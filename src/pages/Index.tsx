@@ -9,6 +9,8 @@ import AddCountryModal from '@/components/AddCountryModal';
 import LocationService from '@/services/LocationService';
 import { Country, LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
+import CircularDashboard from '@/components/CircularDashboard';
+import ExcelExport from '@/components/ExcelExport';
 
 const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -169,6 +171,9 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Circular Dashboard */}
+        <CircularDashboard countries={countries} currentLocation={currentLocation} />
+
         {/* Status Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="border-green-200 bg-green-50">
@@ -214,8 +219,8 @@ const Index = () => {
           </Card>
         </div>
 
-        {/* Action Button */}
-        <div className="flex justify-center">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button 
             onClick={() => setIsAddModalOpen(true)}
             className="gradient-success text-white hover:opacity-90 transition-all duration-200 shadow-lg"
@@ -224,6 +229,8 @@ const Index = () => {
             <Plus className="w-5 h-5 mr-2" />
             Add Country to Track
           </Button>
+          
+          <ExcelExport countries={countries} />
         </div>
 
         {/* Countries Grid */}
