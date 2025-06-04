@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,6 +29,7 @@ const CountryCard: React.FC<CountryCardProps> = ({
 
   const progress = (country.daysSpent / country.dayLimit) * 100;
   const remainingDays = country.dayLimit - country.daysSpent;
+  const taxResidenceDaysLeft = Math.max(0, 183 - country.yearlyDaysSpent);
 
   const getProgressColor = () => {
     if (progress >= 100) return 'gradient-danger';
@@ -81,6 +81,9 @@ const CountryCard: React.FC<CountryCardProps> = ({
             <div>
               <CardTitle className="text-lg">{country.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{country.reason}</p>
+              {country.totalEntries > 0 && (
+                <p className="text-xs text-blue-600">Entries: {country.totalEntries}</p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -112,6 +115,19 @@ const CountryCard: React.FC<CountryCardProps> = ({
           </Button>
         </div>
 
+        {/* Tax Residence Status */}
+        <div className="p-3 bg-blue-50 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-blue-700">Tax Residence Status</span>
+            <Badge variant={taxResidenceDaysLeft < 30 ? "destructive" : "default"} className="text-xs">
+              {taxResidenceDaysLeft} days left
+            </Badge>
+          </div>
+          <p className="text-xs text-blue-600 mt-1">
+            {country.yearlyDaysSpent}/183 days this year
+          </p>
+        </div>
+
         {/* Progress Section */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
@@ -134,14 +150,18 @@ const CountryCard: React.FC<CountryCardProps> = ({
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 p-3 bg-gray-50 rounded-lg">
+        <div className="grid grid-cols-3 gap-3 p-3 bg-gray-50 rounded-lg">
           <div className="text-center">
-            <p className="text-2xl font-bold text-gray-900">{country.daysSpent}</p>
+            <p className="text-xl font-bold text-gray-900">{country.daysSpent}</p>
             <p className="text-xs text-gray-600">Days Spent</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-gray-900">{country.dayLimit}</p>
+            <p className="text-xl font-bold text-gray-900">{country.dayLimit}</p>
             <p className="text-xs text-gray-600">Day Limit</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-bold text-gray-900">{country.yearlyDaysSpent}</p>
+            <p className="text-xs text-gray-600">This Year</p>
           </div>
         </div>
 

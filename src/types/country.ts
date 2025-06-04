@@ -1,3 +1,4 @@
+
 export interface Country {
   id: string;
   code: string;
@@ -8,6 +9,9 @@ export interface Country {
   reason: string;
   lastUpdate: string | null;
   countTravelDays: boolean;
+  yearlyDaysSpent: number; // Days spent in current tax year
+  lastEntry: string | null; // Date of last entry to country
+  totalEntries: number; // Total number of entries to this country
 }
 
 export interface LocationData {

@@ -15,6 +15,7 @@ import ExcelExport from '@/components/ExcelExport';
 const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
+  const [previousLocation, setPreviousLocation] = useState<LocationData | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const { toast } = useToast();
@@ -22,8 +23,14 @@ const Index = () => {
   // Load saved data on component mount
   useEffect(() => {
     const savedCountries = localStorage.getItem('travelCountries');
+    const savedPreviousLocation = localStorage.getItem('previousLocation');
+    
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
+    }
+    
+    if (savedPreviousLocation) {
+      setPreviousLocation(JSON.parse(savedPreviousLocation));
     }
     
     // Request location permission
@@ -44,32 +51,91 @@ const Index = () => {
       });
   }, [toast]);
 
-  // Auto-track current country
+  // Auto-track current country and detect entries/exits
   useEffect(() => {
     if (currentLocation && isLocationEnabled) {
       const currentCountryCode = currentLocation.country_code;
-      const existingCountry = countries.find(c => c.code === currentCountryCode);
+      const previousCountryCode = previousLocation?.country_code;
       
+      // Detect country change (entry/exit)
+      if (previousCountryCode && previousCountryCode !== currentCountryCode) {
+        handleCountryChange(previousCountryCode, currentCountryCode);
+      }
+      
+      const existingCountry = countries.find(c => c.code === currentCountryCode);
       if (existingCountry) {
         updateCountryDays(currentCountryCode);
       }
+      
+      // Save current location as previous for next comparison
+      setPreviousLocation(currentLocation);
+      localStorage.setItem('previousLocation', JSON.stringify(currentLocation));
     }
-  }, [currentLocation, countries, isLocationEnabled]);
+  }, [currentLocation, countries, isLocationEnabled, previousLocation]);
 
   // Save countries to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('travelCountries', JSON.stringify(countries));
   }, [countries]);
 
+  const handleCountryChange = (exitedCountry: string, enteredCountry: string) => {
+    const exitedCountryData = countries.find(c => c.code === exitedCountry);
+    const enteredCountryData = countries.find(c => c.code === enteredCountry);
+    
+    // Notify about exit
+    if (exitedCountryData) {
+      toast({
+        title: `✈️ Exited ${exitedCountryData.name}`,
+        description: `You spent ${exitedCountryData.daysSpent} days there.`,
+      });
+    }
+    
+    // Notify about entry and update entry count
+    if (enteredCountryData) {
+      setCountries(prev => prev.map(country => {
+        if (country.code === enteredCountry) {
+          const newEntries = country.totalEntries + 1;
+          const currentYear = new Date().getFullYear();
+          const taxYearStart = new Date(currentYear, 0, 1); // January 1st
+          const daysSinceYearStart = Math.floor((Date.now() - taxYearStart.getTime()) / (1000 * 60 * 60 * 24));
+          const remainingDaysInYear = 365 - daysSinceYearStart;
+          const taxResidenceDaysLeft = Math.max(0, 183 - country.yearlyDaysSpent); // 183 days = tax residence threshold
+          
+          toast({
+            title: `🎯 Entered ${country.name}`,
+            description: `Entry #${newEntries}. Tax residence: ${taxResidenceDaysLeft} days left this year.`,
+          });
+          
+          return {
+            ...country,
+            totalEntries: newEntries,
+            lastEntry: new Date().toISOString()
+          };
+        }
+        return country;
+      }));
+    } else {
+      // If entering a non-tracked country, notify
+      toast({
+        title: `📍 Entered ${currentLocation?.country}`,
+        description: "This country is not being tracked. Add it to monitor your days.",
+      });
+    }
+  };
+
   const updateCountryDays = (countryCode: string) => {
     const today = new Date().toDateString();
+    const currentYear = new Date().getFullYear();
+    const taxYearStart = new Date(currentYear, 0, 1);
     
     setCountries(prev => prev.map(country => {
       if (country.code === countryCode && country.countTravelDays) {
         const lastUpdate = country.lastUpdate;
         if (lastUpdate !== today) {
           const newDaysSpent = country.daysSpent + 1;
+          const newYearlyDays = country.yearlyDaysSpent + 1;
           const progress = (newDaysSpent / country.dayLimit) * 100;
+          const taxResidenceDaysLeft = Math.max(0, 183 - newYearlyDays);
           
           // Check for warnings
           if (progress >= 90 && progress < 100) {
@@ -86,9 +152,25 @@ const Index = () => {
             });
           }
           
+          // Tax residence warning
+          if (newYearlyDays === 150) {
+            toast({
+              title: "🏛️ Tax Residence Alert",
+              description: `Only ${taxResidenceDaysLeft} days left before tax residence in ${country.name}!`,
+              variant: "destructive"
+            });
+          } else if (newYearlyDays >= 183) {
+            toast({
+              title: "🏛️ Tax Resident",
+              description: `You are now a tax resident of ${country.name} for this year!`,
+              variant: "destructive"
+            });
+          }
+          
           return {
             ...country,
             daysSpent: newDaysSpent,
+            yearlyDaysSpent: newYearlyDays,
             lastUpdate: today
           };
         }
@@ -97,12 +179,15 @@ const Index = () => {
     }));
   };
 
-  const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate' | 'countTravelDays'>) => {
+  const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate' | 'countTravelDays' | 'yearlyDaysSpent' | 'lastEntry' | 'totalEntries'>) => {
     const country: Country = {
       ...newCountry,
       id: Date.now().toString(),
       daysSpent: 0,
+      yearlyDaysSpent: 0,
       lastUpdate: null,
+      lastEntry: null,
+      totalEntries: 0,
       countTravelDays: true
     };
     
@@ -131,7 +216,7 @@ const Index = () => {
 
   const resetCountryDays = (id: string) => {
     setCountries(prev => prev.map(c => 
-      c.id === id ? { ...c, daysSpent: 0, lastUpdate: null } : c
+      c.id === id ? { ...c, daysSpent: 0, yearlyDaysSpent: 0, lastUpdate: null, totalEntries: 0, lastEntry: null } : c
     ));
     toast({
       title: "Days Reset",
