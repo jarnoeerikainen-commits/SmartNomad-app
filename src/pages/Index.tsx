@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,7 +63,7 @@ const Index = () => {
     const today = new Date().toDateString();
     
     setCountries(prev => prev.map(country => {
-      if (country.code === countryCode) {
+      if (country.code === countryCode && country.countTravelDays) {
         const lastUpdate = country.lastUpdate;
         if (lastUpdate !== today) {
           const newDaysSpent = country.daysSpent + 1;
@@ -96,12 +95,13 @@ const Index = () => {
     }));
   };
 
-  const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate'>) => {
+  const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate' | 'countTravelDays'>) => {
     const country: Country = {
       ...newCountry,
       id: Date.now().toString(),
       daysSpent: 0,
-      lastUpdate: null
+      lastUpdate: null,
+      countTravelDays: true
     };
     
     setCountries(prev => [...prev, country]);
@@ -134,6 +134,16 @@ const Index = () => {
     toast({
       title: "Days Reset",
       description: "Country days have been reset to zero.",
+    });
+  };
+
+  const toggleCountTravelDays = (id: string) => {
+    setCountries(prev => prev.map(c => 
+      c.id === id ? { ...c, countTravelDays: !c.countTravelDays } : c
+    ));
+    toast({
+      title: "Travel Day Counting Updated",
+      description: "Travel day counting preference has been updated.",
     });
   };
 
@@ -227,6 +237,7 @@ const Index = () => {
                 onRemove={removeCountry}
                 onUpdateLimit={updateCountryLimit}
                 onReset={resetCountryDays}
+                onToggleCountDays={toggleCountTravelDays}
               />
             ))}
           </div>

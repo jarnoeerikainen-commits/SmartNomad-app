@@ -1,4 +1,3 @@
-
 export interface Country {
   id: string;
   code: string;
@@ -8,6 +7,7 @@ export interface Country {
   daysSpent: number;
   reason: string;
   lastUpdate: string | null;
+  countTravelDays: boolean;
 }
 
 export interface LocationData {

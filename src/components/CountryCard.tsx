@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Settings, Trash2, RotateCcw, MapPin, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Settings, Trash2, RotateCcw, MapPin, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { Country } from '@/types/country';
 
 interface CountryCardProps {
@@ -14,6 +14,7 @@ interface CountryCardProps {
   onRemove: (id: string) => void;
   onUpdateLimit: (id: string, newLimit: number) => void;
   onReset: (id: string) => void;
+  onToggleCountDays: (id: string) => void;
 }
 
 const CountryCard: React.FC<CountryCardProps> = ({
@@ -21,7 +22,8 @@ const CountryCard: React.FC<CountryCardProps> = ({
   isCurrentLocation,
   onRemove,
   onUpdateLimit,
-  onReset
+  onReset,
+  onToggleCountDays
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempLimit, setTempLimit] = useState(country.dayLimit.toString());
@@ -94,6 +96,22 @@ const CountryCard: React.FC<CountryCardProps> = ({
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* Count Travel Days Toggle */}
+        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">Count Travel Days</span>
+          </div>
+          <Button
+            onClick={() => onToggleCountDays(country.id)}
+            variant={country.countTravelDays ? "default" : "outline"}
+            size="sm"
+            className={country.countTravelDays ? "bg-green-600 hover:bg-green-700" : ""}
+          >
+            {country.countTravelDays ? "ON" : "OFF"}
+          </Button>
+        </div>
+
         {/* Progress Section */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
