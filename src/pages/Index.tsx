@@ -5,10 +5,13 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Plus, Settings, Bell, Timer, Globe } from 'lucide-react';
 import CountryCard from '@/components/CountryCard';
-import AddCountryModal from '@/components/AddCountryModal';
+import EnhancedAddCountryModal from '@/components/EnhancedAddCountryModal';
+import PricingCard from '@/components/PricingCard';
+import PassportManager from '@/components/PassportManager';
 import LocationService from '@/services/LocationService';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country, LocationData } from '@/types/country';
+import { Subscription } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
 import CircularDashboard from '@/components/CircularDashboard';
 import ExcelExport from '@/components/ExcelExport';
@@ -20,6 +23,12 @@ const Index = () => {
   const [previousLocation, setPreviousLocation] = useState<LocationData | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
+  const [subscription, setSubscription] = useState<Subscription>({
+    tier: 'free',
+    isActive: true,
+    expiryDate: null,
+    features: []
+  });
   const { toast } = useToast();
   const [isVPNModalOpen, setIsVPNModalOpen] = useState(false);
   const [vpnDetectionData, setVPNDetectionData] = useState<{
@@ -32,6 +41,7 @@ const Index = () => {
   useEffect(() => {
     const savedCountries = localStorage.getItem('travelCountries');
     const savedPreviousLocation = localStorage.getItem('previousLocation');
+    const savedSubscription = localStorage.getItem('subscription');
     
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
@@ -39,6 +49,10 @@ const Index = () => {
     
     if (savedPreviousLocation) {
       setPreviousLocation(JSON.parse(savedPreviousLocation));
+    }
+
+    if (savedSubscription) {
+      setSubscription(JSON.parse(savedSubscription));
     }
     
     // Request location permission
@@ -253,7 +267,34 @@ const Index = () => {
     }));
   };
 
+  const handleUpgrade = (tier: string) => {
+    const newSubscription: Subscription = {
+      tier: tier as any,
+      isActive: true,
+      expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+      features: []
+    };
+    
+    setSubscription(newSubscription);
+    localStorage.setItem('subscription', JSON.stringify(newSubscription));
+    
+    toast({
+      title: "Subscription Updated",
+      description: `Successfully upgraded to ${tier} plan!`,
+    });
+  };
+
   const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate' | 'countTravelDays' | 'yearlyDaysSpent' | 'lastEntry' | 'totalEntries'>) => {
+    // Check subscription limits
+    if (subscription.tier === 'free' && countries.length >= 3) {
+      toast({
+        title: "Upgrade Required",
+        description: "Free tier limited to 3 countries. Upgrade for unlimited tracking.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const country: Country = {
       ...newCountry,
       id: Date.now().toString(),
@@ -348,15 +389,24 @@ const Index = () => {
   return (
     <div className="min-h-screen p-4 md:p-6">
       <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            Travel Day Tracker
-          </h1>
-          <p className="text-muted-foreground">
-            Monitor your stay duration in different countries for visa and tax compliance
-          </p>
+        {/* Header with Pricing Card */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div className="text-center lg:text-left space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              Travel Day Tracker
+            </h1>
+            <p className="text-muted-foreground">
+              Monitor your stay duration in different countries for visa and tax compliance
+            </p>
+          </div>
+          
+          <div className="lg:ml-auto">
+            <PricingCard subscription={subscription} onUpgrade={handleUpgrade} />
+          </div>
         </div>
+
+        {/* Passport Manager */}
+        <PassportManager />
 
         {/* Circular Dashboard */}
         <CircularDashboard countries={countries} currentLocation={currentLocation} />
@@ -385,7 +435,10 @@ const Index = () => {
                 </div>
                 <div>
                   <p className="text-sm text-blue-600 font-medium">Tracked Countries</p>
-                  <p className="text-sm text-blue-700">{getTotalActiveCountries()} active</p>
+                  <p className="text-sm text-blue-700">
+                    {getTotalActiveCountries()} active
+                    {subscription.tier === 'free' && ` (3 max)`}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -428,10 +481,36 @@ const Index = () => {
                 key={country.id}
                 country={country}
                 isCurrentLocation={currentLocation?.country_code === country.code}
-                onRemove={removeCountry}
-                onUpdateLimit={updateCountryLimit}
-                onReset={resetCountryDays}
-                onToggleCountDays={toggleCountTravelDays}
+                onRemove={(id) => {
+                  setCountries(prev => prev.filter(c => c.id !== id));
+                  toast({
+                    title: "Country Removed",
+                    description: "Country has been removed from tracking.",
+                  });
+                }}
+                onUpdateLimit={(id, newLimit) => {
+                  setCountries(prev => prev.map(c => 
+                    c.id === id ? { ...c, dayLimit: newLimit } : c
+                  ));
+                }}
+                onReset={(id) => {
+                  setCountries(prev => prev.map(c => 
+                    c.id === id ? { ...c, daysSpent: 0, yearlyDaysSpent: 0, lastUpdate: null, totalEntries: 0, lastEntry: null } : c
+                  ));
+                  toast({
+                    title: "Days Reset",
+                    description: "Country days have been reset to zero.",
+                  });
+                }}
+                onToggleCountDays={(id) => {
+                  setCountries(prev => prev.map(c => 
+                    c.id === id ? { ...c, countTravelDays: !c.countTravelDays } : c
+                  ));
+                  toast({
+                    title: "Travel Day Counting Updated",
+                    description: "Travel day counting preference has been updated.",
+                  });
+                }}
               />
             ))}
           </div>
@@ -455,8 +534,8 @@ const Index = () => {
           </Card>
         )}
 
-        {/* Add Country Modal */}
-        <AddCountryModal
+        {/* Enhanced Add Country Modal */}
+        <EnhancedAddCountryModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAdd={addCountry}
@@ -469,8 +548,30 @@ const Index = () => {
           onClose={() => setIsVPNModalOpen(false)}
           detectedLocation={vpnDetectionData.location}
           vpnDuration={vpnDetectionData.duration}
-          onConfirmLocation={handleVPNLocationConfirmation}
-          onDisableVPN={handleDisableVPN}
+          onConfirmLocation={(isCorrect) => {
+            if (isCorrect && vpnDetectionData.location) {
+              setCurrentLocation(vpnDetectionData.location);
+              toast({
+                title: "Location Confirmed",
+                description: "Using detected location for travel tracking.",
+              });
+            } else {
+              toast({
+                title: "Location Rejected",
+                description: "Please disable VPN for accurate tracking.",
+                variant: "destructive"
+              });
+            }
+            setIsVPNModalOpen(false);
+          }}
+          onDisableVPN={() => {
+            toast({
+              title: "VPN Guidance",
+              description: "Please disable your VPN temporarily and restart the app for accurate location tracking.",
+              variant: "destructive"
+            });
+            setIsVPNModalOpen(false);
+          }}
         />
       </div>
     </div>
