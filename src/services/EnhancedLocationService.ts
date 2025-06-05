@@ -46,11 +46,21 @@ class EnhancedLocationService {
 
   async detectVPN(): Promise<VPNDetectionResult> {
     try {
-      // Get network info
-      const networkStatus = await Network.getStatus();
+      // Get network info - with fallback for web
+      let networkStatus = null;
+      try {
+        networkStatus = await Network.getStatus();
+      } catch (error) {
+        console.log('Network API not available in web environment');
+      }
       
-      // Get device info
-      const deviceInfo = await Device.getInfo();
+      // Get device info - with fallback for web
+      let deviceInfo = null;
+      try {
+        deviceInfo = await Device.getInfo();
+      } catch (error) {
+        console.log('Device API not available in web environment');
+      }
       
       // Get current location
       const position = await Geolocation.getCurrentPosition({
