@@ -7,10 +7,12 @@ import { MapPin, Plus, Settings, Bell, Timer, Globe } from 'lucide-react';
 import CountryCard from '@/components/CountryCard';
 import AddCountryModal from '@/components/AddCountryModal';
 import LocationService from '@/services/LocationService';
+import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country, LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import CircularDashboard from '@/components/CircularDashboard';
 import ExcelExport from '@/components/ExcelExport';
+import VPNDetectionModal from '@/components/VPNDetectionModal';
 
 const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -19,6 +21,12 @@ const Index = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState(false);
   const { toast } = useToast();
+  const [isVPNModalOpen, setIsVPNModalOpen] = useState(false);
+  const [vpnDetectionData, setVPNDetectionData] = useState<{
+    location: LocationData | null;
+    duration: number;
+  }>({ location: null, duration: 0 });
+  const [isBackgroundTrackingEnabled, setIsBackgroundTrackingEnabled] = useState(false);
 
   // Load saved data on component mount
   useEffect(() => {
@@ -77,6 +85,72 @@ const Index = () => {
   useEffect(() => {
     localStorage.setItem('travelCountries', JSON.stringify(countries));
   }, [countries]);
+
+  // Enhanced location tracking setup
+  useEffect(() => {
+    const initializeEnhancedTracking = async () => {
+      try {
+        const hasPermissions = await EnhancedLocationService.requestBackgroundPermissions();
+        if (hasPermissions) {
+          setIsLocationEnabled(true);
+          
+          // Start background tracking
+          await EnhancedLocationService.startBackgroundTracking((location, vpnInfo) => {
+            setCurrentLocation(location);
+            
+            // Handle VPN detection
+            if (vpnInfo?.isVPNActive && vpnInfo.vpnDuration > 3600000) { // 1 hour
+              setVPNDetectionData({
+                location: vpnInfo.realLocation || location,
+                duration: vpnInfo.vpnDuration
+              });
+              setIsVPNModalOpen(true);
+            }
+          });
+          
+          setIsBackgroundTrackingEnabled(true);
+          
+          toast({
+            title: "Enhanced Tracking Active",
+            description: "Background location tracking with VPN detection is now running.",
+          });
+        } else {
+          // Fallback to basic location service
+          LocationService.requestPermission()
+            .then((granted) => {
+              if (granted) {
+                setIsLocationEnabled(true);
+                LocationService.getCurrentLocation()
+                  .then(setCurrentLocation)
+                  .catch((error) => {
+                    toast({
+                      title: "Location Error",
+                      description: "Could not get current location. Please check your GPS settings.",
+                      variant: "destructive"
+                    });
+                  });
+              }
+            });
+        }
+      } catch (error) {
+        console.error('Enhanced tracking initialization failed:', error);
+        toast({
+          title: "Enhanced Tracking Failed",
+          description: "Falling back to basic location tracking.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    initializeEnhancedTracking();
+
+    // Cleanup on unmount
+    return () => {
+      if (isBackgroundTrackingEnabled) {
+        EnhancedLocationService.stopBackgroundTracking();
+      }
+    };
+  }, [toast]);
 
   const handleCountryChange = (exitedCountry: string, enteredCountry: string) => {
     const exitedCountryData = countries.find(c => c.code === exitedCountry);
@@ -234,10 +308,38 @@ const Index = () => {
     });
   };
 
+  const handleVPNLocationConfirmation = (isCorrect: boolean) => {
+    if (isCorrect && vpnDetectionData.location) {
+      // Use the detected location
+      setCurrentLocation(vpnDetectionData.location);
+      toast({
+        title: "Location Confirmed",
+        description: "Using detected location for travel tracking.",
+      });
+    } else {
+      toast({
+        title: "Location Rejected",
+        description: "Please disable VPN for accurate tracking.",
+        variant: "destructive"
+      });
+    }
+    setIsVPNModalOpen(false);
+  };
+
+  const handleDisableVPN = () => {
+    toast({
+      title: "VPN Guidance",
+      description: "Please disable your VPN temporarily and restart the app for accurate location tracking.",
+      variant: "destructive"
+    });
+    setIsVPNModalOpen(false);
+  };
+
   const getLocationStatus = () => {
     if (!isLocationEnabled) return "Location disabled";
     if (!currentLocation) return "Getting location...";
-    return `${currentLocation.city}, ${currentLocation.country}`;
+    const trackingType = isBackgroundTrackingEnabled ? " (Enhanced)" : " (Basic)";
+    return `${currentLocation.city}, ${currentLocation.country}${trackingType}`;
   };
 
   const getTotalActiveCountries = () => countries.length;
@@ -359,6 +461,16 @@ const Index = () => {
           onClose={() => setIsAddModalOpen(false)}
           onAdd={addCountry}
           existingCountries={countries}
+        />
+
+        {/* VPN Detection Modal */}
+        <VPNDetectionModal
+          isOpen={isVPNModalOpen}
+          onClose={() => setIsVPNModalOpen(false)}
+          detectedLocation={vpnDetectionData.location}
+          vpnDuration={vpnDetectionData.duration}
+          onConfirmLocation={handleVPNLocationConfirmation}
+          onDisableVPN={handleDisableVPN}
         />
       </div>
     </div>
