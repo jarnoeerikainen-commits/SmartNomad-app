@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -70,6 +71,8 @@ const CountryCard: React.FC<CountryCardProps> = ({
     setIsEditing(false);
   };
 
+  const isTrackingTaxResidence = country.reason === 'Tax residence tracking';
+
   return (
     <Card className={`transition-all duration-200 hover:shadow-lg ${
       isCurrentLocation ? 'ring-2 ring-green-400 bg-green-50' : ''
@@ -103,7 +106,7 @@ const CountryCard: React.FC<CountryCardProps> = ({
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">Count Travel Days</span>
+            <span className="text-sm font-medium text-gray-700">Count Travel Days to Total Staying</span>
           </div>
           <Button
             onClick={() => onToggleCountDays(country.id)}
@@ -115,18 +118,20 @@ const CountryCard: React.FC<CountryCardProps> = ({
           </Button>
         </div>
 
-        {/* Tax Residence Status */}
-        <div className="p-3 bg-blue-50 rounded-lg">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-blue-700">Tax Residence Status</span>
-            <Badge variant={taxResidenceDaysLeft < 30 ? "destructive" : "default"} className="text-xs">
-              {taxResidenceDaysLeft} days left
-            </Badge>
+        {/* Tax Residence Status - Only show if tracking tax residence */}
+        {isTrackingTaxResidence && (
+          <div className="p-3 bg-blue-50 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-700">Tax Residence Status</span>
+              <Badge variant={taxResidenceDaysLeft < 30 ? "destructive" : "default"} className="text-xs">
+                {taxResidenceDaysLeft} days left
+              </Badge>
+            </div>
+            <p className="text-xs text-blue-600 mt-1">
+              {country.yearlyDaysSpent}/183 days this year
+            </p>
           </div>
-          <p className="text-xs text-blue-600 mt-1">
-            {country.yearlyDaysSpent}/183 days this year
-          </p>
-        </div>
+        )}
 
         {/* Progress Section */}
         <div className="space-y-2">
@@ -160,8 +165,8 @@ const CountryCard: React.FC<CountryCardProps> = ({
             <p className="text-xs text-gray-600">Day Limit</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-gray-900">{country.yearlyDaysSpent}</p>
-            <p className="text-xs text-gray-600">This Year</p>
+            <p className="text-xl font-bold text-gray-900">{isTrackingTaxResidence ? country.yearlyDaysSpent : country.daysSpent}</p>
+            <p className="text-xs text-gray-600">{isTrackingTaxResidence ? 'This Year' : 'Total Days'}</p>
           </div>
         </div>
 
