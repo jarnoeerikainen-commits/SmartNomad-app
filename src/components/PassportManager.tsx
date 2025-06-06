@@ -13,10 +13,7 @@ interface Passport {
   id: string;
   country: string;
   passportNumber: string;
-  type: 'regular' | 'diplomatic' | 'service' | 'emergency';
-  issueDate: string;
   expiryDate: string;
-  issuingAuthority: string;
   showNumber: boolean;
 }
 
@@ -24,7 +21,6 @@ const PassportManager = () => {
   const [passports, setPassports] = useState<Passport[]>([]);
   const [isAddingPassport, setIsAddingPassport] = useState(false);
   const [newPassport, setNewPassport] = useState<Partial<Passport>>({
-    type: 'regular',
     showNumber: false
   });
   const { toast } = useToast();
@@ -88,15 +84,12 @@ const PassportManager = () => {
       id: Date.now().toString(),
       country: newPassport.country!,
       passportNumber: newPassport.passportNumber!,
-      type: newPassport.type || 'regular',
-      issueDate: newPassport.issueDate || '',
       expiryDate: newPassport.expiryDate!,
-      issuingAuthority: newPassport.issuingAuthority || '',
       showNumber: false
     };
 
     setPassports(prev => [...prev, passport]);
-    setNewPassport({ type: 'regular', showNumber: false });
+    setNewPassport({ showNumber: false });
     setIsAddingPassport(false);
     
     toast({
@@ -143,6 +136,14 @@ const PassportManager = () => {
     return '*'.repeat(number.length - 4) + number.slice(-4);
   };
 
+  const getDaysUntilExpiry = (expiryDate: string) => {
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+    const diffTime = expiry.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   const countries = [
     'United States', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands',
     'Switzerland', 'Austria', 'Belgium', 'Sweden', 'Norway', 'Denmark', 'Finland',
@@ -155,117 +156,128 @@ const PassportManager = () => {
   ];
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="w-5 h-5" />
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+        <CardTitle className="flex items-center gap-2 text-xl">
+          <Calendar className="w-6 h-6 text-blue-600" />
           Passport Manager
+          {passports.length > 0 && (
+            <Badge variant="secondary" className="ml-2">
+              {passports.length} passport{passports.length !== 1 ? 's' : ''}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 p-6">
         {/* Existing Passports */}
         {passports.length > 0 && (
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-gray-700">Your Passports</h3>
-            {passports.map(passport => {
-              const expiryStatus = getExpiryStatus(passport.expiryDate);
-              return (
-                <div key={passport.id} className="p-4 border rounded-lg bg-gray-50">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h4 className="font-semibold text-lg">{passport.country}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          {passport.type.charAt(0).toUpperCase() + passport.type.slice(1)}
-                        </Badge>
-                        <Badge className={`${expiryStatus.color} text-white text-xs`}>
-                          {expiryStatus.text}
-                        </Badge>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              Your Passports
+              <div className="h-px bg-gray-300 flex-1 ml-4"></div>
+            </h3>
+            <div className="grid gap-4">
+              {passports.map(passport => {
+                const expiryStatus = getExpiryStatus(passport.expiryDate);
+                const daysUntilExpiry = getDaysUntilExpiry(passport.expiryDate);
+                
+                return (
+                  <div key={passport.id} className="p-5 border-2 rounded-xl bg-gradient-to-r from-white to-gray-50 hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h4 className="font-bold text-xl text-gray-800">{passport.country}</h4>
+                          <Badge className={`${expiryStatus.color} text-white text-sm px-3 py-1`}>
+                            {expiryStatus.text}
+                          </Badge>
+                        </div>
+                        
+                        <div className="text-sm text-gray-600">
+                          {daysUntilExpiry > 0 ? (
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {daysUntilExpiry} days until expiry
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-1 text-red-600 font-medium">
+                              <AlertTriangle className="w-4 h-4" />
+                              Expired {Math.abs(daysUntilExpiry)} days ago
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <Button
+                        onClick={() => removePassport(passport.id)}
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white p-3 rounded-lg border">
+                        <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Passport Number</Label>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="font-mono text-lg font-semibold">
+                            {passport.showNumber ? passport.passportNumber : maskPassportNumber(passport.passportNumber)}
+                          </span>
+                          <Button
+                            onClick={() => toggleNumberVisibility(passport.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 h-7 w-7 hover:bg-gray-100"
+                          >
+                            {passport.showNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white p-3 rounded-lg border">
+                        <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-lg font-semibold">{new Date(passport.expiryDate).toLocaleDateString()}</span>
+                          {expiryStatus.status !== 'valid' && (
+                            <AlertTriangle className="w-5 h-5 text-amber-500" />
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <Button
-                      onClick={() => removePassport(passport.id)}
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <Label className="text-xs text-gray-600">Passport Number</Label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="font-mono">
-                          {passport.showNumber ? passport.passportNumber : maskPassportNumber(passport.passportNumber)}
-                        </span>
-                        <Button
-                          onClick={() => toggleNumberVisibility(passport.id)}
-                          variant="ghost"
-                          size="sm"
-                          className="p-1 h-6 w-6"
-                        >
-                          {passport.showNumber ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Label className="text-xs text-gray-600">Expiry Date</Label>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span>{new Date(passport.expiryDate).toLocaleDateString()}</span>
-                        {expiryStatus.status !== 'valid' && (
-                          <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                        )}
-                      </div>
-                    </div>
-                    
-                    {passport.issueDate && (
-                      <div>
-                        <Label className="text-xs text-gray-600">Issue Date</Label>
-                        <p className="mt-1">{new Date(passport.issueDate).toLocaleDateString()}</p>
-                      </div>
-                    )}
-                    
-                    {passport.issuingAuthority && (
-                      <div>
-                        <Label className="text-xs text-gray-600">Issuing Authority</Label>
-                        <p className="mt-1">{passport.issuingAuthority}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         )}
 
-        {passports.length > 0 && <Separator />}
+        {passports.length > 0 && <Separator className="my-6" />}
 
         {/* Add New Passport */}
         {!isAddingPassport ? (
           <Button
             onClick={() => setIsAddingPassport(true)}
             variant="outline"
-            className="w-full"
+            size="lg"
+            className="w-full h-14 text-lg border-2 border-dashed border-blue-300 hover:border-blue-500 hover:bg-blue-50"
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Passport
+            <Plus className="w-5 h-5 mr-2" />
+            Add New Passport
           </Button>
         ) : (
-          <div className="space-y-4 p-4 border rounded-lg bg-blue-50">
-            <h3 className="font-semibold">Add New Passport</h3>
+          <div className="space-y-6 p-6 border-2 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50">
+            <h3 className="font-bold text-xl text-gray-800">Add New Passport</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="country">Country *</Label>
+                <Label htmlFor="country" className="text-sm font-semibold text-gray-700">Country *</Label>
                 <Select
-                  value={newPassport.country}
+                  value={newPassport.country || ''}
                   onValueChange={(value) => setNewPassport(prev => ({ ...prev, country: value }))}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select country" />
+                  <SelectTrigger className="mt-2 h-12">
+                    <SelectValue placeholder="Select your country" />
                   </SelectTrigger>
                   <SelectContent>
                     {countries.map(country => (
@@ -276,74 +288,41 @@ const PassportManager = () => {
               </div>
 
               <div>
-                <Label htmlFor="type">Passport Type</Label>
-                <Select
-                  value={newPassport.type}
-                  onValueChange={(value: 'regular' | 'diplomatic' | 'service' | 'emergency') => 
-                    setNewPassport(prev => ({ ...prev, type: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="regular">Regular</SelectItem>
-                    <SelectItem value="diplomatic">Diplomatic</SelectItem>
-                    <SelectItem value="service">Service</SelectItem>
-                    <SelectItem value="emergency">Emergency</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="passportNumber">Passport Number *</Label>
-                <Input
-                  id="passportNumber"
-                  value={newPassport.passportNumber || ''}
-                  onChange={(e) => setNewPassport(prev => ({ ...prev, passportNumber: e.target.value }))}
-                  placeholder="Enter passport number"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="expiryDate">Expiry Date *</Label>
+                <Label htmlFor="expiryDate" className="text-sm font-semibold text-gray-700">Expiry Date *</Label>
                 <Input
                   id="expiryDate"
                   type="date"
+                  className="mt-2 h-12"
                   value={newPassport.expiryDate || ''}
                   onChange={(e) => setNewPassport(prev => ({ ...prev, expiryDate: e.target.value }))}
                 />
               </div>
 
-              <div>
-                <Label htmlFor="issueDate">Issue Date</Label>
+              <div className="md:col-span-2">
+                <Label htmlFor="passportNumber" className="text-sm font-semibold text-gray-700">Passport Number *</Label>
                 <Input
-                  id="issueDate"
-                  type="date"
-                  value={newPassport.issueDate || ''}
-                  onChange={(e) => setNewPassport(prev => ({ ...prev, issueDate: e.target.value }))}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="issuingAuthority">Issuing Authority</Label>
-                <Input
-                  id="issuingAuthority"
-                  value={newPassport.issuingAuthority || ''}
-                  onChange={(e) => setNewPassport(prev => ({ ...prev, issuingAuthority: e.target.value }))}
-                  placeholder="e.g., U.S. Department of State"
+                  id="passportNumber"
+                  className="mt-2 h-12 font-mono"
+                  value={newPassport.passportNumber || ''}
+                  onChange={(e) => setNewPassport(prev => ({ ...prev, passportNumber: e.target.value.toUpperCase() }))}
+                  placeholder="Enter passport number"
                 />
               </div>
             </div>
 
-            <div className="flex gap-2">
-              <Button onClick={addPassport}>Add Passport</Button>
+            <div className="flex gap-3 pt-4">
+              <Button onClick={addPassport} size="lg" className="flex-1">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Passport
+              </Button>
               <Button 
                 onClick={() => {
                   setIsAddingPassport(false);
-                  setNewPassport({ type: 'regular', showNumber: false });
+                  setNewPassport({ showNumber: false });
                 }}
                 variant="outline"
+                size="lg"
+                className="flex-1"
               >
                 Cancel
               </Button>
@@ -351,9 +330,14 @@ const PassportManager = () => {
           </div>
         )}
 
-        <div className="text-xs text-gray-500 mt-4">
-          <p>🔒 Your passport numbers are stored locally and masked for security.</p>
-          <p>📅 You'll receive automatic reminders when passports need renewal.</p>
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <div className="flex items-start gap-3">
+            <div className="text-blue-600 text-2xl">🔒</div>
+            <div className="text-sm text-blue-800">
+              <p className="font-semibold mb-1">Your data is secure</p>
+              <p>Passport numbers are stored locally on your device and masked for security. You'll receive automatic reminders when passports need renewal (7 months and 1 month before expiry).</p>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
