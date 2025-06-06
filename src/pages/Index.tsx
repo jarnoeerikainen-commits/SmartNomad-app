@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,6 +37,7 @@ const Index = () => {
     duration: number;
   }>({ location: null, duration: 0 });
   const [isBackgroundTrackingEnabled, setIsBackgroundTrackingEnabled] = useState(false);
+  const [expenses, setExpenses] = useState<any[]>([]);
 
   // Load saved data on component mount
   useEffect(() => {
@@ -475,7 +475,7 @@ const Index = () => {
             Add Country to Track
           </Button>
           
-          <ExcelExport countries={countries} />
+          <ExcelExport countries={countries} expenses={expenses} />
         </div>
 
         {/* Countries Grid */}

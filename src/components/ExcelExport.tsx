@@ -6,12 +6,16 @@ import { Expense, ExpenseReport } from '@/types/expense';
 import { Country } from '@/types/country';
 
 interface ExcelExportProps {
-  expenses: Expense[];
+  expenses?: Expense[];
   countries: Country[];
   reportData?: any;
 }
 
-const ExcelExport: React.FC<ExcelExportProps> = ({ expenses, countries, reportData }) => {
+const ExcelExport: React.FC<ExcelExportProps> = ({ 
+  expenses = [], 
+  countries, 
+  reportData 
+}) => {
   const generateCSV = (data: any[], filename: string) => {
     if (data.length === 0) return;
 
@@ -79,7 +83,7 @@ const ExcelExport: React.FC<ExcelExportProps> = ({ expenses, countries, reportDa
   const exportTaxReport = () => {
     if (!reportData) return;
 
-    const taxData = [
+    const taxData: any[] = [
       {
         'Report Type': 'Business Expense Summary',
         'Total Expenses': reportData.total_expenses || 0,
@@ -97,7 +101,12 @@ const ExcelExport: React.FC<ExcelExportProps> = ({ expenses, countries, reportDa
           'Report Type': 'Category Breakdown',
           'Category': category,
           'Amount': amount,
-          'Currency': 'USD'
+          'Currency': 'USD',
+          'Total Expenses': '',
+          'Expense Count': '',
+          'Period Start': '',
+          'Period End': '',
+          'Generated': ''
         });
       });
     }
@@ -109,7 +118,13 @@ const ExcelExport: React.FC<ExcelExportProps> = ({ expenses, countries, reportDa
           'Report Type': 'Country Breakdown',
           'Country': country,
           'Amount': amount,
-          'Currency': 'USD'
+          'Currency': 'USD',
+          'Category': '',
+          'Total Expenses': '',
+          'Expense Count': '',
+          'Period Start': '',
+          'Period End': '',
+          'Generated': ''
         });
       });
     }
