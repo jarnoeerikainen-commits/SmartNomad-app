@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import CountryCard from '@/components/CountryCard';
 import EnhancedAddCountryModal from '@/components/EnhancedAddCountryModal';
 import PricingCard from '@/components/PricingCard';
 import PassportManager from '@/components/PassportManager';
+import ExpenseTracker from '@/components/ExpenseTracker';
 import LocationService from '@/services/LocationService';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country, LocationData } from '@/types/country';
@@ -407,6 +409,9 @@ const Index = () => {
 
         {/* Passport Manager */}
         <PassportManager />
+
+        {/* Business Expense Tracker */}
+        <ExpenseTracker />
 
         {/* Circular Dashboard */}
         <CircularDashboard countries={countries} currentLocation={currentLocation} />

@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Calendar, Plus, Edit, Trash2 } from 'lucide-react';
 import { PassportInfo } from '@/types/subscription';
@@ -131,6 +129,11 @@ const PassportManager: React.FC = () => {
     return { status: 'valid', color: 'bg-green-500', text: 'Valid' };
   };
 
+  const maskPassportNumber = (number: string) => {
+    if (number.length <= 4) return number;
+    return '*'.repeat(number.length - 4) + number.slice(-4);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -181,7 +184,7 @@ const PassportManager: React.FC = () => {
                     <span className="font-medium">Country:</span> {passport.issuingCountry}
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium">Number:</span> {passport.passportNumber}
+                    <span className="font-medium">Number:</span> {maskPassportNumber(passport.passportNumber)}
                   </div>
                   <div className="text-sm">
                     <span className="font-medium">Expires:</span> {new Date(passport.expiryDate).toLocaleDateString()}
