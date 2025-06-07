@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Hotel, Restaurant, Shield, Crown, Car, Airplane, Umbrella, Yacht } from 'lucide-react';
+import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship } from 'lucide-react';
 
 interface ServiceBoxProps {
   title: string;
@@ -136,7 +136,7 @@ const TravelServices: React.FC = () => {
         {/* Local Restaurants */}
         <ServiceBox
           title="Local Restaurants"
-          icon={<Restaurant className="w-5 h-5 text-blue-600" />}
+          icon={<UtensilsCrossed className="w-5 h-5 text-blue-600" />}
           description="Discover local cuisine and dining"
           services={[
             "Fine Dining Restaurants",
@@ -176,12 +176,12 @@ const TravelServices: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Airplane className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+              <Plane className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
               <h4 className="font-semibold text-gray-800">Private Jets</h4>
               <p className="text-sm text-gray-600">Exclusive charter flights</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Yacht className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+              <Ship className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
               <h4 className="font-semibold text-gray-800">Luxury Yachts</h4>
               <p className="text-sm text-gray-600">Premium yacht experiences</p>
             </div>
