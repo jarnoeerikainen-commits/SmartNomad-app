@@ -9,6 +9,7 @@ import EnhancedAddCountryModal from '@/components/EnhancedAddCountryModal';
 import PricingCard from '@/components/PricingCard';
 import PassportManager from '@/components/PassportManager';
 import ExpenseTracker from '@/components/ExpenseTracker';
+import TravelServices from '@/components/TravelServices';
 import LocationService from '@/services/LocationService';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country, LocationData } from '@/types/country';
@@ -412,6 +413,9 @@ const Index = () => {
 
         {/* Business Expense Tracker */}
         <ExpenseTracker />
+
+        {/* Travel Services Section */}
+        <TravelServices />
 
         {/* Circular Dashboard */}
         <CircularDashboard countries={countries} currentLocation={currentLocation} />
