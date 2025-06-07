@@ -391,32 +391,13 @@ const PassportManager = () => {
                         </Button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-white p-3 rounded-lg border">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Passport Number</Label>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="font-mono text-lg font-semibold">
-                              {passport.showNumber ? passport.passportNumber : maskPassportNumber(passport.passportNumber)}
-                            </span>
-                            <Button
-                              onClick={() => toggleNumberVisibility(passport.id)}
-                              variant="ghost"
-                              size="sm"
-                              className="p-1 h-7 w-7 hover:bg-gray-100"
-                            >
-                              {passport.showNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="bg-white p-3 rounded-lg border">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-lg font-semibold">{new Date(passport.expiryDate).toLocaleDateString()}</span>
-                            {expiryStatus.status !== 'valid' && (
-                              <AlertTriangle className="w-5 h-5 text-amber-500" />
-                            )}
-                          </div>
+                      <div className="bg-white p-3 rounded-lg border">
+                        <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-lg font-semibold">{new Date(passport.expiryDate).toLocaleDateString()}</span>
+                          {expiryStatus.status !== 'valid' && (
+                            <AlertTriangle className="w-5 h-5 text-amber-500" />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -509,7 +490,7 @@ const PassportManager = () => {
               <div className="text-blue-600 text-2xl">🔒</div>
               <div className="text-sm text-blue-800">
                 <p className="font-semibold mb-1">Your data is secure</p>
-                <p>Passport numbers are stored locally on your device and masked for security. You'll receive automatic reminders when passports need renewal (7 months and 1 month before expiry).</p>
+                <p>Document information is stored locally on your device for privacy. You'll receive automatic reminders when documents need renewal (7 months and 1 month before expiry).</p>
               </div>
             </div>
           </div>
@@ -581,24 +562,7 @@ const PassportManager = () => {
                         </Button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white p-3 rounded-lg border">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Visa Number</Label>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="font-mono text-lg font-semibold">
-                              {visa.showNumber ? visa.visaNumber : maskPassportNumber(visa.visaNumber)}
-                            </span>
-                            <Button
-                              onClick={() => toggleVisaNumberVisibility(visa.id)}
-                              variant="ghost"
-                              size="sm"
-                              className="p-1 h-7 w-7 hover:bg-gray-100"
-                            >
-                              {visa.showNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </Button>
-                          </div>
-                        </div>
-                        
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="bg-white p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Issue Date</Label>
                           <div className="flex items-center gap-2 mt-2">
@@ -796,24 +760,7 @@ const PassportManager = () => {
                         </Button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white p-3 rounded-lg border">
-                          <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Permit Number</Label>
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="font-mono text-lg font-semibold">
-                              {permit.showNumber ? permit.permitNumber : maskPassportNumber(permit.permitNumber)}
-                            </span>
-                            <Button
-                              onClick={() => togglePermitNumberVisibility(permit.id)}
-                              variant="ghost"
-                              size="sm"
-                              className="p-1 h-7 w-7 hover:bg-gray-100"
-                            >
-                              {permit.showNumber ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </Button>
-                          </div>
-                        </div>
-                        
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="bg-white p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Issue Date</Label>
                           <div className="flex items-center gap-2 mt-2">
