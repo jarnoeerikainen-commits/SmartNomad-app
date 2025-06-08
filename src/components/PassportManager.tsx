@@ -145,7 +145,7 @@ const PassportManager = () => {
   }, [passports, visas, workingPermits, toast]);
 
   const addPassport = () => {
-    if (!newPassport.country || !newPassport.passportNumber || !newPassport.expiryDate) {
+    if (!newPassport.country || !newPassport.expiryDate) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -157,7 +157,7 @@ const PassportManager = () => {
     const passport: Passport = {
       id: Date.now().toString(),
       country: newPassport.country!,
-      passportNumber: newPassport.passportNumber!,
+      passportNumber: '', // Keep empty for data safety
       expiryDate: newPassport.expiryDate!,
       showNumber: false
     };
@@ -173,7 +173,7 @@ const PassportManager = () => {
   };
 
   const addVisa = () => {
-    if (!newVisa.country || !newVisa.visaType || !newVisa.visaNumber || !newVisa.issueDate || !newVisa.expiryDate) {
+    if (!newVisa.country || !newVisa.visaType || !newVisa.issueDate || !newVisa.expiryDate) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -186,7 +186,7 @@ const PassportManager = () => {
       id: Date.now().toString(),
       country: newVisa.country!,
       visaType: newVisa.visaType!,
-      visaNumber: newVisa.visaNumber!,
+      visaNumber: '', // Keep empty for data safety
       issueDate: newVisa.issueDate!,
       expiryDate: newVisa.expiryDate!,
       showNumber: false
@@ -203,7 +203,7 @@ const PassportManager = () => {
   };
 
   const addWorkingPermit = () => {
-    if (!newPermit.country || !newPermit.permitType || !newPermit.permitNumber || !newPermit.issueDate || !newPermit.expiryDate) {
+    if (!newPermit.country || !newPermit.permitType || !newPermit.issueDate || !newPermit.expiryDate) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -216,7 +216,7 @@ const PassportManager = () => {
       id: Date.now().toString(),
       country: newPermit.country!,
       permitType: newPermit.permitType!,
-      permitNumber: newPermit.permitNumber!,
+      permitNumber: '', // Keep empty for data safety
       issueDate: newPermit.issueDate!,
       expiryDate: newPermit.expiryDate!,
       showNumber: false
@@ -452,17 +452,6 @@ const PassportManager = () => {
                     onChange={(e) => setNewPassport(prev => ({ ...prev, expiryDate: e.target.value }))}
                   />
                 </div>
-
-                <div className="md:col-span-2">
-                  <Label htmlFor="passportNumber" className="text-sm font-semibold text-gray-700">Passport Number *</Label>
-                  <Input
-                    id="passportNumber"
-                    className="mt-2 h-12 font-mono"
-                    value={newPassport.passportNumber || ''}
-                    onChange={(e) => setNewPassport(prev => ({ ...prev, passportNumber: e.target.value.toUpperCase() }))}
-                    placeholder="Enter passport number"
-                  />
-                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -660,17 +649,6 @@ const PassportManager = () => {
                     onChange={(e) => setNewVisa(prev => ({ ...prev, expiryDate: e.target.value }))}
                   />
                 </div>
-
-                <div className="md:col-span-2">
-                  <Label htmlFor="visaNumber" className="text-sm font-semibold text-gray-700">Visa Number *</Label>
-                  <Input
-                    id="visaNumber"
-                    className="mt-2 h-12 font-mono"
-                    value={newVisa.visaNumber || ''}
-                    onChange={(e) => setNewVisa(prev => ({ ...prev, visaNumber: e.target.value.toUpperCase() }))}
-                    placeholder="Enter visa number"
-                  />
-                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -856,17 +834,6 @@ const PassportManager = () => {
                     className="mt-2 h-12"
                     value={newPermit.expiryDate || ''}
                     onChange={(e) => setNewPermit(prev => ({ ...prev, expiryDate: e.target.value }))}
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <Label htmlFor="permitNumber" className="text-sm font-semibold text-gray-700">Permit Number *</Label>
-                  <Input
-                    id="permitNumber"
-                    className="mt-2 h-12 font-mono"
-                    value={newPermit.permitNumber || ''}
-                    onChange={(e) => setNewPermit(prev => ({ ...prev, permitNumber: e.target.value.toUpperCase() }))}
-                    placeholder="Enter permit number"
                   />
                 </div>
               </div>
