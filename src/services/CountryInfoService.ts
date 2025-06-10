@@ -5,7 +5,9 @@ import { CountryDetails, TrackingRecommendation, OfficialWebsites, StudentInfo, 
 const createDefaultWebsites = (countryCode: string, countryName: string): OfficialWebsites => ({
   government: `https://www.gov.${countryCode.toLowerCase()}`,
   visa: `https://visa.${countryCode.toLowerCase()}`,
+  visaApplication: `https://visa.${countryCode.toLowerCase()}/apply`,
   passport: `https://passport.gov.${countryCode.toLowerCase()}`,
+  passportApplication: `https://passport.gov.${countryCode.toLowerCase()}/apply`,
   tourism: `https://www.visit${countryName.toLowerCase().replace(/\s+/g, '')}.com`
 });
 
@@ -13,6 +15,7 @@ const createDefaultWebsites = (countryCode: string, countryName: string): Offici
 const createDefaultStudentInfo = (): StudentInfo => ({
   studentVisaRequired: true,
   maxStudyDuration: 365,
+  maxStudyDays: 365,
   workPermitWhileStudying: false,
   languageRequirements: ['English'],
   tuitionRange: { min: 10000, max: 50000 }
@@ -24,7 +27,10 @@ const createDefaultExpatInfo = (): ExpatInfo => ({
   minimumInvestment: 50000,
   languageRequirements: ['English'],
   averageCostOfLiving: 2000,
-  popularExpatAreas: ['Capital City']
+  popularExpatAreas: ['Capital City'],
+  residencyRequirementDays: 183,
+  permanentResidencyDays: 1095,
+  citizenshipRequirementDays: 1825
 });
 
 export class CountryInfoService {

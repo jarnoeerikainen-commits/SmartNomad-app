@@ -38,13 +38,16 @@ export interface CountryDetails {
 export interface OfficialWebsites {
   government: string;
   visa: string;
+  visaApplication: string;
   passport: string;
+  passportApplication: string;
   tourism: string;
 }
 
 export interface StudentInfo {
   studentVisaRequired: boolean;
   maxStudyDuration: number;
+  maxStudyDays: number;
   workPermitWhileStudying: boolean;
   languageRequirements: string[];
   tuitionRange: { min: number; max: number };
@@ -56,6 +59,9 @@ export interface ExpatInfo {
   languageRequirements: string[];
   averageCostOfLiving: number;
   popularExpatAreas: string[];
+  residencyRequirementDays: number;
+  permanentResidencyDays: number;
+  citizenshipRequirementDays: number;
 }
 
 export interface TrackingRecommendation {
