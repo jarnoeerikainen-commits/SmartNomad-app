@@ -16,32 +16,53 @@ export interface CountryDetails {
     medical: string;
     fire: string;
   };
-  currency: {
-    code: string;
-    symbol: string;
-    exchangeRate?: number;
-  };
+  currency: string;
+  languages: string[];
   timeZones: string[];
   commonVisaTypes: string[];
   businessRegistrationRequired: boolean;
   taxRate: {
-    personal: number;
+    personal: { min: number; max: number };
     corporate: number;
   };
-  officialWebsites: {
-    government: string;
-    visaApplication: string;
-    passportApplication: string;
-    tourism: string;
+  officialWebsites: OfficialWebsites;
+  studentInfo: StudentInfo;
+  expatInfo: ExpatInfo;
+  costOfLiving: {
+    low: number;
+    medium: number;
+    high: number;
   };
-  studentInfo: {
-    maxStudyDays: number;
-    workRightsWhileStudying: boolean;
-    postGraduationWorkDays: number;
-  };
-  expatInfo: {
-    residencyRequirementDays: number;
-    permanentResidencyDays: number;
-    citizenshipRequirementDays: number;
-  };
+}
+
+export interface OfficialWebsites {
+  government: string;
+  visa: string;
+  passport: string;
+  tourism: string;
+}
+
+export interface StudentInfo {
+  studentVisaRequired: boolean;
+  maxStudyDuration: number;
+  workPermitWhileStudying: boolean;
+  languageRequirements: string[];
+  tuitionRange: { min: number; max: number };
+}
+
+export interface ExpatInfo {
+  residencyPermitRequired: boolean;
+  minimumInvestment: number;
+  languageRequirements: string[];
+  averageCostOfLiving: number;
+  popularExpatAreas: string[];
+}
+
+export interface TrackingRecommendation {
+  type: 'visa_free_limit' | 'study_visa' | 'residency_permit' | 'business_travel' | 'tax_residency' | 'substantial_presence';
+  title: string;
+  description: string;
+  countries: string[];
+  dayLimit: number;
+  priority: 'low' | 'medium' | 'high' | 'critical';
 }

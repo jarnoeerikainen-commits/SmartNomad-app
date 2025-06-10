@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Info, Phone, DollarSign, Shield, Clock } from 'lucide-react';
 import { Country } from '@/types/country';
-import CountryInfoService from '@/services/CountryInfoService';
+import { CountryInfoService } from '@/services/CountryInfoService';
 
 interface EnhancedAddCountryModalProps {
   isOpen: boolean;
