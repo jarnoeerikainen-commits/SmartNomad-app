@@ -254,7 +254,7 @@ const Index = () => {
           } else if (newYearlyDays >= 183) {
             toast({
               title: "🏛️ Tax Resident",
-              description: `You are now a tax resident of ${country.name} for this year!`,
+              description: `You are now a tax resident of ${country.name} for this year!`,\
               variant: "destructive"
             });
           }
@@ -592,5 +592,3 @@ const Index = () => {
 };
 
 export default Index;
-
-}
