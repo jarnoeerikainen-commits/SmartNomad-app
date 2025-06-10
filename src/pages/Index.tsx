@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import CircularDashboard from '@/components/CircularDashboard';
 import ExcelExport from '@/components/ExcelExport';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
+import TrackingRecommendations from '@/components/TrackingRecommendations';
 
 const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -417,6 +418,9 @@ const Index = () => {
         {/* Travel Services Section */}
         <TravelServices />
 
+        {/* Tracking Recommendations */}
+        <TrackingRecommendations countries={countries} onAddCountry={addCountry} />
+
         {/* Circular Dashboard */}
         <CircularDashboard countries={countries} currentLocation={currentLocation} />
 
@@ -588,3 +592,5 @@ const Index = () => {
 };
 
 export default Index;
+
+}

@@ -28,4 +28,20 @@ export interface CountryDetails {
     personal: number;
     corporate: number;
   };
+  officialWebsites: {
+    government: string;
+    visaApplication: string;
+    passportApplication: string;
+    tourism: string;
+  };
+  studentInfo: {
+    maxStudyDays: number;
+    workRightsWhileStudying: boolean;
+    postGraduationWorkDays: number;
+  };
+  expatInfo: {
+    residencyRequirementDays: number;
+    permanentResidencyDays: number;
+    citizenshipRequirementDays: number;
+  };
 }

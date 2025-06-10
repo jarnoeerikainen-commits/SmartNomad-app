@@ -1,4 +1,3 @@
-
 import { CountryDetails } from '@/types/countryInfo';
 
 const COUNTRY_DATABASE: Record<string, CountryDetails> = {
@@ -15,7 +14,23 @@ const COUNTRY_DATABASE: Record<string, CountryDetails> = {
     timeZones: ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles'],
     commonVisaTypes: ['B-1/B-2 Tourist', 'H-1B Work', 'L-1 Intracompany'],
     businessRegistrationRequired: true,
-    taxRate: { personal: 22, corporate: 21 }
+    taxRate: { personal: 22, corporate: 21 },
+    officialWebsites: {
+      government: 'https://www.usa.gov',
+      visaApplication: 'https://travel.state.gov',
+      passportApplication: 'https://travel.state.gov/content/travel/en/passports.html',
+      tourism: 'https://www.visittheusa.com'
+    },
+    studentInfo: {
+      maxStudyDays: 365,
+      workRightsWhileStudying: true,
+      postGraduationWorkDays: 365
+    },
+    expatInfo: {
+      residencyRequirementDays: 183,
+      permanentResidencyDays: 1825,
+      citizenshipRequirementDays: 1825
+    }
   },
   'GB': {
     code: 'GB',
@@ -30,7 +45,23 @@ const COUNTRY_DATABASE: Record<string, CountryDetails> = {
     timeZones: ['Europe/London'],
     commonVisaTypes: ['Standard Visitor', 'Skilled Worker', 'Youth Mobility'],
     businessRegistrationRequired: true,
-    taxRate: { personal: 20, corporate: 19 }
+    taxRate: { personal: 20, corporate: 19 },
+    officialWebsites: {
+      government: 'https://www.gov.uk',
+      visaApplication: 'https://www.gov.uk/apply-uk-visa',
+      passportApplication: 'https://www.gov.uk/passport-fees',
+      tourism: 'https://www.visitbritain.com'
+    },
+    studentInfo: {
+      maxStudyDays: 365,
+      workRightsWhileStudying: true,
+      postGraduationWorkDays: 730
+    },
+    expatInfo: {
+      residencyRequirementDays: 183,
+      permanentResidencyDays: 1825,
+      citizenshipRequirementDays: 1825
+    }
   },
   'DE': {
     code: 'DE',
@@ -45,7 +76,23 @@ const COUNTRY_DATABASE: Record<string, CountryDetails> = {
     timeZones: ['Europe/Berlin'],
     commonVisaTypes: ['Schengen Tourist', 'EU Blue Card', 'Job Seeker'],
     businessRegistrationRequired: true,
-    taxRate: { personal: 42, corporate: 30 }
+    taxRate: { personal: 42, corporate: 30 },
+    officialWebsites: {
+      government: 'https://www.deutschland.de',
+      visaApplication: 'https://www.germany.travel/en/ms/visa-customs/visa.html',
+      passportApplication: 'https://www.germany.travel/en/ms/visa-customs/passport.html',
+      tourism: 'https://www.germany.travel'
+    },
+    studentInfo: {
+      maxStudyDays: 365,
+      workRightsWhileStudying: true,
+      postGraduationWorkDays: 540
+    },
+    expatInfo: {
+      residencyRequirementDays: 183,
+      permanentResidencyDays: 1825,
+      citizenshipRequirementDays: 2920
+    }
   },
   'FR': {
     code: 'FR',
@@ -789,6 +836,14 @@ class CountryInfoService {
         return 90; // Schengen rule
       case 'Work permit limit':
         return 365; // Assume yearly permit
+      case 'Study permit validity':
+        return country.studentInfo?.maxStudyDays || 365;
+      case 'Residency requirement':
+        return country.expatInfo?.residencyRequirementDays || 183;
+      case 'Permanent residency path':
+        return country.expatInfo?.permanentResidencyDays || 1095;
+      case 'Citizenship eligibility':
+        return country.expatInfo?.citizenshipRequirementDays || 1825;
       default:
         return country.visaFreeStays.tourist;
     }
@@ -808,12 +863,33 @@ class CountryInfoService {
       workPermitRequired: reason === 'Business travel limit' || reason === 'Work permit limit' ? country.workPermitRequired : null,
       healthInsuranceRequired: country.healthInsuranceRequired,
       commonVisaTypes: country.commonVisaTypes,
-      timeZones: country.timeZones
+      timeZones: country.timeZones,
+      officialWebsites: country.officialWebsites,
+      studentInfo: reason.includes('Study') || reason.includes('student') ? country.studentInfo : null,
+      expatInfo: reason.includes('Residency') || reason.includes('Citizenship') ? country.expatInfo : null
     };
   }
 
   static getAllCountries(): CountryDetails[] {
     return Object.values(COUNTRY_DATABASE);
+  }
+
+  static getCountriesByUserType(userType: 'tourist' | 'student' | 'expat' | 'business' | 'tax'): CountryDetails[] {
+    const allCountries = this.getAllCountries();
+    
+    // Return countries sorted by relevance for each user type
+    switch (userType) {
+      case 'student':
+        return allCountries.filter(c => c.studentInfo?.maxStudyDays && c.studentInfo.maxStudyDays > 0);
+      case 'expat':
+        return allCountries.filter(c => c.expatInfo?.residencyRequirementDays);
+      case 'business':
+        return allCountries.filter(c => c.visaFreeStays.business > 30);
+      case 'tax':
+        return allCountries.filter(c => c.taxResidencyDays > 0);
+      default:
+        return allCountries;
+    }
   }
 }
 
