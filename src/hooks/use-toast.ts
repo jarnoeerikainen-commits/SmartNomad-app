@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import type {
@@ -169,6 +170,16 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
+  // Ensure React is available and we're in a component context
+  if (typeof React === 'undefined' || !React.useState) {
+    console.error('useToast must be used within a React component')
+    return {
+      toasts: [],
+      toast: () => ({ id: '', dismiss: () => {}, update: () => {} }),
+      dismiss: () => {}
+    }
+  }
+
   const [state, setState] = React.useState<State>(memoryState)
 
   React.useEffect(() => {
