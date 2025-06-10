@@ -416,7 +416,7 @@ const Index = () => {
         <ExpenseTracker />
 
         {/* Travel Services Section */}
-        <TravelServices />
+        <TravelServices currentLocation={currentLocation} />
 
         {/* Tracking Recommendations */}
         <TrackingRecommendations countries={countries} onAddCountry={addCountry} />

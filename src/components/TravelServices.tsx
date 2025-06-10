@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship } from 'lucide-react';
+import OffersModal from '@/components/OffersModal';
+import OffersService, { Offer } from '@/services/OffersService';
+import { LocationData } from '@/types/country';
+import { useToast } from '@/hooks/use-toast';
 
 interface ServiceBoxProps {
   title: string;
@@ -14,6 +18,8 @@ interface ServiceBoxProps {
   isVip?: boolean;
   onOffersToggle: (enabled: boolean) => void;
   offersEnabled: boolean;
+  serviceType: 'insurance' | 'hotels' | 'restaurants' | 'vip';
+  currentLocation: LocationData | null;
 }
 
 const ServiceBox: React.FC<ServiceBoxProps> = ({
@@ -23,64 +29,140 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
   services,
   isVip = false,
   onOffersToggle,
-  offersEnabled
+  offersEnabled,
+  serviceType,
+  currentLocation
 }) => {
-  return (
-    <Card className={`relative ${isVip ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50' : 'border-gray-200 bg-white'}`}>
-      {isVip && (
-        <div className="absolute -top-3 -right-3">
-          <Badge className="bg-yellow-400 text-yellow-900 font-bold">
-            <Crown className="w-3 h-3 mr-1" />
-            VIP
-          </Badge>
-        </div>
-      )}
-      
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${isVip ? 'bg-yellow-100' : 'bg-blue-100'}`}>
-              {icon}
-            </div>
-            <div>
-              <CardTitle className={`text-lg ${isVip ? 'text-yellow-800' : 'text-gray-800'}`}>
-                {title}
-              </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">{description}</p>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
+  const [isOffersModalOpen, setIsOffersModalOpen] = useState(false);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-      <CardContent className="pt-0">
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 gap-2">
-            {services.map((service, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700">{service}</span>
-                <Button variant="outline" size="sm">
-                  Find Offers
-                </Button>
+  const handleFindOffers = async (serviceName: string) => {
+    if (!offersEnabled) {
+      toast({
+        title: "Enable Offers First",
+        description: "Please turn on the 'Get Offers & Deals' toggle to search for offers.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!currentLocation) {
+      toast({
+        title: "Location Required",
+        description: "Location services are required to find local offers.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setIsOffersModalOpen(true);
+
+    try {
+      console.log(`Searching offers for ${serviceName} in ${currentLocation.city}, ${currentLocation.country}`);
+      
+      const foundOffers = await OffersService.searchOffers({
+        service: serviceType,
+        location: currentLocation
+      });
+
+      setOffers(foundOffers);
+      
+      toast({
+        title: "Offers Found!",
+        description: `Found ${foundOffers.length} offers for ${serviceName} in ${currentLocation.city}.`,
+      });
+    } catch (error) {
+      console.error('Error searching offers:', error);
+      toast({
+        title: "Search Failed",
+        description: "Could not find offers at this time. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <Card className={`relative ${isVip ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50' : 'border-gray-200 bg-white'}`}>
+        {isVip && (
+          <div className="absolute -top-3 -right-3">
+            <Badge className="bg-yellow-400 text-yellow-900 font-bold">
+              <Crown className="w-3 h-3 mr-1" />
+              VIP
+            </Badge>
+          </div>
+        )}
+        
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${isVip ? 'bg-yellow-100' : 'bg-blue-100'}`}>
+                {icon}
               </div>
-            ))}
+              <div>
+                <CardTitle className={`text-lg ${isVip ? 'text-yellow-800' : 'text-gray-800'}`}>
+                  {title}
+                </CardTitle>
+                <p className="text-sm text-gray-600 mt-1">{description}</p>
+              </div>
+            </div>
           </div>
-          
-          <div className="flex items-center justify-between pt-3 border-t border-gray-200">
-            <span className="text-sm font-medium text-gray-700">
-              Get Offers & Deals
-            </span>
-            <Switch
-              checked={offersEnabled}
-              onCheckedChange={onOffersToggle}
-            />
+        </CardHeader>
+
+        <CardContent className="pt-0">
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-2">
+              {services.map((service, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                  <span className="text-sm font-medium text-gray-700">{service}</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFindOffers(service)}
+                    disabled={!offersEnabled || !currentLocation}
+                    className={offersEnabled && currentLocation ? 'hover:bg-green-50 hover:border-green-300' : ''}
+                  >
+                    Find Offers
+                  </Button>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+              <span className="text-sm font-medium text-gray-700">
+                Get Offers & Deals
+              </span>
+              <Switch
+                checked={offersEnabled}
+                onCheckedChange={onOffersToggle}
+              />
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <OffersModal
+        isOpen={isOffersModalOpen}
+        onClose={() => setIsOffersModalOpen(false)}
+        offers={offers}
+        serviceType={serviceType}
+        location={currentLocation ? `${currentLocation.city}, ${currentLocation.country}` : ''}
+        isLoading={isLoading}
+      />
+    </>
   );
 };
 
-const TravelServices: React.FC = () => {
+interface TravelServicesProps {
+  currentLocation: LocationData | null;
+}
+
+const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
   const [offersEnabled, setOffersEnabled] = useState<{[key: string]: boolean}>({
     insurance: false,
     hotels: false,
@@ -100,6 +182,11 @@ const TravelServices: React.FC = () => {
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Travel Services</h2>
         <p className="text-gray-600">Find the best deals and services for your travels</p>
+        {currentLocation && (
+          <p className="text-sm text-blue-600 mt-1">
+            📍 Searching offers for {currentLocation.city}, {currentLocation.country}
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -114,8 +201,10 @@ const TravelServices: React.FC = () => {
             "Baggage Protection",
             "Emergency Evacuation"
           ]}
+          serviceType="insurance"
           onOffersToggle={(enabled) => handleOffersToggle('insurance', enabled)}
           offersEnabled={offersEnabled.insurance}
+          currentLocation={currentLocation}
         />
 
         {/* Hotel Booking */}
@@ -129,8 +218,10 @@ const TravelServices: React.FC = () => {
             "Business Hotels",
             "Budget-Friendly Options"
           ]}
+          serviceType="hotels"
           onOffersToggle={(enabled) => handleOffersToggle('hotels', enabled)}
           offersEnabled={offersEnabled.hotels}
+          currentLocation={currentLocation}
         />
 
         {/* Local Restaurants */}
@@ -144,8 +235,10 @@ const TravelServices: React.FC = () => {
             "Food Tours & Experiences",
             "Cooking Classes"
           ]}
+          serviceType="restaurants"
           onOffersToggle={(enabled) => handleOffersToggle('restaurants', enabled)}
           offersEnabled={offersEnabled.restaurants}
+          currentLocation={currentLocation}
         />
 
         {/* VIP Luxury Services */}
@@ -159,9 +252,11 @@ const TravelServices: React.FC = () => {
             "Helicopter Transfers",
             "Limousine Services"
           ]}
+          serviceType="vip"
           isVip={true}
           onOffersToggle={(enabled) => handleOffersToggle('vip', enabled)}
           offersEnabled={offersEnabled.vip}
+          currentLocation={currentLocation}
         />
       </div>
 
