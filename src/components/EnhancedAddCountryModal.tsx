@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Info, Phone, DollarSign, Shield, Clock } from 'lucide-react';
+import { Info, Phone, DollarSign, Shield, Clock, Search } from 'lucide-react';
 import { Country } from '@/types/country';
 import { CountryInfoService } from '@/services/CountryInfoService';
 
@@ -39,15 +39,27 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
   const [reason, setReason] = useState('');
   const [customReason, setCustomReason] = useState('');
   const [dayLimit, setDayLimit] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [showCountryInfo, setShowCountryInfo] = useState(false);
 
-  const availableCountries = CountryInfoService.getAllCountries().filter(
-    country => !existingCountries.some(existing => existing.code === country.code)
-  );
+  const availableCountries = useMemo(() => {
+    return CountryInfoService.getAllCountries().filter(
+      country => !existingCountries.some(existing => existing.code === country.code)
+    );
+  }, [existingCountries]);
+
+  const filteredCountries = useMemo(() => {
+    if (!searchTerm) return availableCountries;
+    return availableCountries.filter(country =>
+      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      country.code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [availableCountries, searchTerm]);
 
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value);
     setShowCountryInfo(true);
+    setSearchTerm('');
     
     // Auto-update day limit based on country and reason
     if (reason) {
@@ -87,6 +99,16 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
     setReason('');
     setCustomReason('');
     setDayLimit('');
+    setSearchTerm('');
+    setShowCountryInfo(false);
+  };
+
+  const handleReset = () => {
+    setSelectedCountry('');
+    setReason('');
+    setCustomReason('');
+    setDayLimit('');
+    setSearchTerm('');
     setShowCountryInfo(false);
   };
 
@@ -97,42 +119,80 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Country with Smart Recommendations</DialogTitle>
+          <DialogTitle className="text-xl font-bold">Add Country to Track</DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Choose from {availableCountries.length} countries with smart recommendations
+          </p>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="country">Select Country</Label>
-              <Select value={selectedCountry} onValueChange={handleCountryChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a country..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableCountries.map(country => (
-                    <SelectItem key={country.code} value={country.code}>
-                      {country.flag} {country.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Country Search and Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="country" className="text-base font-medium">Select Country</Label>
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search countries..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
+            
+            {searchTerm && (
+              <div className="max-h-48 overflow-y-auto border rounded-md bg-background">
+                {filteredCountries.slice(0, 10).map(country => (
+                  <button
+                    key={country.code}
+                    type="button"
+                    onClick={() => handleCountryChange(country.code)}
+                    className="w-full p-3 text-left hover:bg-accent flex items-center gap-3 border-b last:border-b-0"
+                  >
+                    <span className="text-xl">{country.flag}</span>
+                    <div>
+                      <div className="font-medium">{country.name}</div>
+                      <div className="text-xs text-muted-foreground">{country.code}</div>
+                    </div>
+                  </button>
+                ))}
+                {filteredCountries.length === 0 && (
+                  <div className="p-3 text-center text-muted-foreground">
+                    No countries found
+                  </div>
+                )}
+              </div>
+            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="reason">Tracking Reason</Label>
-              <Select value={reason} onValueChange={handleReasonChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Why track this country?" />
-                </SelectTrigger>
-                <SelectContent>
-                  {COMMON_REASONS.map(reasonOption => (
-                    <SelectItem key={reasonOption} value={reasonOption}>
-                      {reasonOption}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {selectedCountryDetails && (
+              <div className="p-3 bg-accent rounded-md">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{selectedCountryDetails.flag}</span>
+                  <div>
+                    <div className="font-medium">{selectedCountryDetails.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Currency: {selectedCountryDetails.currency} | Languages: {selectedCountryDetails.languages.join(', ')}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Reason Selection */}
+          <div className="space-y-2">
+            <Label htmlFor="reason" className="text-base font-medium">Why track this country?</Label>
+            <Select value={reason} onValueChange={handleReasonChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose tracking reason..." />
+              </SelectTrigger>
+              <SelectContent>
+                {COMMON_REASONS.map(reasonOption => (
+                  <SelectItem key={reasonOption} value={reasonOption}>
+                    {reasonOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {reason === 'Custom tracking' && (
@@ -142,11 +202,13 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
                 id="customReason"
                 value={customReason}
                 onChange={(e) => setCustomReason(e.target.value)}
-                placeholder="Enter your reason..."
+                placeholder="Enter your custom reason..."
+                required
               />
             </div>
           )}
 
+          {/* Smart Recommendations */}
           {recommendedInfo && (
             <Card className="border-blue-200 bg-blue-50">
               <CardContent className="p-4">
@@ -213,23 +275,34 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
             </Card>
           )}
 
+          {/* Day Limit */}
           <div className="space-y-2">
-            <Label htmlFor="dayLimit">Day Limit</Label>
+            <Label htmlFor="dayLimit" className="text-base font-medium">Day Limit</Label>
             <Input
               id="dayLimit"
               type="number"
               min="1"
+              max="365"
               value={dayLimit}
               onChange={(e) => setDayLimit(e.target.value)}
-              placeholder="Days allowed per period"
+              placeholder="Enter day limit (e.g. 90, 180, 183)"
               required
             />
             <p className="text-xs text-muted-foreground">
-              {recommendedInfo ? 'Auto-filled based on country regulations' : 'Enter custom day limit'}
+              {recommendedInfo ? 'Auto-filled based on country regulations' : 'Common limits: 90 days (tourist), 183 days (tax residency)'}
             </p>
           </div>
 
+          {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleReset}
+              className="flex-1"
+            >
+              Reset
+            </Button>
             <Button 
               type="button" 
               variant="outline" 
@@ -241,7 +314,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
             <Button 
               type="submit" 
               className="flex-1 gradient-success text-white hover:opacity-90"
-              disabled={!selectedCountry || !reason}
+              disabled={!selectedCountry || !reason || !dayLimit}
             >
               Add Country
             </Button>
