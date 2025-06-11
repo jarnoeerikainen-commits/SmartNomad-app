@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship } from 'lucide-react';
+import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink } from 'lucide-react';
 import OffersModal from '@/components/OffersModal';
 import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
@@ -177,6 +177,94 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
     }));
   };
 
+  // Verified premium luxury service providers
+  const premiumServices = [
+    {
+      name: "NetJets",
+      description: "Private jet charters and fractional ownership",
+      url: "https://www.netjets.com",
+      icon: Plane,
+      category: "Aviation"
+    },
+    {
+      name: "Flexjet",
+      description: "Private jet solutions and luxury travel",
+      url: "https://www.flexjet.com",
+      icon: Plane,
+      category: "Aviation"
+    },
+    {
+      name: "VistaJet",
+      description: "Global private aviation company",
+      url: "https://www.vistajet.com",
+      icon: Plane,
+      category: "Aviation"
+    },
+    {
+      name: "Burgess Yachts",
+      description: "Luxury yacht charter and sales",
+      url: "https://www.burgessyachts.com",
+      icon: Ship,
+      category: "Marine"
+    },
+    {
+      name: "Fraser Yachts",
+      description: "Superyacht charter and brokerage",
+      url: "https://www.fraseryachts.com",
+      icon: Ship,
+      category: "Marine"
+    },
+    {
+      name: "Northrop & Johnson",
+      description: "Luxury yacht charter specialists",
+      url: "https://www.northropandjohnson.com",
+      icon: Ship,
+      category: "Marine"
+    },
+    {
+      name: "Blacklane",
+      description: "Premium chauffeur service worldwide",
+      url: "https://www.blacklane.com",
+      icon: Car,
+      category: "Ground Transport"
+    },
+    {
+      name: "Uber Black",
+      description: "Premium ride service with luxury vehicles",
+      url: "https://www.uber.com/us/en/ride/uber-black/",
+      icon: Car,
+      category: "Ground Transport"
+    },
+    {
+      name: "The Ritz-Carlton",
+      description: "Luxury hotel experiences worldwide",
+      url: "https://www.ritzcarlton.com",
+      icon: Umbrella,
+      category: "Hospitality"
+    },
+    {
+      name: "Four Seasons",
+      description: "Luxury hotels and resorts",
+      url: "https://www.fourseasons.com",
+      icon: Umbrella,
+      category: "Hospitality"
+    },
+    {
+      name: "Mandarin Oriental",
+      description: "Luxury hotel group with Asian heritage",
+      url: "https://www.mandarinoriental.com",
+      icon: Umbrella,
+      category: "Hospitality"
+    },
+    {
+      name: "Quintessentially",
+      description: "Global luxury concierge and lifestyle service",
+      url: "https://www.quintessentially.com",
+      icon: Crown,
+      category: "Concierge"
+    }
+  ];
+
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -260,36 +348,56 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
         />
       </div>
 
-      {/* VIP Luxury Services Details */}
+      {/* Premium Luxury Services Directory */}
       <Card className="border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-yellow-800">
             <Crown className="w-6 h-6" />
-            Premium Luxury Services
+            Premium Luxury Services Directory
           </CardTitle>
+          <p className="text-sm text-yellow-700">
+            Verified premium service providers for the ultimate luxury travel experience
+          </p>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Plane className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-              <h4 className="font-semibold text-gray-800">Private Jets</h4>
-              <p className="text-sm text-gray-600">Exclusive charter flights</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Ship className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-              <h4 className="font-semibold text-gray-800">Luxury Yachts</h4>
-              <p className="text-sm text-gray-600">Premium yacht experiences</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Car className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-              <h4 className="font-semibold text-gray-800">Limousines</h4>
-              <p className="text-sm text-gray-600">Luxury ground transport</p>
-            </div>
-            <div className="text-center p-4 bg-white rounded-lg shadow-sm">
-              <Umbrella className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-              <h4 className="font-semibold text-gray-800">Helicopters</h4>
-              <p className="text-sm text-gray-600">Aerial transfers</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {premiumServices.map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-yellow-200">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Icon className="w-5 h-5 text-yellow-600" />
+                      <div>
+                        <h4 className="font-semibold text-gray-800 text-sm">{service.name}</h4>
+                        <p className="text-xs text-yellow-600">{service.category}</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(service.url, '_blank')}
+                      className="text-xs px-2 py-1 h-auto border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                    >
+                      <ExternalLink className="w-3 h-3 mr-1" />
+                      Visit
+                    </Button>
+                  </div>
+                  <p className="text-xs text-gray-600">{service.description}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
+            <h4 className="font-semibold text-yellow-800 mb-2">Why Choose Premium Services?</h4>
+            <ul className="text-sm text-yellow-700 space-y-1">
+              <li>• 24/7 personalized concierge support</li>
+              <li>• Guaranteed availability and priority booking</li>
+              <li>• Exclusive access to luxury amenities</li>
+              <li>• White-glove service and attention to detail</li>
+              <li>• Global network of verified premium providers</li>
+            </ul>
           </div>
         </CardContent>
       </Card>
