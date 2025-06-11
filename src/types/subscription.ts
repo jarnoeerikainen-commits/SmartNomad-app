@@ -1,6 +1,6 @@
 
 export interface Subscription {
-  tier: 'free' | 'personal' | 'business' | 'enterprise';
+  tier: 'free' | 'student' | 'personal' | 'family' | 'business' | 'enterprise';
   isActive: boolean;
   expiryDate: string | null;
   features: string[];
@@ -14,6 +14,8 @@ export interface PricingTier {
   features: string[];
   popular?: boolean;
   description: string;
+  userLimit?: string;
+  yearlyPrice?: number; // For plans that offer yearly discounts
 }
 
 export interface PassportInfo {

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Check, Crown, Building, Users, X } from 'lucide-react';
+import { Check, Crown, Building, Users, X, GraduationCap, Home } from 'lucide-react';
 import { PricingTier, Subscription } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
 
@@ -20,11 +20,29 @@ const PRICING_TIERS: PricingTier[] = [
     price: 0,
     billing: 'monthly',
     description: 'Basic tracking for casual travelers',
+    userLimit: '1 user',
     features: [
       'Track up to 3 countries',
       'Basic location tracking',
       'Manual day counting',
       'Simple alerts'
+    ]
+  },
+  {
+    id: 'student',
+    name: 'Student',
+    price: 0.99,
+    billing: 'yearly',
+    description: 'Perfect for students studying abroad',
+    userLimit: '1 student',
+    features: [
+      'Everything in Free',
+      'Unlimited country tracking',
+      'Student visa compliance',
+      'University reporting',
+      'Study abroad alerts',
+      'Academic calendar sync',
+      'Student ID verification'
     ]
   },
   {
@@ -34,6 +52,7 @@ const PRICING_TIERS: PricingTier[] = [
     billing: 'monthly',
     description: 'Perfect for digital nomads and frequent travelers',
     popular: true,
+    userLimit: '1 user',
     features: [
       'Unlimited country tracking',
       'Automatic location detection',
@@ -46,37 +65,62 @@ const PRICING_TIERS: PricingTier[] = [
     ]
   },
   {
-    id: 'business',
-    name: 'Business',
-    price: 19.99,
+    id: 'family',
+    name: 'Family Plan',
+    price: 6.99,
+    yearlyPrice: 49.99,
     billing: 'monthly',
-    description: 'For business travelers and companies',
+    description: 'For families and small teams traveling together',
+    userLimit: 'Up to 12 people',
     features: [
       'Everything in Personal',
-      'Team management (up to 10 users)',
-      'Business compliance tracking',
-      'Work permit monitoring',
-      'Expense tracking integration',
-      'Company reporting dashboard',
+      'Family dashboard',
+      'Shared trip planning',
+      'Group compliance tracking',
+      'Multiple passport management',
+      'Family visa coordination',
+      'Shared expense tracking',
+      'Emergency contact system'
+    ]
+  },
+  {
+    id: 'business',
+    name: 'Business',
+    price: 49.99,
+    yearlyPrice: 399,
+    billing: 'monthly',
+    description: 'For companies with traveling employees',
+    userLimit: 'Unlimited users',
+    features: [
+      'Everything in Family',
+      'Unlimited team members',
+      'Advanced compliance dashboard',
+      'Work permit tracking',
+      'Corporate tax optimization',
+      'HR integration tools',
+      'Audit trail reports',
+      'Dedicated account manager',
       'API access',
-      'Priority support'
+      'SSO integration'
     ]
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
-    price: 49.99,
+    price: 99.99,
     billing: 'monthly',
     description: 'For large organizations and agencies',
+    userLimit: 'Unlimited + consulting',
     features: [
       'Everything in Business',
-      'Unlimited team members',
+      'Custom compliance rules',
+      'White-label solutions',
+      'Multi-country operations',
+      'Government reporting',
       'Custom integrations',
-      'White-label options',
-      'Advanced analytics',
-      'Dedicated account manager',
-      'SLA guarantee',
-      'Custom compliance rules'
+      '24/7 priority support',
+      'Legal compliance consulting',
+      'Data sovereignty options'
     ]
   }
 ];
@@ -96,6 +140,8 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
 
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
+      case 'student': return <GraduationCap className="w-5 h-5" />;
+      case 'family': return <Home className="w-5 h-5" />;
       case 'business': return <Building className="w-5 h-5" />;
       case 'enterprise': return <Crown className="w-5 h-5" />;
       default: return <Users className="w-5 h-5" />;
@@ -103,6 +149,20 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
   };
 
   const currentTier = PRICING_TIERS.find(t => t.id === subscription.tier) || PRICING_TIERS[0];
+
+  const formatPrice = (tier: PricingTier) => {
+    if (tier.price === 0) return 'Free';
+    if (tier.billing === 'yearly') return `$${tier.price}/year`;
+    if (tier.yearlyPrice) {
+      return (
+        <div className="flex flex-col">
+          <span>${tier.price}/month</span>
+          <span className="text-sm text-green-600">or ${tier.yearlyPrice}/year</span>
+        </div>
+      );
+    }
+    return `$${tier.price}/month`;
+  };
 
   return (
     <>
@@ -124,10 +184,10 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="text-2xl font-bold text-blue-800 mb-1">
-            ${currentTier.price}
-            <span className="text-sm font-normal text-blue-600">/month</span>
+            {formatPrice(currentTier)}
           </div>
-          <p className="text-xs text-blue-600 mb-3">{currentTier.description}</p>
+          <p className="text-xs text-blue-600 mb-1">{currentTier.description}</p>
+          <p className="text-xs text-blue-500 mb-3">{currentTier.userLimit}</p>
           <Button 
             onClick={() => setIsOpen(true)}
             className="w-full gradient-success text-white hover:opacity-90"
@@ -139,7 +199,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
       </Card>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               Choose Your Plan
@@ -149,7 +209,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
             </DialogTitle>
           </DialogHeader>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mt-4">
             {PRICING_TIERS.map((tier) => (
               <Card 
                 key={tier.id} 
@@ -165,26 +225,32 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
                     {getTierIcon(tier.id)}
                   </div>
                   <CardTitle className="text-lg">{tier.name}</CardTitle>
-                  <div className="text-3xl font-bold">
-                    ${tier.price}
-                    <span className="text-base font-normal text-muted-foreground">/mo</span>
+                  <div className="text-2xl font-bold">
+                    {formatPrice(tier)}
                   </div>
                   <p className="text-sm text-muted-foreground">{tier.description}</p>
+                  <p className="text-xs text-blue-600 font-medium">{tier.userLimit}</p>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 mb-4">
-                    {tier.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                  <ul className="space-y-1 mb-4 text-xs">
+                    {tier.features.slice(0, 6).map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <Check className="w-3 h-3 text-green-500 mt-0.5 shrink-0" />
                         <span>{feature}</span>
                       </li>
                     ))}
+                    {tier.features.length > 6 && (
+                      <li className="text-blue-600 font-medium">
+                        +{tier.features.length - 6} more features
+                      </li>
+                    )}
                   </ul>
                   <Button 
                     onClick={() => handleUpgrade(tier.id)}
                     disabled={subscription.tier === tier.id}
                     className={`w-full ${tier.popular ? 'gradient-success text-white' : ''}`}
                     variant={tier.popular ? 'default' : 'outline'}
+                    size="sm"
                   >
                     {subscription.tier === tier.id ? 'Current Plan' : 'Select Plan'}
                   </Button>
