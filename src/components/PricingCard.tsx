@@ -22,7 +22,7 @@ const PRICING_TIERS: PricingTier[] = [
     description: 'Basic tracking for casual travelers',
     userLimit: '1 user',
     features: [
-      'Track up to 3 countries',
+      'Track only 1 country',
       'Basic location tracking',
       'Manual day counting',
       'Simple alerts'
@@ -48,7 +48,8 @@ const PRICING_TIERS: PricingTier[] = [
   {
     id: 'personal',
     name: 'Personal',
-    price: 9.99,
+    price: 2.99,
+    yearlyPrice: 19.99,
     billing: 'monthly',
     description: 'Perfect for digital nomads and frequent travelers',
     popular: true,
