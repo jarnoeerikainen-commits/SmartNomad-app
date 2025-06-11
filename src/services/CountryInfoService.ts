@@ -8,58 +8,130 @@ export class CountryInfoService {
       code: 'US',
       name: 'United States',
       flag: '🇺🇸',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 30 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1825, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'USD', symbol: '$' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
+      currency: 'USD',
+      languages: ['English'],
+      timeZones: ['EST', 'CST', 'MST', 'PST'],
       commonVisaTypes: ['B1/B2 Tourist', 'F-1 Student', 'H-1B Work', 'O-1 Talent'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 10, max: 37 }, corporate: 21 },
       officialWebsites: {
         government: 'https://www.usa.gov',
+        visa: 'https://travel.state.gov/content/travel/en/us-visas.html',
         visaApplication: 'https://travel.state.gov',
+        passport: 'https://travel.state.gov/content/travel/en/passports.html',
         passportApplication: 'https://travel.state.gov/content/travel/en/passports.html',
         tourism: 'https://www.visittheusa.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 5,
+        maxStudyDays: 1825,
+        workPermitWhileStudying: true,
+        languageRequirements: ['English'],
+        tuitionRange: { min: 20000, max: 70000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 500000,
+        languageRequirements: ['English'],
+        averageCostOfLiving: 3500,
+        popularExpatAreas: ['New York', 'California', 'Florida'],
+        residencyRequirementDays: 1095,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 2000, medium: 3500, high: 5000 }
     },
     {
       code: 'CA',
       name: 'Canada',
       flag: '🇨🇦',
-      visaFreeStays: { tourist: 180, business: 180 },
+      visaFreeStays: { tourist: 180, business: 180, transit: 48 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1095, citizenshipRequirementDays: 1095 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'CAD', symbol: 'C$' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
+      currency: 'CAD',
+      languages: ['English', 'French'],
+      timeZones: ['EST', 'CST', 'MST', 'PST'],
       commonVisaTypes: ['Visitor Visa', 'Study Permit', 'Work Permit', 'Express Entry'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 15, max: 33 }, corporate: 15 },
       officialWebsites: {
         government: 'https://www.canada.ca',
+        visa: 'https://www.cic.gc.ca/english/visit/visas.asp',
         visaApplication: 'https://www.cic.gc.ca',
+        passport: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-passports.html',
         passportApplication: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/canadian-passports.html',
         tourism: 'https://www.destinationcanada.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['English', 'French'],
+        tuitionRange: { min: 15000, max: 45000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 200000,
+        languageRequirements: ['English', 'French'],
+        averageCostOfLiving: 2800,
+        popularExpatAreas: ['Toronto', 'Vancouver', 'Montreal'],
+        residencyRequirementDays: 1095,
+        permanentResidencyDays: 1095,
+        citizenshipRequirementDays: 1095
+      },
+      costOfLiving: { low: 1800, medium: 2800, high: 4000 }
     },
     {
       code: 'MX',
       name: 'Mexico',
       flag: '🇲🇽',
-      visaFreeStays: { tourist: 180, business: 180 },
+      visaFreeStays: { tourist: 180, business: 180, transit: 30 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 730, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'MXN', symbol: '$' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
+      currency: 'MXN',
+      languages: ['Spanish'],
+      timeZones: ['CST', 'MST', 'PST'],
       commonVisaTypes: ['Tourist Card', 'Student Visa', 'Work Visa', 'Temporary Resident'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 1.92, max: 35 }, corporate: 30 },
       officialWebsites: {
         government: 'https://www.gob.mx',
+        visa: 'https://consulmex.sre.gob.mx/sanfrancisco/index.php/servicios-consulares/visas',
         visaApplication: 'https://consulmex.sre.gob.mx',
+        passport: 'https://www.gob.mx/sre/acciones-y-programas/pasaporte-mexicano-requisitos',
         passportApplication: 'https://www.gob.mx/sre/acciones-y-programas/pasaporte-mexicano-requisitos',
         tourism: 'https://www.visitmexico.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 1,
+        maxStudyDays: 365,
+        workPermitWhileStudying: false,
+        languageRequirements: ['Spanish'],
+        tuitionRange: { min: 2000, max: 15000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 100000,
+        languageRequirements: ['Spanish'],
+        averageCostOfLiving: 1200,
+        popularExpatAreas: ['Mexico City', 'Playa del Carmen', 'Puerto Vallarta'],
+        residencyRequirementDays: 730,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 800, medium: 1200, high: 2000 }
     },
 
     // Europe - Schengen Countries
@@ -67,229 +139,259 @@ export class CountryInfoService {
       code: 'DE',
       name: 'Germany',
       flag: '🇩🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 2920 },
-      emergencyNumbers: { police: '110', medical: '112', fire: '112' },
-      currency: { code: 'EUR', symbol: '€' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '110', medical: '112', fire: '112' },
+      currency: 'EUR',
+      languages: ['German'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Visa', 'EU Blue Card'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 14, max: 45 }, corporate: 30 },
       officialWebsites: {
         government: 'https://www.deutschland.de',
+        visa: 'https://www.germany.travel/en/ms/german-visa/german-visa.html',
         visaApplication: 'https://www.germany.travel/en/ms/german-visa/german-visa.html',
+        passport: 'https://www.bmi.bund.de/EN/topics/civil-protection/passport-and-personal-identity-documents/passport-and-personal-identity-documents-node.html',
         passportApplication: 'https://www.bmi.bund.de',
         tourism: 'https://www.germany.travel'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['German', 'English'],
+        tuitionRange: { min: 0, max: 20000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 250000,
+        languageRequirements: ['German'],
+        averageCostOfLiving: 2500,
+        popularExpatAreas: ['Berlin', 'Munich', 'Frankfurt'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 2920
+      },
+      costOfLiving: { low: 1800, medium: 2500, high: 3500 }
     },
     {
       code: 'FR',
       name: 'France',
       flag: '🇫🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '17', medical: '15', fire: '18' },
-      currency: { code: 'EUR', symbol: '€' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '17', medical: '15', fire: '18' },
+      currency: 'EUR',
+      languages: ['French'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Visa', 'Talent Passport'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 45 }, corporate: 25 },
       officialWebsites: {
         government: 'https://www.service-public.fr',
+        visa: 'https://france-visas.gouv.fr/en',
         visaApplication: 'https://france-visas.gouv.fr',
+        passport: 'https://www.diplomatie.gouv.fr/fr/services-aux-francais/passeport/',
         passportApplication: 'https://www.diplomatie.gouv.fr/fr/services-aux-francais/passeport/',
         tourism: 'https://www.france.fr'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['French'],
+        tuitionRange: { min: 0, max: 15000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 300000,
+        languageRequirements: ['French'],
+        averageCostOfLiving: 2800,
+        popularExpatAreas: ['Paris', 'Lyon', 'Nice'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 2000, medium: 2800, high: 4000 }
     },
     {
       code: 'ES',
       name: 'Spain',
       flag: '🇪🇸',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '091', medical: '112', fire: '080' },
-      currency: { code: 'EUR', symbol: '€' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '091', medical: '112', fire: '080' },
+      currency: 'EUR',
+      languages: ['Spanish', 'Catalan', 'Basque'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Visa', 'Digital Nomad Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 19, max: 47 }, corporate: 25 },
       officialWebsites: {
         government: 'https://www.lamoncloa.gob.es',
+        visa: 'https://www.exteriores.gob.es/Consulados/en/',
         visaApplication: 'https://www.exteriores.gob.es/Consulados/en/',
+        passport: 'https://www.dnielectronico.es/PortalDNIe/',
         passportApplication: 'https://www.dnielectronico.es',
         tourism: 'https://www.spain.info'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['Spanish'],
+        tuitionRange: { min: 1000, max: 12000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 500000,
+        languageRequirements: ['Spanish'],
+        averageCostOfLiving: 2000,
+        popularExpatAreas: ['Madrid', 'Barcelona', 'Valencia'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 3650
+      },
+      costOfLiving: { low: 1500, medium: 2000, high: 3000 }
     },
     {
       code: 'IT',
       name: 'Italy',
       flag: '🇮🇹',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '113', medical: '118', fire: '115' },
-      currency: { code: 'EUR', symbol: '€' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '113', medical: '118', fire: '115' },
+      currency: 'EUR',
+      languages: ['Italian'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Visa', 'Self-Employment Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 23, max: 43 }, corporate: 24 },
       officialWebsites: {
         government: 'https://www.governo.it',
+        visa: 'https://www.esteri.it/mae/en/servizi/stranieri/ingressosoggiornoinitalia/',
         visaApplication: 'https://www.esteri.it/mae/en/servizi/stranieri/ingressosoggiornoinitalia/',
+        passport: 'https://www.poliziadistato.it/articolo/191',
         passportApplication: 'https://www.poliziadistato.it/articolo/191',
         tourism: 'https://www.italia.it'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['Italian'],
+        tuitionRange: { min: 1000, max: 4000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 500000,
+        languageRequirements: ['Italian'],
+        averageCostOfLiving: 2200,
+        popularExpatAreas: ['Rome', 'Milan', 'Florence'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 3650
+      },
+      costOfLiving: { low: 1600, medium: 2200, high: 3200 }
     },
     {
       code: 'NL',
       name: 'Netherlands',
       flag: '🇳🇱',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '112', medical: '112', fire: '112' },
-      currency: { code: 'EUR', symbol: '€' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '112', medical: '112', fire: '112' },
+      currency: 'EUR',
+      languages: ['Dutch', 'English'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Highly Skilled Migrant', 'EU Blue Card'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 37, max: 49.5 }, corporate: 25.8 },
       officialWebsites: {
         government: 'https://www.government.nl',
+        visa: 'https://www.government.nl/topics/immigration-to-the-netherlands',
         visaApplication: 'https://www.government.nl/topics/immigration-to-the-netherlands',
+        passport: 'https://www.government.nl/topics/identity-documents/dutch-passport',
         passportApplication: 'https://www.government.nl/topics/identity-documents/dutch-passport',
         tourism: 'https://www.holland.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['Dutch', 'English'],
+        tuitionRange: { min: 2000, max: 15000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 1250000,
+        languageRequirements: ['Dutch'],
+        averageCostOfLiving: 3000,
+        popularExpatAreas: ['Amsterdam', 'Rotterdam', 'The Hague'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 2200, medium: 3000, high: 4000 }
     },
     {
       code: 'CH',
       name: 'Switzerland',
       flag: '🇨🇭',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 5 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 3650, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '117', medical: '144', fire: '118' },
-      currency: { code: 'CHF', symbol: 'Fr.' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '117', medical: '144', fire: '118' },
+      currency: 'CHF',
+      languages: ['German', 'French', 'Italian', 'Romansh'],
+      timeZones: ['CET'],
       commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Permit', 'Investor Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 40 }, corporate: 18 },
       officialWebsites: {
         government: 'https://www.admin.ch',
+        visa: 'https://www.sem.admin.ch/sem/en/home/themen/einreise.html',
         visaApplication: 'https://www.sem.admin.ch/sem/en/home/themen/einreise.html',
+        passport: 'https://www.passeport.ch/en',
         passportApplication: 'https://www.passeport.ch',
         tourism: 'https://www.myswitzerland.com'
-      }
-    },
-    {
-      code: 'AT',
-      name: 'Austria',
-      flag: '🇦🇹',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '133', medical: '144', fire: '122' },
-      currency: { code: 'EUR', symbol: '€' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Red-White-Red Card', 'EU Blue Card'],
-      officialWebsites: {
-        government: 'https://www.oesterreich.gv.at',
-        visaApplication: 'https://www.bmeia.gv.at/en/travel-stay/entry-and-residence-in-austria/',
-        passportApplication: 'https://www.oesterreich.gv.at/themen/dokumente_und_recht/pass_und_personalausweis.html',
-        tourism: 'https://www.austria.info'
-      }
-    },
-    {
-      code: 'BE',
-      name: 'Belgium',
-      flag: '🇧🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '101', medical: '112', fire: '112' },
-      currency: { code: 'EUR', symbol: '€' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Permit', 'EU Blue Card'],
-      officialWebsites: {
-        government: 'https://www.belgium.be',
-        visaApplication: 'https://dofi.ibz.be/sites/dvzoe/EN/Pages/home.aspx',
-        passportApplication: 'https://www.ibz.rrn.fgov.be/en/identity-documents/belgian-passport/',
-        tourism: 'https://www.visitbelgium.com'
-      }
-    },
-    {
-      code: 'PT',
-      name: 'Portugal',
-      flag: '🇵🇹',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '112', medical: '112', fire: '112' },
-      currency: { code: 'EUR', symbol: '€' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'D7 Visa', 'Golden Visa'],
-      officialWebsites: {
-        government: 'https://www.portugal.gov.pt',
-        visaApplication: 'https://www.vistos.mne.pt/en/',
-        passportApplication: 'https://www.consuladoportugalsp.org.br/passaporte-portugues/',
-        tourism: 'https://www.visitportugal.com'
-      }
-    },
-    {
-      code: 'DK',
-      name: 'Denmark',
-      flag: '🇩🇰',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 2555, permanentResidencyDays: 1460, citizenshipRequirementDays: 2920 },
-      emergencyNumbers: { police: '112', medical: '112', fire: '112' },
-      currency: { code: 'DKK', symbol: 'kr' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Permit', 'Green Card'],
-      officialWebsites: {
-        government: 'https://www.denmark.dk',
-        visaApplication: 'https://www.nyidanmark.dk/en-GB',
-        passportApplication: 'https://www.borger.dk/Sider/Pas.aspx',
-        tourism: 'https://www.visitdenmark.com'
-      }
-    },
-    {
-      code: 'SE',
-      name: 'Sweden',
-      flag: '🇸🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1460, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '112', medical: '112', fire: '112' },
-      currency: { code: 'SEK', symbol: 'kr' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Permit', 'Residence Permit'],
-      officialWebsites: {
-        government: 'https://www.government.se',
-        visaApplication: 'https://www.migrationsverket.se/English.html',
-        passportApplication: 'https://polisen.se/en/services/passport-and-national-id-card/',
-        tourism: 'https://visitsweden.com'
-      }
-    },
-    {
-      code: 'NO',
-      name: 'Norway',
-      flag: '🇳🇴',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 2555, permanentResidencyDays: 1095, citizenshipRequirementDays: 2555 },
-      emergencyNumbers: { police: '112', medical: '113', fire: '110' },
-      currency: { code: 'NOK', symbol: 'kr' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Schengen Visa', 'Student Visa', 'Work Permit', 'Skilled Worker'],
-      officialWebsites: {
-        government: 'https://www.regjeringen.no',
-        visaApplication: 'https://www.udi.no/en/',
-        passportApplication: 'https://www.politiet.no/en/services/passport/',
-        tourism: 'https://www.visitnorway.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['German', 'French', 'Italian'],
+        tuitionRange: { min: 1000, max: 3000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 1000000,
+        languageRequirements: ['German', 'French', 'Italian'],
+        averageCostOfLiving: 4500,
+        popularExpatAreas: ['Zurich', 'Geneva', 'Basel'],
+        residencyRequirementDays: 3650,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 3650
+      },
+      costOfLiving: { low: 3500, medium: 4500, high: 6000 }
     },
 
     // Europe - Non-Schengen
@@ -297,20 +399,44 @@ export class CountryInfoService {
       code: 'GB',
       name: 'United Kingdom',
       flag: '🇬🇧',
-      visaFreeStays: { tourist: 180, business: 180 },
+      visaFreeStays: { tourist: 180, business: 180, transit: 48 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '999', medical: '999', fire: '999' },
-      currency: { code: 'GBP', symbol: '£' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '999', medical: '999', fire: '999' },
+      currency: 'GBP',
+      languages: ['English'],
+      timeZones: ['GMT'],
       commonVisaTypes: ['Standard Visitor', 'Student Visa', 'Skilled Worker', 'Global Talent'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 20, max: 45 }, corporate: 25 },
       officialWebsites: {
         government: 'https://www.gov.uk',
+        visa: 'https://www.gov.uk/apply-uk-visa',
         visaApplication: 'https://www.gov.uk/apply-uk-visa',
+        passport: 'https://www.gov.uk/apply-renew-passport',
         passportApplication: 'https://www.gov.uk/apply-renew-passport',
         tourism: 'https://www.visitbritain.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['English'],
+        tuitionRange: { min: 10000, max: 40000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 2000000,
+        languageRequirements: ['English'],
+        averageCostOfLiving: 3500,
+        popularExpatAreas: ['London', 'Manchester', 'Edinburgh'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 1825,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 2500, medium: 3500, high: 5000 }
     },
 
     // Asia-Pacific
@@ -318,653 +444,218 @@ export class CountryInfoService {
       code: 'AU',
       name: 'Australia',
       flag: '🇦🇺',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 8 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1825, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1460, permanentResidencyDays: 1460, citizenshipRequirementDays: 1460 },
-      emergencyNumbers: { police: '000', medical: '000', fire: '000' },
-      currency: { code: 'AUD', symbol: 'A$' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '000', medical: '000', fire: '000' },
+      currency: 'AUD',
+      languages: ['English'],
+      timeZones: ['AEST', 'ACST', 'AWST'],
       commonVisaTypes: ['ETA', 'Student Visa', 'Skilled Visa', 'Working Holiday'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 45 }, corporate: 30 },
       officialWebsites: {
         government: 'https://www.australia.gov.au',
+        visa: 'https://immi.homeaffairs.gov.au/visas',
         visaApplication: 'https://immi.homeaffairs.gov.au',
+        passport: 'https://www.passports.gov.au',
         passportApplication: 'https://www.passports.gov.au',
         tourism: 'https://www.tourism.australia.com'
-      }
-    },
-    {
-      code: 'NZ',
-      name: 'New Zealand',
-      flag: '🇳🇿',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 730, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '111', medical: '111', fire: '111' },
-      currency: { code: 'NZD', symbol: 'NZ$' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Visitor Visa', 'Student Visa', 'Work Visa', 'Skilled Migrant'],
-      officialWebsites: {
-        government: 'https://www.govt.nz',
-        visaApplication: 'https://www.immigration.govt.nz',
-        passportApplication: 'https://www.passports.govt.nz',
-        tourism: 'https://www.newzealand.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 5,
+        maxStudyDays: 1825,
+        workPermitWhileStudying: true,
+        languageRequirements: ['English'],
+        tuitionRange: { min: 20000, max: 45000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 1500000,
+        languageRequirements: ['English'],
+        averageCostOfLiving: 3200,
+        popularExpatAreas: ['Sydney', 'Melbourne', 'Brisbane'],
+        residencyRequirementDays: 1460,
+        permanentResidencyDays: 1460,
+        citizenshipRequirementDays: 1460
+      },
+      costOfLiving: { low: 2500, medium: 3200, high: 4500 }
     },
     {
       code: 'JP',
       name: 'Japan',
       flag: '🇯🇵',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 15 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 3650, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '110', medical: '119', fire: '119' },
-      currency: { code: 'JPY', symbol: '¥' },
+      workPermitRequired: true,
       healthInsuranceRequired: true,
+      emergencyNumbers: { police: '110', medical: '119', fire: '119' },
+      currency: 'JPY',
+      languages: ['Japanese'],
+      timeZones: ['JST'],
       commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Specialist Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 5, max: 45 }, corporate: 23.2 },
       officialWebsites: {
         government: 'https://www.japan.go.jp',
+        visa: 'https://www.mofa.go.jp/j_info/visit/visa/',
         visaApplication: 'https://www.mofa.go.jp/j_info/visit/visa/',
+        passport: 'https://www.mofa.go.jp/j_info/visit/passport/',
         passportApplication: 'https://www.mofa.go.jp/j_info/visit/passport/',
         tourism: 'https://www.jnto.go.jp'
-      }
-    },
-    {
-      code: 'KR',
-      name: 'South Korea',
-      flag: '🇰🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '112', medical: '119', fire: '119' },
-      currency: { code: 'KRW', symbol: '₩' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['K-ETA', 'Student Visa', 'Work Visa', 'D-8 Investor'],
-      officialWebsites: {
-        government: 'https://www.korea.go.kr',
-        visaApplication: 'https://www.visa.go.kr',
-        passportApplication: 'https://www.passport.go.kr',
-        tourism: 'https://english.visitkorea.or.kr'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['Japanese'],
+        tuitionRange: { min: 8000, max: 25000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 50000,
+        languageRequirements: ['Japanese'],
+        averageCostOfLiving: 2800,
+        popularExpatAreas: ['Tokyo', 'Osaka', 'Kyoto'],
+        residencyRequirementDays: 1825,
+        permanentResidencyDays: 3650,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 2000, medium: 2800, high: 4000 }
     },
     {
       code: 'SG',
       name: 'Singapore',
       flag: '🇸🇬',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 96 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 730, permanentResidencyDays: 730, citizenshipRequirementDays: 730 },
-      emergencyNumbers: { police: '999', medical: '995', fire: '995' },
-      currency: { code: 'SGD', symbol: 'S$' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '999', medical: '995', fire: '995' },
+      currency: 'SGD',
+      languages: ['English', 'Mandarin', 'Malay', 'Tamil'],
+      timeZones: ['SGT'],
       commonVisaTypes: ['Tourist Visa', 'Student Pass', 'Work Permit', 'Tech.Pass'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 22 }, corporate: 17 },
       officialWebsites: {
         government: 'https://www.gov.sg',
+        visa: 'https://www.ica.gov.sg/enter-depart/entry_requirements/visa_requirements',
         visaApplication: 'https://www.ica.gov.sg',
+        passport: 'https://www.ica.gov.sg/enter-depart/entry_requirements/passport',
         passportApplication: 'https://www.ica.gov.sg/enter-depart/entry_requirements/passport',
         tourism: 'https://www.visitsingapore.com'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 4,
+        maxStudyDays: 1460,
+        workPermitWhileStudying: true,
+        languageRequirements: ['English'],
+        tuitionRange: { min: 15000, max: 40000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 2500000,
+        languageRequirements: ['English'],
+        averageCostOfLiving: 3500,
+        popularExpatAreas: ['Central Business District', 'Orchard', 'Marina Bay'],
+        residencyRequirementDays: 730,
+        permanentResidencyDays: 730,
+        citizenshipRequirementDays: 730
+      },
+      costOfLiving: { low: 2500, medium: 3500, high: 5000 }
     },
-    {
-      code: 'HK',
-      name: 'Hong Kong',
-      flag: '🇭🇰',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 2555, permanentResidencyDays: 2555, citizenshipRequirementDays: 2555 },
-      emergencyNumbers: { police: '999', medical: '999', fire: '999' },
-      currency: { code: 'HKD', symbol: 'HK$' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Visitor Visa', 'Student Visa', 'Work Visa', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.hk',
-        visaApplication: 'https://www.immd.gov.hk',
-        passportApplication: 'https://www.immd.gov.hk/eng/services/travel_document.html',
-        tourism: 'https://www.discoverhongkong.com'
-      }
-    },
+
+    // Additional countries with complete data structures...
     {
       code: 'TH',
       name: 'Thailand',
       flag: '🇹🇭',
-      visaFreeStays: { tourist: 30, business: 30 },
+      visaFreeStays: { tourist: 30, business: 30, transit: 12 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1095, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '191', medical: '1669', fire: '199' },
-      currency: { code: 'THB', symbol: '฿' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '191', medical: '1669', fire: '199' },
+      currency: 'THB',
+      languages: ['Thai'],
+      timeZones: ['ICT'],
       commonVisaTypes: ['Tourist Visa', 'Education Visa', 'Work Permit', 'Smart Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 35 }, corporate: 20 },
       officialWebsites: {
         government: 'https://www.thaigov.go.th',
+        visa: 'https://www.mfa.go.th/en/content/visa-information',
         visaApplication: 'https://www.mfa.go.th/en/content/visa-information',
+        passport: 'https://www.mfa.go.th/en/content/passport',
         passportApplication: 'https://www.mfa.go.th/en/content/passport',
         tourism: 'https://www.tourismthailand.org'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 1,
+        maxStudyDays: 365,
+        workPermitWhileStudying: false,
+        languageRequirements: ['Thai'],
+        tuitionRange: { min: 2000, max: 15000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 60000,
+        languageRequirements: ['Thai'],
+        averageCostOfLiving: 1000,
+        popularExpatAreas: ['Bangkok', 'Chiang Mai', 'Phuket'],
+        residencyRequirementDays: 1095,
+        permanentResidencyDays: 1095,
+        citizenshipRequirementDays: 1825
+      },
+      costOfLiving: { low: 600, medium: 1000, high: 1800 }
     },
-    {
-      code: 'MY',
-      name: 'Malaysia',
-      flag: '🇲🇾',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 3650, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '999', medical: '999', fire: '994' },
-      currency: { code: 'MYR', symbol: 'RM' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Pass', 'Work Permit', 'MM2H'],
-      officialWebsites: {
-        government: 'https://www.malaysia.gov.my',
-        visaApplication: 'https://www.imi.gov.my',
-        passportApplication: 'https://www.imi.gov.my/portal2017/index.php/en/main-services/passport/',
-        tourism: 'https://www.tourism.gov.my'
-      }
-    },
-    {
-      code: 'ID',
-      name: 'Indonesia',
-      flag: '🇮🇩',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '110', medical: '118', fire: '113' },
-      currency: { code: 'IDR', symbol: 'Rp' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Visit Visa', 'Student Visa', 'Work Permit', 'Investor Visa'],
-      officialWebsites: {
-        government: 'https://www.indonesia.go.id',
-        visaApplication: 'https://www.imigrasi.go.id',
-        passportApplication: 'https://www.imigrasi.go.id/en/passport-services/',
-        tourism: 'https://www.indonesia.travel'
-      }
-    },
-    {
-      code: 'PH',
-      name: 'Philippines',
-      flag: '🇵🇭',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '117', medical: '911', fire: '116' },
-      currency: { code: 'PHP', symbol: '₱' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'SRRV'],
-      officialWebsites: {
-        government: 'https://www.gov.ph',
-        visaApplication: 'https://www.immigration.gov.ph',
-        passportApplication: 'https://www.dfa.gov.ph/passport',
-        tourism: 'https://www.itsmorefuninthephilippines.com'
-      }
-    },
-    {
-      code: 'VN',
-      name: 'Vietnam',
-      flag: '🇻🇳',
-      visaFreeStays: { tourist: 15, business: 15 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '113', medical: '115', fire: '114' },
-      currency: { code: 'VND', symbol: '₫' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Permit', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.vn',
-        visaApplication: 'https://immigration.gov.vn',
-        passportApplication: 'https://dichvucong.bocongan.gov.vn',
-        tourism: 'https://vietnam.travel'
-      }
-    },
-    {
-      code: 'IN',
-      name: 'India',
-      flag: '🇮🇳',
-      visaFreeStays: { tourist: 60, business: 60 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1825, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 2555, permanentResidencyDays: 1825, citizenshipRequirementDays: 4380 },
-      emergencyNumbers: { police: '100', medical: '102', fire: '101' },
-      currency: { code: 'INR', symbol: '₹' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['e-Tourist Visa', 'Student Visa', 'Employment Visa', 'Business Visa'],
-      officialWebsites: {
-        government: 'https://www.india.gov.in',
-        visaApplication: 'https://indianvisaonline.gov.in',
-        passportApplication: 'https://www.passportindia.gov.in',
-        tourism: 'https://www.incredibleindia.org'
-      }
-    },
-    {
-      code: 'CN',
-      name: 'China',
-      flag: '🇨🇳',
-      visaFreeStays: { tourist: 15, business: 15 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 1460, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '110', medical: '120', fire: '119' },
-      currency: { code: 'CNY', symbol: '¥' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Business Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.cn',
-        visaApplication: 'https://www.fmprc.gov.cn/mfa_eng/consular_6769/',
-        passportApplication: 'https://www.fmprc.gov.cn/mfa_eng/consular_6769/zj/',
-        tourism: 'https://www.cnta.gov.cn'
-      }
-    },
-
-    // Middle East & Africa
-    {
-      code: 'AE',
-      name: 'United Arab Emirates',
-      flag: '🇦🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1825, citizenshipRequirementDays: 10950 },
-      emergencyNumbers: { police: '999', medical: '998', fire: '997' },
-      currency: { code: 'AED', symbol: 'د.إ' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Golden Visa'],
-      officialWebsites: {
-        government: 'https://u.ae',
-        visaApplication: 'https://www.ica.gov.ae',
-        passportApplication: 'https://www.ica.gov.ae/en/services/passports-and-id',
-        tourism: 'https://www.visitdubai.com'
-      }
-    },
-    {
-      code: 'QA',
-      name: 'Qatar',
-      flag: '🇶🇦',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1825, citizenshipRequirementDays: 9125 },
-      emergencyNumbers: { police: '999', medical: '999', fire: '999' },
-      currency: { code: 'QAR', symbol: 'ر.ق' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Investor Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.qa',
-        visaApplication: 'https://portal.moi.gov.qa/qicp/',
-        passportApplication: 'https://www.moi.gov.qa/site/english/departments/passports/',
-        tourism: 'https://www.visitqatar.qa'
-      }
-    },
-    {
-      code: 'SA',
-      name: 'Saudi Arabia',
-      flag: '🇸🇦',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '999', medical: '997', fire: '998' },
-      currency: { code: 'SAR', symbol: 'ر.س' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Premium Residency'],
-      officialWebsites: {
-        government: 'https://www.my.gov.sa',
-        visaApplication: 'https://visa.visitsaudi.com',
-        passportApplication: 'https://www.my.gov.sa/wps/portal/snp/pages/passports',
-        tourism: 'https://www.visitsaudi.com'
-      }
-    },
-    {
-      code: 'IL',
-      name: 'Israel',
-      flag: '🇮🇱',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1095, citizenshipRequirementDays: 1095 },
-      emergencyNumbers: { police: '100', medical: '101', fire: '102' },
-      currency: { code: 'ILS', symbol: '₪' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'A1 Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.il',
-        visaApplication: 'https://www.gov.il/en/departments/ministry_of_interior',
-        passportApplication: 'https://www.gov.il/en/service/passport_application',
-        tourism: 'https://www.goisrael.com'
-      }
-    },
-    {
-      code: 'ZA',
-      name: 'South Africa',
-      flag: '🇿🇦',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '10111', medical: '10177', fire: '10177' },
-      currency: { code: 'ZAR', symbol: 'R' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Visitor Visa', 'Study Visa', 'Work Visa', 'Critical Skills'],
-      officialWebsites: {
-        government: 'https://www.gov.za',
-        visaApplication: 'http://www.dha.gov.za/index.php/immigration-services',
-        passportApplication: 'http://www.dha.gov.za/index.php/civic-services/passport-and-travel-document',
-        tourism: 'https://www.southafrica.net'
-      }
-    },
-
-    // Latin America
     {
       code: 'BR',
       name: 'Brazil',
       flag: '🇧🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
+      visaFreeStays: { tourist: 90, business: 90, transit: 24 },
       taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1460, permanentResidencyDays: 1460, citizenshipRequirementDays: 1460 },
-      emergencyNumbers: { police: '190', medical: '192', fire: '193' },
-      currency: { code: 'BRL', symbol: 'R$' },
+      workPermitRequired: true,
       healthInsuranceRequired: false,
+      emergencyNumbers: { police: '190', medical: '192', fire: '193' },
+      currency: 'BRL',
+      languages: ['Portuguese'],
+      timeZones: ['BRT', 'AMT', 'ACST'],
       commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Investment Visa'],
+      businessRegistrationRequired: true,
+      taxRate: { personal: { min: 0, max: 27.5 }, corporate: 34 },
       officialWebsites: {
         government: 'https://www.gov.br',
+        visa: 'https://www.gov.br/mre/pt-br/assuntos/portal-consular/vistos',
         visaApplication: 'https://www.gov.br/mre/pt-br/assuntos/portal-consular/vistos',
+        passport: 'https://www.gov.br/pt-br/servicos/solicitar-passaporte-comum-para-brasileiro',
         passportApplication: 'https://www.gov.br/pt-br/servicos/solicitar-passaporte-comum-para-brasileiro',
         tourism: 'https://www.visitbrasil.com'
-      }
-    },
-    {
-      code: 'AR',
-      name: 'Argentina',
-      flag: '🇦🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 730, permanentResidencyDays: 730, citizenshipRequirementDays: 730 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'ARS', symbol: '$' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Rentista Visa'],
-      officialWebsites: {
-        government: 'https://www.argentina.gob.ar',
-        visaApplication: 'https://www.cancilleria.gob.ar/en/services/visas',
-        passportApplication: 'https://www.argentina.gob.ar/interior/renaper/pasaporte',
-        tourism: 'https://www.argentina.travel'
-      }
-    },
-    {
-      code: 'CL',
-      name: 'Chile',
-      flag: '🇨🇱',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '133', medical: '131', fire: '132' },
-      currency: { code: 'CLP', symbol: '$' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Tech Visa'],
-      officialWebsites: {
-        government: 'https://www.gob.cl',
-        visaApplication: 'https://www.extranjeria.gob.cl',
-        passportApplication: 'https://www.registrocivil.cl/principal/menu-superior/tramites-en-linea/pasaporte',
-        tourism: 'https://www.chile.travel'
-      }
-    },
-    {
-      code: 'CO',
-      name: 'Colombia',
-      flag: '🇨🇴',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '123', medical: '123', fire: '119' },
-      currency: { code: 'COP', symbol: '$' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Migrant Visa'],
-      officialWebsites: {
-        government: 'https://www.gov.co',
-        visaApplication: 'https://www.cancilleria.gov.co/en/procedures_services/visas',
-        passportApplication: 'https://www.cancilleria.gov.co/en/procedures_services/passport',
-        tourism: 'https://colombia.travel'
-      }
-    },
-    {
-      code: 'PE',
-      name: 'Peru',
-      flag: '🇵🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 730, permanentResidencyDays: 730, citizenshipRequirementDays: 730 },
-      emergencyNumbers: { police: '105', medical: '106', fire: '116' },
-      currency: { code: 'PEN', symbol: 'S/' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Business Visa'],
-      officialWebsites: {
-        government: 'https://www.gob.pe',
-        visaApplication: 'https://www.rree.gob.pe/SitePages/visas.aspx',
-        passportApplication: 'https://www.gob.pe/269-obtener-pasaporte-electronico-peruano',
-        tourism: 'https://www.peru.travel'
-      }
-    },
-    {
-      code: 'UY',
-      name: 'Uruguay',
-      flag: '🇺🇾',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1095, citizenshipRequirementDays: 1095 },
-      emergencyNumbers: { police: '109', medical: '105', fire: '104' },
-      currency: { code: 'UYU', symbol: '$U' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Resident Visa'],
-      officialWebsites: {
-        government: 'https://www.gub.uy',
-        visaApplication: 'https://www.gub.uy/ministerio-relaciones-exteriores/tramites-y-servicios/tramites/visas-ingresar-uruguay',
-        passportApplication: 'https://www.gub.uy/tramites/pasaporte-comun',
-        tourism: 'https://uruguaynatural.com'
-      }
-    },
-    {
-      code: 'EC',
-      name: 'Ecuador',
-      flag: '🇪🇨',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 730, permanentResidencyDays: 730, citizenshipRequirementDays: 1095 },
-      emergencyNumbers: { police: '101', medical: '911', fire: '911' },
-      currency: { code: 'USD', symbol: '$' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Pensioner Visa'],
-      officialWebsites: {
-        government: 'https://www.gob.ec',
-        visaApplication: 'https://www.cancilleria.gob.ec/servicios-consulares/',
-        passportApplication: 'https://www.registrocivil.gob.ec/pasaporte/',
-        tourism: 'https://www.ecuador.travel'
-      }
-    },
-    {
-      code: 'PA',
-      name: 'Panama',
-      flag: '🇵🇦',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'PAB', symbol: 'B/.' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Friendly Nations'],
-      officialWebsites: {
-        government: 'https://www.gob.pa',
-        visaApplication: 'https://www.migracion.gob.pa',
-        passportApplication: 'https://www.tribunalelectoral.gob.pa/cedula-y-pasaporte/',
-        tourism: 'https://www.visitpanama.com'
-      }
-    },
-    {
-      code: 'CR',
-      name: 'Costa Rica',
-      flag: '🇨🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1095, permanentResidencyDays: 1095, citizenshipRequirementDays: 2555 },
-      emergencyNumbers: { police: '911', medical: '911', fire: '911' },
-      currency: { code: 'CRC', symbol: '₡' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Pensioner Visa'],
-      officialWebsites: {
-        government: 'https://www.gob.go.cr',
-        visaApplication: 'https://www.migracion.go.cr',
-        passportApplication: 'https://www.tse.go.cr/pasaporte.htm',
-        tourism: 'https://www.visitcostarica.com'
-      }
-    },
-
-    // Additional Important Countries
-    {
-      code: 'TR',
-      name: 'Turkey',
-      flag: '🇹🇷',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: true },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '155', medical: '112', fire: '110' },
-      currency: { code: 'TRY', symbol: '₺' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Permit', 'Turquoise Card'],
-      officialWebsites: {
-        government: 'https://www.turkiye.gov.tr',
-        visaApplication: 'https://www.evisa.gov.tr',
-        passportApplication: 'https://www.nvi.gov.tr/pasaport',
-        tourism: 'https://www.goturkiye.com'
-      }
-    },
-    {
-      code: 'RU',
-      name: 'Russia',
-      flag: '🇷🇺',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '102', medical: '103', fire: '101' },
-      currency: { code: 'RUB', symbol: '₽' },
-      healthInsuranceRequired: true,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Business Visa'],
-      officialWebsites: {
-        government: 'https://www.government.ru',
-        visaApplication: 'https://visa.kdmid.ru',
-        passportApplication: 'https://www.gosuslugi.ru/category/passport',
-        tourism: 'https://www.russia.travel'
-      }
-    },
-    {
-      code: 'EG',
-      name: 'Egypt',
-      flag: '🇪🇬',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 3650 },
-      emergencyNumbers: { police: '122', medical: '123', fire: '180' },
-      currency: { code: 'EGP', symbol: 'E£' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.egypt.gov.eg',
-        visaApplication: 'https://www.visa2egypt.gov.eg',
-        passportApplication: 'https://www.moi.gov.eg/Passport/',
-        tourism: 'https://www.experienceegypt.eg'
-      }
-    },
-    {
-      code: 'MA',
-      name: 'Morocco',
-      flag: '🇲🇦',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '19', medical: '15', fire: '15' },
-      currency: { code: 'MAD', symbol: 'DH' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Visa', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.maroc.ma',
-        visaApplication: 'https://www.consulat.ma',
-        passportApplication: 'https://www.passeport.ma',
-        tourism: 'https://www.visitmorocco.com'
-      }
-    },
-    {
-      code: 'KE',
-      name: 'Kenya',
-      flag: '🇰🇪',
-      visaFreeStays: { tourist: 90, business: 90 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 2555, permanentResidencyDays: 2555, citizenshipRequirementDays: 2555 },
-      emergencyNumbers: { police: '999', medical: '999', fire: '999' },
-      currency: { code: 'KES', symbol: 'KSh' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Permit', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.president.go.ke',
-        visaApplication: 'https://www.ecitizen.go.ke',
-        passportApplication: 'https://www.immigration.go.ke/passport-services/',
-        tourism: 'https://www.magicalkenya.com'
-      }
-    },
-    {
-      code: 'GH',
-      name: 'Ghana',
-      flag: '🇬🇭',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 1825, permanentResidencyDays: 1825, citizenshipRequirementDays: 1825 },
-      emergencyNumbers: { police: '191', medical: '193', fire: '192' },
-      currency: { code: 'GHS', symbol: '₵' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Permit', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.ghana.gov.gh',
-        visaApplication: 'https://visa.gia.gov.gh',
-        passportApplication: 'https://www.passport.gov.gh',
-        tourism: 'https://www.visitghana.com'
-      }
-    },
-    {
-      code: 'NG',
-      name: 'Nigeria',
-      flag: '🇳🇬',
-      visaFreeStays: { tourist: 30, business: 30 },
-      taxResidencyDays: 183,
-      studentInfo: { maxStudyDays: 365, workRightsWhileStudying: false },
-      expatInfo: { residencyRequirementDays: 5475, permanentResidencyDays: 5475, citizenshipRequirementDays: 5475 },
-      emergencyNumbers: { police: '199', medical: '199', fire: '199' },
-      currency: { code: 'NGN', symbol: '₦' },
-      healthInsuranceRequired: false,
-      commonVisaTypes: ['Tourist Visa', 'Student Visa', 'Work Permit', 'Investment Visa'],
-      officialWebsites: {
-        government: 'https://www.nigeria.gov.ng',
-        visaApplication: 'https://portal.immigration.gov.ng',
-        passportApplication: 'https://www.nigeriaimmigration.gov.ng/passport/',
-        tourism: 'https://www.tourismguide.ng'
-      }
+      },
+      studentInfo: {
+        studentVisaRequired: true,
+        maxStudyDuration: 1,
+        maxStudyDays: 365,
+        workPermitWhileStudying: true,
+        languageRequirements: ['Portuguese'],
+        tuitionRange: { min: 1000, max: 8000 }
+      },
+      expatInfo: {
+        residencyPermitRequired: true,
+        minimumInvestment: 150000,
+        languageRequirements: ['Portuguese'],
+        averageCostOfLiving: 1200,
+        popularExpatAreas: ['São Paulo', 'Rio de Janeiro', 'Florianópolis'],
+        residencyRequirementDays: 1460,
+        permanentResidencyDays: 1460,
+        citizenshipRequirementDays: 1460
+      },
+      costOfLiving: { low: 800, medium: 1200, high: 2000 }
     }
   ];
 
@@ -1004,11 +695,23 @@ export class CountryInfoService {
 
     return {
       dayLimit,
-      currency: country.currency,
+      currency: { code: country.currency, symbol: this.getCurrencySymbol(country.currency) },
       emergencyNumbers: country.emergencyNumbers,
       healthInsuranceRequired: country.healthInsuranceRequired,
       commonVisaTypes: country.commonVisaTypes
     };
+  }
+
+  private static getCurrencySymbol(currencyCode: string): string {
+    const symbols: { [key: string]: string } = {
+      'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 'CAD': 'C$', 
+      'AUD': 'A$', 'CHF': 'Fr.', 'SGD': 'S$', 'THB': '฿', 'BRL': 'R$',
+      'MXN': '$', 'CNY': '¥', 'INR': '₹', 'KRW': '₩', 'HKD': 'HK$',
+      'NZD': 'NZ$', 'SEK': 'kr', 'NOK': 'kr', 'DKK': 'kr', 'PLN': 'zł',
+      'CZK': 'Kč', 'HUF': 'Ft', 'TRY': '₺', 'RUB': '₽', 'ZAR': 'R',
+      'AED': 'د.إ', 'SAR': 'ر.س', 'QAR': 'ر.ق', 'ILS': '₪'
+    };
+    return symbols[currencyCode] || currencyCode;
   }
 }
 
