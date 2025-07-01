@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +21,8 @@ import CircularDashboard from '@/components/CircularDashboard';
 import ExcelExport from '@/components/ExcelExport';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import TrackingRecommendations from '@/components/TrackingRecommendations';
+import UserProfile from '@/components/UserProfile';
+import NewsDashboard from '@/components/NewsDashboard';
 
 const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -34,6 +35,10 @@ const Index = () => {
     isActive: true,
     expiryDate: null,
     features: []
+  });
+  const [userProfile, setUserProfile] = useState({
+    languages: ['en'],
+    followedEmbassies: []
   });
   const { toast } = useToast();
   const [isVPNModalOpen, setIsVPNModalOpen] = useState(false);
@@ -49,6 +54,7 @@ const Index = () => {
     const savedCountries = localStorage.getItem('travelCountries');
     const savedPreviousLocation = localStorage.getItem('previousLocation');
     const savedSubscription = localStorage.getItem('subscription');
+    const savedProfile = localStorage.getItem('userProfile');
     
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
@@ -60,6 +66,10 @@ const Index = () => {
 
     if (savedSubscription) {
       setSubscription(JSON.parse(savedSubscription));
+    }
+    
+    if (savedProfile) {
+      setUserProfile(JSON.parse(savedProfile));
     }
     
     // Request location permission
@@ -411,6 +421,12 @@ const Index = () => {
             <PricingCard subscription={subscription} onUpgrade={handleUpgrade} />
           </div>
         </div>
+
+        {/* User Profile */}
+        <UserProfile />
+
+        {/* News Dashboard - Added at the top */}
+        <NewsDashboard countries={countries} userProfile={userProfile} />
 
         {/* Passport Manager */}
         <PassportManager />
