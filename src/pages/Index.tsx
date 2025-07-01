@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import PricingCard from '@/components/PricingCard';
 import PassportManager from '@/components/PassportManager';
 import ExpenseTracker from '@/components/ExpenseTracker';
 import TravelServices from '@/components/TravelServices';
+import VaccinationTracker from '@/components/VaccinationTracker';
+import USTaxTracker from '@/components/USTaxTracker';
 import LocationService from '@/services/LocationService';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country, LocationData } from '@/types/country';
@@ -289,11 +292,11 @@ const Index = () => {
   };
 
   const addCountry = (newCountry: Omit<Country, 'id' | 'daysSpent' | 'lastUpdate' | 'countTravelDays' | 'yearlyDaysSpent' | 'lastEntry' | 'totalEntries'>) => {
-    // Check subscription limits
-    if (subscription.tier === 'free' && countries.length >= 3) {
+    // Check subscription limits - Fixed to use correct limit for free tier
+    if (subscription.tier === 'free' && countries.length >= 1) {
       toast({
         title: "Upgrade Required",
-        description: "Free tier limited to 3 countries. Upgrade for unlimited tracking.",
+        description: "Free tier limited to 1 country. Upgrade for unlimited tracking.",
         variant: "destructive"
       });
       return;
@@ -412,10 +415,16 @@ const Index = () => {
         {/* Passport Manager */}
         <PassportManager />
 
+        {/* US Tax Compliance Tracker */}
+        <USTaxTracker countries={countries} />
+
+        {/* Vaccination Tracker */}
+        <VaccinationTracker currentLocation={currentLocation} />
+
         {/* Business Expense Tracker */}
         <ExpenseTracker />
 
-        {/* Travel Services Section */}
+        {/* Travel Services Section - Remove duplicate VIP services */}
         <TravelServices currentLocation={currentLocation} />
 
         {/* Tracking Recommendations */}
@@ -450,7 +459,7 @@ const Index = () => {
                   <p className="text-sm text-blue-600 font-medium">Tracked Countries</p>
                   <p className="text-sm text-blue-700">
                     {getTotalActiveCountries()} active
-                    {subscription.tier === 'free' && ` (3 max)`}
+                    {subscription.tier === 'free' && ` (1 max)`}
                   </p>
                 </div>
               </div>
