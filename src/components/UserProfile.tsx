@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { User, Language, Phone, Globe, Building } from 'lucide-react';
+import { User, Languages, Phone, Globe, Building } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EmbassyService, { Embassy } from '@/services/EmbassyService';
 

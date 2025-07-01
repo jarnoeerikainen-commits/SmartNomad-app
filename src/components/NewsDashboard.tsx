@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Newspaper, AlertTriangle, ExternalLink, RefreshCw, Bell } from 'lucide-react';
+import { Newspaper, AlertTriangle, ExternalLink, RefreshCw, Bell, Globe } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import NewsService, { NewsItem, NewsAlert } from '@/services/NewsService';
 import EmbassyService, { TravelAdvisory } from '@/services/EmbassyService';
