@@ -180,7 +180,7 @@ const UserProfile: React.FC = () => {
         {/* Languages */}
         <div className="space-y-3">
           <Label className="flex items-center gap-2">
-            <Language className="w-4 h-4" />
+            <Languages className="w-4 h-4" />
             Preferred Languages for News
           </Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
