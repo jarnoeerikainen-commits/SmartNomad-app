@@ -47,8 +47,22 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
     !countries.find(c => c.code === country.code)
   );
 
-  const handleAddCountry = (country: Country) => {
-    onAddCountry(country);
+  const handleAddCountry = (countryData: { code: string; name: string; flag: string }) => {
+    const fullCountry: Country = {
+      id: `country-${countryData.code}-${Date.now()}`,
+      code: countryData.code,
+      name: countryData.name,
+      flag: countryData.flag,
+      dayLimit: 90, // Default 90-day limit
+      daysSpent: 0,
+      reason: 'Tourism/Business',
+      lastUpdate: null,
+      countTravelDays: true,
+      yearlyDaysSpent: 0,
+      lastEntry: null,
+      totalEntries: 0
+    };
+    onAddCountry(fullCountry);
     setSearchTerm('');
     setShowAddCountry(false);
   };

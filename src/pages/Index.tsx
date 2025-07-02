@@ -41,10 +41,12 @@ const Index = () => {
       const isVPNDetected = Math.random() > 0.8; // 20% chance for demo
       if (isVPNDetected) {
         setDetectedLocation({
+          latitude: 40.7128,
+          longitude: -74.0060,
           city: 'New York',
           country: 'United States',
           country_code: 'US',
-          timestamp: new Date().toISOString()
+          timestamp: Date.now()
         });
         setVPNDuration(Date.now() - (Math.random() * 3600000)); // Random duration up to 1 hour
         setShowVPNModal(true);
