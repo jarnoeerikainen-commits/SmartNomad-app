@@ -91,7 +91,8 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
       name: country.name,
       flag: country.flag,
       dayLimit: parseInt(dayLimit) || 90,
-      reason: finalReason || 'General tracking'
+      reason: finalReason || 'General tracking',
+      followEmbassyNews: false // Default to false for enhanced modal
     });
 
     // Reset form

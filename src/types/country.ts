@@ -12,6 +12,7 @@ export interface Country {
   yearlyDaysSpent: number; // Days spent in current tax year
   lastEntry: string | null; // Date of last entry to country
   totalEntries: number; // Total number of entries to this country
+  followEmbassyNews: boolean; // Whether to follow embassy news for this country
 }
 
 export interface LocationData {
