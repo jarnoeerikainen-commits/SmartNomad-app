@@ -16,7 +16,7 @@ export interface Offer {
 }
 
 export interface OfferSearchParams {
-  service: 'insurance' | 'hotels' | 'restaurants' | 'vip';
+  service: 'insurance' | 'hotels' | 'restaurants' | 'vip' | 'lawyers' | 'visa';
   location: LocationData;
   checkIn?: string;
   checkOut?: string;
@@ -49,6 +49,18 @@ export class OffersService {
       { name: 'GetYourGuide', baseUrl: 'https://www.getyourguide.com' },
       { name: 'Klook', baseUrl: 'https://www.klook.com' },
       { name: 'PrivateJet.com', baseUrl: 'https://www.privatejet.com' }
+    ],
+    lawyers: [
+      { name: 'Avvo', baseUrl: 'https://www.avvo.com' },
+      { name: 'FindLaw', baseUrl: 'https://www.findlaw.com' },
+      { name: 'Martindale-Hubbell', baseUrl: 'https://www.martindale.com' },
+      { name: 'Justia', baseUrl: 'https://www.justia.com' }
+    ],
+    visa: [
+      { name: 'VisaGuide', baseUrl: 'https://www.visaguide.world' },
+      { name: 'iVisa', baseUrl: 'https://www.ivisa.com' },
+      { name: 'VisaHQ', baseUrl: 'https://www.visahq.com' },
+      { name: 'Embassy Pages', baseUrl: 'https://www.embassy-pages.com' }
     ]
   };
 
@@ -234,6 +246,86 @@ export class OffersService {
         ];
         offers.push(...vipOffers);
         break;
+
+      case 'lawyers':
+        const lawyerOffers = [
+          {
+            id: '1',
+            title: `Immigration Lawyers ${location.city}`,
+            description: `Specialized visa and immigration attorneys`,
+            price: '$300/hour',
+            originalPrice: '$400/hour',
+            discount: '25% off',
+            provider: 'Avvo',
+            url: `https://www.avvo.com/find-a-lawyer?search_text=${encodeURIComponent(location.city + ' immigration lawyer')}`,
+            rating: 4.7,
+            location: locationString
+          },
+          {
+            id: '2',
+            title: `Business Law Attorneys`,
+            description: `Corporate and business legal services`,
+            price: '$250/hour',
+            provider: 'FindLaw',
+            url: `https://lawyers.findlaw.com/lawyer/practice/business-law/${encodeURIComponent(location.city)}`,
+            rating: 4.5,
+            location: locationString
+          },
+          {
+            id: '3',
+            title: `International Tax Lawyers`,
+            description: `Tax compliance for digital nomads`,
+            price: '$350/hour',
+            originalPrice: '$450/hour',
+            discount: '22% off',
+            provider: 'Martindale-Hubbell',
+            url: `https://www.martindale.com/find-lawyers/?q=${encodeURIComponent(location.city + ' tax lawyer')}`,
+            rating: 4.6,
+            location: locationString
+          }
+        ];
+        offers.push(...lawyerOffers);
+        break;
+
+      case 'visa':
+        const visaOffers = [
+          {
+            id: '1',
+            title: `${location.country} Visa Services`,
+            description: `Fast track visa processing for ${location.country}`,
+            price: '$149',
+            originalPrice: '$199',
+            discount: '25% off',
+            provider: 'iVisa',
+            url: `https://www.ivisa.com/apply-online/${encodeURIComponent(location.country_code)}`,
+            rating: 4.8,
+            location: locationString
+          },
+          {
+            id: '2',
+            title: `Embassy Appointments`,
+            description: `Secure embassy appointments and documentation`,
+            price: '$89',
+            provider: 'VisaHQ',
+            url: `https://www.visahq.com/${encodeURIComponent(location.country_code)}-visa-application`,
+            rating: 4.6,
+            location: locationString
+          },
+          {
+            id: '3',
+            title: `Visa Consultation Services`,
+            description: `Expert guidance for visa applications`,
+            price: '$199',
+            originalPrice: '$249',
+            discount: '20% off',
+            provider: 'VisaGuide',
+            url: `https://www.visaguide.world/visa-for/${encodeURIComponent(location.country)}`,
+            rating: 4.7,
+            location: locationString
+          }
+        ];
+        offers.push(...visaOffers);
+        break;
     }
 
     // Validate all offers before returning
@@ -265,7 +357,9 @@ export class OffersService {
         'booking.com', 'hotels.com', 'expedia.com', 'agoda.com', 'trivago.com',
         'worldnomads.com', 'safetywing.com', 'allianztravelinsurance.com', 'travelguard.com',
         'opentable.com', 'tripadvisor.com', 'yelp.com', 'zomato.com',
-        'viator.com', 'getyourguide.com', 'klook.com', 'privatejet.com'
+        'viator.com', 'getyourguide.com', 'klook.com', 'privatejet.com',
+        'avvo.com', 'findlaw.com', 'martindale.com', 'justia.com',
+        'visaguide.world', 'ivisa.com', 'visahq.com', 'embassy-pages.com'
       ];
 
       const isValidDomain = validDomains.some(domain => 

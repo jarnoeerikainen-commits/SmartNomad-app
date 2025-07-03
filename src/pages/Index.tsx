@@ -12,6 +12,7 @@ import NewsDashboard from '@/components/NewsDashboard';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import NewsLocker from "@/components/NewsLocker";
+import TravelServices from '@/components/TravelServices';
 import { Country, LocationData } from '@/types/country';
 
 const Index = () => {
@@ -168,6 +169,9 @@ const Index = () => {
           />
         </div>
       </div>
+
+      {/* Travel Services */}
+      <TravelServices currentLocation={detectedLocation} />
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 py-4">

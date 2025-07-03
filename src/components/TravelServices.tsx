@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink } from 'lucide-react';
+import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink, Scale, FileText } from 'lucide-react';
 import OffersModal from '@/components/OffersModal';
 import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
@@ -18,7 +18,7 @@ interface ServiceBoxProps {
   isVip?: boolean;
   onOffersToggle: (enabled: boolean) => void;
   offersEnabled: boolean;
-  serviceType: 'insurance' | 'hotels' | 'restaurants' | 'vip';
+  serviceType: 'insurance' | 'hotels' | 'restaurants' | 'vip' | 'lawyers' | 'visa';
   currentLocation: LocationData | null;
 }
 
@@ -167,7 +167,9 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
     insurance: false,
     hotels: false,
     restaurants: false,
-    vip: false
+    vip: false,
+    lawyers: false,
+    visa: false
   });
 
   const handleOffersToggle = (service: string, enabled: boolean) => {
@@ -344,6 +346,40 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
           isVip={true}
           onOffersToggle={(enabled) => handleOffersToggle('vip', enabled)}
           offersEnabled={offersEnabled.vip}
+          currentLocation={currentLocation}
+        />
+
+        {/* Legal Services */}
+        <ServiceBox
+          title="Legal Services"
+          icon={<Scale className="w-5 h-5 text-blue-600" />}
+          description="Professional legal assistance"
+          services={[
+            "Immigration Lawyers",
+            "Business Law Attorneys",
+            "International Tax Lawyers",
+            "Contract Review Services"
+          ]}
+          serviceType="lawyers"
+          onOffersToggle={(enabled) => handleOffersToggle('lawyers', enabled)}
+          offersEnabled={offersEnabled.lawyers}
+          currentLocation={currentLocation}
+        />
+
+        {/* Visa Services */}
+        <ServiceBox
+          title="Visa & Documentation"
+          icon={<FileText className="w-5 h-5 text-blue-600" />}
+          description="Visa processing and document services"
+          services={[
+            "Visa Application Services",
+            "Embassy Appointments",
+            "Document Authentication",
+            "Visa Consultation"
+          ]}
+          serviceType="visa"
+          onOffersToggle={(enabled) => handleOffersToggle('visa', enabled)}
+          offersEnabled={offersEnabled.visa}
           currentLocation={currentLocation}
         />
       </div>
