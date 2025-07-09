@@ -11,7 +11,7 @@ import CountryTracker from '@/components/CountryTracker';
 import NewsDashboard from '@/components/NewsDashboard';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
-import NewsLocker from "@/components/NewsLocker";
+
 import TravelServices from '@/components/TravelServices';
 import { Country, LocationData } from '@/types/country';
 
@@ -122,13 +122,6 @@ const Index = () => {
         onDisableVPN={handleDisableVPN}
       />
       
-      {/* News Locker - Fixed position in top right */}
-      <NewsLocker 
-        countries={countries} 
-        userProfile={{
-          languages: userProfile?.languages || ['en']
-        }}
-      />
 
       {/* Header */}
       <div className="text-center space-y-4">

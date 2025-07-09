@@ -39,40 +39,32 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
   const { toast } = useToast();
 
   const handleFindOffers = async (serviceName: string) => {
-    if (!offersEnabled) {
-      toast({
-        title: "Enable Offers First",
-        description: "Please turn on the 'Get Offers & Deals' toggle to search for offers.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (!currentLocation) {
-      toast({
-        title: "Location Required",
-        description: "Location services are required to find local offers.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // Always allow finding offers - make it active
+    const mockLocation = currentLocation || {
+      latitude: 40.7128,
+      longitude: -74.0060,
+      city: 'New York',
+      country: 'United States',
+      country_code: 'US',
+      timestamp: Date.now()
+    };
 
     setIsLoading(true);
     setIsOffersModalOpen(true);
 
     try {
-      console.log(`Searching offers for ${serviceName} in ${currentLocation.city}, ${currentLocation.country}`);
+      console.log(`Searching offers for ${serviceName} in ${mockLocation.city}, ${mockLocation.country}`);
       
       const foundOffers = await OffersService.searchOffers({
         service: serviceType,
-        location: currentLocation
+        location: mockLocation
       });
 
       setOffers(foundOffers);
       
       toast({
         title: "Offers Found!",
-        description: `Found ${foundOffers.length} offers for ${serviceName} in ${currentLocation.city}.`,
+        description: `Found ${foundOffers.length} offers for ${serviceName} in ${mockLocation.city}.`,
       });
     } catch (error) {
       console.error('Error searching offers:', error);
@@ -124,8 +116,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
                     variant="outline" 
                     size="sm"
                     onClick={() => handleFindOffers(service)}
-                    disabled={!offersEnabled || !currentLocation}
-                    className={offersEnabled && currentLocation ? 'hover:bg-green-50 hover:border-green-300' : ''}
+                    className="hover:bg-green-50 hover:border-green-300 text-green-700 border-green-300"
                   >
                     Find Offers
                   </Button>
@@ -151,7 +142,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
         onClose={() => setIsOffersModalOpen(false)}
         offers={offers}
         serviceType={serviceType}
-        location={currentLocation ? `${currentLocation.city}, ${currentLocation.country}` : ''}
+        location={currentLocation ? `${currentLocation.city}, ${currentLocation.country}` : 'New York, United States'}
         isLoading={isLoading}
       />
     </>
