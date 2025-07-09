@@ -41,6 +41,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
   const [dayLimit, setDayLimit] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [showCountryInfo, setShowCountryInfo] = useState(false);
+  const [followEmbassyNews, setFollowEmbassyNews] = useState(false);
 
   const availableCountries = useMemo(() => {
     return CountryInfoService.getAllCountries().filter(
@@ -92,7 +93,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
       flag: country.flag,
       dayLimit: parseInt(dayLimit) || 90,
       reason: finalReason || 'General tracking',
-      followEmbassyNews: false // Default to false for enhanced modal
+      followEmbassyNews: followEmbassyNews
     });
 
     // Reset form
@@ -102,6 +103,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
     setDayLimit('');
     setSearchTerm('');
     setShowCountryInfo(false);
+    setFollowEmbassyNews(false);
   };
 
   const handleReset = () => {
@@ -111,6 +113,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
     setDayLimit('');
     setSearchTerm('');
     setShowCountryInfo(false);
+    setFollowEmbassyNews(false);
   };
 
   const selectedCountryDetails = selectedCountry ? CountryInfoService.getCountryDetails(selectedCountry) : null;
@@ -275,6 +278,28 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
               </CardContent>
             </Card>
           )}
+
+          {/* Embassy News Toggle */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 text-blue-600" />
+                <Label htmlFor="embassy-news" className="text-sm font-medium">
+                  Follow Embassy News
+                </Label>
+              </div>
+              <input
+                type="checkbox"
+                id="embassy-news"
+                checked={followEmbassyNews}
+                onChange={(e) => setFollowEmbassyNews(e.target.checked)}
+                className="rounded"
+              />
+            </div>
+            <p className="text-xs text-gray-500 -mt-2">
+              Get automatic updates from embassy websites and official sources
+            </p>
+          </div>
 
           {/* Day Limit */}
           <div className="space-y-2">
