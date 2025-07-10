@@ -161,6 +161,58 @@ const Index = () => {
         </div>
       </div>
 
+      {/* Subscription Plans */}
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Choose Your Plan
+          </h2>
+          <p className="text-gray-600">
+            Select the perfect plan for your travel tracking needs
+          </p>
+        </div>
+        
+        <div className="flex justify-center">
+          <PricingCard 
+            subscription={subscription}
+            onUpgrade={handleUpgrade}
+          />
+        </div>
+        
+        {/* Plan Benefits Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-8">
+          <Card className="text-center p-4">
+            <div className="text-2xl font-bold text-blue-600 mb-2">Basic</div>
+            <p className="text-sm text-gray-600">Perfect for casual travelers</p>
+            <div className="text-lg font-semibold text-green-600 mt-2">Free</div>
+          </Card>
+          
+          <Card className="text-center p-4 border-purple-200 bg-purple-50">
+            <div className="text-2xl font-bold text-purple-600 mb-2">Student</div>
+            <p className="text-sm text-gray-600">Study abroad compliance</p>
+            <div className="text-lg font-semibold text-green-600 mt-2">$0.99/year</div>
+          </Card>
+          
+          <Card className="text-center p-4 border-orange-200 bg-orange-50">
+            <div className="text-2xl font-bold text-orange-600 mb-2">Business Individual</div>
+            <p className="text-sm text-gray-600">Solo entrepreneur features</p>
+            <div className="text-lg font-semibold text-green-600 mt-2">$9.99/month</div>
+          </Card>
+          
+          <Card className="text-center p-4 border-blue-200 bg-blue-50">
+            <div className="text-2xl font-bold text-blue-600 mb-2">Family</div>
+            <p className="text-sm text-gray-600">Up to 12 family members</p>
+            <div className="text-lg font-semibold text-green-600 mt-2">$6.99/month</div>
+          </Card>
+          
+          <Card className="text-center p-4 border-indigo-200 bg-indigo-50">
+            <div className="text-2xl font-bold text-indigo-600 mb-2">Business</div>
+            <p className="text-sm text-gray-600">Unlimited team members</p>
+            <div className="text-lg font-semibold text-green-600 mt-2">$49.99/month</div>
+          </Card>
+        </div>
+      </div>
+
       {/* User Profile Section */}
       <UserProfile />
 
@@ -186,52 +238,6 @@ const Index = () => {
 
       {/* Travel Services */}
       <TravelServices currentLocation={detectedLocation} />
-
-      {/* Subscription Plans */}
-      <div className="space-y-6">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Choose Your Plan
-          </h2>
-          <p className="text-gray-600">
-            Select the perfect plan for your travel tracking needs
-          </p>
-        </div>
-        
-        <div className="flex justify-center">
-          <PricingCard 
-            subscription={subscription}
-            onUpgrade={handleUpgrade}
-          />
-        </div>
-        
-        {/* Plan Benefits Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          <Card className="text-center p-4">
-            <div className="text-2xl font-bold text-blue-600 mb-2">Basic</div>
-            <p className="text-sm text-gray-600">Perfect for casual travelers</p>
-            <div className="text-lg font-semibold text-green-600 mt-2">Free</div>
-          </Card>
-          
-          <Card className="text-center p-4 border-purple-200 bg-purple-50">
-            <div className="text-2xl font-bold text-purple-600 mb-2">Student</div>
-            <p className="text-sm text-gray-600">Study abroad compliance</p>
-            <div className="text-lg font-semibold text-green-600 mt-2">$0.99/year</div>
-          </Card>
-          
-          <Card className="text-center p-4 border-blue-200 bg-blue-50">
-            <div className="text-2xl font-bold text-blue-600 mb-2">Family</div>
-            <p className="text-sm text-gray-600">Up to 12 family members</p>
-            <div className="text-lg font-semibold text-green-600 mt-2">$6.99/month</div>
-          </Card>
-          
-          <Card className="text-center p-4 border-indigo-200 bg-indigo-50">
-            <div className="text-2xl font-bold text-indigo-600 mb-2">Business</div>
-            <p className="text-sm text-gray-600">Unlimited team members</p>
-            <div className="text-lg font-semibold text-green-600 mt-2">$49.99/month</div>
-          </Card>
-        </div>
-      </div>
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 py-4">
