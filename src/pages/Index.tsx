@@ -11,6 +11,7 @@ import CountryTracker from '@/components/CountryTracker';
 import NewsDashboard from '@/components/NewsDashboard';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
+import VisaTrackingManager from '@/components/VisaTrackingManager';
 
 import TravelServices from '@/components/TravelServices';
 import PricingCard from '@/components/PricingCard';
@@ -222,6 +223,9 @@ const Index = () => {
 
       {/* User Profile Section */}
       <UserProfile />
+
+      {/* Visa Tracking Manager */}
+      <VisaTrackingManager subscription={subscription} countries={countries} />
 
       {/* Main Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
