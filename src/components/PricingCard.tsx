@@ -16,16 +16,17 @@ interface PricingCardProps {
 const PRICING_TIERS: PricingTier[] = [
   {
     id: 'free',
-    name: 'Free',
+    name: 'Basic',
     price: 0,
     billing: 'monthly',
     description: 'Basic tracking for casual travelers',
     userLimit: '1 user',
     features: [
-      'Track only 1 country',
-      'Basic location tracking',
-      'Manual day counting',
-      'Simple alerts'
+      '✈️ Single visa tracking',
+      '📊 Basic day counting',
+      '📍 Manual location tracking',
+      '⚠️ Simple alerts',
+      '🗂️ Basic export options'
     ]
   },
   {
@@ -36,13 +37,32 @@ const PRICING_TIERS: PricingTier[] = [
     description: 'Perfect for students studying abroad',
     userLimit: '1 student',
     features: [
-      'Everything in Free',
-      'Unlimited country tracking',
-      'Student visa compliance',
-      'University reporting',
-      'Study abroad alerts',
-      'Academic calendar sync',
-      'Student ID verification'
+      '🎓 Multiple visa types (Student, Tourist, Transit)',
+      '🏫 University compliance tracking',
+      '📅 Academic calendar integration',
+      '📖 Study visa monitoring',
+      '🌍 Unlimited country tracking',
+      '📧 Study abroad alerts',
+      '🆔 Student ID verification',
+      '📊 Academic reports'
+    ]
+  },
+  {
+    id: 'business-individual',
+    name: 'Business Individual',
+    price: 9.99,
+    billing: 'monthly',
+    description: 'Solo entrepreneur features',
+    userLimit: '1 business user',
+    features: [
+      '💼 Multiple visa types (Business, Tourist, Work)',
+      '🏢 Work permit tracking',
+      '💰 Tax residence monitoring',
+      '📊 Business travel analytics',
+      '📄 Professional reporting',
+      '☁️ Cloud backup',
+      '🔗 Calendar integrations',
+      '📱 Mobile app access'
     ]
   },
   {
@@ -55,14 +75,15 @@ const PRICING_TIERS: PricingTier[] = [
     popular: true,
     userLimit: '1 user',
     features: [
-      'Unlimited country tracking',
-      'Automatic location detection',
-      'Tax residence tracking',
-      'Passport expiry alerts',
-      'Visa compliance monitoring',
-      'Premium country database',
-      'Excel/PDF reports',
-      'Cloud backup'
+      '🌐 All visa types (Tourist, Business, Transit, Digital Nomad)',
+      '🤖 Automatic location detection',
+      '💰 Tax residence tracking',
+      '📋 Passport expiry alerts',
+      '✅ Visa compliance monitoring',
+      '🗃️ Premium country database',
+      '📊 Excel/PDF reports',
+      '☁️ Cloud backup',
+      '🔄 Easy visa type switching'
     ]
   },
   {
@@ -74,14 +95,15 @@ const PRICING_TIERS: PricingTier[] = [
     description: 'For families and small teams traveling together',
     userLimit: 'Up to 12 people',
     features: [
-      'Everything in Personal',
-      'Family dashboard',
-      'Shared trip planning',
-      'Group compliance tracking',
-      'Multiple passport management',
-      'Family visa coordination',
-      'Shared expense tracking',
-      'Emergency contact system'
+      '👨‍👩‍👧‍👦 All visa types for family members',
+      '🏠 Family dashboard',
+      '🗺️ Shared trip planning',
+      '👥 Group compliance tracking',
+      '📘 Multiple passport management',
+      '🤝 Family visa coordination',
+      '💸 Shared expense tracking',
+      '🚨 Emergency contact system',
+      '🔄 Individual visa preferences'
     ]
   },
   {
@@ -93,16 +115,17 @@ const PRICING_TIERS: PricingTier[] = [
     description: 'For companies with traveling employees',
     userLimit: 'Unlimited users',
     features: [
-      'Everything in Family',
-      'Unlimited team members',
-      'Advanced compliance dashboard',
-      'Work permit tracking',
-      'Corporate tax optimization',
-      'HR integration tools',
-      'Audit trail reports',
-      'Dedicated account manager',
-      'API access',
-      'SSO integration'
+      '🏢 All visa types for employees',
+      '👥 Unlimited team members',
+      '📊 Advanced compliance dashboard',
+      '💼 Work permit tracking',
+      '💰 Corporate tax optimization',
+      '🔗 HR integration tools',
+      '📋 Audit trail reports',
+      '🎯 Dedicated account manager',
+      '🔌 API access',
+      '🔐 SSO integration',
+      '⚙️ Custom visa workflows'
     ]
   },
   {
@@ -113,15 +136,17 @@ const PRICING_TIERS: PricingTier[] = [
     description: 'For large organizations and agencies',
     userLimit: 'Unlimited + consulting',
     features: [
-      'Everything in Business',
-      'Custom compliance rules',
-      'White-label solutions',
-      'Multi-country operations',
-      'Government reporting',
-      'Custom integrations',
-      '24/7 priority support',
-      'Legal compliance consulting',
-      'Data sovereignty options'
+      '🌍 All global visa types & custom rules',
+      '🏢 Custom compliance frameworks',
+      '🏷️ White-label solutions',
+      '🌐 Multi-country operations',
+      '🏛️ Government reporting',
+      '🔗 Custom integrations',
+      '🔧 24/7 priority support',
+      '⚖️ Legal compliance consulting',
+      '🛡️ Data sovereignty options',
+      '🎛️ Advanced visa management',
+      '📈 Predictive compliance analytics'
     ]
   }
 ];
@@ -142,6 +167,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
       case 'student': return <GraduationCap className="w-5 h-5" />;
+      case 'business-individual': return <Building className="w-5 h-5" />;
       case 'family': return <Home className="w-5 h-5" />;
       case 'business': return <Building className="w-5 h-5" />;
       case 'enterprise': return <Crown className="w-5 h-5" />;
