@@ -48,15 +48,72 @@ const POPULAR_COUNTRIES = [
   { code: 'CR', name: 'Costa Rica', flag: '🇨🇷', taxResidenceDays: 183 },
 ];
 
-const COMMON_REASONS = [
-  'Tourist visa limit',
-  'Tax residence tracking',
-  'Work permit limit',
-  'Schengen area limit',
-  'Business travel limit',
-  'Student visa limit',
-  'Digital nomad visa',
-  'Custom tracking'
+const VISA_TYPES = [
+  {
+    type: 'Schengen Area',
+    description: 'EU Schengen zone (90 days per 180-day period)',
+    defaultDays: 90,
+    icon: '🇪🇺'
+  },
+  {
+    type: 'Tourist Visa',
+    description: 'Tourist/visitor visa limits',
+    defaultDays: 90,
+    icon: '🏖️'
+  },
+  {
+    type: 'Student Visa',
+    description: 'Academic study periods',
+    defaultDays: 365,
+    icon: '🎓'
+  },
+  {
+    type: 'Business Visa',
+    description: 'Business travel and meetings',
+    defaultDays: 30,
+    icon: '💼'
+  },
+  {
+    type: 'Work Permit',
+    description: 'Employment authorization',
+    defaultDays: 365,
+    icon: '🏢'
+  },
+  {
+    type: 'Tax Residence',
+    description: 'Tax residency thresholds',
+    defaultDays: 183,
+    icon: '📊'
+  },
+  {
+    type: 'Digital Nomad',
+    description: 'Remote work visa',
+    defaultDays: 180,
+    icon: '💻'
+  },
+  {
+    type: 'Transit Visa',
+    description: 'Airport/country transit',
+    defaultDays: 5,
+    icon: '✈️'
+  },
+  {
+    type: 'Custom Tracking',
+    description: 'Your own tracking reason',
+    defaultDays: 90,
+    icon: '⚙️'
+  }
+];
+
+const COMMON_DAY_LIMITS = [
+  { days: 5, label: '5 days', description: 'Transit visa' },
+  { days: 30, label: '30 days', description: 'Short business/tourist' },
+  { days: 60, label: '60 days', description: 'Extended tourist' },
+  { days: 90, label: '90 days', description: 'Standard tourist/Schengen' },
+  { days: 120, label: '120 days', description: 'Long tourist stay' },
+  { days: 180, label: '180 days', description: 'Digital nomad/extended' },
+  { days: 183, label: '183 days', description: 'Tax residence threshold' },
+  { days: 365, label: '365 days', description: 'Full year (study/work)' }
 ];
 
 const VISA_DAY_OPTIONS = [30, 60, 90, 120, 180];
@@ -90,20 +147,19 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
   const handleReasonChange = (value: string) => {
     setReason(value);
     
-    // Auto-set day limits based on reason and country
-    if (value === 'Tax residence tracking' && selectedCountry) {
-      const country = POPULAR_COUNTRIES.find(c => c.code === selectedCountry);
-      if (country) {
-        setDayLimit(country.taxResidenceDays.toString());
+    // Auto-set day limits based on visa type
+    const visaType = VISA_TYPES.find(v => v.type === value);
+    if (visaType) {
+      if (value === 'Tax Residence' && selectedCountry) {
+        const country = POPULAR_COUNTRIES.find(c => c.code === selectedCountry);
+        if (country) {
+          setDayLimit(country.taxResidenceDays.toString());
+        }
+      } else if (value === 'Schengen Area') {
+        setDayLimit('90');
+      } else {
+        setDayLimit(visaType.defaultDays.toString());
       }
-    } else if (value === 'Tourist visa limit' || value === 'Schengen area limit') {
-      setDayLimit('90');
-    } else if (value === 'Business travel limit') {
-      setDayLimit('30');
-    } else if (value === 'Work permit limit' || value === 'Student visa limit') {
-      setDayLimit('365');
-    } else if (value === 'Digital nomad visa') {
-      setDayLimit('180');
     }
   };
 
@@ -237,50 +293,59 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="reason">Tracking Reason</Label>
+            <Label htmlFor="reason">Visa/Tracking Type</Label>
             <Select value={reason} onValueChange={handleReasonChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Why are you tracking this?" />
+                <SelectValue placeholder="Choose visa or tracking type..." />
               </SelectTrigger>
               <SelectContent>
-                {COMMON_REASONS.map(reasonOption => (
-                  <SelectItem key={reasonOption} value={reasonOption}>
-                    {reasonOption}
+                {VISA_TYPES.map(visaType => (
+                  <SelectItem key={visaType.type} value={visaType.type}>
+                    <div className="flex items-center gap-2">
+                      <span>{visaType.icon}</span>
+                      <div>
+                        <div className="font-medium">{visaType.type}</div>
+                        <div className="text-xs text-muted-foreground">{visaType.description}</div>
+                      </div>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {reason === 'Custom tracking' && (
+          {reason === 'Custom Tracking' && (
             <div className="space-y-2">
               <Label htmlFor="customReason">Custom Reason</Label>
               <Input
                 id="customReason"
                 value={customReason}
                 onChange={(e) => setCustomReason(e.target.value)}
-                placeholder="Enter your reason..."
+                placeholder="Enter your custom tracking reason..."
               />
             </div>
           )}
 
           <div className="space-y-3">
-            <Label>Day Limit</Label>
+            <Label>Day Limit Options</Label>
             
-            {/* Preset Day Options */}
+            {/* Common Day Limits */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Quick select (common visa limits):</p>
-              <div className="grid grid-cols-5 gap-2">
-                {VISA_DAY_OPTIONS.map(days => (
+              <p className="text-sm text-muted-foreground">Choose from common visa limits:</p>
+              <div className="grid grid-cols-2 gap-2">
+                {COMMON_DAY_LIMITS.map(limit => (
                   <Button
-                    key={days}
+                    key={limit.days}
                     type="button"
-                    variant={dayLimit === days.toString() && limitType === 'preset' ? "default" : "outline"}
+                    variant={dayLimit === limit.days.toString() && limitType === 'preset' ? "default" : "outline"}
                     size="sm"
-                    onClick={() => handlePresetDayLimit(days)}
-                    className="text-xs"
+                    onClick={() => handlePresetDayLimit(limit.days)}
+                    className="text-left h-auto p-2"
                   >
-                    {days}d
+                    <div>
+                      <div className="font-semibold">{limit.label}</div>
+                      <div className="text-xs text-muted-foreground">{limit.description}</div>
+                    </div>
                   </Button>
                 ))}
               </div>
@@ -288,19 +353,20 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
 
             {/* Manual Input */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Or enter manually:</p>
+              <p className="text-sm text-muted-foreground">Or enter custom days:</p>
               <Input
                 type="number"
                 min="1"
+                max="365"
                 value={dayLimit}
                 onChange={(e) => handleCustomDayLimit(e.target.value)}
-                placeholder="Number of days allowed"
-                className={limitType === 'custom' ? 'border-blue-500' : ''}
+                placeholder="Enter custom day limit"
+                className={limitType === 'custom' ? 'border-primary' : ''}
               />
             </div>
             
             <p className="text-xs text-muted-foreground">
-              Maximum days allowed in this country for your tracking period
+              Maximum days allowed in this country for your selected visa/tracking type
             </p>
           </div>
 
