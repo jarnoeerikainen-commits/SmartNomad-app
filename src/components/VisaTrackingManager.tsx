@@ -18,6 +18,7 @@ interface VisaTracking {
   dayLimit: number;
   daysUsed: number;
   startDate: string;
+  trackingStartDate: string; // Date when tracking should start counting
   endDate: string;
   passportExpiry?: string;
   passportNotifications: number[]; // months before expiry to notify
@@ -372,6 +373,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const [dayLimit, setDayLimit] = useState('');
   const [passportExpiry, setPassportExpiry] = useState('');
   const [selectedNotifications, setSelectedNotifications] = useState<number[]>([9, 6, 3]);
+  const [trackingStartDate, setTrackingStartDate] = useState('');
+  const [startFromNow, setStartFromNow] = useState(true);
   const { toast } = useToast();
 
   // Check subscription limits
@@ -420,6 +423,10 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     
     if (!selectedCountryData || !selectedVisaData) return;
 
+    const trackingStart = startFromNow ? 
+      new Date().toISOString().split('T')[0] : 
+      trackingStartDate || new Date().toISOString().split('T')[0];
+
     const newVisa: VisaTracking = {
       id: `visa-${Date.now()}`,
       countryCode: selectedCountry,
@@ -428,6 +435,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       dayLimit: parseInt(dayLimit) || 90,
       daysUsed: 0,
       startDate: new Date().toISOString().split('T')[0],
+      trackingStartDate: trackingStart,
       endDate: '',
       passportExpiry: passportExpiry || undefined,
       passportNotifications: selectedNotifications,
@@ -481,6 +489,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     setDayLimit('');
     setPassportExpiry('');
     setSelectedNotifications([9, 6, 3]);
+    setTrackingStartDate('');
+    setStartFromNow(true);
   };
 
   const updateDaysUsed = (visaId: string, newDays: number) => {
@@ -725,6 +735,49 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
                   </div>
                 </div>
               )}
+
+              {/* Tracking Start Date */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  Tracking Start Date
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="start-now"
+                      checked={startFromNow}
+                      onChange={() => setStartFromNow(true)}
+                      className="rounded"
+                    />
+                    <label htmlFor="start-now" className="text-sm">
+                      Start tracking from now
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="start-custom"
+                      checked={!startFromNow}
+                      onChange={() => setStartFromNow(false)}
+                      className="rounded"
+                    />
+                    <label htmlFor="start-custom" className="text-sm">
+                      Start tracking from custom date
+                    </label>
+                  </div>
+                  {!startFromNow && (
+                    <Input
+                      type="date"
+                      value={trackingStartDate}
+                      onChange={(e) => setTrackingStartDate(e.target.value)}
+                      placeholder="Select start date"
+                      className="mt-2"
+                    />
+                  )}
+                </div>
+              </div>
 
               {/* Passport Expiry */}
               <div className="space-y-2">
