@@ -129,9 +129,9 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const getAllowedVisaTypes = () => {
     switch (subscription.tier) {
       case 'free': return ['tourist'];
-      case 'student': return ['tourist', 'student', 'transit'];
-      case 'business-individual': return ['tourist', 'business', 'work'];
-      case 'personal': return ['tourist', 'business', 'transit', 'digital-nomad'];
+      case 'student': return ['tourist', 'student', 'schengen', 'transit'];
+      case 'business-individual': return ['tourist', 'business', 'schengen', 'work'];
+      case 'personal': return ['tourist', 'business', 'student', 'schengen', 'transit', 'digital-nomad'];
       case 'family': return VISA_TYPES.map(v => v.id);
       case 'business': return VISA_TYPES.map(v => v.id);
       case 'enterprise': return VISA_TYPES.map(v => v.id);
