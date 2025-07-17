@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,8 +7,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Clock, AlertTriangle, Edit, FileText, Plane, Settings } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Calendar, Clock, AlertTriangle, Edit, FileText, Plane, Settings, MapPin, Calculator } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import EnhancedLocationService from '@/services/EnhancedLocationService';
+
+interface LocationEntry {
+  date: string;
+  countryCode: string;
+  entryTime?: string;
+  exitTime?: string;
+  isFullDay: boolean;
+}
+
+interface TaxTracking {
+  id: string;
+  countryCode: string;
+  countryName: string;
+  dayLimit: number; // 183 days by default
+  daysSpent: number;
+  trackingStartDate: string;
+  locationEntries: LocationEntry[];
+  isAutoTracking: boolean;
+  isActive: boolean;
+}
 
 interface VisaTracking {
   id: string;
@@ -26,6 +49,11 @@ interface VisaTracking {
 }
 
 interface VisaTrackingManagerProps {
+  subscription: any;
+  countries: any[];
+}
+
+interface TaxTrackingManagerProps {
   subscription: any;
   countries: any[];
 }
@@ -366,8 +394,11 @@ const PASSPORT_NOTIFICATION_OPTIONS = [
 
 const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription, countries }) => {
   const [visaTrackings, setVisaTrackings] = useState<VisaTracking[]>([]);
+  const [taxTrackings, setTaxTrackings] = useState<TaxTracking[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTaxModalOpen, setIsTaxModalOpen] = useState(false);
   const [editingVisa, setEditingVisa] = useState<VisaTracking | null>(null);
+  const [editingTax, setEditingTax] = useState<TaxTracking | null>(null);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedVisaType, setSelectedVisaType] = useState('');
   const [dayLimit, setDayLimit] = useState('');
@@ -375,7 +406,60 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const [selectedNotifications, setSelectedNotifications] = useState<number[]>([9, 6, 3]);
   const [trackingStartDate, setTrackingStartDate] = useState('');
   const [startFromNow, setStartFromNow] = useState(true);
+  const [activeTab, setActiveTab] = useState('visa');
+  const [isLocationTracking, setIsLocationTracking] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<string>('');
   const { toast } = useToast();
+
+  const updateLocationEntry = (countryCode: string, countryName: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    setTaxTrackings(prev => prev.map(tracking => {
+      if (tracking.countryCode === countryCode && tracking.isAutoTracking && tracking.isActive) {
+        const existingEntry = tracking.locationEntries.find(entry => entry.date === today);
+        
+        if (!existingEntry) {
+          const newEntry: LocationEntry = {
+            date: today,
+            countryCode,
+            isFullDay: true
+          };
+          
+          return {
+            ...tracking,
+            locationEntries: [...tracking.locationEntries, newEntry],
+            daysSpent: tracking.daysSpent + 1
+          };
+        }
+      }
+      return tracking;
+    }));
+  };
+
+  // Location tracking effect
+  useEffect(() => {
+    const initializeLocationTracking = async () => {
+      if (taxTrackings.some(t => t.isAutoTracking && t.isActive)) {
+        const hasPermission = await EnhancedLocationService.requestBackgroundPermissions();
+        if (hasPermission) {
+          setIsLocationTracking(true);
+          EnhancedLocationService.startBackgroundTracking((location) => {
+            setCurrentLocation(`${location.city}, ${location.country}`);
+            updateLocationEntry(location.country_code, location.country);
+          });
+        }
+      } else {
+        EnhancedLocationService.stopBackgroundTracking();
+        setIsLocationTracking(false);
+      }
+    };
+
+    initializeLocationTracking();
+
+    return () => {
+      EnhancedLocationService.stopBackgroundTracking();
+    };
+  }, [taxTrackings, updateLocationEntry]);
 
   // Check subscription limits
   const getVisaTrackingLimit = () => {
@@ -482,6 +566,112 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     });
   };
 
+  const getTaxTrackingLimit = () => {
+    switch (subscription.tier) {
+      case 'free': return 1;
+      case 'student': return 3;
+      case 'business-individual': return 5;
+      case 'personal': return 10;
+      case 'premium': return 20;
+      default: return 1;
+    }
+  };
+
+  const openTaxModal = () => {
+    if (taxTrackings.length >= getTaxTrackingLimit()) {
+      toast({
+        title: "Limit Reached",
+        description: `You can only track ${getTaxTrackingLimit()} tax residence(s) with your ${subscription.tier} plan.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsTaxModalOpen(true);
+  };
+
+  const addTaxTracking = () => {
+    if (!selectedCountry || !dayLimit) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a country and set day limit.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const selectedCountryData = COUNTRIES.find(c => c.code === selectedCountry);
+    if (!selectedCountryData) return;
+
+    const trackingStart = startFromNow ? 
+      new Date().toISOString().split('T')[0] : 
+      trackingStartDate || new Date().toISOString().split('T')[0];
+
+    const newTaxTracking: TaxTracking = {
+      id: `tax-${Date.now()}`,
+      countryCode: selectedCountry,
+      countryName: selectedCountryData.name,
+      dayLimit: parseInt(dayLimit) || 183,
+      daysSpent: 0,
+      trackingStartDate: trackingStart,
+      locationEntries: [],
+      isAutoTracking: true,
+      isActive: true
+    };
+
+    setTaxTrackings(prev => [...prev, newTaxTracking]);
+    
+    toast({
+      title: "Tax Tracking Added",
+      description: `Started tracking tax residency for ${selectedCountryData.name}`,
+    });
+
+    closeTaxModal();
+  };
+
+  const closeTaxModal = () => {
+    setIsTaxModalOpen(false);
+    setEditingTax(null);
+    setSelectedCountry('');
+    setDayLimit('183');
+    setTrackingStartDate('');
+    setStartFromNow(true);
+  };
+
+  const toggleTaxTracking = (taxId: string) => {
+    setTaxTrackings(prev => prev.map(tax => 
+      tax.id === taxId ? { ...tax, isActive: !tax.isActive } : tax
+    ));
+  };
+
+  const deleteTaxTracking = (taxId: string) => {
+    setTaxTrackings(prev => prev.filter(tax => tax.id !== taxId));
+    toast({
+      title: "Tax Tracking Deleted",
+      description: "Tax tracking has been removed.",
+    });
+  };
+
+  const addManualDays = (taxId: string, days: number, date: string) => {
+    setTaxTrackings(prev => prev.map(tax => {
+      if (tax.id === taxId) {
+        const existingEntry = tax.locationEntries.find(entry => entry.date === date);
+        if (!existingEntry) {
+          const newEntry: LocationEntry = {
+            date,
+            countryCode: tax.countryCode,
+            isFullDay: true
+          };
+          return {
+            ...tax,
+            locationEntries: [...tax.locationEntries, newEntry],
+            daysSpent: tax.daysSpent + days
+          };
+        }
+      }
+      return tax;
+    }));
+  };
+
   const resetForm = () => {
     setEditingVisa(null);
     setSelectedCountry('');
@@ -527,23 +717,35 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-blue-800">
             <FileText className="w-5 h-5" />
-            Visa Tracking Manager
+            Travel Day Guardian
           </CardTitle>
-          <Badge variant="outline" className="bg-blue-100 text-blue-700">
-            {visaTrackings.length}/{getVisaTrackingLimit()} Visas
-          </Badge>
+          <div className="flex gap-2">
+            <Badge variant="outline" className="bg-blue-100 text-blue-700">
+              {visaTrackings.length}/{getVisaTrackingLimit()} Visas
+            </Badge>
+            <Badge variant="outline" className="bg-green-100 text-green-700">
+              {taxTrackings.length}/{getTaxTrackingLimit()} Tax
+            </Badge>
+          </div>
         </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="visa">Visa Tracking</TabsTrigger>
+            <TabsTrigger value="tax">Tax Residence</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Subscription Notice */}
-        {subscription.tier === 'free' && (
-          <Alert className="border-orange-200 bg-orange-50">
-            <AlertTriangle className="w-4 h-4" />
-            <AlertDescription className="text-orange-800">
-              Free plan: Limited to 1 tourist visa tracking. Upgrade for multiple visa types and unlimited tracking.
-            </AlertDescription>
-          </Alert>
-        )}
+        <TabsContent value="visa" className="space-y-4">
+          {/* Subscription Notice */}
+          {subscription.tier === 'free' && (
+            <Alert className="border-orange-200 bg-orange-50">
+              <AlertTriangle className="w-4 h-4" />
+              <AlertDescription className="text-orange-800">
+                Free plan: Limited to 1 tourist visa tracking. Upgrade for multiple visa types and unlimited tracking.
+              </AlertDescription>
+            </Alert>
+          )}
 
         {/* Active Visa Trackings */}
         <div className="space-y-3">
@@ -831,6 +1033,247 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
             </div>
           </DialogContent>
         </Dialog>
+        </TabsContent>
+
+        <TabsContent value="tax" className="space-y-4">
+          {/* Location Tracking Status */}
+          {isLocationTracking && (
+            <Alert className="border-green-200 bg-green-50">
+              <MapPin className="w-4 h-4" />
+              <AlertDescription className="text-green-800">
+                Location tracking active. Current location: {currentLocation || 'Detecting...'}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Tax Residency Trackings */}
+          <div className="space-y-3">
+            {taxTrackings.map((tax) => {
+              const progress = Math.min((tax.daysSpent / tax.dayLimit) * 100, 100);
+              const remaining = Math.max(tax.dayLimit - tax.daysSpent, 0);
+              const isNearLimit = progress > 80;
+
+              return (
+                <Card key={tax.id} className={`border-white bg-white ${isNearLimit ? 'ring-2 ring-red-200' : ''}`}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <Calculator className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <h4 className="font-medium text-gray-900">
+                            {tax.countryName} Tax Residency
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {tax.daysSpent}/{tax.dayLimit} days • {remaining} days remaining
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Switch
+                              checked={tax.isActive}
+                              onCheckedChange={() => toggleTaxTracking(tax.id)}
+                            />
+                            <span className="text-xs text-gray-500">
+                              {tax.isActive ? 'Active' : 'Paused'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => deleteTaxTracking(tax.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="mb-3">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all ${
+                            progress > 80 ? 'bg-red-500' : 
+                            progress > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                          }`}
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Manual Day Entry */}
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <span>Manual entry:</span>
+                      <Input
+                        type="date"
+                        className="w-32 h-6 text-xs"
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            addManualDays(tax.id, 1, e.target.value);
+                          }
+                        }}
+                      />
+                      <span>Auto-tracking: {tax.isAutoTracking ? '✅' : '❌'}</span>
+                    </div>
+
+                    {/* Warning for near limit */}
+                    {isNearLimit && (
+                      <Alert className="border-red-200 bg-red-50 mt-3">
+                        <AlertTriangle className="w-4 h-4" />
+                        <AlertDescription className="text-red-800">
+                          Warning: Approaching tax residency threshold of {tax.dayLimit} days!
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Add New Tax Tracking Button */}
+          <Button
+            onClick={openTaxModal}
+            disabled={taxTrackings.length >= getTaxTrackingLimit()}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50"
+          >
+            <Calculator className="w-4 h-4 mr-2" />
+            {taxTrackings.length < getTaxTrackingLimit() ? 'Add Tax Residence Tracking' : `Upgrade for More (${taxTrackings.length}/${getTaxTrackingLimit()})`}
+          </Button>
+
+          {/* Tax Tracking Modal */}
+          <Dialog open={isTaxModalOpen} onOpenChange={(open) => {
+            setIsTaxModalOpen(open);
+            if (!open) closeTaxModal();
+          }}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Add Tax Residence Tracking</DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-4">
+                <Alert className="border-blue-200 bg-blue-50">
+                  <Calculator className="w-4 h-4" />
+                  <AlertDescription className="text-blue-800">
+                    Tax residence tracking monitors days spent in a country. Most countries use 183 days as the threshold for tax residency.
+                  </AlertDescription>
+                </Alert>
+
+                {/* Country Selection */}
+                <div className="space-y-2">
+                  <Label>Country</Label>
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select country..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COUNTRIES.map(country => (
+                        <SelectItem key={country.code} value={country.code}>
+                          {country.flag} {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Day Limit */}
+                <div className="space-y-2">
+                  <Label>Tax Residency Threshold (Days)</Label>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={dayLimit === '183' ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setDayLimit('183')}
+                    >
+                      183 days (Standard)
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={dayLimit === '90' ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setDayLimit('90')}
+                    >
+                      90 days
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={dayLimit === '365' ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setDayLimit('365')}
+                    >
+                      365 days
+                    </Button>
+                  </div>
+                  <Input
+                    type="number"
+                    value={dayLimit}
+                    onChange={(e) => setDayLimit(e.target.value)}
+                    placeholder="Custom day limit"
+                    min="1"
+                    max="365"
+                  />
+                </div>
+
+                {/* Tracking Start Date */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    Tracking Start Date
+                  </Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="tax-start-now"
+                        checked={startFromNow}
+                        onChange={() => setStartFromNow(true)}
+                        className="rounded"
+                      />
+                      <label htmlFor="tax-start-now" className="text-sm">
+                        Start tracking from now
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="tax-start-custom"
+                        checked={!startFromNow}
+                        onChange={() => setStartFromNow(false)}
+                        className="rounded"
+                      />
+                      <label htmlFor="tax-start-custom" className="text-sm">
+                        Start tracking from custom date
+                      </label>
+                    </div>
+                    {!startFromNow && (
+                      <Input
+                        type="date"
+                        value={trackingStartDate}
+                        onChange={(e) => setTrackingStartDate(e.target.value)}
+                        placeholder="Select start date"
+                        className="mt-2"
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-4">
+                  <Button variant="outline" onClick={closeTaxModal} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={addTaxTracking}
+                    disabled={!selectedCountry || !dayLimit}
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                  >
+                    Add Tax Tracking
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </TabsContent>
       </CardContent>
     </Card>
   );
