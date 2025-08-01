@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -223,6 +223,82 @@ const Index = () => {
 
       {/* User Profile Section */}
       <UserProfile />
+
+      {/* Tracking Summary */}
+      {countries.length > 0 && (
+        <Card className="p-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              Your Tracking Summary
+            </CardTitle>
+            <CardDescription>
+              Overview of your current visa and tax tracking status
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {countries.map((country) => {
+                const daysUsed = country.daysSpent || 0;
+                const daysLimit = country.dayLimit || 0;
+                const daysLeft = Math.max(0, daysLimit - daysUsed);
+                const usagePercentage = daysLimit > 0 ? (daysUsed / daysLimit) * 100 : 0;
+                
+                return (
+                  <div key={country.id} className="border rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{country.flag}</span>
+                        <div>
+                          <div className="font-semibold">{country.name}</div>
+                          <div className="text-sm text-muted-foreground">{country.reason}</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>Days Used</span>
+                        <span className="font-medium">{daysUsed} / {daysLimit}</span>
+                      </div>
+                      
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-500 ${
+                            usagePercentage >= 90 ? 'bg-red-500' :
+                            usagePercentage >= 70 ? 'bg-orange-500' :
+                            'bg-green-500'
+                          }`}
+                          style={{ width: `${Math.min(usagePercentage, 100)}%` }}
+                        />
+                      </div>
+                      
+                      <div className="flex justify-between text-sm">
+                        <span className={`font-medium ${
+                          daysLeft <= 10 ? 'text-red-600' :
+                          daysLeft <= 30 ? 'text-orange-600' :
+                          'text-green-600'
+                        }`}>
+                          {daysLeft} days left
+                        </span>
+                        <span className="text-muted-foreground">
+                          {usagePercentage.toFixed(1)}% used
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {country.lastEntry && (
+                      <div className="text-xs text-muted-foreground">
+                        Last entry: {new Date(country.lastEntry).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Visa Tracking Manager */}
       <VisaTrackingManager subscription={subscription} countries={countries} />
