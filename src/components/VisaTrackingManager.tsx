@@ -728,15 +728,15 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
             </Badge>
           </div>
         </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="visa">Visa Tracking</TabsTrigger>
             <TabsTrigger value="tax">Tax Residence</TabsTrigger>
           </TabsList>
-        </Tabs>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <TabsContent value="visa" className="space-y-4">
+          
+          <TabsContent value="visa" className="space-y-4">
           {/* Subscription Notice */}
           {subscription.tier === 'free' && (
             <Alert className="border-orange-200 bg-orange-50">
@@ -1274,6 +1274,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
             </DialogContent>
           </Dialog>
         </TabsContent>
+        
+        </Tabs>
       </CardContent>
     </Card>
   );
