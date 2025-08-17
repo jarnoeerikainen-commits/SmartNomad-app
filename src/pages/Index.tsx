@@ -12,6 +12,8 @@ import NewsDashboard from '@/components/NewsDashboard';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import VisaTrackingManager from '@/components/VisaTrackingManager';
+import { SecureDocumentVault } from '@/components/SecureDocumentVault';
+import { SmartAlerts } from '@/components/SmartAlerts';
 
 import TravelServices from '@/components/TravelServices';
 import PricingCard from '@/components/PricingCard';
@@ -299,6 +301,12 @@ const Index = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Smart Alerts */}
+      <SmartAlerts />
+
+      {/* Secure Document Vault */}
+      <SecureDocumentVault />
 
       {/* Visa Tracking Manager */}
       <VisaTrackingManager subscription={subscription} countries={countries} />
