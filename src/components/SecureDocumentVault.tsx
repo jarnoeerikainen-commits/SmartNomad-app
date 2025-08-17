@@ -25,6 +25,7 @@ import {
   QrCode
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import QRCode from 'qrcode';
 
 interface Document {
   id: string;
@@ -140,6 +141,46 @@ export const SecureDocumentVault: React.FC = () => {
           : doc
       )
     );
+  };
+
+  const generateQRCode = async (document: Document) => {
+    try {
+      const documentData = {
+        type: document.type,
+        name: document.name,
+        documentNumber: document.documentNumber,
+        expiryDate: document.expiryDate,
+        issuingAuthority: document.issuingAuthority
+      };
+      
+      const qrCodeUrl = await QRCode.toDataURL(JSON.stringify(documentData));
+      
+      // Create a new window to display the QR code
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head><title>QR Code - ${document.name}</title></head>
+            <body style="display: flex; flex-direction: column; align-items: center; padding: 20px; font-family: Arial, sans-serif;">
+              <h2>${document.name}</h2>
+              <img src="${qrCodeUrl}" alt="QR Code" style="border: 1px solid #ccc; padding: 10px;"/>
+              <p style="text-align: center; margin-top: 10px;">Scan this QR code to quickly access document information</p>
+            </body>
+          </html>
+        `);
+      }
+      
+      toast({
+        title: "QR Code generated",
+        description: "QR code opened in new window",
+      });
+    } catch (error) {
+      toast({
+        title: "QR Code generation failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
   };
 
   const getExpiryStatus = (expiryDate: string) => {
@@ -321,7 +362,11 @@ export const SecureDocumentVault: React.FC = () => {
                           >
                             {document.isVisible ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => generateQRCode(document)}
+                          >
                             <QrCode className="w-3 h-3" />
                           </Button>
                           <Button variant="outline" size="sm">
