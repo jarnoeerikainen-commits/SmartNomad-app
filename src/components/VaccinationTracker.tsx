@@ -22,22 +22,33 @@ interface Vaccination {
 
 interface VaccinationTrackerProps {
   currentLocation?: LocationData | null;
+  trackedCountries?: Array<{ name: string; code: string; }>;
 }
 
 const COMMON_VACCINATIONS = [
-  { name: 'Yellow Fever', duration: 10, required: ['Angola', 'Brazil', 'Ghana', 'Kenya', 'Nigeria'] },
-  { name: 'Hepatitis A', duration: 1, required: ['India', 'Thailand', 'Vietnam', 'Mexico', 'Egypt'] },
-  { name: 'Hepatitis B', duration: 10, required: ['China', 'Thailand', 'India', 'Philippines', 'Vietnam'] },
-  { name: 'Typhoid', duration: 3, required: ['India', 'Pakistan', 'Bangladesh', 'Nepal', 'Cambodia'] },
-  { name: 'Japanese Encephalitis', duration: 2, required: ['Japan', 'China', 'Thailand', 'Vietnam', 'Cambodia'] },
-  { name: 'Meningitis', duration: 3, required: ['Saudi Arabia', 'Chad', 'Niger', 'Sudan', 'Mali'] },
-  { name: 'Cholera', duration: 2, required: ['Haiti', 'Yemen', 'Somalia', 'Congo', 'Afghanistan'] },
-  { name: 'Rabies', duration: 2, required: ['India', 'Thailand', 'Philippines', 'Vietnam', 'Cambodia'] },
-  { name: 'Polio', duration: 10, required: ['Afghanistan', 'Pakistan', 'Nigeria'] },
-  { name: 'COVID-19', duration: 1, required: ['Global'] }
+  { name: 'Yellow Fever', duration: 10, required: ['Angola', 'Brazil', 'Ghana', 'Kenya', 'Nigeria', 'Peru', 'Colombia', 'Ecuador', 'Bolivia'] },
+  { name: 'Hepatitis A', duration: 1, required: ['India', 'Thailand', 'Vietnam', 'Mexico', 'Egypt', 'Morocco', 'Turkey', 'Guatemala', 'Honduras'] },
+  { name: 'Hepatitis B', duration: 10, required: ['China', 'Thailand', 'India', 'Philippines', 'Vietnam', 'Indonesia', 'Malaysia', 'Myanmar', 'Cambodia'] },
+  { name: 'Typhoid', duration: 3, required: ['India', 'Pakistan', 'Bangladesh', 'Nepal', 'Cambodia', 'Laos', 'Burma', 'Afghanistan', 'Iraq'] },
+  { name: 'Japanese Encephalitis', duration: 2, required: ['Japan', 'China', 'Thailand', 'Vietnam', 'Cambodia', 'Laos', 'Myanmar', 'Philippines', 'Indonesia'] },
+  { name: 'Meningitis', duration: 3, required: ['Saudi Arabia', 'Chad', 'Niger', 'Sudan', 'Mali', 'Burkina Faso', 'Senegal', 'Gambia', 'Guinea'] },
+  { name: 'Cholera', duration: 2, required: ['Haiti', 'Yemen', 'Somalia', 'Congo', 'Afghanistan', 'South Sudan', 'Nigeria', 'Bangladesh', 'India'] },
+  { name: 'Rabies', duration: 2, required: ['India', 'Thailand', 'Philippines', 'Vietnam', 'Cambodia', 'Laos', 'Myanmar', 'Indonesia', 'Malaysia'] },
+  { name: 'Polio', duration: 10, required: ['Afghanistan', 'Pakistan', 'Nigeria', 'Syria', 'Somalia', 'Yemen'] },
+  { name: 'COVID-19', duration: 1, required: ['Global'] },
+  { name: 'Malaria Prophylaxis', duration: 0, required: ['Sub-Saharan Africa', 'Parts of Asia', 'Central America', 'Haiti', 'Papua New Guinea'] },
+  { name: 'Tick-borne Encephalitis', duration: 3, required: ['Central Europe', 'Eastern Europe', 'Russia', 'Scandinavia', 'Baltic States'] },
+  { name: 'Influenza', duration: 1, required: ['Recommended Globally'] },
+  { name: 'MMR (Measles, Mumps, Rubella)', duration: 20, required: ['Global - especially developing countries'] },
+  { name: 'Tetanus-Diphtheria', duration: 10, required: ['Global'] },
+  { name: 'Varicella (Chickenpox)', duration: 20, required: ['Recommended for non-immune travelers'] },
+  { name: 'Pneumococcal', duration: 5, required: ['High-risk areas and elderly travelers'] },
+  { name: 'Dengue Fever', duration: 3, required: ['Southeast Asia', 'Latin America', 'Caribbean', 'Pacific Islands'] },
+  { name: 'Chikungunya', duration: 0, required: ['Africa', 'Asia', 'Caribbean', 'Central America'] },
+  { name: 'Zika Virus', duration: 0, required: ['Latin America', 'Caribbean', 'Southeast Asia', 'Pacific Islands'] }
 ];
 
-const VaccinationTracker: React.FC<VaccinationTrackerProps> = ({ currentLocation }) => {
+const VaccinationTracker: React.FC<VaccinationTrackerProps> = ({ currentLocation, trackedCountries = [] }) => {
   const [vaccinations, setVaccinations] = useState<Vaccination[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedVaccination, setSelectedVaccination] = useState('');
@@ -120,12 +131,46 @@ const VaccinationTracker: React.FC<VaccinationTrackerProps> = ({ currentLocation
   };
 
   const getRecommendedVaccinations = () => {
-    if (!currentLocation) return [];
+    const allCountries = [
+      ...(currentLocation ? [currentLocation.country] : []),
+      ...trackedCountries.map(c => c.name)
+    ];
+    
+    if (allCountries.length === 0) return [];
     
     return COMMON_VACCINATIONS.filter(vaccination => 
-      vaccination.required.includes(currentLocation.country) &&
+      vaccination.required.some(req => 
+        allCountries.some(country => 
+          req.includes(country) || country.includes(req) || req === 'Global'
+        )
+      ) &&
       !vaccinations.some(v => v.name === vaccination.name)
     );
+  };
+
+  const quickAddVaccination = (vaccineName: string) => {
+    const vaccinationInfo = COMMON_VACCINATIONS.find(v => v.name === vaccineName);
+    if (!vaccinationInfo) return;
+
+    const today = new Date();
+    const expiryDate = vaccinationInfo.duration > 0 
+      ? new Date(today.getTime() + (vaccinationInfo.duration * 365 * 24 * 60 * 60 * 1000))
+      : new Date(today.getTime() + (365 * 24 * 60 * 60 * 1000)); // Default 1 year for prophylaxis
+
+    const newVaccination: Vaccination = {
+      id: Date.now().toString(),
+      name: vaccineName,
+      dateReceived: today.toISOString().split('T')[0],
+      expiryDate: expiryDate.toISOString().split('T')[0],
+      isRequired: true,
+      notes: 'Quick added'
+    };
+
+    setVaccinations(prev => [...prev, newVaccination]);
+    toast({
+      title: "Vaccination Added",
+      description: `${vaccineName} has been added to your records.`,
+    });
   };
 
   const getVaccinationStatus = (vaccination: Vaccination) => {
@@ -168,15 +213,33 @@ const VaccinationTracker: React.FC<VaccinationTrackerProps> = ({ currentLocation
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Recommended Vaccinations for Current Location */}
+        {/* Recommended Vaccinations for Tracked Countries */}
         {recommendedVaccinations.length > 0 && (
-          <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-            <h4 className="font-medium text-orange-800 mb-2">Recommended for {currentLocation?.country}</h4>
-            <div className="flex flex-wrap gap-2">
+          <div className="p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-orange-200">
+            <h4 className="font-medium text-orange-800 mb-3 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" />
+              Recommended for Your Destinations
+            </h4>
+            <div className="space-y-2">
               {recommendedVaccinations.map(vaccine => (
-                <Badge key={vaccine.name} variant="outline" className="text-orange-700 border-orange-300">
-                  {vaccine.name}
-                </Badge>
+                <div key={vaccine.name} className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-orange-700 border-orange-300">
+                      {vaccine.name}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {vaccine.duration > 0 ? `Valid ${vaccine.duration} years` : 'Prophylaxis'}
+                    </span>
+                  </div>
+                  <Button
+                    onClick={() => quickAddVaccination(vaccine.name)}
+                    size="sm"
+                    variant="outline"
+                    className="text-green-600 border-green-300 hover:bg-green-50"
+                  >
+                    ✓ Add Quick
+                  </Button>
+                </div>
               ))}
             </div>
           </div>

@@ -12,6 +12,7 @@ import NewsDashboard from '@/components/NewsDashboard';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import VisaTrackingManager from '@/components/VisaTrackingManager';
+import VaccinationTracker from '@/components/VaccinationTracker';
 import { SecureDocumentVault } from '@/components/SecureDocumentVault';
 import { SmartAlerts } from '@/components/SmartAlerts';
 
@@ -307,6 +308,12 @@ const Index = () => {
 
       {/* Secure Document Vault */}
       <SecureDocumentVault />
+
+      {/* Vaccination Tracker */}
+      <VaccinationTracker 
+        currentLocation={detectedLocation} 
+        trackedCountries={countries}
+      />
 
       {/* Visa Tracking Manager */}
       <VisaTrackingManager subscription={subscription} countries={countries} />
