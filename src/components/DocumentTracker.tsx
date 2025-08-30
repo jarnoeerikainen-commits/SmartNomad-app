@@ -23,7 +23,6 @@ import { useToast } from '@/hooks/use-toast';
 interface Document {
   id: string;
   type: 'passport' | 'license';
-  documentNumber: string;
   country: string;
   issueDate: string;
   expiryDate: string;
@@ -52,7 +51,6 @@ export const DocumentTracker: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDocumentType, setSelectedDocumentType] = useState<'passport' | 'license'>('passport');
   const [documentForm, setDocumentForm] = useState({
-    documentNumber: '',
     country: '',
     issueDate: '',
     expiryDate: '',
@@ -99,7 +97,7 @@ export const DocumentTracker: React.FC = () => {
   };
 
   const addDocument = () => {
-    if (!documentForm.documentNumber || !documentForm.country || !documentForm.issueDate || !documentForm.expiryDate) {
+    if (!documentForm.country || !documentForm.issueDate || !documentForm.expiryDate) {
       toast({
         title: "Missing information",
         description: "Please fill in all required fields",
@@ -117,7 +115,6 @@ export const DocumentTracker: React.FC = () => {
     setDocuments(prev => [...prev, newDocument]);
     setIsAddModalOpen(false);
     setDocumentForm({
-      documentNumber: '',
       country: '',
       issueDate: '',
       expiryDate: '',
@@ -202,10 +199,9 @@ export const DocumentTracker: React.FC = () => {
                     <div key={passport.id} className="flex items-center justify-between p-3 bg-white rounded-lg border">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(status)}
-                        <div className="flex-1">
+                        <div>
                           <div className="flex items-center gap-2">
                             <p className="font-medium">{passport.country} Passport</p>
-                            <span className="text-xs text-gray-500">#{passport.documentNumber}</span>
                           </div>
                           <p className="text-sm text-muted-foreground">
                             Expires: {new Date(passport.expiryDate).toLocaleDateString()}
@@ -258,10 +254,9 @@ export const DocumentTracker: React.FC = () => {
                     <div key={license.id} className="flex items-center justify-between p-3 bg-white rounded-lg border">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(status)}
-                        <div className="flex-1">
+                        <div>
                           <div className="flex items-center gap-2">
                             <p className="font-medium">{license.country} License</p>
-                            <span className="text-xs text-gray-500">#{license.documentNumber}</span>
                           </div>
                           <p className="text-sm text-muted-foreground">
                             Expires: {new Date(license.expiryDate).toLocaleDateString()}
@@ -318,15 +313,6 @@ export const DocumentTracker: React.FC = () => {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <Label>Document Number *</Label>
-                <Input
-                  value={documentForm.documentNumber}
-                  onChange={(e) => setDocumentForm(prev => ({ ...prev, documentNumber: e.target.value }))}
-                  placeholder={selectedDocumentType === 'passport' ? 'Passport number' : 'License number'}
-                />
-              </div>
-              
               <div>
                 <Label>Country/State *</Label>
                 <Select 
