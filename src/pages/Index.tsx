@@ -13,6 +13,7 @@ import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import VisaTrackingManager from '@/components/VisaTrackingManager';
 import VaccinationTracker from '@/components/VaccinationTracker';
+import { DocumentTracker } from '@/components/DocumentTracker';
 import { SecureDocumentVault } from '@/components/SecureDocumentVault';
 import { SmartAlerts } from '@/components/SmartAlerts';
 
@@ -314,6 +315,9 @@ const Index = () => {
         currentLocation={detectedLocation} 
         trackedCountries={countries}
       />
+
+      {/* Document Tracker */}
+      <DocumentTracker />
 
       {/* Visa Tracking Manager */}
       <VisaTrackingManager subscription={subscription} countries={countries} />
