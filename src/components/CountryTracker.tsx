@@ -16,10 +16,63 @@ interface CountryTrackerProps {
   onRemoveCountry: (countryCode: string) => void;
 }
 
-// World countries data (excluding sanctioned countries)
+// World countries data (excluding sanctioned countries) + US States for tax tracking
 const AVAILABLE_COUNTRIES = [
-  { code: 'AD', name: 'Andorra', flag: '🇦🇩' },
-  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪' },
+  // US States for tax residency tracking
+  { code: 'US-AL', name: 'Alabama (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-AK', name: 'Alaska (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-AZ', name: 'Arizona (US State)', flag: '🇺🇸', category: 'US State', taxDays: 269, taxType: 'hybrid' },
+  { code: 'US-AR', name: 'Arkansas (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-CA', name: 'California (US State)', flag: '🇺🇸', category: 'US State', taxDays: 269, taxType: 'hybrid' },
+  { code: 'US-CO', name: 'Colorado (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-CT', name: 'Connecticut (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-DE', name: 'Delaware (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-FL', name: 'Florida (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-GA', name: 'Georgia (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-HI', name: 'Hawaii (US State)', flag: '🇺🇸', category: 'US State', taxDays: 199, taxType: 'hybrid' },
+  { code: 'US-ID', name: 'Idaho (US State)', flag: '🇺🇸', category: 'US State', taxDays: 269, taxType: 'hybrid' },
+  { code: 'US-IL', name: 'Illinois (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-IN', name: 'Indiana (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-IA', name: 'Iowa (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-KS', name: 'Kansas (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-KY', name: 'Kentucky (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-LA', name: 'Louisiana (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-ME', name: 'Maine (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-MD', name: 'Maryland (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-MA', name: 'Massachusetts (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-MI', name: 'Michigan (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-MN', name: 'Minnesota (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-MS', name: 'Mississippi (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-MO', name: 'Missouri (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-MT', name: 'Montana (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-NE', name: 'Nebraska (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-NV', name: 'Nevada (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-NH', name: 'New Hampshire (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-NJ', name: 'New Jersey (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-NM', name: 'New Mexico (US State)', flag: '🇺🇸', category: 'US State', taxDays: 184, taxType: 'day_count' },
+  { code: 'US-NY', name: 'New York (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-NC', name: 'North Carolina (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-ND', name: 'North Dakota (US State)', flag: '🇺🇸', category: 'US State', taxDays: 209, taxType: 'hybrid' },
+  { code: 'US-OH', name: 'Ohio (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-OK', name: 'Oklahoma (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-OR', name: 'Oregon (US State)', flag: '🇺🇸', category: 'US State', taxDays: 199, taxType: 'hybrid' },
+  { code: 'US-PA', name: 'Pennsylvania (US State)', flag: '🇺🇸', category: 'US State', taxDays: 180, taxType: 'day_count' },
+  { code: 'US-RI', name: 'Rhode Island (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-SC', name: 'South Carolina (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-SD', name: 'South Dakota (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-TN', name: 'Tennessee (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-TX', name: 'Texas (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-UT', name: 'Utah (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-VT', name: 'Vermont (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'hybrid' },
+  { code: 'US-VA', name: 'Virginia (US State)', flag: '🇺🇸', category: 'US State', taxDays: 182, taxType: 'day_count' },
+  { code: 'US-WA', name: 'Washington (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  { code: 'US-WV', name: 'West Virginia (US State)', flag: '🇺🇸', category: 'US State', taxDays: 29, taxType: 'hybrid' },
+  { code: 'US-WI', name: 'Wisconsin (US State)', flag: '🇺🇸', category: 'US State', taxDays: 365, taxType: 'domicile' },
+  { code: 'US-WY', name: 'Wyoming (US State)', flag: '🇺🇸', category: 'US State', taxDays: 0, taxType: 'none' },
+  
+  // World Countries
+  { code: 'AD', name: 'Andorra', flag: '🇦🇩', category: 'Country' },
+  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪', category: 'Country' },
   { code: 'AF', name: 'Afghanistan', flag: '🇦🇫' },
   { code: 'AG', name: 'Antigua and Barbuda', flag: '🇦🇬' },
   { code: 'AI', name: 'Anguilla', flag: '🇦🇮' },
@@ -280,15 +333,29 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
     !countries.find(c => c.code === country.code)
   );
 
-  const handleAddCountry = (countryData: { code: string; name: string; flag: string }) => {
+  const handleAddCountry = (countryData: { code: string; name: string; flag: string; category?: string; taxDays?: number; taxType?: string }) => {
+    // Set appropriate day limit based on category and tax rules
+    let dayLimit = 90; // Default for tourism
+    let reason = 'Tourism/Business';
+    
+    if (countryData.category === 'US State') {
+      if (countryData.taxType === 'none') {
+        dayLimit = 365;
+        reason = 'US State Tax Tracking (No Income Tax)';
+      } else if (countryData.taxDays) {
+        dayLimit = countryData.taxDays;
+        reason = `US State Tax Tracking (${countryData.taxDays} day limit)`;
+      }
+    }
+    
     const fullCountry: Country = {
       id: `country-${countryData.code}-${Date.now()}`,
       code: countryData.code,
       name: countryData.name,
       flag: countryData.flag,
-      dayLimit: 90, // Default 90-day limit
+      dayLimit: dayLimit,
       daysSpent: 0,
-      reason: 'Tourism/Business',
+      reason: reason,
       lastUpdate: null,
       countTravelDays: true,
       yearlyDaysSpent: 0,
@@ -300,10 +367,15 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
     setSearchTerm('');
     setShowAddCountry(false);
     
-    if (followEmbassyNews) {
+    if (followEmbassyNews && countryData.category !== 'US State') {
       toast({
         title: "Embassy News Enabled",
         description: `Now following embassy updates for ${countryData.name}`,
+      });
+    } else if (countryData.category === 'US State') {
+      toast({
+        title: "US State Tax Tracking Added",
+        description: `Now tracking tax compliance for ${countryData.name}`,
       });
     }
   };

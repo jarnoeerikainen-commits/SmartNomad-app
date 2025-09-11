@@ -19,6 +19,7 @@ import { SmartAlerts } from '@/components/SmartAlerts';
 
 import TravelServices from '@/components/TravelServices';
 import PricingCard from '@/components/PricingCard';
+import USTaxStateTracker from '@/components/USTaxStateTracker';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -306,6 +307,9 @@ const Index = () => {
 
       {/* Smart Alerts */}
       <SmartAlerts />
+
+      {/* US State Tax Tracker */}
+      <USTaxStateTracker />
 
       {/* Secure Document Vault */}
       <SecureDocumentVault />
