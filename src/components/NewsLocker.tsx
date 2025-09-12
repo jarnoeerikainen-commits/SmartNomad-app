@@ -51,7 +51,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
 
       // Show critical visa/tax alerts
       const criticalNews = importantNews.filter(item => 
-        (item.category === 'visa' || item.category === 'tax') && 
+        (item.category === 'visa' || item.category === 'taxes') && 
         (item.impact === 'high' || item.isBreaking)
       );
 
@@ -74,7 +74,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'visa': return 'bg-red-100 text-red-800 border-red-300';
-      case 'tax': return 'bg-orange-100 text-orange-800 border-orange-300';
+      case 'taxes': return 'bg-orange-100 text-orange-800 border-orange-300';
       case 'travel': return 'bg-blue-100 text-blue-800 border-blue-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-300';
     }
@@ -152,7 +152,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
                     key={item.id} 
                     className={`p-3 rounded-lg border-l-4 ${
                       item.category === 'visa' ? 'border-l-red-500 bg-red-50' :
-                      item.category === 'tax' ? 'border-l-orange-500 bg-orange-50' :
+                      item.category === 'taxes' ? 'border-l-orange-500 bg-orange-50' :
                       'border-l-blue-500 bg-blue-50'
                     }`}
                   >
@@ -167,7 +167,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
                           <Badge className={`text-xs border ${getCategoryColor(item.category)}`}>
                             {item.category.toUpperCase()}
                           </Badge>
-                          {(item.category === 'visa' || item.category === 'tax') && (
+                          {(item.category === 'visa' || item.category === 'taxes') && (
                             <AlertTriangle className="w-3 h-3 text-red-500" />
                           )}
                         </div>

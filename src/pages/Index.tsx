@@ -9,6 +9,7 @@ import { MapPin, Plus, X, Plane, AlertTriangle, Globe, Wifi, WifiOff } from 'luc
 import { useToast } from '@/hooks/use-toast';
 import CountryTracker from '@/components/CountryTracker';
 import NewsDashboard from '@/components/NewsDashboard';
+import EnhancedNewsSection from '@/components/EnhancedNewsSection';
 import UserProfile from '@/components/UserProfile';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import VisaTrackingManager from '@/components/VisaTrackingManager';
@@ -329,6 +330,9 @@ const Index = () => {
 
       {/* Visa Tracking Manager */}
       <VisaTrackingManager subscription={subscription} countries={countries} />
+
+      {/* Enhanced News Section */}
+      <EnhancedNewsSection />
 
       {/* Main Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

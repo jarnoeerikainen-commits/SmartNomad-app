@@ -5,7 +5,7 @@ interface NewsItem {
   summary: string;
   source: string;
   country: string;
-  category: 'visa' | 'tax' | 'travel' | 'general';
+  category: 'laws' | 'taxes' | 'war' | 'weather_alerts' | 'strikes' | 'aviation' | 'business' | 'visa' | 'travel' | 'general';
   impact: 'high' | 'medium' | 'low';
   publishedAt: string;
   url: string;
@@ -47,8 +47,8 @@ class NewsService {
     return NewsService.instance;
   }
 
-  async getCountryNews(countryCodes: string[], languages: string[] = ['en']): Promise<NewsItem[]> {
-    const cacheKey = `${countryCodes.join(',')}-${languages.join(',')}`;
+  async getCountryNews(countryCodes: string[], languages: string[] = ['en'], categories: string[] = []): Promise<NewsItem[]> {
+    const cacheKey = `${countryCodes.join(',')}-${languages.join(',')}-${categories.join(',')}`;
     
     // Return cached data if available and recent (within 10 minutes)
     if (this.newsCache.has(cacheKey)) {
@@ -59,8 +59,14 @@ class NewsService {
       // Simulate fetching from multiple sources: government sites, international news, local papers
       const mockNews: NewsItem[] = await this.fetchFromMultipleSources(countryCodes);
       
+      // Filter by categories if specified
+      let filteredNews = mockNews;
+      if (categories.length > 0) {
+        filteredNews = mockNews.filter(news => categories.includes(news.category));
+      }
+      
       // Filter and prioritize by impact and breaking status
-      const relevantNews = mockNews
+      const relevantNews = filteredNews
         .filter(news => countryCodes.includes(news.country) || news.country === 'GLOBAL')
         .sort((a, b) => {
           // Prioritize breaking news and high impact
@@ -69,7 +75,8 @@ class NewsService {
           if (a.impact === 'high' && b.impact !== 'high') return -1;
           if (a.impact !== 'high' && b.impact === 'high') return 1;
           return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-        });
+        })
+        .slice(0, 5); // Limit to 5 news daily
 
       this.newsCache.set(cacheKey, relevantNews);
       
@@ -88,81 +95,172 @@ class NewsService {
   private async fetchFromMultipleSources(countryCodes: string[]): Promise<NewsItem[]> {
     const now = new Date();
     const mockNews: NewsItem[] = [
-      // Government/Official sources
+      // Laws
       {
-        id: 'gov-1',
-        title: 'New Digital Nomad Visa Requirements - 90-Day Rule Changes',
-        summary: 'Updated visa requirements for digital nomads across EU countries. New 90-day counting mechanism affects long-term stays.',
-        source: 'EU Immigration Portal',
+        id: 'law-1',
+        title: 'New Immigration Law Changes Visa Processing Times in Germany',
+        summary: 'German parliament passes new immigration legislation affecting processing times for skilled worker visas and student permits.',
+        source: 'German Federal Ministry',
         country: 'DE',
-        category: 'visa',
+        category: 'laws',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 1800000).toISOString(),
+        url: 'https://bamf.de/law-changes',
+        isBreaking: true
+      },
+      {
+        id: 'law-2',
+        title: 'Thailand Updates Foreigner Business Ownership Laws',
+        summary: 'New regulations limit foreign ownership in certain business sectors, affecting digital nomads and expat entrepreneurs.',
+        source: 'Thailand Ministry of Commerce',
+        country: 'TH',
+        category: 'laws',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 3600000).toISOString(),
-        url: 'https://ec.europa.eu/immigration',
-        isBreaking: true
+        url: 'https://moc.go.th/law-updates',
+        isBreaking: false
       },
+      
+      // Taxes
       {
-        id: 'gov-2',
-        title: 'Thailand Tax Residency - 180 Day Rule Implementation',
-        summary: 'Thailand implements new tax residency rules affecting foreign income taxation for stays exceeding 180 days.',
-        source: 'Thailand Revenue Department',
-        country: 'TH',
-        category: 'tax',
+        id: 'tax-1',
+        title: 'Portugal Introduces New Tax Incentives for Digital Nomads',
+        summary: 'Portugal announces D7 visa holders can benefit from reduced tax rates on foreign income for first five years.',
+        source: 'Portuguese Tax Authority',
+        country: 'PT',
+        category: 'taxes',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 7200000).toISOString(),
-        url: 'https://rd.go.th',
-        isBreaking: false
-      },
-      
-      // International news sources
-      {
-        id: 'intl-1',
-        title: 'UK Post-Brexit Travel Changes for Digital Nomads',
-        summary: 'Reuters reports on new UK travel requirements affecting digital nomads and remote workers from EU countries.',
-        source: 'Reuters',
-        country: 'GB',
-        category: 'travel',
-        impact: 'high',
-        publishedAt: new Date(now.getTime() - 10800000).toISOString(),
-        url: 'https://reuters.com/travel-news',
-        isBreaking: false
-      },
-      {
-        id: 'intl-2',
-        title: 'Singapore Eases Entry Requirements for Tech Workers',
-        summary: 'BBC reports Singapore introduces new streamlined visa process for technology professionals and remote workers.',
-        source: 'BBC News',
-        country: 'SG',
-        category: 'visa',
-        impact: 'medium',
-        publishedAt: new Date(now.getTime() - 14400000).toISOString(),
-        url: 'https://bbc.com/singapore-visa',
-        isBreaking: false
-      },
-      
-      // Local newspaper sources
-      {
-        id: 'local-1',
-        title: 'Portugal Golden Visa Program Changes Announced',
-        summary: 'Local Portuguese media reports significant changes to Golden Visa investment requirements and processing times.',
-        source: 'Jornal de Notícias',
-        country: 'PT',
-        category: 'visa',
-        impact: 'high',
-        publishedAt: new Date(now.getTime() - 18000000).toISOString(),
-        url: 'https://jn.pt/golden-visa',
+        url: 'https://portaldasfinancas.gov.pt',
         isBreaking: true
       },
       {
-        id: 'local-2',
-        title: 'Mexico Temporary Resident Visa Updates',
-        summary: 'Mexican Immigration announces updated income requirements for temporary resident visas affecting nomads.',
-        source: 'El Universal',
-        country: 'MX',
-        category: 'visa',
+        id: 'tax-2',
+        title: 'UAE Introduces Corporate Tax for Foreign Companies',
+        summary: 'UAE implements 9% corporate tax rate for multinational companies, affecting digital nomad business structures.',
+        source: 'UAE Federal Tax Authority',
+        country: 'AE',
+        category: 'taxes',
+        impact: 'medium',
+        publishedAt: new Date(now.getTime() - 10800000).toISOString(),
+        url: 'https://tax.gov.ae',
+        isBreaking: false
+      },
+      
+      // War/Conflicts
+      {
+        id: 'war-1',
+        title: 'Travel Advisory: Eastern Europe Border Tensions',
+        summary: 'Increased military activity near Ukraine-Belarus border affects travel routes and visa processing in neighboring countries.',
+        source: 'International Crisis Group',
+        country: 'GLOBAL',
+        category: 'war',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 14400000).toISOString(),
+        url: 'https://crisisgroup.org/updates',
+        isBreaking: true
+      },
+      
+      // Weather Alerts
+      {
+        id: 'weather-1',
+        title: 'Severe Typhoon Warning Affects Philippines Travel',
+        summary: 'Category 4 typhoon approaching Manila region. All flights cancelled, evacuation orders in coastal areas.',
+        source: 'Philippine Weather Bureau',
+        country: 'PH',
+        category: 'weather_alerts',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 1800000).toISOString(),
+        url: 'https://pagasa.dost.gov.ph',
+        isBreaking: true
+      },
+      {
+        id: 'weather-2',
+        title: 'Heat Wave Alert Issued for Southern Europe',
+        summary: 'Extreme temperatures forecasted for Spain, Portugal, and southern France. Health advisories for tourists.',
+        source: 'European Weather Service',
+        country: 'GLOBAL',
+        category: 'weather_alerts',
+        impact: 'medium',
+        publishedAt: new Date(now.getTime() - 7200000).toISOString(),
+        url: 'https://ecmwf.int/alerts',
+        isBreaking: false
+      },
+      // Strikes
+      {
+        id: 'strike-1',
+        title: 'Major Airport Strike Disrupts European Travel',
+        summary: 'Air traffic controllers in France, Germany, and Italy announce coordinated 48-hour strike affecting international flights.',
+        source: 'European Transport Workers Union',
+        country: 'GLOBAL',
+        category: 'strikes',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 3600000).toISOString(),
+        url: 'https://etf-europe.org/strikes',
+        isBreaking: true
+      },
+      {
+        id: 'strike-2',
+        title: 'Rail Workers Strike Affects UK Travel Network',
+        summary: 'National rail strike planned for next week will impact train services between major UK cities and airports.',
+        source: 'UK Rail Workers Union',
+        country: 'GB',
+        category: 'strikes',
+        impact: 'medium',
+        publishedAt: new Date(now.getTime() - 10800000).toISOString(),
+        url: 'https://rmt.org.uk/strikes',
+        isBreaking: false
+      },
+      
+      // Aviation
+      {
+        id: 'aviation-1',
+        title: 'New Flight Routes Connect Southeast Asia Hubs',
+        summary: 'Budget airlines launch new direct routes between Bangkok, Ho Chi Minh City, and Manila, reducing travel costs for nomads.',
+        source: 'Aviation Weekly Asia',
+        country: 'GLOBAL',
+        category: 'aviation',
+        impact: 'medium',
+        publishedAt: new Date(now.getTime() - 14400000).toISOString(),
+        url: 'https://aviationweekly.asia',
+        isBreaking: false
+      },
+      {
+        id: 'aviation-2',
+        title: 'Airport Capacity Restrictions Affect Major Hubs',
+        summary: 'London Heathrow and Frankfurt airports implement passenger caps due to staff shortages, causing flight delays.',
+        source: 'Airport Industry News',
+        country: 'GLOBAL',
+        category: 'aviation',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 18000000).toISOString(),
+        url: 'https://airportindustry.com',
+        isBreaking: false
+      },
+      
+      // Business
+      {
+        id: 'business-1',
+        title: 'Remote Work Visa Programs Drive Economic Growth',
+        summary: 'Study shows digital nomad visa programs in Estonia, Portugal, and Barbados generate significant economic benefits.',
+        source: 'Global Business Journal',
+        country: 'GLOBAL',
+        category: 'business',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 21600000).toISOString(),
-        url: 'https://eluniversal.com.mx/visa-news',
+        url: 'https://globalbusiness.com/nomad-economy',
+        isBreaking: false
+      },
+      {
+        id: 'business-2',
+        title: 'Cryptocurrency Regulations Impact Digital Nomad Banking',
+        summary: 'New crypto regulations in EU countries affect digital nomads using cryptocurrency for international transactions.',
+        source: 'Financial Times',
+        country: 'GLOBAL',
+        category: 'business',
+        impact: 'high',
+        publishedAt: new Date(now.getTime() - 25200000).toISOString(),
+        url: 'https://ft.com/crypto-nomads',
         isBreaking: false
       },
       
@@ -173,7 +271,7 @@ class NewsService {
         summary: 'New international tax agreements between 15 countries will impact how remote workers are taxed starting 2024.',
         source: 'OECD Tax Policy',
         country: 'GLOBAL',
-        category: 'tax',
+        category: 'taxes',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 25200000).toISOString(),
         url: 'https://oecd.org/tax-treaties',

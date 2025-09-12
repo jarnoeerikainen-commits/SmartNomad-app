@@ -94,7 +94,13 @@ const NewsDashboard: React.FC<NewsDashboardProps> = ({ countries, userProfile })
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'visa': return 'bg-blue-100 text-blue-800';
-      case 'tax': return 'bg-green-100 text-green-800';
+      case 'taxes': return 'bg-green-100 text-green-800';
+      case 'laws': return 'bg-blue-100 text-blue-800';
+      case 'war': return 'bg-red-100 text-red-800';
+      case 'weather_alerts': return 'bg-yellow-100 text-yellow-800';
+      case 'strikes': return 'bg-orange-100 text-orange-800';
+      case 'aviation': return 'bg-purple-100 text-purple-800';
+      case 'business': return 'bg-indigo-100 text-indigo-800';
       case 'travel': return 'bg-purple-100 text-purple-800';
       default: return 'bg-gray-100 text-gray-800';
     }
