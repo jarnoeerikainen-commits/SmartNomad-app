@@ -16,6 +16,7 @@ import VaccinationTracker from '@/components/VaccinationTracker';
 import { DocumentTracker } from '@/components/DocumentTracker';
 import { SecureDocumentVault } from '@/components/SecureDocumentVault';
 import { SmartAlerts } from '@/components/SmartAlerts';
+import { CanadaTaxProvinceTracker } from '@/components/CanadaTaxProvinceTracker';
 
 import TravelServices from '@/components/TravelServices';
 import PricingCard from '@/components/PricingCard';
@@ -310,6 +311,9 @@ const Index = () => {
 
       {/* US State Tax Tracker */}
       <USTaxStateTracker />
+
+      {/* Canada Provincial Tax Tracker */}
+      <CanadaTaxProvinceTracker countries={countries} />
 
       {/* Secure Document Vault */}
       <SecureDocumentVault />
