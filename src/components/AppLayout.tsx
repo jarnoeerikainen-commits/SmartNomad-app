@@ -13,6 +13,7 @@ import { SmartAlerts } from './SmartAlerts';
 import TravelServices from './TravelServices';
 import UserProfile from './UserProfile';
 import { SecureDocumentVault } from './SecureDocumentVault';
+import { CookieConsent } from './GDPRCompliance';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -23,6 +24,7 @@ interface AppLayoutProps {
   subscription: Subscription;
   detectedLocation: LocationData | null;
   userProfile: any;
+  onUpgrade?: (tier: string) => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({
@@ -31,7 +33,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onRemoveCountry,
   subscription,
   detectedLocation,
-  userProfile
+  userProfile,
+  onUpgrade
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -120,6 +123,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
+        subscription={subscription}
+        onUpgrade={onUpgrade}
       />
       
       <div className="flex">
@@ -138,6 +143,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </div>
         </main>
       </div>
+      
+      {/* GDPR Cookie Consent */}
+      <CookieConsent />
     </div>
   );
 };

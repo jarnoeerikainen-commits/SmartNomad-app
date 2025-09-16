@@ -122,57 +122,6 @@ const Index = () => {
     });
   };
 
-  // Show pricing modal for free users
-  const shouldShowPricing = subscription.tier === 'free' && countries.length === 0;
-
-  if (shouldShowPricing) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="space-y-4">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <div className="p-4 gradient-primary rounded-2xl shadow-large">
-                <Globe className="w-12 h-12 text-white" />
-              </div>
-              <div>
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  TravelTracker
-                </h1>
-                <p className="text-lg text-muted-foreground mt-2">
-                  Your trusted global travel compliance companion
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold mb-4">
-                Choose Your Plan
-              </h2>
-              <p className="text-muted-foreground text-lg">
-                Select the perfect plan for your travel tracking needs
-              </p>
-            </div>
-            
-            <PricingCard 
-              subscription={subscription}
-              onUpgrade={handleUpgrade}
-            />
-          </div>
-        </div>
-
-        <VPNDetectionModal 
-          isOpen={showVPNModal}
-          onClose={handleVPNModalClose}
-          detectedLocation={detectedLocation}
-          vpnDuration={vpnDuration}
-          onConfirmLocation={handleConfirmLocation}
-          onDisableVPN={handleDisableVPN}
-        />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -183,6 +132,7 @@ const Index = () => {
         subscription={subscription}
         detectedLocation={detectedLocation}
         userProfile={userProfile}
+        onUpgrade={handleUpgrade}
       />
 
       <VPNDetectionModal 

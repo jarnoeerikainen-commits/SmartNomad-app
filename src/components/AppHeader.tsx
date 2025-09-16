@@ -1,5 +1,5 @@
-import React from 'react';
-import { Globe, Menu, Settings, User, Bell } from 'lucide-react';
+import React, { useState } from 'react';
+import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,13 +9,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { LanguageSelector } from './LanguageSelector';
+import { SmartAlerts } from './SmartAlerts';
+import { DataManagement } from './GDPRCompliance';
+import PricingCard from './PricingCard';
+import { Subscription } from '@/types/subscription';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
   showMenuButton?: boolean;
+  subscription?: Subscription;
+  onUpgrade?: (tier: string) => void;
 }
 
-const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick, showMenuButton = false }) => {
+const AppHeader: React.FC<AppHeaderProps> = ({ 
+  onMenuClick, 
+  showMenuButton = false, 
+  subscription,
+  onUpgrade 
+}) => {
+  const [showSmartAlerts, setShowSmartAlerts] = useState(false);
+  const [showDataManagement, setShowDataManagement] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -49,8 +65,16 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick, showMenuButton = fal
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
-          {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
+          {/* Language Selector */}
+          <LanguageSelector />
+          
+          {/* Smart Alerts */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="relative"
+            onClick={() => setShowSmartAlerts(true)}
+          >
             <Bell className="h-5 w-5" />
             <Badge 
               variant="destructive" 
@@ -68,7 +92,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick, showMenuButton = fal
                 <span className="hidden sm:inline">Profile</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
               <DropdownMenuItem>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile Settings</span>
@@ -76,6 +100,21 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick, showMenuButton = fal
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>App Settings</span>
+              </DropdownMenuItem>
+              {subscription && (
+                <DropdownMenuItem onClick={() => setShowUpgrade(true)}>
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  <span>Upgrade Plan</span>
+                  {subscription.tier === 'free' && (
+                    <Badge variant="secondary" className="ml-auto text-xs">
+                      Free
+                    </Badge>
+                  )}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={() => setShowDataManagement(true)}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Privacy & Data</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive">
@@ -85,6 +124,27 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onMenuClick, showMenuButton = fal
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Modals */}
+      <Dialog open={showSmartAlerts} onOpenChange={setShowSmartAlerts}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <SmartAlerts />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showDataManagement} onOpenChange={setShowDataManagement}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DataManagement />
+        </DialogContent>
+      </Dialog>
+
+      {subscription && onUpgrade && (
+        <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <PricingCard subscription={subscription} onUpgrade={onUpgrade} />
+          </DialogContent>
+        </Dialog>
+      )}
     </header>
   );
 };
