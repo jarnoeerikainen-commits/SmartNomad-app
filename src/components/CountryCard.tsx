@@ -17,7 +17,7 @@ interface CountryCardProps {
   onToggleCountDays: (id: string) => void;
 }
 
-const CountryCard: React.FC<CountryCardProps> = ({
+const CountryCard: React.FC<CountryCardProps> = React.memo(({
   country,
   isCurrentLocation,
   onRemove,
@@ -225,6 +225,6 @@ const CountryCard: React.FC<CountryCardProps> = ({
       </CardContent>
     </Card>
   );
-};
+});
 
 export default CountryCard;

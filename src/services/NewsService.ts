@@ -336,7 +336,7 @@ class NewsService {
   }
 
   async markAlertAsRead(alertId: string): Promise<void> {
-    console.log(`Alert ${alertId} marked as read`);
+    
   }
 }
 

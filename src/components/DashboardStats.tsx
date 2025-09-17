@@ -15,7 +15,7 @@ interface DashboardStatsProps {
   countries: Country[];
 }
 
-const DashboardStats: React.FC<DashboardStatsProps> = ({ countries }) => {
+const DashboardStats: React.FC<DashboardStatsProps> = React.memo(({ countries }) => {
   // Calculate stats
   const totalCountries = countries.length;
   const activeTracking = countries.filter(c => c.daysSpent && c.daysSpent > 0).length;
@@ -95,6 +95,6 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({ countries }) => {
       ))}
     </div>
   );
-};
+});
 
 export default DashboardStats;

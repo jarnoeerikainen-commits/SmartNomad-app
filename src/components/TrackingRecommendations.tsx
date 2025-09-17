@@ -7,10 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLink, Calendar, User, GraduationCap, Building, Scale } from 'lucide-react';
 import CountryInfoService from '@/services/CountryInfoService';
 import { CountryDetails } from '@/types/countryInfo';
+import { Country } from '@/types/country';
 
 interface TrackingRecommendationsProps {
-  countries: any[];
-  onAddCountry: (country: any) => void;
+  countries: Country[];
+  onAddCountry: (country: Country) => void;
 }
 
 const TrackingRecommendations: React.FC<TrackingRecommendationsProps> = ({ countries, onAddCountry }) => {
@@ -90,13 +91,23 @@ const TrackingRecommendations: React.FC<TrackingRecommendationsProps> = ({ count
   const handleAddCountryWithReason = (country: CountryDetails, reason: string) => {
     const dayLimit = getRecommendedDayLimit(country, reason);
     
-    onAddCountry({
+    const newCountry: Country = {
+      id: Date.now().toString(),
       code: country.code,
       name: country.name,
       flag: country.flag,
       reason: reason,
-      dayLimit: dayLimit
-    });
+      dayLimit: dayLimit,
+      daysSpent: 0,
+      lastUpdate: new Date().toISOString(),
+      countTravelDays: true,
+      yearlyDaysSpent: 0,
+      lastEntry: null,
+      totalEntries: 0,
+      followEmbassyNews: false
+    };
+    
+    onAddCountry(newCountry);
   };
 
   return (

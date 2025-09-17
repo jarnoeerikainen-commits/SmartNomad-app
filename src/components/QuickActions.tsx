@@ -17,7 +17,7 @@ interface QuickActionsProps {
   onSectionChange: (section: string) => void;
 }
 
-const QuickActions: React.FC<QuickActionsProps> = ({ onAddCountry, onSectionChange }) => {
+const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, onSectionChange }) => {
   const actions = [
     {
       title: 'Add Country',
@@ -80,6 +80,6 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onAddCountry, onSectionChan
       </CardContent>
     </Card>
   );
-};
+});
 
 export default QuickActions;

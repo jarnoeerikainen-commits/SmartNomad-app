@@ -76,9 +76,9 @@ export const SmartAlerts: React.FC = () => {
   // Generate sample alerts based on current tracking data
   useEffect(() => {
     generateSmartAlerts();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const generateSmartAlerts = () => {
+  const generateSmartAlerts = React.useCallback(() => {
     const sampleAlerts: Alert[] = [
       {
         id: '1',
@@ -146,7 +146,7 @@ export const SmartAlerts: React.FC = () => {
     ];
 
     setAlerts(sampleAlerts);
-  };
+  }, []);
 
   const markAsRead = (alertId: string) => {
     setAlerts(prev =>

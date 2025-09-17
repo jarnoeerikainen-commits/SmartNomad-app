@@ -27,7 +27,7 @@ const ExcelExport: React.FC<ExcelExportProps> = ({
   const [locationVerifications, setLocationVerifications] = useState<Record<string, LocationVerification>>({});
   const [verifyingLocation, setVerifyingLocation] = useState<string | null>(null);
 
-  const generateExcel = (data: any[], filename: string, sheetName: string = 'Sheet1') => {
+  const generateExcel = (data: Record<string, any>[], filename: string, sheetName: string = 'Sheet1') => {
     if (data.length === 0) return;
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -36,7 +36,7 @@ const ExcelExport: React.FC<ExcelExportProps> = ({
     
     // Auto-size columns
     const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-    const colWidths: any[] = [];
+    const colWidths: { wch: number }[] = [];
     for (let C = range.s.c; C <= range.e.c; ++C) {
       let maxWidth = 10;
       for (let R = range.s.r; R <= range.e.r; ++R) {
@@ -75,7 +75,7 @@ const ExcelExport: React.FC<ExcelExportProps> = ({
         [countryCode]: mockResponse
       }));
 
-      console.log(`Location verified for ${countryName}:`, mockResponse);
+      
     } catch (error) {
       console.error('Failed to verify location:', error);
     } finally {

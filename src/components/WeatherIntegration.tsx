@@ -110,7 +110,7 @@ export const WeatherIntegration: React.FC = () => {
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getConditionIcon = (condition: string) => {
     const conditionData = WEATHER_CONDITIONS[condition as keyof typeof WEATHER_CONDITIONS] || WEATHER_CONDITIONS.cloudy;

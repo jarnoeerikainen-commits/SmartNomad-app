@@ -68,9 +68,39 @@ export const CurrencyTracker: React.FC = () => {
     setIsLoading(false);
   };
 
+  const fetchRatesCallback = React.useCallback(async () => {
+    if (trackedCurrencies.length === 0) return;
+    
+    setIsLoading(true);
+    
+    try {
+      // Mock data with proper CurrencyRate structure
+      const currencyRates: CurrencyRate[] = trackedCurrencies.map(code => {
+        const currency = POPULAR_CURRENCIES.find(c => c.code === code);
+        return {
+          code,
+          name: currency?.name || code,
+          symbol: currency?.symbol || code,
+          rate: Math.round((Math.random() * 2 + 0.5) * 100) / 100,
+          change: Math.round((Math.random() - 0.5) * 10 * 100) / 100
+        };
+      });
+
+      setRates(currencyRates);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to fetch exchange rates:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [trackedCurrencies]);
+
   useEffect(() => {
-    fetchRates();
-  }, [trackedCurrencies, baseCurrency]);
+    fetchRatesCallback();
+    // Auto-refresh every 5 minutes
+    const interval = setInterval(fetchRatesCallback, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchRatesCallback]);
 
   const addCurrency = (currencyCode: string) => {
     if (!trackedCurrencies.includes(currencyCode)) {

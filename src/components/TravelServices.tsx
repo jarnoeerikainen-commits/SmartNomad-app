@@ -53,7 +53,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
     setIsOffersModalOpen(true);
 
     try {
-      console.log(`Searching offers for ${serviceName} in ${mockLocation.city}, ${mockLocation.country}`);
+      
       
       const foundOffers = await OffersService.searchOffers({
         service: serviceType,

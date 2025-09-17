@@ -70,7 +70,7 @@ export class OffersService {
     const country = location.country;
     const locationString = `${city}, ${country}`;
 
-    console.log(`Searching ${service} offers for ${locationString}`);
+    
 
     try {
       const offers = await this.generateValidatedOffersForService(service, locationString, location);
@@ -340,7 +340,7 @@ export class OffersService {
       if (await this.isValidOffer(offer)) {
         validOffers.push(offer);
       } else {
-        console.log(`Skipping invalid offer: ${offer.title} - ${offer.url}`);
+        
       }
     }
 

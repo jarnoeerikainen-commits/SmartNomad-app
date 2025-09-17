@@ -125,7 +125,7 @@ class EmbassyService {
   async registerWithEmbassy(embassyId: string, phoneNumber: string, travelDetails: any): Promise<boolean> {
     try {
       // Mock registration process
-      console.log(`Registering with embassy ${embassyId}:`, { phoneNumber, travelDetails });
+      
       return true;
     } catch (error) {
       console.error('Failed to register with embassy:', error);

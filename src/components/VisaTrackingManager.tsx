@@ -12,6 +12,8 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar, Clock, AlertTriangle, Edit, FileText, Plane, Settings, MapPin, Calculator } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
+import { Country } from '@/types/country';
+import { Subscription } from '@/types/subscription';
 
 interface LocationEntry {
   date: string;
@@ -49,13 +51,13 @@ interface VisaTracking {
 }
 
 interface VisaTrackingManagerProps {
-  subscription: any;
-  countries: any[];
+  subscription: Subscription;
+  countries: Country[];
 }
 
 interface TaxTrackingManagerProps {
-  subscription: any;
-  countries: any[];
+  subscription: Subscription;
+  countries: Country[];
 }
 
 const VISA_TYPES = [
@@ -466,9 +468,9 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     switch (subscription.tier) {
       case 'free': return 1;
       case 'student': return 5;
-      case 'business-individual': return 10;
-      case 'personal': return 15;
+      case 'personal': return 10;
       case 'family': return 25;
+      case 'business': return 100;
       case 'business': return 100;
       case 'enterprise': return 999;
       default: return 1;
@@ -483,7 +485,6 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     switch (subscription.tier) {
       case 'free': return ['tourist'];
       case 'student': return ['tourist', 'student', 'student-visa', 'schengen', 'transit'];
-      case 'business-individual': return ['tourist', 'business', 'esta', 'schengen', 'work'];
       case 'personal': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad'];
       case 'family': return VISA_TYPES.map(v => v.id);
       case 'business': return VISA_TYPES.map(v => v.id);
@@ -570,9 +571,10 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     switch (subscription.tier) {
       case 'free': return 1;
       case 'student': return 3;
-      case 'business-individual': return 5;
       case 'personal': return 10;
-      case 'premium': return 20;
+      case 'family': return 20;
+      case 'business': return 50;
+      case 'enterprise': return 100;
       default: return 1;
     }
   };

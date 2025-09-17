@@ -67,14 +67,7 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
 
   const newsService = NewsService.getInstance();
 
-  useEffect(() => {
-    loadNews();
-    // Auto-refresh every hour
-    const interval = setInterval(loadNews, 60 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [selectedCountries, selectedCategories]);
-
-  const loadNews = async () => {
+  const loadNewsCallback = React.useCallback(async () => {
     if (selectedCountries.length === 0) {
       setNews([]);
       return;
@@ -99,7 +92,16 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedCountries, selectedCategories, newsService, toast]);
+
+  useEffect(() => {
+    loadNewsCallback();
+    // Auto-refresh every hour
+    const interval = setInterval(loadNewsCallback, 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [loadNewsCallback]);
+
+  const loadNews = loadNewsCallback;
 
   const handleCountryChange = (countryCode: string) => {
     setSelectedCountries(prev => 

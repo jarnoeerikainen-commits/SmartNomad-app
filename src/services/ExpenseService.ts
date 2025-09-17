@@ -689,7 +689,7 @@ class ExpenseService {
     return unit === 'km' ? distance * rates.rate_per_km : distance * rates.rate_per_mile;
   }
 
-  static generateExpenseReport(expenses: any[], startDate: string, endDate: string) {
+  static generateExpenseReport(expenses: Record<string, any>[], startDate: string, endDate: string) {
     const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
     
     return {
@@ -701,14 +701,14 @@ class ExpenseService {
     };
   }
 
-  private static groupExpensesByCategory(expenses: any[]) {
+  private static groupExpensesByCategory(expenses: Record<string, any>[]) {
     return expenses.reduce((acc, expense) => {
       acc[expense.type] = (acc[expense.type] || 0) + expense.amount;
       return acc;
     }, {});
   }
 
-  private static groupExpensesByCountry(expenses: any[]) {
+  private static groupExpensesByCountry(expenses: Record<string, any>[]) {
     return expenses.reduce((acc, expense) => {
       acc[expense.country_code] = (acc[expense.country_code] || 0) + expense.amount;
       return acc;
