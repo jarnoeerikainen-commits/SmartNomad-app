@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -7,30 +7,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Languages } from 'lucide-react';
-
-interface Language {
-  code: string;
-  name: string;
-  nativeName: string;
-}
-
-const LANGUAGES: Language[] = [
-  { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'es', name: 'Spanish', nativeName: 'Español' },
-  { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
-  { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
-  { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
-];
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const LanguageSelector: React.FC = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(LANGUAGES[0]);
-
-  const handleLanguageChange = (language: Language) => {
-    setSelectedLanguage(language);
-    // In a real app, this would trigger language change functionality
-    localStorage.setItem('selectedLanguage', language.code);
-  };
+  const { currentLanguage, setLanguage, languages } = useLanguage();
+  
+  const selectedLanguage = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
   return (
     <DropdownMenu>
@@ -40,11 +22,11 @@ export const LanguageSelector: React.FC = () => {
           <span className="hidden sm:inline">{selectedLanguage.code.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 bg-background border shadow-lg">
-        {LANGUAGES.map((language) => (
+      <DropdownMenuContent align="end" className="w-48 bg-background border shadow-lg z-50">
+        {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
-            onClick={() => handleLanguageChange(language)}
+            onClick={() => setLanguage(language.code)}
             className={`cursor-pointer ${
               selectedLanguage.code === language.code ? 'bg-accent' : ''
             }`}
