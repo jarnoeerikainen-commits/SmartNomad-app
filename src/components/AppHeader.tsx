@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +32,18 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+
+  // Listen for plan upgrade events to close modals
+  useEffect(() => {
+    const handlePlanUpgraded = () => {
+      setShowUpgrade(false);
+      setShowSmartAlerts(false);
+      setShowDataManagement(false);
+    };
+
+    window.addEventListener('planUpgraded', handlePlanUpgraded);
+    return () => window.removeEventListener('planUpgraded', handlePlanUpgraded);
+  }, []);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

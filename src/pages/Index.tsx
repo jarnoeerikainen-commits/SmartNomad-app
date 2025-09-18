@@ -110,15 +110,27 @@ const Index = () => {
   };
 
   const handleUpgrade = (tier: string) => {
-    // In a real app, this would integrate with payment system
+    // Update subscription with enhanced features based on tier
+    const tierFeatures = {
+      free: ['✈️ Single visa tracking', '📊 Basic day counting', '📍 Manual location tracking', '⚠️ Simple alerts'],
+      student: ['🎓 Multiple visa types', '🏫 University compliance tracking', '📅 Academic calendar integration', '📖 Study visa monitoring', '🌍 Unlimited country tracking'],
+      personal: ['🌐 All visa types', '🤖 Automatic location detection', '💰 Tax residence tracking', '📋 Passport expiry alerts', '✅ Visa compliance monitoring', '🗃️ Premium country database'],
+      family: ['👨‍👩‍👧‍👦 All visa types for family', '🏠 Family dashboard', '🗺️ Shared trip planning', '👥 Group compliance tracking', '📘 Multiple passport management'],
+      business: ['🏢 All visa types for employees', '👥 Unlimited team members', '📊 Advanced compliance dashboard', '💼 Work permit tracking', '💰 Corporate tax optimization'],
+      'business-individual': ['💼 Multiple visa types', '🏢 Work permit tracking', '💰 Tax residence monitoring', '📊 Business travel analytics', '📄 Professional reporting'],
+      enterprise: ['🌍 All global visa types', '🏢 Custom compliance frameworks', '🏷️ White-label solutions', '🌐 Multi-country operations', '🏛️ Government reporting']
+    };
+
     setSubscription(prev => ({
       ...prev,
       tier: tier as any,
-      isActive: true
+      isActive: true,
+      features: tierFeatures[tier as keyof typeof tierFeatures] || tierFeatures.free
     }));
+    
     toast({
-      title: "Plan Updated",
-      description: `Successfully upgraded to ${tier} plan!`,
+      title: "Plan Upgraded Successfully!",
+      description: `Welcome to ${tier} plan! All features are now active.`,
     });
   };
 

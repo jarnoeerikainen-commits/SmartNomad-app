@@ -14,6 +14,7 @@ import TravelServices from './TravelServices';
 import UserProfile from './UserProfile';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
+import AITravelAssistant from './AITravelAssistant';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -146,6 +147,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       {/* GDPR Cookie Consent */}
       <CookieConsent />
+      
+      {/* AI Travel Assistant */}
+      <AITravelAssistant 
+        userProfile={userProfile}
+        trackedCountries={countries}
+        subscription={subscription}
+      />
     </div>
   );
 };
