@@ -224,16 +224,16 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Clock className="w-4 h-4 text-blue-600" />
+                      <Clock className="w-4 h-4 text-primary" />
                       <span className="font-medium">Recommended Day Limit:</span>
                     </div>
-                    <Badge className="bg-blue-600 text-white">{recommendedInfo.dayLimit} days</Badge>
+                    <Badge className="bg-primary text-primary-foreground shadow-soft">{recommendedInfo.dayLimit} days</Badge>
                   </div>
 
                   {recommendedInfo.currency && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <DollarSign className="w-4 h-4 text-blue-600" />
+                        <DollarSign className="w-4 h-4 text-primary" />
                         <span className="font-medium">Currency:</span>
                       </div>
                       <span>{recommendedInfo.currency.code} ({recommendedInfo.currency.symbol})</span>
@@ -339,7 +339,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
             </Button>
             <Button 
               type="submit" 
-              className="flex-1 gradient-success text-white hover:opacity-90"
+              className="flex-1 gradient-success text-primary-foreground hover:opacity-90"
               disabled={!selectedCountry || !reason || !dayLimit}
             >
               Add Country

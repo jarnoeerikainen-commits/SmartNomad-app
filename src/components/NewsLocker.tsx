@@ -94,13 +94,13 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
       {!isExpanded ? (
         // Collapsed state - red news indicator
         <div 
-          className="bg-red-500 hover:bg-red-600 text-white rounded-full p-3 shadow-lg cursor-pointer animate-pulse"
+          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full p-3 shadow-large cursor-pointer animate-pulse"
           onClick={() => setIsExpanded(true)}
         >
           <div className="relative">
             <Newspaper className="w-6 h-6" />
             {news.length > 0 && (
-              <div className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+              <div className="absolute -top-2 -right-2 bg-card text-destructive rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-medium">
                 {news.length}
               </div>
             )}
@@ -108,7 +108,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
         </div>
       ) : (
         // Expanded state - full news display
-        <Card className="bg-white shadow-2xl border-2 border-red-200 max-h-full overflow-hidden">
+        <Card className="bg-card shadow-2xl border-destructive/50 max-h-full overflow-hidden">
           <CardHeader className="bg-red-50 pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-red-800 text-lg">
@@ -160,7 +160,7 @@ const NewsLocker: React.FC<NewsLockerProps> = ({ countries, userProfile }) => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           {item.isBreaking && (
-                            <Badge className="bg-red-500 text-white text-xs animate-pulse">
+                            <Badge className="bg-destructive text-destructive-foreground text-xs animate-pulse">
                               BREAKING
                             </Badge>
                           )}

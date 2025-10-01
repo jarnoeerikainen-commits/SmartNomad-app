@@ -65,7 +65,7 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
               key={action.title}
               variant={action.variant}
               className={`h-auto flex-col gap-2 p-4 ${
-                action.gradient ? action.gradient + ' text-white hover:opacity-90' : ''
+                action.gradient ? action.gradient + ' text-primary-foreground hover:opacity-90' : ''
               }`}
               onClick={action.action}
             >

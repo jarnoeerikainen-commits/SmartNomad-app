@@ -455,7 +455,7 @@ const ExpenseTracker: React.FC = () => {
               <Button type="button" variant="outline" onClick={resetForm} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" className="flex-1 gradient-success text-white">
+              <Button type="submit" className="flex-1 gradient-success text-primary-foreground">
                 Add Expense
               </Button>
             </div>

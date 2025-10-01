@@ -225,7 +225,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
           <p className="text-xs text-blue-500 mb-3">{currentTier.userLimit}</p>
           <Button 
             onClick={() => setIsOpen(true)}
-            className="w-full gradient-success text-white hover:opacity-90"
+            className="w-full gradient-success text-primary-foreground hover:opacity-90"
             size="sm"
           >
             {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
@@ -248,11 +248,11 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
             {PRICING_TIERS.map((tier) => (
               <Card 
                 key={tier.id} 
-                className={`relative ${tier.popular ? 'border-blue-500 shadow-lg' : 'border-gray-200'} ${subscription.tier === tier.id ? 'bg-blue-50' : ''}`}
+                className={`relative ${tier.popular ? 'border-primary shadow-large' : 'border-border'} ${subscription.tier === tier.id ? 'bg-accent/20' : ''}`}
               >
                 {tier.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-blue-500 text-white">Most Popular</Badge>
+                    <Badge className="bg-primary text-primary-foreground shadow-medium">Most Popular</Badge>
                   </div>
                 )}
                 <CardHeader className="text-center pb-2">
@@ -283,7 +283,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
                   <Button 
                     onClick={() => handleUpgrade(tier.id)}
                     disabled={subscription.tier === tier.id}
-                    className={`w-full ${tier.popular ? 'gradient-success text-white' : ''}`}
+                    className={`w-full ${tier.popular ? 'gradient-success text-primary-foreground' : ''}`}
                     variant={tier.popular ? 'default' : 'outline'}
                     size="sm"
                   >

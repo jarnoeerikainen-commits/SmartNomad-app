@@ -75,7 +75,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   variant={activeSection === item.id ? 'default' : 'ghost'}
                   className={`w-full justify-start gap-3 ${
                     activeSection === item.id 
-                      ? 'gradient-trust text-white shadow-medium' 
+                      ? 'gradient-trust text-primary-foreground shadow-medium' 
                       : 'hover:bg-accent/50'
                   }`}
                   onClick={() => {

@@ -392,14 +392,14 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
         {/* Tracked Countries List */}
         <div className="space-y-2">
           {countries.length === 0 ? (
-            <div className="text-center py-4 text-green-600">
-              <MapPin className="w-8 h-8 mx-auto mb-2 text-green-400" />
+            <div className="text-center py-4 text-success">
+              <MapPin className="w-8 h-8 mx-auto mb-2 text-success" />
               <p className="text-sm">No countries tracked yet</p>
-              <p className="text-xs text-green-500">Add countries to get travel updates</p>
+              <p className="text-xs text-muted-foreground">Add countries to get travel updates</p>
             </div>
           ) : (
             countries.map((country) => (
-              <div key={country.code} className="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200">
+              <div key={country.code} className="flex items-center justify-between p-3 bg-card rounded-lg border">
                  <div className="flex items-center gap-3">
                    <span className="text-2xl">{country.flag}</span>
                    <div>

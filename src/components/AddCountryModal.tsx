@@ -381,7 +381,7 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
             </Button>
             <Button 
               type="submit" 
-              className="flex-1 gradient-success text-white hover:opacity-90"
+              className="flex-1 gradient-success text-primary-foreground hover:opacity-90"
               disabled={!selectedCountry && !customCountryName.trim()}
             >
               Add Country

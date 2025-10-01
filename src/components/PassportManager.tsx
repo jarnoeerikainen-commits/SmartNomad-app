@@ -361,7 +361,7 @@ const PassportManager = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h4 className="font-bold text-xl text-gray-800">{passport.country}</h4>
-                            <Badge className={`${expiryStatus.color} text-white text-sm px-3 py-1`}>
+                            <Badge className={`${expiryStatus.color} text-primary-foreground text-sm px-3 py-1`}>
                               {expiryStatus.text}
                             </Badge>
                           </div>
@@ -391,7 +391,7 @@ const PassportManager = () => {
                         </Button>
                       </div>
                       
-                      <div className="bg-white p-3 rounded-lg border">
+                      <div className="bg-card p-3 rounded-lg border">
                         <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-lg font-semibold">{new Date(passport.expiryDate).toLocaleDateString()}</span>
@@ -518,10 +518,10 @@ const PassportManager = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h4 className="font-bold text-xl text-gray-800">{visa.country}</h4>
-                            <Badge className="bg-green-600 text-white text-sm px-3 py-1">
+                            <Badge className="bg-success text-primary-foreground text-sm px-3 py-1">
                               {visa.visaType}
                             </Badge>
-                            <Badge className={`${expiryStatus.color} text-white text-sm px-3 py-1`}>
+                            <Badge className={`${expiryStatus.color} text-primary-foreground text-sm px-3 py-1`}>
                               {expiryStatus.text}
                             </Badge>
                           </div>
@@ -552,14 +552,14 @@ const PassportManager = () => {
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-white p-3 rounded-lg border">
+                        <div className="bg-card p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Issue Date</Label>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-lg font-semibold">{new Date(visa.issueDate).toLocaleDateString()}</span>
                           </div>
                         </div>
                         
-                        <div className="bg-white p-3 rounded-lg border">
+                        <div className="bg-card p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-lg font-semibold">{new Date(visa.expiryDate).toLocaleDateString()}</span>
@@ -705,10 +705,10 @@ const PassportManager = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h4 className="font-bold text-xl text-gray-800">{permit.country}</h4>
-                            <Badge className="bg-purple-600 text-white text-sm px-3 py-1">
+                            <Badge className="bg-accent text-accent-foreground text-sm px-3 py-1">
                               {permit.permitType}
                             </Badge>
-                            <Badge className={`${expiryStatus.color} text-white text-sm px-3 py-1`}>
+                            <Badge className={`${expiryStatus.color} text-primary-foreground text-sm px-3 py-1`}>
                               {expiryStatus.text}
                             </Badge>
                           </div>
@@ -739,14 +739,14 @@ const PassportManager = () => {
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-white p-3 rounded-lg border">
+                        <div className="bg-card p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Issue Date</Label>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-lg font-semibold">{new Date(permit.issueDate).toLocaleDateString()}</span>
                           </div>
                         </div>
                         
-                        <div className="bg-white p-3 rounded-lg border">
+                        <div className="bg-card p-3 rounded-lg border">
                           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Expiry Date</Label>
                           <div className="flex items-center gap-2 mt-2">
                             <span className="text-lg font-semibold">{new Date(permit.expiryDate).toLocaleDateString()}</span>

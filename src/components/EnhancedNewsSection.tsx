@@ -146,12 +146,12 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <Card className="border-primary/30 gradient-hero">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-3 text-2xl text-blue-800">
-              <div className="p-2 bg-blue-500 rounded-lg">
-                <Newspaper className="w-6 h-6 text-white" />
+            <CardTitle className="flex items-center gap-3 text-2xl text-card-foreground">
+              <div className="p-2 bg-primary rounded-lg shadow-medium">
+                <Newspaper className="w-6 h-6 text-primary-foreground" />
               </div>
               Daily News Center
             </CardTitle>
@@ -160,7 +160,7 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
                 size="sm"
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
-                className="border-blue-300 text-blue-600 hover:bg-blue-100"
+                className="border-accent/30 bg-card/50 text-card-foreground hover:bg-card/80"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Filters
@@ -189,7 +189,7 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
 
         {/* Filters Section */}
         {showFilters && (
-          <CardContent className="border-t border-blue-200 bg-white/50">
+          <CardContent className="border-t bg-card/80">
             <div className="space-y-6">
               {/* Country Selection */}
               <div>
@@ -280,10 +280,10 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
       <Card className="border-gray-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Bell className="w-5 h-5 text-blue-600" />
+            <Bell className="w-5 h-5 text-primary" />
             Latest News Updates
             {news.length > 0 && (
-              <Badge className="ml-2 bg-blue-500 text-white">{news.length}/5 today</Badge>
+              <Badge className="ml-2 bg-primary text-primary-foreground">{news.length}/5 today</Badge>
             )}
           </CardTitle>
         </CardHeader>
@@ -316,12 +316,12 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
             </div>
           ) : (
             news.map(item => (
-              <div key={item.id} className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-200">
+              <div key={item.id} className="p-4 bg-card rounded-lg border hover:shadow-lg transition-all duration-200">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       {item.isBreaking && (
-                        <Badge className="bg-red-500 text-white text-xs animate-pulse">
+                        <Badge className="bg-destructive text-destructive-foreground text-xs animate-pulse">
                           ⚡ BREAKING
                         </Badge>
                       )}

@@ -26,9 +26,9 @@ const CircularDashboard: React.FC<CircularDashboardProps> = ({ countries, curren
   const circumference = 2 * Math.PI * radius;
 
   return (
-    <Card className="bg-gradient-to-br from-blue-50 to-green-50">
+    <Card className="gradient-hero shadow-medium">
       <CardHeader className="text-center pb-3">
-        <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+        <CardTitle className="text-xl font-bold gradient-primary bg-clip-text text-transparent">
           Countries at a Glance
         </CardTitle>
       </CardHeader>
@@ -49,8 +49,8 @@ const CircularDashboard: React.FC<CircularDashboardProps> = ({ countries, curren
                 <div
                   key={country.id}
                   className={`relative flex flex-col items-center p-4 rounded-lg transition-all duration-200 ${
-                    isCurrentLocation ? 'bg-green-100 ring-2 ring-green-400' : 'bg-white'
-                  } hover:shadow-md`}
+                    isCurrentLocation ? 'bg-success/20 ring-2 ring-success' : 'bg-card'
+                  } hover:shadow-medium`}
                 >
                   {/* Circular Progress */}
                   <div className="relative w-24 h-24 mb-3">
@@ -104,12 +104,12 @@ const CircularDashboard: React.FC<CircularDashboardProps> = ({ countries, curren
                     {/* Status badges */}
                     <div className="flex flex-col gap-1">
                       {isCurrentLocation && (
-                        <Badge variant="outline" className="text-green-600 border-green-300 text-xs py-0">
+                        <Badge variant="outline" className="text-success border-success text-xs py-0">
                           Current
                         </Badge>
                       )}
                       {!country.countTravelDays && (
-                        <Badge variant="secondary" className="text-gray-600 text-xs py-0">
+                        <Badge variant="secondary" className="text-muted-foreground text-xs py-0">
                           Not Counting
                         </Badge>
                       )}

@@ -237,12 +237,12 @@ const NewsDashboard: React.FC<NewsDashboardProps> = ({ countries, userProfile })
             </div>
           ) : (
             news.map(item => (
-              <div key={item.id} className="p-4 bg-white rounded-lg border border-blue-200 hover:shadow-md transition-shadow">
+              <div key={item.id} className="p-4 bg-card rounded-lg border hover:shadow-medium transition-shadow">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       {item.isBreaking && (
-                        <Badge className="bg-red-500 text-white text-xs">BREAKING</Badge>
+                        <Badge className="bg-destructive text-destructive-foreground text-xs">BREAKING</Badge>
                       )}
                       <Badge className={`text-xs ${getCategoryColor(item.category)}`}>
                         {item.category.toUpperCase()}

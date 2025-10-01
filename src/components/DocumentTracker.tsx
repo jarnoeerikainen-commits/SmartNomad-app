@@ -196,7 +196,7 @@ export const DocumentTracker: React.FC = () => {
                 {passports.map(passport => {
                   const status = getDocumentStatus(passport);
                   return (
-                    <div key={passport.id} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                    <div key={passport.id} className="flex items-center justify-between p-3 bg-card rounded-lg border">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(status)}
                         <div>
@@ -238,7 +238,7 @@ export const DocumentTracker: React.FC = () => {
                 setSelectedDocumentType('passport');
                 setIsAddModalOpen(true);
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Passport
@@ -251,7 +251,7 @@ export const DocumentTracker: React.FC = () => {
                 {licenses.map(license => {
                   const status = getDocumentStatus(license);
                   return (
-                    <div key={license.id} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                    <div key={license.id} className="flex items-center justify-between p-3 bg-card rounded-lg border">
                       <div className="flex items-center gap-3">
                         {getStatusIcon(status)}
                         <div>
@@ -296,7 +296,7 @@ export const DocumentTracker: React.FC = () => {
                 setSelectedDocumentType('license');
                 setIsAddModalOpen(true);
               }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add License

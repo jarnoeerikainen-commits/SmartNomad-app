@@ -137,7 +137,7 @@ For advanced features like actual bookings and personalized recommendations, con
           className="h-14 w-14 rounded-full gradient-primary shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
           size="lg"
         >
-          <MessageCircle className="h-6 w-6 text-white" />
+          <MessageCircle className="h-6 w-6 text-primary-foreground" />
         </Button>
       </div>
     );

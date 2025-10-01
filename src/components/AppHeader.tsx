@@ -62,7 +62,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-medium">
-              <Globe className="h-6 w-6 text-white" />
+              <Globe className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">

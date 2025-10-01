@@ -80,7 +80,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
 
   return (
     <>
-      <Card className={`relative ${isVip ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50' : 'border-gray-200 bg-white'}`}>
+      <Card className={`relative ${isVip ? 'border-accent bg-gradient-to-br from-accent/10 to-accent/5' : 'border-border bg-card'}`}>
         {isVip && (
           <div className="absolute -top-3 -right-3">
             <Badge className="bg-yellow-400 text-yellow-900 font-bold">

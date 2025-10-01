@@ -73,7 +73,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = React.memo(({ countries })
               {stat.title}
             </CardTitle>
             <div className={`p-2 rounded-lg ${stat.gradient} shadow-soft`}>
-              <stat.icon className="h-4 w-4 text-white" />
+              <stat.icon className="h-4 w-4 text-primary-foreground" />
             </div>
           </CardHeader>
           <CardContent>
