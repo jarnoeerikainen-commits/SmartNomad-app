@@ -11,6 +11,7 @@ import {
   FileText,
   Plane
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface QuickActionsProps {
   onAddCountry: () => void;
@@ -18,32 +19,34 @@ interface QuickActionsProps {
 }
 
 const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, onSectionChange }) => {
+  const { t } = useLanguage();
+  
   const actions = [
     {
-      title: 'Add Country',
-      description: 'Start tracking a new destination',
+      title: t('quick.add_country'),
+      description: t('quick.add_country_desc'),
       icon: Plus,
       action: onAddCountry,
       variant: 'default' as const,
       gradient: 'gradient-primary'
     },
     {
-      title: 'Upload Documents',
-      description: 'Store important travel docs',
+      title: t('quick.upload_documents'),
+      description: t('quick.upload_documents_desc'),
       icon: Upload,
       action: () => onSectionChange('documents'),
       variant: 'outline' as const
     },
     {
-      title: 'Check Visas',
-      description: 'Review visa requirements',
+      title: t('quick.check_visas'),
+      description: t('quick.check_visas_desc'),
       icon: Plane,
       action: () => onSectionChange('visas'),
       variant: 'outline' as const
     },
     {
-      title: 'View Alerts',
-      description: 'See important notifications',
+      title: t('quick.view_alerts'),
+      description: t('quick.view_alerts_desc'),
       icon: Bell,
       action: () => onSectionChange('alerts'),
       variant: 'outline' as const
@@ -55,7 +58,7 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Settings className="h-5 w-5" />
-          Quick Actions
+          {t('quick.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>

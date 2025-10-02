@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Message {
   id: string;
@@ -24,12 +25,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   trackedCountries = [], 
   subscription 
 }) => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hi! I'm your AI Travel Assistant. I can help you with travel advice, visa requirements, booking assistance, and alerts. What would you like to know?",
+      content: t('ai.greeting'),
       isUser: false,
       timestamp: new Date()
     }
@@ -52,35 +54,27 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     
     // Travel-specific responses based on keywords
     if (lowerMessage.includes('visa') || lowerMessage.includes('passport')) {
-      return `Based on your tracked countries (${trackedCountries.length} currently), I can help with visa requirements. For detailed visa processing and applications, you'll need to upgrade to a premium plan for booking assistance.`;
+      return t('ai.visa_response').replace('{count}', trackedCountries.length.toString());
     }
     
     if (lowerMessage.includes('booking') || lowerMessage.includes('flight') || lowerMessage.includes('hotel')) {
-      return `I can help you find the best travel deals! However, for actual booking assistance and integration with travel partners, you'll need a premium subscription. I can still provide general advice about destinations.`;
+      return t('ai.booking_response');
     }
     
     if (lowerMessage.includes('weather') || lowerMessage.includes('climate')) {
-      return `I can provide weather insights for your tracked destinations. Currently tracking ${trackedCountries.length} countries. Would you like weather updates for any specific location?`;
+      return t('ai.weather_response').replace('{count}', trackedCountries.length.toString());
     }
     
     if (lowerMessage.includes('tax') || lowerMessage.includes('residence')) {
-      return `Tax residency is complex! Based on your travel pattern, I can provide general guidance. For detailed tax advice, consider consulting with a tax professional or upgrading to our business plan.`;
+      return t('ai.tax_response');
     }
     
     if (lowerMessage.includes('alert') || lowerMessage.includes('notification')) {
-      return `I can set up smart alerts for visa expiries, passport renewals, and travel requirements. Your current ${subscription?.tier || 'free'} plan includes basic alerts.`;
+      return t('ai.alert_response').replace('{tier}', subscription?.tier || 'free');
     }
     
     if (lowerMessage.includes('help') || lowerMessage.includes('what can you do')) {
-      return `I can help with:
-🌍 Travel advice & destination info
-📋 Visa requirements & documentation
-🏨 General booking guidance
-⚠️ Travel alerts & notifications
-💰 Tax residency insights
-🌤️ Weather & climate info
-
-For advanced features like actual bookings and personalized recommendations, consider upgrading your plan!`;
+      return t('ai.help_response');
     }
     
     // Default responses

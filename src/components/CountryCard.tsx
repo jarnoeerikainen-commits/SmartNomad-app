@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Settings, Trash2, RotateCcw, MapPin, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { Country } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CountryCardProps {
   country: Country;
@@ -25,6 +25,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
   onReset,
   onToggleCountDays
 }) => {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [tempLimit, setTempLimit] = useState(country.dayLimit.toString());
 
@@ -45,11 +46,11 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
   };
 
   const getStatusText = () => {
-    if (progress >= 100) return 'Limit Exceeded';
-    if (progress >= 90) return 'Critical';
-    if (progress >= 80) return 'Warning';
-    if (progress >= 60) return 'Monitor';
-    return 'Safe';
+    if (progress >= 100) return t('card.limit_exceeded');
+    if (progress >= 90) return t('card.critical');
+    if (progress >= 80) return t('card.warning');
+    if (progress >= 60) return t('card.monitor');
+    return t('card.safe');
   };
 
   const getStatusVariant = () => {
@@ -85,7 +86,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
               <CardTitle className="text-lg">{country.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{country.reason}</p>
               {country.totalEntries > 0 && (
-                <p className="text-xs text-blue-600">Entries: {country.totalEntries}</p>
+                <p className="text-xs text-blue-600">{t('card.entries')}: {country.totalEntries}</p>
               )}
             </div>
           </div>
@@ -93,7 +94,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
             {isCurrentLocation && (
               <Badge variant="outline" className="text-green-600 border-green-300">
                 <MapPin className="w-3 h-3 mr-1" />
-                Current
+                {t('card.current')}
               </Badge>
             )}
             {getStatusIcon()}
@@ -106,7 +107,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">Count Travel Days to Total Staying</span>
+            <span className="text-sm font-medium text-gray-700">{t('card.count_travel_days')}</span>
           </div>
           <Button
             onClick={() => onToggleCountDays(country.id)}
@@ -114,7 +115,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
             size="sm"
             className={country.countTravelDays ? "bg-green-600 hover:bg-green-700" : ""}
           >
-            {country.countTravelDays ? "ON" : "OFF"}
+            {country.countTravelDays ? t('card.on') : t('card.off')}
           </Button>
         </div>
 
@@ -122,13 +123,13 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
         {isTrackingTaxResidence && (
           <div className="p-3 bg-blue-50 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-blue-700">Tax Residence Status</span>
+              <span className="text-sm font-medium text-blue-700">{t('card.tax_residence_status')}</span>
               <Badge variant={taxResidenceDaysLeft < 30 ? "destructive" : "default"} className="text-xs">
-                {taxResidenceDaysLeft} days left
+                {taxResidenceDaysLeft} {t('card.days_left')}
               </Badge>
             </div>
             <p className="text-xs text-blue-600 mt-1">
-              {country.yearlyDaysSpent}/183 days this year
+              {country.yearlyDaysSpent}/183 {t('card.days_this_year')}
             </p>
           </div>
         )}
@@ -136,7 +137,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
         {/* Progress Section */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Days Progress</span>
+            <span className="text-sm font-medium">{t('card.days_progress')}</span>
             <Badge variant={getStatusVariant()}>{getStatusText()}</Badge>
           </div>
           
@@ -149,8 +150,8 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
           </div>
           
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{country.daysSpent} days spent</span>
-            <span>{remainingDays > 0 ? `${remainingDays} remaining` : 'Limit exceeded'}</span>
+            <span>{country.daysSpent} {t('card.days_spent')}</span>
+            <span>{remainingDays > 0 ? `${remainingDays} ${t('card.remaining')}` : t('card.limit_exceeded')}</span>
           </div>
         </div>
 
@@ -158,15 +159,15 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
         <div className="grid grid-cols-3 gap-3 p-3 bg-gray-50 rounded-lg">
           <div className="text-center">
             <p className="text-xl font-bold text-gray-900">{country.daysSpent}</p>
-            <p className="text-xs text-gray-600">Days Spent</p>
+            <p className="text-xs text-gray-600">{t('card.days_spent')}</p>
           </div>
           <div className="text-center">
             <p className="text-xl font-bold text-gray-900">{country.dayLimit}</p>
-            <p className="text-xs text-gray-600">Day Limit</p>
+            <p className="text-xs text-gray-600">{t('card.day_limit')}</p>
           </div>
           <div className="text-center">
             <p className="text-xl font-bold text-gray-900">{isTrackingTaxResidence ? country.yearlyDaysSpent : country.daysSpent}</p>
-            <p className="text-xs text-gray-600">{isTrackingTaxResidence ? 'This Year' : 'Total Days'}</p>
+            <p className="text-xs text-gray-600">{isTrackingTaxResidence ? t('card.this_year') : t('card.total_days')}</p>
           </div>
         </div>
 
@@ -185,10 +186,10 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
             </div>
             <div className="flex gap-2">
               <Button onClick={handleSaveLimit} size="sm" className="flex-1">
-                Save
+                {t('common.save')}
               </Button>
               <Button onClick={handleCancelEdit} variant="outline" size="sm" className="flex-1">
-                Cancel
+                {t('common.cancel')}
               </Button>
             </div>
           </div>
@@ -201,7 +202,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
               className="flex-1"
             >
               <Settings className="w-4 h-4 mr-1" />
-              Edit Limit
+              {t('card.edit_limit')}
             </Button>
             <Button
               onClick={() => onReset(country.id)}
@@ -210,7 +211,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
               className="flex-1"
             >
               <RotateCcw className="w-4 h-4 mr-1" />
-              Reset
+              {t('card.reset')}
             </Button>
             <Button
               onClick={() => onRemove(country.id)}

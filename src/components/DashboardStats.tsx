@@ -10,12 +10,15 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Country } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DashboardStatsProps {
   countries: Country[];
 }
 
 const DashboardStats: React.FC<DashboardStatsProps> = React.memo(({ countries }) => {
+  const { t } = useLanguage();
+  
   // Calculate stats
   const totalCountries = countries.length;
   const activeTracking = countries.filter(c => c.daysSpent && c.daysSpent > 0).length;
@@ -34,33 +37,33 @@ const DashboardStats: React.FC<DashboardStatsProps> = React.memo(({ countries })
 
   const stats = [
     {
-      title: 'Countries Tracked',
+      title: t('stats.countries_tracked'),
       value: totalCountries,
       icon: MapPin,
       gradient: 'gradient-primary',
-      description: 'Active destinations'
+      description: t('stats.active_destinations')
     },
     {
-      title: 'Active Tracking',
+      title: t('stats.active_tracking'),
       value: activeTracking,
       icon: Clock,
       gradient: 'gradient-trust',
-      description: 'With recorded visits'
+      description: t('stats.with_recorded_visits')
     },
     {
-      title: 'Critical Alerts',
+      title: t('stats.critical_alerts'),
       value: criticalAlerts,
       icon: AlertTriangle,
       gradient: 'gradient-danger',
-      description: 'Require attention',
-      badge: criticalAlerts > 0 ? 'URGENT' : undefined
+      description: t('stats.require_attention'),
+      badge: criticalAlerts > 0 ? t('stats.urgent') : undefined
     },
     {
-      title: 'Warnings',
+      title: t('stats.warnings'),
       value: warningAlerts,
       icon: TrendingUp,
       gradient: 'gradient-warning',
-      description: 'Monitor closely'
+      description: t('stats.monitor_closely')
     }
   ];
 
