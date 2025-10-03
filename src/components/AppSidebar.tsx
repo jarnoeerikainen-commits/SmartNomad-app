@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SidebarItem {
   id: string;
@@ -50,6 +51,20 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   isOpen,
   onClose 
 }) => {
+  const { t } = useLanguage();
+  
+  const sidebarItemsTranslated = [
+    { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
+    { id: 'tracking', label: t('nav.tracking'), icon: MapPin, badge: '5' },
+    { id: 'tax', label: t('nav.tax'), icon: Calculator },
+    { id: 'visas', label: t('nav.visas'), icon: Plane },
+    { id: 'documents', label: t('nav.documents'), icon: FileText },
+    { id: 'health', label: t('nav.health'), icon: Heart },
+    { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
+    { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle, badge: '3', variant: 'destructive' as const },
+    { id: 'services', label: t('nav.services'), icon: Shield },
+  ];
+  
   return (
     <>
       {/* Mobile overlay */}
@@ -69,7 +84,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Navigation */}
           <nav className="flex-1 space-y-2 p-4">
             <div className="space-y-1">
-              {sidebarItems.map((item) => (
+              {sidebarItemsTranslated.map((item) => (
                 <Button
                   key={item.id}
                   variant={activeSection === item.id ? 'default' : 'ghost'}
@@ -107,7 +122,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 onClick={() => onSectionChange('settings')}
               >
                 <Settings className="h-5 w-5" />
-                <span>Settings</span>
+                <span>{t('nav.settings')}</span>
               </Button>
               
               <Button
@@ -116,7 +131,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                 onClick={() => onSectionChange('help')}
               >
                 <HelpCircle className="h-5 w-5" />
-                <span>Help & Support</span>
+                <span>{t('nav.help')}</span>
               </Button>
             </div>
           </nav>
@@ -124,8 +139,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Footer */}
           <div className="border-t p-4">
             <div className="text-center text-xs text-muted-foreground">
-              <p>TravelTracker v2.0</p>
-              <p className="mt-1">Stay compliant worldwide</p>
+              <p>{t('nav.footer_version')}</p>
+              <p className="mt-1">{t('nav.footer_tagline')}</p>
             </div>
           </div>
         </div>

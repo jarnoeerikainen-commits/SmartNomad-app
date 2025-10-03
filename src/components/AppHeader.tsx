@@ -15,6 +15,7 @@ import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
 import PricingCard from './PricingCard';
 import { Subscription } from '@/types/subscription';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
@@ -29,6 +30,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   subscription,
   onUpgrade 
 }) => {
+  const { t } = useLanguage();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -66,10 +68,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                TravelTracker
+                {t('app.title')}
               </h1>
               <p className="text-xs text-muted-foreground">
-                Your global travel companion
+                {t('app.tagline')}
               </p>
             </div>
           </div>
@@ -107,30 +109,30 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
               <DropdownMenuItem>
                 <User className="mr-2 h-4 w-4" />
-                <span>Profile Settings</span>
+                <span>{t('header.profile_settings')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
-                <span>App Settings</span>
+                <span>{t('header.app_settings')}</span>
               </DropdownMenuItem>
               {subscription && (
                 <DropdownMenuItem onClick={() => setShowUpgrade(true)}>
                   <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Upgrade Plan</span>
+                  <span>{t('header.upgrade_plan')}</span>
                   {subscription.tier === 'free' && (
                     <Badge variant="secondary" className="ml-auto text-xs">
-                      Free
+                      {t('common.free')}
                     </Badge>
                   )}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem onClick={() => setShowDataManagement(true)}>
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Privacy & Data</span>
+                <span>{t('header.privacy_data')}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive">
-                Sign Out
+                {t('header.sign_out')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

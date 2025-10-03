@@ -22,779 +22,431 @@ const LANGUAGES: Language[] = [
   { code: 'af', name: 'Afrikaans', nativeName: 'Afrikaans' },
 ];
 
-const translations = {
+const translations: Record<string, Record<string, string>> = {
   en: {
-    // Header
-    'app.title': 'Travel Day Counter',
+    // App Header & Navigation
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Your global travel companion',
+    'header.profile': 'Profile',
+    'header.profile_settings': 'Profile Settings',
+    'header.app_settings': 'App Settings',
+    'header.upgrade_plan': 'Upgrade Plan',
+    'header.privacy_data': 'Privacy & Data',
+    'header.sign_out': 'Sign Out',
     'nav.dashboard': 'Dashboard',
-    'nav.tracking': 'Tracking',
+    'nav.tracking': 'Travel Tracking',
     'nav.tax': 'Tax Residency',
-    'nav.visas': 'Visas',
+    'nav.visas': 'Visa Manager',
     'nav.documents': 'Documents',
-    'nav.health': 'Health',
-    'nav.news': 'News',
-    'nav.alerts': 'Alerts',
-    'nav.services': 'Services',
+    'nav.health': 'Health & Vaccines',
+    'nav.news': 'Travel News',
+    'nav.alerts': 'Smart Alerts',
+    'nav.services': 'Travel Services',
     'nav.settings': 'Settings',
+    'nav.help': 'Help & Support',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Stay compliant worldwide',
     
     // Dashboard Stats
     'stats.countries_tracked': 'Countries Tracked',
     'stats.active_destinations': 'Active destinations',
-    'stats.active_tracking': 'Active Tracking',
-    'stats.with_recorded_visits': 'With recorded visits',
     'stats.critical_alerts': 'Critical Alerts',
     'stats.require_attention': 'Require attention',
-    'stats.urgent': 'URGENT',
-    'stats.warnings': 'Warnings',
-    'stats.monitor_closely': 'Monitor closely',
     
     // Quick Actions
     'quick.title': 'Quick Actions',
     'quick.add_country': 'Add Country',
-    'quick.add_country_desc': 'Start tracking a new destination',
     'quick.upload_documents': 'Upload Documents',
-    'quick.upload_documents_desc': 'Store important travel docs',
     'quick.check_visas': 'Check Visas',
-    'quick.check_visas_desc': 'Review visa requirements',
     'quick.view_alerts': 'View Alerts',
-    'quick.view_alerts_desc': 'See important notifications',
-    
-    // Country Card
-    'card.current': 'Current',
-    'card.count_travel_days': 'Count Travel Days to Total Staying',
-    'card.on': 'ON',
-    'card.off': 'OFF',
-    'card.tax_residence_status': 'Tax Residence Status',
-    'card.days_left': 'days left',
-    'card.days_this_year': 'days this year',
-    'card.days_progress': 'Days Progress',
-    'card.limit_exceeded': 'Limit Exceeded',
-    'card.critical': 'Critical',
-    'card.warning': 'Warning',
-    'card.monitor': 'Monitor',
-    'card.safe': 'Safe',
-    'card.days_spent': 'Days Spent',
-    'card.remaining': 'remaining',
-    'card.day_limit': 'Day Limit',
-    'card.this_year': 'This Year',
-    'card.total_days': 'Total Days',
-    'card.edit_limit': 'Edit Limit',
-    'card.reset': 'Reset',
-    'card.entries': 'Entries',
     
     // AI Assistant
-    'ai.greeting': "Hi! I'm your AI Travel Assistant. I can help you with travel advice, visa requirements, booking assistance, and alerts. What would you like to know?",
-    'ai.visa_response': 'Based on your tracked countries ({count} currently), I can help with visa requirements. For detailed visa processing and applications, you\'ll need to upgrade to a premium plan for booking assistance.',
-    'ai.booking_response': 'I can help you find the best travel deals! However, for actual booking assistance and integration with travel partners, you\'ll need a premium subscription. I can still provide general advice about destinations.',
-    'ai.weather_response': 'I can provide weather insights for your tracked destinations. Currently tracking {count} countries. Would you like weather updates for any specific location?',
-    'ai.tax_response': 'Tax residency is complex! Based on your travel pattern, I can provide general guidance. For detailed tax advice, consider consulting with a tax professional or upgrading to our business plan.',
-    'ai.alert_response': 'I can set up smart alerts for visa expiries, passport renewals, and travel requirements. Your current {tier} plan includes basic alerts.',
-    'ai.help_response': 'I can help with:\n🌍 Travel advice & destination info\n📋 Visa requirements & documentation\n🏨 General booking guidance\n⚠️ Travel alerts & notifications\n💰 Tax residency insights\n🌤️ Weather & climate info\n\nFor advanced features like actual bookings and personalized recommendations, consider upgrading your plan!',
     'ai.title': 'AI Travel Assistant',
-    'ai.minimize': 'Minimize',
-    'ai.maximize': 'Maximize',
-    'ai.close': 'Close',
-    'ai.type_message': 'Type your message...',
-    'ai.send': 'Send',
     'ai.typing': 'AI is typing...',
+    
+    // Document Tracker
+    'doc.title': 'Document Tracker',
+    'doc.passports': 'Passports',
+    'doc.licenses': 'Licenses',
+    
+    // Expense Tracker
+    'expense.title': 'Business Expense Tracker',
+    
+    // Smart Alerts
+    'alerts.title': 'Smart Alerts & Notifications',
+    'alerts.settings': 'Settings',
+    
+    // Passport Manager
+    'passport.title': 'Passport Manager',
+    
+    // User Profile
+    'profile.title': 'User Profile & Preferences',
     
     // Tax Residency
     'tax.title': 'Tax Residency & Compliance Center',
-    'tax.description': 'Comprehensive tax residency tracking, compliance monitoring, and planning tools',
-    'tax.select_jurisdiction': 'Select your primary tax jurisdiction:',
-    'tax.global_overview': 'Global Overview',
-    'tax.united_states': 'United States',
-    'tax.canada': 'Canada',
-    'tax.days_spent': 'Days spent:',
-    'tax.tax_resident': '⚠️ Tax resident',
-    'tax.days_remaining': 'days remaining',
-    'tax.no_countries': 'No countries tracked yet. Add countries to start monitoring tax residency.',
-    
-    // Countries
-    'countries.afghanistan': 'Afghanistan',
-    'countries.albania': 'Albania',
-    'countries.algeria': 'Algeria',
-    'countries.argentina': 'Argentina',
-    'countries.australia': 'Australia',
-    'countries.austria': 'Austria',
-    'countries.brazil': 'Brazil',
-    'countries.canada': 'Canada',
-    'countries.china': 'China',
-    'countries.france': 'France',
-    'countries.germany': 'Germany',
-    'countries.india': 'India',
-    'countries.italy': 'Italy',
-    'countries.japan': 'Japan',
-    'countries.mexico': 'Mexico',
-    'countries.netherlands': 'Netherlands',
-    'countries.portugal': 'Portugal',
-    'countries.russia': 'Russia',
-    'countries.south_africa': 'South Africa',
-    'countries.spain': 'Spain',
-    'countries.sweden': 'Sweden',
-    'countries.switzerland': 'Switzerland',
-    'countries.united_kingdom': 'United Kingdom',
-    'countries.united_states': 'United States',
     
     // Common
-    'common.loading': 'Loading...',
     'common.save': 'Save',
     'common.cancel': 'Cancel',
     'common.close': 'Close',
-    'common.add': 'Add',
-    'common.remove': 'Remove',
-    'common.upgrade': 'Upgrade',
-    'common.free': 'Free',
-    'common.premium': 'Premium',
-    'common.pro': 'Pro',
   },
   es: {
     // Header
-    'app.title': 'Contador de Días de Viaje',
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Tu compañero global de viajes',
+    'header.profile': 'Perfil',
+    'header.profile_settings': 'Configuración del perfil',
+    'header.app_settings': 'Configuración de la aplicación',
+    'header.upgrade_plan': 'Actualizar plan',
+    'header.privacy_data': 'Privacidad y datos',
+    'header.sign_out': 'Cerrar sesión',
     'nav.dashboard': 'Panel',
-    'nav.tracking': 'Seguimiento',
-    'nav.tax': 'Residencia Fiscal',
-    'nav.visas': 'Visas',
+    'nav.tracking': 'Seguimiento de viajes',
+    'nav.tax': 'Residencia fiscal',
+    'nav.visas': 'Gestor de visas',
     'nav.documents': 'Documentos',
-    'nav.health': 'Salud',
-    'nav.news': 'Noticias',
-    'nav.alerts': 'Alertas',
-    'nav.services': 'Servicios',
+    'nav.health': 'Salud y vacunas',
+    'nav.news': 'Noticias de viajes',
+    'nav.alerts': 'Alertas inteligentes',
+    'nav.services': 'Servicios de viaje',
     'nav.settings': 'Configuración',
+    'nav.help': 'Ayuda y soporte',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Mantente conforme en todo el mundo',
     
     // Dashboard Stats
-    'stats.countries_tracked': 'Países Rastreados',
+    'stats.countries_tracked': 'Países rastreados',
     'stats.active_destinations': 'Destinos activos',
-    'stats.active_tracking': 'Seguimiento Activo',
-    'stats.with_recorded_visits': 'Con visitas registradas',
-    'stats.critical_alerts': 'Alertas Críticas',
-    'stats.require_attention': 'Requiere atención',
-    'stats.urgent': 'URGENTE',
-    'stats.warnings': 'Advertencias',
-    'stats.monitor_closely': 'Monitorear de cerca',
+    'stats.critical_alerts': 'Alertas críticas',
+    'stats.require_attention': 'Requieren atención',
     
     // Quick Actions
-    'quick.title': 'Acciones Rápidas',
-    'quick.add_country': 'Agregar País',
-    'quick.add_country_desc': 'Comenzar a rastrear un nuevo destino',
-    'quick.upload_documents': 'Subir Documentos',
-    'quick.upload_documents_desc': 'Guardar documentos de viaje importantes',
-    'quick.check_visas': 'Revisar Visas',
-    'quick.check_visas_desc': 'Revisar requisitos de visa',
-    'quick.view_alerts': 'Ver Alertas',
-    'quick.view_alerts_desc': 'Ver notificaciones importantes',
-    
-    // Country Card
-    'card.current': 'Actual',
-    'card.count_travel_days': 'Contar Días de Viaje al Total de Estadía',
-    'card.on': 'ACTIVADO',
-    'card.off': 'DESACTIVADO',
-    'card.tax_residence_status': 'Estado de Residencia Fiscal',
-    'card.days_left': 'días restantes',
-    'card.days_this_year': 'días este año',
-    'card.days_progress': 'Progreso de Días',
-    'card.limit_exceeded': 'Límite Excedido',
-    'card.critical': 'Crítico',
-    'card.warning': 'Advertencia',
-    'card.monitor': 'Monitorear',
-    'card.safe': 'Seguro',
-    'card.days_spent': 'Días Gastados',
-    'card.remaining': 'restantes',
-    'card.day_limit': 'Límite de Días',
-    'card.this_year': 'Este Año',
-    'card.total_days': 'Días Totales',
-    'card.edit_limit': 'Editar Límite',
-    'card.reset': 'Restablecer',
-    'card.entries': 'Entradas',
+    'quick.title': 'Acciones rápidas',
+    'quick.add_country': 'Agregar país',
+    'quick.upload_documents': 'Subir documentos',
+    'quick.check_visas': 'Verificar visas',
+    'quick.view_alerts': 'Ver alertas',
     
     // AI Assistant
-    'ai.greeting': '¡Hola! Soy tu Asistente de Viaje con IA. Puedo ayudarte con consejos de viaje, requisitos de visa, asistencia de reservas y alertas. ¿Qué te gustaría saber?',
-    'ai.visa_response': 'Basado en tus países rastreados ({count} actualmente), puedo ayudar con requisitos de visa. Para procesamiento detallado de visas y aplicaciones, necesitarás actualizar a un plan premium para asistencia de reservas.',
-    'ai.booking_response': '¡Puedo ayudarte a encontrar las mejores ofertas de viaje! Sin embargo, para asistencia real de reservas e integración con socios de viaje, necesitarás una suscripción premium. Aún puedo proporcionar consejos generales sobre destinos.',
-    'ai.weather_response': 'Puedo proporcionar información meteorológica para tus destinos rastreados. Actualmente rastreando {count} países. ¿Te gustaría actualizaciones meteorológicas para alguna ubicación específica?',
-    'ai.tax_response': '¡La residencia fiscal es compleja! Basado en tu patrón de viaje, puedo proporcionar orientación general. Para asesoramiento fiscal detallado, considera consultar con un profesional de impuestos o actualizar a nuestro plan empresarial.',
-    'ai.alert_response': 'Puedo configurar alertas inteligentes para vencimientos de visa, renovaciones de pasaporte y requisitos de viaje. Tu plan {tier} actual incluye alertas básicas.',
-    'ai.help_response': 'Puedo ayudar con:\n🌍 Consejos de viaje e info de destinos\n📋 Requisitos de visa y documentación\n🏨 Orientación general de reservas\n⚠️ Alertas y notificaciones de viaje\n💰 Información sobre residencia fiscal\n🌤️ Info de clima y tiempo\n\n¡Para funciones avanzadas como reservas reales y recomendaciones personalizadas, considera actualizar tu plan!',
-    'ai.title': 'Asistente de Viaje IA',
-    'ai.minimize': 'Minimizar',
-    'ai.maximize': 'Maximizar',
-    'ai.close': 'Cerrar',
-    'ai.type_message': 'Escribe tu mensaje...',
-    'ai.send': 'Enviar',
+    'ai.title': 'Asistente de viaje IA',
     'ai.typing': 'IA está escribiendo...',
     
-    // Tax Residency
-    'tax.title': 'Centro de Residencia Fiscal y Cumplimiento',
-    'tax.description': 'Seguimiento integral de residencia fiscal, monitoreo de cumplimiento y herramientas de planificación',
-    'tax.select_jurisdiction': 'Seleccione su jurisdicción fiscal principal:',
-    'tax.global_overview': 'Vista General Global',
-    'tax.united_states': 'Estados Unidos',
-    'tax.canada': 'Canadá',
-    'tax.days_spent': 'Días gastados:',
-    'tax.tax_resident': '⚠️ Residente fiscal',
-    'tax.days_remaining': 'días restantes',
-    'tax.no_countries': 'Aún no se han rastreado países. Agregue países para comenzar a monitorear la residencia fiscal.',
+    // Document Tracker
+    'doc.title': 'Rastreador de documentos',
+    'doc.passports': 'Pasaportes',
+    'doc.licenses': 'Licencias',
     
-    // Countries
-    'countries.afghanistan': 'Afganistán',
-    'countries.albania': 'Albania',
-    'countries.algeria': 'Argelia',
-    'countries.argentina': 'Argentina',
-    'countries.australia': 'Australia',
-    'countries.austria': 'Austria',
-    'countries.brazil': 'Brasil',
-    'countries.canada': 'Canadá',
-    'countries.china': 'China',
-    'countries.france': 'Francia',
-    'countries.germany': 'Alemania',
-    'countries.india': 'India',
-    'countries.italy': 'Italia',
-    'countries.japan': 'Japón',
-    'countries.mexico': 'México',
-    'countries.netherlands': 'Países Bajos',
-    'countries.portugal': 'Portugal',
-    'countries.russia': 'Rusia',
-    'countries.south_africa': 'Sudáfrica',
-    'countries.spain': 'España',
-    'countries.sweden': 'Suecia',
-    'countries.switzerland': 'Suiza',
-    'countries.united_kingdom': 'Reino Unido',
-    'countries.united_states': 'Estados Unidos',
+    // Expense Tracker
+    'expense.title': 'Rastreador de gastos empresariales',
+    
+    // Smart Alerts
+    'alerts.title': 'Alertas inteligentes y notificaciones',
+    'alerts.settings': 'Configuración',
+    
+    // Passport Manager
+    'passport.title': 'Gestor de pasaportes',
+    
+    // User Profile
+    'profile.title': 'Perfil de usuario y preferencias',
+    
+    // Tax Residency
+    'tax.title': 'Centro de residencia fiscal y cumplimiento',
     
     // Common
-    'common.loading': 'Cargando...',
     'common.save': 'Guardar',
     'common.cancel': 'Cancelar',
     'common.close': 'Cerrar',
-    'common.add': 'Agregar',
-    'common.remove': 'Eliminar',
-    'common.upgrade': 'Actualizar',
-    'common.free': 'Gratis',
-    'common.premium': 'Premium',
-    'common.pro': 'Pro',
   },
   pt: {
     // Header
-    'app.title': 'Contador de Dias de Viagem',
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Seu companheiro global de viagens',
+    'header.profile': 'Perfil',
+    'header.profile_settings': 'Configurações do perfil',
+    'header.app_settings': 'Configurações do aplicativo',
+    'header.upgrade_plan': 'Atualizar plano',
+    'header.privacy_data': 'Privacidade e dados',
+    'header.sign_out': 'Sair',
     'nav.dashboard': 'Painel',
-    'nav.tracking': 'Rastreamento',
-    'nav.tax': 'Residência Fiscal',
-    'nav.visas': 'Vistos',
+    'nav.tracking': 'Rastreamento de viagens',
+    'nav.tax': 'Residência fiscal',
+    'nav.visas': 'Gerenciador de vistos',
     'nav.documents': 'Documentos',
-    'nav.health': 'Saúde',
-    'nav.news': 'Notícias',
-    'nav.alerts': 'Alertas',
-    'nav.services': 'Serviços',
+    'nav.health': 'Saúde e vacinas',
+    'nav.news': 'Notícias de viagens',
+    'nav.alerts': 'Alertas inteligentes',
+    'nav.services': 'Serviços de viagem',
     'nav.settings': 'Configurações',
+    'nav.help': 'Ajuda e suporte',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Mantenha-se conforme em todo o mundo',
     
     // Dashboard Stats
-    'stats.countries_tracked': 'Países Rastreados',
+    'stats.countries_tracked': 'Países rastreados',
     'stats.active_destinations': 'Destinos ativos',
-    'stats.active_tracking': 'Rastreamento Ativo',
-    'stats.with_recorded_visits': 'Com visitas registradas',
-    'stats.critical_alerts': 'Alertas Críticos',
-    'stats.require_attention': 'Requer atenção',
-    'stats.urgent': 'URGENTE',
-    'stats.warnings': 'Avisos',
-    'stats.monitor_closely': 'Monitorar de perto',
+    'stats.critical_alerts': 'Alertas críticos',
+    'stats.require_attention': 'Requerem atenção',
     
     // Quick Actions
-    'quick.title': 'Ações Rápidas',
-    'quick.add_country': 'Adicionar País',
-    'quick.add_country_desc': 'Começar a rastrear um novo destino',
-    'quick.upload_documents': 'Enviar Documentos',
-    'quick.upload_documents_desc': 'Armazenar documentos de viagem importantes',
-    'quick.check_visas': 'Verificar Vistos',
-    'quick.check_visas_desc': 'Revisar requisitos de visto',
-    'quick.view_alerts': 'Ver Alertas',
-    'quick.view_alerts_desc': 'Ver notificações importantes',
-    
-    // Country Card
-    'card.current': 'Atual',
-    'card.count_travel_days': 'Contar Dias de Viagem para Total de Permanência',
-    'card.on': 'LIGADO',
-    'card.off': 'DESLIGADO',
-    'card.tax_residence_status': 'Status de Residência Fiscal',
-    'card.days_left': 'dias restantes',
-    'card.days_this_year': 'dias este ano',
-    'card.days_progress': 'Progresso de Dias',
-    'card.limit_exceeded': 'Limite Excedido',
-    'card.critical': 'Crítico',
-    'card.warning': 'Aviso',
-    'card.monitor': 'Monitorar',
-    'card.safe': 'Seguro',
-    'card.days_spent': 'Dias Gastos',
-    'card.remaining': 'restantes',
-    'card.day_limit': 'Limite de Dias',
-    'card.this_year': 'Este Ano',
-    'card.total_days': 'Dias Totais',
-    'card.edit_limit': 'Editar Limite',
-    'card.reset': 'Redefinir',
-    'card.entries': 'Entradas',
+    'quick.title': 'Ações rápidas',
+    'quick.add_country': 'Adicionar país',
+    'quick.upload_documents': 'Enviar documentos',
+    'quick.check_visas': 'Verificar vistos',
+    'quick.view_alerts': 'Ver alertas',
     
     // AI Assistant
-    'ai.greeting': 'Olá! Sou seu Assistente de Viagem com IA. Posso ajudar com conselhos de viagem, requisitos de visto, assistência de reservas e alertas. O que você gostaria de saber?',
-    'ai.visa_response': 'Com base nos seus países rastreados ({count} atualmente), posso ajudar com requisitos de visto. Para processamento detalhado de vistos e aplicações, você precisará atualizar para um plano premium para assistência de reservas.',
-    'ai.booking_response': 'Posso ajudá-lo a encontrar as melhores ofertas de viagem! No entanto, para assistência real de reservas e integração com parceiros de viagem, você precisará de uma assinatura premium. Ainda posso fornecer conselhos gerais sobre destinos.',
-    'ai.weather_response': 'Posso fornecer informações meteorológicas para seus destinos rastreados. Atualmente rastreando {count} países. Gostaria de atualizações meteorológicas para alguma localização específica?',
-    'ai.tax_response': 'A residência fiscal é complexa! Com base no seu padrão de viagem, posso fornecer orientação geral. Para consultoria fiscal detalhada, considere consultar um profissional de impostos ou atualizar para nosso plano empresarial.',
-    'ai.alert_response': 'Posso configurar alertas inteligentes para vencimentos de visto, renovações de passaporte e requisitos de viagem. Seu plano {tier} atual inclui alertas básicos.',
-    'ai.help_response': 'Posso ajudar com:\n🌍 Conselhos de viagem e info de destinos\n📋 Requisitos de visto e documentação\n🏨 Orientação geral de reservas\n⚠️ Alertas e notificações de viagem\n💰 Informações de residência fiscal\n🌤️ Info de clima e tempo\n\nPara recursos avançados como reservas reais e recomendações personalizadas, considere atualizar seu plano!',
-    'ai.title': 'Assistente de Viagem IA',
-    'ai.minimize': 'Minimizar',
-    'ai.maximize': 'Maximizar',
-    'ai.close': 'Fechar',
-    'ai.type_message': 'Digite sua mensagem...',
-    'ai.send': 'Enviar',
+    'ai.title': 'Assistente de viagem IA',
     'ai.typing': 'IA está digitando...',
     
-    // Tax Residency
-    'tax.title': 'Centro de Residência Fiscal e Conformidade',
-    'tax.description': 'Rastreamento abrangente de residência fiscal, monitoramento de conformidade e ferramentas de planejamento',
-    'tax.select_jurisdiction': 'Selecione sua jurisdição fiscal principal:',
-    'tax.global_overview': 'Visão Geral Global',
-    'tax.united_states': 'Estados Unidos',
-    'tax.canada': 'Canadá',
-    'tax.days_spent': 'Dias gastos:',
-    'tax.tax_resident': '⚠️ Residente fiscal',
-    'tax.days_remaining': 'dias restantes',
-    'tax.no_countries': 'Nenhum país rastreado ainda. Adicione países para começar a monitorar a residência fiscal.',
+    // Document Tracker
+    'doc.title': 'Rastreador de documentos',
+    'doc.passports': 'Passaportes',
+    'doc.licenses': 'Licenças',
     
-    // Countries
-    'countries.afghanistan': 'Afeganistão',
-    'countries.albania': 'Albânia',
-    'countries.algeria': 'Argélia',
-    'countries.argentina': 'Argentina',
-    'countries.australia': 'Austrália',
-    'countries.austria': 'Áustria',
-    'countries.brazil': 'Brasil',
-    'countries.canada': 'Canadá',
-    'countries.china': 'China',
-    'countries.france': 'França',
-    'countries.germany': 'Alemanha',
-    'countries.india': 'Índia',
-    'countries.italy': 'Itália',
-    'countries.japan': 'Japão',
-    'countries.mexico': 'México',
-    'countries.netherlands': 'Países Baixos',
-    'countries.portugal': 'Portugal',
-    'countries.russia': 'Rússia',
-    'countries.south_africa': 'África do Sul',
-    'countries.spain': 'Espanha',
-    'countries.sweden': 'Suécia',
-    'countries.switzerland': 'Suíça',
-    'countries.united_kingdom': 'Reino Unido',
-    'countries.united_states': 'Estados Unidos',
+    // Expense Tracker
+    'expense.title': 'Rastreador de despesas empresariais',
+    
+    // Smart Alerts
+    'alerts.title': 'Alertas inteligentes e notificações',
+    'alerts.settings': 'Configurações',
+    
+    // Passport Manager
+    'passport.title': 'Gerenciador de passaportes',
+    
+    // User Profile
+    'profile.title': 'Perfil de usuário e preferências',
+    
+    // Tax Residency
+    'tax.title': 'Centro de residência fiscal e conformidade',
     
     // Common
-    'common.loading': 'Carregando...',
     'common.save': 'Salvar',
     'common.cancel': 'Cancelar',
     'common.close': 'Fechar',
-    'common.add': 'Adicionar',
-    'common.remove': 'Remover',
-    'common.upgrade': 'Atualizar',
-    'common.free': 'Grátis',
-    'common.premium': 'Premium',
-    'common.pro': 'Pro',
   },
   hi: {
     // Header
-    'app.title': 'यात्रा दिन काउंटर',
+    'app.title': 'TravelTracker',
+    'app.tagline': 'आपका वैश्विक यात्रा साथी',
+    'header.profile': 'प्रोफ़ाइल',
+    'header.profile_settings': 'प्रोफ़ाइल सेटिंग्स',
+    'header.app_settings': 'ऐप सेटिंग्स',
+    'header.upgrade_plan': 'प्लान अपग्रेड करें',
+    'header.privacy_data': 'गोपनीयता और डेटा',
+    'header.sign_out': 'साइन आउट',
     'nav.dashboard': 'डैशबोर्ड',
-    'nav.tracking': 'ट्रैकिंग',
+    'nav.tracking': 'यात्रा ट्रैकिंग',
     'nav.tax': 'कर निवास',
-    'nav.visas': 'वीजा',
+    'nav.visas': 'वीज़ा प्रबंधक',
     'nav.documents': 'दस्तावेज़',
-    'nav.health': 'स्वास्थ्य',
-    'nav.news': 'समाचार',
-    'nav.alerts': 'अलर्ट',
-    'nav.services': 'सेवाएं',
+    'nav.health': 'स्वास्थ्य और टीके',
+    'nav.news': 'यात्रा समाचार',
+    'nav.alerts': 'स्मार्ट अलर्ट',
+    'nav.services': 'यात्रा सेवाएं',
     'nav.settings': 'सेटिंग्स',
+    'nav.help': 'सहायता और समर्थन',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'दुनिया भर में अनुपालन बनाए रखें',
     
     // Dashboard Stats
     'stats.countries_tracked': 'ट्रैक किए गए देश',
     'stats.active_destinations': 'सक्रिय गंतव्य',
-    'stats.active_tracking': 'सक्रिय ट्रैकिंग',
-    'stats.with_recorded_visits': 'दर्ज यात्राओं के साथ',
     'stats.critical_alerts': 'गंभीर अलर्ट',
     'stats.require_attention': 'ध्यान देने की आवश्यकता',
-    'stats.urgent': 'तत्काल',
-    'stats.warnings': 'चेतावनियां',
-    'stats.monitor_closely': 'बारीकी से निगरानी करें',
     
     // Quick Actions
     'quick.title': 'त्वरित क्रियाएं',
     'quick.add_country': 'देश जोड़ें',
-    'quick.add_country_desc': 'एक नए गंतव्य को ट्रैक करना शुरू करें',
     'quick.upload_documents': 'दस्तावेज़ अपलोड करें',
-    'quick.upload_documents_desc': 'महत्वपूर्ण यात्रा दस्तावेज़ संग्रहीत करें',
     'quick.check_visas': 'वीज़ा जांचें',
-    'quick.check_visas_desc': 'वीज़ा आवश्यकताओं की समीक्षा करें',
     'quick.view_alerts': 'अलर्ट देखें',
-    'quick.view_alerts_desc': 'महत्वपूर्ण सूचनाएं देखें',
-    
-    // Country Card
-    'card.current': 'वर्तमान',
-    'card.count_travel_days': 'कुल प्रवास में यात्रा दिन गिनें',
-    'card.on': 'चालू',
-    'card.off': 'बंद',
-    'card.tax_residence_status': 'कर निवास स्थिति',
-    'card.days_left': 'दिन शेष',
-    'card.days_this_year': 'इस वर्ष दिन',
-    'card.days_progress': 'दिनों की प्रगति',
-    'card.limit_exceeded': 'सीमा पार',
-    'card.critical': 'गंभीर',
-    'card.warning': 'चेतावनी',
-    'card.monitor': 'निगरानी',
-    'card.safe': 'सुरक्षित',
-    'card.days_spent': 'बिताए गए दिन',
-    'card.remaining': 'शेष',
-    'card.day_limit': 'दिन की सीमा',
-    'card.this_year': 'इस वर्ष',
-    'card.total_days': 'कुल दिन',
-    'card.edit_limit': 'सीमा संपादित करें',
-    'card.reset': 'रीसेट',
-    'card.entries': 'प्रविष्टियाँ',
     
     // AI Assistant
-    'ai.greeting': 'नमस्ते! मैं आपका एआई यात्रा सहायक हूं। मैं यात्रा सलाह, वीज़ा आवश्यकताओं, बुकिंग सहायता और अलर्ट के साथ मदद कर सकता हूं। आप क्या जानना चाहेंगे?',
-    'ai.visa_response': 'आपके ट्रैक किए गए देशों (वर्तमान में {count}) के आधार पर, मैं वीज़ा आवश्यकताओं में मदद कर सकता हूं। विस्तृत वीज़ा प्रसंस्करण और आवेदनों के लिए, आपको बुकिंग सहायता के लिए प्रीमियम योजना में अपग्रेड करने की आवश्यकता होगी।',
-    'ai.booking_response': 'मैं आपको सर्वोत्तम यात्रा सौदे खोजने में मदद कर सकता हूं! हालांकि, वास्तविक बुकिंग सहायता और यात्रा भागीदारों के साथ एकीकरण के लिए, आपको प्रीमियम सदस्यता की आवश्यकता होगी। मैं अभी भी गंतव्यों के बारे में सामान्य सलाह प्रदान कर सकता हूं।',
-    'ai.weather_response': 'मैं आपके ट्रैक किए गए गंतव्यों के लिए मौसम जानकारी प्रदान कर सकता हूं। वर्तमान में {count} देशों को ट्रैक कर रहा हूं। क्या आप किसी विशिष्ट स्थान के लिए मौसम अपडेट चाहेंगे?',
-    'ai.tax_response': 'कर निवास जटिल है! आपके यात्रा पैटर्न के आधार पर, मैं सामान्य मार्गदर्शन प्रदान कर सकता हूं। विस्तृत कर सलाह के लिए, कर पेशेवर से परामर्श करने या हमारी व्यवसाय योजना में अपग्रेड करने पर विचार करें।',
-    'ai.alert_response': 'मैं वीज़ा समाप्ति, पासपोर्ट नवीनीकरण और यात्रा आवश्यकताओं के लिए स्मार्ट अलर्ट सेट कर सकता हूं। आपकी वर्तमान {tier} योजना में बुनियादी अलर्ट शामिल हैं।',
-    'ai.help_response': 'मैं इनमें मदद कर सकता हूं:\n🌍 यात्रा सलाह और गंतव्य जानकारी\n📋 वीज़ा आवश्यकताएं और दस्तावेज़ीकरण\n🏨 सामान्य बुकिंग मार्गदर्शन\n⚠️ यात्रा अलर्ट और सूचनाएं\n💰 कर निवास जानकारी\n🌤️ मौसम और जलवायु जानकारी\n\nवास्तविक बुकिंग और व्यक्तिगत सिफारिशों जैसी उन्नत सुविधाओं के लिए, अपनी योजना को अपग्रेड करने पर विचार करें!',
     'ai.title': 'एआई यात्रा सहायक',
-    'ai.minimize': 'छोटा करें',
-    'ai.maximize': 'बड़ा करें',
-    'ai.close': 'बंद करें',
-    'ai.type_message': 'अपना संदेश टाइप करें...',
-    'ai.send': 'भेजें',
     'ai.typing': 'एआई टाइप कर रहा है...',
+    
+    // Document Tracker
+    'doc.title': 'दस्तावेज़ ट्रैकर',
+    'doc.passports': 'पासपोर्ट',
+    'doc.licenses': 'लाइसेंस',
+    
+    // Expense Tracker
+    'expense.title': 'व्यावसायिक व्यय ट्रैकर',
+    
+    // Smart Alerts
+    'alerts.title': 'स्मार्ट अलर्ट और सूचनाएं',
+    'alerts.settings': 'सेटिंग्स',
+    
+    // Passport Manager
+    'passport.title': 'पासपोर्ट प्रबंधक',
+    
+    // User Profile
+    'profile.title': 'उपयोगकर्ता प्रोफ़ाइल और प्राथमिकताएं',
     
     // Tax Residency
     'tax.title': 'कर निवास और अनुपालन केंद्र',
-    'tax.description': 'व्यापक कर निवास ट्रैकिंग, अनुपालन निगरानी और योजना उपकरण',
-    'tax.select_jurisdiction': 'अपना प्राथमिक कर क्षेत्राधिकार चुनें:',
-    'tax.global_overview': 'वैश्विक अवलोकन',
-    'tax.united_states': 'संयुक्त राज्य अमेरिका',
-    'tax.canada': 'कनाडा',
-    'tax.days_spent': 'बिताए गए दिन:',
-    'tax.tax_resident': '⚠️ कर निवासी',
-    'tax.days_remaining': 'दिन शेष',
-    'tax.no_countries': 'अभी तक कोई देश ट्रैक नहीं किया गया। कर निवास की निगरानी शुरू करने के लिए देश जोड़ें।',
-    
-    // Countries
-    'countries.afghanistan': 'अफगानिस्तान',
-    'countries.albania': 'अल्बानिया',
-    'countries.algeria': 'अल्जीरिया',
-    'countries.argentina': 'अर्जेंटीना',
-    'countries.australia': 'ऑस्ट्रेलिया',
-    'countries.austria': 'ऑस्ट्रिया',
-    'countries.brazil': 'ब्राजील',
-    'countries.canada': 'कनाडा',
-    'countries.china': 'चीन',
-    'countries.france': 'फ्रांस',
-    'countries.germany': 'जर्मनी',
-    'countries.india': 'भारत',
-    'countries.italy': 'इटली',
-    'countries.japan': 'जापान',
-    'countries.mexico': 'मेक्सिको',
-    'countries.netherlands': 'नीदरलैंड',
-    'countries.portugal': 'पुर्तगाल',
-    'countries.russia': 'रूस',
-    'countries.south_africa': 'दक्षिण अफ्रीका',
-    'countries.spain': 'स्पेन',
-    'countries.sweden': 'स्वीडन',
-    'countries.switzerland': 'स्विट्जरलैंड',
-    'countries.united_kingdom': 'यूनाइटेड किंगडम',
-    'countries.united_states': 'संयुक्त राज्य अमेरिका',
     
     // Common
-    'common.loading': 'लोड हो रहा है...',
-    'common.save': 'सेव करें',
+    'common.save': 'सहेजें',
     'common.cancel': 'रद्द करें',
     'common.close': 'बंद करें',
-    'common.add': 'जोड़ें',
-    'common.remove': 'हटाएं',
-    'common.upgrade': 'अपग्रेड',
-    'common.free': 'मुफ्त',
-    'common.premium': 'प्रीमियम',
-    'common.pro': 'प्रो',
   },
   sw: {
     // Header
-    'app.title': 'Kihesabu cha Siku za Kusafiri',
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Mwenzi wako wa kimataifa wa kusafiri',
+    'header.profile': 'Wasifu',
+    'header.profile_settings': 'Mipangilio ya Wasifu',
+    'header.app_settings': 'Mipangilio ya Programu',
+    'header.upgrade_plan': 'Boresha Mpango',
+    'header.privacy_data': 'Faragha na Data',
+    'header.sign_out': 'Toka',
     'nav.dashboard': 'Dashibodi',
-    'nav.tracking': 'Ufuatiliaji',
+    'nav.tracking': 'Ufuatiliaji wa Safari',
     'nav.tax': 'Makazi ya Kodi',
-    'nav.visas': 'Visa',
-    'nav.documents': 'Nyaraka',
-    'nav.health': 'Afya',
-    'nav.news': 'Habari',
-    'nav.alerts': 'Tahadhari',
-    'nav.services': 'Huduma',
+    'nav.visas': 'Meneja wa Visa',
+    'nav.documents': 'Hati',
+    'nav.health': 'Afya na Chanjo',
+    'nav.news': 'Habari za Safari',
+    'nav.alerts': 'Arifa za Akili',
+    'nav.services': 'Huduma za Safari',
     'nav.settings': 'Mipangilio',
+    'nav.help': 'Msaada na Usaidizi',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Endelea kuwa na ufuasi ulimwenguni',
     
     // Dashboard Stats
     'stats.countries_tracked': 'Nchi Zinazofuatiliwa',
-    'stats.active_destinations': 'Maeneo yenye shughuli',
-    'stats.active_tracking': 'Ufuatiliaji wa Kazi',
-    'stats.with_recorded_visits': 'Na ziara zilizoandikwa',
-    'stats.critical_alerts': 'Tahadhari Muhimu',
-    'stats.require_attention': 'Inahitaji uangalifu',
-    'stats.urgent': 'HARAKA',
-    'stats.warnings': 'Maonyo',
-    'stats.monitor_closely': 'Fuatilia kwa karibu',
+    'stats.active_destinations': 'Maeneo yanayotumika',
+    'stats.critical_alerts': 'Arifa Muhimu',
+    'stats.require_attention': 'Inahitaji umakini',
     
     // Quick Actions
     'quick.title': 'Vitendo vya Haraka',
     'quick.add_country': 'Ongeza Nchi',
-    'quick.add_country_desc': 'Anza kufuatilia eneo jipya',
-    'quick.upload_documents': 'Pakia Nyaraka',
-    'quick.upload_documents_desc': 'Hifadhi nyaraka muhimu za safari',
+    'quick.upload_documents': 'Pakia Hati',
     'quick.check_visas': 'Angalia Visa',
-    'quick.check_visas_desc': 'Kagua mahitaji ya visa',
-    'quick.view_alerts': 'Tazama Tahadhari',
-    'quick.view_alerts_desc': 'Ona arifa muhimu',
-    
-    // Country Card
-    'card.current': 'Ya Sasa',
-    'card.count_travel_days': 'Hesabu Siku za Safari kwa Jumla ya Kukaa',
-    'card.on': 'IMEWASHWA',
-    'card.off': 'IMEZIMWA',
-    'card.tax_residence_status': 'Hali ya Makazi ya Kodi',
-    'card.days_left': 'siku zimebaki',
-    'card.days_this_year': 'siku mwaka huu',
-    'card.days_progress': 'Maendeleo ya Siku',
-    'card.limit_exceeded': 'Kikomo Kimezidiwa',
-    'card.critical': 'Muhimu',
-    'card.warning': 'Onyo',
-    'card.monitor': 'Fuatilia',
-    'card.safe': 'Salama',
-    'card.days_spent': 'Siku Zilizotumika',
-    'card.remaining': 'zimebaki',
-    'card.day_limit': 'Kikomo cha Siku',
-    'card.this_year': 'Mwaka Huu',
-    'card.total_days': 'Jumla ya Siku',
-    'card.edit_limit': 'Hariri Kikomo',
-    'card.reset': 'Weka Upya',
-    'card.entries': 'Maingizo',
+    'quick.view_alerts': 'Tazama Arifa',
     
     // AI Assistant
-    'ai.greeting': 'Habari! Mimi ni Msaidizi wako wa Safari wa AI. Ninaweza kukusaidia na ushauri wa safari, mahitaji ya visa, msaada wa kuhifadhi, na tahadhari. Ungependa kujua nini?',
-    'ai.visa_response': 'Kulingana na nchi zako zinazofuatiliwa ({count} kwa sasa), ninaweza kusaidia na mahitaji ya visa. Kwa usindikaji wa kina wa visa na maombi, utahitaji kuboresha kwa mpango wa premium kwa msaada wa kuhifadhi.',
-    'ai.booking_response': 'Ninaweza kukusaidia kupata ofa bora za safari! Hata hivyo, kwa msaada halisi wa kuhifadhi na ushirikiano na washirika wa safari, utahitaji usajili wa premium. Bado ninaweza kutoa ushauri wa jumla kuhusu maeneo.',
-    'ai.weather_response': 'Ninaweza kutoa maarifa ya hali ya hewa kwa maeneo yako yanayofuatiliwa. Kwa sasa ninafuatilia nchi {count}. Je, ungependa masasisho ya hali ya hewa kwa eneo lolote maalum?',
-    'ai.tax_response': 'Makazi ya kodi ni changamoto! Kulingana na muundo wako wa safari, ninaweza kutoa mwongozo wa jumla. Kwa ushauri wa kina wa kodi, fikiria kushauriana na mtaalamu wa kodi au kuboresha kwa mpango wetu wa biashara.',
-    'ai.alert_response': 'Ninaweza kuweka tahadhari za akili kwa kumalizika kwa visa, upyaji wa pasipoti, na mahitaji ya safari. Mpango wako wa sasa wa {tier} unajumuisha tahadhari za msingi.',
-    'ai.help_response': 'Ninaweza kusaidia na:\n🌍 Ushauri wa safari na habari za eneo\n📋 Mahitaji ya visa na nyaraka\n🏨 Mwongozo wa jumla wa kuhifadhi\n⚠️ Tahadhari na arifa za safari\n💰 Maarifa ya makazi ya kodi\n🌤️ Habari ya hali ya hewa\n\nKwa vipengele vya kina kama uhifadhi halisi na mapendekezo maalum, fikiria kuboresha mpango wako!',
     'ai.title': 'Msaidizi wa Safari wa AI',
-    'ai.minimize': 'Punguza',
-    'ai.maximize': 'Ongeza',
-    'ai.close': 'Funga',
-    'ai.type_message': 'Andika ujumbe wako...',
-    'ai.send': 'Tuma',
     'ai.typing': 'AI inaandika...',
     
-    // Tax Residency
-    'tax.title': 'Kituo cha Makazi ya Kodi na Utii',
-    'tax.description': 'Ufuatiliaji wa kina wa makazi ya kodi, ufuatiliaji wa utii na zana za upangaji',
-    'tax.select_jurisdiction': 'Chagua mamlaka yako kuu ya kodi:',
-    'tax.global_overview': 'Muhtasari wa Kimataifa',
-    'tax.united_states': 'Marekani',
-    'tax.canada': 'Kanada',
-    'tax.days_spent': 'Siku zilizotumika:',
-    'tax.tax_resident': '⚠️ Mkazi wa kodi',
-    'tax.days_remaining': 'siku zimebaki',
-    'tax.no_countries': 'Hakuna nchi zilizofuatiliwa bado. Ongeza nchi ili kuanza kufuatilia makazi ya kodi.',
+    // Document Tracker
+    'doc.title': 'Kifuatiliaji cha Hati',
+    'doc.passports': 'Pasi',
+    'doc.licenses': 'Leseni',
     
-    // Countries
-    'countries.afghanistan': 'Afghanistan',
-    'countries.albania': 'Albania',
-    'countries.algeria': 'Algeria',
-    'countries.argentina': 'Argentina',
-    'countries.australia': 'Australia',
-    'countries.austria': 'Austria',
-    'countries.brazil': 'Brazil',
-    'countries.canada': 'Kanada',
-    'countries.china': 'Uchina',
-    'countries.france': 'Ufaransa',
-    'countries.germany': 'Ujerumani',
-    'countries.india': 'Uhindi',
-    'countries.italy': 'Italia',
-    'countries.japan': 'Japani',
-    'countries.mexico': 'Meksiko',
-    'countries.netherlands': 'Uholanzi',
-    'countries.portugal': 'Ureno',
-    'countries.russia': 'Urusi',
-    'countries.south_africa': 'Afrika Kusini',
-    'countries.spain': 'Uhispania',
-    'countries.sweden': 'Uswidi',
-    'countries.switzerland': 'Uswisi',
-    'countries.united_kingdom': 'Uingereza',
-    'countries.united_states': 'Marekani',
+    // Expense Tracker
+    'expense.title': 'Kifuatiliaji cha Gharama za Biashara',
+    
+    // Smart Alerts
+    'alerts.title': 'Arifa za Akili na Taarifa',
+    'alerts.settings': 'Mipangilio',
+    
+    // Passport Manager
+    'passport.title': 'Meneja wa Pasi',
+    
+    // User Profile
+    'profile.title': 'Wasifu wa Mtumiaji na Mapendeleo',
+    
+    // Tax Residency
+    'tax.title': 'Kituo cha Makazi ya Kodi na Kufuata Sheria',
     
     // Common
-    'common.loading': 'Inapakia...',
     'common.save': 'Hifadhi',
     'common.cancel': 'Ghairi',
     'common.close': 'Funga',
-    'common.add': 'Ongeza',
-    'common.remove': 'Ondoa',
-    'common.upgrade': 'Boresha',
-    'common.free': 'Bure',
-    'common.premium': 'Premium',
-    'common.pro': 'Pro',
   },
   af: {
     // Header
-    'app.title': 'Reis Dag Teller',
-    'nav.dashboard': 'Paneelbord',
-    'nav.tracking': 'Opsporing',
-    'nav.tax': 'Belasting Verblyf',
-    'nav.visas': 'Visas',
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Jou globale reisgenoot',
+    'header.profile': 'Profiel',
+    'header.profile_settings': 'Profielinstellings',
+    'header.app_settings': 'Programinstellings',
+    'header.upgrade_plan': 'Gradeer Plan Op',
+    'header.privacy_data': 'Privaatheid en Data',
+    'header.sign_out': 'Teken Uit',
+    'nav.dashboard': 'Dashboard',
+    'nav.tracking': 'Reisopsporing',
+    'nav.tax': 'Belastingverblyf',
+    'nav.visas': 'Visabestuurder',
     'nav.documents': 'Dokumente',
-    'nav.health': 'Gesondheid',
-    'nav.news': 'Nuus',
-    'nav.alerts': 'Waarskuwings',
-    'nav.services': 'Dienste',
+    'nav.health': 'Gesondheid en Entstowwe',
+    'nav.news': 'Reisnuus',
+    'nav.alerts': 'Slim Waarskuwings',
+    'nav.services': 'Reisdienste',
     'nav.settings': 'Instellings',
+    'nav.help': 'Hulp en Ondersteuning',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Bly wêreldwyd voldoend',
     
     // Dashboard Stats
     'stats.countries_tracked': 'Lande Opgespoor',
     'stats.active_destinations': 'Aktiewe bestemmings',
-    'stats.active_tracking': 'Aktiewe Opsporing',
-    'stats.with_recorded_visits': 'Met aangetekende besoeke',
     'stats.critical_alerts': 'Kritieke Waarskuwings',
     'stats.require_attention': 'Benodig aandag',
-    'stats.urgent': 'DRINGEND',
-    'stats.warnings': 'Waarskuwings',
-    'stats.monitor_closely': 'Monitor noukeurig',
     
     // Quick Actions
     'quick.title': 'Vinnige Aksies',
     'quick.add_country': 'Voeg Land By',
-    'quick.add_country_desc': 'Begin om \'n nuwe bestemming op te spoor',
     'quick.upload_documents': 'Laai Dokumente Op',
-    'quick.upload_documents_desc': 'Stoor belangrike reis dokumente',
     'quick.check_visas': 'Kyk Visas',
-    'quick.check_visas_desc': 'Hersien visa vereistes',
     'quick.view_alerts': 'Sien Waarskuwings',
-    'quick.view_alerts_desc': 'Sien belangrike kennisgewings',
-    
-    // Country Card
-    'card.current': 'Huidige',
-    'card.count_travel_days': 'Tel Reis Dae na Totale Verblyf',
-    'card.on': 'AAN',
-    'card.off': 'AF',
-    'card.tax_residence_status': 'Belasting Verblyf Status',
-    'card.days_left': 'dae oor',
-    'card.days_this_year': 'dae vanjaar',
-    'card.days_progress': 'Dae Vordering',
-    'card.limit_exceeded': 'Limiet Oorskry',
-    'card.critical': 'Krities',
-    'card.warning': 'Waarskuwing',
-    'card.monitor': 'Monitor',
-    'card.safe': 'Veilig',
-    'card.days_spent': 'Dae Spandeer',
-    'card.remaining': 'oor',
-    'card.day_limit': 'Dag Limiet',
-    'card.this_year': 'Vanjaar',
-    'card.total_days': 'Totale Dae',
-    'card.edit_limit': 'Wysig Limiet',
-    'card.reset': 'Herstel',
-    'card.entries': 'Inskrywings',
     
     // AI Assistant
-    'ai.greeting': 'Hallo! Ek is jou KI Reis Assistent. Ek kan help met reis advies, visa vereistes, besprekings hulp, en waarskuwings. Wat wil jy graag weet?',
-    'ai.visa_response': 'Gebaseer op jou opgespoor lande ({count} tans), kan ek help met visa vereistes. Vir gedetailleerde visa verwerking en aansoeke, sal jy moet opgradeer na \'n premium plan vir besprekings hulp.',
-    'ai.booking_response': 'Ek kan jou help om die beste reis transaksies te vind! Maar, vir werklike besprekings hulp en integrasie met reis vennote, sal jy \'n premium inskrywing benodig. Ek kan steeds algemene advies oor bestemmings verskaf.',
-    'ai.weather_response': 'Ek kan weer insigte vir jou opgespoor bestemmings verskaf. Tans {count} lande opspoor. Wil jy weer opdaterings vir enige spesifieke plek hê?',
-    'ai.tax_response': 'Belasting verblyf is kompleks! Gebaseer op jou reis patroon, kan ek algemene leiding verskaf. Vir gedetailleerde belasting advies, oorweeg om met \'n belasting professionele te konsulteer of opgradeer na ons besigheid plan.',
-    'ai.alert_response': 'Ek kan slim waarskuwings opstel vir visa vervaldatums, paspoort hernuwings, en reis vereistes. Jou huidige {tier} plan sluit basiese waarskuwings in.',
-    'ai.help_response': 'Ek kan help met:\n🌍 Reis advies en bestemming info\n📋 Visa vereistes en dokumentasie\n🏨 Algemene besprekings leiding\n⚠️ Reis waarskuwings en kennisgewings\n💰 Belasting verblyf insigte\n🌤️ Weer en klimaat info\n\nVir gevorderde funksies soos werklike besprekings en persoonlike aanbevelings, oorweeg om jou plan op te gradeer!',
     'ai.title': 'KI Reis Assistent',
-    'ai.minimize': 'Minimaliseer',
-    'ai.maximize': 'Maksimeer',
-    'ai.close': 'Sluit',
-    'ai.type_message': 'Tik jou boodskap...',
-    'ai.send': 'Stuur',
-    'ai.typing': 'KI tik...',
+    'ai.typing': 'KI is besig om te tik...',
+    
+    // Document Tracker
+    'doc.title': 'Dokumentopsporingstelsel',
+    'doc.passports': 'Pasporte',
+    'doc.licenses': 'Lisensies',
+    
+    // Expense Tracker
+    'expense.title': 'Sake-onkosteopsporder',
+    
+    // Smart Alerts
+    'alerts.title': 'Slim Waarskuwings en Kennisgewings',
+    'alerts.settings': 'Instellings',
+    
+    // Passport Manager
+    'passport.title': 'Paspoortbestuurder',
+    
+    // User Profile
+    'profile.title': 'Gebruikersprofiel en Voorkeure',
     
     // Tax Residency
-    'tax.title': 'Belasting Verblyf & Nakoming Sentrum',
-    'tax.description': 'Omvattende belasting verblyf opsporing, nakoming monitering en beplanning gereedskap',
-    'tax.select_jurisdiction': 'Kies jou primêre belasting jurisdiksie:',
-    'tax.global_overview': 'Globale Oorsig',
-    'tax.united_states': 'Verenigde State',
-    'tax.canada': 'Kanada',
-    'tax.days_spent': 'Dae spandeer:',
-    'tax.tax_resident': '⚠️ Belasting inwoner',
-    'tax.days_remaining': 'dae oor',
-    'tax.no_countries': 'Geen lande nog opgespoor nie. Voeg lande by om belasting verblyf monitering te begin.',
-    
-    // Countries
-    'countries.afghanistan': 'Afghanistan',
-    'countries.albania': 'Albanië',
-    'countries.algeria': 'Algerië',
-    'countries.argentina': 'Argentinië',
-    'countries.australia': 'Australië',
-    'countries.austria': 'Oostenryk',
-    'countries.brazil': 'Brasilië',
-    'countries.canada': 'Kanada',
-    'countries.china': 'Sjina',
-    'countries.france': 'Frankryk',
-    'countries.germany': 'Duitsland',
-    'countries.india': 'Indië',
-    'countries.italy': 'Italië',
-    'countries.japan': 'Japan',
-    'countries.mexico': 'Meksiko',
-    'countries.netherlands': 'Nederland',
-    'countries.portugal': 'Portugal',
-    'countries.russia': 'Rusland',
-    'countries.south_africa': 'Suid-Afrika',
-    'countries.spain': 'Spanje',
-    'countries.sweden': 'Swede',
-    'countries.switzerland': 'Switserland',
-    'countries.united_kingdom': 'Verenigde Koninkryk',
-    'countries.united_states': 'Verenigde State',
+    'tax.title': 'Belastingverblyf en Nakoming Sentrum',
     
     // Common
-    'common.loading': 'Laai...',
     'common.save': 'Stoor',
     'common.cancel': 'Kanselleer',
     'common.close': 'Sluit',
-    'common.add': 'Voeg by',
-    'common.remove': 'Verwyder',
-    'common.upgrade': 'Opgradeer',
-    'common.free': 'Gratis',
-    'common.premium': 'Premium',
-    'common.pro': 'Pro',
   },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [currentLanguage, setCurrentLanguage] = useState<string>(() => {
+    const saved = localStorage.getItem('app_language');
+    return saved && ['en', 'es', 'pt', 'hi', 'sw', 'af'].includes(saved) ? saved : 'en';
+  });
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('selectedLanguage');
-    if (savedLanguage && LANGUAGES.some(lang => lang.code === savedLanguage)) {
-      setCurrentLanguage(savedLanguage);
-    }
-  }, []);
-
-  const setLanguage = (code: string) => {
-    setCurrentLanguage(code);
-    localStorage.setItem('selectedLanguage', code);
-  };
+    localStorage.setItem('app_language', currentLanguage);
+  }, [currentLanguage]);
 
   const t = (key: string): string => {
-    const translation = translations[currentLanguage as keyof typeof translations];
-    return translation?.[key as keyof typeof translation] || key;
+    return translations[currentLanguage]?.[key] || translations['en']?.[key] || key;
+  };
+
+  const setLanguage = (code: string) => {
+    if (['en', 'es', 'pt', 'hi', 'sw', 'af'].includes(code)) {
+      setCurrentLanguage(code);
+    }
   };
 
   return (
@@ -806,16 +458,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
-  if (context) return context;
-  // Fallback to prevent runtime crashes if provider is missing
-  console.warn('[i18n] useLanguage used without provider. Falling back to defaults.');
-  return {
-    currentLanguage: 'en',
-    setLanguage: () => {},
-    t: (key: string) => {
-      const en = translations.en as Record<string, string>;
-      return en[key] || key;
-    },
-    languages: LANGUAGES,
-  } as LanguageContextType;
+  if (!context) {
+    throw new Error('useLanguage must be used within LanguageProvider');
+  }
+  return context;
 };
