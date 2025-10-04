@@ -19,6 +19,7 @@ import {
   X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Document {
   id: string;
@@ -59,6 +60,7 @@ export const DocumentTracker: React.FC = () => {
     notes: ''
   });
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const savedDocuments = localStorage.getItem('trackedDocuments');
@@ -171,10 +173,10 @@ export const DocumentTracker: React.FC = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-800">
           <FileText className="w-5 h-5" />
-          Document Tracker
+          {t('doc.title')}
         </CardTitle>
         <p className="text-sm text-blue-600">
-          Track your passports and driving licenses with expiry monitoring
+          {t('doc.track_description')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -182,11 +184,11 @@ export const DocumentTracker: React.FC = () => {
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="passports" className="flex items-center gap-2">
               <Globe className="w-4 h-4" />
-              Passports ({passports.length})
+              {t('doc.passports')} ({passports.length})
             </TabsTrigger>
             <TabsTrigger value="licenses" className="flex items-center gap-2">
               <Car className="w-4 h-4" />
-              Licenses ({licenses.length})
+              {t('doc.licenses')} ({licenses.length})
             </TabsTrigger>
           </TabsList>
 
@@ -229,7 +231,7 @@ export const DocumentTracker: React.FC = () => {
             ) : (
               <div className="text-center p-6 text-gray-500">
                 <Globe className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                <p>No passports tracked yet</p>
+                <p>{t('doc.no_passports')}</p>
               </div>
             )}
             
@@ -241,7 +243,7 @@ export const DocumentTracker: React.FC = () => {
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Passport
+              {t('doc.add_passport')}
             </Button>
           </TabsContent>
 
@@ -299,7 +301,7 @@ export const DocumentTracker: React.FC = () => {
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add License
+              {t('doc.add_license')}
             </Button>
           </TabsContent>
         </Tabs>
@@ -307,14 +309,14 @@ export const DocumentTracker: React.FC = () => {
         {/* Add Document Modal */}
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>
-                Add {selectedDocumentType === 'passport' ? 'Passport' : 'Driving License'}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>Country/State *</Label>
+          <DialogHeader>
+            <DialogTitle>
+              Add {selectedDocumentType === 'passport' ? t('doc.passports').slice(0, -1) : t('doc.licenses').slice(0, -2)}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>{t('doc.country_state')} *</Label>
                 <Select 
                   value={documentForm.country} 
                   onValueChange={(value) => setDocumentForm(prev => ({ ...prev, country: value }))}
@@ -332,7 +334,7 @@ export const DocumentTracker: React.FC = () => {
 
               {selectedDocumentType === 'license' && (
                 <div>
-                  <Label>License Class</Label>
+                  <Label>{t('doc.license_class')}</Label>
                   <Select 
                     value={documentForm.licenseClass} 
                     onValueChange={(value) => setDocumentForm(prev => ({ ...prev, licenseClass: value }))}
@@ -350,7 +352,7 @@ export const DocumentTracker: React.FC = () => {
               )}
               
               <div>
-                <Label>Issue Date *</Label>
+                <Label>{t('doc.issue_date')} *</Label>
                 <Input
                   type="date"
                   value={documentForm.issueDate}
@@ -359,7 +361,7 @@ export const DocumentTracker: React.FC = () => {
               </div>
               
               <div>
-                <Label>Expiry Date *</Label>
+                <Label>{t('doc.expiry_date')} *</Label>
                 <Input
                   type="date"
                   value={documentForm.expiryDate}
@@ -368,7 +370,7 @@ export const DocumentTracker: React.FC = () => {
               </div>
               
               <div>
-                <Label>Issuing Authority</Label>
+                <Label>{t('doc.issuing_authority')}</Label>
                 <Input
                   value={documentForm.issuingAuthority}
                   onChange={(e) => setDocumentForm(prev => ({ ...prev, issuingAuthority: e.target.value }))}
@@ -377,7 +379,7 @@ export const DocumentTracker: React.FC = () => {
               </div>
               
               <div>
-                <Label>Notes</Label>
+                <Label>{t('doc.notes')}</Label>
                 <Input
                   value={documentForm.notes}
                   onChange={(e) => setDocumentForm(prev => ({ ...prev, notes: e.target.value }))}
@@ -390,14 +392,14 @@ export const DocumentTracker: React.FC = () => {
                   onClick={addDocument}
                   className="flex-1"
                 >
-                  Add {selectedDocumentType === 'passport' ? 'Passport' : 'License'}
+                  Add {selectedDocumentType === 'passport' ? t('doc.passports').slice(0, -1) : t('doc.licenses').slice(0, -2)}
                 </Button>
                 <Button
                   onClick={() => setIsAddModalOpen(false)}
                   variant="outline"
                   className="flex-1"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </div>
             </div>

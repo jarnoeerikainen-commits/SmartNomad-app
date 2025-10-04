@@ -9,6 +9,7 @@ import OffersModal from '@/components/OffersModal';
 import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ServiceBoxProps {
   title: string;
@@ -37,6 +38,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
   const [offers, setOffers] = useState<Offer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFindOffers = async (serviceName: string) => {
     // Always allow finding offers - make it active
@@ -118,7 +120,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
                     onClick={() => handleFindOffers(service)}
                     className="hover:bg-green-50 hover:border-green-300 text-green-700 border-green-300"
                   >
-                    Find Offers
+                    {t('services.find_offers')}
                   </Button>
                 </div>
               ))}
@@ -126,7 +128,7 @@ const ServiceBox: React.FC<ServiceBoxProps> = ({
             
             <div className="flex items-center justify-between pt-3 border-t border-gray-200">
               <span className="text-sm font-medium text-gray-700">
-                Get Offers & Deals
+                {t('services.get_deals')}
               </span>
               <Switch
                 checked={offersEnabled}
@@ -154,6 +156,7 @@ interface TravelServicesProps {
 }
 
 const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
+  const { t } = useLanguage();
   const [offersEnabled, setOffersEnabled] = useState<{[key: string]: boolean}>({
     insurance: false,
     hotels: false,
@@ -261,8 +264,8 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Travel Services</h2>
-        <p className="text-gray-600">Find the best deals and services for your travels</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('services.title')}</h2>
+        <p className="text-gray-600">{t('services.description')}</p>
         {currentLocation && (
           <p className="text-sm text-blue-600 mt-1">
             📍 Searching offers for {currentLocation.city}, {currentLocation.country}
@@ -273,7 +276,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Insurance Services */}
         <ServiceBox
-          title="Travel Insurance"
+          title={t('services.insurance')}
           icon={<Shield className="w-5 h-5 text-blue-600" />}
           description="Protect your travel investment"
           services={[
@@ -290,7 +293,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
 
         {/* Hotel Booking */}
         <ServiceBox
-          title="Hotel Booking"
+          title={t('services.hotels')}
           icon={<Hotel className="w-5 h-5 text-blue-600" />}
           description="Find your perfect accommodation"
           services={[
@@ -307,7 +310,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
 
         {/* Local Restaurants */}
         <ServiceBox
-          title="Local Restaurants"
+          title={t('services.restaurants')}
           icon={<UtensilsCrossed className="w-5 h-5 text-blue-600" />}
           description="Discover local cuisine and dining"
           services={[
@@ -324,7 +327,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
 
         {/* VIP Luxury Services */}
         <ServiceBox
-          title="Luxury VIP Services"
+          title={t('services.vip')}
           icon={<Crown className="w-5 h-5 text-yellow-600" />}
           description="Premium luxury travel experiences"
           services={[
@@ -342,7 +345,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
 
         {/* Legal Services */}
         <ServiceBox
-          title="Legal Services"
+          title={t('services.legal')}
           icon={<Scale className="w-5 h-5 text-blue-600" />}
           description="Professional legal assistance"
           services={[
@@ -359,7 +362,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
 
         {/* Visa Services */}
         <ServiceBox
-          title="Visa & Documentation"
+          title={t('services.visa')}
           icon={<FileText className="w-5 h-5 text-blue-600" />}
           description="Visa processing and document services"
           services={[
@@ -380,7 +383,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-yellow-800">
             <Crown className="w-6 h-6" />
-            Premium Luxury Services Directory
+            {t('services.premium_directory')}
           </CardTitle>
           <p className="text-sm text-yellow-700">
             Verified premium service providers for the ultimate luxury travel experience
@@ -417,7 +420,7 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
           </div>
           
           <div className="mt-6 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
-            <h4 className="font-semibold text-yellow-800 mb-2">Why Choose Premium Services?</h4>
+            <h4 className="font-semibold text-yellow-800 mb-2">{t('services.why_premium')}</h4>
             <ul className="text-sm text-yellow-700 space-y-1">
               <li>• 24/7 personalized concierge support</li>
               <li>• Guaranteed availability and priority booking</li>

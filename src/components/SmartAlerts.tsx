@@ -20,6 +20,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Alert {
   id: string;
@@ -72,6 +73,7 @@ export const SmartAlerts: React.FC = () => {
   });
   const [activeTab, setActiveTab] = useState<'alerts' | 'settings'>('alerts');
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   // Generate sample alerts based on current tracking data
   useEffect(() => {
@@ -183,7 +185,7 @@ export const SmartAlerts: React.FC = () => {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="w-5 h-5" />
-                Smart Alerts & Notifications
+                {t('alerts.title')}
                 {unreadCount > 0 && (
                   <Badge variant="destructive" className="ml-2">
                     {unreadCount} new
@@ -191,7 +193,7 @@ export const SmartAlerts: React.FC = () => {
                 )}
               </CardTitle>
               <CardDescription>
-                Intelligent alerts for visa limits, document expiry, and tax compliance
+                {t('alerts.intelligent')}
               </CardDescription>
             </div>
             <div className="flex gap-2">
@@ -220,7 +222,7 @@ export const SmartAlerts: React.FC = () => {
                 <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                   <div className="flex items-center gap-2 text-red-800 font-medium mb-2">
                     <AlertTriangle className="w-4 h-4" />
-                    Critical Alerts Require Immediate Action
+                    {t('alerts.critical_action')}
                   </div>
                   <p className="text-red-700 text-sm">
                     You have {criticalCount} critical alert{criticalCount > 1 ? 's' : ''} that need immediate attention.
@@ -231,8 +233,8 @@ export const SmartAlerts: React.FC = () => {
               {alerts.length === 0 ? (
                 <div className="text-center py-8">
                   <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
-                  <p className="text-gray-500">No active alerts</p>
-                  <p className="text-sm text-gray-400">You're all caught up!</p>
+                  <p className="text-gray-500">{t('alerts.no_alerts')}</p>
+                  <p className="text-sm text-gray-400">{t('alerts.all_caught_up')}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -264,7 +266,7 @@ export const SmartAlerts: React.FC = () => {
                               
                               {alert.suggestions.length > 0 && (
                                 <div className="space-y-1">
-                                  <p className="text-xs font-medium">Suggested actions:</p>
+                                  <p className="text-xs font-medium">{t('alerts.suggested_actions')}:</p>
                                   <ul className="text-xs space-y-1">
                                     {alert.suggestions.map((suggestion, index) => (
                                       <li key={index} className="flex items-start gap-1">
@@ -305,10 +307,10 @@ export const SmartAlerts: React.FC = () => {
           ) : (
             <div className="space-y-6">
               <div>
-                <h3 className="font-medium mb-4">Notification Preferences</h3>
+                <h3 className="font-medium mb-4">{t('alerts.notification_prefs')}</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="push-notifications">Push Notifications</Label>
+                    <Label htmlFor="push-notifications">{t('alerts.push_notifications')}</Label>
                     <Switch
                       id="push-notifications"
                       checked={settings.enablePushNotifications}
@@ -316,7 +318,7 @@ export const SmartAlerts: React.FC = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="email-alerts">Email Alerts</Label>
+                    <Label htmlFor="email-alerts">{t('alerts.email_alerts')}</Label>
                     <Switch
                       id="email-alerts"
                       checked={settings.enableEmailAlerts}
@@ -324,7 +326,7 @@ export const SmartAlerts: React.FC = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="daily-digest">Daily Digest</Label>
+                    <Label htmlFor="daily-digest">{t('alerts.daily_digest')}</Label>
                     <Switch
                       id="daily-digest"
                       checked={settings.dailyDigest}
@@ -332,7 +334,7 @@ export const SmartAlerts: React.FC = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="smart-predictions">Smart Predictions</Label>
+                    <Label htmlFor="smart-predictions">{t('alerts.smart_predictions')}</Label>
                     <Switch
                       id="smart-predictions"
                       checked={settings.smartPredictions}

@@ -15,6 +15,7 @@ import {
 import { Expense, DailyAllowance } from '@/types/expense';
 import { useToast } from '@/hooks/use-toast';
 import ExpenseService from '@/services/ExpenseService';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ExpenseTracker: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -34,6 +35,7 @@ const ExpenseTracker: React.FC = () => {
     unit: 'km'
   });
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const savedExpenses = localStorage.getItem('expenses');
@@ -168,16 +170,16 @@ const ExpenseTracker: React.FC = () => {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Receipt className="w-5 h-5" />
-          Business Expense Tracker
+          {t('expense.business_tracker')}
         </h3>
         <div className="flex gap-2">
           <Button onClick={() => setIsAddModalOpen(true)} size="sm">
             <Plus className="w-4 h-4 mr-2" />
-            Add Expense
+            {t('expense.add_expense')}
           </Button>
           <Button onClick={generateTaxReport} variant="outline" size="sm">
             <FileText className="w-4 h-4 mr-2" />
-            Tax Report
+            {t('expense.tax_report')}
           </Button>
         </div>
       </div>
@@ -189,7 +191,7 @@ const ExpenseTracker: React.FC = () => {
             <div className="flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
               <div>
-                <p className="text-sm text-muted-foreground">Total Expenses</p>
+                <p className="text-sm text-muted-foreground">{t('expense.total_expenses')}</p>
                 <p className="text-2xl font-bold">${getTotalExpenses().toFixed(2)}</p>
               </div>
             </div>
@@ -201,7 +203,7 @@ const ExpenseTracker: React.FC = () => {
             <div className="flex items-center gap-3">
               <Receipt className="w-8 h-8 text-blue-600" />
               <div>
-                <p className="text-sm text-muted-foreground">Total Receipts</p>
+                <p className="text-sm text-muted-foreground">{t('expense.total_receipts')}</p>
                 <p className="text-2xl font-bold">{expenses.length}</p>
               </div>
             </div>
@@ -213,7 +215,7 @@ const ExpenseTracker: React.FC = () => {
             <div className="flex items-center gap-3">
               <Calculator className="w-8 h-8 text-purple-600" />
               <div>
-                <p className="text-sm text-muted-foreground">Tax Deductible</p>
+                <p className="text-sm text-muted-foreground">{t('expense.tax_deductible')}</p>
                 <p className="text-2xl font-bold">${getTotalExpenses().toFixed(2)}</p>
               </div>
             </div>
@@ -224,7 +226,7 @@ const ExpenseTracker: React.FC = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Quick Actions</CardTitle>
+          <CardTitle className="text-base">{t('expense.quick_actions')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -247,12 +249,12 @@ const ExpenseTracker: React.FC = () => {
       {/* Recent Expenses */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Recent Expenses</CardTitle>
+          <CardTitle className="text-base">{t('expense.recent_expenses')}</CardTitle>
         </CardHeader>
         <CardContent>
           {expenses.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              No expenses recorded yet. Add your first expense to get started.
+              {t('expense.no_expenses')}
             </p>
           ) : (
             <div className="space-y-3">
