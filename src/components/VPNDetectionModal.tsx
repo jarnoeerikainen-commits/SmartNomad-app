@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, MapPin, Wifi, Clock } from 'lucide-react';
 import { LocationData } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface VPNDetectionModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ const VPNDetectionModal: React.FC<VPNDetectionModalProps> = ({
   onConfirmLocation,
   onDisableVPN
 }) => {
+  const { t } = useLanguage();
   const formatDuration = (milliseconds: number) => {
     const hours = Math.floor(milliseconds / (1000 * 60 * 60));
     const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
@@ -39,7 +41,7 @@ const VPNDetectionModal: React.FC<VPNDetectionModalProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-orange-500" />
-            VPN Detected
+            {t('vpnModal.title')}
           </DialogTitle>
         </DialogHeader>
         

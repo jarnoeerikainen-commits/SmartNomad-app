@@ -7,8 +7,10 @@ import VPNDetectionModal from '@/components/VPNDetectionModal';
 import PricingCard from '@/components/PricingCard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Index = () => {
+  const { t } = useLanguage();
   const [countries, setCountries] = useState<Country[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -67,8 +69,8 @@ const Index = () => {
     if (!countries.find(c => c.code === country.code)) {
       setCountries(prev => [...prev, country]);
       toast({
-        title: "Country Added",
-        description: `Now tracking ${country.name}`,
+        title: t('toast.countryAdded'),
+        description: `${t('toast.countryAddedDesc').replace('{country}', country.name)}`,
       });
     }
   };
@@ -76,8 +78,8 @@ const Index = () => {
   const removeCountry = (countryCode: string) => {
     setCountries(prev => prev.filter(c => c.code !== countryCode));
     toast({
-      title: "Country Removed",
-      description: "Country removed from tracking",
+      title: t('toast.countryRemoved'),
+      description: t('toast.countryRemovedDesc'),
     });
   };
 
@@ -88,13 +90,13 @@ const Index = () => {
   const handleConfirmLocation = (isCorrect: boolean) => {
     if (isCorrect) {
       toast({
-        title: "Location Confirmed",
-        description: "Using detected location for travel tracking",
+        title: t('toast.locationConfirmed'),
+        description: t('toast.locationConfirmedDesc'),
       });
     } else {
       toast({
-        title: "Location Correction Needed",
-        description: "Please manually update your location",
+        title: t('toast.locationCorrection'),
+        description: t('toast.locationCorrectionDesc'),
         variant: "destructive"
       });
     }
@@ -103,8 +105,8 @@ const Index = () => {
 
   const handleDisableVPN = () => {
     toast({
-      title: "VPN Instructions",
-      description: "Please disable your VPN temporarily for accurate location tracking",
+      title: t('toast.vpnInstructions'),
+      description: t('toast.vpnInstructionsDesc'),
     });
     setShowVPNModal(false);
   };
@@ -129,8 +131,8 @@ const Index = () => {
     }));
     
     toast({
-      title: "Plan Upgraded Successfully!",
-      description: `Welcome to ${tier} plan! All features are now active.`,
+      title: t('toast.planUpgraded'),
+      description: t('toast.planUpgradedDesc').replace('{tier}', tier),
     });
   };
 

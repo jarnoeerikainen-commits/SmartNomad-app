@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Country } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CircularDashboardProps {
   countries: Country[];
@@ -10,6 +11,7 @@ interface CircularDashboardProps {
 }
 
 const CircularDashboard: React.FC<CircularDashboardProps> = ({ countries, currentLocation }) => {
+  const { t } = useLanguage();
   const getProgressColor = (progress: number) => {
     if (progress >= 100) return '#ef4444'; // red
     if (progress >= 80) return '#f59e0b'; // orange
@@ -29,7 +31,7 @@ const CircularDashboard: React.FC<CircularDashboardProps> = ({ countries, curren
     <Card className="gradient-hero shadow-medium">
       <CardHeader className="text-center pb-3">
         <CardTitle className="text-xl font-bold gradient-primary bg-clip-text text-transparent">
-          Countries at a Glance
+          {t('circularDashboard.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>

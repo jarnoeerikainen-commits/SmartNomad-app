@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Country } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface AddCountryModalProps {
   isOpen: boolean;
@@ -124,6 +125,7 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
   onAdd,
   existingCountries
 }) => {
+  const { t } = useLanguage();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [customCountryName, setCustomCountryName] = useState('');
   const [customCountryFlag, setCustomCountryFlag] = useState('');
@@ -236,7 +238,7 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Country to Track</DialogTitle>
+          <DialogTitle>{t('addCountry.title')}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
