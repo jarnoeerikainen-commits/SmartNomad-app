@@ -56,9 +56,21 @@ const translations: Record<string, Record<string, string>> = {
     // Quick Actions
     'quick.title': 'Quick Actions',
     'quick.add_country': 'Add Country',
+    'quick.add_country_desc': 'Track a new destination',
     'quick.upload_documents': 'Upload Documents',
+    'quick.upload_documents_desc': 'Add passport & visas',
     'quick.check_visas': 'Check Visas',
+    'quick.check_visas_desc': 'View visa status',
     'quick.view_alerts': 'View Alerts',
+    'quick.view_alerts_desc': 'Check notifications',
+    'quick.ai_doctor': 'AI Travel Doctor',
+    'quick.ai_doctor_desc': 'Health advice & vaccines',
+    'quick.ai_lawyer': 'AI Travel Lawyer',
+    'quick.ai_lawyer_desc': 'Legal guidance',
+    'quick.ai_visa_helper': 'AI Visa Helper',
+    'quick.ai_visa_helper_desc': 'Visa requirements',
+    'quick.ai_restaurant': 'AI Restaurant Booking',
+    'quick.ai_restaurant_desc': 'Find & book nearby',
     
     // AI Assistant
     'ai.title': 'AI Travel Assistant',
@@ -122,10 +134,22 @@ const translations: Record<string, Record<string, string>> = {
     
     // Quick Actions
     'quick.title': 'Acciones rápidas',
-    'quick.add_country': 'Agregar país',
-    'quick.upload_documents': 'Subir documentos',
-    'quick.check_visas': 'Verificar visas',
-    'quick.view_alerts': 'Ver alertas',
+    'quick.add_country': 'Agregar País',
+    'quick.add_country_desc': 'Rastrear nuevo destino',
+    'quick.upload_documents': 'Subir Documentos',
+    'quick.upload_documents_desc': 'Añadir pasaporte y visas',
+    'quick.check_visas': 'Verificar Visas',
+    'quick.check_visas_desc': 'Ver estado de visa',
+    'quick.view_alerts': 'Ver Alertas',
+    'quick.view_alerts_desc': 'Revisar notificaciones',
+    'quick.ai_doctor': 'Doctor de Viaje IA',
+    'quick.ai_doctor_desc': 'Consejos de salud y vacunas',
+    'quick.ai_lawyer': 'Abogado de Viaje IA',
+    'quick.ai_lawyer_desc': 'Orientación legal',
+    'quick.ai_visa_helper': 'Asistente de Visa IA',
+    'quick.ai_visa_helper_desc': 'Requisitos de visa',
+    'quick.ai_restaurant': 'Reserva de Restaurante IA',
+    'quick.ai_restaurant_desc': 'Buscar y reservar cerca',
     
     // AI Assistant
     'ai.title': 'Asistente de viaje IA',
@@ -189,10 +213,22 @@ const translations: Record<string, Record<string, string>> = {
     
     // Quick Actions
     'quick.title': 'Ações rápidas',
-    'quick.add_country': 'Adicionar país',
-    'quick.upload_documents': 'Enviar documentos',
-    'quick.check_visas': 'Verificar vistos',
-    'quick.view_alerts': 'Ver alertas',
+    'quick.add_country': 'Adicionar País',
+    'quick.add_country_desc': 'Rastrear novo destino',
+    'quick.upload_documents': 'Enviar Documentos',
+    'quick.upload_documents_desc': 'Adicionar passaporte e vistos',
+    'quick.check_visas': 'Verificar Vistos',
+    'quick.check_visas_desc': 'Ver status do visto',
+    'quick.view_alerts': 'Ver Alertas',
+    'quick.view_alerts_desc': 'Verificar notificações',
+    'quick.ai_doctor': 'Médico de Viagem IA',
+    'quick.ai_doctor_desc': 'Conselhos de saúde e vacinas',
+    'quick.ai_lawyer': 'Advogado de Viagem IA',
+    'quick.ai_lawyer_desc': 'Orientação jurídica',
+    'quick.ai_visa_helper': 'Assistente de Visto IA',
+    'quick.ai_visa_helper_desc': 'Requisitos de visto',
+    'quick.ai_restaurant': 'Reserva de Restaurante IA',
+    'quick.ai_restaurant_desc': 'Encontrar e reservar perto',
     
     // AI Assistant
     'ai.title': 'Assistente de viagem IA',
@@ -257,9 +293,21 @@ const translations: Record<string, Record<string, string>> = {
     // Quick Actions
     'quick.title': 'त्वरित क्रियाएं',
     'quick.add_country': 'देश जोड़ें',
+    'quick.add_country_desc': 'नया गंतव्य ट्रैक करें',
     'quick.upload_documents': 'दस्तावेज़ अपलोड करें',
+    'quick.upload_documents_desc': 'पासपोर्ट और वीज़ा जोड़ें',
     'quick.check_visas': 'वीज़ा जांचें',
+    'quick.check_visas_desc': 'वीज़ा स्थिति देखें',
     'quick.view_alerts': 'अलर्ट देखें',
+    'quick.view_alerts_desc': 'सूचनाएं जांचें',
+    'quick.ai_doctor': 'एआई यात्रा डॉक्टर',
+    'quick.ai_doctor_desc': 'स्वास्थ्य सलाह और टीके',
+    'quick.ai_lawyer': 'एआई यात्रा वकील',
+    'quick.ai_lawyer_desc': 'कानूनी मार्गदर्शन',
+    'quick.ai_visa_helper': 'एआई वीज़ा सहायक',
+    'quick.ai_visa_helper_desc': 'वीज़ा आवश्यकताएं',
+    'quick.ai_restaurant': 'एआई रेस्तरां बुकिंग',
+    'quick.ai_restaurant_desc': 'पास में खोजें और बुक करें',
     
     // AI Assistant
     'ai.title': 'एआई यात्रा सहायक',
@@ -324,9 +372,21 @@ const translations: Record<string, Record<string, string>> = {
     // Quick Actions
     'quick.title': 'Vitendo vya Haraka',
     'quick.add_country': 'Ongeza Nchi',
+    'quick.add_country_desc': 'Fuatilia mahali mpya',
     'quick.upload_documents': 'Pakia Hati',
-    'quick.check_visas': 'Angalia Visa',
+    'quick.upload_documents_desc': 'Ongeza pasipoti na viza',
+    'quick.check_visas': 'Angalia Viza',
+    'quick.check_visas_desc': 'Tazama hali ya viza',
     'quick.view_alerts': 'Tazama Arifa',
+    'quick.view_alerts_desc': 'Angalia taarifa',
+    'quick.ai_doctor': 'Daktari wa Usafiri wa AI',
+    'quick.ai_doctor_desc': 'Ushauri wa afya na chanjo',
+    'quick.ai_lawyer': 'Wakili wa Usafiri wa AI',
+    'quick.ai_lawyer_desc': 'Mwongozo wa kisheria',
+    'quick.ai_visa_helper': 'Msaidizi wa Viza wa AI',
+    'quick.ai_visa_helper_desc': 'Mahitaji ya viza',
+    'quick.ai_restaurant': 'Uhifadhi wa Mkahawa wa AI',
+    'quick.ai_restaurant_desc': 'Tafuta na uhifadhi karibu',
     
     // AI Assistant
     'ai.title': 'Msaidizi wa Safari wa AI',
@@ -359,7 +419,83 @@ const translations: Record<string, Record<string, string>> = {
     'common.close': 'Funga',
   },
   af: {
-    // ... keep existing code (comprehensive translation system - all 6 languages are fully implemented)
+    // App Header & Navigation
+    'app.title': 'TravelTracker',
+    'app.tagline': 'Jou globale reisgenoot',
+    'header.profile': 'Profiel',
+    'header.profile_settings': 'Profiel Instellings',
+    'header.app_settings': 'App Instellings',
+    'header.upgrade_plan': 'Opgradeer Plan',
+    'header.privacy_data': 'Privaatheid & Data',
+    'header.sign_out': 'Teken Uit',
+    'nav.dashboard': 'Dashboard',
+    'nav.tracking': 'Reis Opvolging',
+    'nav.tax': 'Belasting Residensie',
+    'nav.visas': 'Visum Bestuurder',
+    'nav.documents': 'Dokumente',
+    'nav.health': 'Gesondheid & Inentings',
+    'nav.news': 'Reis Nuus',
+    'nav.alerts': 'Slim Kennisgewings',
+    'nav.services': 'Reis Dienste',
+    'nav.settings': 'Instellings',
+    'nav.help': 'Hulp & Ondersteuning',
+    'nav.footer_version': 'TravelTracker v2.0',
+    'nav.footer_tagline': 'Bly voldoende wêreldwyd',
+    
+    // Dashboard Stats
+    'stats.countries_tracked': 'Lande Opgevolg',
+    'stats.active_destinations': 'Aktiewe bestemmings',
+    'stats.critical_alerts': 'Kritieke Kennisgewings',
+    'stats.require_attention': 'Vereis aandag',
+    
+    // Quick Actions
+    'quick.title': 'Vinnige Aksies',
+    'quick.add_country': 'Voeg Land By',
+    'quick.add_country_desc': 'Volg nuwe bestemming',
+    'quick.upload_documents': 'Laai Dokumente Op',
+    'quick.upload_documents_desc': 'Voeg paspoort en visums by',
+    'quick.check_visas': 'Kontroleer Visums',
+    'quick.check_visas_desc': 'Bekyk visum status',
+    'quick.view_alerts': 'Bekyk Kennisgewings',
+    'quick.view_alerts_desc': 'Kontroleer kennisgewings',
+    'quick.ai_doctor': 'KI Reisdokter',
+    'quick.ai_doctor_desc': 'Gesondheidsadvies en inentings',
+    'quick.ai_lawyer': 'KI Reisadvokaat',
+    'quick.ai_lawyer_desc': 'Wetlike leiding',
+    'quick.ai_visa_helper': 'KI Visum Assistent',
+    'quick.ai_visa_helper_desc': 'Visum vereistes',
+    'quick.ai_restaurant': 'KI Restaurant Bespreking',
+    'quick.ai_restaurant_desc': 'Vind en bespreek naby',
+    
+    // AI Assistant
+    'ai.title': 'KI Reis Assistent',
+    'ai.typing': 'KI is besig om te tik...',
+    
+    // Document Tracker
+    'doc.title': 'Dokument Volger',
+    'doc.passports': 'Paspoort',
+    'doc.licenses': 'Lisensies',
+    
+    // Expense Tracker
+    'expense.title': 'Besigheid Uitgawe Volger',
+    
+    // Smart Alerts
+    'alerts.title': 'Slim Kennisgewings & Kennisgewings',
+    'alerts.settings': 'Instellings',
+    
+    // Passport Manager
+    'passport.title': 'Paspoort Bestuurder',
+    
+    // User Profile
+    'profile.title': 'Gebruiker Profiel & Voorkeure',
+    
+    // Tax Residency
+    'tax.title': 'Belasting Residensie & Voldoenings Sentrum',
+    
+    // Common
+    'common.save': 'Stoor',
+    'common.cancel': 'Kanselleer',
+    'common.close': 'Sluit',
   },
 };
 

@@ -9,7 +9,11 @@ import {
   Bell,
   MapPin,
   FileText,
-  Plane
+  Plane,
+  Stethoscope,
+  Scale,
+  CheckCircle,
+  UtensilsCrossed
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -31,24 +35,31 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       gradient: 'gradient-primary'
     },
     {
-      title: t('quick.upload_documents'),
-      description: t('quick.upload_documents_desc'),
-      icon: Upload,
-      action: () => onSectionChange('documents'),
+      title: t('quick.ai_doctor'),
+      description: t('quick.ai_doctor_desc'),
+      icon: Stethoscope,
+      action: () => onSectionChange('ai-doctor'),
       variant: 'outline' as const
     },
     {
-      title: t('quick.check_visas'),
-      description: t('quick.check_visas_desc'),
-      icon: Plane,
-      action: () => onSectionChange('visas'),
+      title: t('quick.ai_lawyer'),
+      description: t('quick.ai_lawyer_desc'),
+      icon: Scale,
+      action: () => onSectionChange('ai-lawyer'),
       variant: 'outline' as const
     },
     {
-      title: t('quick.view_alerts'),
-      description: t('quick.view_alerts_desc'),
-      icon: Bell,
-      action: () => onSectionChange('alerts'),
+      title: t('quick.ai_visa_helper'),
+      description: t('quick.ai_visa_helper_desc'),
+      icon: CheckCircle,
+      action: () => onSectionChange('ai-visa'),
+      variant: 'outline' as const
+    },
+    {
+      title: t('quick.ai_restaurant'),
+      description: t('quick.ai_restaurant_desc'),
+      icon: UtensilsCrossed,
+      action: () => onSectionChange('ai-restaurant'),
       variant: 'outline' as const
     }
   ];
@@ -62,7 +73,7 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
           {actions.map((action, index) => (
             <Button
               key={action.title}
