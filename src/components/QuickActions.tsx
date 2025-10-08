@@ -54,13 +54,6 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       icon: CheckCircle,
       action: () => onSectionChange('ai-visa'),
       variant: 'outline' as const
-    },
-    {
-      title: t('quick.ai_restaurant'),
-      description: t('quick.ai_restaurant_desc'),
-      icon: UtensilsCrossed,
-      action: () => onSectionChange('ai-restaurant'),
-      variant: 'outline' as const
     }
   ];
 
