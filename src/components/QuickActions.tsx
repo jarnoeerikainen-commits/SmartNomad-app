@@ -13,7 +13,7 @@ import {
   Stethoscope,
   Scale,
   CheckCircle,
-  UtensilsCrossed
+  Smartphone
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -53,6 +53,13 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       description: t('quick.ai_visa_helper_desc'),
       icon: CheckCircle,
       action: () => onSectionChange('ai-visa'),
+      variant: 'outline' as const
+    },
+    {
+      title: t('quick.esim'),
+      description: t('quick.esim_desc'),
+      icon: Smartphone,
+      action: () => onSectionChange('esim'),
       variant: 'outline' as const
     }
   ];

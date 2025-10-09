@@ -71,6 +71,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'Visa requirements',
     'quick.ai_restaurant': 'AI Restaurant Booking',
     'quick.ai_restaurant_desc': 'Find & book nearby',
+    'quick.esim': 'eSIM Services',
+    'quick.esim_desc': 'Stay connected worldwide',
     
     // AI Assistant
     'ai.title': 'AI Travel Assistant',
@@ -150,6 +152,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'Requisitos de visa',
     'quick.ai_restaurant': 'Reserva de Restaurante IA',
     'quick.ai_restaurant_desc': 'Buscar y reservar cerca',
+    'quick.esim': 'Servicios eSIM',
+    'quick.esim_desc': 'Conéctate en todo el mundo',
     
     // AI Assistant
     'ai.title': 'Asistente de viaje IA',
@@ -229,6 +233,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'Requisitos de visto',
     'quick.ai_restaurant': 'Reserva de Restaurante IA',
     'quick.ai_restaurant_desc': 'Encontrar e reservar perto',
+    'quick.esim': 'Serviços eSIM',
+    'quick.esim_desc': 'Conecte-se em todo o mundo',
     
     // AI Assistant
     'ai.title': 'Assistente de viagem IA',
@@ -308,6 +314,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'वीज़ा आवश्यकताएं',
     'quick.ai_restaurant': 'एआई रेस्तरां बुकिंग',
     'quick.ai_restaurant_desc': 'पास में खोजें और बुक करें',
+    'quick.esim': 'eSIM सेवाएं',
+    'quick.esim_desc': 'दुनिया भर में जुड़े रहें',
     
     // AI Assistant
     'ai.title': 'एआई यात्रा सहायक',
@@ -387,6 +395,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'Mahitaji ya viza',
     'quick.ai_restaurant': 'Uhifadhi wa Mkahawa wa AI',
     'quick.ai_restaurant_desc': 'Tafuta na uhifadhi karibu',
+    'quick.esim': 'Huduma za eSIM',
+    'quick.esim_desc': 'Endelea kuunganishwa ulimwenguni',
     
     // AI Assistant
     'ai.title': 'Msaidizi wa Safari wa AI',
@@ -466,6 +476,8 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_visa_helper_desc': 'Visum vereistes',
     'quick.ai_restaurant': 'KI Restaurant Bespreking',
     'quick.ai_restaurant_desc': 'Vind en bespreek naby',
+    'quick.esim': 'eSIM Dienste',
+    'quick.esim_desc': 'Bly wêreldwyd verbind',
     
     // AI Assistant
     'ai.title': 'KI Reis Assistent',
