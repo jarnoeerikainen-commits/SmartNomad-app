@@ -18,6 +18,7 @@ import AITravelAssistant from './AITravelAssistant';
 import { TimeZoneViewer } from './TimeZoneViewer';
 import { ESimServices } from './ESimServices';
 import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
+import EmbassyDirectory from './EmbassyDirectory';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -121,6 +122,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'esim':
         return <ESimServices />;
+      
+      case 'embassy':
+        return <EmbassyDirectory />;
       
       case 'currency':
         return <EnhancedCurrencyConverter />;

@@ -61,6 +61,13 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       icon: Smartphone,
       action: () => onSectionChange('esim'),
       variant: 'outline' as const
+    },
+    {
+      title: t('quick.embassy'),
+      description: t('quick.embassy_desc'),
+      icon: MapPin,
+      action: () => onSectionChange('embassy'),
+      variant: 'outline' as const
     }
   ];
 

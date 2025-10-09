@@ -73,6 +73,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'Find & book nearby',
     'quick.esim': 'eSIM Services',
     'quick.esim_desc': 'Stay connected worldwide',
+    'quick.embassy': 'Embassy Directory',
+    'quick.embassy_desc': 'Official contacts',
+    
+    // Embassy Directory
+    'embassy.title': 'Embassy Directory',
+    'embassy.description': 'Access official embassy websites and travel advisories from major countries',
+    'embassy.visit_website': 'Visit Website',
+    'embassy.travel_advice': 'Travel Advice',
+    'embassy.register': 'Register Travel',
+    'embassy.tip': 'Tip: Register your travel with your embassy for emergency assistance and safety updates',
     
     // AI Assistant
     'ai.title': 'AI Travel Assistant',
@@ -154,6 +164,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'Buscar y reservar cerca',
     'quick.esim': 'Servicios eSIM',
     'quick.esim_desc': 'Conéctate en todo el mundo',
+    'quick.embassy': 'Directorio de Embajadas',
+    'quick.embassy_desc': 'Contactos oficiales',
+    
+    // Embassy Directory
+    'embassy.title': 'Directorio de Embajadas',
+    'embassy.description': 'Acceda a sitios web oficiales de embajadas y avisos de viaje de países principales',
+    'embassy.visit_website': 'Visitar Sitio Web',
+    'embassy.travel_advice': 'Consejos de Viaje',
+    'embassy.register': 'Registrar Viaje',
+    'embassy.tip': 'Consejo: Registre su viaje con su embajada para asistencia de emergencia y actualizaciones de seguridad',
     
     // AI Assistant
     'ai.title': 'Asistente de viaje IA',
@@ -235,6 +255,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'Encontrar e reservar perto',
     'quick.esim': 'Serviços eSIM',
     'quick.esim_desc': 'Conecte-se em todo o mundo',
+    'quick.embassy': 'Diretório de Embaixadas',
+    'quick.embassy_desc': 'Contatos oficiais',
+    
+    // Embassy Directory
+    'embassy.title': 'Diretório de Embaixadas',
+    'embassy.description': 'Acesse sites oficiais de embaixadas e avisos de viagem de países principais',
+    'embassy.visit_website': 'Visitar Site',
+    'embassy.travel_advice': 'Conselhos de Viagem',
+    'embassy.register': 'Registrar Viagem',
+    'embassy.tip': 'Dica: Registre sua viagem com sua embaixada para assistência de emergência e atualizações de segurança',
     
     // AI Assistant
     'ai.title': 'Assistente de viagem IA',
@@ -316,6 +346,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'पास में खोजें और बुक करें',
     'quick.esim': 'eSIM सेवाएं',
     'quick.esim_desc': 'दुनिया भर में जुड़े रहें',
+    'quick.embassy': 'दूतावास निर्देशिका',
+    'quick.embassy_desc': 'आधिकारिक संपर्क',
+    
+    // Embassy Directory
+    'embassy.title': 'दूतावास निर्देशिका',
+    'embassy.description': 'प्रमुख देशों से आधिकारिक दूतावास वेबसाइट और यात्रा सलाह तक पहुंचें',
+    'embassy.visit_website': 'वेबसाइट देखें',
+    'embassy.travel_advice': 'यात्रा सलाह',
+    'embassy.register': 'यात्रा पंजीकृत करें',
+    'embassy.tip': 'सुझाव: आपातकालीन सहायता और सुरक्षा अपडेट के लिए अपनी यात्रा को अपने दूतावास के साथ पंजीकृत करें',
     
     // AI Assistant
     'ai.title': 'एआई यात्रा सहायक',
@@ -397,6 +437,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'Tafuta na uhifadhi karibu',
     'quick.esim': 'Huduma za eSIM',
     'quick.esim_desc': 'Endelea kuunganishwa ulimwenguni',
+    'quick.embassy': 'Saraka za Ubalozi',
+    'quick.embassy_desc': 'Mawasiliano rasmi',
+    
+    // Embassy Directory
+    'embassy.title': 'Saraka za Ubalozi',
+    'embassy.description': 'Fikia tovuti rasmi za ubalozi na ushauri wa safari kutoka nchi kuu',
+    'embassy.visit_website': 'Tembelea Tovuti',
+    'embassy.travel_advice': 'Ushauri wa Safari',
+    'embassy.register': 'Sajili Safari',
+    'embassy.tip': 'Kidokezo: Sajili safari yako na ubalozi wako kwa msaada wa dharura na masasisho ya usalama',
     
     // AI Assistant
     'ai.title': 'Msaidizi wa Safari wa AI',
@@ -478,6 +528,16 @@ const translations: Record<string, Record<string, string>> = {
     'quick.ai_restaurant_desc': 'Vind en bespreek naby',
     'quick.esim': 'eSIM Dienste',
     'quick.esim_desc': 'Bly wêreldwyd verbind',
+    'quick.embassy': 'Ambassade Gids',
+    'quick.embassy_desc': 'Amptelike kontakte',
+    
+    // Embassy Directory
+    'embassy.title': 'Ambassade Gids',
+    'embassy.description': 'Toegang tot amptelike ambassade webwerwe en reisadvies van groot lande',
+    'embassy.visit_website': 'Besoek Webwerf',
+    'embassy.travel_advice': 'Reisadvies',
+    'embassy.register': 'Registreer Reis',
+    'embassy.tip': 'Wenk: Registreer u reis by u ambassade vir noodhulp en veiligheidsopdaterings',
     
     // AI Assistant
     'ai.title': 'KI Reis Assistent',
