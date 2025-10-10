@@ -16,6 +16,7 @@ import { DataManagement } from './GDPRCompliance';
 import PricingCard from './PricingCard';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { TimeZoneHeader } from './TimeZoneHeader';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
@@ -76,6 +77,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Center - Time Zones */}
+        <TimeZoneHeader />
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
