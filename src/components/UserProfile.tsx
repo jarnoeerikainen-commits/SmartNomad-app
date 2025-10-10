@@ -335,7 +335,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
     {subscription && onUpgrade && (
       <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <PricingCard subscription={subscription} onUpgrade={onUpgrade} />
+          <PricingCard 
+            subscription={subscription} 
+            onUpgrade={(tier) => {
+              setShowUpgrade(false);
+              onUpgrade(tier);
+            }} 
+          />
         </DialogContent>
       </Dialog>
     )}

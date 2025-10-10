@@ -36,17 +36,6 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   const [showDataManagement, setShowDataManagement] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
-  // Listen for plan upgrade events to close modals
-  useEffect(() => {
-    const handlePlanUpgraded = () => {
-      setShowUpgrade(false);
-      setShowSmartAlerts(false);
-      setShowDataManagement(false);
-    };
-
-    window.addEventListener('planUpgraded', handlePlanUpgraded);
-    return () => window.removeEventListener('planUpgraded', handlePlanUpgraded);
-  }, []);
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -159,7 +148,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       {subscription && onUpgrade && (
         <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
           <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <PricingCard subscription={subscription} onUpgrade={onUpgrade} />
+            <PricingCard 
+              subscription={subscription} 
+              onUpgrade={(tier) => {
+                setShowUpgrade(false);
+                onUpgrade(tier);
+              }} 
+            />
           </DialogContent>
         </Dialog>
       )}

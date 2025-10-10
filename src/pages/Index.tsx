@@ -142,9 +142,6 @@ const Index = () => {
     setSubscription(newSubscription);
     localStorage.setItem('subscription', JSON.stringify(newSubscription));
     
-    // Dispatch custom event for components to react to plan changes
-    window.dispatchEvent(new CustomEvent('planUpgraded', { detail: { tier } }));
-    
     toast({
       title: t('toast.planUpgraded'),
       description: t('toast.planUpgradedDesc').replace('{tier}', tier),

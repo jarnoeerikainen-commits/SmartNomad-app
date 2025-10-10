@@ -66,7 +66,7 @@ class NewsService {
       }
       
       // Filter and prioritize by impact and breaking status
-      const relevantNews = filteredNews
+      let relevantNews = filteredNews
         .filter(news => countryCodes.includes(news.country) || news.country === 'GLOBAL')
         .sort((a, b) => {
           // Prioritize breaking news and high impact
@@ -75,8 +75,19 @@ class NewsService {
           if (a.impact === 'high' && b.impact !== 'high') return -1;
           if (a.impact !== 'high' && b.impact === 'high') return 1;
           return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-        })
-        .slice(0, 5); // Limit to 5 news daily
+        });
+
+      // Always ensure exactly 5 news items
+      if (relevantNews.length < 5) {
+        // Add global news to fill up to 5 items
+        const globalNews = filteredNews
+          .filter(news => news.country === 'GLOBAL' && !relevantNews.includes(news))
+          .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        
+        relevantNews = [...relevantNews, ...globalNews].slice(0, 5);
+      } else {
+        relevantNews = relevantNews.slice(0, 5);
+      }
 
       this.newsCache.set(cacheKey, relevantNews);
       
