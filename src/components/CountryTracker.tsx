@@ -326,12 +326,22 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddCountry, setShowAddCountry] = useState(false);
   const [followEmbassyNews, setFollowEmbassyNews] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<string>('all');
   const { toast } = useToast();
 
-  const filteredCountries = AVAILABLE_COUNTRIES.filter(country =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    !countries.find(c => c.code === country.code)
-  );
+  // Organize countries by region
+  const worldCountries = AVAILABLE_COUNTRIES.filter(c => !c.category || c.category === 'Country');
+  const usStates = AVAILABLE_COUNTRIES.filter(c => c.category === 'US State');
+
+  const filteredCountries = AVAILABLE_COUNTRIES.filter(country => {
+    const matchesSearch = country.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const notAdded = !countries.find(c => c.code === country.code);
+    const matchesRegion = selectedRegion === 'all' || 
+      (selectedRegion === 'world' && (!country.category || country.category === 'Country')) ||
+      (selectedRegion === 'us-states' && country.category === 'US State');
+    
+    return matchesSearch && notAdded && matchesRegion;
+  });
 
   const handleAddCountry = (countryData: { code: string; name: string; flag: string; category?: string; taxDays?: number; taxType?: string }) => {
     // Set appropriate day limit based on category and tax rules
@@ -435,41 +445,77 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
             className="w-full bg-green-600 hover:bg-green-700"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Country
+            Add Country or Region
           </Button>
         ) : (
           <div className="space-y-3">
+            {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="Search countries..."
+                placeholder="Search countries and regions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
+
+            {/* Region Filter */}
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant={selectedRegion === 'all' ? 'default' : 'outline'}
+                onClick={() => setSelectedRegion('all')}
+                className="flex-1"
+              >
+                All ({AVAILABLE_COUNTRIES.filter(c => !countries.find(cc => cc.code === c.code)).length})
+              </Button>
+              <Button
+                size="sm"
+                variant={selectedRegion === 'world' ? 'default' : 'outline'}
+                onClick={() => setSelectedRegion('world')}
+                className="flex-1"
+              >
+                🌍 Countries ({worldCountries.filter(c => !countries.find(cc => cc.code === c.code)).length})
+              </Button>
+              <Button
+                size="sm"
+                variant={selectedRegion === 'us-states' ? 'default' : 'outline'}
+                onClick={() => setSelectedRegion('us-states')}
+                className="flex-1"
+              >
+                🇺🇸 US States ({usStates.filter(c => !countries.find(cc => cc.code === c.code)).length})
+              </Button>
+            </div>
             
-            {searchTerm && (
-              <div className="max-h-40 overflow-y-auto space-y-1">
-                {filteredCountries.length === 0 ? (
-                  <p className="text-sm text-gray-500 p-2">No countries found</p>
-                ) : (
-                  filteredCountries.map((country) => (
+            {/* Countries Grid */}
+            <div className="max-h-96 overflow-y-auto border rounded-lg p-2 bg-background">
+              {filteredCountries.length === 0 ? (
+                <p className="text-sm text-gray-500 p-4 text-center">No countries available</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {filteredCountries.map((country) => (
                     <div
                       key={country.code}
                       onClick={() => handleAddCountry(country)}
-                      className="flex items-center gap-3 p-2 hover:bg-green-100 rounded cursor-pointer"
+                      className="flex items-center gap-3 p-3 hover:bg-green-100 rounded-lg cursor-pointer border border-transparent hover:border-green-300 transition-all"
                     >
-                      <span className="text-xl">{country.flag}</span>
-                      <div>
-                        <p className="text-sm font-medium">{country.name}</p>
-                        <p className="text-xs text-gray-500">{country.code}</p>
+                      <span className="text-2xl">{country.flag}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{country.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-gray-500">{country.code}</p>
+                          {country.category === 'US State' && country.taxType === 'none' && (
+                            <Badge variant="secondary" className="text-xs">No Tax</Badge>
+                          )}
+                        </div>
                       </div>
+                      <Plus className="w-4 h-4 text-green-600" />
                     </div>
-                  ))
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
             
             {/* Embassy News Toggle */}
             <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -494,6 +540,7 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
               onClick={() => {
                 setShowAddCountry(false);
                 setSearchTerm('');
+                setSelectedRegion('all');
               }}
               className="w-full"
             >
