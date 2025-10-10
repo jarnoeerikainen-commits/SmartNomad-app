@@ -35,8 +35,7 @@ interface AppSidebarProps {
 
 const sidebarItems: SidebarItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
-  { id: 'tracking', label: 'Travel Tracking', icon: MapPin, badge: '5' },
-  { id: 'tax', label: 'Tax Residency', icon: Calculator },
+  { id: 'tax', label: 'Tax & Compliance', icon: Calculator },
   { id: 'visas', label: 'Visa Manager', icon: Plane },
   { id: 'documents', label: 'Documents', icon: FileText },
   { id: 'health', label: 'Health & Vaccines', icon: Heart },
@@ -55,7 +54,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   
   const sidebarItemsTranslated = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
-    { id: 'tracking', label: t('nav.tracking'), icon: MapPin, badge: '5' },
     { id: 'tax', label: t('nav.tax'), icon: Calculator },
     { id: 'visas', label: t('nav.visas'), icon: Plane },
     { id: 'documents', label: t('nav.documents'), icon: FileText },

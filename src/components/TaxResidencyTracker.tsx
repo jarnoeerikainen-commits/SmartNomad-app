@@ -6,14 +6,17 @@ import { Calculator, MapPin, Flag, Globe } from 'lucide-react';
 import USTaxStateTracker from './USTaxStateTracker';
 import USTaxTracker from './USTaxTracker';
 import { CanadaTaxProvinceTracker } from './CanadaTaxProvinceTracker';
+import CountryTracker from './CountryTracker';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TaxResidencyTrackerProps {
   countries: Country[];
+  onAddCountry: (country: Country) => void;
+  onRemoveCountry: (countryCode: string) => void;
 }
 
-const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) => {
+const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, onAddCountry, onRemoveCountry }) => {
   const [selectedCountry, setSelectedCountry] = useState<string>('global');
   const { t } = useLanguage();
 
@@ -24,10 +27,10 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) 
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <Calculator className="w-6 h-6" />
-            {t('tax.title')}
+            Tax Residency & Compliance Center
           </CardTitle>
           <p className="text-muted-foreground">
-            {t('tax.description')}
+            Manage your countries, track tax residency days, and stay compliant with international tax regulations
           </p>
         </CardHeader>
         <CardContent>
@@ -72,22 +75,34 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) 
           </div>
 
           <Tabs value={selectedCountry} onValueChange={setSelectedCountry}>
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="global" className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                Country Manager
+              </TabsTrigger>
+              <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Globe className="w-4 h-4" />
-                {t('tax.global_overview')}
+                Tax Overview
               </TabsTrigger>
               <TabsTrigger value="us" className="flex items-center gap-2">
                 <span>🇺🇸</span>
-                {t('tax.united_states')}
+                United States
               </TabsTrigger>
               <TabsTrigger value="ca" className="flex items-center gap-2">
                 <span>🇨🇦</span>
-                {t('tax.canada')}
+                Canada
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="global" className="mt-6">
+              <CountryTracker
+                countries={countries}
+                onAddCountry={onAddCountry}
+                onRemoveCountry={onRemoveCountry}
+              />
+            </TabsContent>
+
+            <TabsContent value="overview" className="mt-6">
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {countries.map((country) => {
@@ -106,7 +121,7 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) 
                         </div>
                         <div className="space-y-1">
                           <div className="flex justify-between text-sm">
-                            <span>{t('tax.days_spent')}</span>
+                            <span>Days Spent</span>
                             <span className={isOverThreshold ? 'text-red-600 font-medium' : ''}>{taxDays}/183</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -116,7 +131,7 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) 
                             />
                           </div>
                           <div className="text-xs text-muted-foreground mt-1">
-                            {isOverThreshold ? t('tax.tax_resident') : `${Math.max(0, 183 - taxDays)} ${t('tax.days_remaining')}`}
+                            {isOverThreshold ? 'Tax Resident' : `${Math.max(0, 183 - taxDays)} days remaining`}
                           </div>
                         </div>
                       </Card>
@@ -127,7 +142,7 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries }) 
                 {countries.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>{t('tax.no_countries')}</p>
+                    <p>No countries tracked yet. Add countries in the Country Manager tab.</p>
                   </div>
                 )}
               </div>

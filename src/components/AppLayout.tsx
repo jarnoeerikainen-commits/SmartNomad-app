@@ -50,7 +50,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           <div className="space-y-6">
             <DashboardStats countries={countries} />
             <QuickActions 
-              onAddCountry={() => setActiveSection('tracking')} 
+              onAddCountry={() => setActiveSection('tax')} 
               onSectionChange={setActiveSection}
             />
             
@@ -70,17 +70,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </div>
         );
       
-      case 'tracking':
+      case 'tax':
         return (
-          <CountryTracker
+          <TaxResidencyTracker 
             countries={countries}
             onAddCountry={onAddCountry}
             onRemoveCountry={onRemoveCountry}
           />
         );
-      
-      case 'tax':
-        return <TaxResidencyTracker countries={countries} />;
       
       case 'visas':
         return <VisaTrackingManager subscription={subscription} countries={countries} />;
