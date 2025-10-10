@@ -6,15 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { User, Languages, Phone, Globe, Building } from 'lucide-react';
+import { User, Languages, Phone, Globe, Building, CreditCard, Crown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EmbassyService, { Embassy } from '@/services/EmbassyService';
+import { Subscription } from '@/types/subscription';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import PricingCard from './PricingCard';
 
 interface UserProfileData {
   languages: string[];
   phoneNumber: string;
   followedEmbassies: string[];
   nationality: string;
+}
+
+interface UserProfileProps {
+  subscription?: Subscription;
+  onUpgrade?: (tier: string) => void;
 }
 
 const AVAILABLE_LANGUAGES = [
@@ -30,7 +38,7 @@ const AVAILABLE_LANGUAGES = [
   { code: 'ko', name: 'Korean' }
 ];
 
-const UserProfile: React.FC = () => {
+const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) => {
   const [profile, setProfile] = useState<UserProfileData>({
     languages: ['en'],
     phoneNumber: '',
@@ -39,6 +47,7 @@ const UserProfile: React.FC = () => {
   });
   const [embassies, setEmbassies] = useState<Embassy[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -139,15 +148,69 @@ const UserProfile: React.FC = () => {
   }
 
   return (
-    <Card className="border-purple-200 bg-purple-50">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-purple-800">
-          <User className="w-5 h-5" />
-          User Profile & Preferences
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Basic Info */}
+    <>
+      <Card className="border-purple-200 bg-purple-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-purple-800">
+            <User className="w-5 h-5" />
+            User Profile & Preferences
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Subscription Plan Card */}
+          {subscription && (
+            <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      {subscription.tier === 'free' ? (
+                        <CreditCard className="w-5 h-5 text-blue-600" />
+                      ) : (
+                        <Crown className="w-5 h-5 text-blue-600" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-blue-800 capitalize">
+                        {subscription.tier} Plan
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        {subscription.tier === 'free' 
+                          ? 'Upgrade to unlock more features' 
+                          : 'Premium plan active'}
+                      </p>
+                    </div>
+                  </div>
+                  {onUpgrade && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowUpgrade(true)}
+                      className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                    >
+                      {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
+                    </Button>
+                  )}
+                </div>
+                {subscription.features && subscription.features.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {subscription.features.slice(0, 3).map((feature, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                        {feature}
+                      </Badge>
+                    ))}
+                    {subscription.features.length > 3 && (
+                      <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                        +{subscription.features.length - 3} more
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+          
+          {/* Basic Info */}
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="nationality" className="flex items-center gap-2">
@@ -267,6 +330,16 @@ const UserProfile: React.FC = () => {
         </div>
       </CardContent>
     </Card>
+    
+    {/* Upgrade Modal */}
+    {subscription && onUpgrade && (
+      <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <PricingCard subscription={subscription} onUpgrade={onUpgrade} />
+        </DialogContent>
+      </Dialog>
+    )}
+  </>
   );
 };
 

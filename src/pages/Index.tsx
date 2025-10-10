@@ -29,6 +29,7 @@ const Index = () => {
   useEffect(() => {
     const savedCountries = localStorage.getItem('trackedCountries');
     const savedProfile = localStorage.getItem('userProfile');
+    const savedSubscription = localStorage.getItem('subscription');
     
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
@@ -36,6 +37,10 @@ const Index = () => {
     
     if (savedProfile) {
       setUserProfile(JSON.parse(savedProfile));
+    }
+    
+    if (savedSubscription) {
+      setSubscription(JSON.parse(savedSubscription));
     }
 
     // Mock VPN detection - in a real app this would use actual VPN detection
@@ -60,10 +65,14 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Save countries to localStorage whenever countries change
+  // Save data to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('trackedCountries', JSON.stringify(countries));
   }, [countries]);
+
+  useEffect(() => {
+    localStorage.setItem('subscription', JSON.stringify(subscription));
+  }, [subscription]);
 
   const addCountry = (country: Country) => {
     if (!countries.find(c => c.code === country.code)) {
@@ -123,12 +132,18 @@ const Index = () => {
       enterprise: ['🌍 All global visa types', '🏢 Custom compliance frameworks', '🏷️ White-label solutions', '🌐 Multi-country operations', '🏛️ Government reporting']
     };
 
-    setSubscription(prev => ({
-      ...prev,
+    const newSubscription = {
       tier: tier as any,
       isActive: true,
+      expiryDate: null,
       features: tierFeatures[tier as keyof typeof tierFeatures] || tierFeatures.free
-    }));
+    };
+
+    setSubscription(newSubscription);
+    localStorage.setItem('subscription', JSON.stringify(newSubscription));
+    
+    // Dispatch custom event for components to react to plan changes
+    window.dispatchEvent(new CustomEvent('planUpgraded', { detail: { tier } }));
     
     toast({
       title: t('toast.planUpgraded'),

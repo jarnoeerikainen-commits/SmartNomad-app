@@ -411,7 +411,13 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const [activeTab, setActiveTab] = useState('visa');
   const [isLocationTracking, setIsLocationTracking] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<string>('');
+  const [currentSubscription, setCurrentSubscription] = useState(subscription);
   const { toast } = useToast();
+
+  // Update subscription when it changes
+  useEffect(() => {
+    setCurrentSubscription(subscription);
+  }, [subscription]);
 
   const updateLocationEntry = (countryCode: string, countryName: string) => {
     const today = new Date().toISOString().split('T')[0];
@@ -465,7 +471,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
 
   // Check subscription limits
   const getVisaTrackingLimit = () => {
-    switch (subscription.tier) {
+    switch (currentSubscription.tier) {
       case 'free': return 1;
       case 'student': return 5;
       case 'personal': return 10;
@@ -482,7 +488,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   };
 
   const getAllowedVisaTypes = () => {
-    switch (subscription.tier) {
+    switch (currentSubscription.tier) {
       case 'free': return ['tourist'];
       case 'student': return ['tourist', 'student', 'student-visa', 'schengen', 'transit'];
       case 'personal': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad'];
@@ -497,7 +503,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     if (!canAddMoreVisas()) {
       toast({
         title: "Upgrade Required",
-        description: `Your ${subscription.tier} plan allows only ${getVisaTrackingLimit()} visa tracking(s). Please upgrade to add more.`,
+        description: `Your ${currentSubscription.tier} plan allows only ${getVisaTrackingLimit()} visa tracking(s). Please upgrade to add more.`,
         variant: "destructive"
       });
       return;
@@ -568,7 +574,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   };
 
   const getTaxTrackingLimit = () => {
-    switch (subscription.tier) {
+    switch (currentSubscription.tier) {
       case 'free': return 1;
       case 'student': return 3;
       case 'personal': return 10;
@@ -583,7 +589,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
     if (taxTrackings.length >= getTaxTrackingLimit()) {
       toast({
         title: "Limit Reached",
-        description: `You can only track ${getTaxTrackingLimit()} tax residence(s) with your ${subscription.tier} plan.`,
+        description: `You can only track ${getTaxTrackingLimit()} tax residence(s) with your ${currentSubscription.tier} plan.`,
         variant: "destructive"
       });
       return;
@@ -740,7 +746,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
           
           <TabsContent value="visa" className="space-y-4">
           {/* Subscription Notice */}
-          {subscription.tier === 'free' && (
+          {currentSubscription.tier === 'free' && (
             <Alert className="border-orange-200 bg-orange-50">
               <AlertTriangle className="w-4 h-4" />
               <AlertDescription className="text-orange-800">

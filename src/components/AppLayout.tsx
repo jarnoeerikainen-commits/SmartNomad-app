@@ -15,7 +15,6 @@ import UserProfile from './UserProfile';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
-import { TimeZoneViewer } from './TimeZoneViewer';
 import { ESimServices } from './ESimServices';
 import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
 import EmbassyDirectory from './EmbassyDirectory';
@@ -54,12 +53,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
               onAddCountry={() => setActiveSection('tracking')} 
               onSectionChange={setActiveSection}
             />
-            
-            {/* Quick Access Tools */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <TimeZoneViewer />
-              <EnhancedCurrencyConverter />
-            </div>
             
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -117,9 +110,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'services':
         return <TravelServices currentLocation={detectedLocation} />;
       
-      case 'timezone':
-        return <TimeZoneViewer />;
-      
       case 'esim':
         return <ESimServices />;
       
@@ -130,7 +120,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <EnhancedCurrencyConverter />;
       
       case 'settings':
-        return <UserProfile />;
+        return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;
       
       default:
         return (
