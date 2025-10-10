@@ -119,16 +119,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
 
   if (!isExpanded) {
     return (
-      <Card className="border-purple-200 bg-purple-50">
+      <Card className="border-secondary/30 bg-secondary/10">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <User className="w-5 h-5 text-purple-600" />
+              <div className="p-2 bg-secondary/20 rounded-lg">
+                <User className="w-5 h-5 text-secondary" />
               </div>
               <div>
-                <p className="text-sm text-purple-600 font-medium">Profile Settings</p>
-                <p className="text-xs text-purple-700">
+                <p className="text-sm text-secondary font-medium">Profile Settings</p>
+                <p className="text-xs text-secondary/80">
                   {profile.languages.length} languages, {profile.followedEmbassies.length} embassies
                 </p>
               </div>
@@ -137,7 +137,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
               variant="outline"
               size="sm"
               onClick={() => setIsExpanded(true)}
-              className="border-purple-300 text-purple-600 hover:bg-purple-100"
+              className="border-secondary text-secondary hover:bg-secondary/20"
             >
               Configure
             </Button>
@@ -149,9 +149,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
 
   return (
     <>
-      <Card className="border-purple-200 bg-purple-50">
+      <Card className="border-secondary/30 bg-secondary/10">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-purple-800">
+          <CardTitle className="flex items-center gap-2">
             <User className="w-5 h-5" />
             User Profile & Preferences
           </CardTitle>
@@ -159,22 +159,22 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
         <CardContent className="space-y-6">
           {/* Subscription Plan Card */}
           {subscription && (
-            <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+            <Card className="gradient-trust border-primary/30">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
+                    <div className="p-2 bg-primary/20 rounded-lg">
                       {subscription.tier === 'free' ? (
-                        <CreditCard className="w-5 h-5 text-blue-600" />
+                        <CreditCard className="w-5 h-5 text-primary" />
                       ) : (
-                        <Crown className="w-5 h-5 text-blue-600" />
+                        <Crown className="w-5 h-5 text-primary" />
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-blue-800 capitalize">
+                      <p className="text-sm font-semibold capitalize">
                         {subscription.tier} Plan
                       </p>
-                      <p className="text-xs text-blue-600">
+                      <p className="text-xs text-muted-foreground">
                         {subscription.tier === 'free' 
                           ? 'Upgrade to unlock more features' 
                           : 'Premium plan active'}
@@ -186,7 +186,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                       variant="outline"
                       size="sm"
                       onClick={() => setShowUpgrade(true)}
-                      className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                      className="border-primary text-primary hover:bg-primary/10"
                     >
                       {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
                     </Button>
@@ -195,12 +195,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                 {subscription.features && subscription.features.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1">
                     {subscription.features.slice(0, 3).map((feature, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                      <Badge key={idx} variant="secondary" className="text-xs">
                         {feature}
                       </Badge>
                     ))}
                     {subscription.features.length > 3 && (
-                      <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                      <Badge variant="secondary" className="text-xs">
                         +{subscription.features.length - 3} more
                       </Badge>
                     )}
@@ -280,7 +280,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
           </Label>
           <div className="space-y-3">
             {embassies.map(embassy => (
-              <div key={embassy.id} className="p-3 bg-white rounded-lg border border-purple-200">
+              <div key={embassy.id} className="p-3 bg-card rounded-lg border">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center space-x-2">
                     <Checkbox
@@ -292,7 +292,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                       <Label htmlFor={embassy.id} className="font-medium">
                         {embassy.name}
                       </Label>
-                      <p className="text-xs text-gray-600">{embassy.country}</p>
+                      <p className="text-xs text-muted-foreground">{embassy.country}</p>
                     </div>
                   </div>
                   {profile.followedEmbassies.includes(embassy.id) && embassy.registrationUrl && (
@@ -306,7 +306,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                     </Button>
                   )}
                 </div>
-                <div className="text-xs text-gray-500 space-y-1">
+                <div className="text-xs text-muted-foreground space-y-1">
                   <p>Emergency: {embassy.emergencyContact}</p>
                   <p>Languages: {embassy.languages.join(', ')}</p>
                 </div>

@@ -111,22 +111,22 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, on
                     const isOverThreshold = taxDays >= 183;
                     
                     return (
-                      <Card key={country.code} className={`p-4 ${isOverThreshold ? 'border-red-200 bg-red-50' : isNearThreshold ? 'border-yellow-200 bg-yellow-50' : 'border-gray-200'}`}>
+                      <Card key={country.code} className={`p-4 ${isOverThreshold ? 'border-destructive/50 bg-destructive/10' : isNearThreshold ? 'border-warning/50 bg-warning/10' : 'border-border'}`}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className="text-lg">{country.flag}</span>
                             <span className="font-medium">{country.name}</span>
                           </div>
-                          {isOverThreshold && <Flag className="w-4 h-4 text-red-500" />}
+                          {isOverThreshold && <Flag className="w-4 h-4 text-destructive" />}
                         </div>
                         <div className="space-y-1">
                           <div className="flex justify-between text-sm">
                             <span>Days Spent</span>
-                            <span className={isOverThreshold ? 'text-red-600 font-medium' : ''}>{taxDays}/183</span>
+                            <span className={isOverThreshold ? 'text-destructive font-medium' : ''}>{taxDays}/183</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-muted rounded-full h-2">
                             <div 
-                              className={`h-2 rounded-full ${isOverThreshold ? 'bg-red-500' : isNearThreshold ? 'bg-green-500' : 'bg-green-500'}`}
+                              className={`h-2 rounded-full ${isOverThreshold ? 'bg-destructive' : isNearThreshold ? 'bg-warning' : 'bg-success'}`}
                               style={{ width: `${Math.min((taxDays / 183) * 100, 100)}%` }}
                             />
                           </div>
