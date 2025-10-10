@@ -156,19 +156,17 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgrade }) =>
   const { toast } = useToast();
 
   const handleUpgrade = (tierId: string) => {
-    onUpgrade(tierId);
+    // Close modal first to prevent UI freezing
     setIsOpen(false);
     
-    // Close the modal and return to main app
-    setTimeout(() => {
-      // This will trigger parent components to close their modals
-      const event = new CustomEvent('planUpgraded', { detail: { tier: tierId } });
-      window.dispatchEvent(event);
-    }, 100);
-    
-    toast({
-      title: "Plan Upgraded!",
-      description: `Successfully upgraded to ${PRICING_TIERS.find(t => t.id === tierId)?.name} plan. All features are now active!`,
+    // Update subscription after modal closes
+    requestAnimationFrame(() => {
+      onUpgrade(tierId);
+      
+      toast({
+        title: "Plan Upgraded!",
+        description: `Successfully upgraded to ${PRICING_TIERS.find(t => t.id === tierId)?.name} plan. All features are now active!`,
+      });
     });
   };
 

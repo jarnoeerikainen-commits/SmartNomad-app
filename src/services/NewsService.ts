@@ -105,7 +105,7 @@ class NewsService {
         category: 'laws',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 1800000).toISOString(),
-        url: 'https://bamf.de/law-changes',
+        url: 'https://www.bamf.de/EN/Themen/Integration/integration_node.html',
         isBreaking: true
       },
       {
@@ -117,7 +117,7 @@ class NewsService {
         category: 'laws',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 3600000).toISOString(),
-        url: 'https://moc.go.th/law-updates',
+        url: 'https://www.mfa.go.th/en',
         isBreaking: false
       },
       
@@ -131,7 +131,7 @@ class NewsService {
         category: 'taxes',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 7200000).toISOString(),
-        url: 'https://portaldasfinancas.gov.pt',
+        url: 'https://www.portaldascomunidades.mne.gov.pt/en/',
         isBreaking: true
       },
       {
@@ -143,7 +143,7 @@ class NewsService {
         category: 'taxes',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 10800000).toISOString(),
-        url: 'https://tax.gov.ae',
+        url: 'https://u.ae/en/information-and-services/finance-and-investment/taxation',
         isBreaking: false
       },
       
@@ -157,7 +157,7 @@ class NewsService {
         category: 'war',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 14400000).toISOString(),
-        url: 'https://crisisgroup.org/updates',
+        url: 'https://www.crisisgroup.org/',
         isBreaking: true
       },
       
@@ -171,7 +171,7 @@ class NewsService {
         category: 'weather_alerts',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 1800000).toISOString(),
-        url: 'https://pagasa.dost.gov.ph',
+        url: 'https://www.pagasa.dost.gov.ph/',
         isBreaking: true
       },
       {
@@ -183,7 +183,7 @@ class NewsService {
         category: 'weather_alerts',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 7200000).toISOString(),
-        url: 'https://ecmwf.int/alerts',
+        url: 'https://www.ecmwf.int/',
         isBreaking: false
       },
       // Strikes
@@ -196,7 +196,7 @@ class NewsService {
         category: 'strikes',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 3600000).toISOString(),
-        url: 'https://etf-europe.org/strikes',
+        url: 'https://www.etf-europe.org/',
         isBreaking: true
       },
       {
@@ -208,7 +208,7 @@ class NewsService {
         category: 'strikes',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 10800000).toISOString(),
-        url: 'https://rmt.org.uk/strikes',
+        url: 'https://www.rmt.org.uk/',
         isBreaking: false
       },
       
@@ -222,7 +222,7 @@ class NewsService {
         category: 'aviation',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 14400000).toISOString(),
-        url: 'https://aviationweekly.asia',
+        url: 'https://www.reuters.com/business/aerospace-defense/',
         isBreaking: false
       },
       {
@@ -234,7 +234,7 @@ class NewsService {
         category: 'aviation',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 18000000).toISOString(),
-        url: 'https://airportindustry.com',
+        url: 'https://www.bbc.com/news/topics/c207p54m4lvt',
         isBreaking: false
       },
       
@@ -248,7 +248,7 @@ class NewsService {
         category: 'business',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 21600000).toISOString(),
-        url: 'https://globalbusiness.com/nomad-economy',
+        url: 'https://www.bbc.com/worklife/digital-nomads',
         isBreaking: false
       },
       {
@@ -260,7 +260,7 @@ class NewsService {
         category: 'business',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 25200000).toISOString(),
-        url: 'https://ft.com/crypto-nomads',
+        url: 'https://www.ft.com/',
         isBreaking: false
       },
       
@@ -274,7 +274,7 @@ class NewsService {
         category: 'taxes',
         impact: 'high',
         publishedAt: new Date(now.getTime() - 25200000).toISOString(),
-        url: 'https://oecd.org/tax-treaties',
+        url: 'https://www.oecd.org/tax/',
         isBreaking: true
       },
       {
@@ -286,7 +286,7 @@ class NewsService {
         category: 'travel',
         impact: 'medium',
         publishedAt: new Date(now.getTime() - 28800000).toISOString(),
-        url: 'https://ec.europa.eu/travel',
+        url: 'https://ec.europa.eu/home-affairs/index_en',
         isBreaking: false
       }
     ];
