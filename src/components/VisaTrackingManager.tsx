@@ -14,6 +14,11 @@ import { useToast } from '@/hooks/use-toast';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { SchengenCalculator } from './SchengenCalculator';
+import { PDFReportGenerator } from './PDFReportGenerator';
+import { TravelTimeline } from './TravelTimeline';
+import { YearComparisonView } from './YearComparisonView';
+import { TrackingSettings } from './TrackingSettings';
 
 interface LocationEntry {
   date: string;
@@ -412,7 +417,36 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const [isLocationTracking, setIsLocationTracking] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<string>('');
   const [currentSubscription, setCurrentSubscription] = useState(subscription);
+  
+  // Tracking settings state - load from localStorage
+  const [countingMode, setCountingMode] = useState<'days' | 'nights'>(() => {
+    const saved = localStorage.getItem('trackingSettings');
+    return saved ? JSON.parse(saved).countingMode || 'days' : 'days';
+  });
+  const [partialDayRule, setPartialDayRule] = useState<'full' | 'half' | 'exclude'>(() => {
+    const saved = localStorage.getItem('trackingSettings');
+    return saved ? JSON.parse(saved).partialDayRule || 'full' : 'full';
+  });
+  const [countDepartureDay, setCountDepartureDay] = useState(() => {
+    const saved = localStorage.getItem('trackingSettings');
+    return saved ? JSON.parse(saved).countDepartureDay !== false : true;
+  });
+  const [countArrivalDay, setCountArrivalDay] = useState(() => {
+    const saved = localStorage.getItem('trackingSettings');
+    return saved ? JSON.parse(saved).countArrivalDay !== false : true;
+  });
+  
   const { toast } = useToast();
+
+  // Save tracking settings to localStorage
+  useEffect(() => {
+    localStorage.setItem('trackingSettings', JSON.stringify({
+      countingMode,
+      partialDayRule,
+      countDepartureDay,
+      countArrivalDay
+    }));
+  }, [countingMode, partialDayRule, countDepartureDay, countArrivalDay]);
 
   // Update subscription when it changes
   useEffect(() => {
@@ -739,9 +773,14 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       </CardHeader>
       <CardContent className="space-y-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="visa">Visa Tracking</TabsTrigger>
-            <TabsTrigger value="tax">Tax Residence</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-7 gap-1">
+            <TabsTrigger value="visa">Visa</TabsTrigger>
+            <TabsTrigger value="tax">Tax</TabsTrigger>
+            <TabsTrigger value="schengen">Schengen</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+            <TabsTrigger value="comparison">Compare</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="visa" className="space-y-4">
@@ -1281,6 +1320,40 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
               </div>
             </DialogContent>
           </Dialog>
+        </TabsContent>
+
+        {/* Schengen Calculator Tab */}
+        <TabsContent value="schengen" className="space-y-4">
+          <SchengenCalculator />
+        </TabsContent>
+
+        {/* PDF Reports Tab */}
+        <TabsContent value="reports" className="space-y-4">
+          <PDFReportGenerator countries={countries} />
+        </TabsContent>
+
+        {/* Timeline Tab */}
+        <TabsContent value="timeline" className="space-y-4">
+          <TravelTimeline countries={countries} />
+        </TabsContent>
+
+        {/* Year Comparison Tab */}
+        <TabsContent value="comparison" className="space-y-4">
+          <YearComparisonView countries={countries} />
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="space-y-4">
+          <TrackingSettings
+            countingMode={countingMode}
+            onCountingModeChange={setCountingMode}
+            partialDayRule={partialDayRule}
+            onPartialDayRuleChange={setPartialDayRule}
+            countDepartureDay={countDepartureDay}
+            onCountDepartureDayChange={setCountDepartureDay}
+            countArrivalDay={countArrivalDay}
+            onCountArrivalDayChange={setCountArrivalDay}
+          />
         </TabsContent>
         
         </Tabs>

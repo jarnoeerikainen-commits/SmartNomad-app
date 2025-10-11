@@ -13,7 +13,12 @@ export interface Country {
   lastEntry: string | null; // Date of last entry to country
   totalEntries: number; // Total number of entries to this country
   followEmbassyNews: boolean; // Whether to follow embassy news for this country
+  countingMode?: 'days' | 'nights'; // How to count time spent
+  partialDayRule?: 'full' | 'half' | 'exclude'; // How to handle partial days
+  countDepartureDay?: boolean; // Whether to count departure day
+  countArrivalDay?: boolean; // Whether to count arrival day
 }
+
 
 export interface LocationData {
   latitude: number;
