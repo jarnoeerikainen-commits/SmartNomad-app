@@ -21,7 +21,8 @@ import {
   Scale,
   CheckCircle,
   Smartphone,
-  ExternalLink
+  ExternalLink,
+  Map
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -87,6 +88,13 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       description: t('quick.embassy_desc'),
       icon: MapPin,
       action: () => onSectionChange('embassy'),
+      variant: 'outline' as const
+    },
+    {
+      title: 'Travel Planner AI',
+      description: 'Plan your trips with AI',
+      icon: Map,
+      action: () => onSectionChange('travel-planner'),
       variant: 'outline' as const
     }
   ];
