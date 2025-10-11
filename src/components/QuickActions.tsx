@@ -1,6 +1,12 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   Plus, 
   Upload, 
@@ -10,10 +16,12 @@ import {
   MapPin,
   FileText,
   Plane,
+  Hotel,
   Stethoscope,
   Scale,
   CheckCircle,
-  Smartphone
+  Smartphone,
+  ExternalLink
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -24,6 +32,18 @@ interface QuickActionsProps {
 
 const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, onSectionChange }) => {
   const { t } = useLanguage();
+  
+  const flightSearchEngines = [
+    { name: 'Skyscanner', url: 'https://www.skyscanner.com' },
+    { name: 'Google Flights', url: 'https://www.google.com/travel/flights' },
+    { name: 'Kayak', url: 'https://www.kayak.com' }
+  ];
+
+  const hotelSearchEngines = [
+    { name: 'Booking.com', url: 'https://www.booking.com' },
+    { name: 'Hotels.com', url: 'https://www.hotels.com' },
+    { name: 'Agoda', url: 'https://www.agoda.com' }
+  ];
   
   const actions = [
     {
@@ -97,6 +117,68 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
               </div>
             </Button>
           ))}
+          
+          {/* Flights Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-auto flex-col gap-2 p-4"
+              >
+                <Plane className="h-6 w-6" />
+                <div className="text-center">
+                  <div className="font-medium text-sm">Search Flights</div>
+                  <div className="text-xs opacity-80">Top search engines</div>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-48">
+              {flightSearchEngines.map((engine) => (
+                <DropdownMenuItem key={engine.name} asChild>
+                  <a
+                    href={engine.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full cursor-pointer"
+                  >
+                    <span>{engine.name}</span>
+                    <ExternalLink className="h-4 w-4 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Hotels Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-auto flex-col gap-2 p-4"
+              >
+                <Hotel className="h-6 w-6" />
+                <div className="text-center">
+                  <div className="font-medium text-sm">Search Hotels</div>
+                  <div className="text-xs opacity-80">Top search engines</div>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center" className="w-48">
+              {hotelSearchEngines.map((engine) => (
+                <DropdownMenuItem key={engine.name} asChild>
+                  <a
+                    href={engine.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full cursor-pointer"
+                  >
+                    <span>{engine.name}</span>
+                    <ExternalLink className="h-4 w-4 opacity-50" />
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardContent>
     </Card>
