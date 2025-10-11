@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
-import smartNomadLogo from '@/assets/smartnomad-logo.png';
+import smartNomadLogo from '@/assets/smartnomad-logo-v2.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
