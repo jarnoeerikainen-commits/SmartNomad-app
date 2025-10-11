@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
+import smartNomadLogo from '@/assets/smartnomad-logo.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -53,15 +54,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           )}
           
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-medium">
-              <Globe className="h-6 w-6 text-primary-foreground" />
-            </div>
+            <img 
+              src={smartNomadLogo} 
+              alt="SmartNomad Logo" 
+              className="h-10 w-10 rounded-xl shadow-medium"
+            />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {t('app.title')}
+                SmartNomad
               </h1>
               <p className="text-xs text-muted-foreground">
-                {t('app.tagline')}
+                Your Digital Assistant for Global Living
               </p>
             </div>
           </div>

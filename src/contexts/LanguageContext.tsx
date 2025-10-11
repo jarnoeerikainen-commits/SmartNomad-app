@@ -25,8 +25,8 @@ const LANGUAGES: Language[] = [
 const translations: Record<string, Record<string, string>> = {
   en: {
     // App Header & Navigation
-    'app.title': 'TravelTracker',
-    'app.tagline': 'Your global travel companion',
+    'app.title': 'SmartNomad',
+    'app.tagline': 'Your Digital Assistant for Global Living',
     'header.profile': 'Profile',
     'header.profile_settings': 'Profile Settings',
     'header.app_settings': 'App Settings',
