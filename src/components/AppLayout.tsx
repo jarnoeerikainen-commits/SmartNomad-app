@@ -19,6 +19,7 @@ import { ESimServices } from './ESimServices';
 import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
 import EmbassyDirectory from './EmbassyDirectory';
 import EmergencyCardNumbers from './EmergencyCardNumbers';
+import EmergencyContacts from './EmergencyContacts';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -119,6 +120,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'emergency-cards':
         return <EmergencyCardNumbers />;
+      
+      case 'emergency':
+        return <EmergencyContacts />;
       
       case 'settings':
         return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;
