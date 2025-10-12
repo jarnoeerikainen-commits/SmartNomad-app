@@ -10,6 +10,7 @@ import USTaxStateTracker from './USTaxStateTracker';
 import USTaxTracker from './USTaxTracker';
 import { CanadaTaxProvinceTracker } from './CanadaTaxProvinceTracker';
 import CountryTracker from './CountryTracker';
+import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ALL_COUNTRIES } from '@/data/countries';
@@ -50,6 +51,9 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, on
 
   return (
     <div className="space-y-6">
+      {/* Visual Dashboard - Featured at the top */}
+      <TaxResidencyVisualDashboard countries={countries} />
+      
       {/* Main Tax Residency Overview Card */}
       <Card className="w-full">
         <CardHeader>
