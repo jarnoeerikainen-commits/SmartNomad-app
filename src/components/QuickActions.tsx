@@ -100,8 +100,8 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       variant: 'outline' as const
     },
     {
-      title: t('quick.emergency_cards') || 'Close Credit Card',
-      description: t('quick.emergency_cards_desc') || 'Lost/stolen card hotlines',
+      title: 'Credit Cards',
+      description: 'Lost/stolen card hotlines',
       icon: CreditCard,
       action: () => onSectionChange('emergency-cards'),
       variant: 'destructive' as const
