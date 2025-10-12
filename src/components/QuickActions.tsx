@@ -22,7 +22,9 @@ import {
   CheckCircle,
   Smartphone,
   ExternalLink,
-  Map
+  Map,
+  CreditCard,
+  AlertTriangle
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -96,6 +98,13 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       icon: Map,
       action: () => onSectionChange('travel-planner'),
       variant: 'outline' as const
+    },
+    {
+      title: t('quick.emergency_cards') || 'Emergency Cards',
+      description: t('quick.emergency_cards_desc') || 'Lost/stolen card hotlines',
+      icon: CreditCard,
+      action: () => onSectionChange('emergency-cards'),
+      variant: 'destructive' as const
     }
   ];
 
