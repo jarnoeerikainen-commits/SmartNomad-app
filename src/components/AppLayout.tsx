@@ -23,6 +23,7 @@ import EmergencyContacts from './EmergencyContacts';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
 import CryptoToCash from './CryptoToCash';
+import RoadsideAssistance from './RoadsideAssistance';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -135,6 +136,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'crypto-cash':
         return <CryptoToCash currentLocation={detectedLocation} />;
+      
+      case 'roadside':
+        return <RoadsideAssistance currentLocation={detectedLocation} />;
       
       case 'settings':
         return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;

@@ -12,7 +12,8 @@ import {
   Plane,
   Heart,
   AlertTriangle,
-  Landmark
+  Landmark,
+  Car
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -66,6 +67,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
     { id: 'money-transfers', label: 'Money Transfers', icon: CreditCard },
     { id: 'crypto-cash', label: 'Crypto to Cash', icon: MapPin },
+    { id: 'roadside', label: 'Roadside Assistance', icon: Car },
     { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
     { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle, badge: '3', variant: 'destructive' as const },
     { id: 'services', label: t('nav.services'), icon: Shield },
