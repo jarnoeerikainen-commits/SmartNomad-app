@@ -21,6 +21,7 @@ import EmbassyDirectory from './EmbassyDirectory';
 import EmergencyCardNumbers from './EmergencyCardNumbers';
 import EmergencyContacts from './EmergencyContacts';
 import DigitalBanks from './DigitalBanks';
+import MoneyTransfers from './MoneyTransfers';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -127,6 +128,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'digital-banks':
         return <DigitalBanks />;
+      
+      case 'money-transfers':
+        return <MoneyTransfers currentLocation={detectedLocation} />;
       
       case 'settings':
         return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;
