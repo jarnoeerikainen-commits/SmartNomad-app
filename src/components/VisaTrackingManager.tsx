@@ -509,8 +509,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       case 'free': return 1;
       case 'student': return 5;
       case 'personal': return 10;
+      case 'business-individual': return 20;
       case 'family': return 25;
-      case 'business': return 100;
       case 'business': return 100;
       case 'enterprise': return 999;
       default: return 1;
@@ -526,6 +526,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       case 'free': return ['tourist'];
       case 'student': return ['tourist', 'student', 'student-visa', 'schengen', 'transit'];
       case 'personal': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad'];
+      case 'business-individual': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad', 'work-permit'];
       case 'family': return VISA_TYPES.map(v => v.id);
       case 'business': return VISA_TYPES.map(v => v.id);
       case 'enterprise': return VISA_TYPES.map(v => v.id);
@@ -612,6 +613,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       case 'free': return 1;
       case 'student': return 3;
       case 'personal': return 10;
+      case 'business-individual': return 15;
       case 'family': return 20;
       case 'business': return 50;
       case 'enterprise': return 100;

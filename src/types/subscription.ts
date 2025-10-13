@@ -1,6 +1,6 @@
 
 export interface Subscription {
-  tier: 'free' | 'student' | 'personal' | 'family' | 'business' | 'enterprise';
+  tier: 'free' | 'student' | 'personal' | 'business-individual' | 'family' | 'business' | 'enterprise';
   isActive: boolean;
   expiryDate: string | null;
   features: string[];
