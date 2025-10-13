@@ -18,24 +18,36 @@ import PricingCard from './PricingCard';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TimeZoneHeader } from './TimeZoneHeader';
+import { Country } from '@/types/country';
+import { AlertCircle } from 'lucide-react';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
   showMenuButton?: boolean;
   subscription?: Subscription;
   onUpgrade?: (tier: string) => void;
+  countries?: Country[];
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ 
   onMenuClick, 
   showMenuButton = false, 
   subscription,
-  onUpgrade 
+  onUpgrade,
+  countries = []
 }) => {
   const { t } = useLanguage();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+
+  // Calculate critical alerts
+  const criticalAlerts = countries.filter(c => {
+    const daysUsed = c.daysSpent || 0;
+    const daysLimit = c.dayLimit || 0;
+    const usagePercentage = daysLimit > 0 ? (daysUsed / daysLimit) * 100 : 0;
+    return usagePercentage >= 90;
+  }).length;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
@@ -78,21 +90,25 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           {/* Language Selector */}
           <LanguageSelector />
           
-          {/* Smart Alerts */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="relative"
-            onClick={() => setShowSmartAlerts(true)}
-          >
-            <Bell className="h-5 w-5" />
-            <Badge 
-              variant="destructive" 
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
+          {/* Critical Alerts Indicator - Only show if there are alerts */}
+          {criticalAlerts > 0 && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="relative"
+              onClick={() => setShowSmartAlerts(true)}
             >
-              3
-            </Badge>
-          </Button>
+              <AlertCircle className={`h-5 w-5 ${criticalAlerts > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
+              {criticalAlerts > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                >
+                  {criticalAlerts}
+                </Badge>
+              )}
+            </Button>
+          )}
 
           {/* User Menu */}
           <DropdownMenu>

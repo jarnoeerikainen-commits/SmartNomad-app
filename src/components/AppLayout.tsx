@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
-import DashboardStats from './DashboardStats';
 import QuickActions from './QuickActions';
 import CountryTracker from './CountryTracker';
 import EnhancedNewsSection from './EnhancedNewsSection';
@@ -54,7 +53,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'dashboard':
         return (
           <div className="space-y-6">
-            <DashboardStats countries={countries} />
             <QuickActions 
               onAddCountry={() => setActiveSection('tax')} 
               onSectionChange={setActiveSection}
@@ -159,6 +157,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         showMenuButton={true}
         subscription={subscription}
         onUpgrade={onUpgrade}
+        countries={countries}
       />
       
       <div className="flex">
