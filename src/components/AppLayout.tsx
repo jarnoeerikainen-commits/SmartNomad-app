@@ -22,6 +22,7 @@ import EmergencyCardNumbers from './EmergencyCardNumbers';
 import EmergencyContacts from './EmergencyContacts';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
+import CryptoToCash from './CryptoToCash';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -131,6 +132,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'money-transfers':
         return <MoneyTransfers currentLocation={detectedLocation} />;
+      
+      case 'crypto-cash':
+        return <CryptoToCash currentLocation={detectedLocation} />;
       
       case 'settings':
         return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;

@@ -65,6 +65,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
     { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
     { id: 'money-transfers', label: 'Money Transfers', icon: CreditCard },
+    { id: 'crypto-cash', label: 'Crypto to Cash', icon: MapPin },
     { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
     { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle, badge: '3', variant: 'destructive' as const },
     { id: 'services', label: t('nav.services'), icon: Shield },
