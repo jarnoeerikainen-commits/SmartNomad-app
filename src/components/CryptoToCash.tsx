@@ -32,46 +32,46 @@ const CryptoToCash: React.FC<CryptoToCashProps> = ({ currentLocation }) => {
 
   const services = [
     {
-      name: 'Bitcoin ATM Finder',
+      name: 'CoinATMRadar',
       description: 'Find over 38,000+ Bitcoin ATMs worldwide for instant crypto-to-cash conversion',
-      type: 'ATM Network',
+      type: 'ATM Locator',
       features: [
         'Buy & sell Bitcoin instantly',
-        'Support for multiple cryptocurrencies',
+        'Support for 15+ cryptocurrencies',
         'Cash withdrawal available',
         'Real-time ATM availability'
       ],
-      cryptos: ['BTC', 'ETH', 'LTC', 'BCH'],
+      cryptos: ['BTC', 'ETH', 'LTC', 'BCH', 'DASH'],
       website: 'https://coinatmradar.com',
-      locationFinder: `https://coinatmradar.com${displayLocation ? `/city/${encodeURIComponent(displayLocation.toLowerCase().replace(/\s+/g, '-'))}` : ''}`,
+      locationFinder: 'https://coinatmradar.com',
       icon: Landmark,
       color: 'from-orange-500 to-orange-600'
     },
     {
-      name: 'LocalCoinSwap',
-      description: 'Peer-to-peer marketplace to buy and sell crypto with cash locally',
+      name: 'Paxful',
+      description: 'Leading P2P marketplace with over 14 million users and 350+ payment methods',
       type: 'P2P Exchange',
       features: [
-        'Trade with local sellers',
-        'Cash in-person meetings',
-        'Escrow protection',
-        'Multiple payment methods'
+        'Trade with verified sellers',
+        'Cash in-person & online',
+        'Built-in escrow protection',
+        'Gift cards accepted'
       ],
-      cryptos: ['BTC', 'ETH', 'LTC', 'DASH', 'XMR'],
-      website: 'https://localcoinswap.com',
-      locationFinder: `https://localcoinswap.com/buy-sell${displayLocation ? `?location=${encodeURIComponent(displayLocation)}` : ''}`,
+      cryptos: ['BTC', 'ETH', 'USDT', 'USDC'],
+      website: 'https://paxful.com',
+      locationFinder: 'https://paxful.com/sell-bitcoin',
       icon: Users,
       color: 'from-blue-500 to-blue-600'
     },
     {
       name: 'Binance P2P',
-      description: 'World\'s largest P2P platform for buying crypto with local currency',
+      description: 'World\'s largest P2P platform with zero trading fees and local payment options',
       type: 'P2P Exchange',
       features: [
         'Zero trading fees',
         'Meet local traders',
-        'Bank transfer & cash options',
-        '350+ payment methods'
+        'Bank transfer & cash',
+        '100+ countries supported'
       ],
       cryptos: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
       website: 'https://p2p.binance.com',
@@ -80,13 +80,29 @@ const CryptoToCash: React.FC<CryptoToCashProps> = ({ currentLocation }) => {
       color: 'from-yellow-500 to-yellow-600'
     },
     {
-      name: 'Crypto.com',
-      description: 'Get a crypto debit card and spend your crypto anywhere that accepts Visa',
+      name: 'Hodl Hodl',
+      description: 'Non-custodial P2P Bitcoin exchange with no KYC requirements for privacy',
+      type: 'P2P Exchange',
+      features: [
+        'No KYC required',
+        'Direct peer-to-peer trading',
+        'Multi-signature escrow',
+        'Complete privacy'
+      ],
+      cryptos: ['BTC'],
+      website: 'https://hodlhodl.com',
+      locationFinder: 'https://hodlhodl.com/offers/buy',
+      icon: Users,
+      color: 'from-green-500 to-green-600'
+    },
+    {
+      name: 'Crypto.com Visa Card',
+      description: 'Spend crypto anywhere Visa is accepted and withdraw cash at ATMs worldwide',
       type: 'Debit Card',
       features: [
         'Crypto debit card',
-        'ATM withdrawals worldwide',
-        'Cashback rewards',
+        'ATM withdrawals globally',
+        'Up to 8% cashback',
         'No annual fees'
       ],
       cryptos: ['BTC', 'ETH', 'CRO', 'USDT', '250+ coins'],
@@ -124,24 +140,27 @@ const CryptoToCash: React.FC<CryptoToCashProps> = ({ currentLocation }) => {
           </CardTitle>
           <CardDescription>
             {currentLocation 
-              ? `Currently showing services near: ${displayLocation}`
-              : 'Enter your location to find nearby crypto-to-cash services'}
+              ? `Currently in: ${displayLocation}`
+              : 'Search by city or country to filter local options'}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSearch} className="flex gap-2">
             <Input
               type="text"
-              placeholder="Enter city or country..."
+              placeholder="e.g., New York, London, Tokyo..."
               value={searchLocation}
               onChange={(e) => setSearchLocation(e.target.value)}
               className="flex-1"
             />
             <Button type="submit" className="gap-2">
               <Search className="h-4 w-4" />
-              Search
+              Update
             </Button>
           </form>
+          <p className="text-xs text-muted-foreground mt-2">
+            💡 Click "Find Locations" on each service to search for nearby options
+          </p>
         </CardContent>
       </Card>
 
@@ -195,14 +214,14 @@ const CryptoToCash: React.FC<CryptoToCashProps> = ({ currentLocation }) => {
                 </div>
 
                 <div className="flex flex-col gap-2 pt-4">
-                  <Button
-                    variant="default"
-                    className="w-full gap-2"
-                    onClick={() => window.open(service.locationFinder, '_blank')}
-                  >
-                    <MapPin className="h-4 w-4" />
-                    {service.type === 'Debit Card' ? 'Get Card' : 'Find Locations'}
-                  </Button>
+                <Button
+                  variant="default"
+                  className="w-full gap-2"
+                  onClick={() => window.open(service.locationFinder, '_blank')}
+                >
+                  <MapPin className="h-4 w-4" />
+                  {service.type === 'Debit Card' ? 'Get Card' : service.type === 'ATM Locator' ? 'Find ATMs' : 'Start Trading'}
+                </Button>
                   
                   <Button
                     variant="outline"
@@ -229,36 +248,43 @@ const CryptoToCash: React.FC<CryptoToCashProps> = ({ currentLocation }) => {
             <div className="flex items-start gap-2">
               <span className="text-primary font-bold">1.</span>
               <div>
-                <strong>Bitcoin ATMs:</strong> Check fees before transactions (typically 7-12%). 
-                Bring a valid ID as many ATMs require verification for larger amounts.
+                <strong>Bitcoin ATMs (CoinATMRadar):</strong> Check fees before transactions (typically 7-12%). 
+                Use the map search to find nearby ATMs. Bring valid ID as many require verification for amounts over $900.
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-primary font-bold">2.</span>
               <div>
-                <strong>P2P Trading:</strong> Only trade with verified users who have good ratings. 
-                Use escrow services and meet in public places with security cameras.
+                <strong>P2P Trading (Paxful, Binance, Hodl Hodl):</strong> Only trade with verified users with good ratings. 
+                Use built-in escrow services and meet in public places like banks or cafes with security cameras.
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-primary font-bold">3.</span>
               <div>
-                <strong>Transaction Limits:</strong> Many services have daily limits. Plan larger 
-                transactions across multiple days if needed.
+                <strong>Crypto Debit Cards:</strong> Crypto.com and similar cards let you spend crypto anywhere. 
+                Order your card, load it with crypto, and withdraw cash at any ATM that accepts Visa/Mastercard.
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-primary font-bold">4.</span>
               <div>
-                <strong>Tax Compliance:</strong> Keep records of all crypto transactions for tax 
-                purposes. Consult local regulations regarding crypto taxation.
+                <strong>Transaction Limits:</strong> Many services have daily/monthly limits. Plan larger 
+                conversions across multiple transactions if needed. Check each platform's limits in advance.
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-primary font-bold">5.</span>
               <div>
-                <strong>Network Fees:</strong> Consider blockchain network fees when converting. 
-                Transfer during low-traffic periods for lower fees.
+                <strong>Tax Compliance:</strong> Keep records of all crypto-to-cash conversions for tax 
+                purposes. Consult local regulations - most countries require reporting crypto transactions.
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-primary font-bold">6.</span>
+              <div>
+                <strong>Network Fees:</strong> Consider blockchain fees when converting. Bitcoin network fees 
+                vary - check current rates at mempool.space and transfer during low-traffic periods to save money.
               </div>
             </div>
           </div>
