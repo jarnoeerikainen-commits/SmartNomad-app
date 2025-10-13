@@ -11,7 +11,8 @@ import {
   Calculator,
   Plane,
   Heart,
-  AlertTriangle
+  AlertTriangle,
+  Landmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -62,6 +63,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     { id: 'documents', label: t('nav.documents'), icon: FileText },
     { id: 'health', label: t('nav.health'), icon: Heart },
     { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
+    { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
     { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
     { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle, badge: '3', variant: 'destructive' as const },
     { id: 'services', label: t('nav.services'), icon: Shield },
