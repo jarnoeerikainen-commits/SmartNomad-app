@@ -23,6 +23,7 @@ import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
 import CryptoToCash from './CryptoToCash';
 import RoadsideAssistance from './RoadsideAssistance';
+import PetServices from './PetServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -101,6 +102,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             trackedCountries={countries}
           />
         );
+      
+      case 'pet-services':
+        return <PetServices currentLocation={detectedLocation} />;
       
       case 'news':
         return <EnhancedNewsSection />;
