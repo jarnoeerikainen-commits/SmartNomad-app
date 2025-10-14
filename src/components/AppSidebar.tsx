@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Landmark,
   Car,
-  PawPrint
+  PawPrint,
+  TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -61,6 +62,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
     { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
     { id: 'tax', label: t('nav.tax'), icon: Calculator },
+    { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: TrendingUp },
     { id: 'visas', label: t('nav.visas'), icon: Plane },
     { id: 'documents', label: t('nav.documents'), icon: FileText },
     { id: 'health', label: t('nav.health'), icon: Heart },

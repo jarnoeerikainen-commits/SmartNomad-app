@@ -24,6 +24,7 @@ import MoneyTransfers from './MoneyTransfers';
 import CryptoToCash from './CryptoToCash';
 import RoadsideAssistance from './RoadsideAssistance';
 import PetServices from './PetServices';
+import TaxWealthyHelp from './TaxWealthyHelp';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -83,6 +84,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             onRemoveCountry={onRemoveCountry}
           />
         );
+      
+      case 'tax-wealthy':
+        return <TaxWealthyHelp currentLocation={detectedLocation} />;
       
       case 'visas':
         return <VisaTrackingManager subscription={subscription} countries={countries} />;
