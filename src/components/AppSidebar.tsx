@@ -27,6 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Subscription } from '@/types/subscription';
 
 interface SidebarItem {
   id: string;
@@ -41,6 +42,8 @@ interface AppSidebarProps {
   onSectionChange: (section: string) => void;
   isOpen: boolean;
   onClose?: () => void;
+  subscription?: Subscription;
+  onUpgradeClick?: () => void;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -60,7 +63,9 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   activeSection, 
   onSectionChange, 
   isOpen,
-  onClose 
+  onClose,
+  subscription,
+  onUpgradeClick
 }) => {
   const { t } = useLanguage();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['travel', 'money', 'safety']);
@@ -220,36 +225,74 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
             <Separator className="my-4" />
 
-            {/* Settings & Help */}
-            <div className="space-y-1">
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3 hover:bg-accent/50"
-                onClick={() => {
-                  onSectionChange('settings');
-                  onClose?.();
-                }}
-              >
-                <Settings className="h-5 w-5" />
-                <span>{t('nav.settings')}</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-3 hover:bg-accent/50"
-                onClick={() => {
-                  onSectionChange('help');
-                  onClose?.();
-                }}
-              >
-                <HelpCircle className="h-5 w-5" />
-                <span>{t('nav.help')}</span>
-              </Button>
-            </div>
+            {/* Upgrade Button for Free Users */}
+            {subscription?.tier === 'free' && onUpgradeClick && (
+              <>
+                <Button
+                  onClick={() => {
+                    onUpgradeClick();
+                    onClose?.();
+                  }}
+                  className="w-full gradient-success shadow-lg hover:shadow-xl transition-all mb-4"
+                  size="lg"
+                >
+                  <TrendingUp className="h-5 w-5 mr-2" />
+                  Upgrade to Premium
+                </Button>
+                <Separator className="my-4" />
+              </>
+            )}
+
+          {/* Settings & Help */}
+          <div className="space-y-1">
+            <Button
+              variant={activeSection === 'settings' ? 'secondary' : 'ghost'}
+              className="w-full justify-start gap-3 hover:bg-accent/50"
+              onClick={() => {
+                onSectionChange('settings');
+                onClose?.();
+              }}
+            >
+              <Settings className="h-5 w-5" />
+              <span>{t('nav.settings')}</span>
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className="w-full justify-start gap-3 hover:bg-accent/50"
+              onClick={() => {
+                onSectionChange('help');
+                onClose?.();
+              }}
+            >
+              <HelpCircle className="h-5 w-5" />
+              <span>{t('nav.help')}</span>
+            </Button>
+          </div>
           </nav>
 
           {/* Footer */}
           <div className="border-t p-4">
+            {subscription && (
+              <div className="mb-3 p-2 bg-primary/10 rounded-lg text-center">
+                <p className="text-xs font-semibold text-primary capitalize">
+                  {subscription.tier} Plan
+                </p>
+                {subscription.tier === 'free' && onUpgradeClick && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={() => {
+                      onUpgradeClick();
+                      onClose?.();
+                    }}
+                    className="h-auto p-0 text-xs text-primary"
+                  >
+                    Upgrade Now →
+                  </Button>
+                )}
+              </div>
+            )}
             <div className="text-center text-xs text-muted-foreground">
               <p>{t('nav.footer_version')}</p>
               <p className="mt-1">{t('nav.footer_tagline')}</p>

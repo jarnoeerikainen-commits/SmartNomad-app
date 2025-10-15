@@ -1,14 +1,17 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Building, GraduationCap, Home, Users } from 'lucide-react';
-import { Subscription, PricingTier } from '@/types/subscription';
+import { Check, Crown, Building, Users, GraduationCap, Home, X } from 'lucide-react';
+import { PricingTier, Subscription } from '@/types/subscription';
+import { useToast } from '@/hooks/use-toast';
 
-interface PricingCardProps {
+interface UpgradeModalProps {
+  isOpen: boolean;
+  onClose: () => void;
   subscription: Subscription;
-  onUpgradeClick: () => void;
+  onUpgrade: (tier: string) => void;
 }
 
 const PRICING_TIERS: PricingTier[] = [
@@ -149,8 +152,31 @@ const PRICING_TIERS: PricingTier[] = [
   }
 ];
 
-const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick }) => {
-  const currentTier = PRICING_TIERS.find(t => t.id === subscription.tier) || PRICING_TIERS[0];
+const UpgradeModal: React.FC<UpgradeModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  subscription, 
+  onUpgrade 
+}) => {
+  const { toast } = useToast();
+
+  const handleSelectPlan = (tierId: string) => {
+    if (tierId === subscription.tier) {
+      return;
+    }
+    
+    onClose();
+    
+    requestAnimationFrame(() => {
+      onUpgrade(tierId);
+      
+      const tierName = PRICING_TIERS.find(t => t.id === tierId)?.name || tierId;
+      toast({
+        title: "Plan Upgraded!",
+        description: `Successfully upgraded to ${tierName} plan. All features are now active!`,
+      });
+    });
+  };
 
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
@@ -163,66 +189,90 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
     }
   };
 
-  const formatPrice = (currentTier: typeof PRICING_TIERS[0]) => {
-    if (currentTier.price === 0) return 'Free';
-    if (currentTier.billing === 'yearly') return `$${currentTier.price}/year`;
-    if (currentTier.yearlyPrice) {
-      return `$${currentTier.price}/mo or $${currentTier.yearlyPrice}/yr`;
+  const formatPrice = (tier: PricingTier) => {
+    if (tier.price === 0) return 'Free';
+    if (tier.billing === 'yearly') return `$${tier.price}/year`;
+    if (tier.yearlyPrice) {
+      return (
+        <div className="flex flex-col">
+          <span>${tier.price}/month</span>
+          <span className="text-sm text-green-600">or ${tier.yearlyPrice}/year</span>
+        </div>
+      );
     }
-    return `$${currentTier.price}/month`;
+    return `$${tier.price}/month`;
   };
 
   return (
-    <Card className="w-full max-w-sm bg-gradient-to-br from-primary/5 to-accent/5 border-primary/30 shadow-lg">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {getTierIcon(subscription.tier)}
-            <CardTitle className="text-base font-semibold">
-              {currentTier.name} Plan
-            </CardTitle>
-          </div>
-          {subscription.tier !== 'free' && (
-            <Badge variant="secondary" className="bg-green-100 text-green-700">
-              Active
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div>
-          <div className="text-2xl font-bold text-primary mb-1">
-            {formatPrice(currentTier)}
-          </div>
-          <p className="text-xs text-muted-foreground mb-1">{currentTier.description}</p>
-          <p className="text-xs text-primary font-medium">{currentTier.userLimit}</p>
-        </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-between text-2xl">
+            Choose Your Perfect Plan
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="w-4 h-4" />
+            </Button>
+          </DialogTitle>
+        </DialogHeader>
         
-        {subscription.features && subscription.features.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {subscription.features.slice(0, 3).map((feature, idx) => (
-              <Badge key={idx} variant="secondary" className="text-xs">
-                {feature.split(' ')[0]}
-              </Badge>
-            ))}
-            {subscription.features.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
-                +{subscription.features.length - 3}
-              </Badge>
-            )}
-          </div>
-        )}
-        
-        <Button 
-          onClick={onUpgradeClick}
-          className="w-full gradient-success hover:opacity-90"
-          size="sm"
-        >
-          {subscription.tier === 'free' ? 'Upgrade Now' : 'Change Plan'}
-        </Button>
-      </CardContent>
-    </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+          {PRICING_TIERS.map((tier) => (
+            <Card 
+              key={tier.id} 
+              className={`relative transition-all hover:shadow-lg ${
+                tier.popular ? 'border-primary shadow-large ring-2 ring-primary/20' : 'border-border'
+              } ${
+                subscription.tier === tier.id ? 'bg-accent/20 border-accent' : ''
+              }`}
+            >
+              {tier.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground shadow-medium">
+                    ⭐ Most Popular
+                  </Badge>
+                </div>
+              )}
+              <CardHeader className="text-center pb-3">
+                <div className="flex items-center justify-center mb-3">
+                  {getTierIcon(tier.id)}
+                </div>
+                <CardTitle className="text-lg">{tier.name}</CardTitle>
+                <div className="text-2xl font-bold mt-2">
+                  {formatPrice(tier)}
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">{tier.description}</p>
+                <p className="text-xs text-primary font-medium mt-1">{tier.userLimit}</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 mb-4 text-xs">
+                  {tier.features.slice(0, 6).map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                  {tier.features.length > 6 && (
+                    <li className="text-primary font-medium text-center pt-2">
+                      +{tier.features.length - 6} more features
+                    </li>
+                  )}
+                </ul>
+                <Button 
+                  onClick={() => handleSelectPlan(tier.id)}
+                  disabled={subscription.tier === tier.id}
+                  className={`w-full ${tier.popular ? 'gradient-success' : ''}`}
+                  variant={tier.popular ? 'default' : 'outline'}
+                  size="sm"
+                >
+                  {subscription.tier === tier.id ? '✓ Current Plan' : 'Select Plan'}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default PricingCard;
+export default UpgradeModal;

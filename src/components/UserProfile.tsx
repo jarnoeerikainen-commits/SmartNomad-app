@@ -10,7 +10,7 @@ import { User, Languages, Phone, Globe, Building, CreditCard, Crown } from 'luci
 import { useToast } from '@/hooks/use-toast';
 import EmbassyService, { Embassy } from '@/services/EmbassyService';
 import { Subscription } from '@/types/subscription';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import UpgradeModal from './UpgradeModal';
 import PricingCard from './PricingCard';
 
 interface UserProfileData {
@@ -181,16 +181,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                       </p>
                     </div>
                   </div>
-                  {onUpgrade && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowUpgrade(true)}
-                      className="border-primary text-primary hover:bg-primary/10"
-                    >
-                      {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
-                    </Button>
-                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowUpgrade(true)}
+                    className="border-primary text-primary hover:bg-primary/10"
+                  >
+                    {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
+                  </Button>
                 </div>
                 {subscription.features && subscription.features.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1">
@@ -333,17 +331,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
     
     {/* Upgrade Modal */}
     {subscription && onUpgrade && (
-      <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <PricingCard 
-            subscription={subscription} 
-            onUpgrade={(tier) => {
-              setShowUpgrade(false);
-              onUpgrade(tier);
-            }} 
-          />
-        </DialogContent>
-      </Dialog>
+      <UpgradeModal
+        isOpen={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        subscription={subscription}
+        onUpgrade={onUpgrade}
+      />
     )}
   </>
   );

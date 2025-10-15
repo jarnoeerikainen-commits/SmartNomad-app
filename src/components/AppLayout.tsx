@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import QuickActions from './QuickActions';
+import UpgradeBanner from './UpgradeBanner';
+import UpgradeModal from './UpgradeModal';
 import CountryTracker from './CountryTracker';
 import EnhancedNewsSection from './EnhancedNewsSection';
 import TaxResidencyTracker from './TaxResidencyTracker';
@@ -52,12 +54,30 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
+    return localStorage.getItem('upgradeBannerDismissed') === 'true';
+  });
+
+  const handleDismissBanner = () => {
+    setUpgradeBannerDismissed(true);
+    localStorage.setItem('upgradeBannerDismissed', 'true');
+  };
 
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
           <div className="space-y-6">
+            {/* Upgrade Banner for Free Users */}
+            {!upgradeBannerDismissed && (
+              <UpgradeBanner 
+                subscription={subscription}
+                onUpgradeClick={() => setShowUpgradeModal(true)}
+                onDismiss={handleDismissBanner}
+              />
+            )}
+            
             {/* Quick Stats */}
             <DashboardQuickStats countries={countries} />
             
@@ -173,7 +193,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
         subscription={subscription}
-        onUpgrade={onUpgrade}
+        onUpgrade={() => setShowUpgradeModal(true)}
         countries={countries}
       />
       
@@ -183,6 +203,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onSectionChange={setActiveSection}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          subscription={subscription}
+          onUpgradeClick={() => setShowUpgradeModal(true)}
         />
         
         <main className="flex-1 overflow-hidden">
@@ -212,6 +234,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         trackedCountries={countries}
         subscription={subscription}
       />
+
+      {/* Upgrade Modal */}
+      {onUpgrade && (
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          subscription={subscription}
+          onUpgrade={onUpgrade}
+        />
+      )}
     </div>
   );
 };

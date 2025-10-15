@@ -14,7 +14,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { LanguageSelector } from './LanguageSelector';
 import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
-import PricingCard from './PricingCard';
+import UpgradeModal from './UpgradeModal';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TimeZoneHeader } from './TimeZoneHeader';
@@ -109,6 +109,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
               )}
             </Button>
           )}
+          
+          {/* Upgrade Button for Free Users */}
+          {subscription?.tier === 'free' && onUpgrade && (
+            <Button 
+              variant="default"
+              size="sm" 
+              className="gradient-success shadow-medium hover:shadow-lg transition-all hidden md:flex"
+              onClick={() => setShowUpgrade(true)}
+            >
+              <Zap className="h-4 w-4 mr-1" />
+              <span className="font-semibold">Upgrade</span>
+            </Button>
+          )}
 
           {/* User Menu */}
           <DropdownMenu>
@@ -165,17 +178,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       </Dialog>
 
       {subscription && onUpgrade && (
-        <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <PricingCard 
-              subscription={subscription} 
-              onUpgrade={(tier) => {
-                setShowUpgrade(false);
-                onUpgrade(tier);
-              }} 
-            />
-          </DialogContent>
-        </Dialog>
+        <UpgradeModal
+          isOpen={showUpgrade}
+          onClose={() => setShowUpgrade(false)}
+          subscription={subscription}
+          onUpgrade={onUpgrade}
+        />
       )}
     </header>
   );
