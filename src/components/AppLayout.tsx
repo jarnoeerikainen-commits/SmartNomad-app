@@ -31,6 +31,7 @@ import PetServices from './PetServices';
 import TaxWealthyHelp from './TaxWealthyHelp';
 import VPNEmailServices from './VPNEmailServices';
 import TravelInsurance from './TravelInsurance';
+import PublicTransport from './PublicTransport';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -117,6 +118,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'visas':
         return <VisaTrackingManager subscription={subscription} countries={countries} />;
+      
+      case 'public-transport':
+        return <PublicTransport currentLocation={detectedLocation} />;
       
       case 'documents':
         return (

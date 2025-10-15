@@ -20,7 +20,8 @@ import {
   DollarSign,
   Mail,
   Globe,
-  Coins
+  Coins,
+  Bus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -92,6 +93,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'tax', label: t('nav.tax'), icon: Calculator },
         { id: 'visas', label: t('nav.visas'), icon: Plane },
+        { id: 'public-transport', label: 'Public Transport', icon: Bus },
         { id: 'documents', label: t('nav.documents'), icon: FileText },
         { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
         { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
