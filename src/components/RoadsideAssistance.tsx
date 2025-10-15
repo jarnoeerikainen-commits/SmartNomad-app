@@ -34,25 +34,28 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
     setDisplayLocation(searchLocation);
   };
 
-  const services = [
+  // Comprehensive list of high-quality roadside assistance services by region
+  const allServices = [
+    // USA Services
     {
       name: "AAA Roadside Assistance",
       description: "Premier roadside assistance with over 60 million members. 24/7 emergency services including towing, battery service, fuel delivery, and lockout assistance.",
       type: "membership",
       features: [
         "24/7 Emergency Service",
-        "Free Towing (up to miles per membership)",
+        "Free Towing (up to 100 miles)",
         "Battery Jump-Start & Replacement",
         "Flat Tire Service",
         "Fuel Delivery",
         "Lockout Service"
       ],
-      coverage: "USA & Canada",
+      regions: ["USA", "Canada", "United States"],
       phone: "1-800-222-4357",
       website: "https://www.aaa.com/",
       locationFinder: "https://www.aaa.com/findclub",
       icon: Car,
-      color: "blue"
+      color: "blue",
+      rating: 4.5
     },
     {
       name: "HONK",
@@ -66,12 +69,13 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
         "Battery Service",
         "Towing Available"
       ],
-      coverage: "USA (300+ cities)",
+      regions: ["USA", "United States"],
       phone: "1-844-HONK-NOW",
       website: "https://www.honkmobile.com/",
       locationFinder: null,
       icon: Phone,
-      color: "green"
+      color: "green",
+      rating: 4.6
     },
     {
       name: "Urgently",
@@ -84,13 +88,160 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
         "Live ETA Updates",
         "Multiple Service Types"
       ],
-      coverage: "USA",
+      regions: ["USA", "United States"],
       phone: null,
       website: "https://www.urgently.com/",
       locationFinder: null,
       icon: MapPin,
-      color: "purple"
+      color: "purple",
+      rating: 4.4
     },
+    // Canada Services
+    {
+      name: "CAA (Canadian Automobile Association)",
+      description: "Canada's leading roadside assistance provider with 24/7 emergency services. Offers towing, battery service, fuel delivery, and more.",
+      type: "membership",
+      features: [
+        "24/7 Emergency Service",
+        "Towing Service",
+        "Battery Boost & Replacement",
+        "Tire Change",
+        "Fuel Delivery",
+        "Lockout Service"
+      ],
+      regions: ["Canada"],
+      phone: "1-800-222-4357",
+      website: "https://www.caa.ca/",
+      locationFinder: "https://www.caa.ca/",
+      icon: Car,
+      color: "blue",
+      rating: 4.7
+    },
+    // UK Services
+    {
+      name: "AA (The Automobile Association)",
+      description: "UK's most trusted breakdown service with over 3 million members. 24/7 roadside assistance and recovery services.",
+      type: "membership",
+      features: [
+        "24/7 Breakdown Cover",
+        "Nationwide Coverage",
+        "European Breakdown",
+        "At-Home Start",
+        "Relay to Destination",
+        "Key Assist"
+      ],
+      regions: ["UK", "United Kingdom", "England", "Scotland", "Wales", "Northern Ireland"],
+      phone: "0800 887 766",
+      website: "https://www.theaa.com/",
+      locationFinder: "https://www.theaa.com/",
+      icon: Car,
+      color: "blue",
+      rating: 4.5
+    },
+    {
+      name: "RAC",
+      description: "UK's longest-established roadside assistance provider. Comprehensive breakdown cover with fast response times.",
+      type: "membership",
+      features: [
+        "UK Breakdown Cover",
+        "European Cover Available",
+        "Home Start",
+        "Onward Travel",
+        "Fast Response",
+        "Recovery Service"
+      ],
+      regions: ["UK", "United Kingdom", "England", "Scotland", "Wales", "Northern Ireland"],
+      phone: "0333 2000 999",
+      website: "https://www.rac.co.uk/",
+      locationFinder: "https://www.rac.co.uk/",
+      icon: Car,
+      color: "green",
+      rating: 4.4
+    },
+    // Australia Services
+    {
+      name: "RACV (Royal Automobile Club of Victoria)",
+      description: "Australia's largest roadside assistance provider. 24/7 emergency roadside service across Australia.",
+      type: "membership",
+      features: [
+        "24/7 Roadside Assistance",
+        "Towing Service",
+        "Battery Service",
+        "Fuel Delivery",
+        "Tire Change",
+        "Emergency Accommodation"
+      ],
+      regions: ["Australia", "Victoria", "NSW", "Queensland"],
+      phone: "13 11 11",
+      website: "https://www.racv.com.au/",
+      locationFinder: "https://www.racv.com.au/",
+      icon: Car,
+      color: "blue",
+      rating: 4.6
+    },
+    {
+      name: "NRMA",
+      description: "Trusted roadside assistance in NSW, ACT & Tasmania. Fast response times and comprehensive coverage.",
+      type: "membership",
+      features: [
+        "24/7 Service",
+        "Free Towing",
+        "Battery Replacement",
+        "Lockout Service",
+        "Fuel Delivery",
+        "Minor Repairs"
+      ],
+      regions: ["Australia", "New South Wales", "NSW", "ACT", "Tasmania"],
+      phone: "13 11 22",
+      website: "https://www.mynrma.com.au/",
+      locationFinder: "https://www.mynrma.com.au/",
+      icon: Car,
+      color: "orange",
+      rating: 4.5
+    },
+    // Germany Services
+    {
+      name: "ADAC",
+      description: "Germany's largest automobile club providing comprehensive roadside assistance across Europe.",
+      type: "membership",
+      features: [
+        "24/7 Breakdown Service",
+        "Europe-Wide Coverage",
+        "Towing Service",
+        "On-Site Repairs",
+        "Vehicle Recovery",
+        "Medical Assistance"
+      ],
+      regions: ["Germany", "Deutschland", "Austria", "Switzerland"],
+      phone: "+49 89 22 22 22",
+      website: "https://www.adac.de/",
+      locationFinder: "https://www.adac.de/",
+      icon: Car,
+      color: "blue",
+      rating: 4.8
+    },
+    // France Services
+    {
+      name: "Assistance Auto",
+      description: "Leading roadside assistance in France with rapid response and professional service.",
+      type: "membership",
+      features: [
+        "24/7 Service",
+        "Dépannage Rapide",
+        "Remorquage",
+        "Assistance Europe",
+        "Service de Batterie",
+        "Livraison de Carburant"
+      ],
+      regions: ["France", "Belgium", "Luxembourg"],
+      phone: "01 40 55 24 24",
+      website: "https://www.assistanceauto.fr/",
+      locationFinder: null,
+      icon: Car,
+      color: "blue",
+      rating: 4.3
+    },
+    // Universal Services (Always show)
     {
       name: "Local Towing Services",
       description: "Find nearby towing companies in your area. Google Maps will show you local towing services with ratings, contact info, and directions.",
@@ -103,14 +254,15 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
         "Price Estimates",
         "Emergency Services"
       ],
-      coverage: "Worldwide",
+      regions: ["Universal"],
       phone: null,
       website: null,
       locationFinder: displayLocation 
         ? `https://www.google.com/maps/search/towing+services+near+${encodeURIComponent(displayLocation)}`
         : "https://www.google.com/maps/search/towing+services",
       icon: Car,
-      color: "orange"
+      color: "orange",
+      rating: null
     },
     {
       name: "Auto Repair Shops",
@@ -124,16 +276,43 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
         "Contact Information",
         "Directions"
       ],
-      coverage: "Worldwide",
+      regions: ["Universal"],
       phone: null,
       website: null,
       locationFinder: displayLocation
         ? `https://www.google.com/maps/search/auto+repair+near+${encodeURIComponent(displayLocation)}`
         : "https://www.google.com/maps/search/auto+repair",
       icon: Wrench,
-      color: "red"
+      color: "red",
+      rating: null
     }
   ];
+
+  // Filter services based on location
+  const getFilteredServices = () => {
+    if (!displayLocation) {
+      // Show universal services only if no location
+      return allServices.filter(s => s.regions.includes("Universal"));
+    }
+
+    const locationLower = displayLocation.toLowerCase();
+    
+    // Filter services that match the location
+    const filtered = allServices.filter(service => {
+      // Always include universal services
+      if (service.regions.includes("Universal")) return true;
+      
+      // Check if any region matches the location
+      return service.regions.some(region => 
+        locationLower.includes(region.toLowerCase())
+      );
+    });
+
+    // If no specific services found, show universal services
+    return filtered.length > 2 ? filtered : allServices.filter(s => s.regions.includes("Universal"));
+  };
+
+  const services = getFilteredServices();
 
   return (
     <div className="space-y-6">
@@ -205,10 +384,12 @@ const RoadsideAssistance = ({ currentLocation }: RoadsideAssistanceProps) => {
               <CardContent className="space-y-4">
                 <p className="text-sm">{service.description}</p>
 
-                <div>
-                  <h4 className="font-semibold mb-2 text-sm">Coverage:</h4>
-                  <p className="text-sm text-muted-foreground">{service.coverage}</p>
-                </div>
+                {!service.regions.includes("Universal") && (
+                  <div>
+                    <h4 className="font-semibold mb-2 text-sm">Coverage:</h4>
+                    <p className="text-sm text-muted-foreground">{service.regions.join(", ")}</p>
+                  </div>
+                )}
 
                 {service.phone && (
                   <div>
