@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, MapPin, Flag, Globe, Check, ChevronsUpDown } from 'lucide-react';
+import { Calculator, MapPin, Flag, Globe, Check, ChevronsUpDown, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,10 @@ import USTaxTracker from './USTaxTracker';
 import { CanadaTaxProvinceTracker } from './CanadaTaxProvinceTracker';
 import CountryTracker from './CountryTracker';
 import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
+import { SubstantialPresenceTest } from './SubstantialPresenceTest';
+import { ScenarioPlanner } from './ScenarioPlanner';
+import { ThresholdAlerts } from './ThresholdAlerts';
+import { YearComparisonView } from './YearComparisonView';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ALL_COUNTRIES } from '@/data/countries';
@@ -152,22 +156,34 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, on
           </div>
 
           <Tabs value={selectedCountry} onValueChange={setSelectedCountry}>
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-7 h-auto flex-wrap">
               <TabsTrigger value="global" className="flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
-                Country Manager
+                <span className="hidden sm:inline">Countries</span>
               </TabsTrigger>
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Globe className="w-4 h-4" />
-                Tax Overview
+                <span className="hidden sm:inline">Overview</span>
+              </TabsTrigger>
+              <TabsTrigger value="alerts" className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="hidden sm:inline">Alerts</span>
+              </TabsTrigger>
+              <TabsTrigger value="scenario" className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4" />
+                <span className="hidden sm:inline">Planner</span>
+              </TabsTrigger>
+              <TabsTrigger value="comparison" className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" />
+                <span className="hidden sm:inline">Compare</span>
               </TabsTrigger>
               <TabsTrigger value="us" className="flex items-center gap-2">
                 <span>🇺🇸</span>
-                United States
+                <span className="hidden sm:inline">USA</span>
               </TabsTrigger>
               <TabsTrigger value="ca" className="flex items-center gap-2">
                 <span>🇨🇦</span>
-                Canada
+                <span className="hidden sm:inline">Canada</span>
               </TabsTrigger>
             </TabsList>
 
@@ -225,7 +241,20 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, on
               </div>
             </TabsContent>
 
+            <TabsContent value="alerts" className="mt-6">
+              <ThresholdAlerts countries={countries} />
+            </TabsContent>
+
+            <TabsContent value="scenario" className="mt-6">
+              <ScenarioPlanner countries={countries} />
+            </TabsContent>
+
+            <TabsContent value="comparison" className="mt-6">
+              <YearComparisonView countries={countries} />
+            </TabsContent>
+
             <TabsContent value="us" className="mt-6 space-y-6">
+              <SubstantialPresenceTest />
               <USTaxTracker countries={countries} />
               <USTaxStateTracker />
             </TabsContent>
