@@ -27,6 +27,7 @@ import CryptoToCash from './CryptoToCash';
 import RoadsideAssistance from './RoadsideAssistance';
 import PetServices from './PetServices';
 import TaxWealthyHelp from './TaxWealthyHelp';
+import VPNEmailServices from './VPNEmailServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -103,6 +104,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <SecureDocumentVault />
           </div>
         );
+      
+      case 'vpn-email':
+        return <VPNEmailServices />;
       
       case 'health':
         return (

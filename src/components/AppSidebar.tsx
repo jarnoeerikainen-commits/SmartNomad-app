@@ -17,7 +17,9 @@ import {
   PawPrint,
   TrendingUp,
   ChevronDown,
-  DollarSign
+  DollarSign,
+  Mail,
+  Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -85,6 +87,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'tax', label: t('nav.tax'), icon: Calculator },
         { id: 'visas', label: t('nav.visas'), icon: Plane },
         { id: 'documents', label: t('nav.documents'), icon: FileText },
+        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
         { id: 'health', label: t('nav.health'), icon: Heart },
         { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]
