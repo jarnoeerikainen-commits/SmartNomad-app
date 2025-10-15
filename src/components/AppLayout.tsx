@@ -32,6 +32,7 @@ import TaxWealthyHelp from './TaxWealthyHelp';
 import VPNEmailServices from './VPNEmailServices';
 import TravelInsurance from './TravelInsurance';
 import PublicTransport from './PublicTransport';
+import TaxiServices from './TaxiServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -121,6 +122,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'public-transport':
         return <PublicTransport currentLocation={detectedLocation} />;
+      
+      case 'taxis':
+        return <TaxiServices currentLocation={detectedLocation} />;
       
       case 'documents':
         return (
