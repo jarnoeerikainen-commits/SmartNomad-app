@@ -129,7 +129,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
         { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle },
         { id: 'services', label: t('nav.services'), icon: Shield },
-        { id: 'investor-deck', label: 'Investor Deck', icon: TrendingUp, badge: 'NEW' },
       ]
     },
   ];
