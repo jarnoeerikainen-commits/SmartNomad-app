@@ -6,8 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, AlertTriangle, Calendar, FileText, Briefcase } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Plus, Trash2, AlertTriangle, Calendar, FileText, Briefcase, Check, ChevronsUpDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ALL_COUNTRIES } from '@/data/countries';
+import { cn } from '@/lib/utils';
 
 interface Passport {
   id: string;
@@ -44,6 +48,9 @@ const PassportManager = () => {
   const [isAddingPassport, setIsAddingPassport] = useState(false);
   const [isAddingVisa, setIsAddingVisa] = useState(false);
   const [isAddingPermit, setIsAddingPermit] = useState(false);
+  const [passportCountrySearchOpen, setPassportCountrySearchOpen] = useState(false);
+  const [visaCountrySearchOpen, setVisaCountrySearchOpen] = useState(false);
+  const [permitCountrySearchOpen, setPermitCountrySearchOpen] = useState(false);
   const [newPassport, setNewPassport] = useState<Partial<Passport>>({
     showNumber: false
   });
@@ -54,6 +61,12 @@ const PassportManager = () => {
     showNumber: false
   });
   const { toast } = useToast();
+
+  // Use all countries from the data file, sorted alphabetically
+  const countries = ALL_COUNTRIES.map(c => ({
+    value: c.name,
+    label: `${c.flag} ${c.name}`
+  })).sort((a, b) => a.value.localeCompare(b.value));
 
   // Load data from localStorage
   useEffect(() => {
@@ -306,17 +319,6 @@ const PassportManager = () => {
     return diffDays;
   };
 
-  const countries = [
-    'United States', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands',
-    'Switzerland', 'Austria', 'Belgium', 'Sweden', 'Norway', 'Denmark', 'Finland',
-    'Japan', 'South Korea', 'Singapore', 'Hong Kong', 'Australia', 'New Zealand',
-    'Canada', 'Thailand', 'Malaysia', 'Philippines', 'Indonesia', 'Vietnam', 'India',
-    'China', 'United Arab Emirates', 'Saudi Arabia', 'Israel', 'Turkey', 'Russia',
-    'Mexico', 'Brazil', 'Argentina', 'Chile', 'Colombia', 'Peru', 'South Africa',
-    'Egypt', 'Morocco', 'Kenya', 'Nigeria', 'Portugal', 'Greece', 'Poland',
-    'Czech Republic', 'Hungary', 'Ireland', 'Iceland'
-  ];
-
   const visaTypes = [
     'Tourist Visa', 'Business Visa', 'Student Visa', 'Work Visa', 'Transit Visa',
     'Family Visit Visa', 'Medical Visa', 'Conference Visa', 'Multiple Entry Visa'
@@ -427,19 +429,49 @@ const PassportManager = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="country" className="text-sm font-semibold text-gray-700">Country *</Label>
-                  <Select
-                    value={newPassport.country || ''}
-                    onValueChange={(value) => setNewPassport(prev => ({ ...prev, country: value }))}
-                  >
-                    <SelectTrigger className="mt-2 h-12">
-                      <SelectValue placeholder="Select your country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map(country => (
-                        <SelectItem key={country} value={country}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={passportCountrySearchOpen} onOpenChange={setPassportCountrySearchOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={passportCountrySearchOpen}
+                        className="w-full justify-between mt-2 h-12"
+                      >
+                        {newPassport.country
+                          ? countries.find((country) => country.value === newPassport.country)?.label
+                          : "Select your country"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          <CommandEmpty>No country found.</CommandEmpty>
+                          <CommandGroup>
+                            {countries.map((country) => (
+                              <CommandItem
+                                key={country.value}
+                                value={country.value}
+                                onSelect={(currentValue) => {
+                                  setNewPassport(prev => ({ ...prev, country: currentValue }));
+                                  setPassportCountrySearchOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    newPassport.country === country.value ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {country.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div>
@@ -596,19 +628,49 @@ const PassportManager = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="visaCountry" className="text-sm font-semibold text-gray-700">Country *</Label>
-                  <Select
-                    value={newVisa.country || ''}
-                    onValueChange={(value) => setNewVisa(prev => ({ ...prev, country: value }))}
-                  >
-                    <SelectTrigger className="mt-2 h-12">
-                      <SelectValue placeholder="Select country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map(country => (
-                        <SelectItem key={country} value={country}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={visaCountrySearchOpen} onOpenChange={setVisaCountrySearchOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={visaCountrySearchOpen}
+                        className="w-full justify-between mt-2 h-12"
+                      >
+                        {newVisa.country
+                          ? countries.find((country) => country.value === newVisa.country)?.label
+                          : "Select country"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          <CommandEmpty>No country found.</CommandEmpty>
+                          <CommandGroup>
+                            {countries.map((country) => (
+                              <CommandItem
+                                key={country.value}
+                                value={country.value}
+                                onSelect={(currentValue) => {
+                                  setNewVisa(prev => ({ ...prev, country: currentValue }));
+                                  setVisaCountrySearchOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    newVisa.country === country.value ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {country.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div>
@@ -783,19 +845,49 @@ const PassportManager = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="permitCountry" className="text-sm font-semibold text-gray-700">Country *</Label>
-                  <Select
-                    value={newPermit.country || ''}
-                    onValueChange={(value) => setNewPermit(prev => ({ ...prev, country: value }))}
-                  >
-                    <SelectTrigger className="mt-2 h-12">
-                      <SelectValue placeholder="Select country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map(country => (
-                        <SelectItem key={country} value={country}>{country}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={permitCountrySearchOpen} onOpenChange={setPermitCountrySearchOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={permitCountrySearchOpen}
+                        className="w-full justify-between mt-2 h-12"
+                      >
+                        {newPermit.country
+                          ? countries.find((country) => country.value === newPermit.country)?.label
+                          : "Select country"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0" align="start">
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          <CommandEmpty>No country found.</CommandEmpty>
+                          <CommandGroup>
+                            {countries.map((country) => (
+                              <CommandItem
+                                key={country.value}
+                                value={country.value}
+                                onSelect={(currentValue) => {
+                                  setNewPermit(prev => ({ ...prev, country: currentValue }));
+                                  setPermitCountrySearchOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    newPermit.country === country.value ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {country.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div>

@@ -23,28 +23,15 @@ interface EnhancedNewsSectionProps {
   className?: string;
 }
 
-const COUNTRIES = [
-  { code: 'US', name: 'United States', flag: '🇺🇸' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-  { code: 'FR', name: 'France', flag: '🇫🇷' },
-  { code: 'ES', name: 'Spain', flag: '🇪🇸' },
-  { code: 'PT', name: 'Portugal', flag: '🇵🇹' },
-  { code: 'IT', name: 'Italy', flag: '🇮🇹' },
-  { code: 'NL', name: 'Netherlands', flag: '🇳🇱' },
-  { code: 'TH', name: 'Thailand', flag: '🇹🇭' },
-  { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
-  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-  { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
-  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
-  { code: 'AE', name: 'UAE', flag: '🇦🇪' },
-  { code: 'PH', name: 'Philippines', flag: '🇵🇭' },
-  { code: 'VN', name: 'Vietnam', flag: '🇻🇳' },
-  { code: 'ID', name: 'Indonesia', flag: '🇮🇩' },
-  { code: 'MY', name: 'Malaysia', flag: '🇲🇾' }
-];
+// Import all countries from centralized data file
+import { ALL_COUNTRIES } from '@/data/countries';
+
+// Map to the format needed for news filtering
+const COUNTRIES = ALL_COUNTRIES.map(c => ({
+  code: c.code,
+  name: c.name,
+  flag: c.flag
+})).sort((a, b) => a.name.localeCompare(b.name));
 
 const NEWS_CATEGORIES = [
   { id: 'laws', label: 'Laws & Regulations', icon: '⚖️', color: 'bg-blue-100 text-blue-800' },
