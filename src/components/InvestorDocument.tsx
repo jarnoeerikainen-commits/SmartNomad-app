@@ -10,7 +10,9 @@ import {
   Shield,
   Globe,
   Server,
-  Smartphone
+  Smartphone,
+  Target,
+  CheckCircle2
 } from "lucide-react";
 
 export const InvestorDocument = () => {
@@ -610,6 +612,329 @@ export const InvestorDocument = () => {
         </div>
       </Card>
 
+      {/* 3-Year Exit Strategy */}
+      <Card className="p-8 mb-8">
+        <div className="flex items-center gap-3 mb-6">
+          <TrendingUp className="w-6 h-6 text-primary" />
+          <h2 className="text-2xl font-bold">3-Year Exit Strategy</h2>
+        </div>
+        <div className="space-y-6">
+          <div className="prose max-w-none">
+            <p className="text-muted-foreground">
+              Strategic growth plan targeting 10 million free users and 10,000 premium subscribers, 
+              positioning SmartNomad as a premier acquisition target for travel tech giants or private equity firms.
+            </p>
+          </div>
+
+          {/* Year-by-Year Growth Projections */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Growth Trajectory</h3>
+            
+            {/* Year 1 */}
+            <Card className="border-2">
+              <div className="p-6 space-y-2">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-lg font-semibold">Year 1: Foundation & Market Entry</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Free Users</p>
+                    <p className="text-2xl font-bold">500,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Users</p>
+                    <p className="text-2xl font-bold">1,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Revenue</p>
+                    <p className="text-xl font-bold">$118,800/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
+                    <p className="text-xl font-bold">$150,000/year</p>
+                  </div>
+                </div>
+                <div className="pt-2 border-t mt-4">
+                  <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
+                  <p className="text-2xl font-bold text-primary">$268,800</p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Year 2 */}
+            <Card className="border-2">
+              <div className="p-6 space-y-2">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-lg font-semibold">Year 2: Rapid Scaling</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Free Users</p>
+                    <p className="text-2xl font-bold">3,000,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Users</p>
+                    <p className="text-2xl font-bold">4,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Revenue</p>
+                    <p className="text-xl font-bold">$475,200/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
+                    <p className="text-xl font-bold">$600,000/year</p>
+                  </div>
+                </div>
+                <div className="pt-2 border-t mt-4">
+                  <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
+                  <p className="text-2xl font-bold text-primary">$1,075,200</p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Year 3 */}
+            <Card className="border-2 border-primary">
+              <div className="p-6 space-y-2">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-lg font-semibold">Year 3: Market Leadership & Exit</h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Free Users</p>
+                    <p className="text-2xl font-bold">10,000,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Users</p>
+                    <p className="text-2xl font-bold">10,000</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Premium Revenue</p>
+                    <p className="text-xl font-bold">$1,188,000/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
+                    <p className="text-xl font-bold">$2,000,000/year</p>
+                  </div>
+                </div>
+                <div className="pt-2 border-t mt-4">
+                  <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
+                  <p className="text-2xl font-bold text-primary">$3,188,000</p>
+                </div>
+                <div className="pt-2 border-t mt-4">
+                  <p className="text-sm text-muted-foreground">Conversion Rate</p>
+                  <p className="text-lg font-semibold">0.1% (Free to Premium)</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Affiliate Revenue Breakdown */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Year 3 Affiliate Revenue Streams</h3>
+            <div className="grid gap-3">
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>Flight Booking Commissions (0.5% avg)</span>
+                <span className="font-bold">$600,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>Accommodation Bookings (3% avg)</span>
+                <span className="font-bold">$750,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>Travel Insurance Referrals</span>
+                <span className="font-bold">$300,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>eSIM & Digital Services</span>
+                <span className="font-bold">$200,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>VPN & Security Services</span>
+                <span className="font-bold">$100,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <span>Currency Exchange & Banking</span>
+                <span className="font-bold">$50,000</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border-2 border-primary">
+                <span className="font-semibold">Total Affiliate Revenue</span>
+                <span className="font-bold text-xl">$2,000,000</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Company Valuation */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Exit Valuation Analysis</h3>
+            <div className="space-y-3">
+              <Card className="bg-gradient-to-r from-primary/10 to-primary/5">
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg">Revenue Multiple (6-8x for SaaS)</span>
+                      <span className="text-2xl font-bold">7x</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-4 border-t">
+                      <span className="text-xl font-semibold">Estimated Valuation</span>
+                      <span className="text-3xl font-bold text-primary">$22.3M - $25.5M</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <Card>
+                  <div className="p-6">
+                    <h4 className="font-semibold mb-2">User Base Value</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      10M users @ $2-3 per user (industry standard)
+                    </p>
+                    <p className="text-2xl font-bold">$20M - $30M</p>
+                  </div>
+                </Card>
+                <Card>
+                  <div className="p-6">
+                    <h4 className="font-semibold mb-2">Strategic Premium</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Market position + IP + growth trajectory
+                    </p>
+                    <p className="text-2xl font-bold">+20-30%</p>
+                  </div>
+                </Card>
+              </div>
+
+              <Card className="border-2 border-primary">
+                <div className="p-6">
+                  <div className="text-center space-y-2">
+                    <p className="text-lg font-semibold">Target Exit Valuation Range</p>
+                    <p className="text-4xl font-bold text-primary">$25M - $35M</p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Based on comparable exits: TripIt ($120M), TravelPerk ($1.3B valuation), Hopper ($5B valuation)
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Exit Strategy Options */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Potential Acquirers</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card>
+                <div className="p-6">
+                  <h4 className="text-lg font-semibold mb-4">Strategic Buyers</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Booking Holdings</strong> - Expand digital nomad segment</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Expedia Group</strong> - Add tax compliance features</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Airbnb</strong> - Long-term stay tax management</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>TripAdvisor</strong> - Comprehensive travel suite</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              <Card>
+                <div className="p-6">
+                  <h4 className="text-lg font-semibold mb-4">Financial Buyers</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Vista Equity Partners</strong> - SaaS expertise</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Accel-KKR</strong> - Travel tech focus</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Thoma Bravo</strong> - Software consolidation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
+                      <span><strong>Insight Partners</strong> - Growth-stage SaaS</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Investment Returns */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Investor Returns</h3>
+            <Card className="bg-gradient-to-r from-green-500/10 to-green-500/5 border-green-500">
+              <div className="p-6">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-2">Initial Investment</p>
+                    <p className="text-2xl font-bold">$100,000</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-2">Exit Value (20% equity)</p>
+                    <p className="text-2xl font-bold text-green-600">$5M - $7M</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-2">ROI Multiple</p>
+                    <p className="text-3xl font-bold text-green-600">50-70x</p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-6 border-t text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Annualized Return</p>
+                  <p className="text-3xl font-bold text-green-600">~140% per year</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Key Success Factors */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Critical Success Factors</h3>
+            <div className="grid gap-3">
+              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold">Achieve 0.1% conversion rate</p>
+                  <p className="text-sm text-muted-foreground">Industry benchmark for freemium travel apps</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold">Scale to 10M users in 36 months</p>
+                  <p className="text-sm text-muted-foreground">Average 280K new users per month</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold">Maintain churn below 5% monthly</p>
+                  <p className="text-sm text-muted-foreground">Strong retention through unique value proposition</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
+                <Target className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold">Build strategic partnerships</p>
+                  <p className="text-sm text-muted-foreground">Booking.com, Airbnb, major travel brands</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* Conclusion */}
       <Card className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
         <div className="flex items-center gap-3 mb-4">
@@ -654,7 +979,7 @@ export const InvestorDocument = () => {
       {/* Footer */}
       <div className="text-center mt-12 pt-8 border-t text-sm text-muted-foreground">
         <p>Document prepared: {new Date().toLocaleDateString()}</p>
-        <p className="mt-2">For investment inquiries: contact@smartnomad.app</p>
+        <p className="mt-2">For investment inquiries: invest@smartnomad.app</p>
       </div>
     </div>
   );
