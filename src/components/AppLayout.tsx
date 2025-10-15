@@ -176,7 +176,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <RoadsideAssistance currentLocation={detectedLocation} />;
       
       case 'settings':
-        return <UserProfile subscription={subscription} onUpgrade={onUpgrade} />;
+        return <UserProfile subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
       
       default:
         return (
@@ -193,7 +193,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
         subscription={subscription}
-        onUpgrade={() => setShowUpgradeModal(true)}
+        onUpgradeClick={() => setShowUpgradeModal(true)}
         countries={countries}
       />
       

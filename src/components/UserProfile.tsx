@@ -10,8 +10,6 @@ import { User, Languages, Phone, Globe, Building, CreditCard, Crown } from 'luci
 import { useToast } from '@/hooks/use-toast';
 import EmbassyService, { Embassy } from '@/services/EmbassyService';
 import { Subscription } from '@/types/subscription';
-import UpgradeModal from './UpgradeModal';
-import PricingCard from './PricingCard';
 
 interface UserProfileData {
   languages: string[];
@@ -22,7 +20,7 @@ interface UserProfileData {
 
 interface UserProfileProps {
   subscription?: Subscription;
-  onUpgrade?: (tier: string) => void;
+  onUpgradeClick?: () => void;
 }
 
 const AVAILABLE_LANGUAGES = [
@@ -38,7 +36,7 @@ const AVAILABLE_LANGUAGES = [
   { code: 'ko', name: 'Korean' }
 ];
 
-const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgradeClick }) => {
   const [profile, setProfile] = useState<UserProfileData>({
     languages: ['en'],
     phoneNumber: '',
@@ -47,7 +45,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
   });
   const [embassies, setEmbassies] = useState<Embassy[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -184,7 +181,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setShowUpgrade(true)}
+                    onClick={onUpgradeClick}
                     className="border-primary text-primary hover:bg-primary/10"
                   >
                     {subscription.tier === 'free' ? 'Upgrade' : 'Change Plan'}
@@ -328,16 +325,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgrade }) =>
         </div>
       </CardContent>
     </Card>
-    
-    {/* Upgrade Modal */}
-    {subscription && onUpgrade && (
-      <UpgradeModal
-        isOpen={showUpgrade}
-        onClose={() => setShowUpgrade(false)}
-        subscription={subscription}
-        onUpgrade={onUpgrade}
-      />
-    )}
   </>
   );
 };

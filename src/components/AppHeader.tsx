@@ -14,7 +14,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { LanguageSelector } from './LanguageSelector';
 import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
-import UpgradeModal from './UpgradeModal';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TimeZoneHeader } from './TimeZoneHeader';
@@ -25,7 +24,7 @@ interface AppHeaderProps {
   onMenuClick?: () => void;
   showMenuButton?: boolean;
   subscription?: Subscription;
-  onUpgrade?: (tier: string) => void;
+  onUpgradeClick?: () => void;
   countries?: Country[];
 }
 
@@ -33,13 +32,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   onMenuClick, 
   showMenuButton = false, 
   subscription,
-  onUpgrade,
+  onUpgradeClick,
   countries = []
 }) => {
   const { t } = useLanguage();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
-  const [showUpgrade, setShowUpgrade] = useState(false);
 
   // Calculate critical alerts
   const criticalAlerts = countries.filter(c => {
@@ -111,12 +109,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           )}
           
           {/* Upgrade Button for Free Users */}
-          {subscription?.tier === 'free' && onUpgrade && (
+          {subscription?.tier === 'free' && onUpgradeClick && (
             <Button 
               variant="default"
               size="sm" 
               className="gradient-success shadow-medium hover:shadow-lg transition-all hidden md:flex"
-              onClick={() => setShowUpgrade(true)}
+              onClick={onUpgradeClick}
             >
               <Zap className="h-4 w-4 mr-1" />
               <span className="font-semibold">Upgrade</span>
@@ -140,8 +138,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 <Settings className="mr-2 h-4 w-4" />
                 <span>{t('header.app_settings')}</span>
               </DropdownMenuItem>
-              {subscription && (
-                <DropdownMenuItem onClick={() => setShowUpgrade(true)}>
+              {subscription && onUpgradeClick && (
+                <DropdownMenuItem onClick={onUpgradeClick}>
                   <CreditCard className="mr-2 h-4 w-4" />
                   <span>{t('header.upgrade_plan')}</span>
                   {subscription.tier === 'free' && (
@@ -176,15 +174,6 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <DataManagement />
         </DialogContent>
       </Dialog>
-
-      {subscription && onUpgrade && (
-        <UpgradeModal
-          isOpen={showUpgrade}
-          onClose={() => setShowUpgrade(false)}
-          subscription={subscription}
-          onUpgrade={onUpgrade}
-        />
-      )}
     </header>
   );
 };
