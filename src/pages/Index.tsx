@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Globe } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import OnboardingFlow from '@/components/OnboardingFlow';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import PricingCard from '@/components/PricingCard';
 import { Country, LocationData } from '@/types/country';
@@ -15,6 +16,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
   const [showVPNModal, setShowVPNModal] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<LocationData | null>(null);
   const [vpnDuration, setVPNDuration] = useState(0);
   const [subscription, setSubscription] = useState<Subscription>({
@@ -30,6 +32,7 @@ const Index = () => {
     const savedCountries = localStorage.getItem('trackedCountries');
     const savedProfile = localStorage.getItem('userProfile');
     const savedSubscription = localStorage.getItem('subscription');
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
     
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
@@ -41,6 +44,11 @@ const Index = () => {
     
     if (savedSubscription) {
       setSubscription(JSON.parse(savedSubscription));
+    }
+
+    // Show onboarding for first-time users
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
     }
 
     // Mock VPN detection - in a real app this would use actual VPN detection
@@ -151,6 +159,10 @@ const Index = () => {
 
   return (
     <>
+      {showOnboarding && (
+        <OnboardingFlow onComplete={() => setShowOnboarding(false)} />
+      )}
+      
       <AppLayout
         countries={countries}
         onAddCountry={addCountry}

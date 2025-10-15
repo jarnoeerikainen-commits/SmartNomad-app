@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Home, 
   MapPin, 
@@ -15,11 +15,14 @@ import {
   Landmark,
   Car,
   PawPrint,
-  TrendingUp
+  TrendingUp,
+  ChevronDown,
+  DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SidebarItem {
@@ -57,24 +60,63 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onClose 
 }) => {
   const { t } = useLanguage();
-  
-  const sidebarItemsTranslated = [
-    { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
-    { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
-    { id: 'tax', label: t('nav.tax'), icon: Calculator },
-    { id: 'tax-wealthy', label: 'Tax & Wealth Management', icon: TrendingUp },
-    { id: 'visas', label: t('nav.visas'), icon: Plane },
-    { id: 'documents', label: t('nav.documents'), icon: FileText },
-    { id: 'health', label: t('nav.health'), icon: Heart },
-    { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
-    { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
-    { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
-    { id: 'money-transfers', label: 'Money Transfers', icon: CreditCard },
-    { id: 'crypto-cash', label: 'Crypto to Cash', icon: MapPin },
-    { id: 'roadside', label: 'Roadside Assistance', icon: Car },
-    { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
-    { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle, badge: '3', variant: 'destructive' as const },
-    { id: 'services', label: t('nav.services'), icon: Shield },
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['travel', 'money', 'safety']);
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => 
+      prev.includes(groupId) 
+        ? prev.filter(id => id !== groupId)
+        : [...prev, groupId]
+    );
+  };
+
+  const menuGroups = [
+    {
+      id: 'main',
+      label: 'Main',
+      items: [
+        { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
+      ]
+    },
+    {
+      id: 'travel',
+      label: 'Travel & Documents',
+      items: [
+        { id: 'tax', label: t('nav.tax'), icon: Calculator },
+        { id: 'visas', label: t('nav.visas'), icon: Plane },
+        { id: 'documents', label: t('nav.documents'), icon: FileText },
+        { id: 'health', label: t('nav.health'), icon: Heart },
+        { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
+      ]
+    },
+    {
+      id: 'money',
+      label: 'Money & Finance',
+      items: [
+        { id: 'tax-wealthy', label: 'Tax & Wealth', icon: TrendingUp },
+        { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
+        { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign },
+        { id: 'crypto-cash', label: 'Crypto to Cash', icon: MapPin },
+      ]
+    },
+    {
+      id: 'safety',
+      label: 'Safety & Emergency',
+      items: [
+        { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'roadside', label: 'Roadside Assistance', icon: Car },
+      ]
+    },
+    {
+      id: 'updates',
+      label: 'News & Services',
+      items: [
+        { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
+        { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle },
+        { id: 'services', label: t('nav.services'), icon: Shield },
+      ]
+    },
   ];
   
   return (
@@ -94,35 +136,83 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       `}>
         <div className="flex h-full flex-col">
           {/* Navigation */}
-          <nav className="flex-1 space-y-2 p-4">
-            <div className="space-y-1">
-              {sidebarItemsTranslated.map((item) => (
-                <Button
-                  key={item.id}
-                  variant={activeSection === item.id ? 'default' : 'ghost'}
-                  className={`w-full justify-start gap-3 ${
-                    activeSection === item.id 
-                      ? 'gradient-trust text-primary-foreground shadow-medium' 
-                      : 'hover:bg-accent/50'
-                  }`}
-                  onClick={() => {
-                    onSectionChange(item.id);
-                    onClose?.();
-                  }}
+          <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+            {menuGroups.map((group) => {
+              if (group.id === 'main') {
+                return (
+                  <div key={group.id} className="space-y-1 mb-4">
+                    {group.items.map((item) => (
+                      <Button
+                        key={item.id}
+                        variant={activeSection === item.id ? 'default' : 'ghost'}
+                        className={`w-full justify-start gap-3 ${
+                          activeSection === item.id 
+                            ? 'gradient-trust text-primary-foreground shadow-medium' 
+                            : 'hover:bg-accent/50'
+                        }`}
+                        onClick={() => {
+                          onSectionChange(item.id);
+                          onClose?.();
+                        }}
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span className="flex-1 text-left">{item.label}</span>
+                      </Button>
+                    ))}
+                  </div>
+                );
+              }
+
+              return (
+                <Collapsible
+                  key={group.id}
+                  open={expandedGroups.includes(group.id)}
+                  onOpenChange={() => toggleGroup(group.id)}
+                  className="space-y-1"
                 >
-                  <item.icon className="h-5 w-5" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <Badge 
-                      variant={item.variant || 'secondary'} 
-                      className="ml-auto text-xs"
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start gap-2 hover:bg-accent/50 font-medium text-xs text-muted-foreground"
                     >
-                      {item.badge}
-                    </Badge>
-                  )}
-                </Button>
-              ))}
-            </div>
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                        expandedGroups.includes(group.id) ? 'rotate-0' : '-rotate-90'
+                      }`} />
+                      {group.label}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-1 ml-2">
+                    {group.items.map((item) => (
+                      <Button
+                        key={item.id}
+                        variant={activeSection === item.id ? 'default' : 'ghost'}
+                        size="sm"
+                        className={`w-full justify-start gap-3 ${
+                          activeSection === item.id 
+                            ? 'gradient-trust text-primary-foreground shadow-medium' 
+                            : 'hover:bg-accent/50'
+                        }`}
+                        onClick={() => {
+                          onSectionChange(item.id);
+                          onClose?.();
+                        }}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span className="flex-1 text-left text-sm">{item.label}</span>
+                        {item.badge && (
+                          <Badge 
+                            variant={item.variant || 'secondary'} 
+                            className="ml-auto text-xs"
+                          >
+                            {item.badge}
+                          </Badge>
+                        )}
+                      </Button>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              );
+            })}
 
             <Separator className="my-4" />
 
@@ -131,7 +221,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <Button
                 variant="ghost"
                 className="w-full justify-start gap-3 hover:bg-accent/50"
-                onClick={() => onSectionChange('settings')}
+                onClick={() => {
+                  onSectionChange('settings');
+                  onClose?.();
+                }}
               >
                 <Settings className="h-5 w-5" />
                 <span>{t('nav.settings')}</span>
@@ -140,7 +233,10 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <Button
                 variant="ghost"
                 className="w-full justify-start gap-3 hover:bg-accent/50"
-                onClick={() => onSectionChange('help')}
+                onClick={() => {
+                  onSectionChange('help');
+                  onClose?.();
+                }}
               >
                 <HelpCircle className="h-5 w-5" />
                 <span>{t('nav.help')}</span>

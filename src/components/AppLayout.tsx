@@ -14,6 +14,8 @@ import UserProfile from './UserProfile';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
+import FloatingActionButton from './FloatingActionButton';
+import DashboardQuickStats from './DashboardQuickStats';
 import { ESimServices } from './ESimServices';
 import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
 import EmbassyDirectory from './EmbassyDirectory';
@@ -55,6 +57,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'dashboard':
         return (
           <div className="space-y-6">
+            {/* Quick Stats */}
+            <DashboardQuickStats countries={countries} />
+            
             <QuickActions 
               onAddCountry={() => setActiveSection('tax')} 
               onSectionChange={setActiveSection}
@@ -187,6 +192,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       {/* GDPR Cookie Consent */}
       <CookieConsent />
+      
+      {/* Floating Action Button */}
+      <FloatingActionButton 
+        onAction={(action) => {
+          if (action === 'add-country') setActiveSection('tax');
+          if (action === 'add-visa') setActiveSection('visas');
+          if (action === 'add-document') setActiveSection('documents');
+        }}
+      />
       
       {/* AI Travel Assistant */}
       <AITravelAssistant 

@@ -125,28 +125,33 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-40">
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full gradient-primary shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
+          className="h-16 w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
           size="lg"
         >
-          <MessageCircle className="h-6 w-6 text-primary-foreground" />
+          <div className="relative">
+            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+          </div>
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <Card className={`w-96 bg-background border shadow-xl transition-all duration-300 ${
+    <div className="fixed bottom-6 right-6 z-40">
+      <Card className={`w-96 glass-morphism shadow-large transition-all duration-300 ${
         isMinimized ? 'h-16' : 'h-[500px]'
       }`}>
-        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2">
+        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
-            <CardTitle className="text-sm font-medium">AI Travel Assistant</CardTitle>
-            <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+            <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
+              <Bot className="h-5 w-5 text-white" />
+            </div>
+            <CardTitle className="text-sm font-semibold">AI Travel Assistant</CardTitle>
+            <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
             <Button
