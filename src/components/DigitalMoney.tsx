@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ExternalLink, MapPin, Search, Coins, Landmark, Users, CreditCard, AlertCircle, Shield, Wallet, Lock, Smartphone } from 'lucide-react';
+import { ExternalLink, MapPin, Search, Coins, Landmark, Users, CreditCard, AlertCircle, Shield, Wallet, Lock, Smartphone, TrendingUp, Zap, Star } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { LocationData } from '@/types/country';
 
@@ -108,6 +108,45 @@ const DigitalMoney: React.FC<DigitalMoneyProps> = ({ currentLocation }) => {
     }
   ];
 
+  const cryptoPlatforms = [
+    {
+      name: 'Binance',
+      description: 'World\'s largest crypto exchange by trading volume',
+      type: 'Centralized Exchange',
+      features: ['600+ cryptocurrencies', 'Spot & futures trading', 'Staking & savings', 'NFT marketplace', 'Low fees (0.1%)', 'Binance Card'],
+      highlights: ['Highest liquidity', 'Advanced trading tools', 'Mobile app', 'Multiple fiat options'],
+      regions: ['Global (except USA)', 'Asia', 'Europe', 'Americas'],
+      website: 'https://www.binance.com',
+      icon: TrendingUp,
+      color: 'from-yellow-500 to-yellow-600',
+      rating: '4.5/5'
+    },
+    {
+      name: 'Crypto.com',
+      description: 'All-in-one crypto platform with Visa card rewards',
+      type: 'Centralized Exchange',
+      features: ['350+ cryptocurrencies', 'Crypto Visa card', 'Up to 8% cashback', 'Earn & staking', 'DeFi wallet', 'NFT platform'],
+      highlights: ['Best crypto card', 'CRO token rewards', 'User-friendly app', 'Sports sponsorships'],
+      regions: ['Global', 'USA', 'Europe', 'Asia', 'Australia'],
+      website: 'https://crypto.com',
+      icon: CreditCard,
+      color: 'from-blue-500 to-indigo-600',
+      rating: '4.3/5'
+    },
+    {
+      name: 'Bybit',
+      description: 'Leading derivatives exchange for crypto traders',
+      type: 'Centralized Exchange',
+      features: ['400+ cryptocurrencies', 'Derivatives trading', 'Copy trading', 'Launchpad', 'Earn products', 'Low latency'],
+      highlights: ['Best for derivatives', '100x leverage', 'Trading competitions', 'Institutional grade'],
+      regions: ['Global', 'Asia', 'Europe', 'Middle East'],
+      website: 'https://www.bybit.com',
+      icon: Zap,
+      color: 'from-orange-500 to-yellow-500',
+      rating: '4.4/5'
+    }
+  ];
+
   const coldWalletProviders = [
     {
       name: 'Tangem',
@@ -193,11 +232,134 @@ const DigitalMoney: React.FC<DigitalMoneyProps> = ({ currentLocation }) => {
       </div>
 
       <Tabs defaultValue="crypto-to-cash" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="crypto-platforms">Crypto Platforms</TabsTrigger>
           <TabsTrigger value="crypto-to-cash">Crypto to Cash</TabsTrigger>
           <TabsTrigger value="local-offices">Local Offices</TabsTrigger>
           <TabsTrigger value="cold-wallets">Cold Wallets</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="crypto-platforms" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Cryptocurrency Exchanges</CardTitle>
+              <CardDescription>
+                Trade, invest, and manage your crypto on these leading platforms
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+            {cryptoPlatforms.map((platform) => (
+              <Card key={platform.name} className="overflow-hidden">
+                <div className={`h-2 bg-gradient-to-r ${platform.color}`} />
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`rounded-lg bg-gradient-to-br ${platform.color} p-3 text-white`}>
+                        <platform.icon className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">{platform.name}</CardTitle>
+                        <CardDescription className="mt-1 flex gap-2 items-center">
+                          <Badge variant="secondary" className="text-xs">
+                            {platform.type}
+                          </Badge>
+                          <div className="flex items-center gap-1 text-xs text-yellow-500">
+                            <Star className="h-3 w-3 fill-current" />
+                            <span>{platform.rating}</span>
+                          </div>
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">{platform.description}</p>
+
+                  <div>
+                    <h4 className="mb-2 text-sm font-semibold">Key Features</h4>
+                    <ul className="space-y-1">
+                      {platform.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div className="h-1 w-1 rounded-full bg-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="mb-2 text-sm font-semibold">Highlights</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {platform.highlights.map((highlight) => (
+                        <Badge key={highlight} variant="outline" className="text-xs">
+                          {highlight}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="mb-2 text-sm font-semibold">Available Regions</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {platform.regions.map((region) => (
+                        <Badge key={region} variant="secondary" className="text-xs">
+                          {region}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button asChild className="w-full">
+                    <a href={platform.website} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Visit {platform.name}
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Choosing a Crypto Exchange</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2">
+                  <Shield className="mt-1 h-4 w-4 text-blue-500 flex-shrink-0" />
+                  <div>
+                    <span className="text-sm font-medium">Security & Regulation</span>
+                    <p className="text-sm text-muted-foreground">Check if the exchange is licensed in your region and has strong security measures</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Coins className="mt-1 h-4 w-4 text-green-500 flex-shrink-0" />
+                  <div>
+                    <span className="text-sm font-medium">Fees & Costs</span>
+                    <p className="text-sm text-muted-foreground">Compare trading fees, withdrawal fees, and spread costs</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <TrendingUp className="mt-1 h-4 w-4 text-purple-500 flex-shrink-0" />
+                  <div>
+                    <span className="text-sm font-medium">Available Assets</span>
+                    <p className="text-sm text-muted-foreground">Ensure the exchange supports the cryptocurrencies you want to trade</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <Smartphone className="mt-1 h-4 w-4 text-orange-500 flex-shrink-0" />
+                  <div>
+                    <span className="text-sm font-medium">User Experience</span>
+                    <p className="text-sm text-muted-foreground">Look for intuitive interfaces and good mobile app support</p>
+                  </div>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="crypto-to-cash" className="space-y-6">
           <Alert>
