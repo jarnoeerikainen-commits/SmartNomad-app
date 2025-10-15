@@ -23,7 +23,7 @@ import EmergencyCardNumbers from './EmergencyCardNumbers';
 import EmergencyContacts from './EmergencyContacts';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
-import CryptoToCash from './CryptoToCash';
+import DigitalMoney from './DigitalMoney';
 import RoadsideAssistance from './RoadsideAssistance';
 import PetServices from './PetServices';
 import TaxWealthyHelp from './TaxWealthyHelp';
@@ -150,7 +150,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <MoneyTransfers currentLocation={detectedLocation} />;
       
       case 'crypto-cash':
-        return <CryptoToCash currentLocation={detectedLocation} />;
+        return <DigitalMoney currentLocation={detectedLocation} />;
       
       case 'roadside':
         return <RoadsideAssistance currentLocation={detectedLocation} />;

@@ -19,7 +19,8 @@ import {
   ChevronDown,
   DollarSign,
   Mail,
-  Globe
+  Globe,
+  Coins
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -99,7 +100,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'tax-wealthy', label: 'Tax & Wealth', icon: TrendingUp },
         { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
         { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign },
-        { id: 'crypto-cash', label: 'Crypto to Cash', icon: MapPin },
+        { id: 'crypto-cash', label: 'Digital Money', icon: Coins },
       ]
     },
     {
