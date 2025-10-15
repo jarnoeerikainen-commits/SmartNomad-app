@@ -403,12 +403,28 @@ export const InvestorDocument = () => {
                 <span className="font-semibold">$5,000</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">Cold Wallet Affiliates (Tangem, Trezor, Ledger)</span>
+                <span className="font-semibold">$2,500</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">Crypto Platform Affiliates (Binance, Crypto.com, Bybit)</span>
+                <span className="font-semibold">$3,500</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">VPN & Email Service Affiliates</span>
+                <span className="font-semibold">$2,000</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
+                <span className="text-muted-foreground">Google Ads (Free Users)</span>
+                <span className="font-semibold">$8,500</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
                 <span className="text-muted-foreground">Premium Features (One-time purchases)</span>
                 <span className="font-semibold">$3,000</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="font-semibold">Subtotal</span>
-                <span className="font-bold text-primary">$8,000</span>
+                <span className="font-bold text-primary">$24,500</span>
               </div>
             </div>
           </div>
@@ -419,24 +435,24 @@ export const InvestorDocument = () => {
           <div className="bg-primary/10 p-6 rounded-lg space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-xl font-bold">TOTAL MONTHLY REVENUE</span>
-              <span className="text-3xl font-bold text-primary">$82,925</span>
+              <span className="text-3xl font-bold text-primary">$99,425</span>
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-primary/20">
               <span className="text-xl font-bold">MONTHLY PROFIT</span>
-              <span className="text-3xl font-bold text-green-600">$77,675</span>
+              <span className="text-3xl font-bold text-green-600">$94,175</span>
             </div>
             <div className="text-sm text-muted-foreground space-y-1 pt-2">
               <div className="flex justify-between">
                 <span>Annual Revenue:</span>
-                <span className="font-semibold">$995,100</span>
+                <span className="font-semibold">$1,193,100</span>
               </div>
               <div className="flex justify-between">
                 <span>Annual Profit:</span>
-                <span className="font-semibold text-green-600">$932,100</span>
+                <span className="font-semibold text-green-600">$1,130,100</span>
               </div>
               <div className="flex justify-between pt-2 border-t">
                 <span>Profit Margin:</span>
-                <span className="font-bold text-green-600">93.7%</span>
+                <span className="font-bold text-green-600">94.7%</span>
               </div>
             </div>
           </div>
@@ -458,7 +474,7 @@ export const InvestorDocument = () => {
             </div>
             <div className="bg-muted/50 p-6 rounded-lg">
               <div className="text-sm text-muted-foreground mb-2">Monthly Profit @ 250K Users</div>
-              <div className="text-3xl font-bold text-green-600">$77,675</div>
+              <div className="text-3xl font-bold text-green-600">$94,175</div>
             </div>
           </div>
 
@@ -469,15 +485,15 @@ export const InvestorDocument = () => {
             <div className="space-y-3 ml-7">
               <div className="flex justify-between items-center py-3 border-b">
                 <span className="text-muted-foreground">Break-even (at 250K users)</span>
-                <span className="font-bold text-primary">0.64 months (~19 days)</span>
+                <span className="font-bold text-primary">0.53 months (~16 days)</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b">
                 <span className="text-muted-foreground">Year 1 Profit (after initial investment)</span>
-                <span className="font-bold text-green-600">$882,100</span>
+                <span className="font-bold text-green-600">$1,080,100</span>
               </div>
               <div className="flex justify-between items-center py-3 border-b">
                 <span className="text-muted-foreground">ROI Year 1</span>
-                <span className="font-bold text-green-600">1,764%</span>
+                <span className="font-bold text-green-600">2,160%</span>
               </div>
             </div>
           </div>
@@ -651,12 +667,16 @@ export const InvestorDocument = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
-                    <p className="text-xl font-bold">$150,000/year</p>
+                    <p className="text-xl font-bold">$240,000/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Google Ads Revenue</p>
+                    <p className="text-xl font-bold">$60,000/year</p>
                   </div>
                 </div>
                 <div className="pt-2 border-t mt-4">
                   <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
-                  <p className="text-2xl font-bold text-primary">$268,800</p>
+                  <p className="text-2xl font-bold text-primary">$418,800</p>
                 </div>
               </div>
             </Card>
@@ -682,12 +702,16 @@ export const InvestorDocument = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
-                    <p className="text-xl font-bold">$600,000/year</p>
+                    <p className="text-xl font-bold">$960,000/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Google Ads Revenue</p>
+                    <p className="text-xl font-bold">$360,000/year</p>
                   </div>
                 </div>
                 <div className="pt-2 border-t mt-4">
                   <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
-                  <p className="text-2xl font-bold text-primary">$1,075,200</p>
+                  <p className="text-2xl font-bold text-primary">$1,795,200</p>
                 </div>
               </div>
             </Card>
@@ -713,12 +737,16 @@ export const InvestorDocument = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Affiliate Revenue</p>
-                    <p className="text-xl font-bold">$2,000,000/year</p>
+                    <p className="text-xl font-bold">$3,400,000/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Google Ads Revenue</p>
+                    <p className="text-xl font-bold">$1,200,000/year</p>
                   </div>
                 </div>
                 <div className="pt-2 border-t mt-4">
                   <p className="text-sm text-muted-foreground">Total Annual Revenue</p>
-                  <p className="text-2xl font-bold text-primary">$3,188,000</p>
+                  <p className="text-2xl font-bold text-primary">$5,788,000</p>
                 </div>
                 <div className="pt-2 border-t mt-4">
                   <p className="text-sm text-muted-foreground">Conversion Rate</p>
@@ -728,37 +756,77 @@ export const InvestorDocument = () => {
             </Card>
           </div>
 
-          {/* Affiliate Revenue Breakdown */}
+          {/* Revenue Breakdown */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">Year 3 Affiliate Revenue Streams</h3>
-            <div className="grid gap-3">
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Flight Booking Commissions (0.5% avg)</span>
-                <span className="font-bold">$600,000</span>
+            <h3 className="text-xl font-semibold">Year 3 Revenue Breakdown</h3>
+            
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold mb-3">Affiliate Revenue Streams</h4>
+              <div className="grid gap-3">
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Flight Booking Commissions (0.5% avg)</span>
+                  <span className="font-bold">$600,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Accommodation Bookings (3% avg)</span>
+                  <span className="font-bold">$750,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Travel Insurance Referrals</span>
+                  <span className="font-bold">$300,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>eSIM & Digital Services</span>
+                  <span className="font-bold">$200,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Cold Wallet Affiliates (Tangem, Trezor, Ledger)</span>
+                  <span className="font-bold">$450,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Crypto Platform Affiliates (Binance, Crypto.com, Bybit)</span>
+                  <span className="font-bold">$800,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>VPN & Email Service Affiliates</span>
+                  <span className="font-bold">$250,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Currency Exchange & Banking</span>
+                  <span className="font-bold">$50,000</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border-2 border-primary">
+                  <span className="font-semibold">Total Affiliate Revenue</span>
+                  <span className="font-bold text-xl">$3,400,000</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Accommodation Bookings (3% avg)</span>
-                <span className="font-bold">$750,000</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Travel Insurance Referrals</span>
-                <span className="font-bold">$300,000</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>eSIM & Digital Services</span>
-                <span className="font-bold">$200,000</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>VPN & Security Services</span>
-                <span className="font-bold">$100,000</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Currency Exchange & Banking</span>
-                <span className="font-bold">$50,000</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border-2 border-primary">
-                <span className="font-semibold">Total Affiliate Revenue</span>
-                <span className="font-bold text-xl">$2,000,000</span>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold mb-3">Google Ads Revenue (Free Users)</h4>
+              <div className="grid gap-3">
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-muted-foreground">Free Users Base</span>
+                    <span className="font-semibold">10,000,000</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-muted-foreground">Avg. Monthly Ad Impressions/User</span>
+                    <span className="font-semibold">20</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-muted-foreground">Effective CPM (Cost per 1000 impressions)</span>
+                    <span className="font-semibold">$0.50</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t">
+                    <span className="font-semibold">Monthly Ad Revenue</span>
+                    <span className="font-bold">$100,000</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border-2 border-primary">
+                  <span className="font-semibold">Annual Google Ads Revenue</span>
+                  <span className="font-bold text-xl">$1,200,000</span>
+                </div>
               </div>
             </div>
           </div>
