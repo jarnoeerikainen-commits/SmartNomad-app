@@ -94,6 +94,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'visas', label: t('nav.visas'), icon: Plane },
         { id: 'documents', label: t('nav.documents'), icon: FileText },
         { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
+        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
         { id: 'health', label: t('nav.health'), icon: Heart },
         { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]

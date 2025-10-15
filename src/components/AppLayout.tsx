@@ -30,6 +30,7 @@ import RoadsideAssistance from './RoadsideAssistance';
 import PetServices from './PetServices';
 import TaxWealthyHelp from './TaxWealthyHelp';
 import VPNEmailServices from './VPNEmailServices';
+import TravelInsurance from './TravelInsurance';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -127,6 +128,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'vpn-email':
         return <VPNEmailServices />;
+      
+      case 'travel-insurance':
+        return <TravelInsurance />;
       
       case 'health':
         return (
