@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { 
   FileText, 
   Plus, 
@@ -16,10 +18,14 @@ import {
   Bell,
   Car,
   Globe,
-  X
+  X,
+  Check,
+  ChevronsUpDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ALL_COUNTRIES } from '@/data/countries';
+import { cn } from '@/lib/utils';
 
 interface Document {
   id: string;
@@ -32,14 +38,11 @@ interface Document {
   notes?: string;
 }
 
-const COUNTRIES = [
-  'United States', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands',
-  'Canada', 'Australia', 'New Zealand', 'Japan', 'South Korea', 'Singapore', 'China',
-  'India', 'Brazil', 'Mexico', 'Argentina', 'Chile', 'Sweden', 'Norway', 'Denmark',
-  'Finland', 'Switzerland', 'Austria', 'Belgium', 'Ireland', 'Portugal', 'Greece',
-  'Poland', 'Czech Republic', 'Hungary', 'Croatia', 'Slovenia', 'Estonia', 'Latvia',
-  'Lithuania', 'Luxembourg', 'Malta', 'Cyprus', 'Bulgaria', 'Romania', 'Slovakia'
-];
+// Use all countries from the data file, sorted alphabetically
+const COUNTRIES = ALL_COUNTRIES.map(c => ({
+  value: c.name,
+  label: `${c.flag} ${c.name}`
+})).sort((a, b) => a.value.localeCompare(b.value));
 
 const LICENSE_CLASSES = [
   'Class A (Commercial)', 'Class B (Commercial)', 'Class C (Regular)', 'Class D (Motorcycle)',
@@ -51,6 +54,7 @@ export const DocumentTracker: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedDocumentType, setSelectedDocumentType] = useState<'passport' | 'license'>('passport');
+  const [countrySearchOpen, setCountrySearchOpen] = useState(false);
   const [documentForm, setDocumentForm] = useState({
     country: '',
     issueDate: '',
@@ -317,20 +321,50 @@ export const DocumentTracker: React.FC = () => {
           <div className="space-y-4">
             <div>
               <Label>{t('doc.country_state')} *</Label>
-                <Select 
-                  value={documentForm.country} 
-                  onValueChange={(value) => setDocumentForm(prev => ({ ...prev, country: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select country/state..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COUNTRIES.map(country => (
-                      <SelectItem key={country} value={country}>{country}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Popover open={countrySearchOpen} onOpenChange={setCountrySearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={countrySearchOpen}
+                    className="w-full justify-between"
+                  >
+                    {documentForm.country
+                      ? COUNTRIES.find((country) => country.value === documentForm.country)?.label
+                      : "Select country..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search country..." />
+                    <CommandList>
+                      <CommandEmpty>No country found.</CommandEmpty>
+                      <CommandGroup>
+                        {COUNTRIES.map((country) => (
+                          <CommandItem
+                            key={country.value}
+                            value={country.value}
+                            onSelect={(currentValue) => {
+                              setDocumentForm(prev => ({ ...prev, country: currentValue }));
+                              setCountrySearchOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                documentForm.country === country.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {country.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
 
               {selectedDocumentType === 'license' && (
                 <div>
