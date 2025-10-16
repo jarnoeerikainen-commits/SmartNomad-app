@@ -71,7 +71,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['travel', 'money', 'safety']);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'travel']);
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => 
@@ -90,23 +90,36 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       ]
     },
     {
-      id: 'travel',
-      label: 'Travel & Documents',
+      id: 'safety',
+      label: 'Quick Access & Safety',
       items: [
-        { id: 'tax', label: t('nav.tax'), icon: Calculator },
-        { id: 'visas', label: t('nav.visas'), icon: Plane },
+        { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },
+        { id: 'roadside', label: 'Roadside Assistance', icon: Car },
+      ]
+    },
+    {
+      id: 'travel',
+      label: 'Travel & Compliance',
+      items: [
+        { id: 'tax', label: 'Tax & Compliance', icon: Calculator },
+        { id: 'visas', label: 'Visa Manager', icon: Plane },
+        { id: 'documents', label: 'Documents', icon: FileText },
+        { id: 'health', label: 'Health & Vaccines', icon: Heart },
+      ]
+    },
+    {
+      id: 'transportation',
+      label: 'Transportation',
+      items: [
         { id: 'public-transport', label: 'Public Transport', icon: Bus },
         { id: 'taxis', label: 'Taxis & Rides', icon: Car },
-        { id: 'documents', label: t('nav.documents'), icon: FileText },
-        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
-        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
-        { id: 'health', label: t('nav.health'), icon: Heart },
-        { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]
     },
     {
       id: 'money',
-      label: 'Money & Finance',
+      label: 'Financial Management',
       items: [
         { id: 'tax-wealthy', label: 'Tax & Wealth', icon: TrendingUp },
         { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
@@ -115,22 +128,21 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       ]
     },
     {
-      id: 'safety',
-      label: 'Safety & Emergency',
+      id: 'services',
+      label: 'Travel Services',
       items: [
-        { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
-        { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
-        { id: 'roadside', label: 'Roadside Assistance', icon: Car },
+        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
+        { id: 'services', label: 'Travel Services', icon: Globe },
+        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
+        { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]
     },
     {
-      id: 'updates',
-      label: 'News & Services',
+      id: 'community',
+      label: 'Community & Learning',
       items: [
-        { id: 'news', label: t('nav.news'), icon: Newspaper, badge: 'NEW' },
-        { id: 'alerts', label: t('nav.alerts'), icon: AlertTriangle },
-        { id: 'services', label: t('nav.services'), icon: Shield },
         { id: 'students', label: 'Students', icon: GraduationCap, badge: 'NEW' },
+        { id: 'news', label: 'Travel News', icon: Newspaper },
       ]
     },
   ];
