@@ -190,7 +190,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <RoadsideAssistance currentLocation={detectedLocation} />;
       
       case 'students':
-        return <Students />;
+        return <Students currentLocation={detectedLocation} />;
       
       case 'local-nomads':
         return <LocalNomads currentLocation={detectedLocation} />;
