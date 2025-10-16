@@ -23,7 +23,8 @@ import {
   Coins,
   Bus,
   Gift,
-  GraduationCap
+  GraduationCap,
+  Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -141,7 +142,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'community',
       label: 'Community & Learning',
       items: [
-        { id: 'students', label: 'Students', icon: GraduationCap, badge: 'NEW' },
+        { id: 'local-nomads', label: 'Local Nomads', icon: Users, badge: 'NEW' },
+        { id: 'students', label: 'Students', icon: GraduationCap },
         { id: 'news', label: 'Travel News', icon: Newspaper },
       ]
     },

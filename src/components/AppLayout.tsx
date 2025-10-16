@@ -34,6 +34,7 @@ import TravelInsurance from './TravelInsurance';
 import PublicTransport from './PublicTransport';
 import TaxiServices from './TaxiServices';
 import Students from './Students';
+import LocalNomads from './LocalNomads';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -190,6 +191,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'students':
         return <Students />;
+      
+      case 'local-nomads':
+        return <LocalNomads currentLocation={detectedLocation} />;
       
       case 'settings':
         return <UserProfile subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
