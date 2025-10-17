@@ -100,6 +100,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
         { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },
+        { id: 'location-tracking', label: 'Location Tracking', icon: MapPin, badge: 'NEW' },
         { id: 'super-offers', label: 'Super Offers', icon: Tag, badge: 'HOT', variant: 'secondary' as const },
         { id: 'roadside', label: 'Roadside Assistance', icon: Car },
       ]

@@ -38,6 +38,7 @@ import Students from './Students';
 import LocalNomads from './LocalNomads';
 import ExploreLocalLife from './ExploreLocalLife';
 import SuperOffers from './SuperOffers';
+import LocationTrackingServices from './LocationTrackingServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -175,6 +176,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             onProfileFormClick={() => setShowProfileForm(true)}
           />
         );
+      
+      case 'location-tracking':
+        return <LocationTrackingServices />;
       
       case 'services':
         return <TravelServices currentLocation={detectedLocation} />;
