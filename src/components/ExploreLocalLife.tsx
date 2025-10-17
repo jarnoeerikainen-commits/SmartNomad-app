@@ -40,7 +40,13 @@ import {
   Phone,
   Globe,
   User,
-  X
+  X,
+  Bike,
+  Car,
+  Flame,
+  Flag,
+  Target,
+  Zap
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { format, addDays, addWeeks, addMonths, isBefore, startOfDay, parseISO, isAfter } from 'date-fns';
@@ -61,7 +67,9 @@ interface LocalEvent {
   name: string;
   category: 'farmers-market' | 'business' | 'sports' | 'tournament' | 'gameday' | 
             'cultural' | 'workshop' | 'food' | 'wellness' | 'nightlife' | 
-            'networking' | 'art' | 'music' | 'outdoor' | 'tech';
+            'networking' | 'art' | 'music' | 'outdoor' | 'tech' | 
+            'soccer' | 'nba' | 'american-football' | 'cricket' | 'rugby' | 
+            'basketball' | 'cycling' | 'triathlon' | 'motorsports' | 'fighting';
   city: string;
   country: string;
   location: string;
@@ -78,10 +86,12 @@ interface LocalEvent {
   // New detailed fields
   website?: string;
   registrationUrl?: string;
+  ticketUrl?: string;
   organizer: string;
   contactEmail?: string;
   contactPhone?: string;
   address: string;
+  venue?: string;
   capacity?: number;
   attendees?: number;
   requirements?: string[];
@@ -635,6 +645,332 @@ const generateMockEvents = (): LocalEvent[] => {
     }
   });
 
+  // Add major professional sporting events
+  const professionalSportingEvents: LocalEvent[] = [
+    // FIFA World Cup 2026
+    {
+      id: `event-pro-1`,
+      name: 'FIFA World Cup 2026',
+      category: 'soccer',
+      city: 'Multiple Cities',
+      country: 'USA, Canada, Mexico',
+      location: 'Various Stadiums',
+      venue: 'Multiple Venues',
+      startDate: '2026-06-11',
+      endDate: '2026-07-19',
+      time: 'Various Times',
+      description: 'The biggest soccer tournament in the world. Watch the best national teams compete for glory across North America.',
+      isFree: false,
+      fee: '$200-2000',
+      verified: true,
+      tags: ['soccer', 'world cup', 'international', 'professional'],
+      priceRange: 'premium',
+      organizer: 'FIFA',
+      address: 'Multiple Stadiums across USA, Canada, and Mexico',
+      website: 'https://www.fifa.com/fifaplus/en/tournaments/mens/worldcup/canadamexicousa2026',
+      ticketUrl: 'https://fifaworldcup26.hospitality.fifa.com/us/en',
+      contactEmail: 'tickets@fifa.com',
+      capacity: 50000,
+      ageRestriction: 'All ages',
+      accessibility: 'Full wheelchair access at all venues'
+    },
+    // Super Bowl LX
+    {
+      id: `event-pro-2`,
+      name: 'Super Bowl LX',
+      category: 'american-football',
+      city: 'San Francisco',
+      country: 'USA',
+      location: 'Levi\'s Stadium',
+      venue: 'Levi\'s Stadium',
+      startDate: '2026-02-08',
+      time: '15:30 PST',
+      description: 'The championship game of the NFL. Experience the ultimate American sports spectacle with halftime show.',
+      isFree: false,
+      fee: '$5000-50000',
+      verified: true,
+      tags: ['nfl', 'super bowl', 'american football', 'championship'],
+      priceRange: 'premium',
+      organizer: 'NFL',
+      address: '4900 Marie P DeBartolo Way, Santa Clara, CA 95054',
+      website: 'https://www.nfl.com/super-bowl',
+      ticketUrl: 'https://onlocationexp.com/nfl/super-bowl-tickets',
+      contactEmail: 'superbowl@nfl.com',
+      capacity: 68500,
+      ageRestriction: 'All ages',
+      accessibility: 'Full ADA compliance'
+    },
+    // NBA Finals 2026
+    {
+      id: `event-pro-3`,
+      name: 'NBA Finals 2026',
+      category: 'nba',
+      city: 'TBD',
+      country: 'USA',
+      location: 'TBD Based on Teams',
+      venue: 'NBA Arena',
+      startDate: '2026-06-01',
+      endDate: '2026-06-21',
+      time: '17:00-21:00 ET',
+      description: 'The championship series of the NBA. Watch the best basketball players compete for the Larry O\'Brien Trophy.',
+      isFree: false,
+      fee: '$500-10000',
+      verified: true,
+      tags: ['nba', 'basketball', 'finals', 'championship'],
+      priceRange: 'premium',
+      organizer: 'NBA',
+      address: 'Various NBA Arenas',
+      website: 'https://www.nba.com/finals',
+      ticketUrl: 'https://www.nba.com/tickets',
+      contactEmail: 'tickets@nba.com',
+      capacity: 20000,
+      ageRestriction: 'All ages',
+      accessibility: 'Wheelchair accessible'
+    },
+    // NCAA Men's Final Four 2026
+    {
+      id: `event-pro-4`,
+      name: 'NCAA Men\'s Final Four',
+      category: 'basketball',
+      city: 'Indianapolis',
+      country: 'USA',
+      location: 'Lucas Oil Stadium',
+      venue: 'Lucas Oil Stadium',
+      startDate: '2026-04-04',
+      endDate: '2026-04-06',
+      time: 'Various',
+      description: 'College basketball\'s premier event. Watch the nation\'s best college teams battle for the championship.',
+      isFree: false,
+      fee: '$300-2000',
+      verified: true,
+      tags: ['ncaa', 'basketball', 'college', 'tournament'],
+      priceRange: 'premium',
+      organizer: 'NCAA',
+      address: '500 S Capitol Ave, Indianapolis, IN 46225',
+      website: 'https://www.ncaa.com/final-four',
+      ticketUrl: 'https://onlocationexp.com/ncaa/mens-final-four-tickets',
+      contactEmail: 'finalfour@ncaa.com',
+      capacity: 70000,
+      ageRestriction: 'All ages',
+      accessibility: 'Full accessibility'
+    },
+    // UFC 322
+    {
+      id: `event-pro-5`,
+      name: 'UFC 322: Della Maddalena vs Makhachev',
+      category: 'fighting',
+      city: 'New York City',
+      country: 'USA',
+      location: 'Madison Square Garden',
+      venue: 'Madison Square Garden',
+      startDate: '2025-11-15',
+      time: '19:00 ET',
+      description: 'Elite mixed martial arts action featuring top UFC fighters in an epic showdown.',
+      isFree: false,
+      fee: '$200-3000',
+      verified: true,
+      tags: ['ufc', 'mma', 'fighting', 'combat sports'],
+      priceRange: 'premium',
+      organizer: 'UFC',
+      address: '4 Pennsylvania Plaza, New York, NY 10001',
+      website: 'https://www.ufc.com',
+      ticketUrl: 'https://ufcvip.com/d/ufc-322-tickets',
+      contactEmail: 'tickets@ufc.com',
+      capacity: 20789,
+      ageRestriction: '18+',
+      accessibility: 'Wheelchair accessible seating available'
+    },
+    // Tour de France 2026
+    {
+      id: `event-pro-6`,
+      name: 'Tour de France 2026',
+      category: 'cycling',
+      city: 'Multiple Cities',
+      country: 'France',
+      location: 'Various Routes',
+      venue: 'Across France',
+      startDate: '2026-07-04',
+      endDate: '2026-07-26',
+      time: 'Daytime',
+      description: 'The world\'s most prestigious cycling race. Follow the peloton through beautiful French countryside.',
+      isFree: true,
+      verified: true,
+      tags: ['cycling', 'tour de france', 'racing', 'endurance'],
+      priceRange: 'free',
+      organizer: 'ASO',
+      address: 'Various locations across France',
+      website: 'https://www.letour.fr',
+      ticketUrl: 'https://www.letour.fr/en/tickets',
+      contactEmail: 'info@letour.fr',
+      ageRestriction: 'All ages',
+      accessibility: 'Viewing areas vary by location',
+      whatToBring: ['Sun protection', 'Water', 'Comfortable shoes']
+    },
+    // NASCAR Cup Series Championship
+    {
+      id: `event-pro-7`,
+      name: 'NASCAR Cup Series Championship Race',
+      category: 'motorsports',
+      city: 'Phoenix',
+      country: 'USA',
+      location: 'Phoenix Raceway',
+      venue: 'Phoenix Raceway',
+      startDate: '2025-11-02',
+      time: '15:00 MST',
+      description: 'The final race of the NASCAR season. Watch stock car racing\'s best compete for the championship.',
+      isFree: false,
+      fee: '$150-1000',
+      verified: true,
+      tags: ['nascar', 'racing', 'motorsports', 'championship'],
+      priceRange: 'premium',
+      organizer: 'NASCAR',
+      address: '7602 S Avondale Blvd, Avondale, AZ 85323',
+      website: 'https://www.nascar.com',
+      ticketUrl: 'https://onlocationexp.com/nascar/phoenix-fall-race-tickets',
+      contactEmail: 'tickets@nascar.com',
+      capacity: 42000,
+      ageRestriction: 'All ages',
+      accessibility: 'ADA accessible',
+      whatToBring: ['Ear protection', 'Sunscreen', 'Hat']
+    },
+    // Rugby World Cup 2027
+    {
+      id: `event-pro-8`,
+      name: 'Rugby World Cup 2027',
+      category: 'rugby',
+      city: 'Multiple Cities',
+      country: 'Australia',
+      location: 'Various Stadiums',
+      venue: 'Multiple Venues',
+      startDate: '2027-09-08',
+      endDate: '2027-10-20',
+      time: 'Various',
+      description: 'The pinnacle of international rugby. Watch the world\'s best rugby nations battle for the Webb Ellis Cup.',
+      isFree: false,
+      fee: '$100-1500',
+      verified: true,
+      tags: ['rugby', 'world cup', 'international', 'tournament'],
+      priceRange: 'premium',
+      organizer: 'World Rugby',
+      address: 'Various stadiums across Australia',
+      website: 'https://www.rugbyworldcup.com',
+      ticketUrl: 'https://www.rugbyworldcup.com/tickets',
+      contactEmail: 'tickets@worldrugby.org',
+      capacity: 50000,
+      ageRestriction: 'All ages',
+      accessibility: 'Wheelchair accessible at all venues'
+    },
+    // ICC Cricket World Cup
+    {
+      id: `event-pro-9`,
+      name: 'ICC Cricket World Cup',
+      category: 'cricket',
+      city: 'Multiple Cities',
+      country: 'India & Pakistan',
+      location: 'Various Stadiums',
+      venue: 'Multiple Cricket Grounds',
+      startDate: '2027-10-01',
+      endDate: '2027-11-19',
+      time: 'Various',
+      description: 'The premier international cricket championship. Watch the world\'s best cricket teams compete.',
+      isFree: false,
+      fee: '$50-800',
+      verified: true,
+      tags: ['cricket', 'world cup', 'international', 'tournament'],
+      priceRange: 'premium',
+      organizer: 'ICC',
+      address: 'Various cricket grounds across India & Pakistan',
+      website: 'https://www.icc-cricket.com',
+      ticketUrl: 'https://www.icc-cricket.com/tickets',
+      contactEmail: 'tickets@icc-cricket.com',
+      capacity: 40000,
+      ageRestriction: 'All ages',
+      accessibility: 'Wheelchair accessible seating'
+    },
+    // Ironman World Championship
+    {
+      id: `event-pro-10`,
+      name: 'Ironman World Championship',
+      category: 'triathlon',
+      city: 'Kona',
+      country: 'USA',
+      location: 'Kailua-Kona, Hawaii',
+      venue: 'Kailua-Kona',
+      startDate: '2026-10-10',
+      time: '06:30 HST',
+      description: 'The ultimate triathlon challenge. Watch elite athletes swim 2.4mi, bike 112mi, and run 26.2mi.',
+      isFree: true,
+      verified: true,
+      tags: ['triathlon', 'ironman', 'endurance', 'hawaii'],
+      priceRange: 'free',
+      organizer: 'Ironman',
+      address: 'Kailua-Kona, Big Island, Hawaii',
+      website: 'https://www.ironman.com/im-world-championship',
+      ticketUrl: 'https://www.ironman.com/im-world-championship',
+      contactEmail: 'info@ironman.com',
+      ageRestriction: 'All ages welcome to watch',
+      accessibility: 'Various viewing points',
+      whatToBring: ['Sun protection', 'Water', 'Comfortable walking shoes', 'Snacks']
+    },
+    // Premier League - Multiple Games
+    {
+      id: `event-pro-11`,
+      name: 'Premier League Match Day',
+      category: 'soccer',
+      city: 'London',
+      country: 'UK',
+      location: 'Various London Stadiums',
+      venue: 'Premier League Stadiums',
+      startDate: '2025-11-01',
+      endDate: '2026-05-23',
+      time: 'Various Times',
+      description: 'Experience the world\'s most exciting soccer league. Multiple matches every weekend across London.',
+      isFree: false,
+      fee: '$50-300',
+      verified: true,
+      recurring: 'weekly',
+      tags: ['soccer', 'premier league', 'football', 'UK'],
+      priceRange: 'moderate',
+      organizer: 'Premier League',
+      address: 'Various Premier League Stadiums in London',
+      website: 'https://www.premierleague.com',
+      ticketUrl: 'https://www.premierleague.com/tickets',
+      contactEmail: 'tickets@premierleague.com',
+      capacity: 60000,
+      ageRestriction: 'All ages',
+      accessibility: 'All stadiums wheelchair accessible'
+    },
+    // La Liga
+    {
+      id: `event-pro-12`,
+      name: 'La Liga: Real Madrid vs Barcelona',
+      category: 'soccer',
+      city: 'Madrid',
+      country: 'Spain',
+      location: 'Santiago Bernabéu Stadium',
+      venue: 'Santiago Bernabéu Stadium',
+      startDate: '2026-03-21',
+      time: '21:00 CET',
+      description: 'El Clásico - The biggest rivalry in world soccer. Experience the passion of Spanish football.',
+      isFree: false,
+      fee: '$200-1500',
+      verified: true,
+      tags: ['soccer', 'la liga', 'el clasico', 'spain'],
+      priceRange: 'premium',
+      organizer: 'La Liga',
+      address: 'Av. de Concha Espina, 1, 28036 Madrid, Spain',
+      website: 'https://www.laliga.com',
+      ticketUrl: 'https://www.realmadrid.com/en/tickets',
+      contactEmail: 'tickets@laliga.es',
+      capacity: 81044,
+      ageRestriction: 'All ages',
+      accessibility: 'Wheelchair accessible'
+    }
+  ];
+
+  // Combine all events
+  events.push(...professionalSportingEvents);
+
   return events;
 };
 
@@ -730,6 +1066,66 @@ const categoryConfig = {
     icon: Wrench,
     color: 'text-sky-600 dark:text-sky-400',
     bgColor: 'bg-sky-500/10 border-sky-500/20'
+  },
+  'soccer': {
+    label: 'Soccer',
+    icon: Trophy,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-500/10 border-emerald-500/20'
+  },
+  'nba': {
+    label: 'NBA Basketball',
+    icon: Target,
+    color: 'text-orange-600 dark:text-orange-400',
+    bgColor: 'bg-orange-500/10 border-orange-500/20'
+  },
+  'american-football': {
+    label: 'American Football',
+    icon: Flag,
+    color: 'text-red-700 dark:text-red-500',
+    bgColor: 'bg-red-500/10 border-red-500/20'
+  },
+  'cricket': {
+    label: 'Cricket',
+    icon: Trophy,
+    color: 'text-green-700 dark:text-green-500',
+    bgColor: 'bg-green-500/10 border-green-500/20'
+  },
+  'rugby': {
+    label: 'Rugby',
+    icon: Flame,
+    color: 'text-slate-700 dark:text-slate-400',
+    bgColor: 'bg-slate-500/10 border-slate-500/20'
+  },
+  'basketball': {
+    label: 'Basketball',
+    icon: Target,
+    color: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-500/10 border-amber-500/20'
+  },
+  'cycling': {
+    label: 'Cycling & Races',
+    icon: Bike,
+    color: 'text-blue-700 dark:text-blue-500',
+    bgColor: 'bg-blue-500/10 border-blue-500/20'
+  },
+  'triathlon': {
+    label: 'Triathlon',
+    icon: Zap,
+    color: 'text-purple-700 dark:text-purple-500',
+    bgColor: 'bg-purple-500/10 border-purple-500/20'
+  },
+  'motorsports': {
+    label: 'Motorsports',
+    icon: Car,
+    color: 'text-red-600 dark:text-red-400',
+    bgColor: 'bg-red-500/10 border-red-500/20'
+  },
+  'fighting': {
+    label: 'UFC & Fighting',
+    icon: Flame,
+    color: 'text-orange-700 dark:text-orange-500',
+    bgColor: 'bg-orange-500/10 border-orange-500/20'
   }
 };
 
@@ -1097,7 +1493,9 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                     
                     <div className="flex items-start gap-2 text-sm">
                       <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                      <span className="line-clamp-1">{event.location}</span>
+                      <div className="flex-1">
+                        <span className="line-clamp-1">{event.venue || event.location}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -1112,17 +1510,32 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 pt-2">
-                    {event.isFree ? (
-                      <Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
-                        <Heart className="h-3 w-3 mr-1" />
-                        Free Entry
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
-                        <DollarSign className="h-3 w-3 mr-1" />
-                        {event.fee}
-                      </Badge>
+                  <div className="flex items-center justify-between gap-2 pt-2 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      {event.isFree ? (
+                        <Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
+                          <Heart className="h-3 w-3 mr-1" />
+                          Free Entry
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
+                          <DollarSign className="h-3 w-3 mr-1" />
+                          {event.fee}
+                        </Badge>
+                      )}
+                    </div>
+                    {event.ticketUrl && (
+                      <Button 
+                        size="sm" 
+                        variant="default"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(event.ticketUrl, '_blank');
+                        }}
+                      >
+                        <Trophy className="h-3 w-3 mr-1" />
+                        Get Tickets
+                      </Button>
                     )}
                   </div>
                 </CardContent>
@@ -1293,10 +1706,16 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                 </div>
 
                 {/* Additional Details */}
-                {(selectedEvent.requirements || selectedEvent.whatToBring || selectedEvent.ageRestriction || selectedEvent.accessibility) && (
+                {(selectedEvent.venue || selectedEvent.requirements || selectedEvent.whatToBring || selectedEvent.ageRestriction || selectedEvent.accessibility) && (
                   <div>
                     <h3 className="font-semibold text-lg mb-3">Additional Information</h3>
                     <div className="space-y-3">
+                      {selectedEvent.venue && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">Venue</p>
+                          <p className="text-sm text-muted-foreground">{selectedEvent.venue}</p>
+                        </div>
+                      )}
                       {selectedEvent.requirements && (
                         <div>
                           <p className="font-medium text-sm mb-1">Requirements</p>
@@ -1349,15 +1768,27 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
-                  {selectedEvent.registrationUrl ? (
+                  {selectedEvent.ticketUrl && (
                     <Button
                       className="flex-1"
+                      size="lg"
+                      onClick={() => window.open(selectedEvent.ticketUrl, '_blank')}
+                    >
+                      <Trophy className="h-4 w-4 mr-2" />
+                      Buy Tickets
+                    </Button>
+                  )}
+                  {selectedEvent.registrationUrl && (
+                    <Button
+                      className="flex-1"
+                      variant={selectedEvent.ticketUrl ? "outline" : "default"}
                       onClick={() => window.open(selectedEvent.registrationUrl, '_blank')}
                     >
                       <ExternalLink className="h-4 w-4 mr-2" />
                       Register Now
                     </Button>
-                  ) : selectedEvent.website ? (
+                  )}
+                  {!selectedEvent.ticketUrl && !selectedEvent.registrationUrl && selectedEvent.website && (
                     <Button
                       className="flex-1"
                       onClick={() => window.open(selectedEvent.website, '_blank')}
@@ -1365,7 +1796,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                       <ExternalLink className="h-4 w-4 mr-2" />
                       Visit Website
                     </Button>
-                  ) : null}
+                  )}
                   {selectedEvent.contactEmail && (
                     <Button
                       variant="outline"
