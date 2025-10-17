@@ -13,6 +13,7 @@ import VaccinationTracker from './VaccinationTracker';
 import { SmartAlerts } from './SmartAlerts';
 import TravelServices from './TravelServices';
 import Settings from './Settings';
+import EnhancedProfileForm from './EnhancedProfileForm';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
@@ -47,6 +48,7 @@ interface AppLayoutProps {
   detectedLocation: LocationData | null;
   userProfile: any;
   onUpgrade?: (tier: string) => void;
+  onProfileComplete?: (data: any) => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({
@@ -56,11 +58,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   subscription,
   detectedLocation,
   userProfile,
-  onUpgrade
+  onUpgrade,
+  onProfileComplete
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showProfileForm, setShowProfileForm] = useState(false);
   const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
@@ -80,6 +84,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
               <UpgradeBanner 
                 subscription={subscription}
                 onUpgradeClick={() => setShowUpgradeModal(true)}
+                onProfileFormClick={() => setShowProfileForm(true)}
                 onDismiss={handleDismissBanner}
               />
             )}
@@ -200,7 +205,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <ExploreLocalLife currentLocation={detectedLocation} />;
       
       case 'settings':
-        return <Settings subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
+        return (
+          <Settings 
+            subscription={subscription} 
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+            onProfileComplete={onProfileComplete}
+          />
+        );
       
       default:
         return (
@@ -266,6 +277,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onClose={() => setShowUpgradeModal(false)}
           subscription={subscription}
           onUpgrade={onUpgrade}
+        />
+      )}
+
+      {/* Enhanced Profile Form */}
+      {showProfileForm && onProfileComplete && (
+        <EnhancedProfileForm 
+          onComplete={(data) => {
+            onProfileComplete(data);
+            setShowProfileForm(false);
+          }}
+          onSkip={() => setShowProfileForm(false)}
         />
       )}
     </div>

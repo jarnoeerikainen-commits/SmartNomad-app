@@ -157,7 +157,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ subscription, onUpgradeClick 
           {/* Subscription Plan Card */}
           {subscription && (
             <Card className="gradient-trust border-primary/30">
-              <CardContent className="p-4">
+              <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/20 rounded-lg">

@@ -259,6 +259,7 @@ const Index = () => {
         detectedLocation={detectedLocation}
         userProfile={userProfile}
         onUpgrade={handleUpgrade}
+        onProfileComplete={handleProfileComplete}
       />
 
       <VPNDetectionModal 
