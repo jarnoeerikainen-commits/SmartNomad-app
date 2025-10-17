@@ -41,6 +41,7 @@ import SuperOffers from './SuperOffers';
 import LocationTrackingServices from './LocationTrackingServices';
 import MedicalServices from './MedicalServices';
 import TravelLegalServices from './TravelLegalServices';
+import { VisaAssistanceServices } from './VisaAssistanceServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -236,6 +237,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             currentLocation={detectedLocation}
             subscription={subscription}
             onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
+      
+      case 'visa-assistance':
+        return (
+          <VisaAssistanceServices 
+            currentLocation={detectedLocation}
+            subscription={subscription}
           />
         );
       
