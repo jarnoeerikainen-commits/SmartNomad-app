@@ -88,6 +88,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'main',
       label: 'Main',
       items: [
+        { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'NEW', variant: 'secondary' as const },
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
       ]
     },
@@ -173,24 +174,49 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               if (group.id === 'main') {
                 return (
                   <div key={group.id} className="space-y-1 mb-4">
-                    {group.items.map((item) => (
-                      <Button
-                        key={item.id}
-                        variant={activeSection === item.id ? 'default' : 'ghost'}
-                        className={`w-full justify-start gap-3 ${
-                          activeSection === item.id 
-                            ? 'gradient-trust text-primary-foreground shadow-medium' 
-                            : 'hover:bg-accent/50'
-                        }`}
-                        onClick={() => {
-                          onSectionChange(item.id);
-                          onClose?.();
-                        }}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        <span className="flex-1 text-left">{item.label}</span>
-                      </Button>
-                    ))}
+                    {group.items.map((item) => {
+                      // Handle upgrade button specially
+                      if (item.id === 'upgrade' && onUpgradeClick) {
+                        return (
+                          <Button
+                            key={item.id}
+                            variant="default"
+                            className="w-full justify-start gap-3 gradient-success shadow-medium hover:shadow-lg"
+                            onClick={() => {
+                              onUpgradeClick();
+                              onClose?.();
+                            }}
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span className="flex-1 text-left">{item.label}</span>
+                            {item.badge && (
+                              <Badge variant={item.variant || 'secondary'} className="ml-auto text-xs">
+                                {item.badge}
+                              </Badge>
+                            )}
+                          </Button>
+                        );
+                      }
+                      
+                      return (
+                        <Button
+                          key={item.id}
+                          variant={activeSection === item.id ? 'default' : 'ghost'}
+                          className={`w-full justify-start gap-3 ${
+                            activeSection === item.id 
+                              ? 'gradient-trust text-primary-foreground shadow-medium' 
+                              : 'hover:bg-accent/50'
+                          }`}
+                          onClick={() => {
+                            onSectionChange(item.id);
+                            onClose?.();
+                          }}
+                        >
+                          <item.icon className="h-5 w-5" />
+                          <span className="flex-1 text-left">{item.label}</span>
+                        </Button>
+                      );
+                    })}
                   </div>
                 );
               }

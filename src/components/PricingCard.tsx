@@ -41,12 +41,13 @@ const PRICING_TIERS: PricingTier[] = [
       'All Free features',
       'Tax day calculators',
       'Basic tax reports',
-      '20 AI requests/month',
+      '100 AI requests/month',
       'Schengen calculator',
       'US & Canada tax trackers',
       'Document storage (50 files)',
       'Email support',
-      'Visa tracking (up to 3)',
+      'Unlimited visa tracking',
+      'Unlimited passport tracking',
       'Health requirements tracker'
     ]
   },
@@ -62,7 +63,7 @@ const PRICING_TIERS: PricingTier[] = [
       'Advanced tax reports & exports',
       'Unlimited passport tracking',
       'Unlimited visa tracking',
-      '100 AI requests/month',
+      '500 AI requests/month',
       'Smart alerts & notifications',
       'Weather integration',
       'Currency tracking',
@@ -83,11 +84,10 @@ const PRICING_TIERS: PricingTier[] = [
     userLimit: '1 user',
     features: [
       'All Premium features',
-      '500 AI requests/month',
+      '2000 AI requests/month',
       'Advanced AI travel assistant',
       'Tax & wealth management tools',
       'Unlimited document storage',
-      'Investor document generator',
       'Multi-year tax planning',
       'Scenario planner',
       'Priority 24/7 support',
@@ -147,18 +147,16 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
           <p className="text-xs text-primary font-medium">{currentTier.userLimit}</p>
         </div>
         
-        {subscription.features && subscription.features.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {subscription.features.slice(0, 3).map((feature, idx) => (
-              <Badge key={idx} variant="secondary" className="text-xs">
-                {feature.split(' ')[0]}
-              </Badge>
-            ))}
-            {subscription.features.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
-                +{subscription.features.length - 3}
-              </Badge>
-            )}
+        {currentTier.features && currentTier.features.length > 0 && (
+          <div className="max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent pr-2">
+            <ul className="space-y-1.5 text-xs">
+              {currentTier.features.map((feature, idx) => (
+                <li key={idx} className="flex items-start gap-1.5">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span className="text-muted-foreground">{feature}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         

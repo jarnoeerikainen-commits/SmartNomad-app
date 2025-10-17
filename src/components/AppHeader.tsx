@@ -85,6 +85,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
+          {/* Plan Badge */}
+          {subscription && subscription.tier !== 'free' && (
+            <Badge 
+              variant="secondary" 
+              className="hidden md:flex items-center gap-1 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 text-primary font-semibold px-2 py-1"
+            >
+              <Zap className="h-3 w-3" />
+              <span className="capitalize text-xs">{subscription.tier.replace('-', ' ')}</span>
+            </Badge>
+          )}
+          
           {/* Language Selector */}
           <LanguageSelector />
           

@@ -5,7 +5,7 @@ export interface Subscription {
   expiryDate: string | null;
   features: string[];
   aiRequestsRemaining?: number;
-  aiRequestsLimit?: number;
+  aiRequestsLimit?: number; // Lite: 100, Premium: 500, Diamond: 2000
 }
 
 export interface PricingTier {
