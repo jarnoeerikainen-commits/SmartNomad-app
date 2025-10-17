@@ -37,13 +37,44 @@ const TIMEZONES = [
 ];
 
 export const TimeZoneHeader: React.FC = () => {
-  const [selectedTimezones, setSelectedTimezones] = useState<TimeZone[]>([
-    TIMEZONES[0], // New York
-    TIMEZONES[3], // London
-    TIMEZONES[9], // Tokyo
-  ]);
+  const getLocalTimezone = (): TimeZone => {
+    const offsetMinutes = -new Date().getTimezoneOffset();
+    const sign = offsetMinutes >= 0 ? '+' : '-';
+    const hours = Math.floor(Math.abs(offsetMinutes) / 60);
+    const minutes = Math.abs(offsetMinutes) % 60;
+    const offset = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    
+    return {
+      id: 'local',
+      name: 'Local',
+      city: 'Your Location',
+      offset
+    };
+  };
+
+  const loadSavedHeaderTimezones = (): TimeZone[] => {
+    const saved = localStorage.getItem('headerTimezones');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to load saved header timezones', e);
+      }
+    }
+    return [
+      getLocalTimezone(),
+      TIMEZONES[3], // London
+      TIMEZONES[9], // Tokyo
+    ];
+  };
+
+  const [selectedTimezones, setSelectedTimezones] = useState<TimeZone[]>(loadSavedHeaderTimezones());
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('headerTimezones', JSON.stringify(selectedTimezones));
+  }, [selectedTimezones]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -68,7 +99,12 @@ export const TimeZoneHeader: React.FC = () => {
   };
 
   const updateTimezone = (index: number, timezoneId: string) => {
-    const timezone = TIMEZONES.find(tz => tz.id === timezoneId);
+    let timezone: TimeZone | undefined;
+    if (timezoneId === 'local') {
+      timezone = getLocalTimezone();
+    } else {
+      timezone = TIMEZONES.find(tz => tz.id === timezoneId);
+    }
     if (timezone) {
       const newTimezones = [...selectedTimezones];
       newTimezones[index] = timezone;
@@ -124,6 +160,14 @@ export const TimeZoneHeader: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="local">
+                      <div className="flex items-center justify-between w-full gap-4">
+                        <span>Your Location (Local)</span>
+                        <span className="text-xs text-muted-foreground">
+                          Current
+                        </span>
+                      </div>
+                    </SelectItem>
                     {TIMEZONES.map((tz) => (
                       <SelectItem key={tz.id} value={tz.id}>
                         <div className="flex items-center justify-between w-full gap-4">

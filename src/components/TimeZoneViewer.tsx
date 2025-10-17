@@ -29,12 +29,46 @@ const POPULAR_TIMEZONES = [
 ];
 
 export const TimeZoneViewer: React.FC = () => {
-  const [selectedTimezones, setSelectedTimezones] = useState<TimeZone[]>([
-    { ...POPULAR_TIMEZONES[0], time: new Date() },
-    { ...POPULAR_TIMEZONES[3], time: new Date() },
-    { ...POPULAR_TIMEZONES[9], time: new Date() },
-  ]);
+  const getLocalTimezone = (): TimeZone => {
+    const offsetMinutes = -new Date().getTimezoneOffset();
+    const sign = offsetMinutes >= 0 ? '+' : '-';
+    const hours = Math.floor(Math.abs(offsetMinutes) / 60);
+    const minutes = Math.abs(offsetMinutes) % 60;
+    const offset = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    
+    return {
+      id: 'local',
+      name: 'Local Time',
+      city: 'Your Location',
+      offset,
+      time: new Date()
+    };
+  };
+
+  const loadSavedTimezones = (): TimeZone[] => {
+    const saved = localStorage.getItem('worldClockTimezones');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((tz: any) => ({ ...tz, time: new Date() }));
+      } catch (e) {
+        console.error('Failed to load saved timezones', e);
+      }
+    }
+    return [
+      getLocalTimezone(),
+      { ...POPULAR_TIMEZONES[3], time: new Date() },
+      { ...POPULAR_TIMEZONES[9], time: new Date() },
+    ];
+  };
+
+  const [selectedTimezones, setSelectedTimezones] = useState<TimeZone[]>(loadSavedTimezones());
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timezonesToSave = selectedTimezones.map(({ id, name, city, offset }) => ({ id, name, city, offset }));
+    localStorage.setItem('worldClockTimezones', JSON.stringify(timezonesToSave));
+  }, [selectedTimezones]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,12 +88,15 @@ export const TimeZoneViewer: React.FC = () => {
   const addTimezone = (timezoneId: string) => {
     const timezone = POPULAR_TIMEZONES.find(tz => tz.id === timezoneId);
     if (timezone && !selectedTimezones.find(tz => tz.id === timezoneId)) {
-      setSelectedTimezones([...selectedTimezones, { ...timezone, time: getTimeForTimezone(timezone.offset) }]);
+      const newTimezones = [...selectedTimezones, { ...timezone, time: getTimeForTimezone(timezone.offset) }];
+      setSelectedTimezones(newTimezones);
     }
   };
 
   const removeTimezone = (timezoneId: string) => {
-    setSelectedTimezones(selectedTimezones.filter(tz => tz.id !== timezoneId));
+    if (timezoneId === 'local') return; // Don't allow removing local time
+    const newTimezones = selectedTimezones.filter(tz => tz.id !== timezoneId);
+    setSelectedTimezones(newTimezones);
   };
 
   const formatTime = (date: Date) => {
@@ -114,14 +151,16 @@ export const TimeZoneViewer: React.FC = () => {
               return (
                 <Card key={timezone.id} className="relative overflow-hidden">
                   <CardContent className="p-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="absolute top-2 right-2 h-6 w-6 p-0"
-                      onClick={() => removeTimezone(timezone.id)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
+                    {timezone.id !== 'local' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute top-2 right-2 h-6 w-6 p-0"
+                        onClick={() => removeTimezone(timezone.id)}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
                     
                     <div className="space-y-3">
                       <div>

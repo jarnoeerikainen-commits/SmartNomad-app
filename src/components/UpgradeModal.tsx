@@ -193,19 +193,16 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({
                 <p className="text-xs text-primary font-medium mt-1">{tier.userLimit}</p>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2 mb-4 text-xs">
-                  {tier.features.slice(0, 6).map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                  {tier.features.length > 6 && (
-                    <li className="text-primary font-medium text-center pt-2">
-                      +{tier.features.length - 6} more features
-                    </li>
-                  )}
-                </ul>
+                <div className="mb-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent pr-2">
+                  <ul className="space-y-2 text-xs">
+                    {tier.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <Button 
                   onClick={() => handleSelectPlan(tier.id)}
                   disabled={subscription.tier === tier.id}
