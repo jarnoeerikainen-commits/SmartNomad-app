@@ -12,7 +12,7 @@ import { DocumentTracker } from './DocumentTracker';
 import VaccinationTracker from './VaccinationTracker';
 import { SmartAlerts } from './SmartAlerts';
 import TravelServices from './TravelServices';
-import UserProfile from './UserProfile';
+import Settings from './Settings';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
@@ -200,7 +200,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <ExploreLocalLife currentLocation={detectedLocation} />;
       
       case 'settings':
-        return <UserProfile subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
+        return <Settings subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
       
       default:
         return (
