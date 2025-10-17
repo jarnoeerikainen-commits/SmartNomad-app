@@ -39,6 +39,8 @@ import LocalNomads from './LocalNomads';
 import ExploreLocalLife from './ExploreLocalLife';
 import SuperOffers from './SuperOffers';
 import LocationTrackingServices from './LocationTrackingServices';
+import MedicalServices from './MedicalServices';
+import TravelLegalServices from './TravelLegalServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -218,6 +220,24 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'explore-local':
         return <ExploreLocalLife currentLocation={detectedLocation} />;
+      
+      case 'medical-services':
+        return (
+          <MedicalServices 
+            currentLocation={detectedLocation}
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
+      
+      case 'travel-lawyers':
+        return (
+          <TravelLegalServices 
+            currentLocation={detectedLocation}
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
       
       case 'settings':
         return (
