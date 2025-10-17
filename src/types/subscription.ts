@@ -1,9 +1,11 @@
 
 export interface Subscription {
-  tier: 'free' | 'student' | 'personal' | 'business-individual' | 'family' | 'business' | 'enterprise';
+  tier: 'free' | 'premium-lite' | 'premium' | 'diamond';
   isActive: boolean;
   expiryDate: string | null;
   features: string[];
+  aiRequestsRemaining?: number;
+  aiRequestsLimit?: number;
 }
 
 export interface PricingTier {

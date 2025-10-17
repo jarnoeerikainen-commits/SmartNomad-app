@@ -507,12 +507,9 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const getVisaTrackingLimit = () => {
     switch (currentSubscription.tier) {
       case 'free': return 1;
-      case 'student': return 5;
-      case 'personal': return 10;
-      case 'business-individual': return 20;
-      case 'family': return 25;
-      case 'business': return 100;
-      case 'enterprise': return 999;
+      case 'premium-lite': return 3;
+      case 'premium': return 999; // unlimited
+      case 'diamond': return 999; // unlimited
       default: return 1;
     }
   };
@@ -524,12 +521,9 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const getAllowedVisaTypes = () => {
     switch (currentSubscription.tier) {
       case 'free': return ['tourist'];
-      case 'student': return ['tourist', 'student', 'student-visa', 'schengen', 'transit'];
-      case 'personal': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad'];
-      case 'business-individual': return ['tourist', 'business', 'student', 'student-visa', 'esta', 'schengen', 'transit', 'digital-nomad', 'work-permit'];
-      case 'family': return VISA_TYPES.map(v => v.id);
-      case 'business': return VISA_TYPES.map(v => v.id);
-      case 'enterprise': return VISA_TYPES.map(v => v.id);
+      case 'premium-lite': return ['tourist', 'business', 'student', 'schengen', 'transit'];
+      case 'premium': return VISA_TYPES.map(v => v.id); // all types
+      case 'diamond': return VISA_TYPES.map(v => v.id); // all types
       default: return ['tourist'];
     }
   };
@@ -611,12 +605,9 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const getTaxTrackingLimit = () => {
     switch (currentSubscription.tier) {
       case 'free': return 1;
-      case 'student': return 3;
-      case 'personal': return 10;
-      case 'business-individual': return 15;
-      case 'family': return 20;
-      case 'business': return 50;
-      case 'enterprise': return 100;
+      case 'premium-lite': return 3;
+      case 'premium': return 10;
+      case 'diamond': return 50;
       default: return 1;
     }
   };

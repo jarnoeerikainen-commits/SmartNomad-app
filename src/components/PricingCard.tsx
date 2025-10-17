@@ -14,137 +14,88 @@ interface PricingCardProps {
 const PRICING_TIERS: PricingTier[] = [
   {
     id: 'free',
-    name: 'Basic',
+    name: 'Free',
     price: 0,
     billing: 'monthly',
-    description: 'Basic tracking for casual travelers',
+    description: 'Essential travel tracking for casual nomads',
     userLimit: '1 user',
     features: [
-      '✈️ Single visa tracking',
-      '📊 Basic day counting',
-      '📍 Manual location tracking',
-      '⚠️ Simple alerts',
-      '🗂️ Basic export options'
+      'Basic country tracking',
+      'Manual trip logging',
+      'Basic dashboard',
+      'Emergency contacts',
+      'Limited document storage (5 files)',
+      'Community access',
+      'No AI assistance'
     ]
   },
   {
-    id: 'student',
-    name: 'Student',
-    price: 0.99,
-    billing: 'yearly',
-    description: 'Perfect for students studying abroad',
-    userLimit: '1 student',
-    features: [
-      '🎓 Multiple visa types (Student, Tourist, Transit)',
-      '🏫 University compliance tracking',
-      '📅 Academic calendar integration',
-      '📖 Study visa monitoring',
-      '🌍 Unlimited country tracking',
-      '📧 Study abroad alerts',
-      '🆔 Student ID verification',
-      '📊 Academic reports'
-    ]
-  },
-  {
-    id: 'business-individual',
-    name: 'Business Individual',
-    price: 9.99,
+    id: 'premium-lite',
+    name: 'Premium Lite',
+    price: 1,
     billing: 'monthly',
-    description: 'Solo entrepreneur features',
-    userLimit: '1 business user',
-    features: [
-      '💼 Multiple visa types (Business, Tourist, Work)',
-      '🏢 Work permit tracking',
-      '💰 Tax residence monitoring',
-      '📊 Business travel analytics',
-      '📄 Professional reporting',
-      '☁️ Cloud backup',
-      '🔗 Calendar integrations',
-      '📱 Mobile app access'
-    ]
-  },
-  {
-    id: 'personal',
-    name: 'Personal',
-    price: 2.99,
-    yearlyPrice: 19.99,
-    billing: 'monthly',
-    description: 'Perfect for digital nomads and frequent travelers',
+    description: 'Perfect starter plan for budget-conscious travelers',
+    userLimit: '1 user',
     popular: true,
+    features: [
+      'All Free features',
+      'Tax day calculators',
+      'Basic tax reports',
+      '20 AI requests/month',
+      'Schengen calculator',
+      'US & Canada tax trackers',
+      'Document storage (50 files)',
+      'Email support',
+      'Visa tracking (up to 3)',
+      'Health requirements tracker'
+    ]
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    price: 2.99,
+    billing: 'monthly',
+    description: 'Complete solution for serious digital nomads',
     userLimit: '1 user',
     features: [
-      '🌐 All visa types (Tourist, Business, Transit, Digital Nomad)',
-      '🤖 Automatic location detection',
-      '💰 Tax residence tracking',
-      '📋 Passport expiry alerts',
-      '✅ Visa compliance monitoring',
-      '🗃️ Premium country database',
-      '📊 Excel/PDF reports',
-      '☁️ Cloud backup',
-      '🔄 Easy visa type switching'
+      'All Premium Lite features',
+      'Advanced tax reports & exports',
+      'Unlimited passport tracking',
+      'Unlimited visa tracking',
+      '100 AI requests/month',
+      'Smart alerts & notifications',
+      'Weather integration',
+      'Currency tracking',
+      'Expense management',
+      'Document storage (500 files)',
+      'PDF report generation',
+      'Priority email support',
+      'Travel insurance finder',
+      'Local community access'
     ]
   },
   {
-    id: 'family',
-    name: 'Family Plan',
-    price: 6.99,
-    yearlyPrice: 49.99,
+    id: 'diamond',
+    name: 'Diamond',
+    price: 9.90,
     billing: 'monthly',
-    description: 'For families and small teams traveling together',
-    userLimit: 'Up to 12 people',
+    description: 'Ultimate plan for professional nomads & wealthy travelers',
+    userLimit: '1 user',
     features: [
-      '👨‍👩‍👧‍👦 All visa types for family members',
-      '🏠 Family dashboard',
-      '🗺️ Shared trip planning',
-      '👥 Group compliance tracking',
-      '📘 Multiple passport management',
-      '🤝 Family visa coordination',
-      '💸 Shared expense tracking',
-      '🚨 Emergency contact system',
-      '🔄 Individual visa preferences'
-    ]
-  },
-  {
-    id: 'business',
-    name: 'Business',
-    price: 49.99,
-    yearlyPrice: 399,
-    billing: 'monthly',
-    description: 'For companies with traveling employees',
-    userLimit: 'Unlimited users',
-    features: [
-      '🏢 All visa types for employees',
-      '👥 Unlimited team members',
-      '📊 Advanced compliance dashboard',
-      '💼 Work permit tracking',
-      '💰 Corporate tax optimization',
-      '🔗 HR integration tools',
-      '📋 Audit trail reports',
-      '🎯 Dedicated account manager',
-      '🔌 API access',
-      '🔐 SSO integration',
-      '⚙️ Custom visa workflows'
-    ]
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 99.99,
-    billing: 'monthly',
-    description: 'For large organizations and agencies',
-    userLimit: 'Unlimited + consulting',
-    features: [
-      '🌍 All global visa types & custom rules',
-      '🏢 Custom compliance frameworks',
-      '🏷️ White-label solutions',
-      '🌐 Multi-country operations',
-      '🏛️ Government reporting',
-      '🔗 Custom integrations',
-      '🔧 24/7 priority support',
-      '⚖️ Legal compliance consulting',
-      '🛡️ Data sovereignty options',
-      '🎛️ Advanced visa management',
-      '📈 Predictive compliance analytics'
+      'All Premium features',
+      '500 AI requests/month',
+      'Advanced AI travel assistant',
+      'Tax & wealth management tools',
+      'Unlimited document storage',
+      'Investor document generator',
+      'Multi-year tax planning',
+      'Scenario planner',
+      'Priority 24/7 support',
+      'Dedicated account manager',
+      'Custom tax consultation',
+      'VIP travel services',
+      'Exclusive partner discounts',
+      'Early access to new features'
     ]
   }
 ];
@@ -154,12 +105,10 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
 
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
-      case 'student': return <GraduationCap className="w-5 h-5" />;
-      case 'business-individual': return <Building className="w-5 h-5" />;
-      case 'family': return <Home className="w-5 h-5" />;
-      case 'business': return <Building className="w-5 h-5" />;
-      case 'enterprise': return <Crown className="w-5 h-5" />;
-      default: return <Users className="w-5 h-5" />;
+      case 'premium-lite': return <Users className="w-5 h-5" />;
+      case 'premium': return <Building className="w-5 h-5" />;
+      case 'diamond': return <Crown className="w-5 h-5" />;
+      default: return <Home className="w-5 h-5" />;
     }
   };
 
