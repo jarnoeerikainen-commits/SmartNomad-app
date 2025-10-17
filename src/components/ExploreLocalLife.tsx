@@ -34,10 +34,23 @@ import {
   GraduationCap,
   Wrench,
   Pizza,
-  Leaf
+  Leaf,
+  ExternalLink,
+  Mail,
+  Phone,
+  Globe,
+  User,
+  X
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { format, addDays, addWeeks, addMonths, isBefore, startOfDay, parseISO, isAfter } from 'date-fns';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface ExploreLocalLifeProps {
   currentLocation: LocationData | null;
@@ -62,6 +75,19 @@ interface LocalEvent {
   recurring?: 'daily' | 'weekly' | 'monthly';
   tags?: string[];
   priceRange?: 'free' | 'budget' | 'moderate' | 'premium';
+  // New detailed fields
+  website?: string;
+  registrationUrl?: string;
+  organizer: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address: string;
+  capacity?: number;
+  attendees?: number;
+  requirements?: string[];
+  whatToBring?: string[];
+  ageRestriction?: string;
+  accessibility?: string;
 }
 
 // Helper function to generate upcoming dates
@@ -207,7 +233,14 @@ const generateMockEvents = (): LocalEvent[] => {
       verified: true,
       recurring: 'weekly',
       tags: ['organic', 'local', 'food'],
-      priceRange: 'free'
+      priceRange: 'free',
+      organizer: `${cityData.city} Farmers Market Association`,
+      address: `Main Square, Central Market District, ${cityData.city}`,
+      website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}farmersmarket.com`,
+      contactEmail: `info@${cityData.city.toLowerCase().replace(/\s/g, '')}market.com`,
+      contactPhone: '+1-555-MARKET',
+      accessibility: 'Wheelchair accessible',
+      whatToBring: ['Reusable bags', 'Cash (some vendors)']
     });
 
     // Business Networking
@@ -225,7 +258,14 @@ const generateMockEvents = (): LocalEvent[] => {
       verified: true,
       recurring: 'weekly',
       tags: ['networking', 'remote work', 'community'],
-      priceRange: 'free'
+      priceRange: 'free',
+      organizer: 'Digital Nomads Network',
+      address: `123 Innovation Street, ${cityData.city}`,
+      website: 'https://www.digitalnomads.com',
+      registrationUrl: `https://www.meetup.com/digital-nomads-${cityData.city.toLowerCase().replace(/\s/g, '-')}`,
+      contactEmail: `${cityData.city.toLowerCase().replace(/\s/g, '')}@digitalnomads.com`,
+      capacity: 50,
+      attendees: 35
     });
 
     // Sports & Wellness
@@ -243,7 +283,12 @@ const generateMockEvents = (): LocalEvent[] => {
       verified: true,
       recurring: 'daily',
       tags: ['running', 'fitness', 'morning'],
-      priceRange: 'free'
+      priceRange: 'free',
+      organizer: `${cityData.city} Runners Association`,
+      address: `Main Entrance, City Park, ${cityData.city}`,
+      website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}runners.com`,
+      contactEmail: `run@${cityData.city.toLowerCase().replace(/\s/g, '')}club.com`,
+      whatToBring: ['Running shoes', 'Water bottle', 'Comfortable clothes']
     });
 
     // Cultural Events
@@ -261,7 +306,15 @@ const generateMockEvents = (): LocalEvent[] => {
       fee: '$15-25',
       verified: true,
       tags: ['culture', 'traditional', 'evening'],
-      priceRange: 'budget'
+      priceRange: 'budget',
+      organizer: `${cityData.city} Cultural Foundation`,
+      address: `45 Heritage Avenue, ${cityData.city}`,
+      website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}culture.org`,
+      registrationUrl: `https://tickets.${cityData.city.toLowerCase().replace(/\s/g, '')}culture.org`,
+      contactEmail: `events@${cityData.city.toLowerCase().replace(/\s/g, '')}culture.org`,
+      contactPhone: '+1-555-CULTURE',
+      capacity: 150,
+      attendees: 120
     });
 
     // Tech Events
@@ -279,7 +332,14 @@ const generateMockEvents = (): LocalEvent[] => {
         isFree: true,
         verified: true,
         tags: ['startups', 'tech', 'innovation'],
-        priceRange: 'free'
+        priceRange: 'free',
+        organizer: 'Startup Weekend Community',
+        address: `Innovation District, ${cityData.city}`,
+        website: 'https://www.startupweekend.org',
+        registrationUrl: 'https://www.eventbrite.com/e/startup-pitch-night',
+        contactEmail: `${cityData.city.toLowerCase().replace(/\s/g, '')}@startupweekend.org`,
+        capacity: 100,
+        attendees: 75
       });
     }
 
@@ -300,7 +360,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$50 per team',
         verified: true,
         tags: ['football', 'tournament', 'sports'],
-        priceRange: 'budget'
+        priceRange: 'budget',
+        organizer: `${cityData.city} Football Federation`,
+        address: `Olympic Sports Complex, ${cityData.city}`,
+        website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}football.com`,
+        registrationUrl: `https://register.${cityData.city.toLowerCase().replace(/\s/g, '')}football.com`,
+        contactEmail: `tournaments@${cityData.city.toLowerCase().replace(/\s/g, '')}football.com`,
+        contactPhone: '+1-555-SOCCER',
+        capacity: 16,
+        attendees: 12,
+        requirements: ['Team registration', 'Insurance', 'Medical clearance'],
+        whatToBring: ['Football boots', 'Shin guards', 'Team uniform', 'Water']
       });
     }
 
@@ -321,7 +391,14 @@ const generateMockEvents = (): LocalEvent[] => {
         verified: true,
         recurring: 'weekly',
         tags: ['games', 'social', 'indoor'],
-        priceRange: 'budget'
+        priceRange: 'budget',
+        organizer: 'Board Gamers Society',
+        address: `789 Game Street, ${cityData.city}`,
+        website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}games.com`,
+        contactEmail: `play@${cityData.city.toLowerCase().replace(/\s/g, '')}games.com`,
+        contactPhone: '+1-555-GAMES',
+        capacity: 40,
+        attendees: 28
       });
     }
 
@@ -341,7 +418,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$35-45',
         verified: true,
         tags: ['food', 'tour', 'local cuisine'],
-        priceRange: 'moderate'
+        priceRange: 'moderate',
+        organizer: 'Foodie Adventures',
+        address: `Old Town Square, ${cityData.city}`,
+        website: 'https://www.foodieadventures.com',
+        registrationUrl: `https://book.foodieadventures.com/${cityData.city.toLowerCase().replace(/\s/g, '-')}`,
+        contactEmail: `tours@foodieadventures.com`,
+        contactPhone: '+1-555-FOODIE',
+        capacity: 15,
+        attendees: 12,
+        requirements: ['Comfortable walking shoes'],
+        whatToBring: ['Appetite', 'Camera', 'Cash for extras']
       });
     }
 
@@ -361,7 +448,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$60-80',
         verified: true,
         tags: ['photography', 'learning', 'creative'],
-        priceRange: 'moderate'
+        priceRange: 'moderate',
+        organizer: 'Creative Arts Academy',
+        address: `456 Arts Boulevard, ${cityData.city}`,
+        website: 'https://www.creativearts.academy',
+        registrationUrl: 'https://register.creativearts.academy/photography',
+        contactEmail: 'workshops@creativearts.academy',
+        contactPhone: '+1-555-PHOTO',
+        capacity: 20,
+        attendees: 15,
+        requirements: ['Basic photography knowledge helpful but not required'],
+        whatToBring: ['Camera (DSLR/Mirrorless preferred)', 'Notebook', 'Lunch']
       });
     }
 
@@ -380,7 +477,13 @@ const generateMockEvents = (): LocalEvent[] => {
         isFree: true,
         verified: true,
         tags: ['art', 'culture', 'evening'],
-        priceRange: 'free'
+        priceRange: 'free',
+        organizer: `${cityData.city} Arts Council`,
+        address: `Gallery Row, Arts District, ${cityData.city}`,
+        website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}arts.org`,
+        contactEmail: `info@${cityData.city.toLowerCase().replace(/\s/g, '')}arts.org`,
+        ageRestriction: '21+ (wine service)',
+        accessibility: 'All galleries wheelchair accessible'
       });
     }
 
@@ -401,7 +504,16 @@ const generateMockEvents = (): LocalEvent[] => {
         verified: true,
         recurring: 'weekly',
         tags: ['music', 'jazz', 'nightlife'],
-        priceRange: 'budget'
+        priceRange: 'budget',
+        organizer: `${cityData.city} Jazz Society`,
+        address: `Jazz Quarter, ${cityData.city}`,
+        website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}jazz.com`,
+        registrationUrl: `https://tickets.${cityData.city.toLowerCase().replace(/\s/g, '')}jazz.com`,
+        contactEmail: `bookings@${cityData.city.toLowerCase().replace(/\s/g, '')}jazz.com`,
+        contactPhone: '+1-555-JAZZZ',
+        capacity: 80,
+        attendees: 65,
+        ageRestriction: '18+'
       });
     }
 
@@ -421,7 +533,13 @@ const generateMockEvents = (): LocalEvent[] => {
         verified: true,
         recurring: 'daily',
         tags: ['yoga', 'wellness', 'morning'],
-        priceRange: 'free'
+        priceRange: 'free',
+        organizer: 'Wellness Warriors Community',
+        address: `Sunrise Point, ${cityData.city}`,
+        website: 'https://www.wellnesswarriors.com',
+        contactEmail: `${cityData.city.toLowerCase().replace(/\s/g, '')}@wellnesswarriors.com`,
+        whatToBring: ['Yoga mat', 'Water bottle', 'Towel', 'Comfortable clothes'],
+        accessibility: 'Suitable for all fitness levels'
       });
     }
 
@@ -441,7 +559,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$15-25',
         verified: true,
         tags: ['party', 'nightlife', 'rooftop'],
-        priceRange: 'budget'
+        priceRange: 'budget',
+        organizer: 'Skyline Entertainment',
+        address: `Penthouse Level, Downtown Tower, ${cityData.city}`,
+        website: 'https://www.skylineentertainment.com',
+        registrationUrl: `https://tickets.skylineentertainment.com/${cityData.city.toLowerCase().replace(/\s/g, '-')}`,
+        contactEmail: 'events@skylineentertainment.com',
+        contactPhone: '+1-555-PARTY',
+        capacity: 200,
+        attendees: 180,
+        ageRestriction: '21+',
+        requirements: ['Valid ID required']
       });
     }
 
@@ -461,7 +589,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$25-35',
         verified: true,
         tags: ['hiking', 'outdoor', 'nature'],
-        priceRange: 'budget'
+        priceRange: 'budget',
+        organizer: 'Outdoor Adventures Co',
+        address: `Nature Reserve Visitor Center, ${cityData.city}`,
+        website: 'https://www.outdooradventures.co',
+        registrationUrl: 'https://book.outdooradventures.co/hiking',
+        contactEmail: 'adventures@outdooradventures.co',
+        contactPhone: '+1-555-HIKE',
+        capacity: 25,
+        attendees: 18,
+        requirements: ['Moderate fitness level', 'Closed-toe shoes'],
+        whatToBring: ['Hiking boots', 'Backpack', 'Water (2L)', 'Snacks', 'Sunscreen', 'Hat']
       });
     }
 
@@ -482,7 +620,17 @@ const generateMockEvents = (): LocalEvent[] => {
         fee: '$200-500',
         verified: true,
         tags: ['business', 'conference', 'networking'],
-        priceRange: 'premium'
+        priceRange: 'premium',
+        organizer: 'Global Business Forum',
+        address: `International Convention Center, ${cityData.city}`,
+        website: `https://www.${cityData.city.toLowerCase().replace(/\s/g, '')}businesssummit.com`,
+        registrationUrl: `https://register.${cityData.city.toLowerCase().replace(/\s/g, '')}businesssummit.com`,
+        contactEmail: `info@${cityData.city.toLowerCase().replace(/\s/g, '')}businesssummit.com`,
+        contactPhone: '+1-555-SUMMIT',
+        capacity: 500,
+        attendees: 420,
+        requirements: ['Professional attire', 'Business registration'],
+        whatToBring: ['Business cards', 'Laptop', 'Notebook']
       });
     }
   });
@@ -593,6 +741,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
   const [priceFilter, setPriceFilter] = useState<string>('all');
   const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(true);
   const [visibleEvents, setVisibleEvents] = useState(24);
+  const [selectedEvent, setSelectedEvent] = useState<LocalEvent | null>(null);
 
   // Get unique cities and countries for filters
   const cities = useMemo(() => {
@@ -744,7 +893,11 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
           <CardContent>
             <div className="grid gap-4 md:grid-cols-3">
               {topLocalEvents.map((event) => (
-                <Card key={event.id} className="hover:shadow-lg transition-shadow">
+                <Card 
+                  key={event.id} 
+                  className="hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedEvent(event)}
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
@@ -902,6 +1055,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
               <Card 
                 key={event.id} 
                 className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer"
+                onClick={() => setSelectedEvent(event)}
               >
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -999,6 +1153,235 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
           </CardContent>
         </Card>
       )}
+
+      {/* Event Details Modal */}
+      <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          {selectedEvent && (
+            <>
+              <DialogHeader>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      {getCategoryIcon(selectedEvent.category)}
+                      <Badge variant="outline" className={categoryConfig[selectedEvent.category].bgColor}>
+                        {categoryConfig[selectedEvent.category].label}
+                      </Badge>
+                      {selectedEvent.verified && (
+                        <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      )}
+                    </div>
+                    <DialogTitle className="text-2xl">{selectedEvent.name}</DialogTitle>
+                    <DialogDescription className="text-base mt-2">
+                      {selectedEvent.city}, {selectedEvent.country}
+                    </DialogDescription>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-6 mt-4">
+                {/* Description */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">About This Event</h3>
+                  <p className="text-muted-foreground">{selectedEvent.description}</p>
+                </div>
+
+                {/* Key Details */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="font-medium">Date</p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatEventDate(selectedEvent.startDate, selectedEvent.endDate)}
+                          {selectedEvent.recurring && (
+                            <Badge variant="secondary" className="ml-2 text-xs">
+                              {selectedEvent.recurring}
+                            </Badge>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="font-medium">Time</p>
+                        <p className="text-sm text-muted-foreground">{selectedEvent.time}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="font-medium">Location</p>
+                        <p className="text-sm text-muted-foreground">{selectedEvent.location}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{selectedEvent.address}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="font-medium">Organizer</p>
+                        <p className="text-sm text-muted-foreground">{selectedEvent.organizer}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="font-medium">Price</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedEvent.isFree ? 'Free Entry' : selectedEvent.fee}
+                        </p>
+                      </div>
+                    </div>
+
+                    {selectedEvent.capacity && (
+                      <div className="flex items-start gap-3">
+                        <Users className="h-5 w-5 text-muted-foreground mt-0.5" />
+                        <div>
+                          <p className="font-medium">Capacity</p>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedEvent.attendees || 0} / {selectedEvent.capacity} attendees
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">Contact Information</h3>
+                  <div className="space-y-2">
+                    {selectedEvent.website && (
+                      <a
+                        href={selectedEvent.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <Globe className="h-4 w-4" />
+                        {selectedEvent.website}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                    {selectedEvent.contactEmail && (
+                      <a
+                        href={`mailto:${selectedEvent.contactEmail}`}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
+                      >
+                        <Mail className="h-4 w-4" />
+                        {selectedEvent.contactEmail}
+                      </a>
+                    )}
+                    {selectedEvent.contactPhone && (
+                      <a
+                        href={`tel:${selectedEvent.contactPhone}`}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {selectedEvent.contactPhone}
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* Additional Details */}
+                {(selectedEvent.requirements || selectedEvent.whatToBring || selectedEvent.ageRestriction || selectedEvent.accessibility) && (
+                  <div>
+                    <h3 className="font-semibold text-lg mb-3">Additional Information</h3>
+                    <div className="space-y-3">
+                      {selectedEvent.requirements && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">Requirements</p>
+                          <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                            {selectedEvent.requirements.map((req, idx) => (
+                              <li key={idx}>{req}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedEvent.whatToBring && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">What to Bring</p>
+                          <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                            {selectedEvent.whatToBring.map((item, idx) => (
+                              <li key={idx}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedEvent.ageRestriction && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">Age Restriction</p>
+                          <p className="text-sm text-muted-foreground">{selectedEvent.ageRestriction}</p>
+                        </div>
+                      )}
+                      {selectedEvent.accessibility && (
+                        <div>
+                          <p className="font-medium text-sm mb-1">Accessibility</p>
+                          <p className="text-sm text-muted-foreground">{selectedEvent.accessibility}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tags */}
+                {selectedEvent.tags && selectedEvent.tags.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Tags</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedEvent.tags.map((tag, idx) => (
+                        <Badge key={idx} variant="outline">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+                  {selectedEvent.registrationUrl ? (
+                    <Button
+                      className="flex-1"
+                      onClick={() => window.open(selectedEvent.registrationUrl, '_blank')}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Register Now
+                    </Button>
+                  ) : selectedEvent.website ? (
+                    <Button
+                      className="flex-1"
+                      onClick={() => window.open(selectedEvent.website, '_blank')}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Visit Website
+                    </Button>
+                  ) : null}
+                  {selectedEvent.contactEmail && (
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => window.open(`mailto:${selectedEvent.contactEmail}`, '_blank')}
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Contact Organizer
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
