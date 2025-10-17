@@ -37,6 +37,7 @@ import TaxiServices from './TaxiServices';
 import Students from './Students';
 import LocalNomads from './LocalNomads';
 import ExploreLocalLife from './ExploreLocalLife';
+import SuperOffers from './SuperOffers';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -164,6 +165,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'alerts':
         return <SmartAlerts />;
+      
+      case 'super-offers':
+        return (
+          <SuperOffers 
+            currentLocation={detectedLocation}
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+            onProfileFormClick={() => setShowProfileForm(true)}
+          />
+        );
       
       case 'services':
         return <TravelServices currentLocation={detectedLocation} />;
