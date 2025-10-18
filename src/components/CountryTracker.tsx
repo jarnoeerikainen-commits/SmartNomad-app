@@ -324,6 +324,7 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
   onAddCountry, 
   onRemoveCountry 
 }) => {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddCountry, setShowAddCountry] = useState(false);
   const [followEmbassyNews, setFollowEmbassyNews] = useState(true);

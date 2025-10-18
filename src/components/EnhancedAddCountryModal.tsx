@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Info, Phone, DollarSign, Shield, Clock, Search } from 'lucide-react';
 import { Country } from '@/types/country';
 import { CountryInfoService } from '@/services/CountryInfoService';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface EnhancedAddCountryModalProps {
   isOpen: boolean;
@@ -35,6 +36,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
   onAdd,
   existingCountries
 }) => {
+  const { t } = useLanguage();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [reason, setReason] = useState('');
   const [customReason, setCustomReason] = useState('');
