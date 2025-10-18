@@ -57,8 +57,13 @@ const translations: Record<string, Record<string, string>> = {
     // Dashboard Stats
     'stats.countries_tracked': 'Countries Tracked',
     'stats.active_destinations': 'Active destinations',
+    'stats.active_tracking': 'Active Tracking',
+    'stats.with_recorded_visits': 'With recorded visits',
     'stats.critical_alerts': 'Critical Alerts',
     'stats.require_attention': 'Require attention',
+    'stats.warnings': 'Warnings',
+    'stats.urgent': 'Urgent',
+    'stats.monitor_closely': 'Monitor closely',
     
     // Quick Actions
     'quick.title': 'Quick Actions',
@@ -94,11 +99,28 @@ const translations: Record<string, Record<string, string>> = {
     // AI Assistant
     'ai.title': 'AI Travel Assistant',
     'ai.typing': 'AI is typing...',
+    'ai.greeting': 'Hello! I\'m your AI Travel Assistant. How can I help you today?',
+    'ai.visa_response': 'Based on your {count} tracked countries, I can help you with visa requirements and applications.',
+    'ai.booking_response': 'I can help you find and book the best restaurants in your current location.',
+    'ai.weather_response': 'I can provide weather information for all {count} countries you\'re tracking.',
+    'ai.tax_response': 'I can assist with tax residency questions and compliance requirements.',
+    'ai.alert_response': 'Your {tier} plan includes smart alerts and notifications to keep you informed.',
+    'ai.help_response': 'I can help with visa requirements, tax residency, travel planning, and much more!',
     
     // Document Tracker
     'doc.title': 'Document Tracker',
+    'doc.track_description': 'Keep track of your important travel documents and expiry dates',
     'doc.passports': 'Passports',
     'doc.licenses': 'Licenses',
+    'doc.no_passports': 'No passports added yet',
+    'doc.add_passport': 'Add Passport',
+    'doc.add_license': 'Add License',
+    'doc.country_state': 'Country/State',
+    'doc.license_class': 'License Class',
+    'doc.issue_date': 'Issue Date',
+    'doc.expiry_date': 'Expiry Date',
+    'doc.issuing_authority': 'Issuing Authority',
+    'doc.notes': 'Notes',
     
     // Expense Tracker
     'expense.title': 'Business Expense Tracker',
@@ -115,11 +137,59 @@ const translations: Record<string, Record<string, string>> = {
     
     // Tax Residency
     'tax.title': 'Tax Residency & Compliance Center',
+    'tax.global_overview': 'Global Overview',
+    'tax.united_states': 'United States',
+    'tax.canada': 'Canada',
+    'tax.select_jurisdiction': 'Select Jurisdiction',
+    
+    // Country Card
+    'card.limit_exceeded': 'Limit Exceeded',
+    'card.critical': 'Critical',
+    'card.warning': 'Warning',
+    'card.monitor': 'Monitor',
+    'card.safe': 'Safe',
+    'card.entries': 'Entries',
+    'card.current': 'Current',
+    'card.count_travel_days': 'Count Travel Days',
+    'card.on': 'ON',
+    'card.off': 'OFF',
+    'card.tax_residence_status': 'Tax Residence Status',
+    'card.days_left': 'days left',
+    'card.days_this_year': 'days this year',
+    'card.days_progress': 'Days Progress',
+    'card.days_spent': 'Days Spent',
+    'card.remaining': 'remaining',
+    'card.day_limit': 'Day Limit',
+    'card.this_year': 'This Year',
+    'card.total_days': 'Total Days',
+    'card.edit_limit': 'Edit Limit',
+    'card.reset': 'Reset',
+    
+    // Add Country Modal
+    'addCountry.title': 'Add Country to Track',
+    
+    // Circular Dashboard
+    'circularDashboard.title': 'Travel Overview',
+    
+    // Toast Messages
+    'toast.countryAdded': 'Country Added',
+    'toast.countryAddedDesc': '{country} has been added to your tracking list',
+    'toast.countryRemoved': 'Country Removed',
+    'toast.countryRemovedDesc': 'Country has been removed from tracking',
+    'toast.locationConfirmed': 'Location Confirmed',
+    'toast.locationConfirmedDesc': 'Your location has been confirmed',
+    'toast.locationCorrection': 'Location Needs Correction',
+    'toast.locationCorrectionDesc': 'Please update your location manually',
+    'toast.vpnInstructions': 'VPN Detected',
+    'toast.vpnInstructionsDesc': 'Please disable VPN for accurate tracking',
+    'toast.planUpgraded': 'Plan Upgraded',
+    'toast.planUpgradedDesc': 'Successfully upgraded to {tier} plan',
     
     // Common
     'common.save': 'Save',
     'common.cancel': 'Cancel',
     'common.close': 'Close',
+    'common.free': 'Free',
   },
   es: {
     // Header
@@ -148,8 +218,13 @@ const translations: Record<string, Record<string, string>> = {
     // Dashboard Stats
     'stats.countries_tracked': 'Países rastreados',
     'stats.active_destinations': 'Destinos activos',
+    'stats.active_tracking': 'Rastreo Activo',
+    'stats.with_recorded_visits': 'Con visitas registradas',
     'stats.critical_alerts': 'Alertas críticas',
     'stats.require_attention': 'Requieren atención',
+    'stats.warnings': 'Advertencias',
+    'stats.urgent': 'Urgente',
+    'stats.monitor_closely': 'Monitorear de cerca',
     
     // Quick Actions
     'quick.title': 'Acciones rápidas',
@@ -185,11 +260,28 @@ const translations: Record<string, Record<string, string>> = {
     // AI Assistant
     'ai.title': 'Asistente de viaje IA',
     'ai.typing': 'IA está escribiendo...',
+    'ai.greeting': '¡Hola! Soy tu Asistente de Viaje IA. ¿Cómo puedo ayudarte hoy?',
+    'ai.visa_response': 'Basado en tus {count} países rastreados, puedo ayudarte con requisitos de visa y solicitudes.',
+    'ai.booking_response': 'Puedo ayudarte a encontrar y reservar los mejores restaurantes en tu ubicación actual.',
+    'ai.weather_response': 'Puedo proporcionar información meteorológica para todos los {count} países que estás rastreando.',
+    'ai.tax_response': 'Puedo asistir con preguntas de residencia fiscal y requisitos de cumplimiento.',
+    'ai.alert_response': 'Tu plan {tier} incluye alertas inteligentes y notificaciones para mantenerte informado.',
+    'ai.help_response': '¡Puedo ayudar con requisitos de visa, residencia fiscal, planificación de viajes y mucho más!',
     
     // Document Tracker
     'doc.title': 'Rastreador de documentos',
+    'doc.track_description': 'Mantenga un registro de sus documentos de viaje importantes y fechas de vencimiento',
     'doc.passports': 'Pasaportes',
     'doc.licenses': 'Licencias',
+    'doc.no_passports': 'Aún no se han agregado pasaportes',
+    'doc.add_passport': 'Agregar Pasaporte',
+    'doc.add_license': 'Agregar Licencia',
+    'doc.country_state': 'País/Estado',
+    'doc.license_class': 'Clase de Licencia',
+    'doc.issue_date': 'Fecha de Emisión',
+    'doc.expiry_date': 'Fecha de Vencimiento',
+    'doc.issuing_authority': 'Autoridad Emisora',
+    'doc.notes': 'Notas',
     
     // Expense Tracker
     'expense.title': 'Rastreador de gastos empresariales',
@@ -206,11 +298,59 @@ const translations: Record<string, Record<string, string>> = {
     
     // Tax Residency
     'tax.title': 'Centro de residencia fiscal y cumplimiento',
+    'tax.global_overview': 'Resumen Global',
+    'tax.united_states': 'Estados Unidos',
+    'tax.canada': 'Canadá',
+    'tax.select_jurisdiction': 'Seleccionar Jurisdicción',
+    
+    // Country Card
+    'card.limit_exceeded': 'Límite Excedido',
+    'card.critical': 'Crítico',
+    'card.warning': 'Advertencia',
+    'card.monitor': 'Monitorear',
+    'card.safe': 'Seguro',
+    'card.entries': 'Entradas',
+    'card.current': 'Actual',
+    'card.count_travel_days': 'Contar Días de Viaje',
+    'card.on': 'ACTIVADO',
+    'card.off': 'DESACTIVADO',
+    'card.tax_residence_status': 'Estado de Residencia Fiscal',
+    'card.days_left': 'días restantes',
+    'card.days_this_year': 'días este año',
+    'card.days_progress': 'Progreso de Días',
+    'card.days_spent': 'Días Gastados',
+    'card.remaining': 'restantes',
+    'card.day_limit': 'Límite de Días',
+    'card.this_year': 'Este Año',
+    'card.total_days': 'Días Totales',
+    'card.edit_limit': 'Editar Límite',
+    'card.reset': 'Reiniciar',
+    
+    // Add Country Modal
+    'addCountry.title': 'Agregar País para Rastrear',
+    
+    // Circular Dashboard
+    'circularDashboard.title': 'Resumen de Viajes',
+    
+    // Toast Messages
+    'toast.countryAdded': 'País Agregado',
+    'toast.countryAddedDesc': '{country} ha sido agregado a tu lista de rastreo',
+    'toast.countryRemoved': 'País Eliminado',
+    'toast.countryRemovedDesc': 'El país ha sido eliminado del rastreo',
+    'toast.locationConfirmed': 'Ubicación Confirmada',
+    'toast.locationConfirmedDesc': 'Tu ubicación ha sido confirmada',
+    'toast.locationCorrection': 'La Ubicación Necesita Corrección',
+    'toast.locationCorrectionDesc': 'Por favor actualiza tu ubicación manualmente',
+    'toast.vpnInstructions': 'VPN Detectada',
+    'toast.vpnInstructionsDesc': 'Por favor desactiva la VPN para un rastreo preciso',
+    'toast.planUpgraded': 'Plan Actualizado',
+    'toast.planUpgradedDesc': 'Actualizado exitosamente al plan {tier}',
     
     // Common
     'common.save': 'Guardar',
     'common.cancel': 'Cancelar',
     'common.close': 'Cerrar',
+    'common.free': 'Gratis',
   },
   pt: {
     // Header
@@ -239,8 +379,13 @@ const translations: Record<string, Record<string, string>> = {
     // Dashboard Stats
     'stats.countries_tracked': 'Países rastreados',
     'stats.active_destinations': 'Destinos ativos',
+    'stats.active_tracking': 'Rastreamento Ativo',
+    'stats.with_recorded_visits': 'Com visitas registradas',
     'stats.critical_alerts': 'Alertas críticos',
     'stats.require_attention': 'Requerem atenção',
+    'stats.warnings': 'Avisos',
+    'stats.urgent': 'Urgente',
+    'stats.monitor_closely': 'Monitorar de perto',
     
     // Quick Actions
     'quick.title': 'Ações rápidas',
@@ -276,11 +421,28 @@ const translations: Record<string, Record<string, string>> = {
     // AI Assistant
     'ai.title': 'Assistente de viagem IA',
     'ai.typing': 'IA está digitando...',
+    'ai.greeting': 'Olá! Sou seu Assistente de Viagem IA. Como posso ajudá-lo hoje?',
+    'ai.visa_response': 'Com base em seus {count} países rastreados, posso ajudá-lo com requisitos e solicitações de visto.',
+    'ai.booking_response': 'Posso ajudá-lo a encontrar e reservar os melhores restaurantes em sua localização atual.',
+    'ai.weather_response': 'Posso fornecer informações meteorológicas para todos os {count} países que você está rastreando.',
+    'ai.tax_response': 'Posso ajudar com questões de residência fiscal e requisitos de conformidade.',
+    'ai.alert_response': 'Seu plano {tier} inclui alertas inteligentes e notificações para mantê-lo informado.',
+    'ai.help_response': 'Posso ajudar com requisitos de visto, residência fiscal, planejamento de viagens e muito mais!',
     
     // Document Tracker
     'doc.title': 'Rastreador de documentos',
+    'doc.track_description': 'Acompanhe seus documentos de viagem importantes e datas de validade',
     'doc.passports': 'Passaportes',
     'doc.licenses': 'Licenças',
+    'doc.no_passports': 'Nenhum passaporte adicionado ainda',
+    'doc.add_passport': 'Adicionar Passaporte',
+    'doc.add_license': 'Adicionar Licença',
+    'doc.country_state': 'País/Estado',
+    'doc.license_class': 'Classe da Licença',
+    'doc.issue_date': 'Data de Emissão',
+    'doc.expiry_date': 'Data de Validade',
+    'doc.issuing_authority': 'Autoridade Emissora',
+    'doc.notes': 'Notas',
     
     // Expense Tracker
     'expense.title': 'Rastreador de despesas empresariais',
@@ -297,11 +459,59 @@ const translations: Record<string, Record<string, string>> = {
     
     // Tax Residency
     'tax.title': 'Centro de residência fiscal e conformidade',
+    'tax.global_overview': 'Visão Geral Global',
+    'tax.united_states': 'Estados Unidos',
+    'tax.canada': 'Canadá',
+    'tax.select_jurisdiction': 'Selecionar Jurisdição',
+    
+    // Country Card
+    'card.limit_exceeded': 'Limite Excedido',
+    'card.critical': 'Crítico',
+    'card.warning': 'Aviso',
+    'card.monitor': 'Monitorar',
+    'card.safe': 'Seguro',
+    'card.entries': 'Entradas',
+    'card.current': 'Atual',
+    'card.count_travel_days': 'Contar Dias de Viagem',
+    'card.on': 'LIGADO',
+    'card.off': 'DESLIGADO',
+    'card.tax_residence_status': 'Status de Residência Fiscal',
+    'card.days_left': 'dias restantes',
+    'card.days_this_year': 'dias este ano',
+    'card.days_progress': 'Progresso de Dias',
+    'card.days_spent': 'Dias Gastos',
+    'card.remaining': 'restantes',
+    'card.day_limit': 'Limite de Dias',
+    'card.this_year': 'Este Ano',
+    'card.total_days': 'Dias Totais',
+    'card.edit_limit': 'Editar Limite',
+    'card.reset': 'Reiniciar',
+    
+    // Add Country Modal
+    'addCountry.title': 'Adicionar País para Rastrear',
+    
+    // Circular Dashboard
+    'circularDashboard.title': 'Visão Geral de Viagens',
+    
+    // Toast Messages
+    'toast.countryAdded': 'País Adicionado',
+    'toast.countryAddedDesc': '{country} foi adicionado à sua lista de rastreamento',
+    'toast.countryRemoved': 'País Removido',
+    'toast.countryRemovedDesc': 'O país foi removido do rastreamento',
+    'toast.locationConfirmed': 'Localização Confirmada',
+    'toast.locationConfirmedDesc': 'Sua localização foi confirmada',
+    'toast.locationCorrection': 'Localização Precisa de Correção',
+    'toast.locationCorrectionDesc': 'Por favor, atualize sua localização manualmente',
+    'toast.vpnInstructions': 'VPN Detectada',
+    'toast.vpnInstructionsDesc': 'Por favor, desative a VPN para rastreamento preciso',
+    'toast.planUpgraded': 'Plano Atualizado',
+    'toast.planUpgradedDesc': 'Atualizado com sucesso para o plano {tier}',
     
     // Common
     'common.save': 'Salvar',
     'common.cancel': 'Cancelar',
     'common.close': 'Fechar',
+    'common.free': 'Grátis',
   },
   hi: {
     // Header
@@ -330,8 +540,13 @@ const translations: Record<string, Record<string, string>> = {
     // Dashboard Stats
     'stats.countries_tracked': 'ट्रैक किए गए देश',
     'stats.active_destinations': 'सक्रिय गंतव्य',
+    'stats.active_tracking': 'सक्रिय ट्रैकिंग',
+    'stats.with_recorded_visits': 'रिकॉर्ड किए गए दौरों के साथ',
     'stats.critical_alerts': 'गंभीर अलर्ट',
     'stats.require_attention': 'ध्यान देने की आवश्यकता',
+    'stats.warnings': 'चेतावनी',
+    'stats.urgent': 'तत्काल',
+    'stats.monitor_closely': 'बारीकी से निगरानी करें',
     
     // Quick Actions
     'quick.title': 'त्वरित क्रियाएं',
@@ -367,11 +582,28 @@ const translations: Record<string, Record<string, string>> = {
     // AI Assistant
     'ai.title': 'एआई यात्रा सहायक',
     'ai.typing': 'एआई टाइप कर रहा है...',
+    'ai.greeting': 'नमस्ते! मैं आपका एआई यात्रा सहायक हूं। आज मैं आपकी कैसे मदद कर सकता हूं?',
+    'ai.visa_response': 'आपके {count} ट्रैक किए गए देशों के आधार पर, मैं वीज़ा आवश्यकताओं और आवेदनों में आपकी सहायता कर सकता हूं।',
+    'ai.booking_response': 'मैं आपके वर्तमान स्थान पर सर्वोत्तम रेस्तरां खोजने और बुक करने में आपकी मदद कर सकता हूं।',
+    'ai.weather_response': 'मैं आपके द्वारा ट्रैक किए जा रहे सभी {count} देशों के लिए मौसम की जानकारी प्रदान कर सकता हूं।',
+    'ai.tax_response': 'मैं कर निवास प्रश्नों और अनुपालन आवश्यकताओं में सहायता कर सकता हूं।',
+    'ai.alert_response': 'आपकी {tier} योजना में आपको सूचित रखने के लिए स्मार्ट अलर्ट और सूचनाएं शामिल हैं।',
+    'ai.help_response': 'मैं वीज़ा आवश्यकताओं, कर निवास, यात्रा योजना और बहुत कुछ में मदद कर सकता हूं!',
     
     // Document Tracker
     'doc.title': 'दस्तावेज़ ट्रैकर',
+    'doc.track_description': 'अपने महत्वपूर्ण यात्रा दस्तावेजों और समाप्ति तिथियों का ट्रैक रखें',
     'doc.passports': 'पासपोर्ट',
     'doc.licenses': 'लाइसेंस',
+    'doc.no_passports': 'अभी तक कोई पासपोर्ट नहीं जोड़ा गया',
+    'doc.add_passport': 'पासपोर्ट जोड़ें',
+    'doc.add_license': 'लाइसेंस जोड़ें',
+    'doc.country_state': 'देश/राज्य',
+    'doc.license_class': 'लाइसेंस वर्ग',
+    'doc.issue_date': 'जारी करने की तिथि',
+    'doc.expiry_date': 'समाप्ति तिथि',
+    'doc.issuing_authority': 'जारीकर्ता प्राधिकरण',
+    'doc.notes': 'नोट्स',
     
     // Expense Tracker
     'expense.title': 'व्यावसायिक व्यय ट्रैकर',
@@ -388,11 +620,59 @@ const translations: Record<string, Record<string, string>> = {
     
     // Tax Residency
     'tax.title': 'कर निवास और अनुपालन केंद्र',
+    'tax.global_overview': 'वैश्विक अवलोकन',
+    'tax.united_states': 'संयुक्त राज्य अमेरिका',
+    'tax.canada': 'कनाडा',
+    'tax.select_jurisdiction': 'क्षेत्राधिकार चुनें',
+    
+    // Country Card
+    'card.limit_exceeded': 'सीमा पार',
+    'card.critical': 'महत्वपूर्ण',
+    'card.warning': 'चेतावनी',
+    'card.monitor': 'निगरानी',
+    'card.safe': 'सुरक्षित',
+    'card.entries': 'प्रवेश',
+    'card.current': 'वर्तमान',
+    'card.count_travel_days': 'यात्रा दिनों की गणना',
+    'card.on': 'चालू',
+    'card.off': 'बंद',
+    'card.tax_residence_status': 'कर निवास स्थिति',
+    'card.days_left': 'दिन शेष',
+    'card.days_this_year': 'इस वर्ष के दिन',
+    'card.days_progress': 'दिनों की प्रगति',
+    'card.days_spent': 'बिताए गए दिन',
+    'card.remaining': 'शेष',
+    'card.day_limit': 'दिन की सीमा',
+    'card.this_year': 'इस वर्ष',
+    'card.total_days': 'कुल दिन',
+    'card.edit_limit': 'सीमा संपादित करें',
+    'card.reset': 'रीसेट',
+    
+    // Add Country Modal
+    'addCountry.title': 'ट्रैक करने के लिए देश जोड़ें',
+    
+    // Circular Dashboard
+    'circularDashboard.title': 'यात्रा अवलोकन',
+    
+    // Toast Messages
+    'toast.countryAdded': 'देश जोड़ा गया',
+    'toast.countryAddedDesc': '{country} को आपकी ट्रैकिंग सूची में जोड़ा गया है',
+    'toast.countryRemoved': 'देश हटाया गया',
+    'toast.countryRemovedDesc': 'देश को ट्रैकिंग से हटा दिया गया है',
+    'toast.locationConfirmed': 'स्थान की पुष्टि की गई',
+    'toast.locationConfirmedDesc': 'आपके स्थान की पुष्टि हो गई है',
+    'toast.locationCorrection': 'स्थान को सुधार की आवश्यकता',
+    'toast.locationCorrectionDesc': 'कृपया अपने स्थान को मैन्युअल रूप से अपडेट करें',
+    'toast.vpnInstructions': 'VPN का पता चला',
+    'toast.vpnInstructionsDesc': 'सटीक ट्रैकिंग के लिए कृपया VPN अक्षम करें',
+    'toast.planUpgraded': 'योजना अपग्रेड की गई',
+    'toast.planUpgradedDesc': 'सफलतापूर्वक {tier} योजना में अपग्रेड किया गया',
     
     // Common
     'common.save': 'सहेजें',
     'common.cancel': 'रद्द करें',
     'common.close': 'बंद करें',
+    'common.free': 'मुफ्त',
   },
   sw: {
     // Header
@@ -421,8 +701,13 @@ const translations: Record<string, Record<string, string>> = {
     // Dashboard Stats
     'stats.countries_tracked': 'Nchi Zinazofuatiliwa',
     'stats.active_destinations': 'Maeneo yanayotumika',
+    'stats.active_tracking': 'Ufuatiliaji Unaotumika',
+    'stats.with_recorded_visits': 'Yenye ziara zilizorekodishwa',
     'stats.critical_alerts': 'Arifa Muhimu',
     'stats.require_attention': 'Inahitaji umakini',
+    'stats.warnings': 'Maonyo',
+    'stats.urgent': 'Dharura',
+    'stats.monitor_closely': 'Fuatilia kwa karibu',
     
     // Quick Actions
     'quick.title': 'Vitendo vya Haraka',
@@ -458,11 +743,28 @@ const translations: Record<string, Record<string, string>> = {
     // AI Assistant
     'ai.title': 'Msaidizi wa Safari wa AI',
     'ai.typing': 'AI inaandika...',
+    'ai.greeting': 'Hujambo! Mimi ni Msaidizi wako wa Safari wa AI. Naweza kukusaidia vipi leo?',
+    'ai.visa_response': 'Kulingana na nchi {count} unazofuatilia, naweza kukusaidia na mahitaji ya viza na maombi.',
+    'ai.booking_response': 'Naweza kukusaidia kutafuta na kuhifadhi mikahawa bora katika eneo lako la sasa.',
+    'ai.weather_response': 'Naweza kutoa habari za hali ya hewa kwa nchi zote {count} unazofuatilia.',
+    'ai.tax_response': 'Naweza kusaidia na maswali ya makazi ya kodi na mahitaji ya kufuata sheria.',
+    'ai.alert_response': 'Mpango wako wa {tier} unajumuisha arifa na taarifa za akili kukuweka umejulishwa.',
+    'ai.help_response': 'Naweza kusaidia na mahitaji ya viza, makazi ya kodi, mipango ya safari na mengi zaidi!',
     
     // Document Tracker
     'doc.title': 'Kifuatiliaji cha Hati',
+    'doc.track_description': 'Fuatilia hati zako muhimu za kusafiri na tarehe za kumalizika',
     'doc.passports': 'Pasi',
     'doc.licenses': 'Leseni',
+    'doc.no_passports': 'Hakuna pasipoti zilizoongezwa bado',
+    'doc.add_passport': 'Ongeza Pasipoti',
+    'doc.add_license': 'Ongeza Leseni',
+    'doc.country_state': 'Nchi/Jimbo',
+    'doc.license_class': 'Darasa la Leseni',
+    'doc.issue_date': 'Tarehe ya Kutolewa',
+    'doc.expiry_date': 'Tarehe ya Kumalizika',
+    'doc.issuing_authority': 'Mamlaka Inayotoa',
+    'doc.notes': 'Maelezo',
     
     // Expense Tracker
     'expense.title': 'Kifuatiliaji cha Gharama za Biashara',
@@ -479,11 +781,59 @@ const translations: Record<string, Record<string, string>> = {
     
     // Tax Residency
     'tax.title': 'Kituo cha Makazi ya Kodi na Kufuata Sheria',
+    'tax.global_overview': 'Muhtasari wa Kimataifa',
+    'tax.united_states': 'Marekani',
+    'tax.canada': 'Kanada',
+    'tax.select_jurisdiction': 'Chagua Mamlaka',
+    
+    // Country Card
+    'card.limit_exceeded': 'Kikomo Kimezidishwa',
+    'card.critical': 'Muhimu',
+    'card.warning': 'Onyo',
+    'card.monitor': 'Fuatilia',
+    'card.safe': 'Salama',
+    'card.entries': 'Kuingia',
+    'card.current': 'Ya Sasa',
+    'card.count_travel_days': 'Hesabu Siku za Safari',
+    'card.on': 'IMEWASHWA',
+    'card.off': 'IMEZIMWA',
+    'card.tax_residence_status': 'Hali ya Makazi ya Kodi',
+    'card.days_left': 'siku zilizobaki',
+    'card.days_this_year': 'siku mwaka huu',
+    'card.days_progress': 'Maendeleo ya Siku',
+    'card.days_spent': 'Siku Zilizotumika',
+    'card.remaining': 'zilizobaki',
+    'card.day_limit': 'Kikomo cha Siku',
+    'card.this_year': 'Mwaka Huu',
+    'card.total_days': 'Jumla ya Siku',
+    'card.edit_limit': 'Hariri Kikomo',
+    'card.reset': 'Weka Upya',
+    
+    // Add Country Modal
+    'addCountry.title': 'Ongeza Nchi ya Kufuatilia',
+    
+    // Circular Dashboard
+    'circularDashboard.title': 'Muhtasari wa Safari',
+    
+    // Toast Messages
+    'toast.countryAdded': 'Nchi Imeongezwa',
+    'toast.countryAddedDesc': '{country} imeongezwa kwenye orodha yako ya ufuatiliaji',
+    'toast.countryRemoved': 'Nchi Imeondolewa',
+    'toast.countryRemovedDesc': 'Nchi imeondolewa kutoka ufuatiliaji',
+    'toast.locationConfirmed': 'Eneo Limethibitishwa',
+    'toast.locationConfirmedDesc': 'Eneo lako limethibitishwa',
+    'toast.locationCorrection': 'Eneo Linahitaji Urekebishaji',
+    'toast.locationCorrectionDesc': 'Tafadhali sasisha eneo lako mwenyewe',
+    'toast.vpnInstructions': 'VPN Imegunduliwa',
+    'toast.vpnInstructionsDesc': 'Tafadhali lemaza VPN kwa ufuatiliaji sahihi',
+    'toast.planUpgraded': 'Mpango Umeboreshwa',
+    'toast.planUpgradedDesc': 'Umefanikiwa kuboresha hadi mpango wa {tier}',
     
     // Common
     'common.save': 'Hifadhi',
     'common.cancel': 'Ghairi',
     'common.close': 'Funga',
+    'common.free': 'Bure',
   },
   af: {
     // App Header & Navigation
