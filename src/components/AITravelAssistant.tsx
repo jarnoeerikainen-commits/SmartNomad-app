@@ -79,10 +79,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     
     // Default responses
     const responses = [
-      "That's a great travel question! Let me help you with that information.",
-      "Based on your travel history, I'd recommend checking the latest requirements for your destinations.",
-      "I'm here to assist with your travel planning needs. What specific aspect would you like help with?",
-      "Travel planning can be complex, but I'm here to make it easier for you!"
+      t('ai.default_response_1'),
+      t('ai.default_response_2'),
+      t('ai.default_response_3'),
+      t('ai.default_response_4')
     ];
     
     return responses[Math.floor(Math.random() * responses.length)];
@@ -150,7 +150,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
               <Bot className="h-5 w-5 text-white" />
             </div>
-            <CardTitle className="text-sm font-semibold">AI Travel Assistant</CardTitle>
+            <CardTitle className="text-sm font-semibold">{t('ai.title')}</CardTitle>
             <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
@@ -222,7 +222,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask about travel, visas, bookings..."
+                  placeholder={t('ai.placeholder')}
                   className="flex-1"
                   disabled={isTyping}
                 />
@@ -236,7 +236,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                AI responses are simulated. For advanced features, connect to Supabase.
+                {t('ai.disclaimer')}
               </p>
             </div>
           </CardContent>

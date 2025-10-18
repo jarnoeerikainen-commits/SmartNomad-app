@@ -132,11 +132,11 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Country Search and Selection */}
           <div className="space-y-2">
-            <Label htmlFor="country" className="text-base font-medium">Select Country</Label>
+            <Label htmlFor="country" className="text-base font-medium">{t('addCountry.select_country')}</Label>
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search countries..."
+                placeholder={t('placeholder.search_country')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -161,7 +161,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
                 ))}
                 {filteredCountries.length === 0 && (
                   <div className="p-3 text-center text-muted-foreground">
-                    No countries found
+                    {t('addCountry.no_countries_found')}
                   </div>
                 )}
               </div>
@@ -174,7 +174,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
                   <div>
                     <div className="font-medium">{selectedCountryDetails.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      Currency: {selectedCountryDetails.currency} | Languages: {selectedCountryDetails.languages.join(', ')}
+                      {t('addCountry.currency')}: {selectedCountryDetails.currency} | {t('addCountry.languages')}: {selectedCountryDetails.languages.join(', ')}
                     </div>
                   </div>
                 </div>
@@ -184,10 +184,10 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
 
           {/* Reason Selection */}
           <div className="space-y-2">
-            <Label htmlFor="reason" className="text-base font-medium">Why track this country?</Label>
+            <Label htmlFor="reason" className="text-base font-medium">{t('addCountry.why_track')}</Label>
             <Select value={reason} onValueChange={handleReasonChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Choose tracking reason..." />
+                <SelectValue placeholder={t('placeholder.choose_country')} />
               </SelectTrigger>
               <SelectContent>
                 {COMMON_REASONS.map(reasonOption => (
@@ -201,12 +201,12 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
 
           {reason === 'Custom tracking' && (
             <div className="space-y-2">
-              <Label htmlFor="customReason">Custom Reason</Label>
+              <Label htmlFor="customReason">{t('addCountry.custom_reason')}</Label>
               <Input
                 id="customReason"
                 value={customReason}
                 onChange={(e) => setCustomReason(e.target.value)}
-                placeholder="Enter your custom reason..."
+                placeholder={t('placeholder.enter_country_name')}
                 required
               />
             </div>

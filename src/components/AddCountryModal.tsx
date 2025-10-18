@@ -243,10 +243,10 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="country">Select Country</Label>
+            <Label htmlFor="country">{t('addCountry.select_country')}</Label>
             <Select value={selectedCountry} onValueChange={handleCountryChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Choose a country..." />
+                <SelectValue placeholder={t('placeholder.choose_country')} />
               </SelectTrigger>
               <SelectContent>
                 {availableCountries.map(country => (
@@ -260,19 +260,19 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
 
           {selectedCountryInfo && (
             <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm font-medium text-blue-800">Tax Residence Rule</p>
+              <p className="text-sm font-medium text-blue-800">{t('addCountry.tax_rule')}</p>
               <p className="text-sm text-blue-700">
-                {selectedCountryInfo.days} days - {selectedCountryInfo.note}
+                {selectedCountryInfo.days} {t('common.days')} - {selectedCountryInfo.note}
               </p>
             </div>
           )}
 
           {!selectedCountry && (
             <>
-              <div className="text-center text-sm text-muted-foreground">or</div>
+              <div className="text-center text-sm text-muted-foreground">{t('addCountry.or')}</div>
               <div className="grid grid-cols-4 gap-2">
                 <div className="col-span-1">
-                  <Label htmlFor="flag">Flag</Label>
+                  <Label htmlFor="flag">{t('addCountry.flag')}</Label>
                   <Input
                     id="flag"
                     value={customCountryFlag}
@@ -282,12 +282,12 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
                   />
                 </div>
                 <div className="col-span-3">
-                  <Label htmlFor="customCountry">Custom Country</Label>
+                  <Label htmlFor="customCountry">{t('addCountry.custom_country')}</Label>
                   <Input
                     id="customCountry"
                     value={customCountryName}
                     onChange={(e) => setCustomCountryName(e.target.value)}
-                    placeholder="Enter country name..."
+                    placeholder={t('placeholder.enter_country_name')}
                   />
                 </div>
               </div>
@@ -295,10 +295,10 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="reason">Visa/Tracking Type</Label>
+            <Label htmlFor="reason">{t('addCountry.visa_type')}</Label>
             <Select value={reason} onValueChange={handleReasonChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Choose visa or tracking type..." />
+                <SelectValue placeholder={t('placeholder.choose_country')} />
               </SelectTrigger>
               <SelectContent>
                 {VISA_TYPES.map(visaType => (
@@ -318,22 +318,22 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
 
           {reason === 'Custom Tracking' && (
             <div className="space-y-2">
-              <Label htmlFor="customReason">Custom Reason</Label>
+              <Label htmlFor="customReason">{t('addCountry.custom_reason')}</Label>
               <Input
                 id="customReason"
                 value={customReason}
                 onChange={(e) => setCustomReason(e.target.value)}
-                placeholder="Enter your custom tracking reason..."
+                placeholder={t('placeholder.enter_country_name')}
               />
             </div>
           )}
 
           <div className="space-y-3">
-            <Label>Day Limit Options</Label>
+            <Label>{t('addCountry.day_limit_options')}</Label>
             
             {/* Common Day Limits */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Choose from common visa limits:</p>
+              <p className="text-sm text-muted-foreground">{t('addCountry.choose_common')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {COMMON_DAY_LIMITS.map(limit => (
                   <Button
@@ -355,14 +355,14 @@ const AddCountryModal: React.FC<AddCountryModalProps> = ({
 
             {/* Manual Input */}
             <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Or enter custom days:</p>
+              <p className="text-sm text-muted-foreground">{t('addCountry.or_enter_custom')}</p>
               <Input
                 type="number"
                 min="1"
                 max="365"
                 value={dayLimit}
                 onChange={(e) => handleCustomDayLimit(e.target.value)}
-                placeholder="Enter custom day limit"
+                placeholder={t('placeholder.day_limit')}
                 className={limitType === 'custom' ? 'border-primary' : ''}
               />
             </div>

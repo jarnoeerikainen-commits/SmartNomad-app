@@ -2245,6 +2245,231 @@ const commonTranslations = {
     it: 'Si prega di compilare tutti i campi obbligatori', ko: '모든 필수 필드를 입력하세요',
     hi: 'कृपया सभी आवश्यक फ़ील्ड भरें', sw: 'Tafadhali jaza sehemu zote zinazohitajika', af: 'Vul asseblief alle vereiste velde in'
   },
+  
+  // AI Assistant
+  'ai.title': {
+    en: 'AI Travel Assistant', es: 'Asistente de Viaje IA', pt: 'Assistente de Viagem IA',
+    zh: 'AI旅行助手', fr: 'Assistant de Voyage IA', de: 'KI-Reiseassistent',
+    ar: 'مساعد السفر بالذكاء الاصطناعي', ja: 'AI旅行アシスタント', it: 'Assistente di Viaggio IA',
+    ko: 'AI 여행 도우미', hi: 'AI यात्रा सहायक', sw: 'Msaidizi wa Usafiri wa AI', af: 'AI Reisassistent'
+  },
+  'ai.placeholder': {
+    en: 'Ask about travel, visas, bookings...', es: 'Pregunta sobre viajes, visas, reservas...',
+    pt: 'Pergunte sobre viagens, vistos, reservas...', zh: '询问旅行、签证、预订...',
+    fr: 'Posez des questions sur les voyages, visas, réservations...', de: 'Fragen Sie nach Reisen, Visa, Buchungen...',
+    ar: 'اسأل عن السفر والتأشيرات والحجوزات...', ja: '旅行、ビザ、予約について質問してください...',
+    it: 'Chiedi informazioni su viaggi, visti, prenotazioni...', ko: '여행, 비자, 예약에 대해 질문하세요...',
+    hi: 'यात्रा, वीजा, बुकिंग के बारे में पूछें...', sw: 'Uliza kuhusu usafiri, visa, uhifadhi...', af: 'Vra oor reise, visums, besprekings...'
+  },
+  'ai.disclaimer': {
+    en: 'AI responses are simulated. For advanced features, connect to Supabase.',
+    es: 'Las respuestas de IA son simuladas. Para funciones avanzadas, conéctese a Supabase.',
+    pt: 'As respostas de IA são simuladas. Para recursos avançados, conecte-se ao Supabase.',
+    zh: 'AI 响应是模拟的。要使用高级功能，请连接到 Supabase。',
+    fr: 'Les réponses IA sont simulées. Pour les fonctions avancées, connectez-vous à Supabase.',
+    de: 'KI-Antworten sind simuliert. Für erweiterte Funktionen mit Supabase verbinden.',
+    ar: 'استجابات الذكاء الاصطناعي محاكاة. للميزات المتقدمة، اتصل بـ Supabase.',
+    ja: 'AI応答はシミュレーションです。高度な機能を使用するには、Supabaseに接続してください。',
+    it: 'Le risposte AI sono simulate. Per funzionalità avanzate, connettiti a Supabase.',
+    ko: 'AI 응답은 시뮬레이션입니다. 고급 기능을 사용하려면 Supabase에 연결하세요.',
+    hi: 'AI प्रतिक्रियाएं अनुकरणीय हैं। उन्नत सुविधाओं के लिए, Supabase से कनेक्ट करें।',
+    sw: 'Majibu ya AI ni ya kuiga. Kwa vipengele vya juu, unganisha kwenye Supabase.',
+    af: 'AI-antwoorde is gesimuleer. Vir gevorderde funksies, koppel aan Supabase.'
+  },
+  'ai.default_response_1': {
+    en: "That's a great travel question! Let me help you with that information.",
+    es: '¡Esa es una gran pregunta de viaje! Déjame ayudarte con esa información.',
+    pt: 'Essa é uma ótima pergunta de viagem! Deixe-me ajudá-lo com essa informação.',
+    zh: '这是一个很好的旅行问题！让我帮你提供这些信息。',
+    fr: "C'est une excellente question de voyage ! Laissez-moi vous aider avec cette information.",
+    de: 'Das ist eine tolle Reisefrage! Lassen Sie mich Ihnen mit dieser Information helfen.',
+    ar: 'هذا سؤال سفر رائع! دعني أساعدك بهذه المعلومات.',
+    ja: 'それは素晴らしい旅行の質問です！その情報をお手伝いさせてください。',
+    it: 'È un\'ottima domanda di viaggio! Lascia che ti aiuti con queste informazioni.',
+    ko: '훌륭한 여행 질문입니다! 그 정보로 도와드리겠습니다.',
+    hi: 'यह एक बेहतरीन यात्रा प्रश्न है! मुझे उस जानकारी में आपकी मदद करने दें।',
+    sw: 'Hiyo ni swali nzuri la usafiri! Wacha nikusaidie na habari hiyo.',
+    af: 'Dit is \'n groot reisvraag! Laat my jou met daardie inligting help.'
+  },
+  'ai.default_response_2': {
+    en: "Based on your travel history, I'd recommend checking the latest requirements for your destinations.",
+    es: 'Según tu historial de viajes, te recomendaría verificar los requisitos más recientes para tus destinos.',
+    pt: 'Com base no seu histórico de viagens, eu recomendaria verificar os requisitos mais recentes para seus destinos.',
+    zh: '根据您的旅行历史，我建议检查您目的地的最新要求。',
+    fr: 'En fonction de votre historique de voyage, je vous recommande de vérifier les dernières exigences pour vos destinations.',
+    de: 'Basierend auf Ihrer Reisehistorie empfehle ich, die neuesten Anforderungen für Ihre Ziele zu überprüfen.',
+    ar: 'بناءً على تاريخ سفرك، أوصي بالتحقق من أحدث المتطلبات لوجهاتك.',
+    ja: 'あなたの旅行履歴に基づいて、目的地の最新の要件を確認することをお勧めします。',
+    it: 'In base alla tua cronologia di viaggio, consiglio di verificare i requisiti più recenti per le tue destinazioni.',
+    ko: '여행 기록을 바탕으로 목적지의 최신 요구 사항을 확인하는 것이 좋습니다.',
+    hi: 'आपके यात्रा इतिहास के आधार पर, मैं आपके गंतव्यों के लिए नवीनतम आवश्यकताओं की जांच करने की सिफारिश करूंगा।',
+    sw: 'Kulingana na historia yako ya usafiri, ningependekeza kuangalia mahitaji ya hivi karibuni kwa maeneo yako.',
+    af: 'Gebaseer op jou reisgeskiedenis, sal ek aanbeveel om die nuutste vereistes vir jou bestemmings na te gaan.'
+  },
+  'ai.default_response_3': {
+    en: "I'm here to assist with your travel planning needs. What specific aspect would you like help with?",
+    es: 'Estoy aquí para ayudarte con tus necesidades de planificación de viajes. ¿Con qué aspecto específico te gustaría ayuda?',
+    pt: 'Estou aqui para ajudar com suas necessidades de planejamento de viagem. Com qual aspecto específico você gostaria de ajuda?',
+    zh: '我在这里协助您的旅行计划需求。您想要帮助哪个具体方面？',
+    fr: 'Je suis là pour vous aider avec vos besoins de planification de voyage. Sur quel aspect spécifique aimeriez-vous de l\'aide ?',
+    de: 'Ich bin hier, um Sie bei Ihren Reiseplanungsbedürfnissen zu unterstützen. Bei welchem speziellen Aspekt möchten Sie Hilfe?',
+    ar: 'أنا هنا لمساعدتك في احتياجات تخطيط السفر. في أي جانب محدد تريد المساعدة؟',
+    ja: '旅行計画のニーズをサポートするためにここにいます。どの具体的な側面についてヘルプが必要ですか？',
+    it: 'Sono qui per aiutarti con le tue esigenze di pianificazione del viaggio. Con quale aspetto specifico vorresti aiuto?',
+    ko: '여행 계획 요구 사항을 지원하기 위해 여기 있습니다. 어떤 구체적인 측면에 대해 도움을 받고 싶으신가요?',
+    hi: 'मैं आपकी यात्रा योजना की जरूरतों में मदद करने के लिए यहां हूं। आप किस विशिष्ट पहलू में मदद चाहेंगे?',
+    sw: 'Nipo hapa kusaidia na mahitaji yako ya kupanga usafiri. Ni kipengele gani maalum ungependa kusaidiwa?',
+    af: 'Ek is hier om te help met jou reisbeplanningsbehoeftes. Met watter spesifieke aspek wil jy graag hulp hê?'
+  },
+  'ai.default_response_4': {
+    en: 'Travel planning can be complex, but I\'m here to make it easier for you!',
+    es: 'La planificación de viajes puede ser compleja, ¡pero estoy aquí para hacértela más fácil!',
+    pt: 'O planejamento de viagens pode ser complexo, mas estou aqui para torná-lo mais fácil para você!',
+    zh: '旅行计划可能很复杂，但我在这里让您更轻松！',
+    fr: 'La planification de voyage peut être complexe, mais je suis là pour vous faciliter la tâche !',
+    de: 'Reiseplanung kann komplex sein, aber ich bin hier, um es Ihnen zu erleichtern!',
+    ar: 'يمكن أن يكون تخطيط السفر معقدًا، لكنني هنا لجعله أسهل بالنسبة لك!',
+    ja: '旅行計画は複雑になることがありますが、私はあなたのためにそれを簡単にするためにここにいます！',
+    it: 'La pianificazione del viaggio può essere complessa, ma sono qui per renderla più facile per te!',
+    ko: '여행 계획은 복잡할 수 있지만, 저는 당신을 위해 더 쉽게 만들기 위해 여기 있습니다!',
+    hi: 'यात्रा योजना जटिल हो सकती है, लेकिन मैं इसे आपके लिए आसान बनाने के लिए यहां हूं!',
+    sw: 'Kupanga usafiri kunaweza kuwa ngumu, lakini nipo hapa kukufanyia rahisi!',
+    af: 'Reisbeplanning kan kompleks wees, maar ek is hier om dit makliker vir jou te maak!'
+  },
+  
+  // Common form placeholders
+  'placeholder.search_country': {
+    en: 'Search countries...', es: 'Buscar países...', pt: 'Pesquisar países...',
+    zh: '搜索国家...', fr: 'Rechercher des pays...', de: 'Länder suchen...',
+    ar: 'البحث عن البلدان...', ja: '国を検索...', it: 'Cerca paesi...',
+    ko: '국가 검색...', hi: 'देश खोजें...', sw: 'Tafuta nchi...', af: 'Soek lande...'
+  },
+  'placeholder.search_city': {
+    en: 'Enter city or country...', es: 'Ingrese ciudad o país...',
+    pt: 'Digite cidade ou país...', zh: '输入城市或国家...',
+    fr: 'Entrez ville ou pays...', de: 'Stadt oder Land eingeben...',
+    ar: 'أدخل المدينة أو البلد...', ja: '都市または国を入力...', it: 'Inserisci città o paese...',
+    ko: '도시 또는 국가 입력...', hi: 'शहर या देश दर्ज करें...', sw: 'Weka jiji au nchi...', af: 'Voer stad of land in...'
+  },
+  'placeholder.choose_country': {
+    en: 'Choose a country...', es: 'Elige un país...', pt: 'Escolha um país...',
+    zh: '选择一个国家...', fr: 'Choisissez un pays...', de: 'Wählen Sie ein Land...',
+    ar: 'اختر بلدًا...', ja: '国を選択...', it: 'Scegli un paese...',
+    ko: '국가를 선택하세요...', hi: 'एक देश चुनें...', sw: 'Chagua nchi...', af: 'Kies \'n land...'
+  },
+  'placeholder.enter_country_name': {
+    en: 'Enter country name...', es: 'Ingrese nombre del país...',
+    pt: 'Digite o nome do país...', zh: '输入国家名称...',
+    fr: 'Entrez le nom du pays...', de: 'Ländername eingeben...',
+    ar: 'أدخل اسم البلد...', ja: '国名を入力...', it: 'Inserisci nome del paese...',
+    ko: '국가 이름 입력...', hi: 'देश का नाम दर्ज करें...', sw: 'Weka jina la nchi...', af: 'Voer landnaam in...'
+  },
+  'placeholder.search_location': {
+    en: 'Search events, locations, activities, tags...', es: 'Buscar eventos, lugares, actividades, etiquetas...',
+    pt: 'Pesquisar eventos, locais, atividades, tags...', zh: '搜索活动、地点、活动、标签...',
+    fr: 'Rechercher événements, lieux, activités, tags...', de: 'Veranstaltungen, Orte, Aktivitäten, Tags suchen...',
+    ar: 'البحث عن الأحداث والمواقع والأنشطة والعلامات...', ja: 'イベント、場所、アクティビティ、タグを検索...',
+    it: 'Cerca eventi, luoghi, attività, tag...', ko: '이벤트, 위치, 활동, 태그 검색...',
+    hi: 'इवेंट, स्थान, गतिविधियां, टैग खोजें...', sw: 'Tafuta matukio, maeneo, shughuli, lebo...',
+    af: 'Soek geleenthede, plekke, aktiwiteite, etikette...'
+  },
+  'placeholder.notes': {
+    en: 'Additional notes...', es: 'Notas adicionales...', pt: 'Notas adicionais...',
+    zh: '附加说明...', fr: 'Notes supplémentaires...', de: 'Zusätzliche Notizen...',
+    ar: 'ملاحظات إضافية...', ja: '追加メモ...', it: 'Note aggiuntive...',
+    ko: '추가 메모...', hi: 'अतिरिक्त नोट्स...', sw: 'Maelezo ya ziada...', af: 'Bykomende notas...'
+  },
+  'placeholder.day_limit': {
+    en: 'Enter day limit', es: 'Ingrese límite de días', pt: 'Digite o limite de dias',
+    zh: '输入天数限制', fr: 'Entrez la limite de jours', de: 'Tageslimit eingeben',
+    ar: 'أدخل حد الأيام', ja: '日数制限を入力', it: 'Inserisci limite giorni',
+    ko: '일수 제한 입력', hi: 'दिन की सीमा दर्ज करें', sw: 'Weka kikomo cha siku', af: 'Voer daglimiet in'
+  },
+  
+  // Add Country Modal
+  'addCountry.select_country': {
+    en: 'Select Country', es: 'Seleccionar país', pt: 'Selecionar país',
+    zh: '选择国家', fr: 'Sélectionner le pays', de: 'Land auswählen',
+    ar: 'اختر الدولة', ja: '国を選択', it: 'Seleziona paese',
+    ko: '국가 선택', hi: 'देश चुनें', sw: 'Chagua Nchi', af: 'Kies Land'
+  },
+  'addCountry.tax_rule': {
+    en: 'Tax Residence Rule', es: 'Regla de residencia fiscal', pt: 'Regra de residência fiscal',
+    zh: '税务居住规则', fr: 'Règle de résidence fiscale', de: 'Steuerresidenzregel',
+    ar: 'قاعدة الإقامة الضريبية', ja: '税務居住規則', it: 'Regola residenza fiscale',
+    ko: '세금 거주 규칙', hi: 'कर निवास नियम', sw: 'Kanuni ya Makazi ya Kodi', af: 'Belasting Woonplek Reël'
+  },
+  'addCountry.or': {
+    en: 'or', es: 'o', pt: 'ou', zh: '或', fr: 'ou', de: 'oder',
+    ar: 'أو', ja: 'または', it: 'o', ko: '또는', hi: 'या', sw: 'au', af: 'of'
+  },
+  'addCountry.flag': {
+    en: 'Flag', es: 'Bandera', pt: 'Bandeira', zh: '旗帜', fr: 'Drapeau', de: 'Flagge',
+    ar: 'العلم', ja: '旗', it: 'Bandiera', ko: '국기', hi: 'झंडा', sw: 'Bendera', af: 'Vlag'
+  },
+  'addCountry.custom_country': {
+    en: 'Custom Country', es: 'País personalizado', pt: 'País personalizado',
+    zh: '自定义国家', fr: 'Pays personnalisé', de: 'Benutzerdefiniertes Land',
+    ar: 'بلد مخصص', ja: 'カスタム国', it: 'Paese personalizzato',
+    ko: '사용자 지정 국가', hi: 'कस्टम देश', sw: 'Nchi Maalum', af: 'Aangepaste Land'
+  },
+  'addCountry.visa_type': {
+    en: 'Visa/Tracking Type', es: 'Tipo de visa/seguimiento', pt: 'Tipo de visto/rastreamento',
+    zh: '签证/跟踪类型', fr: 'Type de visa/suivi', de: 'Visum/Tracking-Typ',
+    ar: 'نوع التأشيرة/التتبع', ja: 'ビザ/トラッキングタイプ', it: 'Tipo visto/tracciamento',
+    ko: '비자/추적 유형', hi: 'वीजा/ट्रैकिंग प्रकार', sw: 'Aina ya Visa/Ufuatiliaji', af: 'Visum/Volg Tipe'
+  },
+  'addCountry.custom_reason': {
+    en: 'Custom Reason', es: 'Razón personalizada', pt: 'Motivo personalizado',
+    zh: '自定义原因', fr: 'Raison personnalisée', de: 'Benutzerdefinierter Grund',
+    ar: 'السبب المخصص', ja: 'カスタム理由', it: 'Motivo personalizzato',
+    ko: '사용자 지정 이유', hi: 'कस्टम कारण', sw: 'Sababu Maalum', af: 'Aangepaste Rede'
+  },
+  'addCountry.day_limit_options': {
+    en: 'Day Limit Options', es: 'Opciones de límite de días', pt: 'Opções de limite de dias',
+    zh: '天数限制选项', fr: 'Options de limite de jours', de: 'Tageslimit-Optionen',
+    ar: 'خيارات حد الأيام', ja: '日数制限オプション', it: 'Opzioni limite giorni',
+    ko: '일수 제한 옵션', hi: 'दिन की सीमा विकल्प', sw: 'Chaguzi za Kikomo cha Siku', af: 'Daglimiet Opsies'
+  },
+  'addCountry.choose_common': {
+    en: 'Choose from common visa limits:', es: 'Elija entre límites de visa comunes:',
+    pt: 'Escolha entre limites de visto comuns:', zh: '从常见签证限制中选择：',
+    fr: 'Choisissez parmi les limites de visa courantes:', de: 'Wählen Sie aus gängigen Visumlimits:',
+    ar: 'اختر من حدود التأشيرة الشائعة:', ja: '一般的なビザ制限から選択：',
+    it: 'Scegli tra i limiti di visto comuni:', ko: '일반적인 비자 한도에서 선택:',
+    hi: 'सामान्य वीजा सीमाओं में से चुनें:', sw: 'Chagua kutoka kwa vikomo vya visa vya kawaida:',
+    af: 'Kies uit algemene visum limiete:'
+  },
+  'addCountry.or_enter_custom': {
+    en: 'Or enter custom days:', es: 'O ingrese días personalizados:',
+    pt: 'Ou digite dias personalizados:', zh: '或输入自定义天数：',
+    fr: 'Ou entrez des jours personnalisés:', de: 'Oder geben Sie benutzerdefinierte Tage ein:',
+    ar: 'أو أدخل الأيام المخصصة:', ja: 'またはカスタム日数を入力：',
+    it: 'O inserisci giorni personalizzati:', ko: '또는 사용자 지정 일수 입력:',
+    hi: 'या कस्टम दिन दर्ज करें:', sw: 'Au weka siku maalum:', af: 'Of voer aangepaste dae in:'
+  },
+  'addCountry.why_track': {
+    en: 'Why track this country?', es: '¿Por qué rastrear este país?',
+    pt: 'Por que rastrear este país?', zh: '为什么要跟踪这个国家？',
+    fr: 'Pourquoi suivre ce pays ?', de: 'Warum dieses Land verfolgen?',
+    ar: 'لماذا تتبع هذا البلد؟', ja: 'なぜこの国を追跡するのですか？',
+    it: 'Perché tracciare questo paese?', ko: '이 국가를 추적하는 이유는 무엇입니까?',
+    hi: 'इस देश को क्यों ट्रैक करें?', sw: 'Kwa nini ufuatilie nchi hii?', af: 'Waarom hierdie land volg?'
+  },
+  'addCountry.no_countries_found': {
+    en: 'No countries found', es: 'No se encontraron países', pt: 'Nenhum país encontrado',
+    zh: '未找到国家', fr: 'Aucun pays trouvé', de: 'Keine Länder gefunden',
+    ar: 'لم يتم العثور على دول', ja: '国が見つかりません', it: 'Nessun paese trovato',
+    ko: '국가를 찾을 수 없습니다', hi: 'कोई देश नहीं मिला', sw: 'Hakuna nchi zilizopatikana', af: 'Geen lande gevind nie'
+  },
+  'addCountry.currency': {
+    en: 'Currency', es: 'Moneda', pt: 'Moeda', zh: '货币', fr: 'Devise', de: 'Währung',
+    ar: 'العملة', ja: '通貨', it: 'Valuta', ko: '통화', hi: 'मुद्रा', sw: 'Sarafu', af: 'Geldeenheid'
+  },
+  'addCountry.languages': {
+    en: 'Languages', es: 'Idiomas', pt: 'Idiomas', zh: '语言', fr: 'Langues', de: 'Sprachen',
+    ar: 'اللغات', ja: '言語', it: 'Lingue', ko: '언어', hi: 'भाषाएं', sw: 'Lugha', af: 'Tale'
+  },
 };
 
 Object.keys(translations).forEach(lang => {

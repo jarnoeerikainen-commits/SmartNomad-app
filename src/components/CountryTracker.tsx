@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { MapPin, Plus, X, Search, Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Country } from '@/types/country';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface CountryTrackerProps {
   countries: Country[];
@@ -453,7 +454,7 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="Search countries and regions..."
+                placeholder={t('placeholder.search_country')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
