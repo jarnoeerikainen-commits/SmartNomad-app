@@ -42,6 +42,7 @@ import LocationTrackingServices from './LocationTrackingServices';
 import MedicalServices from './MedicalServices';
 import TravelLegalServices from './TravelLegalServices';
 import { VisaAssistanceServices } from './VisaAssistanceServices';
+import ErrorBoundary from './ErrorBoundary';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -220,7 +221,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <LocalNomads currentLocation={detectedLocation} />;
       
       case 'explore-local':
-        return <ExploreLocalLife currentLocation={detectedLocation} />;
+        return (
+          <ErrorBoundary>
+            <ExploreLocalLife currentLocation={detectedLocation} />
+          </ErrorBoundary>
+        );
       
       case 'medical-services':
         return (

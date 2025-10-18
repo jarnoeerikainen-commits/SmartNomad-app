@@ -5,16 +5,19 @@ import { TrustBadge as TrustBadgeType } from '@/services/TrustFilterService';
 import { cn } from '@/lib/utils';
 
 interface TrustBadgeProps {
-  badge: TrustBadgeType;
+  badge: string | TrustBadgeType;
   className?: string;
   showIcon?: boolean;
 }
 
-const BADGE_CONFIG: Record<TrustBadgeType, {
+// Define a more flexible badge config that can handle any string badge
+interface BadgeConfig {
   icon: React.ComponentType<any>;
   variant: 'default' | 'secondary' | 'destructive' | 'outline';
   className: string;
-}> = {
+}
+
+const BADGE_CONFIG: Record<string, BadgeConfig> = {
   'Top Rated': {
     icon: Star,
     variant: 'default',
@@ -40,6 +43,16 @@ const BADGE_CONFIG: Record<TrustBadgeType, {
     variant: 'secondary',
     className: 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-0'
   },
+  'Cultural Gem': {
+    icon: Sparkles,
+    variant: 'secondary',
+    className: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0'
+  },
+  'World-Class': {
+    icon: Star,
+    variant: 'default',
+    className: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-0'
+  },
   'Sustainable': {
     icon: Leaf,
     variant: 'secondary',
@@ -52,12 +65,25 @@ const BADGE_CONFIG: Record<TrustBadgeType, {
   }
 };
 
+// Default fallback badge config
+const DEFAULT_BADGE_CONFIG: BadgeConfig = {
+  icon: Shield,
+  variant: 'outline',
+  className: 'bg-muted/50 text-muted-foreground border-muted'
+};
+
 export const TrustBadge: React.FC<TrustBadgeProps> = ({ 
   badge, 
   className,
   showIcon = true 
 }) => {
-  const config = BADGE_CONFIG[badge];
+  // Safely get badge config with fallback
+  if (!badge) {
+    console.warn('TrustBadge: badge is undefined or null');
+    return null;
+  }
+
+  const config = BADGE_CONFIG[badge] || DEFAULT_BADGE_CONFIG;
   const Icon = config.icon;
 
   return (

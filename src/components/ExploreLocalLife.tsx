@@ -1158,104 +1158,137 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
 
   // Filter and sort events with SmartNomad Local Life AI rules
   const filteredEvents = useMemo(() => {
-    let filtered = mockEvents;
+    try {
+      let filtered = mockEvents;
 
-    // RULE 1: Only verified events with rating >= 4.0★
-    filtered = filtered.filter(event => {
-      const hasValidRating = event.rating && event.rating >= 4.0;
-      const isVerified = event.verified === true;
-      return hasValidRating && isVerified;
-    });
-
-    // RULE 2: Filter out expired events if showOnlyUpcoming is true
-    if (showOnlyUpcoming) {
-      const today = startOfDay(new Date());
+      // RULE 1: Only verified events with rating >= 4.0★
       filtered = filtered.filter(event => {
-        const eventDate = parseISO(event.startDate);
-        return isAfter(eventDate, today) || event.recurring;
+        if (!event) return false;
+        const hasValidRating = event.rating && event.rating >= 4.0;
+        const isVerified = event.verified === true;
+        return hasValidRating && isVerified;
       });
-    }
 
-    // Filter by search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(event =>
-        event.name.toLowerCase().includes(query) ||
-        event.description.toLowerCase().includes(query) ||
-        event.location.toLowerCase().includes(query) ||
-        event.city.toLowerCase().includes(query) ||
-        event.country.toLowerCase().includes(query) ||
-        event.tags?.some(tag => tag.toLowerCase().includes(query))
-      );
-    }
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(event => event.category === selectedCategory);
-    }
-
-    // Filter by city
-    if (selectedCity !== 'all') {
-      filtered = filtered.filter(event => event.city === selectedCity);
-    }
-
-    // Filter by country
-    if (selectedCountry !== 'all') {
-      filtered = filtered.filter(event => event.country === selectedCountry);
-    }
-
-    // Filter by price
-    if (priceFilter === 'free') {
-      filtered = filtered.filter(event => event.isFree);
-    } else if (priceFilter !== 'all') {
-      filtered = filtered.filter(event => event.priceRange === priceFilter);
-    }
-
-    // RULE 3: Sort by rating (high → low), reviews, then date
-    return filtered.sort((a, b) => {
-      // Priority to current location
-      if (currentLocation?.city) {
-        const aIsLocal = a.city.toLowerCase() === currentLocation.city.toLowerCase();
-        const bIsLocal = b.city.toLowerCase() === currentLocation.city.toLowerCase();
-        
-        if (aIsLocal && !bIsLocal) return -1;
-        if (!aIsLocal && bIsLocal) return 1;
+      // RULE 2: Filter out expired events if showOnlyUpcoming is true
+      if (showOnlyUpcoming) {
+        const today = startOfDay(new Date());
+        filtered = filtered.filter(event => {
+          if (!event?.startDate) return false;
+          try {
+            const eventDate = parseISO(event.startDate);
+            return isAfter(eventDate, today) || event.recurring;
+          } catch (error) {
+            console.warn('Invalid date format for event:', event.id, error);
+            return false;
+          }
+        });
       }
-      
-      // Sort by rating (high to low)
-      const ratingDiff = (b.rating || 0) - (a.rating || 0);
-      if (Math.abs(ratingDiff) > 0.1) return ratingDiff;
-      
-      // Then by number of reviews (high to low)
-      const reviewsDiff = (b.reviews || 0) - (a.reviews || 0);
-      if (reviewsDiff !== 0) return reviewsDiff;
-      
-      // Finally by date (soonest first)
-      const dateA = parseISO(a.startDate);
-      const dateB = parseISO(b.startDate);
-      return dateA.getTime() - dateB.getTime();
-    });
+
+      // Filter by search query
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(event => {
+          if (!event) return false;
+          return (
+            event.name?.toLowerCase().includes(query) ||
+            event.description?.toLowerCase().includes(query) ||
+            event.location?.toLowerCase().includes(query) ||
+            event.city?.toLowerCase().includes(query) ||
+            event.country?.toLowerCase().includes(query) ||
+            event.tags?.some(tag => tag?.toLowerCase().includes(query))
+          );
+        });
+      }
+
+      // Filter by category
+      if (selectedCategory !== 'all') {
+        filtered = filtered.filter(event => event?.category === selectedCategory);
+      }
+
+      // Filter by city
+      if (selectedCity !== 'all') {
+        filtered = filtered.filter(event => event?.city === selectedCity);
+      }
+
+      // Filter by country
+      if (selectedCountry !== 'all') {
+        filtered = filtered.filter(event => event?.country === selectedCountry);
+      }
+
+      // Filter by price
+      if (priceFilter === 'free') {
+        filtered = filtered.filter(event => event?.isFree);
+      } else if (priceFilter !== 'all') {
+        filtered = filtered.filter(event => event?.priceRange === priceFilter);
+      }
+
+      // RULE 3: Sort by rating (high → low), reviews, then date
+      return filtered.sort((a, b) => {
+        if (!a || !b) return 0;
+        
+        // Priority to current location
+        if (currentLocation?.city) {
+          const aIsLocal = a.city?.toLowerCase() === currentLocation.city.toLowerCase();
+          const bIsLocal = b.city?.toLowerCase() === currentLocation.city.toLowerCase();
+          
+          if (aIsLocal && !bIsLocal) return -1;
+          if (!aIsLocal && bIsLocal) return 1;
+        }
+        
+        // Sort by rating (high to low)
+        const ratingDiff = (b.rating || 0) - (a.rating || 0);
+        if (Math.abs(ratingDiff) > 0.1) return ratingDiff;
+        
+        // Then by number of reviews (high to low)
+        const reviewsDiff = (b.reviews || 0) - (a.reviews || 0);
+        if (reviewsDiff !== 0) return reviewsDiff;
+        
+        // Finally by date (soonest first)
+        try {
+          const dateA = parseISO(a.startDate);
+          const dateB = parseISO(b.startDate);
+          return dateA.getTime() - dateB.getTime();
+        } catch (error) {
+          return 0;
+        }
+      });
+    } catch (error) {
+      console.error('Error filtering events:', error);
+      return [];
+    }
   }, [searchQuery, selectedCategory, selectedCity, selectedCountry, priceFilter, showOnlyUpcoming, currentLocation]);
 
   // Get top local events (verified, high-rated only)
   const topLocalEvents = useMemo(() => {
-    if (!currentLocation?.city) return [];
-    
-    const today = startOfDay(new Date());
-    return mockEvents
-      .filter(event => {
-        const eventDate = parseISO(event.startDate);
-        const hasValidRating = event.rating && event.rating >= 4.0;
-        const isVerified = event.verified === true;
-        return (
-          event.city.toLowerCase() === currentLocation.city.toLowerCase() && 
-          (isAfter(eventDate, today) || event.recurring) &&
-          hasValidRating &&
-          isVerified
-        );
-      })
-      .sort((a, b) => (b.rating || 0) - (a.rating || 0)) // Sort by rating
-      .slice(0, 3);
+    try {
+      if (!currentLocation?.city) return [];
+      
+      const today = startOfDay(new Date());
+      return mockEvents
+        .filter(event => {
+          if (!event) return false;
+          
+          try {
+            const eventDate = parseISO(event.startDate);
+            const hasValidRating = event.rating && event.rating >= 4.0;
+            const isVerified = event.verified === true;
+            return (
+              event.city?.toLowerCase() === currentLocation.city.toLowerCase() && 
+              (isAfter(eventDate, today) || event.recurring) &&
+              hasValidRating &&
+              isVerified
+            );
+          } catch (error) {
+            console.warn('Error processing event for top local events:', event?.id, error);
+            return false;
+          }
+        })
+        .sort((a, b) => (b.rating || 0) - (a.rating || 0)) // Sort by rating
+        .slice(0, 3);
+    } catch (error) {
+      console.error('Error getting top local events:', error);
+      return [];
+    }
   }, [currentLocation]);
 
   const getCategoryConfig = (category: LocalEvent['category']) => {
@@ -1279,18 +1312,26 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
   };
 
   const formatEventDate = (startDate: string, endDate?: string): string => {
+    if (!startDate) return 'Date TBA';
+    
     try {
       const start = parseISO(startDate);
       const formattedStart = format(start, 'MMM dd, yyyy');
       
       if (endDate) {
-        const end = parseISO(endDate);
-        const formattedEnd = format(end, 'MMM dd, yyyy');
-        return `${formattedStart} - ${formattedEnd}`;
+        try {
+          const end = parseISO(endDate);
+          const formattedEnd = format(end, 'MMM dd, yyyy');
+          return `${formattedStart} - ${formattedEnd}`;
+        } catch (error) {
+          console.warn('Invalid end date format:', endDate, error);
+          return formattedStart;
+        }
       }
       
       return formattedStart;
-    } catch {
+    } catch (error) {
+      console.warn('Invalid date format:', startDate, error);
       return startDate;
     }
   };
