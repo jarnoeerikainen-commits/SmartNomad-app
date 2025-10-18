@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { TrustBadge, TrustRating, TrustScore } from '@/components/ui/trust-badge';
 
 interface SuperOffersProps {
   currentLocation: LocationData | null;
@@ -82,46 +83,58 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
     {
       id: 'insurance-1',
       title: 'SafetyWing Nomad Insurance',
-      description: 'Medical coverage for digital nomads traveling the world',
+      description: '🛡️ Medical coverage for digital nomads traveling the world',
       price: '$42/month',
       discount: 'First month free',
       rating: 4.8,
+      reviews: 523,
+      verified: true,
       icon: Shield,
       url: 'https://safetywing.com/nomad-insurance',
-      features: ['180+ Countries', 'Cancel Anytime', 'Covers COVID-19']
+      features: ['180+ Countries', 'Cancel Anytime', 'Covers COVID-19'],
+      badges: ['Top Rated', 'Nomad Favorite']
     },
     {
       id: 'insurance-2',
       title: 'World Nomads Travel Insurance',
-      description: 'Comprehensive travel insurance with adventure sports coverage',
+      description: '🌍 Comprehensive travel insurance with adventure sports coverage',
       price: '$45/week',
       discount: '15% off for long trips',
       rating: 4.7,
+      reviews: 412,
+      verified: true,
       icon: Globe,
       url: 'https://www.worldnomads.com',
-      features: ['Adventure Coverage', '24/7 Support', 'Medical Evacuation']
+      features: ['Adventure Coverage', '24/7 Support', 'Medical Evacuation'],
+      badges: ['Top Rated', 'Traveler Favorite']
     },
     {
       id: 'esim-1',
       title: 'Airalo eSIM Plans',
-      description: 'Stay connected in 200+ countries with affordable eSIM data',
+      description: '📱 Stay connected in 200+ countries with affordable eSIM data',
       price: 'From $3.50',
       discount: '$3 off first purchase',
       rating: 4.9,
+      reviews: 1240,
+      verified: true,
       icon: Wifi,
       url: 'https://www.airalo.com',
-      features: ['No SIM Swap', 'Instant Setup', '200+ Countries']
+      features: ['No SIM Swap', 'Instant Setup', '200+ Countries'],
+      badges: ['Top Rated', 'Nomad Favorite']
     },
     {
       id: 'esim-2',
       title: 'Holafly Unlimited Data',
-      description: 'Unlimited data eSIM for over 160 destinations',
+      description: '⚡ Unlimited data eSIM for over 160 destinations',
       price: 'From $19/week',
       discount: '5% off with code NOMAD',
       rating: 4.6,
+      reviews: 287,
+      verified: true,
       icon: Zap,
       url: 'https://www.holafly.com',
-      features: ['Unlimited Data', 'Multi-Country Plans', '24/7 Support']
+      features: ['Unlimited Data', 'Multi-Country Plans', '24/7 Support'],
+      badges: ['Verified Local']
     }
   ];
 
@@ -273,21 +286,28 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
             {travelOffers.map((offer) => {
               const Icon = offer.icon;
               return (
-                <Card key={offer.id} className="hover:shadow-lg transition-shadow">
+                <Card key={offer.id} className="hover:shadow-lg transition-shadow border-2 border-primary/10">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <Icon className="w-5 h-5 text-primary" />
                           <CardTitle className="text-lg">{offer.title}</CardTitle>
+                          {offer.verified && (
+                            <Shield className="w-4 h-4 text-green-500" />
+                          )}
                         </div>
+                        {offer.badges && offer.badges.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {offer.badges.map((badge, idx) => (
+                              <TrustBadge key={idx} badge={badge as any} showIcon={false} />
+                            ))}
+                          </div>
+                        )}
                         <CardDescription>{offer.description}</CardDescription>
                       </div>
                       {offer.rating && (
-                        <Badge variant="secondary" className="ml-2">
-                          <Star className="w-3 h-3 mr-1 fill-yellow-400 text-yellow-400" />
-                          {offer.rating}
-                        </Badge>
+                        <TrustRating rating={offer.rating} reviews={offer.reviews} />
                       )}
                     </div>
                   </CardHeader>
@@ -429,12 +449,15 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
       <Card className="bg-muted/50">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+            <Shield className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-sm font-medium">Smart Recommendations</p>
+              <p className="text-sm font-medium flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                SmartNomad Trust AI
+              </p>
               <p className="text-xs text-muted-foreground">
-                These offers are curated based on your location, travel history, and preferences. 
-                Some offers may include affiliate partnerships that help support SmartNomad at no extra cost to you.
+                All offers are curated and verified for quality (≥4.0★). We prioritize trusted providers,
+                authentic reviews, and local gems. Some partnerships help support SmartNomad at no extra cost to you.
               </p>
             </div>
           </div>

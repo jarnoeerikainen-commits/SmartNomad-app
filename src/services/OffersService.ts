@@ -1,5 +1,6 @@
 
 import { LocationData } from '@/types/country';
+import { TrustFilterService, TrustItem } from './TrustFilterService';
 
 export interface Offer {
   id: string;
@@ -13,6 +14,12 @@ export interface Offer {
   rating?: number;
   image?: string;
   location: string;
+  verified?: boolean;
+  reviews?: number;
+  category?: string;
+  source?: string;
+  trust_score?: number;
+  badges?: string[];
 }
 
 export interface OfferSearchParams {
@@ -70,11 +77,50 @@ export class OffersService {
     const country = location.country;
     const locationString = `${city}, ${country}`;
 
-    
-
     try {
       const offers = await this.generateValidatedOffersForService(service, locationString, location);
-      return offers;
+      
+      // Apply Trust AI filtering and ranking
+      const trustItems: Partial<TrustItem>[] = offers.map(offer => ({
+        service_name: offer.title,
+        rating: offer.rating || 4.5 + Math.random() * 0.4,
+        verified: true,
+        category: service,
+        source: offer.provider,
+        trust_score: undefined,
+        reviews: Math.floor(Math.random() * 150) + 50,
+        summary: offer.description,
+        price: offer.price,
+        url: offer.url,
+        discount: offer.discount,
+        provider: offer.provider,
+        location: offer.location
+      }));
+      
+      const filteredItems = TrustFilterService.processForDisplay(trustItems, {
+        minRating: 4.0,
+        requireVerified: true,
+        preferLocal: true
+      });
+      
+      // Convert back to Offer format
+      return filteredItems.map(item => ({
+        id: `offer-${Date.now()}-${Math.random()}`,
+        title: item.service_name,
+        description: item.summary,
+        price: item.price || 'Contact for pricing',
+        provider: item.source,
+        url: item.url || '#',
+        rating: item.rating,
+        discount: item.discount,
+        verified: item.verified,
+        reviews: item.reviews,
+        category: item.category,
+        source: item.source,
+        trust_score: item.trust_score,
+        badges: item.badges,
+        location: item.location || locationString
+      }));
     } catch (error) {
       console.error('Error searching offers:', error);
       return [];

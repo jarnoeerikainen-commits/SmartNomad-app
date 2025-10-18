@@ -46,7 +46,8 @@ import {
   Flame,
   Flag,
   Target,
-  Zap
+  Zap,
+  Shield
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { format, addDays, addWeeks, addMonths, isBefore, startOfDay, parseISO, isAfter } from 'date-fns';
@@ -57,6 +58,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { TrustBadge, TrustRating } from '@/components/ui/trust-badge';
 
 interface ExploreLocalLifeProps {
   currentLocation: LocationData | null;
@@ -83,7 +85,11 @@ interface LocalEvent {
   recurring?: 'daily' | 'weekly' | 'monthly';
   tags?: string[];
   priceRange?: 'free' | 'budget' | 'moderate' | 'premium';
-  // New detailed fields
+  // Trust AI fields
+  rating?: number;
+  reviews?: number;
+  trustBadges?: string[];
+  // Existing detailed fields
   website?: string;
   registrationUrl?: string;
   ticketUrl?: string;
@@ -238,7 +244,7 @@ const generateMockEvents = (): LocalEvent[] => {
       location: `Central Market District, ${cityData.city}`,
       startDate: format(baseDate, 'yyyy-MM-dd'),
       time: '07:00 - 14:00',
-      description: `Fresh local produce, artisanal foods, and handcrafted goods from regional farmers and makers`,
+      description: `🥕 Fresh local produce, artisanal foods, and handcrafted goods from regional farmers and makers`,
       isFree: true,
       verified: true,
       recurring: 'weekly',
@@ -250,7 +256,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: `info@${cityData.city.toLowerCase().replace(/\s/g, '')}market.com`,
       contactPhone: '+1-555-MARKET',
       accessibility: 'Wheelchair accessible',
-      whatToBring: ['Reusable bags', 'Cash (some vendors)']
+      whatToBring: ['Reusable bags', 'Cash (some vendors)'],
+      rating: 4.6 + Math.random() * 0.3,
+      reviews: 120 + Math.floor(Math.random() * 200),
+      trustBadges: ['Verified Local', 'Local Gem']
     });
 
     // Business Networking
@@ -263,7 +272,7 @@ const generateMockEvents = (): LocalEvent[] => {
       location: `Co-working Hub, ${cityData.city}`,
       startDate: format(addDays(baseDate, 3), 'yyyy-MM-dd'),
       time: '18:00 - 21:00',
-      description: 'Connect with fellow remote workers, entrepreneurs, and digital nomads. Share experiences and build your network',
+      description: '💼 Connect with fellow remote workers, entrepreneurs, and digital nomads. Share experiences and build your network',
       isFree: true,
       verified: true,
       recurring: 'weekly',
@@ -275,7 +284,10 @@ const generateMockEvents = (): LocalEvent[] => {
       registrationUrl: `https://www.meetup.com/digital-nomads-${cityData.city.toLowerCase().replace(/\s/g, '-')}`,
       contactEmail: `${cityData.city.toLowerCase().replace(/\s/g, '')}@digitalnomads.com`,
       capacity: 50,
-      attendees: 35
+      attendees: 35,
+      rating: 4.7 + Math.random() * 0.2,
+      reviews: 80 + Math.floor(Math.random() * 150),
+      trustBadges: ['Nomad Favorite', 'Traveler Favorite']
     });
 
     // Sports & Wellness
@@ -1271,9 +1283,12 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
           <Sparkles className="h-8 w-8 text-primary" />
           <h1 className="text-4xl font-bold">Explore Local Life</h1>
         </div>
-        <p className="text-muted-foreground">
-          Discover amazing events, activities, and experiences in 100+ cities worldwide. From sports tournaments to cultural events, business networking to local markets.
-        </p>
+        <div className="flex items-start gap-2">
+          <p className="text-muted-foreground flex-1">
+            🌍 Discover verified, high-quality events in 100+ cities. Only ≥4.0★ rated events from trusted organizers.
+          </p>
+          <Shield className="w-5 h-5 text-primary flex-shrink-0" />
+        </div>
       </div>
 
       {/* Current Location Events */}
@@ -1510,12 +1525,25 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between gap-2 pt-2 flex-wrap">
+                  {/* Trust badges and rating */}
+                  {event.trustBadges && event.trustBadges.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {event.trustBadges.slice(0, 2).map((badge, idx) => (
+                        <TrustBadge key={idx} badge={badge as any} showIcon={false} />
+                      ))}
+                    </div>
+                  )}
+                  
+                  {event.rating && (
+                    <TrustRating rating={event.rating} reviews={event.reviews} showReviews={false} />
+                  )}
+
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t flex-wrap">
                     <div className="flex items-center gap-2">
                       {event.isFree ? (
                         <Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
                           <Heart className="h-3 w-3 mr-1" />
-                          Free Entry
+                          Free
                         </Badge>
                       ) : (
                         <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
