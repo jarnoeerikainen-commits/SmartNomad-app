@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { ALL_COUNTRIES } from "@/data/countries";
-import { getCitiesForCountry, CityData } from "@/data/cities";
+import { getCitiesForCountry, getCountriesWithCities, CityData } from "@/data/cities";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -27,10 +27,15 @@ export function SmartSearchMenu({
   const [countrySearch, setCountrySearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
 
-  // Alphabetically sorted countries
+  // Get countries with active cities only
+  const activeCountryCodes = useMemo(() => getCountriesWithCities(), []);
+
+  // Alphabetically sorted countries with active cities
   const sortedCountries = useMemo(() => {
-    return [...ALL_COUNTRIES].sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
+    return ALL_COUNTRIES
+      .filter((country) => activeCountryCodes.includes(country.code))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [activeCountryCodes]);
 
   // Filter countries based on search
   const filteredCountries = useMemo(() => {
