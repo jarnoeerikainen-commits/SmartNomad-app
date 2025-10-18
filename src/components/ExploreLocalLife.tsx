@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SmartSearchMenu } from '@/components/SmartSearchMenu';
 import { 
   Select,
   SelectContent,
@@ -10,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { 
+import {
   Calendar,
   Clock,
   MapPin,
@@ -1374,74 +1375,57 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
           </div>
 
           {/* Filter Grid */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {/* Category Filter */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {Object.entries(categoryConfig).map(([key, config]) => (
-                  <SelectItem key={key} value={key}>
-                    {config.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="space-y-4">
+            {/* Smart Location Search */}
+            <SmartSearchMenu
+              selectedCountry={selectedCountry === 'all' ? null : selectedCountry}
+              selectedCity={selectedCity === 'all' ? null : selectedCity}
+              onCountryChange={(code, name) => {
+                setSelectedCountry(name);
+                setSelectedCity('all');
+              }}
+              onCityChange={(city) => setSelectedCity(city)}
+            />
+            
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* Category Filter */}
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {Object.entries(categoryConfig).map(([key, config]) => (
+                    <SelectItem key={key} value={key}>
+                      {config.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            {/* Country Filter */}
-            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Countries" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Countries</SelectItem>
-                {countries.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {/* Price Filter */}
+              <Select value={priceFilter} onValueChange={setPriceFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Prices" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Prices</SelectItem>
+                  <SelectItem value="free">Free Only</SelectItem>
+                  <SelectItem value="budget">Budget ($0-50)</SelectItem>
+                  <SelectItem value="moderate">Moderate ($50-150)</SelectItem>
+                  <SelectItem value="premium">Premium ($150+)</SelectItem>
+                </SelectContent>
+              </Select>
 
-            {/* City Filter */}
-            <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Cities" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Cities</SelectItem>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Price Filter */}
-            <Select value={priceFilter} onValueChange={setPriceFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Prices" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Prices</SelectItem>
-                <SelectItem value="free">Free Only</SelectItem>
-                <SelectItem value="budget">Budget ($0-50)</SelectItem>
-                <SelectItem value="moderate">Moderate ($50-150)</SelectItem>
-                <SelectItem value="premium">Premium ($150+)</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Clear Filters */}
-            <Button
-              variant="outline"
-              onClick={clearAllFilters}
-              className="w-full"
-            >
-              Clear All Filters
-            </Button>
+              {/* Clear Filters */}
+              <Button
+                variant="outline"
+                onClick={clearAllFilters}
+                className="w-full"
+              >
+                Clear All Filters
+              </Button>
+            </div>
           </div>
 
           {/* Upcoming Toggle */}

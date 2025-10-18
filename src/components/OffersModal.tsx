@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ExternalLink, Star, MapPin, Loader2, Shield, Sparkles } from 'lucide-react';
 import { Offer } from '@/services/OffersService';
 import { TrustBadge, TrustRating, TrustScore } from '@/components/ui/trust-badge';
+import { SmartSearchMenu } from '@/components/SmartSearchMenu';
 
 interface OffersModalProps {
   isOpen: boolean;
@@ -25,6 +26,16 @@ const OffersModal: React.FC<OffersModalProps> = ({
   location,
   isLoading
 }) => {
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
+
+  // Filter offers by selected location
+  const filteredOffers = offers.filter((offer) => {
+    if (!selectedCountry) return true;
+    if (!selectedCity) return offer.country_code === selectedCountry;
+    return offer.country_code === selectedCountry && offer.city === selectedCity;
+  });
+
   const formatServiceType = (type: string) => {
     switch (type) {
       case 'insurance': return 'Travel Insurance';
@@ -43,6 +54,17 @@ const OffersModal: React.FC<OffersModalProps> = ({
             <MapPin className="w-5 h-5 text-blue-600" />
             {formatServiceType(serviceType)} Offers in {location}
           </DialogTitle>
+          <div className="pt-4">
+            <SmartSearchMenu
+              selectedCountry={selectedCountry}
+              selectedCity={selectedCity}
+              onCountryChange={(code) => {
+                setSelectedCountry(code);
+                setSelectedCity(null);
+              }}
+              onCityChange={setSelectedCity}
+            />
+          </div>
         </DialogHeader>
 
         {isLoading ? (
@@ -52,9 +74,9 @@ const OffersModal: React.FC<OffersModalProps> = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {offers.length > 0 ? (
+            {filteredOffers.length > 0 ? (
               <div className="grid grid-cols-1 gap-4">
-                {offers.map((offer) => (
+                {filteredOffers.map((offer) => (
                   <Card key={offer.id} className="hover:shadow-lg transition-shadow border-2 border-primary/10">
                     <CardContent className="p-4">
                       <div className="space-y-3">
@@ -141,16 +163,26 @@ const OffersModal: React.FC<OffersModalProps> = ({
                 <Shield className="w-16 h-16 text-muted-foreground mx-auto opacity-50" />
                 <div>
                   <p className="font-semibold mb-2">
-                    No verified offers found
+                    {selectedCity 
+                      ? `No verified services in ${selectedCity}`
+                      : selectedCountry
+                      ? "Select a city to see services"
+                      : "No verified offers found"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    SmartNomad Trust AI filters results to show only verified, high-quality services with ratings ≥ 4.0★
+                    {selectedCity 
+                      ? "Try selecting another city to explore more options!"
+                      : selectedCountry
+                      ? "Choose a city from the dropdown above to view available services"
+                      : "SmartNomad Trust AI filters results to show only verified, high-quality services with ratings ≥ 4.0★"}
                   </p>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  We're searching top providers including TripAdvisor, Booking.com, and verified local partners.
-                  Check back soon!
-                </p>
+                {!selectedCountry && (
+                  <p className="text-xs text-muted-foreground">
+                    We're searching top providers including TripAdvisor, Booking.com, and verified local partners.
+                    Check back soon!
+                  </p>
+                )}
               </div>
             )}
 

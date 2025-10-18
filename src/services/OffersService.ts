@@ -20,6 +20,8 @@ export interface Offer {
   source?: string;
   trust_score?: number;
   badges?: string[];
+  country_code?: string;
+  city?: string;
 }
 
 export interface OfferSearchParams {
@@ -119,7 +121,9 @@ export class OffersService {
         source: item.source,
         trust_score: item.trust_score,
         badges: item.badges,
-        location: item.location || locationString
+        location: item.location || locationString,
+        country_code: location.country_code,
+        city: location.city
       }));
     } catch (error) {
       console.error('Error searching offers:', error);
