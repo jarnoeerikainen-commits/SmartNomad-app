@@ -221,17 +221,20 @@ const generateMockEvents = (): LocalEvent[] => {
       location: `City Park, ${cityData.name}`,
       startDate: format(addDays(baseDate, 1), 'yyyy-MM-dd'),
       time: '06:30 - 07:30',
-      description: 'Morning run for all fitness levels. Free, friendly, and a great way to start your day',
+      description: '🏃 Morning run for all fitness levels. Free, friendly, and a great way to start your day',
       isFree: true,
       verified: true,
       recurring: 'daily',
       tags: ['running', 'fitness', 'morning'],
       priceRange: 'free',
-      organizer: `${cityData.name} Runners Association`,
+      organizer: `${cityData.name} Runners Association (${verifiedSources[5]})`,
       address: `Main Entrance, City Park, ${cityData.name}`,
       website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}runners.com`,
       contactEmail: `run@${cityData.name.toLowerCase().replace(/\s/g, '')}club.com`,
-      whatToBring: ['Running shoes', 'Water bottle', 'Comfortable clothes']
+      whatToBring: ['Running shoes', 'Water bottle', 'Comfortable clothes'],
+      rating: 4.3 + Math.random() * 0.6,
+      reviews: 110 + Math.floor(Math.random() * 160),
+      trustBadges: ['Local Gem', 'Nomad Favorite']
     });
 
     // Cultural Events
@@ -250,14 +253,17 @@ const generateMockEvents = (): LocalEvent[] => {
       verified: true,
       tags: ['culture', 'traditional', 'evening'],
       priceRange: 'budget',
-      organizer: `${cityData.name} Cultural Foundation`,
+      organizer: `${cityData.name} Cultural Foundation (${verifiedSources[4]})`,
       address: `45 Heritage Avenue, ${cityData.name}`,
       website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}culture.org`,
       registrationUrl: `https://tickets.${cityData.name.toLowerCase().replace(/\s/g, '')}culture.org`,
       contactEmail: `events@${cityData.name.toLowerCase().replace(/\s/g, '')}culture.org`,
       contactPhone: '+1-555-CULTURE',
       capacity: 150,
-      attendees: 120
+      attendees: 120,
+      rating: 4.1 + Math.random() * 0.8,
+      reviews: 95 + Math.floor(Math.random() * 180),
+      trustBadges: ['Verified Local', 'Cultural Gem']
     });
 
     // Tech Events
@@ -271,18 +277,21 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Innovation Hub, ${cityData.name}`,
         startDate: format(addDays(baseDate, 7), 'yyyy-MM-dd'),
         time: '18:30 - 21:30',
-        description: 'Watch local startups pitch their ideas. Network with founders and investors',
+        description: '💡 Watch local startups pitch their ideas. Network with founders and investors',
         isFree: true,
         verified: true,
         tags: ['startups', 'tech', 'innovation'],
         priceRange: 'free',
-        organizer: 'Startup Weekend Community',
+        organizer: `Startup Weekend Community (${verifiedSources[2]})`,
         address: `Innovation District, ${cityData.name}`,
         website: 'https://www.startupweekend.org',
         registrationUrl: 'https://www.eventbrite.com/e/startup-pitch-night',
         contactEmail: `${cityData.name.toLowerCase().replace(/\s/g, '')}@startupweekend.org`,
         capacity: 100,
-        attendees: 75
+        attendees: 75,
+        rating: 4.4 + Math.random() * 0.5,
+        reviews: 65 + Math.floor(Math.random() * 120),
+        trustBadges: ['Nomad Favorite', 'Top Rated']
       });
     }
 
@@ -298,13 +307,13 @@ const generateMockEvents = (): LocalEvent[] => {
         startDate: format(addDays(baseDate, 14), 'yyyy-MM-dd'),
         endDate: format(addDays(baseDate, 16), 'yyyy-MM-dd'),
         time: '09:00 - 18:00',
-        description: 'International amateur football tournament. All skill levels welcome',
+        description: '⚽ International amateur football tournament. All skill levels welcome',
         isFree: false,
         fee: '$50 per team',
         verified: true,
         tags: ['football', 'tournament', 'sports'],
         priceRange: 'budget',
-        organizer: `${cityData.name} Football Federation`,
+        organizer: `${cityData.name} Football Federation (${verifiedSources[5]})`,
         address: `Olympic Sports Complex, ${cityData.name}`,
         website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}football.com`,
         registrationUrl: `https://register.${cityData.name.toLowerCase().replace(/\s/g, '')}football.com`,
@@ -313,7 +322,10 @@ const generateMockEvents = (): LocalEvent[] => {
         capacity: 16,
         attendees: 12,
         requirements: ['Team registration', 'Insurance', 'Medical clearance'],
-        whatToBring: ['Football boots', 'Shin guards', 'Team uniform', 'Water']
+        whatToBring: ['Football boots', 'Shin guards', 'Team uniform', 'Water'],
+        rating: 4.2 + Math.random() * 0.7,
+        reviews: 85 + Math.floor(Math.random() * 140),
+        trustBadges: ['Verified Local', 'Top Rated']
       });
     }
 
@@ -328,20 +340,23 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Game Café, ${cityData.name}`,
         startDate: format(addDays(baseDate, 4), 'yyyy-MM-dd'),
         time: '19:00 - 23:00',
-        description: 'Casual board game evening. Bring friends or make new ones',
+        description: '🎲 Casual board game evening. Bring friends or make new ones',
         isFree: false,
         fee: '$5-10',
         verified: true,
         recurring: 'weekly',
         tags: ['games', 'social', 'indoor'],
         priceRange: 'budget',
-        organizer: 'Board Gamers Society',
+        organizer: `Board Gamers Society (${verifiedSources[3]})`,
         address: `789 Game Street, ${cityData.name}`,
         website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}games.com`,
         contactEmail: `play@${cityData.name.toLowerCase().replace(/\s/g, '')}games.com`,
         contactPhone: '+1-555-GAMES',
         capacity: 40,
-        attendees: 28
+        attendees: 28,
+        rating: 4.5 + Math.random() * 0.4,
+        reviews: 125 + Math.floor(Math.random() * 175),
+        trustBadges: ['Nomad Favorite', 'Traveler Favorite']
       });
     }
 
@@ -356,13 +371,13 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Old Town, ${cityData.name}`,
         startDate: format(addDays(baseDate, 6), 'yyyy-MM-dd'),
         time: '17:00 - 20:00',
-        description: 'Guided tour through the best street food spots. Taste authentic local cuisine',
+        description: '🍜 Guided tour through the best street food spots. Taste authentic local cuisine',
         isFree: false,
         fee: '$35-45',
         verified: true,
         tags: ['food', 'tour', 'local cuisine'],
         priceRange: 'moderate',
-        organizer: 'Foodie Adventures',
+        organizer: `Foodie Adventures (${verifiedSources[0]})`,
         address: `Old Town Square, ${cityData.name}`,
         website: 'https://www.foodieadventures.com',
         registrationUrl: `https://book.foodieadventures.com/${cityData.name.toLowerCase().replace(/\s/g, '-')}`,
@@ -371,7 +386,10 @@ const generateMockEvents = (): LocalEvent[] => {
         capacity: 15,
         attendees: 12,
         requirements: ['Comfortable walking shoes'],
-        whatToBring: ['Appetite', 'Camera', 'Cash for extras']
+        whatToBring: ['Appetite', 'Camera', 'Cash for extras'],
+        rating: 4.6 + Math.random() * 0.3,
+        reviews: 140 + Math.floor(Math.random() * 190),
+        trustBadges: ['Top Rated', 'Traveler Favorite']
       });
     }
 
@@ -386,13 +404,13 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Art Studio, ${cityData.name}`,
         startDate: format(addDays(baseDate, 10), 'yyyy-MM-dd'),
         time: '10:00 - 16:00',
-        description: 'Learn urban photography techniques from a professional. Camera provided if needed',
+        description: '📸 Learn urban photography techniques from a professional. Camera provided if needed',
         isFree: false,
         fee: '$60-80',
         verified: true,
         tags: ['photography', 'learning', 'creative'],
         priceRange: 'moderate',
-        organizer: 'Creative Arts Academy',
+        organizer: `Creative Arts Academy (${verifiedSources[0]})`,
         address: `456 Arts Boulevard, ${cityData.name}`,
         website: 'https://www.creativearts.academy',
         registrationUrl: 'https://register.creativearts.academy/photography',
@@ -401,7 +419,10 @@ const generateMockEvents = (): LocalEvent[] => {
         capacity: 20,
         attendees: 15,
         requirements: ['Basic photography knowledge helpful but not required'],
-        whatToBring: ['Camera (DSLR/Mirrorless preferred)', 'Notebook', 'Lunch']
+        whatToBring: ['Camera (DSLR/Mirrorless preferred)', 'Notebook', 'Lunch'],
+        rating: 4.7 + Math.random() * 0.2,
+        reviews: 75 + Math.floor(Math.random() * 110),
+        trustBadges: ['Top Rated', 'Local Gem']
       });
     }
 
@@ -416,17 +437,20 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Art District, ${cityData.name}`,
         startDate: format(addDays(baseDate, 8), 'yyyy-MM-dd'),
         time: '18:00 - 22:00',
-        description: 'Free entry to multiple galleries. Meet artists and enjoy complimentary wine',
+        description: '🎨 Free entry to multiple galleries. Meet artists and enjoy complimentary wine',
         isFree: true,
         verified: true,
         tags: ['art', 'culture', 'evening'],
         priceRange: 'free',
-        organizer: `${cityData.name} Arts Council`,
+        organizer: `${cityData.name} Arts Council (${verifiedSources[4]})`,
         address: `Gallery Row, Arts District, ${cityData.name}`,
         website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}arts.org`,
         contactEmail: `info@${cityData.name.toLowerCase().replace(/\s/g, '')}arts.org`,
         ageRestriction: '21+ (wine service)',
-        accessibility: 'All galleries wheelchair accessible'
+        accessibility: 'All galleries wheelchair accessible',
+        rating: 4.4 + Math.random() * 0.5,
+        reviews: 88 + Math.floor(Math.random() * 135),
+        trustBadges: ['Verified Local', 'Cultural Gem']
       });
     }
 
@@ -441,14 +465,14 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Jazz Club, ${cityData.name}`,
         startDate: format(addDays(baseDate, 9), 'yyyy-MM-dd'),
         time: '20:00 - 00:00',
-        description: 'Live jazz performance featuring local and international musicians',
+        description: '🎶 Live jazz performance featuring local and international musicians',
         isFree: false,
         fee: '$20-30',
         verified: true,
         recurring: 'weekly',
         tags: ['music', 'jazz', 'nightlife'],
         priceRange: 'budget',
-        organizer: `${cityData.name} Jazz Society`,
+        organizer: `${cityData.name} Jazz Society (${verifiedSources[1]})`,
         address: `Jazz Quarter, ${cityData.name}`,
         website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}jazz.com`,
         registrationUrl: `https://tickets.${cityData.name.toLowerCase().replace(/\s/g, '')}jazz.com`,
@@ -456,7 +480,10 @@ const generateMockEvents = (): LocalEvent[] => {
         contactPhone: '+1-555-JAZZZ',
         capacity: 80,
         attendees: 65,
-        ageRestriction: '18+'
+        ageRestriction: '18+',
+        rating: 4.5 + Math.random() * 0.4,
+        reviews: 100 + Math.floor(Math.random() * 155),
+        trustBadges: ['Top Rated', 'Nomad Favorite']
       });
     }
 
@@ -471,18 +498,21 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Beach/Park, ${cityData.name}`,
         startDate: format(addDays(baseDate, 2), 'yyyy-MM-dd'),
         time: '06:00 - 07:00',
-        description: 'Start your day with peaceful yoga overlooking beautiful views',
+        description: '🧘 Start your day with peaceful yoga overlooking beautiful views',
         isFree: true,
         verified: true,
         recurring: 'daily',
         tags: ['yoga', 'wellness', 'morning'],
         priceRange: 'free',
-        organizer: 'Wellness Warriors Community',
+        organizer: `Wellness Warriors Community (${verifiedSources[2]})`,
         address: `Sunrise Point, ${cityData.name}`,
         website: 'https://www.wellnesswarriors.com',
         contactEmail: `${cityData.name.toLowerCase().replace(/\s/g, '')}@wellnesswarriors.com`,
         whatToBring: ['Yoga mat', 'Water bottle', 'Towel', 'Comfortable clothes'],
-        accessibility: 'Suitable for all fitness levels'
+        accessibility: 'Suitable for all fitness levels',
+        rating: 4.6 + Math.random() * 0.3,
+        reviews: 95 + Math.floor(Math.random() * 145),
+        trustBadges: ['Local Gem', 'Nomad Favorite']
       });
     }
 
@@ -497,20 +527,23 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Sky Bar, ${cityData.name}`,
         startDate: format(addDays(baseDate, 12), 'yyyy-MM-dd'),
         time: '21:00 - 03:00',
-        description: 'Dance under the stars with DJ sets and stunning city views',
+        description: '🎉 Dance under the stars with DJ sets and stunning city views',
         isFree: false,
         fee: '$15-25',
         verified: true,
         tags: ['party', 'nightlife', 'rooftop'],
         priceRange: 'budget',
-        organizer: 'Skyline Entertainment',
+        organizer: `Skyline Entertainment (${verifiedSources[3]})`,
         address: `Penthouse Level, Downtown Tower, ${cityData.name}`,
         website: 'https://www.skylineentertainment.com',
         registrationUrl: `https://tickets.skylineentertainment.com/${cityData.name.toLowerCase().replace(/\s/g, '-')}`,
         contactEmail: 'events@skylineentertainment.com',
         ageRestriction: '21+',
         capacity: 200,
-        attendees: 180
+        attendees: 180,
+        rating: 4.3 + Math.random() * 0.6,
+        reviews: 105 + Math.floor(Math.random() * 165),
+        trustBadges: ['Nomad Favorite', 'Top Rated']
       });
     }
 
@@ -525,13 +558,13 @@ const generateMockEvents = (): LocalEvent[] => {
         location: `Nature Reserve near ${cityData.name}`,
         startDate: format(addDays(baseDate, 11), 'yyyy-MM-dd'),
         time: '08:00 - 14:00',
-        description: 'Guided hike through scenic trails. All fitness levels welcome',
+        description: '🥾 Guided hike through scenic trails. All fitness levels welcome',
         isFree: false,
         fee: '$25-35',
         verified: true,
         tags: ['hiking', 'outdoor', 'nature'],
         priceRange: 'budget',
-        organizer: 'Outdoor Adventures Co',
+        organizer: `Outdoor Adventures Co (${verifiedSources[0]})`,
         address: `Nature Reserve Visitor Center, ${cityData.name}`,
         website: 'https://www.outdooradventures.co',
         registrationUrl: 'https://book.outdooradventures.co/hiking',
@@ -540,7 +573,10 @@ const generateMockEvents = (): LocalEvent[] => {
         capacity: 25,
         attendees: 18,
         requirements: ['Moderate fitness level', 'Closed-toe shoes'],
-        whatToBring: ['Hiking boots', 'Backpack', 'Water (2L)', 'Snacks', 'Sunscreen', 'Hat']
+        whatToBring: ['Hiking boots', 'Backpack', 'Water (2L)', 'Snacks', 'Sunscreen', 'Hat'],
+        rating: 4.7 + Math.random() * 0.2,
+        reviews: 130 + Math.floor(Math.random() * 185),
+        trustBadges: ['Top Rated', 'Traveler Favorite']
       });
     }
 
@@ -556,13 +592,13 @@ const generateMockEvents = (): LocalEvent[] => {
         startDate: format(addDays(baseDate, 20), 'yyyy-MM-dd'),
         endDate: format(addDays(baseDate, 22), 'yyyy-MM-dd'),
         time: '09:00 - 18:00',
-        description: 'Three-day business conference with keynote speakers and networking opportunities',
+        description: '💼 Three-day business conference with keynote speakers and networking opportunities',
         isFree: false,
         fee: '$200-500',
         verified: true,
         tags: ['business', 'conference', 'networking'],
         priceRange: 'premium',
-        organizer: 'Global Business Forum',
+        organizer: `Global Business Forum (${verifiedSources[0]})`,
         address: `International Convention Center, ${cityData.name}`,
         website: `https://www.${cityData.name.toLowerCase().replace(/\s/g, '')}businesssummit.com`,
         registrationUrl: `https://register.${cityData.name.toLowerCase().replace(/\s/g, '')}businesssummit.com`,
@@ -571,7 +607,10 @@ const generateMockEvents = (): LocalEvent[] => {
         capacity: 500,
         attendees: 420,
         requirements: ['Professional attire', 'Business registration'],
-        whatToBring: ['Business cards', 'Laptop', 'Notebook']
+        whatToBring: ['Business cards', 'Laptop', 'Notebook'],
+        rating: 4.4 + Math.random() * 0.5,
+        reviews: 210 + Math.floor(Math.random() * 250),
+        trustBadges: ['Verified Local', 'Top Rated']
       });
     }
   });
@@ -590,7 +629,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2026-06-11',
       endDate: '2026-07-19',
       time: 'Various Times',
-      description: 'The biggest soccer tournament in the world. Watch the best national teams compete for glory across North America.',
+      description: '⚽ The biggest soccer tournament in the world. Watch the best national teams compete for glory across North America.',
       isFree: false,
       fee: '$200-2000',
       verified: true,
@@ -603,7 +642,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@fifa.com',
       capacity: 50000,
       ageRestriction: 'All ages',
-      accessibility: 'Full wheelchair access at all venues'
+      accessibility: 'Full wheelchair access at all venues',
+      rating: 4.9,
+      reviews: 15000,
+      trustBadges: ['World-Class', 'Top Rated', 'Verified Local']
     },
     // Super Bowl LX
     {
@@ -616,7 +658,7 @@ const generateMockEvents = (): LocalEvent[] => {
       venue: 'Levi\'s Stadium',
       startDate: '2026-02-08',
       time: '15:30 PST',
-      description: 'The championship game of the NFL. Experience the ultimate American sports spectacle with halftime show.',
+      description: '🏈 The championship game of the NFL. Experience the ultimate American sports spectacle with halftime show.',
       isFree: false,
       fee: '$5000-50000',
       verified: true,
@@ -629,7 +671,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'superbowl@nfl.com',
       capacity: 68500,
       ageRestriction: 'All ages',
-      accessibility: 'Full ADA compliance'
+      accessibility: 'Full ADA compliance',
+      rating: 4.8,
+      reviews: 12000,
+      trustBadges: ['World-Class', 'Top Rated']
     },
     // NBA Finals 2026
     {
@@ -643,7 +688,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2026-06-01',
       endDate: '2026-06-21',
       time: '17:00-21:00 ET',
-      description: 'The championship series of the NBA. Watch the best basketball players compete for the Larry O\'Brien Trophy.',
+      description: '🏀 The championship series of the NBA. Watch the best basketball players compete for the Larry O\'Brien Trophy.',
       isFree: false,
       fee: '$500-10000',
       verified: true,
@@ -656,7 +701,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@nba.com',
       capacity: 20000,
       ageRestriction: 'All ages',
-      accessibility: 'Wheelchair accessible'
+      accessibility: 'Wheelchair accessible',
+      rating: 4.7,
+      reviews: 8500,
+      trustBadges: ['World-Class', 'Top Rated']
     },
     // NCAA Men's Final Four 2026
     {
@@ -670,7 +718,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2026-04-04',
       endDate: '2026-04-06',
       time: 'Various',
-      description: 'College basketball\'s premier event. Watch the nation\'s best college teams battle for the championship.',
+      description: '🏀 College basketball\'s premier event. Watch the nation\'s best college teams battle for the championship.',
       isFree: false,
       fee: '$300-2000',
       verified: true,
@@ -683,7 +731,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'finalfour@ncaa.com',
       capacity: 70000,
       ageRestriction: 'All ages',
-      accessibility: 'Full accessibility'
+      accessibility: 'Full accessibility',
+      rating: 4.7,
+      reviews: 6800,
+      trustBadges: ['Top Rated', 'World-Class']
     },
     // UFC 322
     {
@@ -696,7 +747,7 @@ const generateMockEvents = (): LocalEvent[] => {
       venue: 'Madison Square Garden',
       startDate: '2025-11-15',
       time: '19:00 ET',
-      description: 'Elite mixed martial arts action featuring top UFC fighters in an epic showdown.',
+      description: '🥊 Elite mixed martial arts action featuring top UFC fighters in an epic showdown.',
       isFree: false,
       fee: '$200-3000',
       verified: true,
@@ -709,7 +760,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@ufc.com',
       capacity: 20789,
       ageRestriction: '18+',
-      accessibility: 'Wheelchair accessible seating available'
+      accessibility: 'Wheelchair accessible seating available',
+      rating: 4.6,
+      reviews: 7200,
+      trustBadges: ['Top Rated', 'World-Class']
     },
     // Tour de France 2026
     {
@@ -723,7 +777,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2026-07-04',
       endDate: '2026-07-26',
       time: 'Daytime',
-      description: 'The world\'s most prestigious cycling race. Follow the peloton through beautiful French countryside.',
+      description: '🚴 The world\'s most prestigious cycling race. Follow the peloton through beautiful French countryside.',
       isFree: true,
       verified: true,
       tags: ['cycling', 'tour de france', 'racing', 'endurance'],
@@ -735,7 +789,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'info@letour.fr',
       ageRestriction: 'All ages',
       accessibility: 'Viewing areas vary by location',
-      whatToBring: ['Sun protection', 'Water', 'Comfortable shoes']
+      whatToBring: ['Sun protection', 'Water', 'Comfortable shoes'],
+      rating: 4.8,
+      reviews: 9500,
+      trustBadges: ['World-Class', 'Top Rated', 'Traveler Favorite']
     },
     // NASCAR Cup Series Championship
     {
@@ -748,7 +805,7 @@ const generateMockEvents = (): LocalEvent[] => {
       venue: 'Phoenix Raceway',
       startDate: '2025-11-02',
       time: '15:00 MST',
-      description: 'The final race of the NASCAR season. Watch stock car racing\'s best compete for the championship.',
+      description: '🏁 The final race of the NASCAR season. Watch stock car racing\'s best compete for the championship.',
       isFree: false,
       fee: '$150-1000',
       verified: true,
@@ -762,7 +819,10 @@ const generateMockEvents = (): LocalEvent[] => {
       capacity: 42000,
       ageRestriction: 'All ages',
       accessibility: 'ADA accessible',
-      whatToBring: ['Ear protection', 'Sunscreen', 'Hat']
+      whatToBring: ['Ear protection', 'Sunscreen', 'Hat'],
+      rating: 4.5,
+      reviews: 5400,
+      trustBadges: ['Top Rated', 'World-Class']
     },
     // Rugby World Cup 2027
     {
@@ -776,7 +836,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2027-09-08',
       endDate: '2027-10-20',
       time: 'Various',
-      description: 'The pinnacle of international rugby. Watch the world\'s best rugby nations battle for the Webb Ellis Cup.',
+      description: '🏉 The pinnacle of international rugby. Watch the world\'s best rugby nations battle for the Webb Ellis Cup.',
       isFree: false,
       fee: '$100-1500',
       verified: true,
@@ -789,7 +849,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@worldrugby.org',
       capacity: 50000,
       ageRestriction: 'All ages',
-      accessibility: 'Wheelchair accessible at all venues'
+      accessibility: 'Wheelchair accessible at all venues',
+      rating: 4.8,
+      reviews: 11000,
+      trustBadges: ['World-Class', 'Top Rated']
     },
     // ICC Cricket World Cup
     {
@@ -803,7 +866,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2027-10-01',
       endDate: '2027-11-19',
       time: 'Various',
-      description: 'The premier international cricket championship. Watch the world\'s best cricket teams compete.',
+      description: '🏏 The premier international cricket championship. Watch the world\'s best cricket teams compete.',
       isFree: false,
       fee: '$50-800',
       verified: true,
@@ -816,7 +879,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@icc-cricket.com',
       capacity: 40000,
       ageRestriction: 'All ages',
-      accessibility: 'Wheelchair accessible seating'
+      accessibility: 'Wheelchair accessible seating',
+      rating: 4.8,
+      reviews: 13500,
+      trustBadges: ['World-Class', 'Top Rated']
     },
     // Ironman World Championship
     {
@@ -829,7 +895,7 @@ const generateMockEvents = (): LocalEvent[] => {
       venue: 'Kailua-Kona',
       startDate: '2026-10-10',
       time: '06:30 HST',
-      description: 'The ultimate triathlon challenge. Watch elite athletes swim 2.4mi, bike 112mi, and run 26.2mi.',
+      description: '🏊‍♂️🚴‍♂️🏃‍♂️ The ultimate triathlon challenge. Watch elite athletes swim 2.4mi, bike 112mi, and run 26.2mi.',
       isFree: true,
       verified: true,
       tags: ['triathlon', 'ironman', 'endurance', 'hawaii'],
@@ -841,7 +907,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'info@ironman.com',
       ageRestriction: 'All ages welcome to watch',
       accessibility: 'Various viewing points',
-      whatToBring: ['Sun protection', 'Water', 'Comfortable walking shoes', 'Snacks']
+      whatToBring: ['Sun protection', 'Water', 'Comfortable walking shoes', 'Snacks'],
+      rating: 4.9,
+      reviews: 8900,
+      trustBadges: ['World-Class', 'Top Rated', 'Traveler Favorite']
     },
     // Premier League - Multiple Games
     {
@@ -855,7 +924,7 @@ const generateMockEvents = (): LocalEvent[] => {
       startDate: '2025-11-01',
       endDate: '2026-05-23',
       time: 'Various Times',
-      description: 'Experience the world\'s most exciting soccer league. Multiple matches every weekend across London.',
+      description: '⚽ Experience the world\'s most exciting soccer league. Multiple matches every weekend across London.',
       isFree: false,
       fee: '$50-300',
       verified: true,
@@ -869,7 +938,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@premierleague.com',
       capacity: 60000,
       ageRestriction: 'All ages',
-      accessibility: 'All stadiums wheelchair accessible'
+      accessibility: 'All stadiums wheelchair accessible',
+      rating: 4.7,
+      reviews: 14200,
+      trustBadges: ['World-Class', 'Top Rated']
     },
     // La Liga
     {
@@ -882,7 +954,7 @@ const generateMockEvents = (): LocalEvent[] => {
       venue: 'Santiago Bernabéu Stadium',
       startDate: '2026-03-21',
       time: '21:00 CET',
-      description: 'El Clásico - The biggest rivalry in world soccer. Experience the passion of Spanish football.',
+      description: '⚽ El Clásico - The biggest rivalry in world soccer. Experience the passion of Spanish football.',
       isFree: false,
       fee: '$200-1500',
       verified: true,
@@ -895,7 +967,10 @@ const generateMockEvents = (): LocalEvent[] => {
       contactEmail: 'tickets@laliga.es',
       capacity: 81044,
       ageRestriction: 'All ages',
-      accessibility: 'Wheelchair accessible'
+      accessibility: 'Wheelchair accessible',
+      rating: 4.9,
+      reviews: 18500,
+      trustBadges: ['World-Class', 'Top Rated', 'Traveler Favorite']
     }
   ];
 
