@@ -1258,9 +1258,24 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
       .slice(0, 3);
   }, [currentLocation]);
 
+  const getCategoryConfig = (category: LocalEvent['category']) => {
+    const config = categoryConfig[category];
+    if (!config) {
+      console.warn(`Category "${category}" not found in categoryConfig`);
+      return {
+        label: 'Event',
+        icon: Sparkles,
+        color: 'text-muted-foreground',
+        bgColor: 'bg-muted/50'
+      };
+    }
+    return config;
+  };
+
   const getCategoryIcon = (category: LocalEvent['category']) => {
-    const Icon = categoryConfig[category].icon;
-    return <Icon className={`h-5 w-5 ${categoryConfig[category].color}`} />;
+    const config = getCategoryConfig(category);
+    const Icon = config.icon;
+    return <Icon className={`h-5 w-5 ${config.color}`} />;
   };
 
   const formatEventDate = (startDate: string, endDate?: string): string => {
@@ -1520,8 +1535,8 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
                       {getCategoryIcon(event.category)}
-                      <Badge variant="outline" className={categoryConfig[event.category].bgColor}>
-                        {categoryConfig[event.category].label}
+                      <Badge variant="outline" className={getCategoryConfig(event.category).bgColor}>
+                        {getCategoryConfig(event.category).label}
                       </Badge>
                     </div>
                     {event.verified && (
@@ -1653,8 +1668,8 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       {getCategoryIcon(selectedEvent.category)}
-                      <Badge variant="outline" className={categoryConfig[selectedEvent.category].bgColor}>
-                        {categoryConfig[selectedEvent.category].label}
+                      <Badge variant="outline" className={getCategoryConfig(selectedEvent.category).bgColor}>
+                        {getCategoryConfig(selectedEvent.category).label}
                       </Badge>
                       {selectedEvent.verified && (
                         <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
