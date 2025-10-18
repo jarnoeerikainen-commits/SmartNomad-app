@@ -93,15 +93,15 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       variant: 'outline' as const
     },
     {
-      title: 'Travel Planner AI',
-      description: 'Plan your trips with AI',
+      title: t('quick.travel_planner'),
+      description: t('quick.travel_planner_desc'),
       icon: Map,
       action: () => onSectionChange('travel-planner'),
       variant: 'outline' as const
     },
     {
-      title: 'Credit Cards',
-      description: 'Lost/stolen card hotlines',
+      title: t('quick.credit_cards'),
+      description: t('quick.credit_cards_desc'),
       icon: CreditCard,
       action: () => onSectionChange('emergency-cards'),
       variant: 'destructive' as const
@@ -144,8 +144,8 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
               >
                 <Plane className="h-6 w-6" />
                 <div className="text-center">
-                  <div className="font-medium text-sm">Search Flights</div>
-                  <div className="text-xs opacity-80">Top search engines</div>
+                  <div className="font-medium text-sm">{t('quick.search_flights')}</div>
+                  <div className="text-xs opacity-80">{t('quick.search_flights_desc')}</div>
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -175,8 +175,8 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
               >
                 <Hotel className="h-6 w-6" />
                 <div className="text-center">
-                  <div className="font-medium text-sm">Search Hotels</div>
-                  <div className="text-xs opacity-80">Top search engines</div>
+                  <div className="font-medium text-sm">{t('quick.search_hotels')}</div>
+                  <div className="text-xs opacity-80">{t('quick.search_hotels_desc')}</div>
                 </div>
               </Button>
             </DropdownMenuTrigger>

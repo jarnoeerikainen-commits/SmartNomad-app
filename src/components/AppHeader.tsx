@@ -127,8 +127,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
               className="gradient-success shadow-medium hover:shadow-lg transition-all hidden md:flex"
               onClick={onUpgradeClick}
             >
-              <Zap className="h-4 w-4 mr-1" />
-              <span className="font-semibold">Upgrade</span>
+                <Zap className="h-4 w-4 mr-1" />
+                <span className="font-semibold">{t('common.upgrade')}</span>
             </Button>
           )}
 
@@ -137,7 +137,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                <span className="hidden sm:inline">Profile</span>
+                <span className="hidden sm:inline">{t('common.profile')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Crown, X, Gift } from 'lucide-react';
 import { Subscription } from '@/types/subscription';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface UpgradeBannerProps {
   subscription: Subscription;
@@ -18,6 +19,8 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   onDismiss,
   onProfileFormClick
 }) => {
+  const { t } = useLanguage();
+  
   // Only show for free users
   if (subscription.tier !== 'free') {
     return null;
@@ -40,20 +43,20 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <h3 className="text-lg font-bold text-foreground">
-                      🎉 Get 3 Months Premium FREE!
+                      {t('upgrade.free_premium_title')}
                     </h3>
                     <Badge variant="default" className="bg-accent text-accent-foreground animate-pulse">
                       <Sparkles className="w-3 h-3 mr-1" />
-                      Special Offer
+                      {t('upgrade.special_offer')}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Share your travel preferences and unlock Premium features for 3 months - completely free!
+                    {t('upgrade.share_preferences')}
                   </p>
                   <div className="flex gap-2 flex-wrap">
-                    <Badge variant="secondary" className="text-xs">✈️ Personalized Alerts</Badge>
-                    <Badge variant="secondary" className="text-xs">🌍 Tax & Visa Guidance</Badge>
-                    <Badge variant="secondary" className="text-xs">🤖 AI Assistant</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('upgrade.personalized_alerts')}</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('upgrade.tax_visa_guidance')}</Badge>
+                    <Badge variant="secondary" className="text-xs">{t('upgrade.ai_assistant')}</Badge>
                   </div>
                 </div>
               </div>
@@ -64,7 +67,7 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
                   size="lg"
                 >
                   <Gift className="w-4 h-4 mr-2" />
-                  Get Free Premium
+                  {t('upgrade.get_free_premium')}
                 </Button>
               </div>
             </div>
@@ -84,33 +87,33 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <h3 className="text-lg font-bold text-foreground">
-                    Unlock Premium Features
+                    {t('upgrade.unlock_premium')}
                   </h3>
                   <Badge variant="secondary" className="bg-accent text-accent-foreground">
                     <Sparkles className="w-3 h-3 mr-1" />
-                    From $0.99/year
+                    {t('upgrade.from_price')}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Get automatic tracking, unlimited countries, tax residence monitoring, and more!
+                  {t('upgrade.benefits')}
                 </p>
                 <div className="flex gap-2 flex-wrap">
-                  <Badge variant="outline" className="text-xs">🤖 Auto Location</Badge>
-                  <Badge variant="outline" className="text-xs">💰 Tax Tracking</Badge>
-                  <Badge variant="outline" className="text-xs">📊 Advanced Reports</Badge>
-                  <Badge variant="outline" className="text-xs">☁️ Cloud Backup</Badge>
+                  <Badge variant="outline" className="text-xs">{t('upgrade.auto_location')}</Badge>
+                  <Badge variant="outline" className="text-xs">{t('upgrade.tax_tracking')}</Badge>
+                  <Badge variant="outline" className="text-xs">{t('upgrade.advanced_reports')}</Badge>
+                  <Badge variant="outline" className="text-xs">{t('upgrade.cloud_backup')}</Badge>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button 
-                onClick={onUpgradeClick}
-                className="gradient-success shadow-lg hover:shadow-xl transition-all"
-                size="lg"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                View Plans
-              </Button>
+                <Button 
+                  onClick={onUpgradeClick}
+                  className="gradient-success shadow-lg hover:shadow-xl transition-all"
+                  size="lg"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {t('upgrade.view_plans')}
+                </Button>
               {onDismiss && (
                 <Button 
                   variant="ghost" 
