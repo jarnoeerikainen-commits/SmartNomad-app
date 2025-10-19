@@ -5,8 +5,11 @@ import ProfileDataViewer from './ProfileDataViewer';
 import EnhancedProfileForm from './EnhancedProfileForm';
 import { Subscription } from '@/types/subscription';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Shield, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { User, Shield, FileText, Languages } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface SettingsProps {
   subscription?: Subscription;
@@ -16,6 +19,7 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onProfileComplete }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [showProfileForm, setShowProfileForm] = useState(false);
 
   const handleProfileEdit = () => {
@@ -36,6 +40,24 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
           <h2 className="text-3xl font-bold mb-2">{t('common.settings')}</h2>
           <p className="text-muted-foreground">{t('common.manage_profile')}</p>
         </div>
+
+        {/* Translation Manager Alert - Admin Tool */}
+        <Alert className="bg-primary/5 border-primary/20">
+          <Languages className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span className="font-medium">
+              Professional Translation Manager - Manage all 13 languages in one place
+            </span>
+            <Button 
+              onClick={() => navigate('/translation-manager')}
+              variant="default"
+              size="sm"
+            >
+              <Languages className="mr-2 h-4 w-4" />
+              Open Translation Manager
+            </Button>
+          </AlertDescription>
+        </Alert>
 
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full max-w-2xl grid-cols-3">
