@@ -27,6 +27,7 @@ import EmergencyContacts from './EmergencyContacts';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
 import DigitalMoney from './DigitalMoney';
+import SimpleCurrencyConverter from './SimpleCurrencyConverter';
 import RoadsideAssistance from './RoadsideAssistance';
 import PetServices from './PetServices';
 import TaxWealthyHelp from './TaxWealthyHelp';
@@ -210,6 +211,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'crypto-cash':
         return <DigitalMoney currentLocation={detectedLocation} />;
+      
+      case 'currency-converter':
+        return <SimpleCurrencyConverter />;
       
       case 'roadside':
         return <RoadsideAssistance currentLocation={detectedLocation} />;

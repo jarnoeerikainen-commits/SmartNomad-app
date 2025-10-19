@@ -132,10 +132,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'money',
       label: 'Financial Management',
       items: [
+        { id: 'currency-converter', label: 'Currency Converter', icon: DollarSign, badge: 'NEW', variant: 'secondary' as const },
         { id: 'tax-wealthy', label: 'Tax & Wealth', icon: TrendingUp },
         { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
-        { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign },
-        { id: 'crypto-cash', label: 'Digital Money', icon: Coins },
+        { id: 'money-transfers', label: 'Money Transfers', icon: Coins },
+        { id: 'crypto-cash', label: 'Digital Money', icon: Landmark },
       ]
     },
     {
