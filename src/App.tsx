@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { InvestorDocument } from "./components/InvestorDocument";
+import { InvestorOnePager } from "./components/InvestorOnePager";
 import { TranslationManager } from "./components/TranslationManager";
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -23,6 +24,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/investor-document" element={<InvestorDocument />} />
+              <Route path="/investor-pitch" element={<InvestorOnePager />} />
               <Route path="/translation-manager" element={<TranslationManager />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
