@@ -43,6 +43,7 @@ import LocationTrackingServices from './LocationTrackingServices';
 import MedicalServices from './MedicalServices';
 import TravelLegalServices from './TravelLegalServices';
 import { VisaAssistanceServices } from './VisaAssistanceServices';
+import MyAwards from './MyAwards';
 import ErrorBoundary from './ErrorBoundary';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
@@ -197,6 +198,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'services':
         return <TravelServices currentLocation={detectedLocation} />;
+      
+      case 'my-travel-awards':
+        return <MyAwards />;
       
       case 'esim':
         return <ESimServices />;

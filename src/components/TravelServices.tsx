@@ -10,7 +10,6 @@ import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
-import MyAwards from '@/components/MyAwards';
 
 interface ServiceBoxProps {
   title: string;
@@ -432,11 +431,6 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
           </div>
         </CardContent>
       </Card>
-
-      {/* My Awards Section */}
-      <div className="mt-8">
-        <MyAwards />
-      </div>
     </div>
   );
 };

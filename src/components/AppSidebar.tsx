@@ -28,7 +28,8 @@ import {
   Sparkles,
   Tag,
   Stethoscope,
-  Scale
+  Scale,
+  Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -145,6 +146,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
         { id: 'services', label: 'Travel Services', icon: Globe },
+        { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award, badge: 'NEW', variant: 'secondary' as const },
         { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
         { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]
