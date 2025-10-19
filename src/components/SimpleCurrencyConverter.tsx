@@ -123,9 +123,18 @@ export const SimpleCurrencyConverter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState<string[]>(['EUR', 'GBP', 'BTC']);
 
-  useEffect(() => {
-    fetchExchangeRate();
-  }, [fromCurrency, toCurrency]);
+  // Helper functions defined first
+  const getCurrency = (code: string) => CURRENCIES.find(c => c.code === code);
+
+  const getCurrencyDecimals = (code: string): number => {
+    const currency = getCurrency(code);
+    if (currency?.type === 'crypto') {
+      if (['BTC', 'ETH'].includes(code)) return 8;
+      return 6;
+    }
+    if (['JPY', 'KRW'].includes(code)) return 0;
+    return 2;
+  };
 
   const fetchExchangeRate = async () => {
     setLoading(true);
@@ -145,17 +154,9 @@ export const SimpleCurrencyConverter: React.FC = () => {
     ? (parseFloat(amount) * exchangeRate.rate).toFixed(getCurrencyDecimals(toCurrency))
     : '0';
 
-  const getCurrency = (code: string) => CURRENCIES.find(c => c.code === code);
-
-  function getCurrencyDecimals(code: string): number {
-    const currency = getCurrency(code);
-    if (currency?.type === 'crypto') {
-      if (['BTC', 'ETH'].includes(code)) return 8;
-      return 6;
-    }
-    if (['JPY', 'KRW'].includes(code)) return 0;
-    return 2;
-  }
+  useEffect(() => {
+    fetchExchangeRate();
+  }, [fromCurrency, toCurrency]);
 
   const formatAmount = (value: string, currencyCode: string) => {
     const currency = getCurrency(currencyCode);
