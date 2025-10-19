@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import QuickActions from './QuickActions';
@@ -75,6 +75,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
+
+  // Return to dashboard when home event is triggered (e.g., clicking logo)
+  useEffect(() => {
+    const goHome = () => {
+      setActiveSection('dashboard');
+      setSidebarOpen(false);
+    };
+    window.addEventListener('smartnomad:home', goHome);
+    return () => window.removeEventListener('smartnomad:home', goHome);
+  }, []);
 
   const handleDismissBanner = () => {
     setUpgradeBannerDismissed(true);
