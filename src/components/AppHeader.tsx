@@ -68,6 +68,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             to="/" 
             className="flex items-center gap-3 cursor-pointer group transition-all hover:opacity-80"
             title="Back to Dashboard"
+            onClick={() => console.log('SmartNomad logo clicked - navigating to /')}
           >
             <img 
               src={smartNomadLogo} 
