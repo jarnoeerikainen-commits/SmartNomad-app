@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import smartNomadLogo from '@/assets/smartnomad-logo-v2.png';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,8 +37,20 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   countries = []
 }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
+
+  const handleHomeClick = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('smartnomad:home'));
+    }
+  };
 
   // Calculate critical alerts
   const criticalAlerts = countries.filter(c => {
@@ -49,7 +61,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   }).length;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
+    <header className="sticky top-0 z-[70] w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Left side - Menu and Logo */}
         <div className="flex items-center gap-4">
@@ -68,7 +80,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             to="/" 
             className="flex items-center gap-3 cursor-pointer group transition-all hover:opacity-80"
             title="Back to Dashboard"
-            onClick={() => console.log('SmartNomad logo clicked - navigating to /')}
+            onClick={handleHomeClick}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleHomeClick(); }}
+            role="link"
+            tabIndex={0}
           >
             <img 
               src={smartNomadLogo} 

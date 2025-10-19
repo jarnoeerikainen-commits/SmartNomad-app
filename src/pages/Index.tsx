@@ -31,6 +31,18 @@ const Index = () => {
   });
   const { toast } = useToast();
 
+  // Ensure home click closes overlays, scrolls to top
+  useEffect(() => {
+    const handler = () => {
+      setShowOnboarding(false);
+      setShowProfileForm(false);
+      setShowVPNModal(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    window.addEventListener('smartnomad:home', handler);
+    return () => window.removeEventListener('smartnomad:home', handler);
+  }, []);
+
   // Load saved data on component mount
   useEffect(() => {
     const savedCountries = localStorage.getItem('trackedCountries');
