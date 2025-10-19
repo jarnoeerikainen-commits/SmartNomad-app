@@ -26,6 +26,7 @@ import { translationAnalyzer } from '@/utils/translationAnalyzer';
 import { LanguageReport, TranslationImport } from '@/types/translation';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
+import AppHeader from './AppHeader';
 
 // Import real translations - we'll extract them from the LanguageContext module
 // For now, we create a simple extraction that reads the actual translations
@@ -124,6 +125,11 @@ export const TranslationManager: React.FC = () => {
   useEffect(() => {
     const translations = extractTranslationsFromContext();
     setCurrentTranslations(translations);
+    // Auto-analyze on mount
+    setTimeout(() => {
+      const analysisReports = translationAnalyzer.analyzeTranslations(translations);
+      setReports(analysisReports);
+    }, 100);
   }, []);
 
   // Analyze translations
@@ -283,26 +289,28 @@ export const TranslationManager: React.FC = () => {
   }, [reports, searchTerm]);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Globe className="h-8 w-8" />
-            Translation Manager
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Professional translation management for SmartNomad - Analyze, export, import, and validate translations across 13 languages
-          </p>
+    <div className="min-h-screen bg-background">
+      <AppHeader />
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Globe className="h-8 w-8" />
+              Translation Manager
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Professional translation management for SmartNomad - Analyze, export, import, and validate translations across 13 languages
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/')}
+          >
+            <Home className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={() => navigate('/')}
-        >
-          <Home className="mr-2 h-4 w-4" />
-          Back to Dashboard
-        </Button>
-      </div>
 
       {/* Statistics Cards */}
       {reports.length > 0 && (
@@ -626,6 +634,7 @@ export const TranslationManager: React.FC = () => {
           </Card>
         </TabsContent>
       </Tabs>
+    </div>
     </div>
   );
 };
