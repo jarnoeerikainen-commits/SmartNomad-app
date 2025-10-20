@@ -66,6 +66,43 @@ interface TaxTrackingManagerProps {
 }
 
 const VISA_TYPES = [
+  // Electronic Travel Authorizations (ETAs)
+  { 
+    id: 'uk-eta', 
+    name: 'UK ETA', 
+    icon: '🇬🇧', 
+    description: 'UK Electronic Travel Authorisation',
+    commonDays: [180]
+  },
+  { 
+    id: 'us-esta', 
+    name: 'US ESTA', 
+    icon: '🇺🇸', 
+    description: 'Electronic System for Travel Authorization',
+    commonDays: [90]
+  },
+  { 
+    id: 'canada-eta', 
+    name: 'Canada eTA', 
+    icon: '🇨🇦', 
+    description: 'Canada Electronic Travel Authorization',
+    commonDays: [180]
+  },
+  { 
+    id: 'australia-eta', 
+    name: 'Australia ETA', 
+    icon: '🇦🇺', 
+    description: 'Australia Electronic Travel Authority',
+    commonDays: [90]
+  },
+  { 
+    id: 'nz-nzeta', 
+    name: 'New Zealand NZeTA', 
+    icon: '🇳🇿', 
+    description: 'New Zealand Electronic Travel Authority',
+    commonDays: [90]
+  },
+  // Traditional Visas
   { 
     id: 'tourist', 
     name: 'Tourist Visa', 
@@ -93,13 +130,6 @@ const VISA_TYPES = [
     icon: '📚', 
     description: 'Student exchange programs',
     commonDays: [90, 180, 365]
-  },
-  { 
-    id: 'esta', 
-    name: 'ESTA (USA)', 
-    icon: '🇺🇸', 
-    description: 'Electronic System for Travel Authorization',
-    commonDays: [90]
   },
   { 
     id: 'work', 
@@ -932,7 +962,7 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
                   <SelectTrigger>
                     <SelectValue placeholder="Select visa type..." />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-[400px]">
                     {VISA_TYPES.filter(vt => allowedVisaTypes.includes(vt.id)).map(visaType => (
                       <SelectItem key={visaType.id} value={visaType.id}>
                         <div className="flex items-center gap-2">

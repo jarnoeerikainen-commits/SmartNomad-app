@@ -698,7 +698,7 @@ const PassportManager = () => {
                     <SelectTrigger className="mt-2 h-12">
                       <SelectValue placeholder="Select visa type" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px] overflow-y-auto">
+                    <SelectContent className="max-h-[400px]">
                       {visaTypes.map(type => (
                         <SelectItem key={type} value={type}>{type}</SelectItem>
                       ))}
@@ -915,7 +915,7 @@ const PassportManager = () => {
                     <SelectTrigger className="mt-2 h-12">
                       <SelectValue placeholder="Select permit type" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-[400px]">
                       {permitTypes.map(type => (
                         <SelectItem key={type} value={type}>{type}</SelectItem>
                       ))}
