@@ -430,8 +430,14 @@ const PASSPORT_NOTIFICATION_OPTIONS = [
 ];
 
 const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription, countries }) => {
-  const [visaTrackings, setVisaTrackings] = useState<VisaTracking[]>([]);
-  const [taxTrackings, setTaxTrackings] = useState<TaxTracking[]>([]);
+  const [visaTrackings, setVisaTrackings] = useState<VisaTracking[]>(() => {
+    const saved = localStorage.getItem('visaTrackings');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [taxTrackings, setTaxTrackings] = useState<TaxTracking[]>(() => {
+    const saved = localStorage.getItem('taxTrackings');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTaxModalOpen, setIsTaxModalOpen] = useState(false);
   const [editingVisa, setEditingVisa] = useState<VisaTracking | null>(null);
@@ -477,6 +483,18 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       countArrivalDay
     }));
   }, [countingMode, partialDayRule, countDepartureDay, countArrivalDay]);
+
+  // Save visa trackings to localStorage
+  useEffect(() => {
+    localStorage.setItem('visaTrackings', JSON.stringify(visaTrackings));
+    // Dispatch event to update dashboard stats
+    window.dispatchEvent(new Event('visaTrackingsUpdated'));
+  }, [visaTrackings]);
+
+  // Save tax trackings to localStorage
+  useEffect(() => {
+    localStorage.setItem('taxTrackings', JSON.stringify(taxTrackings));
+  }, [taxTrackings]);
 
   // Update subscription when it changes
   useEffect(() => {

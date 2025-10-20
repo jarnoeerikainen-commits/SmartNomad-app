@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Calendar, Shield, TrendingUp } from 'lucide-react';
 import { Country } from '@/types/country';
@@ -7,7 +7,68 @@ interface DashboardQuickStatsProps {
   countries: Country[];
 }
 
+interface VisaTracking {
+  id: string;
+  countryCode: string;
+  countryName: string;
+  visaType: string;
+  dayLimit: number;
+  daysUsed: number;
+  startDate: string;
+  trackingStartDate: string;
+  endDate: string;
+  passportExpiry?: string;
+  passportNotifications: number[];
+  isActive: boolean;
+}
+
 const DashboardQuickStats: React.FC<DashboardQuickStatsProps> = ({ countries }) => {
+  const [activeVisasCount, setActiveVisasCount] = useState(0);
+
+  useEffect(() => {
+    // Load visa trackings from localStorage
+    const loadVisaCount = () => {
+      const saved = localStorage.getItem('visaTrackings');
+      if (saved) {
+        try {
+          const visaTrackings: VisaTracking[] = JSON.parse(saved);
+          const today = new Date();
+          
+          // Count active visas (not expired and within day limit)
+          const active = visaTrackings.filter(visa => {
+            if (!visa.isActive) return false;
+            
+            // Check if visa has expired (if endDate is set)
+            if (visa.endDate) {
+              const endDate = new Date(visa.endDate);
+              if (today > endDate) return false;
+            }
+            
+            // Check if still within day limit
+            if (visa.daysUsed >= visa.dayLimit) return false;
+            
+            return true;
+          }).length;
+          
+          setActiveVisasCount(active);
+        } catch (error) {
+          console.error('Error loading visa trackings:', error);
+          setActiveVisasCount(0);
+        }
+      }
+    };
+
+    loadVisaCount();
+
+    // Listen for visa tracking updates
+    const handleVisaUpdate = () => loadVisaCount();
+    window.addEventListener('visaTrackingsUpdated', handleVisaUpdate);
+
+    return () => {
+      window.removeEventListener('visaTrackingsUpdated', handleVisaUpdate);
+    };
+  }, []);
+
   const totalDays = countries.reduce((sum, country) => sum + country.daysSpent, 0);
 
   const currentYear = new Date().getFullYear();
@@ -32,10 +93,10 @@ const DashboardQuickStats: React.FC<DashboardQuickStatsProps> = ({ countries }) 
     },
     {
       label: 'Active Visas',
-      value: '0',
+      value: activeVisasCount.toString(),
       icon: Shield,
       color: 'gradient-sunset',
-      trend: 'All valid',
+      trend: activeVisasCount > 0 ? 'All valid' : 'None tracked',
     },
     {
       label: 'Tax Status',
