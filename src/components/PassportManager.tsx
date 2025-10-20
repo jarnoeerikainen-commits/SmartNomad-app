@@ -320,8 +320,24 @@ const PassportManager = () => {
   };
 
   const visaTypes = [
-    'Tourist Visa', 'Business Visa', 'Student Visa', 'Work Visa', 'Transit Visa',
-    'Family Visit Visa', 'Medical Visa', 'Conference Visa', 'Multiple Entry Visa'
+    // Electronic Travel Authorizations (ETAs)
+    'UK ETA (Electronic Travel Authorisation)',
+    'US ESTA (Electronic System for Travel Authorization)',
+    'Canada eTA (Electronic Travel Authorization)',
+    'Australia ETA (Electronic Travel Authority)',
+    'New Zealand NZeTA',
+    // Traditional Visas
+    'Tourist Visa',
+    'Business Visa',
+    'Student Visa',
+    'Work Visa',
+    'Transit Visa',
+    'Family Visit Visa',
+    'Medical Visa',
+    'Conference Visa',
+    'Multiple Entry Visa',
+    'Schengen Visa',
+    'Digital Nomad Visa'
   ];
 
   const permitTypes = [
@@ -682,7 +698,7 @@ const PassportManager = () => {
                     <SelectTrigger className="mt-2 h-12">
                       <SelectValue placeholder="Select visa type" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-[300px] overflow-y-auto">
                       {visaTypes.map(type => (
                         <SelectItem key={type} value={type}>{type}</SelectItem>
                       ))}
