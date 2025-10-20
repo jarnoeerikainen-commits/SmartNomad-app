@@ -45,6 +45,7 @@ import TravelLegalServices from './TravelLegalServices';
 import { VisaAssistanceServices } from './VisaAssistanceServices';
 import MyAwards from './MyAwards';
 import ErrorBoundary from './ErrorBoundary';
+import WiFiHotspotFinder from './WiFiHotspotFinder';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -268,6 +269,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           <VisaAssistanceServices 
             currentLocation={detectedLocation}
             subscription={subscription}
+          />
+        );
+      
+      case 'wifi-finder':
+        return (
+          <WiFiHotspotFinder
+            subscription={subscription}
+            currentLocation={detectedLocation}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
           />
         );
       

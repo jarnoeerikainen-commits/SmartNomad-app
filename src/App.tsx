@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import WiFiFinder from "./pages/WiFiFinder";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { InvestorDocument } from "./components/InvestorDocument";
 import { InvestorOnePager } from "./components/InvestorOnePager";
@@ -23,6 +24,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/wifi-finder" element={<WiFiFinder />} />
               <Route path="/investor-document" element={<InvestorDocument />} />
               <Route path="/investor-pitch" element={<InvestorOnePager />} />
               <Route path="/translation-manager" element={<TranslationManager />} />

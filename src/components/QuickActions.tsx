@@ -24,7 +24,8 @@ import {
   ExternalLink,
   Map,
   CreditCard,
-  AlertTriangle
+  AlertTriangle,
+  Wifi
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -56,6 +57,14 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       action: onAddCountry,
       variant: 'default' as const,
       gradient: 'gradient-primary'
+    },
+    {
+      title: 'WiFi Finder',
+      description: 'Find reliable WiFi hotspots',
+      icon: Wifi,
+      action: () => onSectionChange('wifi-finder'),
+      variant: 'outline' as const,
+      badge: 'NEW'
     },
     {
       title: t('quick.ai_doctor'),
