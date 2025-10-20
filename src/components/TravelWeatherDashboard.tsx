@@ -6,6 +6,8 @@ import { CloudRain, Plus, MapPin, Settings, RefreshCw, Sun, CloudSnow, Cloud } f
 import WeatherLocationCard from './WeatherLocationCard';
 import SevereWeatherAlert from './SevereWeatherAlert';
 import WeatherPreferencesModal from './WeatherPreferencesModal';
+import WeatherCitySelector from './WeatherCitySelector';
+import { WeatherCity } from '@/data/weatherCities';
 import { useToast } from '@/hooks/use-toast';
 
 interface WeatherLocation {
@@ -56,6 +58,7 @@ const TravelWeatherDashboard: React.FC = () => {
   const [weatherData, setWeatherData] = useState<Record<string, WeatherData>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
+  const [showCitySelector, setShowCitySelector] = useState(false);
   const [preferences, setPreferences] = useState({
     units: 'celsius' as 'celsius' | 'fahrenheit',
     notifications: true,
@@ -168,36 +171,15 @@ const TravelWeatherDashboard: React.FC = () => {
       });
       return;
     }
+    
+    setShowCitySelector(true);
+  };
 
-    // Popular nomad destinations for demo
-    const cities = [
-      { city: 'Bangkok', country: 'Thailand' },
-      { city: 'Barcelona', country: 'Spain' },
-      { city: 'Bali', country: 'Indonesia' },
-      { city: 'Mexico City', country: 'Mexico' },
-      { city: 'Dubai', country: 'UAE' },
-      { city: 'Tokyo', country: 'Japan' },
-      { city: 'Berlin', country: 'Germany' },
-      { city: 'Cape Town', country: 'South Africa' },
-    ];
-
-    const availableCities = cities.filter(
-      c => !locations.some(l => l.city === c.city)
-    );
-
-    if (availableCities.length === 0) {
-      toast({
-        title: 'No More Cities',
-        description: 'All available cities are already tracked.',
-      });
-      return;
-    }
-
-    const newCity = availableCities[Math.floor(Math.random() * availableCities.length)];
+  const handleSelectCity = (city: WeatherCity) => {
     const newLocation: WeatherLocation = {
       id: `loc-${Date.now()}`,
-      city: newCity.city,
-      country: newCity.country,
+      city: city.city,
+      country: city.country,
       isAutoDetected: false,
       lastUpdated: new Date(),
     };
@@ -210,7 +192,7 @@ const TravelWeatherDashboard: React.FC = () => {
 
     toast({
       title: 'Location Added',
-      description: `Now tracking weather for ${newCity.city}, ${newCity.country}`,
+      description: `Now tracking weather for ${city.city}, ${city.country}`,
     });
   };
 
@@ -425,6 +407,15 @@ const TravelWeatherDashboard: React.FC = () => {
         onClose={() => setShowPreferences(false)}
         preferences={preferences}
         onSave={handleSavePreferences}
+      />
+
+      {/* City Selector Modal */}
+      <WeatherCitySelector
+        isOpen={showCitySelector}
+        onClose={() => setShowCitySelector(false)}
+        onSelectCity={handleSelectCity}
+        excludedCities={locations.map(l => l.city)}
+        maxSelections={5}
       />
     </div>
   );
