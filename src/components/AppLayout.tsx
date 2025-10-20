@@ -46,6 +46,7 @@ import { VisaAssistanceServices } from './VisaAssistanceServices';
 import MyAwards from './MyAwards';
 import ErrorBoundary from './ErrorBoundary';
 import WiFiHotspotFinder from './WiFiHotspotFinder';
+import TravelWeatherDashboard from './TravelWeatherDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -280,6 +281,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             onUpgradeClick={() => setShowUpgradeModal(true)}
           />
         );
+      
+      case 'weather':
+        return <TravelWeatherDashboard />;
       
       case 'settings':
         return (

@@ -30,7 +30,8 @@ import {
   Stethoscope,
   Scale,
   Award,
-  Wifi
+  Wifi,
+  CloudRain
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -116,6 +117,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'travel',
       label: 'Travel & Compliance',
       items: [
+        { id: 'weather', label: 'Travel Weather', icon: CloudRain, badge: 'NEW', variant: 'secondary' as const },
         { id: 'tax', label: 'Tax & Compliance', icon: Calculator },
         { id: 'visas', label: 'Visa Manager', icon: Plane },
         { id: 'documents', label: 'Documents', icon: FileText },
