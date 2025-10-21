@@ -963,18 +963,39 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
               {/* Country Selection */}
               <div className="space-y-2">
                 <Label>Country</Label>
-                <Select value={selectedCountry} onValueChange={setSelectedCountry} disabled={!!editingVisa}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select country..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {COUNTRIES.map(country => (
-                      <SelectItem key={country.code} value={country.code}>
-                        {country.flag} {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {selectedCountry && !editingVisa ? (
+                  <div className="flex items-center justify-between p-3 border rounded-lg bg-muted">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">{selectedVisaCountryFlag}</span>
+                      <span className="font-medium">{selectedVisaCountryName}</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCountry('');
+                        setSelectedVisaCountryName('');
+                        setSelectedVisaCountryFlag('');
+                      }}
+                    >
+                      Change
+                    </Button>
+                  </div>
+                ) : editingVisa ? (
+                  <div className="flex items-center gap-2 p-3 border rounded-lg bg-muted">
+                    <span className="text-2xl">{COUNTRIES.find(c => c.code === selectedCountry)?.flag}</span>
+                    <span className="font-medium">{COUNTRIES.find(c => c.code === selectedCountry)?.name}</span>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={() => setShowVisaCountrySelector(true)}
+                  >
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Select Country
+                  </Button>
+                )}
               </div>
 
               {/* Visa Type Selection */}
@@ -1257,18 +1278,34 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
                 {/* Country Selection */}
                 <div className="space-y-2">
                   <Label>Country</Label>
-                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select country..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {COUNTRIES.map(country => (
-                        <SelectItem key={country.code} value={country.code}>
-                          {country.flag} {country.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {selectedCountry ? (
+                    <div className="flex items-center justify-between p-3 border rounded-lg bg-muted">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{selectedTaxCountryFlag}</span>
+                        <span className="font-medium">{selectedTaxCountryName}</span>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedCountry('');
+                          setSelectedTaxCountryName('');
+                          setSelectedTaxCountryFlag('');
+                        }}
+                      >
+                        Change
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => setShowTaxCountrySelector(true)}
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Select Country
+                    </Button>
+                  )}
                 </div>
 
                 {/* Day Limit */}
@@ -1406,6 +1443,51 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
         </TabsContent>
         
         </Tabs>
+
+        {/* Country Selectors */}
+        <CountrySelector
+          isOpen={showVisaCountrySelector}
+          onClose={() => setShowVisaCountrySelector(false)}
+          onSelect={(countryCode, countryName, countryFlag) => {
+            setSelectedCountry(countryCode);
+            setSelectedVisaCountryName(countryName);
+            setSelectedVisaCountryFlag(countryFlag);
+            setShowVisaCountrySelector(false);
+          }}
+          existingCountries={[]}
+          maxCountries={999}
+        />
+
+        <CountrySelector
+          isOpen={showTaxCountrySelector}
+          onClose={() => setShowTaxCountrySelector(false)}
+          onSelect={(countryCode, countryName, countryFlag) => {
+            setSelectedCountry(countryCode);
+            setSelectedTaxCountryName(countryName);
+            setSelectedTaxCountryFlag(countryFlag);
+            setShowTaxCountrySelector(false);
+          }}
+          existingCountries={taxTrackings.map(t => ({
+            id: t.id,
+            code: t.countryCode,
+            name: t.countryName,
+            flag: COUNTRIES.find(c => c.code === t.countryCode)?.flag || '',
+            dayLimit: t.dayLimit,
+            daysSpent: t.daysSpent,
+            reason: 'Tax residence tracking',
+            lastUpdate: null,
+            countTravelDays: true,
+            yearlyDaysSpent: t.daysSpent,
+            lastEntry: null,
+            totalEntries: 0,
+            followEmbassyNews: false,
+            countingMode: 'days',
+            partialDayRule: 'full',
+            countArrivalDay: true,
+            countDepartureDay: true,
+          }))}
+          maxCountries={999}
+        />
       </CardContent>
     </Card>
   );
