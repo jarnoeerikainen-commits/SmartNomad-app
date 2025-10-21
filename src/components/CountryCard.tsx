@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Settings, Trash2, RotateCcw, MapPin, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Settings, Trash2, RotateCcw, MapPin, AlertTriangle, CheckCircle, Clock, Settings2 } from 'lucide-react';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { CountryTrackingSettingsModal } from './CountryTrackingSettingsModal';
 
 interface CountryCardProps {
   country: Country;
@@ -15,6 +16,12 @@ interface CountryCardProps {
   onUpdateLimit: (id: string, newLimit: number) => void;
   onReset: (id: string) => void;
   onToggleCountDays: (id: string) => void;
+  onUpdateSettings: (id: string, settings: {
+    countingMode: 'days' | 'nights';
+    partialDayRule: 'full' | 'half' | 'exclude';
+    countArrivalDay: boolean;
+    countDepartureDay: boolean;
+  }) => void;
 }
 
 const CountryCard: React.FC<CountryCardProps> = React.memo(({
@@ -23,11 +30,13 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
   onRemove,
   onUpdateLimit,
   onReset,
-  onToggleCountDays
+  onToggleCountDays,
+  onUpdateSettings
 }) => {
   const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [tempLimit, setTempLimit] = useState(country.dayLimit.toString());
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const progress = (country.daysSpent / country.dayLimit) * 100;
   const remainingDays = country.dayLimit - country.daysSpent;
@@ -74,7 +83,23 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
 
   const isTrackingTaxResidence = country.reason === 'Tax residence tracking';
 
+  const getTrackingRulesSummary = () => {
+    const mode = country.countingMode || 'days';
+    const rule = country.partialDayRule || 'full';
+    const arrival = country.countArrivalDay !== false;
+    const departure = country.countDepartureDay !== false;
+    
+    return `${mode === 'days' ? '📅 Days' : '🌙 Nights'} • ${rule === 'full' ? 'Full' : rule === 'half' ? 'Half' : 'Exclude'} • ${arrival ? '✓' : '✗'} Arrival • ${departure ? '✓' : '✗'} Departure`;
+  };
+
   return (
+    <>
+      <CountryTrackingSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        country={country}
+        onSave={(settings) => onUpdateSettings(country.id, settings)}
+      />
     <Card className={`transition-all duration-200 hover:shadow-lg ${
       isCurrentLocation ? 'ring-2 ring-green-400 bg-green-50' : ''
     }`}>
@@ -103,6 +128,27 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* Tracking Rules Summary */}
+        <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <Settings2 className="w-4 h-4 text-primary flex-shrink-0" />
+                <span className="text-sm font-semibold text-primary">Tracking Rules</span>
+              </div>
+              <p className="text-xs text-muted-foreground truncate">{getTrackingRulesSummary()}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSettingsModal(true)}
+              className="flex-shrink-0 text-xs h-7"
+            >
+              Configure
+            </Button>
+          </div>
+        </div>
+
         {/* Count Travel Days Toggle */}
         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
           <div className="flex items-center gap-2">
@@ -225,6 +271,7 @@ const CountryCard: React.FC<CountryCardProps> = React.memo(({
         )}
       </CardContent>
     </Card>
+    </>
   );
 });
 

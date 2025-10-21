@@ -10,6 +10,8 @@ import { MapPin, Plus, X, Search, Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { CountrySelector } from './CountrySelector';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CountryTrackerProps {
   countries: Country[];
@@ -325,206 +327,158 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
   onRemoveCountry 
 }) => {
   const { t } = useLanguage();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showAddCountry, setShowAddCountry] = useState(false);
+  const [showCountrySelector, setShowCountrySelector] = useState(false);
   const [followEmbassyNews, setFollowEmbassyNews] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState<string>('all');
+  const [selectedReason, setSelectedReason] = useState('Tourist visa limit');
+  const [dayLimit, setDayLimit] = useState('90');
   const { toast } = useToast();
 
-  // Organize countries by region
-  const worldCountries = AVAILABLE_COUNTRIES.filter(c => !c.category || c.category === 'Country');
-  const usStates = AVAILABLE_COUNTRIES.filter(c => c.category === 'US State');
+  const TRACKING_REASONS = [
+    'Tourist visa limit',
+    'Tax residence tracking',
+    'Work permit limit',
+    'Schengen area limit',
+    'Business travel limit',
+    'Student visa limit',
+    'Digital nomad visa',
+    'Custom tracking'
+  ];
 
-  const filteredCountries = AVAILABLE_COUNTRIES.filter(country => {
-    const matchesSearch = country.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const notAdded = !countries.find(c => c.code === country.code);
-    const matchesRegion = selectedRegion === 'all' || 
-      (selectedRegion === 'world' && (!country.category || country.category === 'Country')) ||
-      (selectedRegion === 'us-states' && country.category === 'US State');
+  const handleSelectCountry = (countryCode: string, countryName: string, countryFlag: string) => {
+    // Determine default day limit based on reason
+    let defaultDayLimit = parseInt(dayLimit) || 90;
     
-    return matchesSearch && notAdded && matchesRegion;
-  });
-
-  const handleAddCountry = (countryData: { code: string; name: string; flag: string; category?: string; taxDays?: number; taxType?: string }) => {
-    // Set appropriate day limit based on category and tax rules
-    let dayLimit = 90; // Default for tourism
-    let reason = 'Tourism/Business';
-    
-    if (countryData.category === 'US State') {
-      if (countryData.taxType === 'none') {
-        dayLimit = 365;
-        reason = 'US State Tax Tracking (No Income Tax)';
-      } else if (countryData.taxDays) {
-        dayLimit = countryData.taxDays;
-        reason = `US State Tax Tracking (${countryData.taxDays} day limit)`;
-      }
+    if (selectedReason === 'Tax residence tracking') {
+      defaultDayLimit = 183;
+    } else if (selectedReason === 'Schengen area limit') {
+      defaultDayLimit = 90;
+    } else if (selectedReason === 'Tourist visa limit') {
+      defaultDayLimit = 90;
+    } else if (selectedReason === 'Work permit limit') {
+      defaultDayLimit = 365;
     }
-    
+
     const fullCountry: Country = {
-      id: `country-${countryData.code}-${Date.now()}`,
-      code: countryData.code,
-      name: countryData.name,
-      flag: countryData.flag,
-      dayLimit: dayLimit,
+      id: `country-${countryCode}-${Date.now()}`,
+      code: countryCode,
+      name: countryName,
+      flag: countryFlag,
+      dayLimit: defaultDayLimit,
       daysSpent: 0,
-      reason: reason,
+      reason: selectedReason,
       lastUpdate: null,
       countTravelDays: true,
       yearlyDaysSpent: 0,
       lastEntry: null,
       totalEntries: 0,
-      followEmbassyNews: followEmbassyNews
+      followEmbassyNews: followEmbassyNews,
+      countingMode: 'days',
+      partialDayRule: 'full',
+      countArrivalDay: true,
+      countDepartureDay: true,
     };
-    onAddCountry(fullCountry);
-    setSearchTerm('');
-    setShowAddCountry(false);
     
-    if (followEmbassyNews && countryData.category !== 'US State') {
-      toast({
-        title: "Embassy News Enabled",
-        description: `Now following embassy updates for ${countryData.name}`,
-      });
-    } else if (countryData.category === 'US State') {
-      toast({
-        title: "US State Tax Tracking Added",
-        description: `Now tracking tax compliance for ${countryData.name}`,
-      });
-    }
+    onAddCountry(fullCountry);
+    
+    toast({
+      title: "Country Added",
+      description: `${countryName} has been added to your tracking list`,
+    });
   };
 
   return (
-    <Card className="border-green-200 bg-green-50">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-green-800">
-          <MapPin className="w-5 h-5" />
-          Tracked Countries ({countries.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Tracked Countries List */}
-        <div className="space-y-2">
-          {countries.length === 0 ? (
-            <div className="text-center py-4 text-success">
-              <MapPin className="w-8 h-8 mx-auto mb-2 text-success" />
-              <p className="text-sm">No countries tracked yet</p>
-              <p className="text-xs text-muted-foreground">Add countries to get travel updates</p>
-            </div>
-          ) : (
-            countries.map((country) => (
-              <div key={country.code} className="flex items-center justify-between p-3 bg-card rounded-lg border">
-                 <div className="flex items-center gap-3">
-                   <span className="text-2xl">{country.flag}</span>
-                   <div>
-                     <p className="font-medium text-gray-900">{country.name}</p>
-                     <div className="flex items-center gap-2">
-                       <p className="text-xs text-gray-500">{country.code}</p>
-                       {country.followEmbassyNews && (
-                         <Badge variant="secondary" className="text-xs">
-                           <Building2 className="w-3 h-3 mr-1" />
-                           Embassy
-                         </Badge>
-                       )}
-                     </div>
-                   </div>
-                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onRemoveCountry(country.code)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
+    <>
+      <CountrySelector
+        isOpen={showCountrySelector}
+        onClose={() => setShowCountrySelector(false)}
+        onSelect={handleSelectCountry}
+        existingCountries={countries}
+        maxCountries={10}
+      />
+      
+      <Card className="border-green-200 bg-green-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-green-800">
+            <MapPin className="w-5 h-5" />
+            Tracked Countries ({countries.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Tracked Countries List */}
+          <div className="space-y-2">
+            {countries.length === 0 ? (
+              <div className="text-center py-4 text-success">
+                <MapPin className="w-8 h-8 mx-auto mb-2 text-success" />
+                <p className="text-sm">No countries tracked yet</p>
+                <p className="text-xs text-muted-foreground">Add countries to get travel updates</p>
               </div>
-            ))
-          )}
-        </div>
+            ) : (
+              countries.map((country) => (
+                <div key={country.code} className="flex items-center justify-between p-3 bg-card rounded-lg border">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{country.flag}</span>
+                    <div>
+                      <p className="font-medium text-gray-900">{country.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-gray-500">{country.code}</p>
+                        {country.followEmbassyNews && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Building2 className="w-3 h-3 mr-1" />
+                            Embassy
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => onRemoveCountry(country.code)}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
 
-        {/* Add Country Section */}
-        {!showAddCountry ? (
-          <Button
-            onClick={() => setShowAddCountry(true)}
-            className="w-full bg-green-600 hover:bg-green-700"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Country or Region
-          </Button>
-        ) : (
-          <div className="space-y-3">
-            {/* Search Bar */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          {/* Configuration Options */}
+          <div className="space-y-3 border-t pt-4">
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Default Tracking Reason</Label>
+              <Select value={selectedReason} onValueChange={setSelectedReason}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {TRACKING_REASONS.map(reason => (
+                    <SelectItem key={reason} value={reason}>
+                      {reason}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Default Day Limit</Label>
               <Input
-                placeholder={t('placeholder.search_country')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                type="number"
+                value={dayLimit}
+                onChange={(e) => setDayLimit(e.target.value)}
+                placeholder="90"
+                min="1"
+                max="365"
               />
             </div>
 
-            {/* Region Filter */}
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant={selectedRegion === 'all' ? 'default' : 'outline'}
-                onClick={() => setSelectedRegion('all')}
-                className="flex-1"
-              >
-                All ({AVAILABLE_COUNTRIES.filter(c => !countries.find(cc => cc.code === c.code)).length})
-              </Button>
-              <Button
-                size="sm"
-                variant={selectedRegion === 'world' ? 'default' : 'outline'}
-                onClick={() => setSelectedRegion('world')}
-                className="flex-1"
-              >
-                🌍 Countries ({worldCountries.filter(c => !countries.find(cc => cc.code === c.code)).length})
-              </Button>
-              <Button
-                size="sm"
-                variant={selectedRegion === 'us-states' ? 'default' : 'outline'}
-                onClick={() => setSelectedRegion('us-states')}
-                className="flex-1"
-              >
-                🇺🇸 US States ({usStates.filter(c => !countries.find(cc => cc.code === c.code)).length})
-              </Button>
-            </div>
-            
-            {/* Countries Grid */}
-            <div className="max-h-96 overflow-y-auto border rounded-lg p-2 bg-background">
-              {filteredCountries.length === 0 ? (
-                <p className="text-sm text-gray-500 p-4 text-center">No countries available</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {filteredCountries.map((country) => (
-                    <div
-                      key={country.code}
-                      onClick={() => handleAddCountry(country)}
-                      className="flex items-center gap-3 p-3 hover:bg-green-100 rounded-lg cursor-pointer border border-transparent hover:border-green-300 transition-all"
-                    >
-                      <span className="text-2xl">{country.flag}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{country.name}</p>
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs text-gray-500">{country.code}</p>
-                          {country.category === 'US State' && country.taxType === 'none' && (
-                            <Badge variant="secondary" className="text-xs">No Tax</Badge>
-                          )}
-                        </div>
-                      </div>
-                      <Plus className="w-4 h-4 text-green-600" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            
             {/* Embassy News Toggle */}
             <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-blue-600" />
-                <Label htmlFor="embassy-news" className="text-sm font-medium">
-                  Follow Embassy News
+                <Label htmlFor="embassy-news" className="text-sm font-medium cursor-pointer">
+                  Follow Embassy News by Default
                 </Label>
               </div>
               <Switch
@@ -533,25 +487,20 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
                 onCheckedChange={setFollowEmbassyNews}
               />
             </div>
-            <p className="text-xs text-gray-500 -mt-2">
-              Get automatic updates from embassy websites and official sources
-            </p>
-            
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowAddCountry(false);
-                setSearchTerm('');
-                setSelectedRegion('all');
-              }}
-              className="w-full"
-            >
-              Cancel
-            </Button>
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Add Country Button */}
+          <Button
+            onClick={() => setShowCountrySelector(true)}
+            className="w-full bg-green-600 hover:bg-green-700"
+            disabled={countries.length >= 10}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {countries.length >= 10 ? 'Maximum Countries Reached' : 'Add Country'}
+          </Button>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

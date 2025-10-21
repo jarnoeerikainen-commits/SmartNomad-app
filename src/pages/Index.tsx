@@ -126,6 +126,23 @@ const Index = () => {
     });
   };
 
+  const updateCountrySettings = (countryId: string, settings: {
+    countingMode: 'days' | 'nights';
+    partialDayRule: 'full' | 'half' | 'exclude';
+    countArrivalDay: boolean;
+    countDepartureDay: boolean;
+  }) => {
+    setCountries(prev => prev.map(country => 
+      country.id === countryId 
+        ? { ...country, ...settings }
+        : country
+    ));
+    toast({
+      title: "Settings Updated",
+      description: "Day counting rules have been saved",
+    });
+  };
+
   const handleVPNModalClose = () => {
     setShowVPNModal(false);
   };
@@ -267,6 +284,7 @@ const Index = () => {
         countries={countries}
         onAddCountry={addCountry}
         onRemoveCountry={removeCountry}
+        onUpdateCountrySettings={updateCountrySettings}
         subscription={subscription}
         detectedLocation={detectedLocation}
         userProfile={userProfile}

@@ -54,6 +54,12 @@ interface AppLayoutProps {
   countries: Country[];
   onAddCountry: (country: Country) => void;
   onRemoveCountry: (countryCode: string) => void;
+  onUpdateCountrySettings: (countryId: string, settings: {
+    countingMode: 'days' | 'nights';
+    partialDayRule: 'full' | 'half' | 'exclude';
+    countArrivalDay: boolean;
+    countDepartureDay: boolean;
+  }) => void;
   subscription: Subscription;
   detectedLocation: LocationData | null;
   userProfile: any;
