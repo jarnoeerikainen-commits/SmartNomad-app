@@ -19,6 +19,7 @@ import { PDFReportGenerator } from './PDFReportGenerator';
 import { TravelTimeline } from './TravelTimeline';
 import { YearComparisonView } from './YearComparisonView';
 import { TrackingSettings } from './TrackingSettings';
+import { CountrySelector } from './CountrySelector';
 
 interface LocationEntry {
   date: string;
@@ -442,10 +443,17 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
   const [isTaxModalOpen, setIsTaxModalOpen] = useState(false);
   const [editingVisa, setEditingVisa] = useState<VisaTracking | null>(null);
   const [editingTax, setEditingTax] = useState<TaxTracking | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedVisaType, setSelectedVisaType] = useState('');
-  const [dayLimit, setDayLimit] = useState('');
-  const [passportExpiry, setPassportExpiry] = useState('');
+const [selectedCountry, setSelectedCountry] = useState('');
+const [selectedVisaType, setSelectedVisaType] = useState('');
+const [dayLimit, setDayLimit] = useState('');
+const [passportExpiry, setPassportExpiry] = useState('');
+// Country selector integration
+const [showVisaCountrySelector, setShowVisaCountrySelector] = useState(false);
+const [showTaxCountrySelector, setShowTaxCountrySelector] = useState(false);
+const [selectedVisaCountryName, setSelectedVisaCountryName] = useState('');
+const [selectedVisaCountryFlag, setSelectedVisaCountryFlag] = useState('');
+const [selectedTaxCountryName, setSelectedTaxCountryName] = useState('');
+const [selectedTaxCountryFlag, setSelectedTaxCountryFlag] = useState('');
   const [selectedNotifications, setSelectedNotifications] = useState<number[]>([9, 6, 3]);
   const [trackingStartDate, setTrackingStartDate] = useState('');
   const [startFromNow, setStartFromNow] = useState(true);
@@ -586,8 +594,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription,
       return;
     }
 
-    const selectedCountryData = COUNTRIES.find(c => c.code === selectedCountry);
-    const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
+const selectedCountryData = COUNTRIES.find(c => c.code === selectedCountry);
+const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
     
     if (!selectedCountryData || !selectedVisaData) return;
 
