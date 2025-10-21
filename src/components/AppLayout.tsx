@@ -156,6 +156,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             onUpdateCountryLimit={onUpdateCountryLimit}
             onResetCountry={onResetCountry}
             onToggleCountDays={onToggleCountDays}
+            currentLocation={detectedLocation}
           />
         );
       

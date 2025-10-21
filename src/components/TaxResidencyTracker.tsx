@@ -33,6 +33,7 @@ interface TaxResidencyTrackerProps {
   onUpdateCountryLimit: (countryId: string, newLimit: number) => void;
   onResetCountry: (countryId: string) => void;
   onToggleCountDays: (countryId: string) => void;
+  currentLocation?: { country_code: string } | null;
 }
 
 const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ 
@@ -42,7 +43,8 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({
   onUpdateCountrySettings,
   onUpdateCountryLimit,
   onResetCountry,
-  onToggleCountDays
+  onToggleCountDays,
+  currentLocation
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<string>('global');
   const [open, setOpen] = useState(false);
@@ -218,6 +220,7 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({
                 <TaxResidencyVisualDashboard countries={countries} />
                 <CountryManagementGrid
                   countries={countries}
+                  currentLocation={currentLocation}
                   onRemove={onRemoveCountry}
                   onUpdateLimit={onUpdateCountryLimit}
                   onReset={onResetCountry}
