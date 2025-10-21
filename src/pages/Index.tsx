@@ -143,6 +143,38 @@ const Index = () => {
     });
   };
 
+  const updateCountryLimit = (countryId: string, newLimit: number) => {
+    setCountries(prev => prev.map(country => 
+      country.id === countryId 
+        ? { ...country, dayLimit: newLimit }
+        : country
+    ));
+    toast({
+      title: "Limit Updated",
+      description: `Day limit has been updated to ${newLimit} days`,
+    });
+  };
+
+  const resetCountry = (countryId: string) => {
+    setCountries(prev => prev.map(country => 
+      country.id === countryId 
+        ? { ...country, daysSpent: 0, yearlyDaysSpent: 0, lastEntry: null, totalEntries: 0, lastUpdate: null }
+        : country
+    ));
+    toast({
+      title: "Country Reset",
+      description: "All tracking data has been reset",
+    });
+  };
+
+  const toggleCountDays = (countryId: string) => {
+    setCountries(prev => prev.map(country => 
+      country.id === countryId 
+        ? { ...country, countTravelDays: !country.countTravelDays }
+        : country
+    ));
+  };
+
   const handleVPNModalClose = () => {
     setShowVPNModal(false);
   };
@@ -285,6 +317,9 @@ const Index = () => {
         onAddCountry={addCountry}
         onRemoveCountry={removeCountry}
         onUpdateCountrySettings={updateCountrySettings}
+        onUpdateCountryLimit={updateCountryLimit}
+        onResetCountry={resetCountry}
+        onToggleCountDays={toggleCountDays}
         subscription={subscription}
         detectedLocation={detectedLocation}
         userProfile={userProfile}

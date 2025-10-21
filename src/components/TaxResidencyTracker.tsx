@@ -15,6 +15,7 @@ import { SubstantialPresenceTest } from './SubstantialPresenceTest';
 import { ScenarioPlanner } from './ScenarioPlanner';
 import { ThresholdAlerts } from './ThresholdAlerts';
 import { YearComparisonView } from './YearComparisonView';
+import { CountryManagementGrid } from './CountryManagementGrid';
 import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ALL_COUNTRIES } from '@/data/countries';
@@ -23,9 +24,26 @@ interface TaxResidencyTrackerProps {
   countries: Country[];
   onAddCountry: (country: Country) => void;
   onRemoveCountry: (countryCode: string) => void;
+  onUpdateCountrySettings: (countryId: string, settings: {
+    countingMode: 'days' | 'nights';
+    partialDayRule: 'full' | 'half' | 'exclude';
+    countArrivalDay: boolean;
+    countDepartureDay: boolean;
+  }) => void;
+  onUpdateCountryLimit: (countryId: string, newLimit: number) => void;
+  onResetCountry: (countryId: string) => void;
+  onToggleCountDays: (countryId: string) => void;
 }
 
-const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, onAddCountry, onRemoveCountry }) => {
+const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ 
+  countries, 
+  onAddCountry, 
+  onRemoveCountry, 
+  onUpdateCountrySettings,
+  onUpdateCountryLimit,
+  onResetCountry,
+  onToggleCountDays
+}) => {
   const [selectedCountry, setSelectedCountry] = useState<string>('global');
   const [open, setOpen] = useState(false);
   const { t } = useLanguage();
@@ -197,47 +215,15 @@ const TaxResidencyTracker: React.FC<TaxResidencyTrackerProps> = ({ countries, on
 
             <TabsContent value="overview" className="mt-6">
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {countries.map((country) => {
-                    const taxDays = country.yearlyDaysSpent || 0;
-                    const isNearThreshold = taxDays >= 150; // 183 day threshold approaching
-                    const isOverThreshold = taxDays >= 183;
-                    
-                    return (
-                      <Card key={country.code} className={`p-4 ${isOverThreshold ? 'border-destructive/50 bg-destructive/10' : isNearThreshold ? 'border-warning/50 bg-warning/10' : 'border-border'}`}>
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{country.flag}</span>
-                            <span className="font-medium">{country.name}</span>
-                          </div>
-                          {isOverThreshold && <Flag className="w-4 h-4 text-destructive" />}
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-sm">
-                            <span>Days Spent</span>
-                            <span className={isOverThreshold ? 'text-destructive font-medium' : ''}>{taxDays}/183</span>
-                          </div>
-                          <div className="w-full bg-muted rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full ${isOverThreshold ? 'bg-destructive' : isNearThreshold ? 'bg-warning' : 'bg-success'}`}
-                              style={{ width: `${Math.min((taxDays / 183) * 100, 100)}%` }}
-                            />
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {isOverThreshold ? 'Tax Resident' : `${Math.max(0, 183 - taxDays)} days remaining`}
-                          </div>
-                        </div>
-                      </Card>
-                    );
-                  })}
-                </div>
-                
-                {countries.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No countries tracked yet. Add countries in the Country Manager tab.</p>
-                  </div>
-                )}
+                <TaxResidencyVisualDashboard countries={countries} />
+                <CountryManagementGrid
+                  countries={countries}
+                  onRemove={onRemoveCountry}
+                  onUpdateLimit={onUpdateCountryLimit}
+                  onReset={onResetCountry}
+                  onToggleCountDays={onToggleCountDays}
+                  onUpdateSettings={onUpdateCountrySettings}
+                />
               </div>
             </TabsContent>
 

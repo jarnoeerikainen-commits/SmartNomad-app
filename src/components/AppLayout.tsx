@@ -60,6 +60,9 @@ interface AppLayoutProps {
     countArrivalDay: boolean;
     countDepartureDay: boolean;
   }) => void;
+  onUpdateCountryLimit: (countryId: string, newLimit: number) => void;
+  onResetCountry: (countryId: string) => void;
+  onToggleCountDays: (countryId: string) => void;
   subscription: Subscription;
   detectedLocation: LocationData | null;
   userProfile: any;
@@ -71,6 +74,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   countries,
   onAddCountry,
   onRemoveCountry,
+  onUpdateCountrySettings,
+  onUpdateCountryLimit,
+  onResetCountry,
+  onToggleCountDays,
   subscription,
   detectedLocation,
   userProfile,
@@ -145,6 +152,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             countries={countries}
             onAddCountry={onAddCountry}
             onRemoveCountry={onRemoveCountry}
+            onUpdateCountrySettings={onUpdateCountrySettings}
+            onUpdateCountryLimit={onUpdateCountryLimit}
+            onResetCountry={onResetCountry}
+            onToggleCountDays={onToggleCountDays}
           />
         );
       
