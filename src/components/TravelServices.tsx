@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink, Scale, FileText } from 'lucide-react';
 import OffersModal from '@/components/OffersModal';
 import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import AirportLoungeAccess from '@/components/AirportLoungeAccess';
 
 interface ServiceBoxProps {
   title: string;
@@ -273,7 +275,18 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="services" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="services">Travel Services</TabsTrigger>
+          <TabsTrigger value="lounges">
+            <Crown className="w-4 h-4 mr-2" />
+            Airport Lounges
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="services" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Insurance Services */}
         <ServiceBox
           title={t('services.insurance')}
@@ -378,59 +391,66 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
         />
       </div>
 
-      {/* Premium Luxury Services Directory */}
-      <Card className="border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-yellow-800">
-            <Crown className="w-6 h-6" />
-            {t('services.premium_directory')}
-          </CardTitle>
-          <p className="text-sm text-yellow-700">
-            Verified premium service providers for the ultimate luxury travel experience
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {premiumServices.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-yellow-200">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Icon className="w-5 h-5 text-yellow-600" />
-                      <div>
-                        <h4 className="font-semibold text-gray-800 text-sm">{service.name}</h4>
-                        <p className="text-xs text-yellow-600">{service.category}</p>
+          {/* Premium Luxury Services Directory */}
+          <Card className="border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-yellow-800">
+                <Crown className="w-6 h-6" />
+                {t('services.premium_directory')}
+              </CardTitle>
+              <p className="text-sm text-yellow-700">
+                Verified premium service providers for the ultimate luxury travel experience
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {premiumServices.map((service, index) => {
+                  const Icon = service.icon;
+                  return (
+                    <div key={index} className="bg-white rounded-lg p-4 shadow-sm border border-yellow-200">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-5 h-5 text-yellow-600" />
+                          <div>
+                            <h4 className="font-semibold text-gray-800 text-sm">{service.name}</h4>
+                            <p className="text-xs text-yellow-600">{service.category}</p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(service.url, '_blank')}
+                          className="text-xs px-2 py-1 h-auto border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Visit
+                        </Button>
                       </div>
+                      <p className="text-xs text-gray-600">{service.description}</p>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(service.url, '_blank')}
-                      className="text-xs px-2 py-1 h-auto border-yellow-300 text-yellow-700 hover:bg-yellow-50"
-                    >
-                      <ExternalLink className="w-3 h-3 mr-1" />
-                      Visit
-                    </Button>
-                  </div>
-                  <p className="text-xs text-gray-600">{service.description}</p>
-                </div>
-              );
-            })}
-          </div>
-          
-          <div className="mt-6 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
-            <h4 className="font-semibold text-yellow-800 mb-2">{t('services.why_premium')}</h4>
-            <ul className="text-sm text-yellow-700 space-y-1">
-              <li>• 24/7 personalized concierge support</li>
-              <li>• Guaranteed availability and priority booking</li>
-              <li>• Exclusive access to luxury amenities</li>
-              <li>• White-glove service and attention to detail</li>
-              <li>• Global network of verified premium providers</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
+                  );
+                })}
+              </div>
+              
+              <div className="mt-6 p-4 bg-yellow-100 rounded-lg border border-yellow-200">
+                <h4 className="font-semibold text-yellow-800 mb-2">{t('services.why_premium')}</h4>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• 24/7 personalized concierge support</li>
+                  <li>• Guaranteed availability and priority booking</li>
+                  <li>• Exclusive access to luxury amenities</li>
+                  <li>• White-glove service and attention to detail</li>
+                  <li>• Global network of verified premium providers</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Airport Lounge Access Tab */}
+        <TabsContent value="lounges">
+          <AirportLoungeAccess currentLocation={currentLocation} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
