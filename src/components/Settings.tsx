@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import UserProfile from './UserProfile';
+import ComprehensiveUserProfile from './ComprehensiveUserProfile';
 import DataManagementSettings from './DataManagementSettings';
 import ProfileDataViewer from './ProfileDataViewer';
 import EnhancedProfileForm from './EnhancedProfileForm';
 import { Subscription } from '@/types/subscription';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { User, Shield, FileText, Languages } from 'lucide-react';
+import { User, Shield, FileText, Languages, UserCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -60,8 +61,12 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
         </Alert>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full max-w-2xl grid-cols-3">
+          <TabsList className="grid w-full max-w-3xl grid-cols-4">
             <TabsTrigger value="profile" className="flex items-center gap-2">
+              <UserCircle className="h-4 w-4" />
+              User Profile
+            </TabsTrigger>
+            <TabsTrigger value="legacy" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               {t('common.profile')}
             </TabsTrigger>
@@ -76,6 +81,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
           </TabsList>
 
           <TabsContent value="profile" className="mt-6">
+            <ComprehensiveUserProfile subscription={subscription} onUpgradeClick={onUpgradeClick} />
+          </TabsContent>
+
+          <TabsContent value="legacy" className="mt-6">
             <UserProfile subscription={subscription} onUpgradeClick={onUpgradeClick} />
           </TabsContent>
 
