@@ -33,7 +33,8 @@ import {
   Wifi,
   CloudRain,
   BookOpen,
-  Truck
+  Truck,
+  Shirt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -170,6 +171,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
         { id: 'students', label: 'Students', icon: GraduationCap },
         { id: 'language-learning', label: 'Language Learning', icon: BookOpen, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'laundry-services', label: 'Laundry Services', icon: Shirt, badge: 'NEW', variant: 'secondary' as const },
         { id: 'news', label: 'Travel News', icon: Newspaper },
       ]
     },
