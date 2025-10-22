@@ -105,8 +105,9 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
       title: t('quick.travel_planner'),
       description: t('quick.travel_planner_desc'),
       icon: Map,
-      action: () => onSectionChange('travel-planner'),
-      variant: 'outline' as const
+      action: () => onSectionChange('ai-planner'),
+      variant: 'outline' as const,
+      badge: 'NEW'
     },
     {
       title: t('quick.credit_cards'),
