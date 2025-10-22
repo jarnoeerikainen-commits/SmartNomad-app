@@ -23,6 +23,7 @@ import { AITravelLawyer } from './AITravelLawyer';
 import { AITravelPlanner } from './AITravelPlanner';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
+import { EnhancedDashboard } from './EnhancedDashboard';
 import { ESimServices } from './ESimServices';
 import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
 import EmbassyDirectory from './EmbassyDirectory';
@@ -130,27 +131,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
               />
             )}
             
-            {/* Quick Stats */}
-            <DashboardQuickStats countries={countries} />
-            
-            <QuickActions 
-              onAddCountry={() => setActiveSection('tax')} 
-              onSectionChange={setActiveSection}
+            {/* Enhanced Dashboard with all features */}
+            <EnhancedDashboard 
+              countries={countries}
+              userProfile={userProfile}
+              onSectionChange={(section) => setActiveSection(section)}
             />
-            
-            {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="space-y-6">
-                <CountryTracker
-                  countries={countries}
-                  onAddCountry={onAddCountry}
-                  onRemoveCountry={onRemoveCountry}
-                />
-              </div>
-              <div className="space-y-6">
-                <EnhancedNewsSection />
-              </div>
-            </div>
           </div>
         );
       
