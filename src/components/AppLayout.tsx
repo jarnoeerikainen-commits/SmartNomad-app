@@ -13,6 +13,7 @@ import { DocumentTracker } from './DocumentTracker';
 import VaccinationTracker from './VaccinationTracker';
 import { SmartAlerts } from './SmartAlerts';
 import TravelServices from './TravelServices';
+import AirportLoungeAccess from './AirportLoungeAccess';
 import Settings from './Settings';
 import EnhancedProfileForm from './EnhancedProfileForm';
 import { SecureDocumentVault } from './SecureDocumentVault';
@@ -232,6 +233,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'services':
         return <TravelServices currentLocation={detectedLocation} />;
+      
+      case 'airport-lounges':
+        return <AirportLoungeAccess currentLocation={detectedLocation} />;
       
       case 'my-travel-awards':
         return <MyAwards />;

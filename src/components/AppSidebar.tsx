@@ -35,7 +35,8 @@ import {
   BookOpen,
   Truck,
   Shirt,
-  Building2
+  Building2,
+  Crown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -159,6 +160,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
         { id: 'services', label: 'Travel Services', icon: Globe },
+        { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
         { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi, badge: 'NEW', variant: 'secondary' as const },
         { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award, badge: 'NEW', variant: 'secondary' as const },
         { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
