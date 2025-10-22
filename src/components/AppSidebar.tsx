@@ -107,6 +107,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },
         { id: 'ai-doctor', label: 'AI Travel Doctor', icon: Stethoscope, badge: 'NEW' },
         { id: 'ai-lawyer', label: 'AI Travel Lawyer', icon: Scale, badge: 'NEW' },
+        { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, badge: 'NEW' },
         { id: 'medical-services', label: 'Medical Services', icon: Stethoscope },
         { id: 'travel-lawyers', label: 'Travel Lawyers', icon: Scale },
         { id: 'visa-assistance', label: 'Visa Assistance', icon: FileText, badge: 'NEW' },
