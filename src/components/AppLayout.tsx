@@ -52,6 +52,7 @@ import ErrorBoundary from './ErrorBoundary';
 import WiFiHotspotFinder from './WiFiHotspotFinder';
 import TravelWeatherDashboard from './TravelWeatherDashboard';
 import LanguageLearning from './LanguageLearning';
+import DeliveryServices from './DeliveryServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -179,6 +180,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'car-rent-lease':
         return <CarRentLease />;
+      
+      case 'delivery-services':
+        return <DeliveryServices currentLocation={detectedLocation} />;
       
       case 'documents':
         return (

@@ -32,7 +32,8 @@ import {
   Award,
   Wifi,
   CloudRain,
-  BookOpen
+  BookOpen,
+  Truck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -135,6 +136,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'car-rent-lease', label: 'Car Rent & Lease', icon: Car, badge: 'NEW', variant: 'secondary' as const },
         { id: 'public-transport', label: 'Public Transport', icon: Bus },
         { id: 'taxis', label: 'Taxis & Rides', icon: Car },
+        { id: 'delivery-services', label: 'Delivery Services', icon: Truck, badge: 'NEW', variant: 'secondary' as const },
       ]
     },
     {
