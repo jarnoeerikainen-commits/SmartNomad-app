@@ -91,7 +91,7 @@ const GlobalCityServices = () => {
                 <h4 className="text-lg font-semibold mb-3">Expansion Plans</h4>
                 <p className="text-muted-foreground mb-4">
                   We're actively expanding services in Tier 2 and Tier 3 cities, with 50+ new
-                  provider partnerships planned for Q2-Q3 2024.
+                  provider partnerships planned for Q2-Q3 2026.
                 </p>
               </div>
 
