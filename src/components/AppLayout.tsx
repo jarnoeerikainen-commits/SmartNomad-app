@@ -51,6 +51,7 @@ import MyAwards from './MyAwards';
 import ErrorBoundary from './ErrorBoundary';
 import WiFiHotspotFinder from './WiFiHotspotFinder';
 import TravelWeatherDashboard from './TravelWeatherDashboard';
+import LanguageLearning from './LanguageLearning';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -318,6 +319,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'weather':
         return <TravelWeatherDashboard />;
+      
+      case 'language-learning':
+        return (
+          <ErrorBoundary>
+            <LanguageLearning currentLocation={detectedLocation} />
+          </ErrorBoundary>
+        );
       
       case 'settings':
         return (

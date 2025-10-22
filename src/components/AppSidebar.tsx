@@ -31,7 +31,8 @@ import {
   Scale,
   Award,
   Wifi,
-  CloudRain
+  CloudRain,
+  BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -166,6 +167,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'explore-local', label: 'Explore Local Life', icon: Sparkles, badge: 'NEW' },
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
         { id: 'students', label: 'Students', icon: GraduationCap },
+        { id: 'language-learning', label: 'Language Learning', icon: BookOpen, badge: 'NEW', variant: 'secondary' as const },
         { id: 'news', label: 'Travel News', icon: Newspaper },
       ]
     },
