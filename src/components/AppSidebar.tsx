@@ -131,6 +131,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'transportation',
       label: 'Transportation',
       items: [
+        { id: 'car-rent-lease', label: 'Car Rent & Lease', icon: Car, badge: 'NEW', variant: 'secondary' as const },
         { id: 'public-transport', label: 'Public Transport', icon: Bus },
         { id: 'taxis', label: 'Taxis & Rides', icon: Car },
       ]

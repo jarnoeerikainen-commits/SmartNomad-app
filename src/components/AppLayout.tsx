@@ -38,6 +38,7 @@ import VPNEmailServices from './VPNEmailServices';
 import TravelInsurance from './TravelInsurance';
 import PublicTransport from './PublicTransport';
 import TaxiServices from './TaxiServices';
+import CarRentLease from './CarRentLease';
 import Students from './Students';
 import LocalNomads from './LocalNomads';
 import ExploreLocalLife from './ExploreLocalLife';
@@ -174,6 +175,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'taxis':
         return <TaxiServices currentLocation={detectedLocation} />;
+      
+      case 'car-rent-lease':
+        return <CarRentLease />;
       
       case 'documents':
         return (
