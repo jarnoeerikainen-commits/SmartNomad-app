@@ -18,6 +18,7 @@ import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
 import AITravelDoctor from './AITravelDoctor';
+import { AITravelLawyer } from './AITravelLawyer';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
 import { ESimServices } from './ESimServices';
@@ -267,7 +268,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         );
       
       case 'ai-doctor':
-        return <AITravelDoctor currentLocation={detectedLocation} />;
+        return <AITravelDoctor currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
+      
+      case 'ai-lawyer':
+        return <AITravelLawyer currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
+      
       case 'medical-services':
         return (
           <MedicalServices

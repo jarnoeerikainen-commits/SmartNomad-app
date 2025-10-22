@@ -32,10 +32,13 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
+import { Subscription } from '@/types/subscription';
 import { useToast } from '@/hooks/use-toast';
 
 interface AITravelDoctorProps {
   currentLocation: LocationData | null;
+  subscription: Subscription;
+  onUpgradeClick?: () => void;
 }
 
 interface PatientInfo {
@@ -67,7 +70,7 @@ interface CountryHealthData {
   yellowFever: boolean;
 }
 
-const AITravelDoctor: React.FC<AITravelDoctorProps> = ({ currentLocation }) => {
+const AITravelDoctor: React.FC<AITravelDoctorProps> = ({ currentLocation, subscription, onUpgradeClick }) => {
   const { toast } = useToast();
   const [step, setStep] = useState<'welcome' | 'patient' | 'medical-history' | 'symptoms' | 'results'>('welcome');
   const [patientInfo, setPatientInfo] = useState<PatientInfo>({
