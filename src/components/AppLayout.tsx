@@ -17,6 +17,7 @@ import EnhancedProfileForm from './EnhancedProfileForm';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
+import AITravelDoctor from './AITravelDoctor';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
 import { ESimServices } from './ESimServices';
@@ -265,9 +266,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </ErrorBoundary>
         );
       
+      case 'ai-doctor':
+        return <AITravelDoctor currentLocation={detectedLocation} />;
       case 'medical-services':
         return (
-          <MedicalServices 
+          <MedicalServices
             currentLocation={detectedLocation}
             subscription={subscription}
             onUpgradeClick={() => setShowUpgradeModal(true)}
