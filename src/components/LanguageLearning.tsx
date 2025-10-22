@@ -45,7 +45,6 @@ interface LanguagePlatform {
   languages: number;
   price: string;
   priceDetails: string;
-  commission: string;
   rating: number;
   features: string[];
   bestFor: string[];
@@ -69,7 +68,6 @@ const LanguageLearning: React.FC<LanguageLearningProps> = ({ currentLocation }) 
       languages: 100,
       price: 'Free',
       priceDetails: 'or $12.99/mo for Super',
-      commission: '5-15%',
       rating: 4.7,
       features: [
         'Gamified bite-sized lessons',
@@ -94,7 +92,6 @@ const LanguageLearning: React.FC<LanguageLearningProps> = ({ currentLocation }) 
       languages: 14,
       price: '$13.95/mo',
       priceDetails: 'or $83.40/year',
-      commission: '20-30%',
       rating: 4.6,
       features: [
         'Conversational focus',
@@ -119,7 +116,6 @@ const LanguageLearning: React.FC<LanguageLearningProps> = ({ currentLocation }) 
       languages: 200,
       price: '$8.99/mo',
       priceDetails: 'or $59.99/year',
-      commission: '15-25%',
       rating: 4.5,
       features: [
         'Native speaker videos',
@@ -282,7 +278,6 @@ const LanguageLearning: React.FC<LanguageLearningProps> = ({ currentLocation }) 
         <div className={`bg-gradient-to-r ${platform.color} p-4 rounded-lg text-white`}>
           <div className="text-2xl font-bold">{platform.price}</div>
           <div className="text-sm opacity-90">{platform.priceDetails}</div>
-          <div className="text-xs mt-2 opacity-75">Commission: {platform.commission}</div>
         </div>
 
         {/* Features */}
