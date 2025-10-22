@@ -22,6 +22,7 @@ import { SubstantialPresenceTest } from './SubstantialPresenceTest';
 import { ScenarioPlanner } from './ScenarioPlanner';
 import { ThresholdAlerts } from './ThresholdAlerts';
 import { YearComparisonView } from './YearComparisonView';
+import { TrackingSettings } from './TrackingSettings';
 import { Country, LocationData } from '@/types/country';
 
 interface TaxResidencyHubProps {
@@ -40,6 +41,14 @@ interface TaxResidencyHubProps {
   currentLocation: LocationData | null;
 }
 
+// Default tracking settings
+const DEFAULT_TRACKING_SETTINGS = {
+  countingMode: 'days' as 'days' | 'nights',
+  partialDayRule: 'full' as 'full' | 'half' | 'exclude',
+  countArrivalDay: true,
+  countDepartureDay: true
+};
+
 const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
   countries,
   onAddCountry,
@@ -51,6 +60,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
   currentLocation
 }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [trackingSettings, setTrackingSettings] = useState(DEFAULT_TRACKING_SETTINGS);
 
   // Calculate summary stats
   const totalCountries = countries.filter(c => c.countTravelDays).length;
@@ -108,10 +118,14 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-2 h-auto">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-2 h-auto">
           <TabsTrigger value="dashboard" className="flex items-center gap-2">
             <Globe className="h-4 w-4" />
             <span className="hidden sm:inline">Dashboard</span>
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            <span className="hidden sm:inline">Settings</span>
           </TabsTrigger>
           <TabsTrigger value="tracker" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
@@ -138,6 +152,66 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
             <span className="hidden sm:inline">Compare</span>
           </TabsTrigger>
         </TabsList>
+
+        {/* Day Counting Settings Tab */}
+        <TabsContent value="settings" className="space-y-6">
+          <TrackingSettings
+            countingMode={trackingSettings.countingMode}
+            onCountingModeChange={(mode) => setTrackingSettings({ ...trackingSettings, countingMode: mode })}
+            partialDayRule={trackingSettings.partialDayRule}
+            onPartialDayRuleChange={(rule) => setTrackingSettings({ ...trackingSettings, partialDayRule: rule })}
+            countDepartureDay={trackingSettings.countDepartureDay}
+            onCountDepartureDayChange={(value) => setTrackingSettings({ ...trackingSettings, countDepartureDay: value })}
+            countArrivalDay={trackingSettings.countArrivalDay}
+            onCountArrivalDayChange={(value) => setTrackingSettings({ ...trackingSettings, countArrivalDay: value })}
+          />
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>How Your Settings Affect Calculations</CardTitle>
+              <CardDescription>
+                Understanding how different counting methods impact tax residency
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <h4 className="font-semibold mb-2">Current Configuration:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Counting Method: <strong>{trackingSettings.countingMode === 'days' ? 'Days' : 'Nights'}</strong></li>
+                  <li>• Partial Days: <strong>{
+                    trackingSettings.partialDayRule === 'full' ? 'Count as full day' :
+                    trackingSettings.partialDayRule === 'half' ? 'Count as half day' :
+                    'Exclude partial days'
+                  }</strong></li>
+                  <li>• Arrival Day: <strong>{trackingSettings.countArrivalDay ? 'Counted' : 'Not counted'}</strong></li>
+                  <li>• Departure Day: <strong>{trackingSettings.countDepartureDay ? 'Counted' : 'Not counted'}</strong></li>
+                </ul>
+              </div>
+              
+              <div className="p-4 border rounded-lg">
+                <h4 className="font-semibold mb-2">Example Scenario:</h4>
+                <p className="text-sm text-muted-foreground mb-2">
+                  You arrive in Country A on Jan 15th at 11 PM and depart on Jan 17th at 2 AM.
+                </p>
+                <div className="text-sm">
+                  <strong>With current settings, this counts as:</strong>
+                  <div className="mt-2 p-3 bg-primary/10 rounded">
+                    {(() => {
+                      let days = 1; // Full day (Jan 16)
+                      if (trackingSettings.countArrivalDay) {
+                        days += trackingSettings.partialDayRule === 'full' ? 1 : trackingSettings.partialDayRule === 'half' ? 0.5 : 0;
+                      }
+                      if (trackingSettings.countDepartureDay) {
+                        days += trackingSettings.partialDayRule === 'full' ? 1 : trackingSettings.partialDayRule === 'half' ? 0.5 : 0;
+                      }
+                      return `${days} ${trackingSettings.countingMode}`;
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* Dashboard Tab */}
         <TabsContent value="dashboard" className="space-y-6">
