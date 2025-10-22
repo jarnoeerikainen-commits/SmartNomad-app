@@ -34,7 +34,8 @@ import {
   CloudRain,
   BookOpen,
   Truck,
-  Shirt
+  Shirt,
+  Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -108,6 +109,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
         { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },
+        { id: 'tax-residency', label: 'Tax Residency', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
         { id: 'ai-doctor', label: 'AI Travel Doctor', icon: Stethoscope, badge: 'NEW' },
         { id: 'ai-lawyer', label: 'AI Travel Lawyer', icon: Scale, badge: 'NEW' },
         { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, badge: 'NEW' },

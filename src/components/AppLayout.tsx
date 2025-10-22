@@ -7,6 +7,7 @@ import UpgradeModal from './UpgradeModal';
 import CountryTracker from './CountryTracker';
 import EnhancedNewsSection from './EnhancedNewsSection';
 import TaxResidencyTracker from './TaxResidencyTracker';
+import TaxResidencyHub from './TaxResidencyHub';
 import VisaTrackingManager from './VisaTrackingManager';
 import { DocumentTracker } from './DocumentTracker';
 import VaccinationTracker from './VaccinationTracker';
@@ -156,6 +157,20 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'tax':
         return (
           <TaxResidencyTracker 
+            countries={countries}
+            onAddCountry={onAddCountry}
+            onRemoveCountry={onRemoveCountry}
+            onUpdateCountrySettings={onUpdateCountrySettings}
+            onUpdateCountryLimit={onUpdateCountryLimit}
+            onResetCountry={onResetCountry}
+            onToggleCountDays={onToggleCountDays}
+            currentLocation={detectedLocation}
+          />
+        );
+      
+      case 'tax-residency':
+        return (
+          <TaxResidencyHub 
             countries={countries}
             onAddCountry={onAddCountry}
             onRemoveCountry={onRemoveCountry}
