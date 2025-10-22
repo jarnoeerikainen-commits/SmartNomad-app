@@ -14,7 +14,8 @@ import {
   Hospital,
   User,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Smile
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
@@ -369,7 +370,7 @@ const MedicalServices: React.FC<MedicalServicesProps> = ({
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <Button
                   variant="outline"
                   className="h-24 flex-col"
@@ -396,6 +397,20 @@ const MedicalServices: React.FC<MedicalServicesProps> = ({
                 >
                   <Hospital className="h-8 w-8 mb-2" />
                   <span>Find Nearest Hospital</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="h-24 flex-col"
+                  onClick={() => {
+                    const query = currentLocation 
+                      ? `dental clinics near ${currentLocation.city}, ${currentLocation.country}`
+                      : 'dental clinics near me';
+                    window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+                  }}
+                >
+                  <Smile className="h-8 w-8 mb-2" />
+                  <span>Find Dental Clinics</span>
                 </Button>
 
                 <Button
