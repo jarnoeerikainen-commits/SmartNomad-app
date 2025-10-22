@@ -27,6 +27,7 @@ interface AppHeaderProps {
   subscription?: Subscription;
   onUpgradeClick?: () => void;
   countries?: Country[];
+  onNavigateToSettings?: () => void;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ 
@@ -34,7 +35,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   showMenuButton = false, 
   subscription,
   onUpgradeClick,
-  countries = []
+  countries = [],
+  onNavigateToSettings
 }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -161,12 +163,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 <span className="hidden sm:inline">{t('common.profile')}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
-              <DropdownMenuItem>
+            <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-[80]">
+              <DropdownMenuItem onClick={onNavigateToSettings} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
                 <span>{t('header.profile_settings')}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={onNavigateToSettings} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>{t('header.app_settings')}</span>
               </DropdownMenuItem>

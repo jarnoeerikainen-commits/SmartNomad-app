@@ -345,6 +345,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         subscription={subscription}
         onUpgradeClick={() => setShowUpgradeModal(true)}
         countries={countries}
+        onNavigateToSettings={() => {
+          setActiveSection('settings');
+          setSidebarOpen(false);
+        }}
       />
       
       <div className="flex">
