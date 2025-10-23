@@ -1175,6 +1175,620 @@ export const newsCities: NewsCity[] = [
     },
     safetyAlerts: true,
     tier: 3
+  },
+  
+  // Additional Tier 2 & 3 cities to reach 100
+  {
+    id: "phu",
+    cityName: "Phuket",
+    countryCode: "THA",
+    countryName: "Thailand",
+    latitude: 7.8804,
+    longitude: 98.3923,
+    timezone: "Asia/Bangkok",
+    primaryLanguage: "th",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Phuket News", "Phuket Gazette", "The Thaiger"],
+      international: ["Reuters Bangkok", "Thai PBS"],
+      english: ["Phuket News", "Coconuts Phuket"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "dub",
+    cityName: "Dublin",
+    countryCode: "IRL",
+    countryName: "Ireland",
+    latitude: 53.3498,
+    longitude: -6.2603,
+    timezone: "Europe/Dublin",
+    primaryLanguage: "en",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Irish Times", "Irish Independent", "The Journal"],
+      international: ["Reuters Dublin", "PA Ireland"],
+      english: ["Dublin Live", "Lovin Dublin"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "edi",
+    cityName: "Edinburgh",
+    countryCode: "GBR",
+    countryName: "United Kingdom",
+    latitude: 55.9533,
+    longitude: -3.1883,
+    timezone: "Europe/London",
+    primaryLanguage: "en",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["The Scotsman", "Edinburgh News", "Edinburgh Live"],
+      international: ["Reuters Edinburgh", "PA Scotland"],
+      english: ["Edinburgh Reporter", "The Skinny"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "man",
+    cityName: "Manchester",
+    countryCode: "GBR",
+    countryName: "United Kingdom",
+    latitude: 53.4808,
+    longitude: -2.2426,
+    timezone: "Europe/London",
+    primaryLanguage: "en",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Manchester Evening News", "The Guardian Manchester", "Manchester Wire"],
+      international: ["Reuters Manchester", "PA North"],
+      english: ["Confidentials Manchester", "Manchester Mill"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "rom",
+    cityName: "Rome",
+    countryCode: "ITA",
+    countryName: "Italy",
+    latitude: 41.9028,
+    longitude: 12.4964,
+    timezone: "Europe/Rome",
+    primaryLanguage: "it",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Il Messaggero", "La Repubblica Roma", "Corriere della Sera"],
+      international: ["Reuters Rome", "ANSA"],
+      english: ["The Local Italy", "Wanted in Rome", "Rome Reports"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "mil",
+    cityName: "Milan",
+    countryCode: "ITA",
+    countryName: "Italy",
+    latitude: 45.4642,
+    longitude: 9.1900,
+    timezone: "Europe/Rome",
+    primaryLanguage: "it",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Corriere della Sera Milano", "Il Giorno", "Milano Today"],
+      international: ["Reuters Milan", "ANSA Milano"],
+      english: ["Milano.Today", "MilanoToday English"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "muc",
+    cityName: "Munich",
+    countryCode: "DEU",
+    countryName: "Germany",
+    latitude: 48.1351,
+    longitude: 11.5820,
+    timezone: "Europe/Berlin",
+    primaryLanguage: "de",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Süddeutsche Zeitung", "Münchner Merkur", "TZ"],
+      international: ["Reuters Munich", "DPA Munich"],
+      english: ["The Local Munich", "Munich Voice", "Toytown Munich"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "zur",
+    cityName: "Zurich",
+    countryCode: "CHE",
+    countryName: "Switzerland",
+    latitude: 47.3769,
+    longitude: 8.5417,
+    timezone: "Europe/Zurich",
+    primaryLanguage: "de",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Neue Zürcher Zeitung", "Tages-Anzeiger", "Blick"],
+      international: ["Reuters Zurich", "SDA"],
+      english: ["The Local Switzerland", "Zurich English News"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "gen",
+    cityName: "Geneva",
+    countryCode: "CHE",
+    countryName: "Switzerland",
+    latitude: 46.2044,
+    longitude: 6.1432,
+    timezone: "Europe/Zurich",
+    primaryLanguage: "fr",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Tribune de Genève", "Le Temps", "20 Minutes"],
+      international: ["Reuters Geneva", "SDA Geneva"],
+      english: ["Geneva Lunch", "Living in Geneva"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "hel",
+    cityName: "Helsinki",
+    countryCode: "FIN",
+    countryName: "Finland",
+    latitude: 60.1699,
+    longitude: 24.9384,
+    timezone: "Europe/Helsinki",
+    primaryLanguage: "fi",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Helsingin Sanomat", "Ilta-Sanomat", "Yle"],
+      international: ["Reuters Helsinki", "STT"],
+      english: ["Helsinki Times", "Yle News English"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "osl",
+    cityName: "Oslo",
+    countryCode: "NOR",
+    countryName: "Norway",
+    latitude: 59.9139,
+    longitude: 10.7522,
+    timezone: "Europe/Oslo",
+    primaryLanguage: "no",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Aftenposten", "VG", "Dagbladet"],
+      international: ["Reuters Oslo", "NTB"],
+      english: ["The Local Norway", "Norway Today"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "tal",
+    cityName: "Tallinn",
+    countryCode: "EST",
+    countryName: "Estonia",
+    latitude: 59.4370,
+    longitude: 24.7536,
+    timezone: "Europe/Tallinn",
+    primaryLanguage: "et",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Postimees", "Eesti Päevaleht", "Delfi"],
+      international: ["Reuters Tallinn", "BNS"],
+      english: ["ERR News", "Tallinn Times"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "rig",
+    cityName: "Riga",
+    countryCode: "LVA",
+    countryName: "Latvia",
+    latitude: 56.9496,
+    longitude: 24.1052,
+    timezone: "Europe/Riga",
+    primaryLanguage: "lv",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Latvijas Avīze", "Diena", "Delfi Latvia"],
+      international: ["Reuters Riga", "BNS Latvia"],
+      english: ["The Baltic Times", "Riga Today"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "vil",
+    cityName: "Vilnius",
+    countryCode: "LTU",
+    countryName: "Lithuania",
+    latitude: 54.6872,
+    longitude: 25.2797,
+    timezone: "Europe/Vilnius",
+    primaryLanguage: "lt",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Lietuvos rytas", "Delfi Lithuania", "15min"],
+      international: ["Reuters Vilnius", "BNS Lithuania"],
+      english: ["Lithuania Tribune", "Vilnius Now"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "zag",
+    cityName: "Zagreb",
+    countryCode: "HRV",
+    countryName: "Croatia",
+    latitude: 45.8150,
+    longitude: 15.9819,
+    timezone: "Europe/Zagreb",
+    primaryLanguage: "hr",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Večernji list", "Jutarnji list", "24sata"],
+      international: ["Reuters Zagreb", "HINA"],
+      english: ["Total Croatia News", "Croatia Week"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "bel",
+    cityName: "Belgrade",
+    countryCode: "SRB",
+    countryName: "Serbia",
+    latitude: 44.7866,
+    longitude: 20.4489,
+    timezone: "Europe/Belgrade",
+    primaryLanguage: "sr",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Blic", "Politika", "Kurir"],
+      international: ["Reuters Belgrade", "Tanjug"],
+      english: ["Belgrade Insight", "B92 English"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "sof",
+    cityName: "Sofia",
+    countryCode: "BGR",
+    countryName: "Bulgaria",
+    latitude: 42.6977,
+    longitude: 23.3219,
+    timezone: "Europe/Sofia",
+    primaryLanguage: "bg",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["24 Chasa", "Dnevnik", "Capital"],
+      international: ["Reuters Sofia", "BTA"],
+      english: ["The Sofia Globe", "Novinite"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "buc",
+    cityName: "Bucharest",
+    countryCode: "ROU",
+    countryName: "Romania",
+    latitude: 44.4268,
+    longitude: 26.1025,
+    timezone: "Europe/Bucharest",
+    primaryLanguage: "ro",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Adevărul", "Libertatea", "Gandul"],
+      international: ["Reuters Bucharest", "Agerpres"],
+      english: ["Romania Insider", "Bucharest Herald"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "qui",
+    cityName: "Quito",
+    countryCode: "ECU",
+    countryName: "Ecuador",
+    latitude: -0.1807,
+    longitude: -78.4678,
+    timezone: "America/Guayaquil",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El Comercio", "El Universo", "La Hora"],
+      international: ["Reuters Quito", "EFE Ecuador"],
+      english: ["Ecuador Times", "Cuenca High Life"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "pan",
+    cityName: "Panama City",
+    countryCode: "PAN",
+    countryName: "Panama",
+    latitude: 8.9824,
+    longitude: -79.5199,
+    timezone: "America/Panama",
+    primaryLanguage: "es",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["La Prensa", "El Siglo", "TVN Noticias"],
+      international: ["Reuters Panama", "EFE Panama"],
+      english: ["Panama Today", "The Panama News"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "gua",
+    cityName: "Guadalajara",
+    countryCode: "MEX",
+    countryName: "Mexico",
+    latitude: 20.6597,
+    longitude: -103.3496,
+    timezone: "America/Mexico_City",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El Informador", "Milenio Jalisco", "Notisistema"],
+      international: ["Reuters Guadalajara", "EFE Mexico"],
+      english: ["Guadalajara Reporter", "GDL Life"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "pla",
+    cityName: "Playa del Carmen",
+    countryCode: "MEX",
+    countryName: "Mexico",
+    latitude: 20.6296,
+    longitude: -87.0739,
+    timezone: "America/Cancun",
+    primaryLanguage: "es",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Por Esto!", "Novedades Quintana Roo", "Luces del Siglo"],
+      international: ["Reuters Mexico", "Notimex"],
+      english: ["Playa Times", "Riviera Maya News"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "cnc",
+    cityName: "Cancun",
+    countryCode: "MEX",
+    countryName: "Mexico",
+    latitude: 21.1619,
+    longitude: -86.8515,
+    timezone: "America/Cancun",
+    primaryLanguage: "es",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["Novedades Cancún", "Sipse", "Diario de Yucatán"],
+      international: ["Reuters Cancun", "EFE Mexico"],
+      english: ["Cancun Sun", "Riviera Maya Times"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "car",
+    cityName: "Cartagena",
+    countryCode: "COL",
+    countryName: "Colombia",
+    latitude: 10.3910,
+    longitude: -75.4794,
+    timezone: "America/Bogota",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El Universal Cartagena", "El Heraldo", "Caracol Cartagena"],
+      international: ["Reuters Bogota", "EFE Colombia"],
+      english: ["Colombia Travel", "Cartagena Life"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "mon",
+    cityName: "Montevideo",
+    countryCode: "URY",
+    countryName: "Uruguay",
+    latitude: -34.9011,
+    longitude: -56.1645,
+    timezone: "America/Montevideo",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El País Uruguay", "El Observador", "La Diaria"],
+      international: ["Reuters Montevideo", "EFE Uruguay"],
+      english: ["Uruguay Times", "MercoPress"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "pun",
+    cityName: "Punta del Este",
+    countryCode: "URY",
+    countryName: "Uruguay",
+    latitude: -34.9631,
+    longitude: -54.9471,
+    timezone: "America/Montevideo",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El País Punta", "Maldonado Noticias", "La Prensa"],
+      international: ["Reuters Montevideo", "EFE Uruguay"],
+      english: ["Punta del Este News", "Uruguay Times"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "cuz",
+    cityName: "Cusco",
+    countryCode: "PER",
+    countryName: "Peru",
+    latitude: -13.5319,
+    longitude: -71.9675,
+    timezone: "America/Lima",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Diario del Cusco", "Cusco al Día", "La República Cusco"],
+      international: ["Reuters Lima", "Andina"],
+      english: ["Peru Reports Cusco", "Cusco Eats"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "asu",
+    cityName: "Asunción",
+    countryCode: "PRY",
+    countryName: "Paraguay",
+    latitude: -25.2637,
+    longitude: -57.5759,
+    timezone: "America/Asuncion",
+    primaryLanguage: "es",
+    englishCoverageLevel: "basic",
+    newsSources: {
+      local: ["ABC Color", "La Nación Paraguay", "Última Hora"],
+      international: ["Reuters Asuncion", "EFE Paraguay"],
+      english: ["Paraguay News", "Latin America Herald"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "lpa",
+    cityName: "La Paz",
+    countryCode: "BOL",
+    countryName: "Bolivia",
+    latitude: -16.5000,
+    longitude: -68.1500,
+    timezone: "America/La_Paz",
+    primaryLanguage: "es",
+    englishCoverageLevel: "basic",
+    newsSources: {
+      local: ["La Razón", "El Deber", "Página Siete"],
+      international: ["Reuters La Paz", "EFE Bolivia"],
+      english: ["Bolivia Express", "Bolivia Weekly"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "jkt",
+    cityName: "Jakarta",
+    countryCode: "IDN",
+    countryName: "Indonesia",
+    latitude: -6.2088,
+    longitude: 106.8456,
+    timezone: "Asia/Jakarta",
+    primaryLanguage: "id",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["Kompas", "Tempo", "Detik"],
+      international: ["Reuters Jakarta", "Antara"],
+      english: ["Jakarta Post", "Jakarta Globe", "Coconuts Jakarta"]
+    },
+    safetyAlerts: true,
+    tier: 2
+  },
+  {
+    id: "cgk",
+    cityName: "Surabaya",
+    countryCode: "IDN",
+    countryName: "Indonesia",
+    latitude: -7.2575,
+    longitude: 112.7521,
+    timezone: "Asia/Jakarta",
+    primaryLanguage: "id",
+    englishCoverageLevel: "basic",
+    newsSources: {
+      local: ["Jawa Pos", "Surabaya Post", "Surya"],
+      international: ["Reuters Jakarta", "Antara Surabaya"],
+      english: ["East Java News", "Surabaya Expat"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "ceb",
+    cityName: "Cebu",
+    countryCode: "PHL",
+    countryName: "Philippines",
+    latitude: 10.3157,
+    longitude: 123.8854,
+    timezone: "Asia/Manila",
+    primaryLanguage: "tl",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["SunStar Cebu", "Cebu Daily News", "Freeman"],
+      international: ["Reuters Manila", "PNA Cebu"],
+      english: ["Cebu Pacific News", "Sugbo News"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "dav",
+    cityName: "Davao",
+    countryCode: "PHL",
+    countryName: "Philippines",
+    latitude: 7.1907,
+    longitude: 125.4553,
+    timezone: "Asia/Manila",
+    primaryLanguage: "tl",
+    englishCoverageLevel: "excellent",
+    newsSources: {
+      local: ["SunStar Davao", "Mindanao Times", "Davao Today"],
+      international: ["Reuters Manila", "PNA Davao"],
+      english: ["Davao Life", "Edge Davao"]
+    },
+    safetyAlerts: true,
+    tier: 3
+  },
+  {
+    id: "ctg",
+    cityName: "Cartagena de Indias",
+    countryCode: "COL",
+    countryName: "Colombia",
+    latitude: 10.3910,
+    longitude: -75.4794,
+    timezone: "America/Bogota",
+    primaryLanguage: "es",
+    englishCoverageLevel: "good",
+    newsSources: {
+      local: ["El Universal", "El Heraldo Cartagena", "Caracol"],
+      international: ["Reuters Bogota", "EFE"],
+      english: ["Cartagena Connect", "Colombia Travel"]
+    },
+    safetyAlerts: true,
+    tier: 3
   }
 ];
 
