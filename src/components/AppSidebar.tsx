@@ -87,6 +87,21 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 }) => {
   const { t } = useLanguage();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'travel']);
+  
+  // Check for danger zone (imported from ThreatIntelligenceService)
+  const [isInDangerZone, setIsInDangerZone] = React.useState(false);
+  
+  React.useEffect(() => {
+    // Simulate threat checking - in real app this would call the service
+    const checkThreats = () => {
+      // Mock: Set to true to show blinking red badge
+      setIsInDangerZone(true);
+    };
+    
+    checkThreats();
+    const interval = setInterval(checkThreats, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => 
@@ -101,6 +116,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'main',
       label: 'Main',
       items: [
+        { id: 'threats', label: 'Threats', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
         { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'NEW', variant: 'secondary' as const },
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
       ]
@@ -242,7 +258,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             activeSection === item.id 
                               ? 'gradient-trust text-primary-foreground shadow-medium' 
                               : 'hover:bg-accent/50'
-                          }`}
+                          } ${item.id === 'threats' && item.badge === 'ALERT' ? 'animate-pulse' : ''}`}
                           onClick={() => {
                             onSectionChange(item.id);
                             onClose?.();
@@ -250,6 +266,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                         >
                           <item.icon className="h-5 w-5" />
                           <span className="flex-1 text-left">{item.label}</span>
+                          {item.badge && (
+                            <Badge variant={item.variant || 'secondary'} className="ml-auto text-xs">
+                              {item.badge}
+                            </Badge>
+                          )}
                         </Button>
                       );
                     })}

@@ -62,6 +62,7 @@ import LocalServices from './LocalServices';
 import LocalNews from './LocalNews';
 import { GovernmentApps } from './GovernmentApps';
 import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
+import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -124,6 +125,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   const renderActiveSection = () => {
     switch (activeSection) {
+      case 'threats':
+        return <ThreatDashboard />;
       case 'dashboard':
         return (
           <div className="space-y-6">
