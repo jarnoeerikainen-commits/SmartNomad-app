@@ -177,6 +177,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
         { id: 'students', label: 'Students', icon: GraduationCap },
         { id: 'language-learning', label: 'Language Learning', icon: BookOpen, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'local-services', label: 'Local Services', icon: Home, badge: 'NEW', variant: 'secondary' as const },
         { id: 'laundry-services', label: 'Laundry Services', icon: Shirt, badge: 'NEW', variant: 'secondary' as const },
         { id: 'news', label: 'Travel News', icon: Newspaper },
       ]

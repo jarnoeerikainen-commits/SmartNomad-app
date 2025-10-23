@@ -58,6 +58,7 @@ import TravelWeatherDashboard from './TravelWeatherDashboard';
 import LanguageLearning from './LanguageLearning';
 import DeliveryServices from './DeliveryServices';
 import LaundryServices from './LaundryServices';
+import LocalServices from './LocalServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -338,6 +339,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return (
           <ErrorBoundary>
             <LanguageLearning currentLocation={detectedLocation} />
+          </ErrorBoundary>
+        );
+      
+      case 'local-services':
+        return (
+          <ErrorBoundary>
+            <LocalServices />
           </ErrorBoundary>
         );
       
