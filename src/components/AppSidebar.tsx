@@ -111,6 +111,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'cyber-helpline', label: 'Cyber Helpline', icon: Shield, badge: 'NEW', variant: 'destructive' as const },
         { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },
         { id: 'tax-residency', label: 'Tax Residency', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
         { id: 'gov-apps', label: 'Gov. Apps', icon: Landmark, badge: 'NEW', variant: 'secondary' as const },

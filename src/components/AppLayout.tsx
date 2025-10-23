@@ -61,6 +61,7 @@ import DeliveryServices from './DeliveryServices';
 import LocalServices from './LocalServices';
 import LocalNews from './LocalNews';
 import { GovernmentApps } from './GovernmentApps';
+import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -264,6 +265,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'emergency-cards':
         return <EmergencyCardNumbers />;
+      
+      case 'cyber-helpline':
+        return <CyberHelplineDashboard />;
       
       case 'emergency':
         return <EmergencyContacts />;
