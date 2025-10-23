@@ -58,6 +58,7 @@ import TravelWeatherDashboard from './TravelWeatherDashboard';
 import LanguageLearning from './LanguageLearning';
 import DeliveryServices from './DeliveryServices';
 import LocalServices from './LocalServices';
+import LocalNews from './LocalNews';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -345,6 +346,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return (
           <ErrorBoundary>
             <LocalServices />
+          </ErrorBoundary>
+        );
+      
+      case 'local-news':
+        return (
+          <ErrorBoundary>
+            <LocalNews />
           </ErrorBoundary>
         );
       
