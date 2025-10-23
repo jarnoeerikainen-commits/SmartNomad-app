@@ -59,6 +59,7 @@ import LanguageLearning from './LanguageLearning';
 import DeliveryServices from './DeliveryServices';
 import LocalServices from './LocalServices';
 import LocalNews from './LocalNews';
+import { GovernmentApps } from './GovernmentApps';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -170,6 +171,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             currentLocation={detectedLocation}
           />
         );
+      
+      case 'gov-apps':
+        return <GovernmentApps />;
       
       case 'tax-wealthy':
         return <TaxWealthyHelp currentLocation={detectedLocation} />;
