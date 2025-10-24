@@ -15,15 +15,13 @@ interface Message {
 }
 
 interface AITravelAssistantProps {
-  userProfile?: any;
-  trackedCountries?: any[];
-  subscription?: any;
+  currentLocation?: { country: string; city: string };
+  citizenship?: string;
 }
 
 const AITravelAssistant: React.FC<AITravelAssistantProps> = ({ 
-  userProfile, 
-  trackedCountries = [], 
-  subscription 
+  currentLocation,
+  citizenship
 }) => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
@@ -50,13 +48,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   }, [messages]);
 
   const streamChat = async (userMessage: string) => {
-    const CHAT_URL = `https://xeunjlpzvitnrepyzatg.supabase.co/functions/v1/travel-assistant`;
+    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
     
     const userContext = {
-      trackedCountries: trackedCountries.map(c => c.name || c.country),
-      subscription: subscription?.tier || 'free',
-      userName: userProfile?.name,
-      citizenship: userProfile?.citizenship
+      currentCountry: currentLocation?.country,
+      currentCity: currentLocation?.city,
+      citizenship
     };
 
     try {
@@ -64,7 +61,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhldW5qbHB6dml0bnJlcHl6YXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyNjUxMDUsImV4cCI6MjA3Njg0MTEwNX0.eiTYJpSpLpY7o860HSFDB7wQPPt5y9bIYRfzmPGEgU0`,
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
           messages: messages

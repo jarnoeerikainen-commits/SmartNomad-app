@@ -436,9 +436,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       {/* AI Travel Assistant */}
       <AITravelAssistant 
-        userProfile={userProfile}
-        trackedCountries={countries}
-        subscription={subscription}
+        currentLocation={detectedLocation ? { 
+          country: detectedLocation.country, 
+          city: detectedLocation.city 
+        } : undefined}
+        citizenship={userProfile?.citizenship}
       />
 
       {/* Upgrade Modal */}
