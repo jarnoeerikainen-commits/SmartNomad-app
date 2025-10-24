@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { toast } from "sonner";
 import { Subscription } from "@/types/subscription";
+import { LegalAIChat } from "./LegalAIChat";
 
 interface AITravelLawyerProps {
   currentLocation?: { country: string; city: string };
@@ -465,14 +466,23 @@ export const AITravelLawyer: React.FC<AITravelLawyerProps> = ({
         </Card>
       )}
 
-      <Tabs defaultValue="issue" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+      <Tabs defaultValue="chat" className="w-full">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="chat">AI Chat</TabsTrigger>
           <TabsTrigger value="issue">Legal Issue</TabsTrigger>
           <TabsTrigger value="categories">Legal Areas</TabsTrigger>
           <TabsTrigger value="insurance">Insurance</TabsTrigger>
           <TabsTrigger value="attorneys">Attorneys</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
         </TabsList>
+
+        {/* AI Chat Tab - PRIMARY INTERFACE */}
+        <TabsContent value="chat" className="space-y-4">
+          <LegalAIChat 
+            currentLocation={currentLocation}
+            citizenship={userInfo.citizenship}
+          />
+        </TabsContent>
 
         {/* Legal Issue Submission Tab */}
         <TabsContent value="issue" className="space-y-4">
