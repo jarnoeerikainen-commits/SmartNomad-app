@@ -29,7 +29,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: t('ai.greeting'),
+      content: "✈️ Welcome! I'm Voyager, your world-best travel companion.\n\nI can help you with:\n• Planning trips & discovering destinations\n• Booking flights, hotels & activities\n• Real-time travel support & emergencies\n• Visa requirements & documentation\n• Local recommendations & translations\n• Currency, insurance & safety alerts\n\nTell me about your travel plans or ask me anything!",
       isUser: false,
       timestamp: new Date()
     }
@@ -213,7 +213,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
               <Bot className="h-5 w-5 text-white" />
             </div>
-            <CardTitle className="text-sm font-semibold">{t('ai.title')}</CardTitle>
+            <CardTitle className="text-sm font-semibold">Voyager - AI Travel Assistant</CardTitle>
             <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
@@ -285,7 +285,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder={t('ai.placeholder')}
+                  placeholder="Ask me anything about travel..."
                   className="flex-1"
                   disabled={isTyping}
                 />
@@ -299,7 +299,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                {t('ai.disclaimer')}
+                AI-powered travel assistant • Real-time support
               </p>
             </div>
           </CardContent>
