@@ -25,7 +25,7 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm your AI legal advisor team. Ask me about visas, taxes, immigration, or any travel-related legal questions. I only provide verified information from official sources."
+      content: "🚨 Emergency Legal Help Available 24/7\n\nI'm your AI legal team. If you're in an emergency (accident, robbery, arrest, lost documents), tell me immediately and I'll give you clear step-by-step actions.\n\nI provide verified legal guidance and will recommend real lawyers when needed."
     }
   ]);
   const [input, setInput] = useState('');
@@ -147,10 +147,10 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
   };
 
   const quickQuestions = [
-    "What are visa requirements for digital nomads?",
-    "How does the 183-day tax rule work?",
-    "What should I do if my passport is stolen?",
-    "Can I work remotely on a tourist visa?"
+    "My passport was stolen, what should I do?",
+    "I was in a car accident, what are my steps?",
+    "I was robbed, help me with next steps",
+    "I'm being arrested, what are my rights?"
   ];
 
   return (
