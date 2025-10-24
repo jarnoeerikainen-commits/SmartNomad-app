@@ -25,7 +25,7 @@ export const AITravelDoctor: React.FC<AITravelDoctorProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "🏥 Medical Emergency Support\n\nI'm your AI medical advisor. If you have a medical emergency (severe pain, difficulty breathing, chest pain, severe bleeding), tell me immediately and I'll guide you to get help fast.\n\nI'll ask the right questions to understand your symptoms and provide verified medical guidance."
+      content: "👨‍⚕️ Welcome! I'm Dr. Atlas, your Travel Medicine specialist.\n\nI can help you with:\n• Pre-travel health planning & risk assessment\n• Current symptoms/emergencies during travel\n• Country-specific health risks & vaccinations\n• Post-travel health concerns\n\nFor best results, tell me about your travel plans OR describe any current symptoms you're experiencing."
     }
   ]);
   const [input, setInput] = useState('');
@@ -147,10 +147,10 @@ export const AITravelDoctor: React.FC<AITravelDoctorProps> = ({
   };
 
   const quickQuestions = [
-    "I have a high fever and chills",
-    "I have severe stomach pain and diarrhea",
-    "I got bitten by an insect, what should I watch for?",
-    "I need to find a hospital urgently"
+    "I'm planning a trip to Thailand next month",
+    "I have fever and chills after returning from Africa",
+    "What vaccinations do I need for Brazil?",
+    "I have traveler's diarrhea, what should I do?"
   ];
 
   return (
