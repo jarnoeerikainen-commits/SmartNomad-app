@@ -32,6 +32,7 @@ import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
 import EmbassyDirectory from './EmbassyDirectory';
 import EmergencyCardNumbers from './EmergencyCardNumbers';
 import EmergencyContacts from './EmergencyContacts';
+import SOSServices from './SOSServices';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
 import DigitalMoney from './DigitalMoney';
@@ -274,6 +275,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'emergency':
         return <EmergencyContacts />;
+      
+      case 'sos-services':
+        return <SOSServices />;
       
       case 'digital-banks':
         return <DigitalBanks />;

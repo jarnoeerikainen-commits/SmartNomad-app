@@ -38,7 +38,8 @@ import {
   Building2,
   Crown,
   Globe2,
-  Building
+  Building,
+  Siren
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -126,6 +127,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Quick Access & Safety',
       items: [
         { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
         { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
         { id: 'cyber-helpline', label: 'Cyber Helpline', icon: Shield, badge: 'NEW', variant: 'destructive' as const },
         { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle },

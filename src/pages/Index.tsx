@@ -7,6 +7,7 @@ import OnboardingFlow from '@/components/OnboardingFlow';
 import EnhancedProfileForm from '@/components/EnhancedProfileForm';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import PricingCard from '@/components/PricingCard';
+import SOSServices from '@/components/SOSServices';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
