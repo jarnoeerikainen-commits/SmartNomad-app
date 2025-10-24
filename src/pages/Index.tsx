@@ -7,7 +7,6 @@ import OnboardingFlow from '@/components/OnboardingFlow';
 import EnhancedProfileForm from '@/components/EnhancedProfileForm';
 import VPNDetectionModal from '@/components/VPNDetectionModal';
 import PricingCard from '@/components/PricingCard';
-import InvestorSummary from '@/components/InvestorSummary';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -311,10 +310,6 @@ const Index = () => {
           onComplete={handleProfileComplete}
           onSkip={() => setShowProfileForm(false)}
         />
-      )}
-
-      {!showOnboarding && !showProfileForm && (
-        <InvestorSummary />
       )}
       
       <AppLayout
