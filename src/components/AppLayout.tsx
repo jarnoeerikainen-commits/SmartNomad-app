@@ -21,7 +21,7 @@ import EnhancedProfileForm from './EnhancedProfileForm';
 import { SecureDocumentVault } from './SecureDocumentVault';
 import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
-import AITravelDoctor from './AITravelDoctor';
+import { AITravelDoctor } from './AITravelDoctor';
 import { AITravelLawyer } from './AITravelLawyer';
 import { AITravelPlanner } from './AITravelPlanner';
 import FloatingActionButton from './FloatingActionButton';
@@ -304,7 +304,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         );
       
       case 'ai-doctor':
-        return <AITravelDoctor currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
+        return <AITravelDoctor currentLocation={detectedLocation} />;
       
       case 'ai-lawyer':
         return <AITravelLawyer currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
