@@ -24,12 +24,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   citizenship
 }) => {
   const { t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "✈️ Welcome! I'm Voyager, your world-best travel companion.\n\nI can help you with:\n• Planning trips & discovering destinations\n• Booking flights, hotels & activities\n• Real-time travel support & emergencies\n• Visa requirements & documentation\n• Local recommendations & translations\n• Currency, insurance & safety alerts\n\nTell me about your travel plans or ask me anything!",
+      content: "Hello and a huge welcome! ✈️ I'm Voyager, your personal travel assistant, and I'm absolutely thrilled to be adventuring with you. Where shall we begin?\n\n🌍 **Planning a new getaway?** I can dream up destinations tailored just for you.\n\n✈️ **Already have a trip?** I can manage your bookings, check you in, or find you the perfect dinner spot.\n\n🆘 **Need help right now?** Whether it's a flight delay, a lost reservation, or just a question, I'm here to fix it.\n\nSo, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to make everything smooth and wonderful.",
       isUser: false,
       timestamp: new Date()
     }
