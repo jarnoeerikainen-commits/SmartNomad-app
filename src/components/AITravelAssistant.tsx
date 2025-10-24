@@ -49,43 +49,120 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  const generateResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
+  const streamChat = async (userMessage: string) => {
+    const CHAT_URL = `https://xeunjlpzvitnrepyzatg.supabase.co/functions/v1/travel-assistant`;
     
-    // Travel-specific responses based on keywords
-    if (lowerMessage.includes('visa') || lowerMessage.includes('passport')) {
-      return t('ai.visa_response').replace('{count}', trackedCountries.length.toString());
+    const userContext = {
+      trackedCountries: trackedCountries.map(c => c.name || c.country),
+      subscription: subscription?.tier || 'free',
+      userName: userProfile?.name,
+      citizenship: userProfile?.citizenship
+    };
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhldW5qbHB6dml0bnJlcHl6YXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyNjUxMDUsImV4cCI6MjA3Njg0MTEwNX0.eiTYJpSpLpY7o860HSFDB7wQPPt5y9bIYRfzmPGEgU0`,
+        },
+        body: JSON.stringify({
+          messages: messages
+            .filter(m => m.id !== '1')
+            .map(m => ({
+              role: m.isUser ? 'user' : 'assistant',
+              content: m.content
+            }))
+            .concat([{ role: 'user', content: userMessage }]),
+          userContext
+        }),
+      });
+
+      if (!resp.ok) {
+        if (resp.status === 429) {
+          toast({
+            title: "Rate limit exceeded",
+            description: "Please try again in a moment.",
+            variant: "destructive"
+          });
+          return;
+        }
+        if (resp.status === 402) {
+          toast({
+            title: "Payment required",
+            description: "Please add funds to continue using AI features.",
+            variant: "destructive"
+          });
+          return;
+        }
+        throw new Error("Failed to start stream");
+      }
+
+      if (!resp.body) throw new Error("No response body");
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let streamDone = false;
+      let assistantContent = "";
+
+      // Add initial assistant message
+      const assistantId = (Date.now() + 1).toString();
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        content: "",
+        isUser: false,
+        timestamp: new Date()
+      }]);
+
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") {
+            streamDone = true;
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => prev.map(m => 
+                m.id === assistantId 
+                  ? { ...m, content: assistantContent }
+                  : m
+              ));
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
+      setIsTyping(false);
+    } catch (error) {
+      console.error("Chat error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to get response. Please try again.",
+        variant: "destructive"
+      });
+      setIsTyping(false);
     }
-    
-    if (lowerMessage.includes('booking') || lowerMessage.includes('flight') || lowerMessage.includes('hotel')) {
-      return t('ai.booking_response');
-    }
-    
-    if (lowerMessage.includes('weather') || lowerMessage.includes('climate')) {
-      return t('ai.weather_response').replace('{count}', trackedCountries.length.toString());
-    }
-    
-    if (lowerMessage.includes('tax') || lowerMessage.includes('residence')) {
-      return t('ai.tax_response');
-    }
-    
-    if (lowerMessage.includes('alert') || lowerMessage.includes('notification')) {
-      return t('ai.alert_response').replace('{tier}', subscription?.tier || 'free');
-    }
-    
-    if (lowerMessage.includes('help') || lowerMessage.includes('what can you do')) {
-      return t('ai.help_response');
-    }
-    
-    // Default responses
-    const responses = [
-      t('ai.default_response_1'),
-      t('ai.default_response_2'),
-      t('ai.default_response_3'),
-      t('ai.default_response_4')
-    ];
-    
-    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   const handleSendMessage = async () => {
@@ -102,18 +179,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI thinking time
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        content: generateResponse(inputMessage),
-        isUser: false,
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+    await streamChat(inputMessage);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
