@@ -29,7 +29,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello and a huge welcome! ✈️ I'm Voyager, your personal travel assistant, and I'm absolutely thrilled to be adventuring with you. Where shall we begin?\n\n🌍 **Planning a new getaway?** I can dream up destinations tailored just for you.\n\n✈️ **Already have a trip?** I can manage your bookings, check you in, or find you the perfect dinner spot.\n\n🆘 **Need help right now?** Whether it's a flight delay, a lost reservation, or just a question, I'm here to fix it.\n\nSo, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to make everything smooth and wonderful.",
+      content: "Hello! ✈️ I'm your AI travel assistant. How can I help?\n\n🌍 **Planning a trip?** Tell me your preferences\n✈️ **Need bookings?** Flights, hotels, activities\n🆘 **Travel issue?** I'm here to solve it\n\nWhat would you like to do?",
       isUser: false,
       timestamp: new Date()
     }
@@ -213,7 +213,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
               <Bot className="h-5 w-5 text-white" />
             </div>
-            <CardTitle className="text-sm font-semibold">Voyager - AI Travel Assistant</CardTitle>
+            <CardTitle className="text-sm font-semibold">AI Travel Assistant</CardTitle>
             <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
