@@ -138,6 +138,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, badge: 'NEW' },
         { id: 'medical-services', label: 'Medical Services', icon: Stethoscope },
         { id: 'travel-lawyers', label: 'Travel Lawyers', icon: Scale },
+        { id: 'tax-advisors', label: 'Tax Advisors', icon: Calculator, badge: 'NEW', variant: 'secondary' as const },
         { id: 'visa-assistance', label: 'Visa Assistance', icon: FileText, badge: 'NEW' },
         { id: 'location-tracking', label: 'Location Tracking', icon: MapPin, badge: 'NEW' },
         { id: 'super-offers', label: 'Super Offers', icon: Tag, badge: 'HOT', variant: 'secondary' as const },

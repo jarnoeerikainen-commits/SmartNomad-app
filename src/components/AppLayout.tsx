@@ -24,6 +24,7 @@ import AITravelAssistant from './AITravelAssistant';
 import { AITravelDoctor } from './AITravelDoctor';
 import { AITravelLawyer } from './AITravelLawyer';
 import { AITravelPlanner } from './AITravelPlanner';
+import { TaxAdvisors } from './TaxAdvisors';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
 import { EnhancedDashboard } from './EnhancedDashboard';
@@ -333,6 +334,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             onUpgradeClick={() => setShowUpgradeModal(true)}
           />
         );
+      
+      case 'tax-advisors':
+        return <TaxAdvisors />;
       
       case 'visa-assistance':
         return (
