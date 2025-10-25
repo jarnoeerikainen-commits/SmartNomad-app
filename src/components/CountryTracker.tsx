@@ -333,6 +333,19 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
   const [dayLimit, setDayLimit] = useState('90');
   const { toast } = useToast();
 
+  // Auto-update day limit when tracking reason changes
+  React.useEffect(() => {
+    if (selectedReason === 'Tax residence tracking') {
+      setDayLimit('183');
+    } else if (selectedReason === 'Schengen area limit') {
+      setDayLimit('90');
+    } else if (selectedReason === 'Tourist visa limit') {
+      setDayLimit('90');
+    } else if (selectedReason === 'Work permit limit') {
+      setDayLimit('365');
+    }
+  }, [selectedReason]);
+
   const TRACKING_REASONS = [
     'Tourist visa limit',
     'Tax residence tracking',
