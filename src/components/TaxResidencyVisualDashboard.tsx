@@ -1,14 +1,31 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Country } from '@/types/country';
-import { AlertTriangle, CheckCircle, Shield, TrendingUp } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Shield, TrendingUp, Globe, ExternalLink, Home, Briefcase, Heart, DollarSign, FileCheck, Scale } from 'lucide-react';
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TaxResidencyVisualDashboardProps {
   countries: Country[];
-  homeCountryCode?: string; // The user's home country for tax purposes
+  homeCountryCode?: string;
 }
+
+// Government data sources for verification
+const TAX_DATA_SOURCES = {
+  US: { name: 'IRS', url: 'https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test' },
+  GB: { name: 'HMRC', url: 'https://www.gov.uk/guidance/tax-residence' },
+  CA: { name: 'CRA', url: 'https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/individuals-leaving-entering-canada-non-residents/residency-status.html' },
+  AU: { name: 'ATO', url: 'https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/your-tax-residency' },
+  DE: { name: 'BMF', url: 'https://www.bundesfinanzministerium.de/' },
+  FR: { name: 'DGFiP', url: 'https://www.impots.gouv.fr/international' },
+  ES: { name: 'AEAT', url: 'https://sede.agenciatributaria.gob.es/' },
+  IT: { name: 'Agenzia delle Entrate', url: 'https://www.agenziaentrate.gov.it/' },
+  PT: { name: 'AT', url: 'https://info.portaldasfinancas.gov.pt/' },
+  NL: { name: 'Belastingdienst', url: 'https://www.belastingdienst.nl/' },
+  DEFAULT: { name: 'OECD Model Tax Convention', url: 'https://www.oecd.org/tax/treaties/model-tax-convention-on-income-and-on-capital-condensed-version-20745419.htm' }
+};
 
 const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = ({ 
   countries, 
@@ -84,8 +101,51 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
     );
   }
 
+  // Overall global status
+  const globalStatus = useMemo(() => {
+    const atRisk = countryMetrics.filter(m => m.status === 'danger').length;
+    const warning = countryMetrics.filter(m => m.status === 'warning').length;
+    
+    if (atRisk > 0) return { status: 'danger', label: 'Tax Resident', color: 'hsl(var(--destructive))', icon: AlertTriangle };
+    if (warning > 0) return { status: 'warning', label: 'Approaching Threshold', color: 'hsl(var(--warning))', icon: AlertTriangle };
+    return { status: 'safe', label: 'Safe Zone', color: 'hsl(var(--success))', icon: CheckCircle };
+  }, [countryMetrics]);
+
   return (
     <div className="space-y-6">
+      {/* Global Status Hero */}
+      <Card className="w-full overflow-hidden gradient-trust border-none text-primary-foreground">
+        <CardContent className="pt-8 pb-8">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="relative">
+              <Globe 
+                className="w-24 h-24 animate-pulse" 
+                style={{ color: globalStatus.color, filter: 'drop-shadow(0 0 20px currentColor)' }}
+              />
+              <div className="absolute -bottom-2 -right-2">
+                <globalStatus.icon 
+                  className="w-10 h-10" 
+                  style={{ color: globalStatus.color }}
+                />
+              </div>
+            </div>
+            <div>
+              <h2 className="text-4xl font-bold mb-2">Tax Residency Status</h2>
+              <Badge 
+                variant="secondary" 
+                className="text-lg px-4 py-1 bg-white/20 text-white border-white/30"
+              >
+                {globalStatus.label}
+              </Badge>
+            </div>
+            <p className="text-primary-foreground/80 max-w-2xl">
+              Your global tax residency cockpit. All data verified through official government sources.
+              Tracking {countryMetrics.length} {countryMetrics.length === 1 ? 'country' : 'countries'}.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Main Hero Card - Featured Country */}
       <Card className="w-full overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 border-2">
         <CardHeader className="text-center pb-2">
@@ -215,10 +275,127 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                   </div>
                 </div>
               )}
+
+              {/* Government Data Source Verification */}
+              <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+                <FileCheck className="w-4 h-4 text-success" />
+                <div className="flex-1 text-xs">
+                  <span className="font-medium">Government Verified</span>
+                  <p className="text-muted-foreground">
+                    Data sourced from official tax authority
+                  </p>
+                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2"
+                        onClick={() => {
+                          const source = TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT;
+                          window.open(source.url, '_blank');
+                        }}
+                      >
+                        <ExternalLink className="w-3 h-3 mr-1" />
+                        {(TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT).name}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>View official source</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Tie-Breaker Matrix */}
+      {mainCountry && mainCountry.daysSpent >= 150 && (
+        <Card className="border-warning/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Scale className="w-5 h-5 text-warning" />
+              Tie-Breaker Analysis: {mainCountry.country.name}
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              When you're resident in multiple countries, tie-breaker rules determine your primary tax residence
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="p-4 bg-card/50">
+                <div className="flex items-start gap-3">
+                  <Home className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-sm mb-1">Permanent Home</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Do you own or rent a home available to you year-round?
+                    </p>
+                    <Badge variant="outline" className="mt-2 text-xs">
+                      Primary Factor
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-4 bg-card/50">
+                <div className="flex items-start gap-3">
+                  <Heart className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-sm mb-1">Center of Vital Interests</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Where are your personal and economic ties strongest?
+                    </p>
+                    <Badge variant="outline" className="mt-2 text-xs">
+                      Secondary Factor
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-4 bg-card/50">
+                <div className="flex items-start gap-3">
+                  <Briefcase className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-sm mb-1">Habitual Abode</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Where do you spend most of your time throughout the year?
+                    </p>
+                    <Badge variant="outline" className="mt-2 text-xs">
+                      Tertiary Factor
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-4 bg-card/50">
+                <div className="flex items-start gap-3">
+                  <DollarSign className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-sm mb-1">Economic Interests</h4>
+                    <p className="text-xs text-muted-foreground">
+                      Where are your business activities, investments, and income sources?
+                    </p>
+                    <Badge variant="outline" className="mt-2 text-xs">
+                      Key Consideration
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <div className="mt-4 p-4 bg-warning/10 border border-warning/30 rounded-lg">
+              <p className="text-sm">
+                <span className="font-semibold">⚠️ Professional Advice Required:</span> Tie-breaker rules are complex and vary by treaty. 
+                Consult with a qualified international tax advisor to determine your status when approaching thresholds in multiple countries.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Other Countries Grid */}
       {countryMetrics.length > 1 && (

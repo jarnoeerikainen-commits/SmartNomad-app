@@ -14,6 +14,7 @@ import {
   Calendar
 } from 'lucide-react';
 import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
+import TaxResidencyReports from './TaxResidencyReports';
 import CountryTracker from './CountryTracker';
 import USTaxTracker from './USTaxTracker';
 import { CanadaTaxProvinceTracker } from './CanadaTaxProvinceTracker';
@@ -309,42 +310,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
         {/* Reports Tab */}
         <TabsContent value="reports" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Professional Tax Reports
-              </CardTitle>
-              <CardDescription>
-                Generate comprehensive tax residency reports for your accountant or tax authority
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">Annual Residency Report</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Complete breakdown of days spent in each country with supporting documentation
-                  </p>
-                  <Badge variant="outline">Coming Soon</Badge>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">Tax Advisor Summary</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Executive summary of your tax residency status with key dates and thresholds
-                  </p>
-                  <Badge variant="outline">Coming Soon</Badge>
-                </div>
-                <div className="p-4 border rounded-lg">
-                  <h4 className="font-semibold mb-2">Audit Defense Package</h4>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Complete presence timeline with verification evidence for tax audits
-                  </p>
-                  <Badge variant="outline">Coming Soon</Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <TaxResidencyReports countries={countries} />
         </TabsContent>
 
         {/* Year Comparison Tab */}
