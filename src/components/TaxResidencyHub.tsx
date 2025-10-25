@@ -115,7 +115,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
       <Card className="gradient-trust border-none text-primary-foreground">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">
-            <div>
+            <div className="flex-1">
               <CardTitle className="text-3xl font-bold mb-2 flex items-center gap-3">
                 <Scale className="h-8 w-8" />
                 Tax Residency Hub
@@ -124,9 +124,19 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
                 Professional-grade tax residency management for digital nomads
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-              Premium Feature
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                Premium Feature
+              </Badge>
+              <Button 
+                size="lg"
+                onClick={() => setIsCountrySelectorOpen(true)}
+                className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Add Countries to Track Tax Residency
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -257,45 +267,48 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
         <TabsContent value="dashboard" className="space-y-6">
           {/* Add Country CTA */}
           {countries.length === 0 && (
-            <Card className="border-2 border-dashed">
-              <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-                <div className="rounded-full bg-primary/10 p-6">
-                  <MapPin className="h-12 w-12 text-primary" />
+            <Card className="border-2 border-dashed border-primary/50 bg-gradient-to-br from-primary/5 to-accent/5">
+              <CardContent className="flex flex-col items-center justify-center py-16 space-y-6">
+                <div className="rounded-full bg-gradient-to-br from-primary/20 to-primary/10 p-8 shadow-lg">
+                  <MapPin className="h-16 w-16 text-primary" />
                 </div>
-                <div className="text-center space-y-2">
-                  <h3 className="text-2xl font-semibold">Start Tracking Your Tax Residency</h3>
-                  <p className="text-muted-foreground max-w-md">
-                    Add countries to begin monitoring your days spent and stay compliant with international tax obligations.
+                <div className="text-center space-y-3 max-w-xl">
+                  <h3 className="text-3xl font-bold">Start Tracking Your Tax Residency</h3>
+                  <p className="text-muted-foreground text-lg">
+                    Add countries to begin monitoring your days spent and stay compliant with international tax obligations. 
+                    Track up to 50 countries with professional-grade accuracy.
                   </p>
                 </div>
-                <Button 
-                  size="lg" 
-                  onClick={() => setIsCountrySelectorOpen(true)}
-                  className="gap-2"
-                >
-                  <Plus className="h-5 w-5" />
-                  Add Your First Country
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-4 items-center">
+                  <Button 
+                    size="lg" 
+                    onClick={() => setIsCountrySelectorOpen(true)}
+                    className="gap-2 text-lg px-8 py-6 shadow-lg"
+                  >
+                    <Plus className="h-6 w-6" />
+                    Add Countries to Track Tax Residency
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 w-full max-w-2xl">
+                  <div className="text-center p-4 bg-card rounded-lg border">
+                    <div className="text-2xl font-bold text-primary">250+</div>
+                    <div className="text-sm text-muted-foreground">Countries Available</div>
+                  </div>
+                  <div className="text-center p-4 bg-card rounded-lg border">
+                    <div className="text-2xl font-bold text-primary">183</div>
+                    <div className="text-sm text-muted-foreground">Standard Tax Days</div>
+                  </div>
+                  <div className="text-center p-4 bg-card rounded-lg border">
+                    <div className="text-2xl font-bold text-primary">Real-time</div>
+                    <div className="text-sm text-muted-foreground">Day Counting</div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {countries.length > 0 && (
             <>
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-lg font-semibold">Tax Residency Overview</h3>
-                  <p className="text-sm text-muted-foreground">Monitor your status across all tracked countries</p>
-                </div>
-                <Button 
-                  onClick={() => setIsCountrySelectorOpen(true)}
-                  className="gap-2"
-                >
-                  <Plus className="h-4 w-4" />
-                  Add Country
-                </Button>
-              </div>
-
               <TaxResidencyVisualDashboard 
                 countries={countries.filter(c => c.countTravelDays)} 
               />
