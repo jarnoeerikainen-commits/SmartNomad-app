@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { 
   Calculator, 
   Globe, 
@@ -11,8 +12,10 @@ import {
   BarChart3,
   Scale,
   MapPin,
-  Calendar
+  Calendar,
+  Plus
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
 import TaxResidencyReports from './TaxResidencyReports';
 import CountryTracker from './CountryTracker';
@@ -25,6 +28,8 @@ import { ThresholdAlerts } from './ThresholdAlerts';
 import { YearComparisonView } from './YearComparisonView';
 import { TrackingSettings } from './TrackingSettings';
 import { Country, LocationData } from '@/types/country';
+import { CountrySelector } from './CountrySelector';
+import { ALL_COUNTRIES } from '@/data/countries';
 
 interface TaxResidencyHubProps {
   countries: Country[];
@@ -62,6 +67,40 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [trackingSettings, setTrackingSettings] = useState(DEFAULT_TRACKING_SETTINGS);
+  const [isCountrySelectorOpen, setIsCountrySelectorOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleCountrySelect = (countryCode: string, countryName: string, countryFlag: string) => {
+    // Find the country in ALL_COUNTRIES to get the tax residency days
+    const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+    
+    const newCountry: Country = {
+      id: `${countryCode}-${Date.now()}`,
+      code: countryCode,
+      name: countryName,
+      flag: countryFlag,
+      dayLimit: countryInfo?.taxResidencyDays || 183,
+      daysSpent: 0,
+      reason: 'Tax Residency Tracking',
+      lastUpdate: new Date().toISOString(),
+      countTravelDays: true,
+      yearlyDaysSpent: 0,
+      lastEntry: null,
+      totalEntries: 0,
+      followEmbassyNews: false,
+      countingMode: 'days',
+      partialDayRule: 'full',
+      countDepartureDay: true,
+      countArrivalDay: true
+    };
+    
+    onAddCountry(newCountry);
+    setIsCountrySelectorOpen(false);
+    toast({
+      title: "Country Added",
+      description: `${countryName} has been added to your tax residency tracking.`,
+    });
+  };
 
   // Calculate summary stats
   const totalCountries = countries.filter(c => c.countTravelDays).length;
@@ -216,9 +255,52 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
         {/* Dashboard Tab */}
         <TabsContent value="dashboard" className="space-y-6">
-          <TaxResidencyVisualDashboard 
-            countries={countries.filter(c => c.countTravelDays)} 
-          />
+          {/* Add Country CTA */}
+          {countries.length === 0 && (
+            <Card className="border-2 border-dashed">
+              <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+                <div className="rounded-full bg-primary/10 p-6">
+                  <MapPin className="h-12 w-12 text-primary" />
+                </div>
+                <div className="text-center space-y-2">
+                  <h3 className="text-2xl font-semibold">Start Tracking Your Tax Residency</h3>
+                  <p className="text-muted-foreground max-w-md">
+                    Add countries to begin monitoring your days spent and stay compliant with international tax obligations.
+                  </p>
+                </div>
+                <Button 
+                  size="lg" 
+                  onClick={() => setIsCountrySelectorOpen(true)}
+                  className="gap-2"
+                >
+                  <Plus className="h-5 w-5" />
+                  Add Your First Country
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {countries.length > 0 && (
+            <>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold">Tax Residency Overview</h3>
+                  <p className="text-sm text-muted-foreground">Monitor your status across all tracked countries</p>
+                </div>
+                <Button 
+                  onClick={() => setIsCountrySelectorOpen(true)}
+                  className="gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Country
+                </Button>
+              </div>
+
+              <TaxResidencyVisualDashboard 
+                countries={countries.filter(c => c.countTravelDays)} 
+              />
+            </>
+          )}
           
           <Card>
             <CardHeader>
@@ -318,6 +400,15 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
           <YearComparisonView countries={countries} />
         </TabsContent>
       </Tabs>
+
+      {/* Country Selector Modal */}
+      <CountrySelector
+        isOpen={isCountrySelectorOpen}
+        onClose={() => setIsCountrySelectorOpen(false)}
+        onSelect={handleCountrySelect}
+        existingCountries={countries}
+        maxCountries={50}
+      />
     </div>
   );
 };
