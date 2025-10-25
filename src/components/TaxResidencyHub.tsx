@@ -71,6 +71,18 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
   const { toast } = useToast();
 
   const handleCountrySelect = (countryCode: string, countryName: string, countryFlag: string) => {
+    // Prevent duplicate entries
+    const existingCountry = countries.find(c => c.code === countryCode);
+    if (existingCountry) {
+      toast({
+        title: "Country Already Added",
+        description: `${countryName} is already being tracked.`,
+        variant: "destructive"
+      });
+      setIsCountrySelectorOpen(false);
+      return;
+    }
+
     // Find the country in ALL_COUNTRIES to get the tax residency days
     const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
     
@@ -96,9 +108,10 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
     
     onAddCountry(newCountry);
     setIsCountrySelectorOpen(false);
+    
     toast({
-      title: "Country Added",
-      description: `${countryName} has been added to your tax residency tracking.`,
+      title: "✅ Country Added Successfully",
+      description: `${countryName} is now being tracked. Tax residency threshold: ${countryInfo?.taxResidencyDays || 183} days.`,
     });
   };
 
@@ -125,13 +138,16 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
               </CardDescription>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+              <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-3 py-1">
                 Premium Feature
               </Badge>
               <Button 
                 size="lg"
-                onClick={() => setIsCountrySelectorOpen(true)}
-                className="bg-white text-primary hover:bg-white/90 font-semibold shadow-lg"
+                onClick={() => {
+                  console.log('Add Countries button clicked');
+                  setIsCountrySelectorOpen(true);
+                }}
+                className="bg-white text-primary hover:bg-white/90 hover:scale-105 transition-all font-bold shadow-lg hover:shadow-xl text-base px-6 py-3"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Add Countries to Track Tax Residency
@@ -282,12 +298,18 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
                 <div className="flex flex-col sm:flex-row gap-4 items-center">
                   <Button 
                     size="lg" 
-                    onClick={() => setIsCountrySelectorOpen(true)}
-                    className="gap-2 text-lg px-8 py-6 shadow-lg"
+                    onClick={() => {
+                      console.log('Empty state button clicked');
+                      setIsCountrySelectorOpen(true);
+                    }}
+                    className="gap-2 text-lg px-8 py-6 shadow-xl hover:shadow-2xl hover:scale-105 transition-all font-bold"
                   >
                     <Plus className="h-6 w-6" />
                     Add Countries to Track Tax Residency
                   </Button>
+                  <p className="text-sm text-muted-foreground">
+                    Search from 250+ countries with instant filtering
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 w-full max-w-2xl">
                   <div className="text-center p-4 bg-card rounded-lg border">
@@ -415,13 +437,18 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
       </Tabs>
 
       {/* Country Selector Modal */}
-      <CountrySelector
-        isOpen={isCountrySelectorOpen}
-        onClose={() => setIsCountrySelectorOpen(false)}
-        onSelect={handleCountrySelect}
-        existingCountries={countries}
-        maxCountries={50}
-      />
+      {isCountrySelectorOpen && (
+        <CountrySelector
+          isOpen={isCountrySelectorOpen}
+          onClose={() => {
+            console.log('Closing country selector');
+            setIsCountrySelectorOpen(false);
+          }}
+          onSelect={handleCountrySelect}
+          existingCountries={countries}
+          maxCountries={50}
+        />
+      )}
     </div>
   );
 };

@@ -106,15 +106,15 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[85vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4">
+      <DialogContent className="max-w-3xl max-h-[90vh] p-0 gap-0">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <div className="flex items-center justify-between">
             <div>
-              <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                <Globe2 className="h-6 w-6 text-primary" />
-                Select Country
+              <DialogTitle className="text-3xl font-bold flex items-center gap-3 mb-2">
+                <Globe2 className="h-8 w-8 text-primary" />
+                Select Country to Track
               </DialogTitle>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-base text-muted-foreground">
                 {availableCountries.length} countries available • {availableSlots} slots remaining
               </p>
             </div>
@@ -122,7 +122,8 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         </DialogHeader>
 
         {/* Region Filters */}
-        <div className="px-6 pb-4">
+        <div className="px-6 py-4 bg-muted/30 border-b">
+          <p className="text-sm font-medium mb-3 text-muted-foreground">Filter by Region:</p>
           <div className="flex gap-2 flex-wrap">
             {REGIONS.map(region => (
               <Button
@@ -130,9 +131,9 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                 variant={selectedRegion === region.value ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedRegion(region.value)}
-                className="text-xs"
+                className="text-sm font-medium"
               >
-                {region.emoji && <span className="mr-1">{region.emoji}</span>}
+                {region.emoji && <span className="mr-2 text-lg">{region.emoji}</span>}
                 {region.name}
                 {region.value !== 'all' && (
                   <Badge variant="secondary" className="ml-2 text-xs">
@@ -145,28 +146,32 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
         </div>
 
         {/* Search Command */}
-        <Command className="border-t">
-          <div className="relative">
-            <Search className="absolute left-4 top-3.5 h-4 w-4 text-muted-foreground" />
+        <div className="border-b bg-background">
+          <div className="relative px-6 py-4">
+            <Search className="absolute left-10 top-7 h-5 w-5 text-muted-foreground" />
             <CommandInput
-              placeholder="Type country name or code (e.g., Portugal or PT)..."
+              placeholder="Type to search: country name, code (e.g., 'Portugal', 'PT', 'France', 'FR')..."
               value={searchQuery}
               onValueChange={setSearchQuery}
-              className="pl-10"
+              className="pl-12 h-12 text-base"
             />
           </div>
-          
+        </div>
+        
+        <Command className="border-none">
           <CommandList>
-            <ScrollArea className="h-[400px]">
-              <CommandEmpty className="py-6 text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <MapPin className="h-8 w-8 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">No countries found</p>
+            <ScrollArea className="h-[450px]">
+              <CommandEmpty className="py-12 text-center">
+                <div className="flex flex-col items-center gap-3">
+                  <MapPin className="h-12 w-12 text-muted-foreground/50" />
+                  <p className="text-base font-medium">No countries found</p>
+                  <p className="text-sm text-muted-foreground">Try a different search term or region</p>
                   {searchQuery && (
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => setSearchQuery('')}
+                      className="mt-2"
                     >
                       Clear search
                     </Button>
@@ -174,7 +179,7 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                 </div>
               </CommandEmpty>
               
-              <CommandGroup>
+              <CommandGroup className="p-2">
                 {filteredCountries.map((country) => {
                   const region = COUNTRY_REGIONS[country.code];
                   const regionName = REGIONS.find(r => r.value === region)?.name || 'Other';
@@ -183,25 +188,33 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                     <CommandItem
                       key={country.code}
                       onSelect={() => handleSelect(country)}
-                      className="cursor-pointer py-3 px-4 hover:bg-accent"
+                      className="cursor-pointer py-4 px-4 hover:bg-accent rounded-lg mb-1 transition-colors"
                     >
-                      <div className="flex items-center justify-between w-full gap-3">
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <span className="text-3xl flex-shrink-0">{country.flag}</span>
+                      <div className="flex items-center justify-between w-full gap-4">
+                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                          <span className="text-4xl flex-shrink-0">{country.flag}</span>
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate">{country.name}</div>
-                            <div className="text-xs text-muted-foreground flex items-center gap-2">
-                              <span>{country.code}</span>
+                            <div className="font-semibold text-base truncate">{country.name}</div>
+                            <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+                              <span className="font-mono">{country.code}</span>
                               <span>•</span>
                               <span>{regionName}</span>
                               <span>•</span>
-                              <span>Tax: {country.taxResidencyDays} days</span>
+                              <span className="font-medium">Tax: {country.taxResidencyDays} days</span>
                             </div>
                           </div>
                         </div>
-                        <Badge variant="outline" className="flex-shrink-0 text-xs">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          className="flex-shrink-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelect(country);
+                          }}
+                        >
                           Add
-                        </Badge>
+                        </Button>
                       </div>
                     </CommandItem>
                   );
@@ -213,9 +226,11 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
 
         {/* Footer */}
         <div className="px-6 py-4 border-t bg-muted/30">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Showing {filteredCountries.length} of {availableCountries.length} countries</span>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground font-medium">
+              Showing {filteredCountries.length} of {availableCountries.length} countries
+            </span>
+            <Button variant="outline" size="sm" onClick={onClose}>
               Cancel
             </Button>
           </div>
