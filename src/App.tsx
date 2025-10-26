@@ -10,6 +10,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { InvestorDocument } from "./components/InvestorDocument";
 import { InvestorOnePager } from "./components/InvestorOnePager";
 import { TranslationManager } from "./components/TranslationManager";
+import { BusinessCentersPage } from "./components/BusinessCenters/BusinessCentersPage";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/wifi-finder" element={<WiFiFinder />} />
+              <Route path="/business-centers" element={<BusinessCentersPage />} />
               <Route path="/investor-document" element={<InvestorDocument />} />
               <Route path="/investor-pitch" element={<InvestorOnePager />} />
               <Route path="/translation-manager" element={<TranslationManager />} />

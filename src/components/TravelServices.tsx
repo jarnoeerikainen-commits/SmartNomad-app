@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink, Scale, FileText } from 'lucide-react';
+import { Hotel, UtensilsCrossed, Shield, Crown, Car, Plane, Umbrella, Ship, ExternalLink, Scale, FileText, Briefcase } from 'lucide-react';
 import OffersModal from '@/components/OffersModal';
 import OffersService, { Offer } from '@/services/OffersService';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ServiceBoxProps {
   title: string;
@@ -157,6 +158,7 @@ interface TravelServicesProps {
 
 const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [offersEnabled, setOffersEnabled] = useState<{[key: string]: boolean}>({
     insurance: false,
     hotels: false,
@@ -272,6 +274,61 @@ const TravelServices: React.FC<TravelServicesProps> = ({ currentLocation }) => {
           </p>
         )}
       </div>
+
+      {/* Business Centers - Featured Card */}
+      <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-secondary/5 mb-6 shadow-medium hover:shadow-large transition-all duration-200">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-primary/10">
+                <Briefcase className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-xl text-foreground">Business Centers</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Find printing, fax, computer use & shipping services
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="default"
+              onClick={() => navigate('/business-centers')}
+              className="shadow-soft hover:shadow-medium"
+            >
+              Find Centers
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>Printing</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-secondary" />
+              <span>Fax Services</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>Computers</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-secondary" />
+              <span>Scanning</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <span>Shipping</span>
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-card rounded-lg border border-border">
+            <p className="text-xs text-muted-foreground">
+              ✅ 4.0+ rated locations · 📍 Location-based search · 🌍 100+ cities worldwide
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Insurance Services */}
