@@ -184,6 +184,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
         { id: 'services', label: 'Travel Services', icon: Globe },
         { id: 'remote-offices', label: 'Remote Offices', icon: Building, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'business-centers', label: 'Business Centers', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
         { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
         { id: 'global-city-services', label: 'Global City Services', icon: Globe2, badge: '512', variant: 'secondary' as const },
         { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi, badge: 'NEW', variant: 'secondary' as const },

@@ -14,6 +14,7 @@ import VaccinationTracker from './VaccinationTracker';
 import { SmartAlerts } from './SmartAlerts';
 import TravelServices from './TravelServices';
 import RemoteOffices from './RemoteWorkOffices/OfficeFinder';
+import { BusinessCentersPage } from './BusinessCenters/BusinessCentersPage';
 import AirportLoungeAccess from './AirportLoungeAccess';
 import GlobalCityServices from './GlobalCityServices';
 import Settings from './Settings';
@@ -249,6 +250,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'remote-offices':
         return <RemoteOffices />;
+      
+      case 'business-centers':
+        return <BusinessCentersPage />;
       
       case 'airport-lounges':
         return <AirportLoungeAccess currentLocation={detectedLocation} />;
