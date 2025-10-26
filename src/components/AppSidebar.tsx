@@ -87,7 +87,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'travel']);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'travel', 'services']);
   
   // Check for danger zone (imported from ThreatIntelligenceService)
   const [isInDangerZone, setIsInDangerZone] = React.useState(false);
@@ -146,6 +146,22 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       ]
     },
     {
+      id: 'services',
+      label: 'Travel Services',
+      items: [
+        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
+        { id: 'services', label: 'Travel Services', icon: Globe },
+        { id: 'remote-offices', label: 'Remote Offices', icon: Building, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'business-centers', label: 'Business Centers', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
+        { id: 'global-city-services', label: 'Global City Services', icon: Globe2, badge: '512', variant: 'secondary' as const },
+        { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
+        { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
+      ]
+    },
+    {
       id: 'travel',
       label: 'Travel & Compliance',
       items: [
@@ -175,22 +191,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'digital-banks', label: 'Digital Banks', icon: Landmark },
         { id: 'money-transfers', label: 'Money Transfers', icon: Coins },
         { id: 'crypto-cash', label: 'Digital Money', icon: Landmark },
-      ]
-    },
-    {
-      id: 'services',
-      label: 'Travel Services',
-      items: [
-        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
-        { id: 'services', label: 'Travel Services', icon: Globe },
-        { id: 'remote-offices', label: 'Remote Offices', icon: Building, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'business-centers', label: 'Business Centers', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
-        { id: 'global-city-services', label: 'Global City Services', icon: Globe2, badge: '512', variant: 'secondary' as const },
-        { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
-        { id: 'pet-services', label: 'Pet Services', icon: PawPrint },
       ]
     },
     {
