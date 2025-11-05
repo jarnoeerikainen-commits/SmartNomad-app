@@ -92,6 +92,18 @@ export interface TravelProfile {
     };
     fitnessLevel: 'sedentary' | 'moderate' | 'active' | 'athletic';
   };
+
+  // Learning & Memory (Auto-tracked)
+  learnedPreferences?: {
+    frequentDestinationTypes: string[];
+    preferredAirlines: string[];
+    preferredHotelChains: string[];
+    avgTripDuration: number;
+    bookingLeadTime: number;
+    restaurantPreferences: string[];
+    activityPatterns: string[];
+    lastUpdated: Date;
+  };
 }
 
 export interface PersonalPreferences {

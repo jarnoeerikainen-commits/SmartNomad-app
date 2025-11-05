@@ -17,11 +17,13 @@ interface Message {
 interface AITravelAssistantProps {
   currentLocation?: { country: string; city: string };
   citizenship?: string;
+  userProfile?: any;
 }
 
 const AITravelAssistant: React.FC<AITravelAssistantProps> = ({ 
   currentLocation,
-  citizenship
+  citizenship,
+  userProfile
 }) => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(true);
@@ -29,7 +31,15 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! ✈️ I'm your AI travel assistant. How can I help?\n\n🌍 **Planning a trip?** Tell me your preferences\n✈️ **Need bookings?** Flights, hotels, activities\n🆘 **Travel issue?** I'm here to solve it\n\nWhat would you like to do?",
+      content: `Hello and a huge welcome! ✈️ I'm Voyager, your personal travel assistant, and I'm absolutely thrilled to be adventuring with you.${currentLocation ? ` I see you're in ${currentLocation.city}, ${currentLocation.country}—what a wonderful place!` : ''}
+
+Where shall we begin?
+
+🌍 **Planning a new getaway?** I can dream up destinations tailored just for you
+✈️ **Already have a trip?** I can manage bookings, check you in, or find the perfect dinner spot
+🆘 **Need help right now?** Flight delays, lost reservations, or just questions—I'm here to fix it
+
+So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to make everything smooth and wonderful! 🌟`,
       isUser: false,
       timestamp: new Date()
     }
@@ -53,7 +63,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const userContext = {
       currentCountry: currentLocation?.country,
       currentCity: currentLocation?.city,
-      citizenship
+      citizenship,
+      userProfile: userProfile ? {
+        travelStyle: userProfile.travel?.preferences,
+        dietaryPreferences: userProfile.personal?.dietary,
+        accommodationPreferences: userProfile.personal?.accommodation,
+        professionalInfo: userProfile.lifestyle?.professional,
+        familyInfo: userProfile.lifestyle?.family,
+        hobbies: userProfile.personal?.hobbies,
+        mobility: userProfile.travel?.mobility
+      } : null
     };
 
     try {
