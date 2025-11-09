@@ -89,15 +89,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           >
             <img 
               src={superNomadLogo} 
-              alt="SuperNomad Logo" 
+              alt={`${t('app.title')} Logo`} 
               className="h-10 w-10 rounded-xl shadow-medium transition-transform group-hover:scale-105"
             />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent transition-all group-hover:from-accent group-hover:to-primary">
-                SuperNomad
+                {t('app.title')}
               </h1>
               <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
-                Your Digital Assistant for Global Living
+                {t('app.tagline')}
               </p>
             </div>
           </Link>
