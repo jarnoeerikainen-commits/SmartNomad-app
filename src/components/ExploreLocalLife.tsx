@@ -113,7 +113,7 @@ const getUpcomingDate = (daysFromNow: number): string => {
   return format(addDays(new Date(), daysFromNow), 'yyyy-MM-dd');
 };
 
-// SmartNomad Local Life AI - Event Filtering & Ranking System
+// SuperNomad Local Life AI - Event Filtering & Ranking System
 const generateMockEvents = (): LocalEvent[] => {
   const today = new Date();
   const events: LocalEvent[] = [];
@@ -121,7 +121,7 @@ const generateMockEvents = (): LocalEvent[] => {
   // Get all active cities from our centralized database
   const activeCities = getAllCities();
   
-  console.log(`🌍 SmartNomad Local Life AI: Generating events for ${activeCities.length} active cities`);
+  console.log(`🌍 SuperNomad Local Life AI: Generating events for ${activeCities.length} active cities`);
   
   // Helper to map country codes to full names
   const getCountryName = (code: string): string => {
@@ -146,7 +146,7 @@ const generateMockEvents = (): LocalEvent[] => {
   // Verified sources for trust system
   const verifiedSources = [
     'Eventbrite Verified', 'Meetup Official', 'Facebook Events', 
-    'SmartNomad Verified', 'Local Tourism Board', 'Official Organizer'
+    'SuperNomad Verified', 'Local Tourism Board', 'Official Organizer'
   ];
 
   let eventId = 1;
@@ -1156,7 +1156,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
     return uniqueCountries.sort();
   }, []);
 
-  // Filter and sort events with SmartNomad Local Life AI rules
+  // Filter and sort events with SuperNomad Local Life AI rules
   const filteredEvents = useMemo(() => {
     try {
       let filtered = mockEvents;
@@ -1355,7 +1355,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
     const eventCountries = new Set(mockEvents.map(e => e.country));
     const verifiedEvents = mockEvents.filter(e => e.verified && e.rating && e.rating >= 4.0);
     
-    console.log('🌍 SmartNomad Local Life AI Status:');
+    console.log('🌍 SuperNomad Local Life AI Status:');
     console.log(`   ✅ Total Events Generated: ${mockEvents.length}`);
     console.log(`   ✅ Verified Events (≥4.0★): ${verifiedEvents.length}`);
     console.log(`   ✅ Active Cities with Events: ${eventCities.size}`);
@@ -1366,7 +1366,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Trust Banner - SmartNomad Local Life AI */}
+      {/* Trust Banner - SuperNomad Local Life AI */}
       <Card className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-primary/30">
         <CardContent className="pt-6">
           <div className="flex items-start gap-4">
@@ -1377,7 +1377,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-semibold text-xl flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-primary" />
-                  SmartNomad Local Life AI
+                  SuperNomad Local Life AI
                 </h3>
                 <Badge className="bg-primary/20 text-primary border-primary/40">
                   Verified & Trusted

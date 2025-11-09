@@ -117,8 +117,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       setActiveSection('dashboard');
       setSidebarOpen(false);
     };
-    window.addEventListener('smartnomad:home', goHome);
-    return () => window.removeEventListener('smartnomad:home', goHome);
+    window.addEventListener('supernomad:home', goHome);
+    return () => window.removeEventListener('supernomad:home', goHome);
   }, []);
 
   const handleDismissBanner = () => {

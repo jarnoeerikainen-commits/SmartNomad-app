@@ -40,8 +40,8 @@ const Index = () => {
       setShowVPNModal(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-    window.addEventListener('smartnomad:home', handler);
-    return () => window.removeEventListener('smartnomad:home', handler);
+    window.addEventListener('supernomad:home', handler);
+    return () => window.removeEventListener('supernomad:home', handler);
   }, []);
 
   // Load saved data on component mount

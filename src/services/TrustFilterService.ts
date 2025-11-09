@@ -1,5 +1,5 @@
 /**
- * SmartNomad Trust AI - Filtering & Ranking Service
+ * SuperNomad Trust AI - Filtering & Ranking Service
  * Ensures only verified, high-quality services, offers, and events are displayed
  */
 
@@ -36,7 +36,7 @@ const TRUSTED_SOURCES = [
   'TripAdvisor',
   'Booking.com',
   'Eventbrite',
-  'SmartNomad',
+  'SuperNomad',
   'Yelp',
   'Airbnb',
   'GetYourGuide',

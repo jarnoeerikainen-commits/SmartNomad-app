@@ -1,4 +1,4 @@
-// City data for SmartNomad Search AI - Comprehensive Global Database
+// City data for SuperNomad Search AI - Comprehensive Global Database
 export interface CityData {
   name: string;
   country_code: string;

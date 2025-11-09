@@ -11,7 +11,7 @@ export const InvestorOnePager = () => {
           <div className="flex items-center justify-center gap-3">
             <Globe className="w-12 h-12 text-primary" />
             <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              SmartNomad
+              SuperNomad
             </h1>
           </div>
           <p className="text-2xl text-muted-foreground font-medium">
@@ -32,7 +32,7 @@ export const InvestorOnePager = () => {
               <h2 className="text-2xl font-bold mb-3">The Vision</h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 35 million digital nomads navigate complex tax residency rules, visa requirements, and compliance across 195+ countries. 
-                <span className="text-foreground font-semibold"> SmartNomad automates this complexity</span>, transforming global mobility from a legal minefield into a competitive advantage.
+                <span className="text-foreground font-semibold"> SuperNomad automates this complexity</span>, transforming global mobility from a legal minefield into a competitive advantage.
               </p>
             </div>
           </div>
@@ -246,7 +246,7 @@ export const InvestorOnePager = () => {
             For investment inquiries and detailed financial projections
           </div>
           <div className="text-lg font-semibold">
-            investors@smartnomad.app
+            investors@supernomad.app
           </div>
           <div className="text-xs text-muted-foreground">
             Confidential - For Accredited Investors Only

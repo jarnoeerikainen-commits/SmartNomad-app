@@ -241,7 +241,7 @@ const LocalServices = () => {
                   <li>1. Select your city and browse service categories</li>
                   <li>2. Compare verified providers with transparent pricing</li>
                   <li>3. Book directly with providers or request quotes</li>
-                  <li>4. Enjoy quality service with SmartNomad guarantee</li>
+                  <li>4. Enjoy quality service with SuperNomad guarantee</li>
                   <li>5. Rate and review to help other expats</li>
                 </ol>
               </div>

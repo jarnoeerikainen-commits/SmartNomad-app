@@ -300,7 +300,7 @@ export const TranslationManager: React.FC = () => {
               Translation Manager
             </h1>
             <p className="text-muted-foreground mt-2">
-              Professional translation management for SmartNomad - Analyze, export, import, and validate translations across 13 languages
+              Professional translation management for SuperNomad - Analyze, export, import, and validate translations across 13 languages
             </p>
           </div>
           <Button 

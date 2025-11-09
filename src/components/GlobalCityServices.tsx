@@ -75,7 +75,7 @@ const GlobalCityServices = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Global Reach</h4>
                 <p className="text-muted-foreground mb-4">
-                  SmartNomad now covers 512 cities across 6 continents, providing comprehensive
+                  SuperNomad now covers 512 cities across 6 continents, providing comprehensive
                   service intelligence for digital nomads worldwide.
                 </p>
               </div>

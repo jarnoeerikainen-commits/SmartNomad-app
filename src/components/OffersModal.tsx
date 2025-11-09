@@ -174,7 +174,7 @@ const OffersModal: React.FC<OffersModalProps> = ({
                       ? "Try selecting another city to explore more options!"
                       : selectedCountry
                       ? "Choose a city from the dropdown above to view available services"
-                      : "SmartNomad Trust AI filters results to show only verified, high-quality services with ratings ≥ 4.0★"}
+                      : "SuperNomad Trust AI filters results to show only verified, high-quality services with ratings ≥ 4.0★"}
                   </p>
                 </div>
                 {!selectedCountry && (
@@ -191,7 +191,7 @@ const OffersModal: React.FC<OffersModalProps> = ({
                 <div className="flex items-start gap-3">
                   <Shield className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold">SmartNomad Trust AI</p>
+                    <p className="text-sm font-semibold">SuperNomad Trust AI</p>
                     <p className="text-xs text-muted-foreground">
                       All results filtered for verified quality (≥4.0★), trusted sources (Google, TripAdvisor, Booking.com),
                       and authentic reviews. We prioritize local providers and sustainable practices.

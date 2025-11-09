@@ -893,7 +893,7 @@ const TaxWealthyHelp: React.FC<TaxWealthyHelpProps> = ({ currentLocation }) => {
             citizenship decisions. Ensure all services are properly licensed and comply with relevant regulations.
           </p>
           <p className="font-medium text-foreground">
-            SmartNomad is not affiliated with any listed service providers and does not receive compensation for referrals.
+            SuperNomad is not affiliated with any listed service providers and does not receive compensation for referrals.
           </p>
         </CardContent>
       </Card>

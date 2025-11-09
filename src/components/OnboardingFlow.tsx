@@ -12,7 +12,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
 
   const steps = [
     {
-      title: 'Welcome to SmartNomad',
+      title: 'Welcome to SuperNomad',
       description: 'Your intelligent travel companion for managing visas, tax residency, and travel compliance.',
       icon: MapPin,
       color: 'gradient-primary',

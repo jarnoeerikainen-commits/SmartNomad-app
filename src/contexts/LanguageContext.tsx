@@ -32,7 +32,7 @@ const LANGUAGES: Language[] = [
 const translations: Record<string, Record<string, string>> = {
   en: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Your Digital Assistant for Global Living',
     'header.profile': 'Profile',
     'header.profile_settings': 'Profile Settings',
@@ -1158,7 +1158,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   zh: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': '您的全球生活数字助手',
     'header.profile': '个人资料',
     'header.profile_settings': '个人资料设置',
@@ -1299,7 +1299,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   fr: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Votre assistant numérique pour la vie mondiale',
     'header.profile': 'Profil',
     'header.profile_settings': 'Paramètres du profil',
@@ -1440,7 +1440,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   de: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Ihr digitaler Assistent für das globale Leben',
     'header.profile': 'Profil',
     'header.profile_settings': 'Profileinstellungen',
@@ -1581,7 +1581,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ar: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'مساعدك الرقمي للحياة العالمية',
     'header.profile': 'الملف الشخصي',
     'header.profile_settings': 'إعدادات الملف الشخصي',
@@ -1722,7 +1722,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ja: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'グローバルライフのためのデジタルアシスタント',
     'header.profile': 'プロフィール',
     'header.profile_settings': 'プロフィール設定',
@@ -1863,7 +1863,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   it: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Il tuo assistente digitale per la vita globale',
     'header.profile': 'Profilo',
     'header.profile_settings': 'Impostazioni profilo',
@@ -2004,7 +2004,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   ko: {
     // App Header & Navigation
-    'app.title': 'SmartNomad',
+    'app.title': 'SuperNomad',
     'app.tagline': '글로벌 생활을 위한 디지털 어시스턴트',
     'header.profile': '프로필',
     'header.profile_settings': '프로필 설정',

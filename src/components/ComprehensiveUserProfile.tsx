@@ -117,7 +117,7 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
                 <CardDescription>
                   {progress.overall < 25 && "Just getting started - complete your profile to unlock AI recommendations"}
                   {progress.overall >= 25 && progress.overall < 50 && "Good progress - add more details for better personalization"}
-                  {progress.overall >= 50 && progress.overall < 75 && "Looking great - you're getting the most out of SmartNomad"}
+                  {progress.overall >= 50 && progress.overall < 75 && "Looking great - you're getting the most out of SuperNomad"}
                   {progress.overall >= 75 && "Excellent! Your profile is highly optimized"}
                 </CardDescription>
               </div>

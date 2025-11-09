@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import smartNomadLogo from '@/assets/smartnomad-logo-v2.png';
+import superNomadLogo from '@/assets/smartnomad-logo-v2.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -50,7 +50,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       navigate('/');
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      window.dispatchEvent(new CustomEvent('smartnomad:home'));
+      window.dispatchEvent(new CustomEvent('supernomad:home'));
     }
   };
 
@@ -88,13 +88,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             tabIndex={0}
           >
             <img 
-              src={smartNomadLogo} 
-              alt="SmartNomad Logo" 
+              src={superNomadLogo} 
+              alt="SuperNomad Logo" 
               className="h-10 w-10 rounded-xl shadow-medium transition-transform group-hover:scale-105"
             />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent transition-all group-hover:from-accent group-hover:to-primary">
-                SmartNomad
+                SuperNomad
               </h1>
               <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                 Your Digital Assistant for Global Living

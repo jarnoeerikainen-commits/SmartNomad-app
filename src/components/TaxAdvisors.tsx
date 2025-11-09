@@ -298,7 +298,7 @@ export const TaxAdvisors = () => {
             <h3 className="font-semibold mb-2">Important Tax Advisory Notice</h3>
             <p className="text-sm text-muted-foreground mb-3">
               Tax laws vary by jurisdiction and change frequently. The advisors listed are independent 
-              professionals not directly affiliated with SmartNomad. Always verify credentials and 
+              professionals not directly affiliated with SuperNomad. Always verify credentials and 
               consult multiple sources before making tax decisions.
             </p>
             <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">

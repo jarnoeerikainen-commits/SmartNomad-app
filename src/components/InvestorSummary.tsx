@@ -96,7 +96,7 @@ const InvestorSummary = () => {
           Investment Opportunity
         </Badge>
         <h1 className="text-5xl font-bold gradient-text">
-          SmartNomad: The Ultimate Travel Intelligence Platform
+          SuperNomad: The Ultimate Travel Intelligence Platform
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Production-ready AI-powered platform serving digital nomads, expats, and global travelers
@@ -298,13 +298,13 @@ const InvestorSummary = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="mailto:invest@smartnomad.com" 
+              href="mailto:invest@supernomad.com" 
               className="px-8 py-3 rounded-lg gradient-premium text-white font-semibold hover:shadow-glow transition-all"
             >
               Request Investor Deck
             </a>
             <a 
-              href="mailto:founders@smartnomad.com" 
+              href="mailto:founders@supernomad.com" 
               className="px-8 py-3 rounded-lg border border-primary text-primary font-semibold hover:bg-primary/10 transition-all"
             >
               Schedule Meeting

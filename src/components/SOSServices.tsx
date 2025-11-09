@@ -186,7 +186,7 @@ const SOSServices = () => {
       {/* Behind the Scenes Section */}
       <Card className="glass-effect">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Behind the Scenes: The Smartnomad Promise</CardTitle>
+          <CardTitle className="text-2xl text-center">Behind the Scenes: The SuperNomad Promise</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
@@ -306,7 +306,7 @@ const SOSServices = () => {
               🚨 EMERGENCY ASSISTANCE IS READY
             </DialogTitle>
             <DialogDescription className="text-base pt-2">
-              You are about to contact the Smartnomad Global Response Center. Our team of professionals is available 24/7 to assist you.
+              You are about to contact the SuperNomad Global Response Center. Our team of professionals is available 24/7 to assist you.
             </DialogDescription>
           </DialogHeader>
           

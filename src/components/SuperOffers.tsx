@@ -453,11 +453,11 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
             <div className="space-y-1">
               <p className="text-sm font-medium flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
-                SmartNomad Trust AI
+                SuperNomad Trust AI
               </p>
               <p className="text-xs text-muted-foreground">
                 All offers are curated and verified for quality (≥4.0★). We prioritize trusted providers,
-                authentic reviews, and local gems. Some partnerships help support SmartNomad at no extra cost to you.
+                authentic reviews, and local gems. Some partnerships help support SuperNomad at no extra cost to you.
               </p>
             </div>
           </div>

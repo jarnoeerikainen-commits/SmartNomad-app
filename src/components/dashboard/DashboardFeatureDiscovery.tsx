@@ -101,7 +101,7 @@ export const DashboardFeatureDiscovery: React.FC<DashboardFeatureDiscoveryProps>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            Discover SmartNomad Features
+            Discover SuperNomad Features
           </CardTitle>
         </div>
       </CardHeader>

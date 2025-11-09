@@ -21,7 +21,7 @@ export const InvestorDocument = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <Badge className="mb-4" variant="outline">Investment Opportunity</Badge>
-        <h1 className="text-4xl font-bold mb-4">SmartNomad Travel App</h1>
+        <h1 className="text-4xl font-bold mb-4">SuperNomad Travel App</h1>
         <h2 className="text-2xl text-muted-foreground mb-2">Complete Financial Analysis</h2>
         <p className="text-muted-foreground">Development Costs, Operating Expenses & Revenue Projections</p>
       </div>
@@ -34,7 +34,7 @@ export const InvestorDocument = () => {
         </div>
         <div className="space-y-4 text-muted-foreground">
           <p>
-            SmartNomad is a comprehensive travel management application targeting digital nomads, 
+            SuperNomad is a comprehensive travel management application targeting digital nomads, 
             frequent travelers, and expatriates. The app provides tax residency tracking, 
             visa management, expense tracking, and essential travel services.
           </p>
@@ -638,7 +638,7 @@ export const InvestorDocument = () => {
           <div className="prose max-w-none">
             <p className="text-muted-foreground">
               Strategic growth plan targeting 10 million free users and 10,000 premium subscribers, 
-              positioning SmartNomad as a premier acquisition target for travel tech giants or private equity firms.
+              positioning SuperNomad as a premier acquisition target for travel tech giants or private equity firms.
             </p>
           </div>
 
@@ -1011,7 +1011,7 @@ export const InvestorDocument = () => {
         </div>
         <div className="space-y-4 text-muted-foreground">
           <p>
-            SmartNomad represents a high-potential investment opportunity in the growing digital nomad 
+            SuperNomad represents a high-potential investment opportunity in the growing digital nomad 
             and international travel market. With a modest initial investment of $50,000 and a 3-month 
             development timeline, the app is positioned to achieve profitability rapidly.
           </p>
@@ -1038,7 +1038,7 @@ export const InvestorDocument = () => {
             </div>
           </div>
           <p className="font-semibold text-foreground">
-            Expected ROI of 1,764% in Year 1 makes SmartNomad an exceptionally attractive investment 
+            Expected ROI of 1,764% in Year 1 makes SuperNomad an exceptionally attractive investment 
             with minimal downside risk and substantial upside potential.
           </p>
         </div>
@@ -1047,7 +1047,7 @@ export const InvestorDocument = () => {
       {/* Footer */}
       <div className="text-center mt-12 pt-8 border-t text-sm text-muted-foreground">
         <p>Document prepared: {new Date().toLocaleDateString()}</p>
-        <p className="mt-2">For investment inquiries: invest@smartnomad.app</p>
+        <p className="mt-2">For investment inquiries: invest@supernomad.app</p>
       </div>
     </div>
   );

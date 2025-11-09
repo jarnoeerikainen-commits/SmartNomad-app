@@ -368,7 +368,7 @@ const EnhancedProfileForm: React.FC<EnhancedProfileFormProps> = ({ onComplete, o
                 />
                 <div className="flex-1">
                   <Label htmlFor="dataProcessing" className="text-sm cursor-pointer">
-                    I consent to SmartNomad processing my data to provide personalized travel services
+                    I consent to SuperNomad processing my data to provide personalized travel services
                     <span className="text-destructive ml-1">*</span>
                   </Label>
                   <p className="text-xs text-muted-foreground mt-1">
