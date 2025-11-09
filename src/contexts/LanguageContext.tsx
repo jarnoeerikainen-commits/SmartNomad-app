@@ -254,7 +254,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   es: {
     // Header
-    'app.title': 'TravelTracker',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Tu compañero global de viajes',
     'header.profile': 'Perfil',
     'header.profile_settings': 'Configuración del perfil',
@@ -476,7 +476,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   pt: {
     // Header
-    'app.title': 'TravelTracker',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Seu companheiro global de viagens',
     'header.profile': 'Perfil',
     'header.profile_settings': 'Configurações do perfil',
@@ -675,7 +675,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   hi: {
     // Header
-    'app.title': 'TravelTracker',
+    'app.title': 'SuperNomad',
     'app.tagline': 'आपका वैश्विक यात्रा साथी',
     'header.profile': 'प्रोफ़ाइल',
     'header.profile_settings': 'प्रोफ़ाइल सेटिंग्स',
@@ -836,7 +836,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   sw: {
     // Header
-    'app.title': 'TravelTracker',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Mwenzi wako wa kimataifa wa kusafiri',
     'header.profile': 'Wasifu',
     'header.profile_settings': 'Mipangilio ya Wasifu',
@@ -997,7 +997,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   af: {
     // App Header & Navigation
-    'app.title': 'TravelTracker',
+    'app.title': 'SuperNomad',
     'app.tagline': 'Jou globale reisgenoot',
     'header.profile': 'Profiel',
     'header.profile_settings': 'Profiel Instellings',
