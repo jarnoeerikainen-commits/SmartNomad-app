@@ -61,7 +61,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				success: 'hsl(var(--success))',
+				warning: 'hsl(var(--warning))',
+				danger: 'hsl(var(--danger))',
+				info: 'hsl(var(--info))',
+				trust: 'hsl(var(--trust))',
+				security: 'hsl(var(--security))'
+			},
+			fontFamily: {
+				sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+				display: ['Playfair Display', 'Georgia', 'serif'],
+				trust: ['Playfair Display', 'Georgia', 'serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

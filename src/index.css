@@ -5,59 +5,66 @@
 
 @layer base {
   :root {
-    /* Modern 2025 Travel App Palette - Ocean Blues, Tropical Teals, Warm Coral */
-    --background: 210 40% 98%; /* Soft cloud white */
-    --foreground: 215 25% 15%; /* Deep ocean navy */
+    /* Premium Financial Tool Palette - Sophisticated Neutrals with Confident Accent */
+    --background: 220 13% 97%; /* Soft pearl white */
+    --foreground: 220 26% 14%; /* Deep charcoal */
 
-    --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 215 25% 15%;
+    --card: 0 0% 100%; /* Pure white elevated cards */
+    --card-foreground: 220 26% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 220 26% 14%;
 
-    --primary: 197 71% 52%; /* Ocean blue - vibrant and trustworthy */
+    --primary: 217 91% 35%; /* Deep blue - confident and trustworthy */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 172 66% 50%; /* Tropical teal - fresh and energetic */
+    --secondary: 220 13% 46%; /* Slate gray - sophisticated */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96%; /* Soft misty gray */
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 13% 95%; /* Soft mist */
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 11 80% 62%; /* Warm coral - sunset vibes */
+    --accent: 158 64% 42%; /* Emerald green - prosperity and growth */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%; /* Bold red for warnings */
+    --destructive: 0 84% 60%; /* Vibrant red for critical alerts */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%; /* Light silver border */
-    --input: 214 32% 91%;
-    --ring: 197 71% 52%;
+    --border: 220 13% 91%; /* Subtle silver border */
+    --input: 220 13% 91%;
+    --ring: 217 91% 35%;
 
     --radius: 0.75rem;
 
-    --success: 142 71% 45%; /* Fresh green for success */
-    --warning: 38 92% 50%; /* Vibrant amber for warnings */
-    --info: 197 71% 52%; /* Ocean blue for info */
-    --trust: 197 71% 52%; /* Ocean blue for trust */
-    --security: 142 71% 45%; /* Green for security */
+    /* Status Indicators - Traffic Light System */
+    --success: 142 76% 36%; /* Green - safe status */
+    --warning: 38 92% 50%; /* Amber - caution */
+    --danger: 0 84% 60%; /* Red - critical */
+    --info: 217 91% 35%; /* Deep blue for informational */
+    --trust: 217 91% 35%; /* Deep blue for trust badges */
+    --security: 142 76% 36%; /* Green for security */
 
-    /* Premium Gradients - Modern and sophisticated */
-    --gradient-primary: linear-gradient(135deg, hsl(197 71% 52%) 0%, hsl(172 66% 50%) 100%);
-    --gradient-hero: linear-gradient(120deg, hsl(197 71% 52%) 0%, hsl(172 66% 50%) 50%, hsl(11 80% 62%) 100%);
-    --gradient-trust: linear-gradient(135deg, hsl(197 71% 52%) 0%, hsl(197 71% 62%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(210 40% 100%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(11 80% 62%) 0%, hsl(28 80% 52%) 100%);
-    --gradient-mesh: radial-gradient(at 40% 20%, hsl(197 71% 52% / 0.3) 0px, transparent 50%),
-                     radial-gradient(at 80% 0%, hsl(172 66% 50% / 0.25) 0px, transparent 50%),
-                     radial-gradient(at 0% 50%, hsl(11 80% 62% / 0.2) 0px, transparent 50%);
-    --gradient-premium: linear-gradient(135deg, hsl(270 60% 65%) 0%, hsl(197 71% 52%) 100%);
+    /* Premium Gradients - Elegant and Refined */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 35%) 0%, hsl(217 91% 45%) 100%);
+    --gradient-hero: linear-gradient(120deg, hsl(217 91% 35%) 0%, hsl(158 64% 42%) 100%);
+    --gradient-trust: linear-gradient(135deg, hsl(217 91% 35%) 0%, hsl(217 91% 50%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220 13% 97%) 0%, hsl(0 0% 100%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(142 76% 46%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(45 93% 47%) 100%);
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 70%) 100%);
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(217 91% 35% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsl(158 64% 42% / 0.1) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsl(220 13% 46% / 0.08) 0px, transparent 50%);
+    --gradient-premium: linear-gradient(135deg, hsl(217 91% 35%) 0%, hsl(158 64% 42%) 100%);
 
-    /* Modern shadows with depth */
-    --shadow-soft: 0 2px 4px 0 hsl(215 25% 15% / 0.05), 0 1px 2px -1px hsl(215 25% 15% / 0.05);
-    --shadow-medium: 0 8px 16px -4px hsl(215 25% 15% / 0.08), 0 4px 8px -4px hsl(215 25% 15% / 0.05);
-    --shadow-large: 0 20px 25px -5px hsl(215 25% 15% / 0.1), 0 10px 10px -5px hsl(215 25% 15% / 0.04);
-    --shadow-glow: 0 0 40px hsl(197 71% 52% / 0.3);
+    /* Sophisticated Shadows with Depth */
+    --shadow-soft: 0 1px 3px 0 hsl(220 26% 14% / 0.08), 0 1px 2px -1px hsl(220 26% 14% / 0.06);
+    --shadow-medium: 0 4px 12px -2px hsl(220 26% 14% / 0.12), 0 2px 6px -2px hsl(220 26% 14% / 0.08);
+    --shadow-large: 0 12px 24px -4px hsl(220 26% 14% / 0.16), 0 6px 12px -4px hsl(220 26% 14% / 0.08);
+    --shadow-glow: 0 0 32px hsl(217 91% 35% / 0.24);
+    --shadow-glow-success: 0 0 32px hsl(142 76% 36% / 0.24);
+    --shadow-glow-warning: 0 0 32px hsl(38 92% 50% / 0.24);
+    --shadow-glow-danger: 0 0 32px hsl(0 84% 60% / 0.24);
 
     /* Sidebar - Clean and modern */
     --sidebar-background: 0 0% 100%;
@@ -71,39 +78,49 @@
   }
 
   .dark {
-    /* Dark Mode - Modern midnight palette */
-    --background: 215 30% 8%; /* Deep midnight blue */
-    --foreground: 210 40% 98%;
-    --card: 215 28% 12%; /* Elevated dark cards */
-    --card-foreground: 210 40% 98%;
-    --popover: 215 28% 12%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 197 71% 58%; /* Brighter ocean blue for dark mode */
-    --primary-foreground: 215 30% 8%;
-    --secondary: 172 66% 55%; /* Brighter tropical teal */
-    --secondary-foreground: 215 30% 8%;
-    --muted: 215 25% 18%; /* Subtle dark gray */
-    --muted-foreground: 215 20% 65%;
-    --accent: 11 80% 65%; /* Vibrant coral for dark */
-    --accent-foreground: 215 30% 8%;
-    --destructive: 0 72% 55%; /* Bright red for warnings */
-    --destructive-foreground: 210 40% 98%;
-    --border: 215 25% 20%; /* Subtle dark borders */
-    --input: 215 25% 20%;
-    --ring: 197 71% 58%;
+    /* Dark Mode - Sophisticated Midnight with Refined Elegance */
+    --background: 220 26% 10%; /* Deep charcoal */
+    --foreground: 220 13% 97%;
+    --card: 220 24% 14%; /* Elevated midnight cards */
+    --card-foreground: 220 13% 97%;
+    --popover: 220 24% 14%;
+    --popover-foreground: 220 13% 97%;
+    --primary: 217 91% 52%; /* Brighter confident blue */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 13% 55%; /* Brighter slate */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 22% 20%; /* Subtle dark mist */
+    --muted-foreground: 220 13% 65%;
+    --accent: 158 64% 52%; /* Brighter emerald */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 65%; /* Bright alert red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 22% 22%; /* Subtle dark borders */
+    --input: 220 22% 22%;
+    --ring: 217 91% 52%;
+
+    /* Dark mode status colors */
+    --success: 142 76% 42%;
+    --warning: 38 92% 55%;
+    --danger: 0 84% 65%;
 
     /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(197 71% 58%) 0%, hsl(172 66% 55%) 100%);
-    --gradient-hero: linear-gradient(120deg, hsl(197 71% 58%) 0%, hsl(172 66% 55%) 50%, hsl(11 80% 65%) 100%);
-    --gradient-trust: linear-gradient(135deg, hsl(197 71% 58%) 0%, hsl(197 71% 68%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(215 30% 8%) 0%, hsl(215 28% 12%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(11 80% 65%) 0%, hsl(28 80% 58%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 52%) 0%, hsl(217 91% 62%) 100%);
+    --gradient-hero: linear-gradient(120deg, hsl(217 91% 52%) 0%, hsl(158 64% 52%) 100%);
+    --gradient-trust: linear-gradient(135deg, hsl(217 91% 52%) 0%, hsl(217 91% 65%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220 26% 10%) 0%, hsl(220 24% 14%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 42%) 0%, hsl(142 76% 52%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 55%) 0%, hsl(45 93% 52%) 100%);
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 65%) 0%, hsl(0 84% 75%) 100%);
 
     /* Dark mode shadows with glow */
-    --shadow-soft: 0 2px 4px 0 hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.4);
-    --shadow-medium: 0 8px 16px -4px hsl(0 0% 0% / 0.5), 0 4px 8px -4px hsl(0 0% 0% / 0.4);
-    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.6), 0 10px 10px -5px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 40px hsl(197 71% 58% / 0.4);
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.5), 0 1px 2px -1px hsl(0 0% 0% / 0.4);
+    --shadow-medium: 0 4px 12px -2px hsl(0 0% 0% / 0.6), 0 2px 6px -2px hsl(0 0% 0% / 0.5);
+    --shadow-large: 0 12px 24px -4px hsl(0 0% 0% / 0.7), 0 6px 12px -4px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 0 32px hsl(217 91% 52% / 0.3);
+    --shadow-glow-success: 0 0 32px hsl(142 76% 42% / 0.3);
+    --shadow-glow-warning: 0 0 32px hsl(38 92% 55% / 0.3);
+    --shadow-glow-danger: 0 0 32px hsl(0 84% 65% / 0.3);
 
     /* Dark sidebar */
     --sidebar-background: 215 28% 12%;
@@ -126,7 +143,26 @@
     @apply bg-background text-foreground;
     background: var(--gradient-subtle);
     min-height: 100vh;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .font-trust {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 }
 
@@ -156,15 +192,51 @@
   }
   
   .gradient-success {
-    background: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(var(--success) / 0.8) 100%);
+    background: var(--gradient-success);
   }
   
   .gradient-warning {
-    background: linear-gradient(135deg, hsl(var(--warning)) 0%, hsl(var(--warning) / 0.8) 100%);
+    background: var(--gradient-warning);
   }
   
   .gradient-danger {
-    background: linear-gradient(135deg, hsl(var(--destructive)) 0%, hsl(var(--destructive) / 0.8) 100%);
+    background: var(--gradient-danger);
+  }
+
+  .text-success {
+    color: hsl(var(--success));
+  }
+
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+
+  .text-danger {
+    color: hsl(var(--danger));
+  }
+
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+
+  .bg-danger {
+    background-color: hsl(var(--danger));
+  }
+
+  .border-success {
+    border-color: hsl(var(--success));
+  }
+
+  .border-warning {
+    border-color: hsl(var(--warning));
+  }
+
+  .border-danger {
+    border-color: hsl(var(--danger));
   }
 
   .shadow-soft {
@@ -199,21 +271,81 @@
     border: 1px solid hsl(var(--border) / 0.2);
   }
 
+  /* Premium Micro-interactions */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .animate-slide-up {
-    animation: slideUp 0.4s ease-out;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+  }
+
+  .status-indicator {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+      opacity: 0; 
+      transform: translateY(12px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
   }
 
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+      opacity: 0; 
+      transform: translateY(24px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      opacity: 1;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+    50% {
+      opacity: 0.8;
+      filter: drop-shadow(0 0 16px currentColor);
+    }
   }
 }
