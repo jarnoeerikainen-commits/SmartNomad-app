@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
@@ -13,12 +14,22 @@ import { TranslationManager } from "./components/TranslationManager";
 import { BusinessCentersPage } from "./components/BusinessCenters/BusinessCentersPage";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-const queryClient = new QueryClient();
+const App = () => {
+  // Create QueryClient inside component to prevent subscription errors
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+      },
+    },
+  }));
 
-const App = () => (
-  <ErrorBoundary>
-    <LanguageProvider>
-      <QueryClientProvider client={queryClient}>
+  return (
+    <ErrorBoundary>
+      <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -38,6 +49,7 @@ const App = () => (
       </QueryClientProvider>
     </LanguageProvider>
   </ErrorBoundary>
-);
+  );
+};
 
 export default App;

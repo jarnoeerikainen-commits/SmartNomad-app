@@ -430,7 +430,17 @@ const PASSPORT_NOTIFICATION_OPTIONS = [
   { months: 1, label: '1 month before expiry' }
 ];
 
-const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription = { tier: 'free', startDate: new Date().toISOString(), endDate: new Date().toISOString() }, countries = [] }) => {
+const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ 
+  subscription = { 
+    tier: 'free', 
+    isActive: true, 
+    expiryDate: null,
+    features: ['✈️ Basic travel tracking', '📊 Simple day counting', '📍 Manual location entry', '⚠️ Basic alerts'],
+    aiRequestsRemaining: 0,
+    aiRequestsLimit: 0
+  }, 
+  countries = [] 
+}) => {
   const [visaTrackings, setVisaTrackings] = useState<VisaTracking[]>(() => {
     const saved = localStorage.getItem('visaTrackings');
     return saved ? JSON.parse(saved) : [];
