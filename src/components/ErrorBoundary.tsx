@@ -25,6 +25,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
+    this.setState({ errorInfo });
   }
 
   private handleReload = () => {
@@ -51,9 +52,15 @@ class ErrorBoundary extends React.Component<Props, State> {
                 We encountered an unexpected error. This might be a temporary issue.
               </p>
               {this.state.error && (
-                <details className="text-xs bg-muted p-2 rounded">
+                <details className="text-xs bg-muted p-2 rounded space-y-2">
                   <summary className="cursor-pointer font-medium">Error details</summary>
-                  <pre className="mt-2 whitespace-pre-wrap">{this.state.error.message}</pre>
+                  <pre className="mt-2 whitespace-pre-wrap break-words">{this.state.error.message}</pre>
+                  {this.state.error.stack && (
+                    <pre className="mt-2 whitespace-pre-wrap break-words opacity-80">{this.state.error.stack}</pre>
+                  )}
+                  {this.state.errorInfo?.componentStack && (
+                    <pre className="mt-2 whitespace-pre-wrap break-words text-muted-foreground">{this.state.errorInfo.componentStack}</pre>
+                  )}
                 </details>
               )}
               <div className="flex gap-2">
