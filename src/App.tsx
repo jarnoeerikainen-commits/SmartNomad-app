@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
@@ -29,9 +28,8 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <LanguageProvider>
-          <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <Toaster />
             <Sonner />
@@ -50,7 +48,6 @@ const App = () => {
           </TooltipProvider>
         </QueryClientProvider>
       </LanguageProvider>
-    </ThemeProvider>
     </ErrorBoundary>
   );
 };
