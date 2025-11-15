@@ -330,14 +330,22 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'emergency-cards':
         return <EmergencyCardNumbers />;
       
+      case 'sos-services':
+        return <SOSServices />;
+      
       case 'cyber-helpline':
         return <CyberHelplineDashboard />;
       
+      case 'vault':
+        return (
+          <div className="space-y-6">
+            <DocumentTracker />
+            <SecureDocumentVault />
+          </div>
+        );
+      
       case 'emergency':
         return <EmergencyContacts />;
-      
-      case 'sos-services':
-        return <SOSServices />;
       
       case 'digital-banks':
         return <DigitalBanks />;

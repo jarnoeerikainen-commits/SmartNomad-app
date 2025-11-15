@@ -3,7 +3,9 @@ import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/ca
 import { 
   Shield, Calculator, Plane, MapPin, 
   Globe, Wifi, Building, Crown,
-  AlertTriangle, ShieldCheck, Bug, Siren
+  AlertTriangle, ShieldCheck, Bug, Siren,
+  Bus, Car, Package, BookOpen, Users, Newspaper,
+  Stethoscope, Scale, Briefcase, Sparkles
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -32,9 +34,9 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       badgeVariant: 'destructive' as const,
       items: [
         { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle },
-        { id: 'sos', label: 'SOS Services', icon: Siren },
-        { id: 'cyber', label: 'Cyber Security', icon: ShieldCheck },
-        { id: 'threats', label: 'Threat Intelligence', icon: Bug },
+        { id: 'sos-services', label: 'SOS Services', icon: Siren },
+        { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldCheck },
+        { id: 'threats', label: 'Threat Intelligence', icon: Shield },
       ]
     },
     {
@@ -48,7 +50,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       badgeVariant: 'default' as const,
       items: [
         { id: 'tax', label: 'Tax Residency Dashboard', icon: Calculator },
-        { id: 'tracker', label: 'Country Tracker', icon: MapPin },
+        { id: 'tax-residency', label: 'Country Tracker', icon: MapPin },
         { id: 'visas', label: 'Visa Manager', icon: Plane },
         { id: 'vault', label: 'Document Vault', icon: Shield },
       ]
@@ -61,9 +63,11 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       color: 'text-accent',
       bgColor: 'bg-accent/10',
       items: [
-        { id: 'transport', label: 'Transportation', icon: Plane },
+        { id: 'public-transport', label: 'Public Transport', icon: Bus },
+        { id: 'taxis', label: 'Taxi Services', icon: Car },
+        { id: 'delivery-services', label: 'Delivery Services', icon: Package },
         { id: 'esim', label: 'eSIM & VPN', icon: Wifi },
-        { id: 'insurance', label: 'Travel Insurance', icon: Shield },
+        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
       ]
     },
     {
@@ -74,10 +78,10 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       color: 'text-secondary',
       bgColor: 'bg-secondary/10',
       items: [
-        { id: 'city-services', label: 'City Services', icon: Building },
-        { id: 'language', label: 'Language Learning', icon: Globe },
-        { id: 'nomads', label: 'Local Nomads', icon: Globe },
-        { id: 'news', label: 'News & Updates', icon: Globe },
+        { id: 'global-city-services', label: 'City Services', icon: Building },
+        { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
+        { id: 'local-nomads', label: 'Local Nomads', icon: Users },
+        { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
     },
     {
@@ -90,12 +94,12 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       badge: 'Premium',
       badgeVariant: 'secondary' as const,
       items: [
-        { id: 'ai-doctor', label: 'AI Health Advisor', icon: Crown },
-        { id: 'ai-lawyer', label: 'AI Legal Advisor', icon: Crown },
-        { id: 'ai-planner', label: 'AI Travel Planner', icon: Crown },
-        { id: 'tax-advisors', label: 'Tax Advisors', icon: Crown },
+        { id: 'ai-doctor', label: 'AI Health Advisor', icon: Stethoscope },
+        { id: 'ai-lawyer', label: 'AI Legal Advisor', icon: Scale },
+        { id: 'ai-planner', label: 'AI Travel Planner', icon: Sparkles },
+        { id: 'tax-advisors', label: 'Tax Advisors', icon: Briefcase },
         { id: 'business-centers', label: 'Business Centers', icon: Building },
-        { id: 'lounges', label: 'VIP Lounges', icon: Crown },
+        { id: 'airport-lounges', label: 'VIP Lounges', icon: Crown },
       ]
     },
   ];
