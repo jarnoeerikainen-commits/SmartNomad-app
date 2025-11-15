@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -509,7 +509,7 @@ const [selectedTaxCountryFlag, setSelectedTaxCountryFlag] = useState('');
     setCurrentSubscription(subscription);
   }, [subscription]);
 
-  const updateLocationEntry = (countryCode: string, countryName: string) => {
+  const updateLocationEntry = useCallback((countryCode: string, countryName: string) => {
     const today = new Date().toISOString().split('T')[0];
     
     setTaxTrackings(prev => prev.map(tracking => {
@@ -532,7 +532,7 @@ const [selectedTaxCountryFlag, setSelectedTaxCountryFlag] = useState('');
       }
       return tracking;
     }));
-  };
+  }, []);
 
   // Location tracking effect
   useEffect(() => {
