@@ -57,8 +57,8 @@ interface VisaTracking {
 }
 
 interface VisaTrackingManagerProps {
-  subscription: Subscription;
-  countries: Country[];
+  subscription?: Subscription;
+  countries?: Country[];
 }
 
 interface TaxTrackingManagerProps {
@@ -430,7 +430,7 @@ const PASSPORT_NOTIFICATION_OPTIONS = [
   { months: 1, label: '1 month before expiry' }
 ];
 
-const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription, countries }) => {
+const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({ subscription = { tier: 'free', startDate: new Date().toISOString(), endDate: new Date().toISOString() }, countries = [] }) => {
   const [visaTrackings, setVisaTrackings] = useState<VisaTracking[]>(() => {
     const saved = localStorage.getItem('visaTrackings');
     return saved ? JSON.parse(saved) : [];
