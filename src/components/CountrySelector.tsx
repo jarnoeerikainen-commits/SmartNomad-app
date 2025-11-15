@@ -145,20 +145,19 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
           </div>
         </div>
 
-        {/* Search Command */}
-        <div className="border-b bg-background">
-          <div className="relative px-6 py-4">
-            <Search className="absolute left-10 top-7 h-5 w-5 text-muted-foreground" />
-            <CommandInput
-              placeholder="Type to search: country name, code (e.g., 'Portugal', 'PT', 'France', 'FR')..."
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-              className="pl-12 h-12 text-base"
-            />
-          </div>
-        </div>
-        
+        {/* Search + Results Command (wrapped correctly) */}
         <Command className="border-none">
+          <div className="border-b bg-background">
+            <div className="relative px-6 py-4">
+              <Search className="absolute left-10 top-7 h-5 w-5 text-muted-foreground" />
+              <CommandInput
+                placeholder="Type to search: country name, code (e.g., 'Portugal', 'PT', 'France', 'FR')..."
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                className="pl-12 h-12 text-base"
+              />
+            </div>
+          </div>
           <CommandList>
             <ScrollArea className="h-[450px]">
               <CommandEmpty className="py-12 text-center">
@@ -178,12 +177,10 @@ export const CountrySelector: React.FC<CountrySelectorProps> = ({
                   )}
                 </div>
               </CommandEmpty>
-              
               <CommandGroup className="p-2">
                 {filteredCountries.map((country) => {
                   const region = COUNTRY_REGIONS[country.code];
                   const regionName = REGIONS.find(r => r.value === region)?.name || 'Other';
-                  
                   return (
                     <CommandItem
                       key={country.code}
