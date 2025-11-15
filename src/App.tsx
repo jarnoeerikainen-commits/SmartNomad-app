@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
@@ -28,27 +29,29 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <LanguageProvider>
-        <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/wifi-finder" element={<WiFiFinder />} />
-              <Route path="/business-centers" element={<BusinessCentersPage />} />
-              <Route path="/investor-document" element={<InvestorDocument />} />
-              <Route path="/investor-pitch" element={<InvestorOnePager />} />
-              <Route path="/translation-manager" element={<TranslationManager />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </LanguageProvider>
-  </ErrorBoundary>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <LanguageProvider>
+          <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/wifi-finder" element={<WiFiFinder />} />
+                <Route path="/business-centers" element={<BusinessCentersPage />} />
+                <Route path="/investor-document" element={<InvestorDocument />} />
+                <Route path="/investor-pitch" element={<InvestorOnePager />} />
+                <Route path="/translation-manager" element={<TranslationManager />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 
