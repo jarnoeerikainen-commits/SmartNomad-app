@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
+import BottomNavigation from './BottomNavigation';
+import HomeSection from './sections/HomeSection';
+import TrackingSection from './sections/TrackingSection';
+import EmergencySection from './sections/EmergencySection';
+import AISection from './sections/AISection';
+import ProfileSection from './sections/ProfileSection';
 import QuickActions from './QuickActions';
 import UpgradeBanner from './UpgradeBanner';
 import UpgradeModal from './UpgradeModal';
@@ -104,6 +110,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onProfileComplete
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [bottomNavTab, setBottomNavTab] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showProfileForm, setShowProfileForm] = useState(false);
@@ -114,6 +121,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   // Return to dashboard when home event is triggered (e.g., clicking logo)
   useEffect(() => {
     const goHome = () => {
+      setBottomNavTab('home');
       setActiveSection('dashboard');
       setSidebarOpen(false);
     };
@@ -126,14 +134,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     localStorage.setItem('upgradeBannerDismissed', 'true');
   };
 
-  const renderActiveSection = () => {
-    switch (activeSection) {
-      case 'threats':
-        return <ThreatDashboard />;
-      case 'dashboard':
+  const renderBottomNavContent = () => {
+    switch (bottomNavTab) {
+      case 'home':
         return (
           <div className="space-y-6">
-            {/* Upgrade Banner for Free Users */}
             {!upgradeBannerDismissed && (
               <UpgradeBanner 
                 subscription={subscription}
@@ -142,15 +147,65 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 onDismiss={handleDismissBanner}
               />
             )}
-            
-            {/* Enhanced Dashboard with all features */}
-            <EnhancedDashboard 
+            <HomeSection 
               countries={countries}
-              userProfile={userProfile}
-              onSectionChange={(section) => setActiveSection(section)}
+              subscription={subscription}
+              onNavigate={(section) => setActiveSection(section)}
             />
           </div>
         );
+      
+      case 'tracking':
+        return (
+          <TrackingSection
+            countries={countries}
+            onAddCountry={onAddCountry}
+            onRemoveCountry={onRemoveCountry}
+            onUpdateCountrySettings={onUpdateCountrySettings}
+            onUpdateCountryLimit={onUpdateCountryLimit}
+            onResetCountry={onResetCountry}
+            onToggleCountDays={onToggleCountDays}
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
+      
+      case 'emergency':
+        return <EmergencySection />;
+      
+      case 'ai':
+        return (
+          <AISection 
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
+      
+      case 'profile':
+        return (
+          <ProfileSection
+            subscription={subscription}
+            onUpgradeClick={() => setShowUpgradeModal(true)}
+          />
+        );
+      
+      default:
+        return null;
+    }
+  };
+
+  const renderActiveSection = () => {
+    // For mobile, always show bottom nav content
+    if (bottomNavTab !== 'home' || activeSection === 'dashboard') {
+      return renderBottomNavContent();
+    }
+
+    // For desktop sidebar navigation
+    switch (activeSection) {
+      case 'threats':
+        return <ThreatDashboard />;
+      case 'dashboard':
+        return renderBottomNavContent();
       
       case 'tax':
         return (
@@ -437,11 +492,26 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       {/* GDPR Cookie Consent */}
       <CookieConsent />
       
+      {/* Bottom Navigation - Mobile Only */}
+      <BottomNavigation 
+        activeTab={bottomNavTab}
+        onTabChange={(tab) => {
+          setBottomNavTab(tab);
+          setSidebarOpen(false);
+        }}
+      />
+      
       {/* Floating Action Button */}
       <FloatingActionButton 
         onAction={(action) => {
-          if (action === 'add-country') setActiveSection('tax');
-          if (action === 'add-visa') setActiveSection('visas');
+          if (action === 'add-country') {
+            setBottomNavTab('tracking');
+            setActiveSection('tax');
+          }
+          if (action === 'add-visa') {
+            setBottomNavTab('tracking');
+            setActiveSection('visas');
+          }
           if (action === 'add-document') setActiveSection('documents');
         }}
       />
