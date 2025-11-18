@@ -1,10 +1,19 @@
 import { InvestorsPitchDeck } from '@/components/investors/InvestorsPitchDeck';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Home } from 'lucide-react';
+import { Home, FileDown } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Investors = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleExportPDF = () => {
+    toast({
+      title: "PDF Export",
+      description: "PDF export feature coming soon. Use browser Print to PDF for now (Ctrl+P or Cmd+P).",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,8 +34,19 @@ const Investors = () => {
               <span className="text-foreground font-medium">SuperNomad</span> · Investor Pitch Deck
             </div>
           </div>
-          <div className="text-xs text-muted-foreground">
-            $500K Raise @ $1.5M Valuation
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleExportPDF}
+              variant="outline"
+              size="sm"
+              className="gap-2"
+            >
+              <FileDown className="h-4 w-4" />
+              Export PDF
+            </Button>
+            <div className="text-xs text-muted-foreground">
+              $650K Raise @ $1.1M Pre-Money · 37% Equity
+            </div>
           </div>
         </div>
       </div>
