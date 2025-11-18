@@ -1,6 +1,6 @@
 import { PitchDeckSlide } from '../PitchDeckSlide';
 import { TractionData } from '@/types/pitchDeck';
-import { Rocket, Users, TrendingUp, DollarSign, Zap, Target } from 'lucide-react';
+import { Rocket, Users, TrendingUp, Activity, Target } from 'lucide-react';
 
 interface TractionSlideProps {
   data: TractionData;
@@ -8,74 +8,90 @@ interface TractionSlideProps {
 }
 
 export const TractionSlide = ({ data, onUpdate }: TractionSlideProps) => {
-  const metrics = [
-    {
-      icon: Users,
-      label: 'Total Users',
-      value: data.users.toLocaleString(),
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-    },
-    {
-      icon: TrendingUp,
-      label: 'Monthly Growth',
-      value: `${data.growth}%`,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-    },
-    {
-      icon: DollarSign,
-      label: 'Monthly Revenue',
-      value: `$${(data.mrr / 1000).toFixed(1)}K`,
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-    },
-    {
-      icon: Zap,
-      label: 'User Engagement',
-      value: data.engagement,
-      color: 'text-orange-500',
-      bgColor: 'bg-orange-500/10',
-    },
-    {
-      icon: Target,
-      label: 'Retention Rate',
-      value: `${data.retention}%`,
-      color: 'text-pink-500',
-      bgColor: 'bg-pink-500/10',
-    },
-  ];
-
   return (
     <PitchDeckSlide background="bg-gradient-to-br from-green-500/10 via-background to-blue-500/10">
       <div className="space-y-8">
         <div className="flex items-center gap-3">
           <Rocket className="h-12 w-12 text-primary" />
-          <h2 className="text-5xl font-bold">Traction & Metrics</h2>
+          <h2 className="text-5xl font-bold">Explosive Pre-Launch Momentum</h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-8">
-          {metrics.map((metric, i) => {
-            const Icon = metric.icon;
-            return (
-              <div
-                key={i}
-                className={`${metric.bgColor} rounded-xl p-8 space-y-4 hover:scale-105 transition-transform`}
-              >
-                <div className={`h-16 w-16 rounded-lg ${metric.bgColor} flex items-center justify-center`}>
-                  <Icon className={`h-8 w-8 ${metric.color}`} />
+        <div className="space-y-4">
+          <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border/50">
+            <div className="flex items-center gap-3 mb-4">
+              <Users className="h-10 w-10 text-primary" />
+              <div>
+                <div className="text-sm text-muted-foreground">Waitlist Growth</div>
+                <div className="text-5xl font-bold text-foreground">
+                  {data.users.toLocaleString()}+
                 </div>
-                <div className="text-sm text-muted-foreground">{metric.label}</div>
-                <div className={`text-5xl font-bold ${metric.color}`}>{metric.value}</div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  12,000 → 150,000 in 90 days
+                </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
 
-          <div className="col-span-2 bg-accent/10 rounded-xl p-8 text-center">
-            <div className="text-xl text-muted-foreground mb-2">Path to Profitability</div>
-            <div className="text-4xl font-bold text-primary">Q4 2024</div>
-            <div className="text-sm text-muted-foreground mt-2">
-              At current growth rate, with $50K MRR target
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-card/50 backdrop-blur-sm rounded-xl p-5 border border-border/50 text-center">
+              <TrendingUp className="h-6 w-6 text-green-500 mx-auto mb-2" />
+              <div className="text-sm text-muted-foreground">MoM Growth</div>
+              <div className="text-3xl font-bold text-green-500">{data.growth}%</div>
+              <div className="text-xs text-muted-foreground mt-1">Organic</div>
+            </div>
+
+            <div className="bg-card/50 backdrop-blur-sm rounded-xl p-5 border border-border/50 text-center">
+              <Activity className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+              <div className="text-sm text-muted-foreground">Beta Satisfaction</div>
+              <div className="text-3xl font-bold text-foreground">{data.retention}%</div>
+              <div className="text-xs text-muted-foreground mt-1">High engagement</div>
+            </div>
+
+            <div className="bg-card/50 backdrop-blur-sm rounded-xl p-5 border border-border/50 text-center">
+              <Target className="h-6 w-6 text-purple-500 mx-auto mb-2" />
+              <div className="text-sm text-muted-foreground">NPS Score</div>
+              <div className="text-3xl font-bold text-foreground">7.2/10</div>
+              <div className="text-xs text-muted-foreground mt-1">Strong product-market fit</div>
+            </div>
+          </div>
+
+          <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border/50">
+            <h3 className="text-xl font-bold mb-4">Partnership Pipeline</h3>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">50+</div>
+                <div className="text-sm text-muted-foreground">LOIs from Co-working</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">100+</div>
+                <div className="text-sm text-muted-foreground">Service Providers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">Gov't</div>
+                <div className="text-sm text-muted-foreground">Partnerships in Progress</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border/50">
+            <h3 className="text-xl font-bold mb-4">Technical Milestones</h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 bg-green-500 rounded-full" />
+                <span className="text-muted-foreground">150+ production-ready components</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 bg-green-500 rounded-full" />
+                <span className="text-muted-foreground">13 language internationalization</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 bg-green-500 rounded-full" />
+                <span className="text-muted-foreground">195+ country compliance database</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 bg-green-500 rounded-full" />
+                <span className="text-muted-foreground">4 AI assistants trained & integrated</span>
+              </div>
             </div>
           </div>
         </div>
