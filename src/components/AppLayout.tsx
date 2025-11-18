@@ -455,6 +455,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           />
         );
       
+      case 'investors':
+        // Navigate to the dedicated investors page
+        window.location.href = '/investors';
+        return (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-muted-foreground">Redirecting to Investors page...</p>
+          </div>
+        );
+      
       default:
         return (
           <div className="flex items-center justify-center h-64">
