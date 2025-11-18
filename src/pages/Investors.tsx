@@ -45,7 +45,7 @@ const Investors = () => {
               Export PDF
             </Button>
             <div className="text-xs text-muted-foreground">
-              $650K Raise @ $1.1M Pre-Money · 37% Equity
+              Series A | $15M Raise @ $75M Pre-Money | 20% Equity
             </div>
           </div>
         </div>

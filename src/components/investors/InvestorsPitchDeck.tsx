@@ -9,6 +9,7 @@ import { MarketSlide } from './slides/MarketSlide';
 import { ProductSlide } from './slides/ProductSlide';
 import { BusinessModelSlide } from './slides/BusinessModelSlide';
 import { TractionSlide } from './slides/TractionSlide';
+import { TechnologySlide } from './slides/TechnologySlide';
 import { CompetitionSlide } from './slides/CompetitionSlide';
 import { GoToMarketSlide } from './slides/GoToMarketSlide';
 import { FinancialsSlide } from './slides/FinancialsSlide';
@@ -58,18 +59,18 @@ export const InvestorsPitchDeck = () => {
     <ProblemSlide key={1} data={data.problem} onUpdate={(u) => updateData('problem', u)} />,
     <SolutionSlide key={2} data={data.solution} onUpdate={(u) => updateData('solution', u)} />,
     <MarketSlide key={3} data={data.market} onUpdate={(u) => updateData('market', u)} />,
-    <ProductSlide key={4} data={data.product} onUpdate={(u) => updateData('product', u)} />,
+    <TractionSlide key={4} data={data.traction} onUpdate={(u) => updateData('traction', u)} />,
     <BusinessModelSlide key={5} data={data.businessModel} onUpdate={(u) => updateData('businessModel', u)} />,
-    <TractionSlide key={6} data={data.traction} onUpdate={(u) => updateData('traction', u)} />,
-    <CompetitionSlide key={7} data={data.competition} onUpdate={(u) => updateData('competition', u)} />,
-    <GoToMarketSlide key={8} data={data.goToMarket} onUpdate={(u) => updateData('goToMarket', u)} />,
+    <TechnologySlide key={6} />,
+    <GoToMarketSlide key={7} data={data.goToMarket} onUpdate={(u) => updateData('goToMarket', u)} />,
+    <TeamSlide key={8} data={data.team} onUpdate={(u) => updateData('team', u)} />,
+    <CompetitionSlide key={9} data={data.competition} onUpdate={(u) => updateData('competition', u)} />,
     <FinancialsSlide
-      key={9}
+      key={10}
       data={data.financials}
       onUpdate={(u) => updateData('financials', u)}
       onOpenModeling={() => setShowFinancialPanel(true)}
     />,
-    <TeamSlide key={10} data={data.team} onUpdate={(u) => updateData('team', u)} />,
     <AskSlide key={11} data={data.ask} onUpdate={(u) => updateData('ask', u)} />,
   ];
 
