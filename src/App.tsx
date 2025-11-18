@@ -7,6 +7,7 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
+import Investors from "./pages/Investors";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { InvestorDocument } from "./components/InvestorDocument";
 import { InvestorOnePager } from "./components/InvestorOnePager";
@@ -37,6 +38,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/wifi-finder" element={<WiFiFinder />} />
+                <Route path="/investors" element={<Investors />} />
                 <Route path="/business-centers" element={<BusinessCentersPage />} />
                 <Route path="/investor-document" element={<InvestorDocument />} />
                 <Route path="/investor-pitch" element={<InvestorOnePager />} />
