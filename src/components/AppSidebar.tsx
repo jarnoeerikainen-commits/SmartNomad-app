@@ -119,8 +119,9 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Quick Actions',
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
+        { id: 'investors', label: 'Investors', icon: TrendingUp, badge: 'NEW', variant: 'secondary' as const },
         { id: 'threats', label: 'Threats', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
-        { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
       ]
     },
     {
