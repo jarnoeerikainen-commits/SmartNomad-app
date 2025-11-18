@@ -58,30 +58,69 @@ export const FinancialsSlide = ({ data, onUpdate, onOpenModeling }: FinancialsSl
 
         <div className="grid grid-cols-3 gap-4">
           {data.projections.map((p) => (
-            <div key={p.year} className="bg-accent/10 rounded-lg p-4 space-y-2">
-              <div className="text-2xl font-bold text-primary">{p.year}</div>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between">
+            <div key={p.year} className="bg-gradient-to-br from-accent/20 to-accent/5 rounded-lg p-4 space-y-2 border border-border/50">
+              <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">{p.year}</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Users</span>
-                  <span className="font-medium">{p.users.toLocaleString()}</span>
+                  <span className="font-bold text-foreground">{(p.users / 1000000).toFixed(1)}M</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Revenue</span>
-                  <span className="font-medium text-green-600">${(p.revenue / 1000).toFixed(0)}K</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">${(p.revenue / 1000000).toFixed(0)}M</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Costs</span>
-                  <span className="font-medium text-orange-600">${(p.costs / 1000).toFixed(0)}K</span>
+                  <span className="font-medium text-orange-600 dark:text-orange-400">${(p.costs / 1000000).toFixed(0)}M</span>
                 </div>
-                <div className="flex justify-between border-t pt-1">
-                  <span className="text-muted-foreground">Profit</span>
-                  <span className={`font-bold ${p.profit > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    ${(p.profit / 1000).toFixed(0)}K
+                <div className="flex justify-between items-center border-t border-border/50 pt-2 mt-2">
+                  <span className="text-muted-foreground font-medium">Net Profit</span>
+                  <span className={`font-bold text-lg ${p.profit > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {p.profit > 0 ? '+' : ''}${(p.profit / 1000000).toFixed(0)}M
                   </span>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-4 bg-primary/10 border border-primary/20 rounded-lg p-4">
+          <div className="grid grid-cols-2 gap-6 text-sm">
+            <div>
+              <div className="text-muted-foreground mb-2">Key Assumptions</div>
+              <div className="space-y-1">
+                <div className="flex justify-between">
+                  <span>User Growth Rate</span>
+                  <span className="font-medium">{data.assumptions.userGrowthRate}%/year</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Premium Conversion</span>
+                  <span className="font-medium">{data.assumptions.conversionRate}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>ARPU (Annual)</span>
+                  <span className="font-medium">${data.assumptions.arpu}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div className="text-muted-foreground mb-2">Revenue Streams</div>
+              <div className="space-y-1">
+                <div className="flex justify-between">
+                  <span>Premium Subscriptions</span>
+                  <span className="font-medium">~5%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Affiliate Income</span>
+                  <span className="font-medium">~57%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Advertising</span>
+                  <span className="font-medium">~38%</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </PitchDeckSlide>
