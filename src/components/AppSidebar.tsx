@@ -157,8 +157,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Local Living',
       items: [
         { id: 'global-city-services', label: 'City Services', icon: Building2 },
-        { id: 'language', label: 'Language Learning', icon: BookOpen },
-        { id: 'nomads', label: 'Local Nomads', icon: Users },
+        { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
+        { id: 'local-nomads', label: 'Local Nomads', icon: Users },
         { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
     },
