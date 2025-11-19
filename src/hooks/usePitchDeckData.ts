@@ -120,10 +120,10 @@ const defaultData: PitchDeckData = {
       { name: 'Enterprise Sales Motion', description: 'Land-and-expand with remote-first companies, government contracts, white-label solutions', cost: '$2M/year' },
     ],
     timeline: [
-      { quarter: 'Month 6', milestone: 'Launch, 500K users, $5M ARR run rate' },
-      { quarter: 'Month 12', milestone: '2M users, $30M ARR, 50 enterprise customers' },
-      { quarter: 'Month 18', milestone: '5M users, $75M ARR, profitability' },
-      { quarter: 'Month 24', milestone: '10M users, $150M ARR, Series B preparation' },
+      { quarter: 'Q2 2025', milestone: 'Launch, 500K users, $5M ARR run rate' },
+      { quarter: 'Q3 2025', milestone: '2M users, $30M ARR, 50 enterprise customers' },
+      { quarter: 'Q1 2026', milestone: '5M users, $75M ARR, profitability' },
+      { quarter: 'Q3 2026', milestone: '10M users, $150M ARR, Series B preparation' },
     ],
   },
   financials: {
