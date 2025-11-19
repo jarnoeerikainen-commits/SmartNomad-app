@@ -64,7 +64,7 @@ const defaultData: PitchDeckData = {
     pricing: {
       free: ['Basic visa tracking', '3 countries max', 'Community access'],
       pro: {
-        price: 29.99,
+        price: 9.90,
         features: ['Unlimited countries', 'AI assistants', 'Tax compliance', 'Threat intelligence', 'Priority support'],
       },
       business: {
