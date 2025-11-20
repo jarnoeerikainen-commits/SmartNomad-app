@@ -81,6 +81,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
         { id: 'global-city-services', label: 'City Services', icon: Building },
         { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
+        { id: 'explore-local', label: 'Local Events & Markets', icon: MapPin },
         { id: 'family-services', label: 'Nanny & Family Services', icon: Baby },
         { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
