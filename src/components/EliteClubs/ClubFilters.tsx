@@ -72,98 +72,99 @@ export const ClubFilters: React.FC<ClubFiltersProps> = ({
 
       {/* Quick Filters */}
       <div className="grid gap-3">
-        <div>
-          <Label className="text-sm mb-2 block">City</Label>
-          <Select
-            value={filters.city || ''}
-            onValueChange={(value) => onFilterChange('city', value || undefined)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Cities" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Cities</SelectItem>
-              {CITIES.map((city) => (
-                <SelectItem key={city} value={city}>
-                  {city}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <Label className="text-sm mb-2 block">City</Label>
+        <Select
+          value={filters.city || 'all'}
+          onValueChange={(value) => onFilterChange('city', value === 'all' ? undefined : value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="All Cities" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Cities</SelectItem>
+            {CITIES.map((city) => (
+              <SelectItem key={city} value={city}>
+                {city}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div>
-          <Label className="text-sm mb-2 block">Country</Label>
-          <Select
-            value={filters.country || ''}
-            onValueChange={(value) => onFilterChange('country', value || undefined)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Countries" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Countries</SelectItem>
-              {COUNTRIES.map((country) => (
-                <SelectItem key={country} value={country}>
-                  {country}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <Label className="text-sm mb-2 block">Country</Label>
+        <Select
+          value={filters.country || 'all'}
+          onValueChange={(value) => onFilterChange('country', value === 'all' ? undefined : value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="All Countries" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Countries</SelectItem>
+            {COUNTRIES.map((country) => (
+              <SelectItem key={country} value={country}>
+                {country}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div>
-          <Label className="text-sm mb-2 block">Region</Label>
-          <Select
-            value={filters.region || ''}
-            onValueChange={(value) => onFilterChange('region', value || undefined)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="All Regions" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All Regions</SelectItem>
-              {REGIONS.map((region) => (
-                <SelectItem key={region} value={region}>
-                  {region}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <Label className="text-sm mb-2 block">Region</Label>
+        <Select
+          value={filters.region || 'all'}
+          onValueChange={(value) => onFilterChange('region', value === 'all' ? undefined : value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="All Regions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Regions</SelectItem>
+            {REGIONS.map((region) => (
+              <SelectItem key={region} value={region}>
+                {region}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <div>
-          <Label className="text-sm mb-2 block">Annual Dues Range</Label>
-          <Select
-            value={
-              filters.priceRange
-                ? `${filters.priceRange.min}-${filters.priceRange.max}`
-                : ''
+      <div>
+        <Label className="text-sm mb-2 block">Annual Dues Range</Label>
+        <Select
+          value={
+            filters.priceRange
+              ? `${filters.priceRange.min}-${filters.priceRange.max}`
+              : 'all'
+          }
+          onValueChange={(value) => {
+            if (value === 'all') {
+              onFilterChange('priceRange', undefined);
+              return;
             }
-            onValueChange={(value) => {
-              if (!value) {
-                onFilterChange('priceRange', undefined);
-                return;
-              }
-              const [min, max] = value.split('-').map(Number);
-              onFilterChange('priceRange', { min, max });
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Any Price" />
-            </SelectTrigger>
-            <SelectContent>
-              {PRICE_RANGES.map((range) => (
-                <SelectItem
-                  key={range.label}
-                  value={`${range.min}-${range.max}`}
-                >
-                  {range.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            const [min, max] = value.split('-').map(Number);
+            onFilterChange('priceRange', { min, max });
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Any Price" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Any Price</SelectItem>
+            {PRICE_RANGES.slice(1).map((range) => (
+              <SelectItem
+                key={range.label}
+                value={`${range.min}-${range.max}`}
+              >
+                {range.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       </div>
 
       {/* Advanced Filters */}
