@@ -42,7 +42,8 @@ import {
   Siren,
   ShieldAlert,
   Baby,
-  Calendar
+  Calendar,
+  Cat
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -163,6 +164,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
         { id: 'explore-local', label: 'Local Events & Markets', icon: Calendar, badge: 'LIVE', variant: 'secondary' as const },
         { id: 'family-services', label: 'Nanny & Family Services', icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
+        { id: 'pet-services', label: 'Pet Services', icon: Cat },
         { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
     },
