@@ -5,7 +5,7 @@ import {
   Globe, Wifi, Building, Crown,
   AlertTriangle, ShieldCheck, Bug, Siren,
   Bus, Car, Package, BookOpen, Users, Newspaper,
-  Stethoscope, Scale, Briefcase, Sparkles
+  Stethoscope, Scale, Briefcase, Sparkles, Baby
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -81,6 +81,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
         { id: 'global-city-services', label: 'City Services', icon: Building },
         { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
+        { id: 'family-services', label: 'Nanny & Family Services', icon: Baby },
         { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
     },
