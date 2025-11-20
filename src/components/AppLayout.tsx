@@ -73,6 +73,7 @@ import { GovernmentApps } from './GovernmentApps';
 import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
+import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -315,6 +316,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'private-clubs':
         return <ClubsDirectory />;
+      
+      case 'family-services':
+        return <NannyDirectory />;
       
       case 'global-city-services':
         return <GlobalCityServices />;

@@ -40,7 +40,8 @@ import {
   Globe2,
   Building,
   Siren,
-  ShieldAlert
+  ShieldAlert,
+  Baby
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -159,6 +160,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'global-city-services', label: 'City Services', icon: Building2 },
         { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
         { id: 'local-nomads', label: 'Local Nomads', icon: Users },
+        { id: 'family-services', label: 'Nanny & Family Services', icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
         { id: 'news', label: 'News & Updates', icon: Newspaper },
       ]
     },
