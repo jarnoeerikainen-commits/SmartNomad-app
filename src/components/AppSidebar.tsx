@@ -172,6 +172,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'tax-advisors', label: 'Tax Advisors', icon: Calculator, badge: 'VIP', variant: 'secondary' as const },
         { id: 'business-centers', label: 'Business Centers', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
         { id: 'airport-lounges', label: 'VIP Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
+        { id: 'private-clubs', label: 'Private Clubs', icon: Crown, badge: 'ELITE', variant: 'secondary' as const },
       ]
     },
   ];

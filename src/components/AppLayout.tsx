@@ -72,6 +72,7 @@ import LocalNews from './LocalNews';
 import { GovernmentApps } from './GovernmentApps';
 import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
+import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -311,6 +312,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'airport-lounges':
         return <AirportLoungeAccess currentLocation={detectedLocation} />;
+      
+      case 'private-clubs':
+        return <ClubsDirectory />;
       
       case 'global-city-services':
         return <GlobalCityServices />;

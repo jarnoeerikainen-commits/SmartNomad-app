@@ -100,6 +100,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
         { id: 'tax-advisors', label: 'Tax Advisors', icon: Briefcase },
         { id: 'business-centers', label: 'Business Centers', icon: Building },
         { id: 'airport-lounges', label: 'VIP Lounges', icon: Crown },
+        { id: 'private-clubs', label: 'Private Clubs', icon: Crown },
       ]
     },
   ];
