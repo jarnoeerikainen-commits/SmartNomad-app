@@ -346,21 +346,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <HelpCircle className="h-5 w-5" />
               <span>{t('nav.help')}</span>
             </Button>
-
-            <Button
-              variant={activeSection === 'investors' ? 'secondary' : 'ghost'}
-              className="w-full justify-start gap-3 hover:bg-accent/50"
-              onClick={() => {
-                onSectionChange('investors');
-                onClose?.();
-              }}
-            >
-              <TrendingUp className="h-5 w-5" />
-              <span>Investors</span>
-              <Badge variant="secondary" className="ml-auto text-xs">
-                NEW
-              </Badge>
-            </Button>
           </div>
           </nav>
 
