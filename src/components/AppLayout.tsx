@@ -41,6 +41,7 @@ import EmbassyDirectory from './EmbassyDirectory';
 import EmergencyCardNumbers from './EmergencyCardNumbers';
 import EmergencyContacts from './EmergencyContacts';
 import SOSServices from './SOSServices';
+import SecurityDirectory from './SecurityServices/SecurityDirectory';
 import DigitalBanks from './DigitalBanks';
 import MoneyTransfers from './MoneyTransfers';
 import DigitalMoney from './DigitalMoney';
@@ -340,6 +341,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'sos-services':
         return <SOSServices />;
+      
+      case 'private-protection':
+        return <SecurityDirectory />;
       
       case 'cyber-helpline':
         return <CyberHelplineDashboard />;
