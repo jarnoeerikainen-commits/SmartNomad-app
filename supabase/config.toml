@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.travel-planner]
 verify_jwt = false
+
+[functions.community-chat]
+verify_jwt = false

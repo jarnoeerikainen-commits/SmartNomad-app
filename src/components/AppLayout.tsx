@@ -75,6 +75,7 @@ import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { NannyDirectory } from './FamilyServices/NannyDirectory';
+import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -283,6 +284,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'pet-services':
         return <PetServices currentLocation={detectedLocation} />;
+      
+      case 'nomad-chat':
+        return <NomadChatDashboard />;
       
       case 'news':
         return <EnhancedNewsSection />;
