@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCommunityChat } from '@/hooks/useCommunityChat';
 import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS } from '@/data/communityChatData';
 import { Send, Users, Sparkles, MapPin, TrendingUp } from 'lucide-react';
+import { SubjectChatView } from './SubjectChatView';
 
 export const NomadChatDashboard = () => {
   const { messages, sendMessage, isLoading } = useCommunityChat();
@@ -37,9 +38,10 @@ export const NomadChatDashboard = () => {
       </div>
 
       <Tabs defaultValue="chat" className="space-y-6">
-        <TabsList className="grid grid-cols-3 w-full max-w-md">
+        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
           <TabsTrigger value="chat">💬 Chat</TabsTrigger>
-          <TabsTrigger value="matches">🎯 Matches</TabsTrigger>
+          <TabsTrigger value="subjects">🎯 Subject Chats</TabsTrigger>
+          <TabsTrigger value="matches">👥 Matches</TabsTrigger>
           <TabsTrigger value="nearby">📍 Nearby</TabsTrigger>
         </TabsList>
 
@@ -185,6 +187,10 @@ export const NomadChatDashboard = () => {
               </Button>
             </div>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="subjects" className="space-y-6">
+          <SubjectChatView />
         </TabsContent>
 
         <TabsContent value="matches" className="space-y-6">
