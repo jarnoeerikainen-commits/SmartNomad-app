@@ -44,7 +44,8 @@ import {
   Baby,
   Calendar,
   Cat,
-  MessageSquare
+  MessageSquare,
+  Flag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -132,6 +133,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Safety First',
       items: [
         { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
         { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
         { id: 'private-protection', label: 'Private Protection', icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
         { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
