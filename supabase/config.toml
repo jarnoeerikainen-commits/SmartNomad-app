@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.subject-chat-moderator]
 verify_jwt = false
+
+[functions.cyber-assistant]
+verify_jwt = false

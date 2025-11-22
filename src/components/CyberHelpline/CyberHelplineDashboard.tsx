@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { CyberGuardianChat } from './CyberGuardianChat';
 
 interface ScenarioCard {
   id: string;
@@ -199,6 +200,9 @@ const CyberHelplineDashboard: React.FC = () => {
           </AlertDescription>
         </Alert>
       </div>
+
+      {/* AI Cyber Guardian Chat */}
+      <CyberGuardianChat />
 
       {/* Get Help Now Section */}
       <Card className="border-2 border-destructive/20 shadow-lg">
