@@ -110,7 +110,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
             <Heart className="h-3 w-3" />
             {item.favorites}
           </div>
-          {item.offers.length > 0 && (
+          {item.offers && item.offers.length > 0 && (
             <div className="flex items-center gap-1 text-primary font-medium">
               <Tag className="h-3 w-3" />
               {item.offers.length}

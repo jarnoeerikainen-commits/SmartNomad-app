@@ -216,7 +216,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }
                     <Tag className="h-5 w-5 text-primary" />
                     Make an Offer
                   </h3>
-                  {item.offers.length > 0 && (
+                  {item.offers && item.offers.length > 0 && (
                     <Badge variant="secondary">
                       {item.offers.length} offer{item.offers.length > 1 ? 's' : ''}
                     </Badge>
@@ -277,7 +277,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }
         </div>
 
         {/* Existing Offers */}
-        {item.offers.length > 0 && (
+        {item.offers && item.offers.length > 0 && (
           <>
             <Separator className="my-6" />
             <div className="space-y-4">
