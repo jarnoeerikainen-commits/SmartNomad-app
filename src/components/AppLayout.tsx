@@ -78,6 +78,7 @@ import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
 import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
+import { SocialDashboard } from './SocialChat/SocialDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
