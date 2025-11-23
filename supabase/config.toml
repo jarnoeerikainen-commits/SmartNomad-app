@@ -1,5 +1,8 @@
 project_id = "xeunjlpzvitnrepyzatg"
 
+[functions.social-chat-ai]
+verify_jwt = false
+
 [functions.legal-chat]
 verify_jwt = false
 
