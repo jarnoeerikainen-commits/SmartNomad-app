@@ -287,6 +287,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'pet-services':
         return <PetServices currentLocation={detectedLocation} />;
       
+      case 'marketplace':
+        return <MarketplaceDashboard />;
+      
+      case 'moving-services':
+        return <MovingServicesDashboard />;
+      
+      case 'social-chat':
+        return <SocialDashboard />;
+      
       case 'nomad-chat':
         return <NomadChatDashboard />;
       
