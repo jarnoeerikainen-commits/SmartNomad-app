@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { MarketplaceItem, MarketplaceFilters, AIPricingRequest, AIPricingResponse, AIDescriptionRequest, AIDescriptionResponse } from '@/types/marketplace';
+import { MarketplaceItem, MarketplaceFilters, AIPricingRequest, AIPricingResponse, AIDescriptionRequest, AIDescriptionResponse, ItemOffer } from '@/types/marketplace';
 import { DEMO_MARKETPLACE_ITEMS } from '@/data/marketplaceData';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';

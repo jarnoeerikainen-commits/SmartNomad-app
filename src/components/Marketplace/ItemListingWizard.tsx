@@ -136,6 +136,7 @@ const ItemListingWizard: React.FC<ItemListingWizardProps> = ({ open, onClose }) 
       },
       images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800'],
       tags: [category, condition],
+      offers: [],
       aiFeatures: {
         pricingSuggestion: aiPriceSuggestion || undefined,
         demandScore: 75,

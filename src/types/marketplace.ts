@@ -60,6 +60,18 @@ export interface SellerProfile {
   badges: string[];
 }
 
+export interface ItemOffer {
+  id: string;
+  itemId: string;
+  buyerName: string;
+  buyerPhoto: string;
+  amount: number;
+  currency: string;
+  message?: string;
+  createdAt: Date;
+  status: 'pending' | 'accepted' | 'declined';
+}
+
 export interface MarketplaceItem {
   id: string;
   seller: SellerProfile;
@@ -76,6 +88,7 @@ export interface MarketplaceItem {
   tags: string[];
   views: number;
   favorites: number;
+  offers: ItemOffer[];
   aiFeatures: AIFeatures;
   createdAt: Date;
   updatedAt: Date;

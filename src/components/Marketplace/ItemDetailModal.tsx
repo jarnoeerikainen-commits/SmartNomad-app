@@ -1,5 +1,5 @@
-import React from 'react';
-import { MapPin, Clock, Eye, Heart, Share2, Flag, Sparkles, TrendingUp, MessageCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Clock, Eye, Heart, Share2, Flag, Sparkles, TrendingUp, MessageCircle, Tag, Send } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
@@ -24,6 +26,9 @@ interface ItemDetailModalProps {
 
 const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }) => {
   const { toast } = useToast();
+  const [offerAmount, setOfferAmount] = useState('');
+  const [offerMessage, setOfferMessage] = useState('');
+  
   const categoryInfo = CATEGORY_INFO[item.category];
   const conditionInfo = CONDITION_INFO[item.condition];
 
@@ -39,6 +44,25 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }
       title: "Added to Favorites",
       description: "You'll be notified of any price changes",
     });
+  };
+
+  const handleSubmitOffer = () => {
+    if (!offerAmount || parseFloat(offerAmount) <= 0) {
+      toast({
+        title: "Invalid Offer",
+        description: "Please enter a valid offer amount",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: "Offer Submitted!",
+      description: `Your offer of €${offerAmount} has been sent to the seller`,
+    });
+
+    setOfferAmount('');
+    setOfferMessage('');
   };
 
   return (
@@ -184,6 +208,54 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }
               </CardContent>
             </Card>
 
+            {/* Make an Offer Section */}
+            <Card className="border-primary/20">
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold flex items-center gap-2">
+                    <Tag className="h-5 w-5 text-primary" />
+                    Make an Offer
+                  </h3>
+                  {item.offers.length > 0 && (
+                    <Badge variant="secondary">
+                      {item.offers.length} offer{item.offers.length > 1 ? 's' : ''}
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Your Offer (EUR)</label>
+                    <Input
+                      type="number"
+                      placeholder={`Max: ${item.price.amount}`}
+                      value={offerAmount}
+                      onChange={(e) => setOfferAmount(e.target.value)}
+                      max={item.price.amount}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Asking price: €{item.price.amount}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Message (Optional)</label>
+                    <Textarea
+                      placeholder="Add a message to strengthen your offer..."
+                      value={offerMessage}
+                      onChange={(e) => setOfferMessage(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+
+                  <Button onClick={handleSubmitOffer} className="w-full">
+                    <Send className="h-4 w-4 mr-2" />
+                    Submit Offer
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Location & Availability */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
@@ -203,6 +275,40 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({ item, open, onClose }
             </div>
           </div>
         </div>
+
+        {/* Existing Offers */}
+        {item.offers.length > 0 && (
+          <>
+            <Separator className="my-6" />
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Recent Offers</h3>
+              <div className="space-y-3">
+                {item.offers.slice(0, 5).map((offer) => (
+                  <div key={offer.id} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={offer.buyerPhoto} />
+                      <AvatarFallback>{offer.buyerName[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-medium text-sm">{offer.buyerName}</p>
+                        <Badge variant="outline" className="shrink-0">
+                          €{offer.amount}
+                        </Badge>
+                      </div>
+                      {offer.message && (
+                        <p className="text-sm text-muted-foreground mt-1">{offer.message}</p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(offer.createdAt).toLocaleDateString()} at {new Date(offer.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Description */}
         <div className="space-y-4 mt-6">
