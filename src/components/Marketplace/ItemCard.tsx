@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Clock, Eye, Heart, Sparkles, TrendingUp } from 'lucide-react';
+import { MapPin, Clock, Eye, Heart, Sparkles, TrendingUp, Tag } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -110,6 +110,12 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
             <Heart className="h-3 w-3" />
             {item.favorites}
           </div>
+          {item.offers.length > 0 && (
+            <div className="flex items-center gap-1 text-primary font-medium">
+              <Tag className="h-3 w-3" />
+              {item.offers.length}
+            </div>
+          )}
           <div className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {new Date(item.createdAt).toLocaleDateString()}
