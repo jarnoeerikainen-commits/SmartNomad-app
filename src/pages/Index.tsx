@@ -9,6 +9,7 @@ import VPNDetectionModal from '@/components/VPNDetectionModal';
 import PricingCard from '@/components/PricingCard';
 import SOSServices from '@/components/SOSServices';
 import MarketplaceDashboard from '@/components/Marketplace/MarketplaceDashboard';
+import { MovingServicesDashboard } from '@/components/MovingServices/MovingServicesDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';

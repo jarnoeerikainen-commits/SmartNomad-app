@@ -170,6 +170,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'explore-local', label: 'Local Events & Markets', icon: Calendar, badge: 'LIVE', variant: 'secondary' as const },
         { id: 'family-services', label: 'Nanny & Family Services', icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
         { id: 'pet-services', label: 'Pet Services', icon: Cat },
+        { id: 'moving-services', label: 'Moving Services', icon: Truck, badge: 'AI', variant: 'secondary' as const },
         { id: 'marketplace', label: 'Expat Marketplace', icon: Store, badge: 'AI', variant: 'secondary' as const },
         { id: 'nomad-chat', label: 'Nomad Chat', icon: MessageSquare, badge: 'AI', variant: 'secondary' as const },
         { id: 'news', label: 'News & Updates', icon: Newspaper },

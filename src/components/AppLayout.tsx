@@ -77,6 +77,7 @@ import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
 import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
+import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -462,6 +463,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <LocalNews />
           </ErrorBoundary>
         );
+      
+      case 'moving-services':
+        return <MovingServicesDashboard />;
       
       case 'marketplace':
         return <MarketplaceDashboard />;

@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.marketplace-ai]
 verify_jwt = false
+
+[functions.moving-ai-assistant]
+verify_jwt = false
