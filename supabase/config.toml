@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.cyber-assistant]
 verify_jwt = false
+
+[functions.marketplace-ai]
+verify_jwt = false

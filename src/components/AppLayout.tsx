@@ -76,6 +76,7 @@ import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
+import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -461,6 +462,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <LocalNews />
           </ErrorBoundary>
         );
+      
+      case 'marketplace':
+        return <MarketplaceDashboard />;
       
       case 'settings':
         return (
