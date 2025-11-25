@@ -33,7 +33,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
       image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80'
     },
     {
-      id: 'marketplace',
+      id: 'explore-local-life',
       title: 'Local Events & Markets',
       subtitle: 'Discover workshops, meetups, and hidden gems.',
       buttonText: 'Discover Events',

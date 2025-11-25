@@ -292,6 +292,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'marketplace':
         return <MarketplaceDashboard />;
       
+      case 'explore-local-life':
+        return <ExploreLocalLife currentLocation={detectedLocation} />;
+      
       case 'moving-services':
         return <MovingServicesDashboard />;
       
