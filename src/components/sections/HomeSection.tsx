@@ -20,7 +20,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
           Welcome to SuperNomad
         </h1>
         <p className="text-lg text-muted-foreground">
-          Your global community awaits. Connect, discover, thrive.
+          Your AI-powered global community. Connect smarter, discover easier, thrive faster.
         </p>
       </div>
       
