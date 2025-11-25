@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Settings } from 'lucide-react';
+import { Clock, Settings, FileCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Country } from '@/types/country';
 import {
   Popover,
   PopoverContent,
@@ -36,7 +37,12 @@ const TIMEZONES = [
   { id: 'Pacific/Auckland', name: 'NZDT', city: 'Auckland', offset: '+13:00' },
 ];
 
-export const TimeZoneHeader: React.FC = () => {
+interface TimeZoneHeaderProps {
+  countries?: Country[];
+  onNavigateToTax?: () => void;
+}
+
+export const TimeZoneHeader: React.FC<TimeZoneHeaderProps> = ({ countries = [], onNavigateToTax }) => {
   const getLocalTimezone = (): TimeZone => {
     const offsetMinutes = -new Date().getTimezoneOffset();
     const sign = offsetMinutes >= 0 ? '+' : '-';
@@ -112,6 +118,11 @@ export const TimeZoneHeader: React.FC = () => {
     }
   };
 
+  // Calculate tax status
+  const currentYear = new Date().getFullYear();
+  const daysThisYear = countries.reduce((sum, country) => sum + country.yearlyDaysSpent, 0);
+  const isTaxClear = daysThisYear < 183;
+
   return (
     <div className="hidden lg:flex items-center gap-3 px-4">
       {selectedTimezones.map((tz, index) => {
@@ -131,6 +142,19 @@ export const TimeZoneHeader: React.FC = () => {
           </div>
         );
       })}
+      
+      {/* Tax Status Indicator */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="flex items-center gap-2 px-3 py-1.5 h-auto hover:bg-accent/10"
+        onClick={onNavigateToTax}
+      >
+        <FileCheck className={`w-3.5 h-3.5 ${isTaxClear ? 'text-success' : 'text-warning'}`} />
+        <span className={`text-xs font-medium ${isTaxClear ? 'text-success' : 'text-warning'}`}>
+          Tax {isTaxClear ? 'Clear' : 'Review'}
+        </span>
+      </Button>
       
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>

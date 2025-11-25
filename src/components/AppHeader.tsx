@@ -28,6 +28,7 @@ interface AppHeaderProps {
   onUpgradeClick?: () => void;
   countries?: Country[];
   onNavigateToSettings?: () => void;
+  onNavigateToTax?: () => void;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({ 
@@ -36,7 +37,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   subscription,
   onUpgradeClick,
   countries = [],
-  onNavigateToSettings
+  onNavigateToSettings,
+  onNavigateToTax
 }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -104,7 +106,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         </div>
 
         {/* Center - Time Zones */}
-        <TimeZoneHeader />
+        <TimeZoneHeader countries={countries} onNavigateToTax={onNavigateToTax} />
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">

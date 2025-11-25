@@ -79,6 +79,7 @@ import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
 import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { SocialDashboard } from './SocialChat/SocialDashboard';
+import DashboardBottomStats from './dashboard/DashboardBottomStats';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 
@@ -519,6 +520,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           setActiveSection('settings');
           setSidebarOpen(false);
         }}
+        onNavigateToTax={() => {
+          setActiveSection('tax-residency');
+          setBottomNavTab('tracking');
+          setSidebarOpen(false);
+        }}
       />
       
       <div className="flex">
@@ -542,6 +548,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       {/* GDPR Cookie Consent */}
       <CookieConsent />
+      
+      {/* Bottom Stats Bar */}
+      {bottomNavTab === 'home' && (
+        <DashboardBottomStats 
+          countries={countries}
+          onOpenTracking={() => {
+            setBottomNavTab('tracking');
+            setActiveSection('tax');
+          }}
+        />
+      )}
       
       {/* Bottom Navigation - Mobile Only */}
       <BottomNavigation 
