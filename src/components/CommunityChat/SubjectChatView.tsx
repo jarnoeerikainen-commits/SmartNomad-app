@@ -5,8 +5,13 @@ import { SubjectChatCreation } from './SubjectChatCreation';
 import { SubjectChatRoom } from './SubjectChatRoom';
 import { ChatRoom } from '@/types/subjectChat';
 
-export const SubjectChatView = () => {
-  const [view, setView] = useState<'list' | 'create' | 'room'>('list');
+interface SubjectChatViewProps {
+  initialView?: 'list' | 'create';
+  onViewChange?: (view: 'list' | 'create' | 'room') => void;
+}
+
+export const SubjectChatView = ({ initialView = 'list', onViewChange }: SubjectChatViewProps = {}) => {
+  const [view, setView] = useState<'list' | 'create' | 'room'>(initialView);
   const { 
     chatRooms, 
     activeChatRoom, 
@@ -18,24 +23,42 @@ export const SubjectChatView = () => {
 
   const handleCreateChat = (chatData: any) => {
     createChatRoom(chatData);
-    setView('room');
+    const newView = 'room';
+    setView(newView);
+    onViewChange?.(newView);
   };
 
   const handleSelectChat = (chat: ChatRoom) => {
     setActiveChatRoom(chat);
-    setView('room');
+    const newView = 'room';
+    setView(newView);
+    onViewChange?.(newView);
   };
 
   const handleBack = () => {
     setActiveChatRoom(null);
-    setView('list');
+    const newView = 'list';
+    setView(newView);
+    onViewChange?.(newView);
+  };
+
+  const handleStartCreate = () => {
+    const newView = 'create';
+    setView(newView);
+    onViewChange?.(newView);
+  };
+
+  const handleCancelCreate = () => {
+    const newView = 'list';
+    setView(newView);
+    onViewChange?.(newView);
   };
 
   if (view === 'create') {
     return (
       <SubjectChatCreation
         onCreateChat={handleCreateChat}
-        onCancel={() => setView('list')}
+        onCancel={handleCancelCreate}
       />
     );
   }
@@ -55,7 +78,7 @@ export const SubjectChatView = () => {
     <SubjectChatList
       chatRooms={chatRooms}
       onSelectChat={handleSelectChat}
-      onCreateNew={() => setView('create')}
+      onCreateNew={handleStartCreate}
     />
   );
 };

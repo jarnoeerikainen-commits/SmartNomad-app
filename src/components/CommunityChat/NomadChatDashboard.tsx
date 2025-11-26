@@ -8,12 +8,14 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCommunityChat } from '@/hooks/useCommunityChat';
 import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS } from '@/data/communityChatData';
-import { Send, Users, Sparkles, MapPin, TrendingUp } from 'lucide-react';
+import { Send, Users, Sparkles, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { SubjectChatView } from './SubjectChatView';
 
 export const NomadChatDashboard = () => {
   const { messages, sendMessage, isLoading } = useCommunityChat();
   const [messageInput, setMessageInput] = useState('');
+  const [activeTab, setActiveTab] = useState('chat');
+  const [triggerCreateGroup, setTriggerCreateGroup] = useState(false);
 
   const handleSend = () => {
     if (messageInput.trim()) {
@@ -22,22 +24,42 @@ export const NomadChatDashboard = () => {
     }
   };
 
+  const handleCreateGroup = () => {
+    setActiveTab('subjects');
+    setTriggerCreateGroup(true);
+  };
+
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold gradient-text">🤝 Local Nomad Network</h1>
-          <Badge variant="secondary" className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            12 Online
-          </Badge>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold gradient-text mb-2">🤝 Local Nomad Network</h1>
+            <p className="text-muted-foreground mb-1">
+              AI-powered community connecting digital nomads in your area
+            </p>
+            <p className="text-sm text-muted-foreground/80">
+              Create your own group in an instant to do anything, anywhere, for as long as you want.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button 
+              size="lg"
+              className="shadow-large hover:shadow-glow transition-all duration-300 gap-2"
+              onClick={handleCreateGroup}
+            >
+              <Plus className="w-5 h-5" />
+              Create Group
+            </Button>
+            <Badge variant="secondary" className="flex items-center gap-2 px-3 py-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              12 Online
+            </Badge>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          AI-powered community connecting digital nomads in your area
-        </p>
       </div>
 
-      <Tabs defaultValue="chat" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-2xl">
           <TabsTrigger value="chat">💬 Chat</TabsTrigger>
           <TabsTrigger value="subjects">🎯 Subject Chats</TabsTrigger>
@@ -190,7 +212,10 @@ export const NomadChatDashboard = () => {
         </TabsContent>
 
         <TabsContent value="subjects" className="space-y-6">
-          <SubjectChatView />
+          <SubjectChatView 
+            initialView={triggerCreateGroup ? 'create' : 'list'}
+            onViewChange={() => setTriggerCreateGroup(false)}
+          />
         </TabsContent>
 
         <TabsContent value="matches" className="space-y-6">
