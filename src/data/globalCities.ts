@@ -49,7 +49,7 @@ export const CITY_SERVICES: CityService[] = [
   { id: 's7', cityId: 'c1', serviceCategory: 'delivery', serviceType: 'Food & Grocery Delivery', availabilityStatus: 'available', providerCount: 15, userRating: 4.6, responseTimeMinutes: 25, coverageNotes: '24/7 delivery options', lastVerified: '2024-01-15' },
   { id: 's8', cityId: 'c1', serviceCategory: 'legal', serviceType: 'Immigration Assistance', availabilityStatus: 'available', providerCount: 9, userRating: 4.4, responseTimeMinutes: 120, coverageNotes: 'Visa specialists available', lastVerified: '2024-01-15' },
   { id: 's9', cityId: 'c1', serviceCategory: 'financial', serviceType: 'Multi-Currency Banking', availabilityStatus: 'available', providerCount: 18, userRating: 4.7, responseTimeMinutes: 60, coverageNotes: 'Digital bank integrations', lastVerified: '2024-01-15' },
-  { id: 's10', cityId: 'c1', serviceCategory: 'community', serviceType: 'Local Nomad Network', availabilityStatus: 'available', providerCount: 35, userRating: 4.8, responseTimeMinutes: 10, coverageNotes: 'Active expat community', lastVerified: '2024-01-15' },
+  { id: 's10', cityId: 'c1', serviceCategory: 'community', serviceType: 'Active Meetups AI', availabilityStatus: 'available', providerCount: 35, userRating: 4.8, responseTimeMinutes: 10, coverageNotes: 'Active expat community', lastVerified: '2024-01-15' },
 
   // Singapore (c8) - Full coverage
   { id: 's81', cityId: 'c8', serviceCategory: 'accommodation', serviceType: 'Co-Living Spaces', availabilityStatus: 'available', providerCount: 52, userRating: 4.9, responseTimeMinutes: 10, coverageNotes: 'Highest quality co-living options', lastVerified: '2024-01-15' },
