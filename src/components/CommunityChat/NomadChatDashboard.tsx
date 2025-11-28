@@ -34,7 +34,7 @@ export const NomadChatDashboard = () => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold gradient-text mb-2">🤝 Local Nomad Network</h1>
+            <h1 className="text-3xl font-bold gradient-text mb-2">🤝 Active Meetups AI</h1>
             <p className="text-muted-foreground mb-1">
               AI-powered community connecting digital nomads in your area
             </p>

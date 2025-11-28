@@ -14,7 +14,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
   const heroCards = [
     {
       id: 'nomad-chat',
-      title: 'Nomad Chat Groups AI',
+      title: 'Active Meetups AI',
       subtitle: 'Find your tribe. Connect by interest, profession, or city.',
       buttonText: 'Explore Groups',
       icon: MessageSquare,
