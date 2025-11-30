@@ -14,8 +14,8 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
   const heroCards = [
     {
       id: 'nomad-chat',
-      title: 'Active Meetups AI',
-      subtitle: 'Find your tribe. Connect by interest, profession, or city.',
+      title: 'SuperNomad Pulse',
+      subtitle: 'Supernomad Pulse uses advanced AI to instantly connect you with your perfect adventure partners, wherever you are.',
       buttonText: 'Explore Groups',
       icon: MessageSquare,
       gradient: 'from-primary/20 via-primary/10 to-transparent',

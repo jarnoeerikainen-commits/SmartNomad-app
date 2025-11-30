@@ -34,9 +34,9 @@ export const NomadChatDashboard = () => {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold gradient-text mb-2">🤝 Active Meetups AI</h1>
+            <h1 className="text-3xl font-bold gradient-text mb-2">🤝 SuperNomad Pulse</h1>
             <p className="text-muted-foreground mb-1">
-              AI-powered community connecting digital nomads in your area
+              Supernomad Pulse uses advanced AI to instantly connect you with your perfect adventure partners, wherever you are.
             </p>
             <p className="text-sm text-muted-foreground/80">
               Create your own group in an instant to do anything, anywhere, for as long as you want.
