@@ -53,7 +53,7 @@ export const NomadChatDashboard = () => {
             </Button>
             <Badge variant="secondary" className="flex items-center gap-2 px-3 py-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              12 Online
+              6 258 490 Online
             </Badge>
           </div>
         </div>
@@ -268,7 +268,7 @@ export const NomadChatDashboard = () => {
               <h2 className="text-xl font-semibold">Nearby Nomads</h2>
             </div>
             <p className="text-muted-foreground mb-6">
-              {DEMO_USERS.filter((u) => u.isOnline).length} digital nomads online in your area
+              6 258 490 people online in your area
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {DEMO_USERS.map((user) => (
