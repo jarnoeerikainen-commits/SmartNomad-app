@@ -24,8 +24,8 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
     },
     {
       id: 'social-chat',
-      title: 'Social Chat AI',
-      subtitle: 'Spark spontaneous conversations. Meet nomads near you.',
+      title: 'SuperNomad Vibe',
+      subtitle: 'AI Breaks the Ice, Not Your Privacy. Experience spontaneous chats with verified nomads, backed by intelligent safety systems that let you be yourself, freely and securely.',
       buttonText: 'Start Chatting',
       icon: Users,
       gradient: 'from-accent/20 via-accent/10 to-transparent',
