@@ -126,7 +126,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Quick Actions',
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
-        { id: 'threats', label: 'Threats', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
         { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
       ]
     },
@@ -135,12 +134,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: 'Safety First',
       items: [
         { id: 'guardian', label: 'SuperNomad Guardian', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'threats', label: 'Threat Intelligence', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
         { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
         { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
         { id: 'private-protection', label: 'Private Protection', icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
         { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
-        { id: 'threats', label: 'Threat Intelligence', icon: Shield },
       ]
     },
     {
@@ -248,7 +247,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             activeSection === item.id 
                               ? 'gradient-trust text-primary-foreground shadow-medium' 
                               : 'hover:bg-accent/50'
-                          } ${item.id === 'threats' && item.badge === 'ALERT' ? 'animate-pulse' : ''}`}
+                          }`}
                           onClick={() => {
                             onSectionChange(item.id);
                             onClose?.();
@@ -296,7 +295,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                           activeSection === item.id 
                             ? 'gradient-trust text-primary-foreground shadow-medium' 
                             : 'hover:bg-accent/50'
-                        }`}
+                        } ${item.id === 'threats' && item.badge === 'ALERT' ? 'animate-pulse' : ''}`}
                         onClick={() => {
                           onSectionChange(item.id);
                           onClose?.();
