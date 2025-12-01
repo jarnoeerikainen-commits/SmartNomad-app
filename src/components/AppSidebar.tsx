@@ -95,7 +95,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'travel', 'services']);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['premium', 'travel', 'local']);
   
   // Check for danger zone (imported from ThreatIntelligenceService)
   const [isInDangerZone, setIsInDangerZone] = React.useState(false);
@@ -127,19 +127,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
-      ]
-    },
-    {
-      id: 'safety',
-      label: 'Safety First',
-      items: [
-        { id: 'guardian', label: 'SuperNomad Guardian', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'threats', label: 'Threat Intelligence', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
-        { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
-        { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
-        { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
-        { id: 'private-protection', label: 'Private Protection', icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
-        { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
       ]
     },
     {
@@ -182,6 +169,13 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'premium',
       label: 'Premium Services',
       items: [
+        { id: 'guardian', label: 'SuperNomad Guardian', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'threats', label: 'Threat Intelligence', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
+        { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
+        { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
+        { id: 'private-protection', label: 'Private Protection', icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
+        { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
         { id: 'ai-doctor', label: 'AI Health Advisor', icon: Stethoscope, badge: 'AI' },
         { id: 'ai-lawyer', label: 'AI Legal Advisor', icon: Scale, badge: 'AI' },
         { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, badge: 'AI' },
