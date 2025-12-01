@@ -73,6 +73,7 @@ import LocalNews from './LocalNews';
 import { GovernmentApps } from './GovernmentApps';
 import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
+import { SuperNomadGuardian } from './SuperNomadGuardian';
 import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
@@ -210,6 +211,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
     // For desktop sidebar navigation
     switch (activeSection) {
+      case 'guardian':
+        return <SuperNomadGuardian />;
       case 'threats':
         return <ThreatDashboard />;
       case 'dashboard':

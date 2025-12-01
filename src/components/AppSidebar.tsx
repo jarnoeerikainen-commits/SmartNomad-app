@@ -40,6 +40,7 @@ import {
   Globe2,
   Building,
   Siren,
+  ShieldCheck,
   ShieldAlert,
   Baby,
   Calendar,
@@ -133,6 +134,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'safety',
       label: 'Safety First',
       items: [
+        { id: 'guardian', label: 'SuperNomad Guardian', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
         { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
         { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
