@@ -295,7 +295,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                           activeSection === item.id 
                             ? 'gradient-trust text-primary-foreground shadow-medium' 
                             : 'hover:bg-accent/50'
-                        } ${item.id === 'threats' && item.badge === 'ALERT' ? 'animate-pulse' : ''}`}
+                        }`}
                         onClick={() => {
                           onSectionChange(item.id);
                           onClose?.();
