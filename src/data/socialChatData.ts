@@ -1,11 +1,44 @@
 import { SocialProfile, ChatRoom } from '@/types/socialChat';
 
+// Beautiful, professional avatar URLs using Unsplash - diverse and attractive
+const AVATAR_URLS = {
+  // Women - beautiful and professional
+  sarah: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
+  lena: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+  elena: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+  maria: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face',
+  sophie: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+  nina: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face',
+  emma: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
+  lisa: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face',
+  yuki: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face',
+  rachel: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=face',
+  anna: 'https://images.unsplash.com/photo-1499887142886-791eca5918cd?w=150&h=150&fit=crop&crop=face',
+  priya: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
+  fatima: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face',
+  
+  // Men - handsome and professional
+  mike: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+  tom: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+  alex: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+  raj: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face',
+  marcus: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face',
+  chris: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop&crop=face',
+  david: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop&crop=face',
+  john: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face',
+  james: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+  carlos: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
+  lucas: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face',
+  omar: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop&crop=face',
+  miguel: 'https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?w=150&h=150&fit=crop&crop=face',
+};
+
 export const socialProfiles: SocialProfile[] = [
   {
     id: '1',
     basicInfo: {
       name: 'Sarah Chen',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+      avatar: AVATAR_URLS.sarah,
       age: 29,
       languages: ['English', 'Mandarin', 'Portuguese'],
       tagline: 'UX designer building the future of remote work'
@@ -52,7 +85,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '2',
     basicInfo: {
       name: 'James Rodriguez',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James',
+      avatar: AVATAR_URLS.james,
       age: 42,
       languages: ['English', 'Spanish'],
       tagline: 'Investment banker connecting global markets'
@@ -107,7 +140,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '3',
     basicInfo: {
       name: 'Lena Schmidt',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lena',
+      avatar: AVATAR_URLS.lena,
       age: 23,
       languages: ['German', 'English', 'Spanish'],
       tagline: 'Exchange student discovering the world'
@@ -154,7 +187,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '4',
     basicInfo: {
       name: 'Captain Mike Thompson',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike',
+      avatar: AVATAR_URLS.mike,
       age: 38,
       languages: ['English', 'Arabic'],
       tagline: 'Airline pilot connecting continents'
@@ -209,7 +242,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '5',
     basicInfo: {
       name: 'Maria Gonzalez',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria',
+      avatar: AVATAR_URLS.maria,
       age: 35,
       languages: ['Spanish', 'English'],
       tagline: 'Tech sales bringing innovation to market'
@@ -256,7 +289,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '6',
     basicInfo: {
       name: 'Alex Kim',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+      avatar: AVATAR_URLS.alex,
       age: 31,
       languages: ['Korean', 'English', 'Japanese'],
       tagline: 'Software engineer living the nomad dream'
@@ -302,7 +335,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '7',
     basicInfo: {
       name: 'Emma Wilson',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
+      avatar: AVATAR_URLS.emma,
       age: 27,
       languages: ['English', 'French'],
       tagline: 'Expat teacher sharing knowledge across borders'
@@ -340,7 +373,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '8',
     basicInfo: {
       name: 'Carlos Mendez',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Carlos',
+      avatar: AVATAR_URLS.carlos,
       age: 45,
       languages: ['Spanish', 'English', 'Portuguese'],
       tagline: 'Entrepreneur building bridges across Latin America'
@@ -386,7 +419,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '9',
     basicInfo: {
       name: 'Yuki Tanaka',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yuki',
+      avatar: AVATAR_URLS.yuki,
       age: 26,
       languages: ['Japanese', 'English'],
       tagline: 'Conference organizer connecting tech communities'
@@ -433,7 +466,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '10',
     basicInfo: {
       name: 'Sophie Laurent',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie',
+      avatar: AVATAR_URLS.sophie,
       age: 33,
       languages: ['French', 'English', 'Italian'],
       tagline: 'Fashion buyer discovering global trends'
@@ -480,7 +513,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '11',
     basicInfo: {
       name: 'David Okonkwo',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David',
+      avatar: AVATAR_URLS.david,
       age: 29,
       languages: ['English', 'Yoruba', 'French'],
       tagline: 'Tech entrepreneur building Africa\'s digital future'
@@ -526,7 +559,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '12',
     basicInfo: {
       name: 'Anna Kowalski',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anna',
+      avatar: AVATAR_URLS.anna,
       age: 24,
       languages: ['Polish', 'English', 'German'],
       tagline: 'Master\'s student exploring European opportunities'
@@ -564,7 +597,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '13',
     basicInfo: {
       name: 'Rachel Cohen',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rachel',
+      avatar: AVATAR_URLS.rachel,
       age: 36,
       languages: ['English', 'Hebrew'],
       tagline: 'Marketing director scaling global brands'
@@ -611,7 +644,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '14',
     basicInfo: {
       name: 'Lucas Silva',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas',
+      avatar: AVATAR_URLS.lucas,
       age: 28,
       languages: ['Portuguese', 'English', 'Spanish'],
       tagline: 'Remote developer coding from paradise'
@@ -657,7 +690,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '15',
     basicInfo: {
       name: 'Priya Sharma',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya',
+      avatar: AVATAR_URLS.priya,
       age: 32,
       languages: ['Hindi', 'English', 'Tamil'],
       tagline: 'Expat HR leader building diverse teams'
@@ -695,7 +728,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '16',
     basicInfo: {
       name: 'Tom Anderson',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tom',
+      avatar: AVATAR_URLS.tom,
       age: 41,
       languages: ['English', 'Swedish'],
       tagline: 'Investment analyst exploring Nordic markets'
@@ -742,7 +775,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '17',
     basicInfo: {
       name: 'Fatima Al-Hassan',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Fatima',
+      avatar: AVATAR_URLS.fatima,
       age: 30,
       languages: ['Arabic', 'English', 'French'],
       tagline: 'Architect designing sustainable cities'
@@ -789,7 +822,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '18',
     basicInfo: {
       name: 'Miguel Santos',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Miguel',
+      avatar: AVATAR_URLS.miguel,
       age: 25,
       languages: ['Portuguese', 'English'],
       tagline: 'Backpacker exploring Southeast Asia'
@@ -835,7 +868,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '19',
     basicInfo: {
       name: 'Nina Petrov',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nina',
+      avatar: AVATAR_URLS.nina,
       age: 37,
       languages: ['Russian', 'English', 'German'],
       tagline: 'Medical professional serving global health'
@@ -873,7 +906,7 @@ export const socialProfiles: SocialProfile[] = [
     id: '20',
     basicInfo: {
       name: 'Omar Abdullah',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Omar',
+      avatar: AVATAR_URLS.omar,
       age: 34,
       languages: ['Arabic', 'English'],
       tagline: 'E-commerce entrepreneur scaling globally'
@@ -927,12 +960,12 @@ export const demoChatRooms: ChatRoom[] = [
       {
         id: '1',
         name: 'Sarah Chen',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah'
+        avatar: AVATAR_URLS.sarah
       },
       {
         id: '7',
         name: 'Emma Wilson',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma'
+        avatar: AVATAR_URLS.emma
       }
     ],
     messages: [],
@@ -953,17 +986,17 @@ export const demoChatRooms: ChatRoom[] = [
       {
         id: '2',
         name: 'James Rodriguez',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James'
+        avatar: AVATAR_URLS.james
       },
       {
         id: '13',
         name: 'Rachel Cohen',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rachel'
+        avatar: AVATAR_URLS.rachel
       },
       {
         id: '16',
         name: 'Tom Anderson',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tom'
+        avatar: AVATAR_URLS.tom
       }
     ],
     messages: [],
@@ -983,17 +1016,17 @@ export const demoChatRooms: ChatRoom[] = [
       {
         id: '2',
         name: 'James Rodriguez',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James'
+        avatar: AVATAR_URLS.james
       },
       {
         id: '9',
         name: 'Yuki Tanaka',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Yuki'
+        avatar: AVATAR_URLS.yuki
       },
       {
         id: '15',
         name: 'Priya Sharma',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya'
+        avatar: AVATAR_URLS.priya
       }
     ],
     messages: [],
@@ -1006,3 +1039,6 @@ export const demoChatRooms: ChatRoom[] = [
     }
   }
 ];
+
+// Export avatar URLs for reuse across components
+export { AVATAR_URLS };

@@ -1,6 +1,13 @@
 import { useState, useCallback } from 'react';
 import { ChatMessage } from '@/types/communityChat';
-import { DEMO_USERS } from '@/data/communityChatData';
+import { DEMO_USERS, AVATAR_URLS } from '@/data/communityChatData';
+
+// Hardcoded Supabase config for consistent API calls
+const SUPABASE_URL = 'https://xeunjlpzvitnrepyzatg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhldW5qbHB6dml0bnJlcHl6YXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyNjUxMDUsImV4cCI6MjA3Njg0MTEwNX0.eiTYJpSpLpY7o860HSFDB7wQPPt5y9bIYRfzmPGEgU0';
+
+// Current user avatar - professional photo
+const CURRENT_USER_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face';
 
 export const useCommunityChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -8,7 +15,7 @@ export const useCommunityChat = () => {
       id: '1',
       senderId: '2',
       senderName: 'Mike Johnson',
-      senderAvatar: '👨‍💻',
+      senderAvatar: AVATAR_URLS.mike,
       content: 'Anyone up for focused work session at WeWork today?',
       timestamp: new Date(Date.now() - 3600000)
     },
@@ -25,7 +32,7 @@ export const useCommunityChat = () => {
       id: '3',
       senderId: '1',
       senderName: 'Sarah Chen',
-      senderAvatar: '👩‍💼',
+      senderAvatar: AVATAR_URLS.sarah,
       content: 'Perfect! I can be there by 10am. Anyone interested in a design feedback session?',
       timestamp: new Date(Date.now() - 1800000)
     }
@@ -34,12 +41,12 @@ export const useCommunityChat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const sendMessage = useCallback(async (content: string) => {
-    // Add user message
+    // Add user message with professional avatar
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       senderId: 'current-user',
       senderName: 'You',
-      senderAvatar: '👤',
+      senderAvatar: CURRENT_USER_AVATAR,
       content,
       timestamp: new Date()
     };
@@ -48,12 +55,12 @@ export const useCommunityChat = () => {
     setIsLoading(true);
 
     try {
-      // Call Lovable AI for intelligent response
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/community-chat`, {
+      // Call AI with consistent authentication
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/community-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         },
         body: JSON.stringify({
           message: content,
