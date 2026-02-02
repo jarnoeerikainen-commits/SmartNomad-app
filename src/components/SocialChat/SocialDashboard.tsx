@@ -252,7 +252,10 @@ export const SocialDashboard = () => {
                           key={participant.id}
                           src={participant.avatar}
                           alt={participant.name}
-                          className="w-10 h-10 rounded-full border-2 border-background"
+                          className="w-10 h-10 rounded-full border-2 border-background object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=random&size=150`;
+                          }}
                         />
                       ))}
                     </div>

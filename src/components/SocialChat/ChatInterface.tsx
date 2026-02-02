@@ -46,7 +46,10 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                   key={participant.id}
                   src={participant.avatar}
                   alt={participant.name}
-                  className="w-8 h-8 rounded-full border-2 border-background"
+                  className="w-8 h-8 rounded-full border-2 border-background object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=random&size=150`;
+                  }}
                 />
               ))}
             </div>
@@ -85,9 +88,12 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                   >
                     {!isCurrentUser && (
                       <img
-                        src={msg.senderAvatar}
+                        src={msg.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName)}&background=random&size=150`}
                         alt={msg.senderName}
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8 rounded-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName)}&background=random&size=150`;
+                        }}
                       />
                     )}
                     <div
