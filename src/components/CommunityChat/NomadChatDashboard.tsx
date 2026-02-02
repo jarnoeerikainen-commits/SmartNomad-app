@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCommunityChat } from '@/hooks/useCommunityChat';
-import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS } from '@/data/communityChatData';
+import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS, AVATAR_URLS } from '@/data/communityChatData';
 import { Send, Users, Sparkles, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { SubjectChatView } from './SubjectChatView';
 
@@ -144,7 +144,14 @@ export const NomadChatDashboard = () => {
                     }`}
                   >
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback>{message.senderAvatar}</AvatarFallback>
+                      {message.isAI ? (
+                        <AvatarFallback className="bg-primary/10 text-primary">🤖</AvatarFallback>
+                      ) : (
+                        <>
+                          <AvatarImage src={message.senderAvatar} alt={message.senderName} />
+                          <AvatarFallback>{message.senderName.substring(0, 2)}</AvatarFallback>
+                        </>
+                      )}
                     </Avatar>
                     <div
                       className={`flex-1 max-w-[70%] ${
@@ -182,7 +189,7 @@ export const NomadChatDashboard = () => {
                 {isLoading && (
                   <div className="flex gap-3">
                     <Avatar className="w-10 h-10">
-                      <AvatarFallback>🤖</AvatarFallback>
+                      <AvatarFallback className="bg-primary/10 text-primary">🤖</AvatarFallback>
                     </Avatar>
                     <div className="bg-accent p-3 rounded-lg">
                       <div className="flex gap-1">
@@ -235,7 +242,8 @@ export const NomadChatDashboard = () => {
                 >
                   <div className="flex items-start gap-4">
                     <Avatar className="w-12 h-12">
-                      <AvatarFallback>{user.avatar}</AvatarFallback>
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
@@ -277,7 +285,8 @@ export const NomadChatDashboard = () => {
                   className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors text-center cursor-pointer"
                 >
                   <Avatar className="w-16 h-16 mx-auto mb-2">
-                    <AvatarFallback className="text-2xl">{user.avatar}</AvatarFallback>
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback className="text-lg">{user.name.substring(0, 2)}</AvatarFallback>
                   </Avatar>
                   <h3 className="font-semibold text-sm mb-1">{user.name}</h3>
                   <p className="text-xs text-muted-foreground mb-2">{user.profession}</p>

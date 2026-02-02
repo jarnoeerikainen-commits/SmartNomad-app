@@ -1,15 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Globe } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
-import EnhancedProfileForm from '@/components/EnhancedProfileForm';
-import VPNDetectionModal from '@/components/VPNDetectionModal';
-import PricingCard from '@/components/PricingCard';
-import SOSServices from '@/components/SOSServices';
-import MarketplaceDashboard from '@/components/Marketplace/MarketplaceDashboard';
-import { MovingServicesDashboard } from '@/components/MovingServices/MovingServicesDashboard';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -17,13 +10,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const Index = () => {
   const { t } = useLanguage();
   const [countries, setCountries] = useState<Country[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [showVPNModal, setShowVPNModal] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showProfileForm, setShowProfileForm] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<LocationData | null>(null);
-  const [vpnDuration, setVPNDuration] = useState(0);
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
     isActive: true,
@@ -38,8 +27,6 @@ const Index = () => {
   useEffect(() => {
     const handler = () => {
       setShowOnboarding(false);
-      setShowProfileForm(false);
-      setShowVPNModal(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     window.addEventListener('supernomad:home', handler);
@@ -70,36 +57,6 @@ const Index = () => {
     if (!hasSeenOnboarding) {
       setShowOnboarding(true);
     }
-    
-    // Show profile form after onboarding if not completed and not on premium
-    if (hasSeenOnboarding && !enhancedProfile && savedSubscription) {
-      const sub = JSON.parse(savedSubscription) as Subscription;
-      if (sub.tier === 'free') {
-        // Delay showing the form slightly after app loads
-        setTimeout(() => setShowProfileForm(true), 1000);
-      }
-    }
-
-    // Mock VPN detection - in a real app this would use actual VPN detection
-    const mockDetectVPN = () => {
-      const isVPNDetected = Math.random() > 0.8; // 20% chance for demo
-      if (isVPNDetected) {
-        setDetectedLocation({
-          latitude: 40.7128,
-          longitude: -74.0060,
-          city: 'New York',
-          country: 'United States',
-          country_code: 'US',
-          timestamp: Date.now()
-        });
-        setVPNDuration(Date.now() - (Math.random() * 3600000)); // Random duration up to 1 hour
-        setShowVPNModal(true);
-      }
-    };
-
-    // Check for VPN after 2 seconds (demo purposes)
-    const timer = setTimeout(mockDetectVPN, 2000);
-    return () => clearTimeout(timer);
   }, []);
 
   // Save data to localStorage whenever it changes
@@ -176,34 +133,6 @@ const Index = () => {
         ? { ...country, countTravelDays: !country.countTravelDays }
         : country
     ));
-  };
-
-  const handleVPNModalClose = () => {
-    setShowVPNModal(false);
-  };
-
-  const handleConfirmLocation = (isCorrect: boolean) => {
-    if (isCorrect) {
-      toast({
-        title: t('toast.locationConfirmed'),
-        description: t('toast.locationConfirmedDesc'),
-      });
-    } else {
-      toast({
-        title: t('toast.locationCorrection'),
-        description: t('toast.locationCorrectionDesc'),
-        variant: "destructive"
-      });
-    }
-    setShowVPNModal(false);
-  };
-
-  const handleDisableVPN = () => {
-    toast({
-      title: t('toast.vpnInstructions'),
-      description: t('toast.vpnInstructionsDesc'),
-    });
-    setShowVPNModal(false);
   };
 
   const handleUpgrade = (tier: string) => {
@@ -298,7 +227,6 @@ const Index = () => {
     setUserProfile(profileData);
     localStorage.setItem('subscription', JSON.stringify(premiumSubscription));
     localStorage.setItem('userProfile', JSON.stringify(profileData));
-    setShowProfileForm(false);
   };
 
 
@@ -306,13 +234,6 @@ const Index = () => {
     <>
       {showOnboarding && (
         <OnboardingFlow onComplete={() => setShowOnboarding(false)} />
-      )}
-
-      {showProfileForm && !showOnboarding && (
-        <EnhancedProfileForm 
-          onComplete={handleProfileComplete}
-          onSkip={() => setShowProfileForm(false)}
-        />
       )}
       
       <AppLayout
@@ -328,15 +249,6 @@ const Index = () => {
         userProfile={userProfile}
         onUpgrade={handleUpgrade}
         onProfileComplete={handleProfileComplete}
-      />
-
-      <VPNDetectionModal 
-        isOpen={showVPNModal}
-        onClose={handleVPNModalClose}
-        detectedLocation={detectedLocation}
-        vpnDuration={vpnDuration}
-        onConfirmLocation={handleConfirmLocation}
-        onDisableVPN={handleDisableVPN}
       />
     </>
   );

@@ -43,7 +43,10 @@ export const ProfileCard = ({ profile, onStartChat }: ProfileCardProps) => {
             <img
               src={profile.basicInfo.avatar}
               alt={profile.basicInfo.name}
-              className="w-16 h-16 rounded-full"
+              className="w-16 h-16 rounded-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.basicInfo.name)}&background=random&size=150`;
+              }}
             />
             <div className={`absolute bottom-0 right-0 w-4 h-4 ${statusColor} rounded-full border-2 border-background`} />
           </div>
