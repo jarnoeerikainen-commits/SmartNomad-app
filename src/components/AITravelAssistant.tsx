@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
+import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 
 interface Message {
   id: string;
@@ -50,6 +51,11 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const {
+    isListening, isSpeaking, voiceEnabled,
+    startListening, stopListening, speak, stopSpeaking,
+    toggleVoice, sttSupported, ttsSupported
+  } = useVoiceConversation();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -171,6 +177,11 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
         }
       }
 
+      // Auto-speak the final response if voice is enabled
+      if (assistantContent && voiceEnabled) {
+        speak(assistantContent);
+      }
+
       setIsTyping(false);
     } catch (error) {
       console.error("Chat error:", error);
@@ -238,6 +249,18 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
             <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
+            {ttsSupported && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={voiceEnabled ? stopSpeaking : undefined}
+                onClickCapture={toggleVoice}
+                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
+              >
+                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -301,12 +324,32 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
             </ScrollArea>
 
             <div className="border-t p-4">
-              <div className="flex gap-2">
+            <div className="flex gap-2">
+                {sttSupported && (
+                  <Button
+                    onClick={() => {
+                      if (isListening) {
+                        stopListening();
+                      } else {
+                        startListening((text) => {
+                          setInputMessage(text);
+                        });
+                      }
+                    }}
+                    variant={isListening ? 'default' : 'outline'}
+                    size="sm"
+                    className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                    disabled={isTyping}
+                    title={isListening ? 'Stop listening' : 'Voice input'}
+                  >
+                    {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                  </Button>
+                )}
                 <Input
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask me anything about travel..."
+                  placeholder={isListening ? 'Listening...' : 'Ask me anything about travel...'}
                   className="flex-1"
                   disabled={isTyping}
                 />
@@ -320,7 +363,7 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                Your proactive concierge • Always thinking ahead
+                Your proactive concierge • {voiceEnabled ? '🔊 Voice on' : 'Always thinking ahead'}
               </p>
             </div>
           </CardContent>
