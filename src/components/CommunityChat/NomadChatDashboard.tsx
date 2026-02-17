@@ -52,7 +52,7 @@ export const NomadChatDashboard = () => {
               Create Group
             </Button>
             <Badge variant="secondary" className="flex items-center gap-2 px-3 py-2">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
               6 258 490 Online
             </Badge>
           </div>
@@ -130,8 +130,12 @@ export const NomadChatDashboard = () => {
           <Card className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl">💼</span>
-              <h2 className="text-xl font-semibold">Co-working Group</h2>
-              <Badge variant="secondary">8 members</Badge>
+              <h2 className="text-xl font-semibold">Dubai Marina Co-workers</h2>
+              <Badge variant="secondary">6 members</Badge>
+              <div className="ml-auto flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                <span className="text-xs text-muted-foreground">Live</span>
+              </div>
             </div>
 
             <ScrollArea className="h-[400px] border rounded-lg p-4 mb-4">
@@ -249,7 +253,7 @@ export const NomadChatDashboard = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold">{user.name}</h3>
                         {user.isOnline && (
-                          <div className="w-2 h-2 rounded-full bg-green-500" />
+                          <div className="w-2 h-2 rounded-full bg-success" />
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">{user.profession}</p>

@@ -42,23 +42,11 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
 
   const premiumOffers = [
     {
-      id: 'profile-premium',
-      title: '🎉 Get 3 Months Premium FREE',
-      description: 'Share your travel preferences and unlock all Premium features for 3 months - completely free!',
-      value: 'Worth $47.97',
-      features: ['AI Travel Assistant', 'Unlimited Countries', 'Tax Tracking', 'Cloud Backup', 'Priority Support'],
-      action: 'Get Free Premium',
-      icon: Gift,
-      gradient: 'from-primary via-accent to-primary',
-      show: !hasEnhancedProfile && isFreeUser,
-      onClick: onProfileFormClick
-    },
-    {
       id: 'upgrade-premium',
       title: '👑 Upgrade to Premium',
-      description: 'Unlock all features and take full control of your digital nomad journey',
-      value: 'From $0.99/year',
-      features: ['Auto Location Tracking', 'Unlimited Tax Reports', 'Advanced Analytics', 'API Access'],
+      description: 'Unlock all features including 10,000 AI requests, tax reports, and more',
+      value: '$4.99/month',
+      features: ['10,000 AI Requests', 'Tax Residency Reports', 'Auto Location Tracking', 'Advanced Analytics'],
       action: 'View Plans',
       icon: Crown,
       gradient: 'from-accent via-primary to-accent',

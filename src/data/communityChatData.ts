@@ -106,56 +106,65 @@ export const DEMO_USERS: NomadUser[] = [
 export const DEMO_GROUPS: ChatGroup[] = [
   {
     id: '1',
-    name: 'Co-working Group',
+    name: 'Dubai Marina Co-workers',
     category: 'Professional',
     members: DEMO_USERS.slice(0, 3),
-    lastMessage: 'Which co-working space today?',
-    unreadCount: 2,
+    lastMessage: 'Lena: The wifi here is insane — 200mbps 🚀',
+    unreadCount: 3,
     icon: '💼'
   },
   {
     id: '2',
-    name: 'Tech Meetup',
+    name: 'AI & Web3 Builders',
     category: 'Networking',
     members: DEMO_USERS,
-    lastMessage: 'AI discussion at 7pm',
-    unreadCount: 5,
-    icon: '💻'
+    lastMessage: 'Alex: Who\'s coming to the demo night at 7pm?',
+    unreadCount: 7,
+    icon: '🤖'
   },
   {
     id: '3',
-    name: 'Weekend Explorers',
+    name: 'Sunset Rooftop Social',
     category: 'Social',
-    members: DEMO_USERS.slice(1, 4),
-    lastMessage: 'Desert safari anyone?',
+    members: DEMO_USERS.slice(1, 5),
+    lastMessage: 'Elena: Brought my camera — golden hour in 20min!',
+    unreadCount: 1,
+    icon: '🌅'
+  },
+  {
+    id: '4',
+    name: 'Morning Run Crew',
+    category: 'Fitness',
+    members: DEMO_USERS.slice(2, 6),
+    lastMessage: 'Tom: 6am at the Marina walk tomorrow?',
     unreadCount: 0,
-    icon: '🏜️'
+    icon: '🏃'
   }
 ];
 
 export const AI_SUGGESTIONS: AIMatch[] = [
   {
     type: 'co-working',
-    count: 3,
-    description: '3 professionals looking for co-working',
-    icon: '💼'
-  },
-  {
-    type: 'exploration',
-    count: 2,
-    description: '2 artists planning gallery visit',
+    count: 4,
+    description: '4 designers need UX feedback — join the session at 2pm',
     icon: '🎨'
   },
   {
+    type: 'dining',
+    count: 6,
+    description: '6 foodies organizing rooftop dinner tonight at 8pm',
+    icon: '🍽️'
+  },
+  {
     type: 'fitness',
-    count: 5,
-    description: '5 runners for morning jog',
+    count: 9,
+    description: '9 runners meeting at Marina Walk — 6am tomorrow',
     icon: '🏃'
   },
   {
     type: 'tech',
-    count: 8,
-    description: 'Tech meetup forming (8 people)',
-    icon: '💻'
+    count: 12,
+    description: '12 developers at AI demo night — starts in 3 hours',
+    icon: '🤖'
   }
 ];
