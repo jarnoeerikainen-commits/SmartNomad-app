@@ -13,28 +13,52 @@ export const useCommunityChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
-      senderId: '2',
-      senderName: 'Mike Johnson',
-      senderAvatar: AVATAR_URLS.mike,
-      content: 'Anyone up for focused work session at WeWork today?',
-      timestamp: new Date(Date.now() - 3600000)
+      senderId: '3',
+      senderName: 'Lena Martinez',
+      senderAvatar: AVATAR_URLS.lena,
+      content: 'Good morning everyone! ☀️ Just arrived at the co-working space near Marina. The wifi here is insane — 200mbps down.',
+      timestamp: new Date(Date.now() - 5400000)
     },
     {
       id: '2',
-      senderId: 'ai',
-      senderName: 'AI Assistant',
-      senderAvatar: '🤖',
-      content: 'Based on your profiles, I recommend meeting at WeWork Dubai Mall - it has excellent facilities and is convenient for all members.',
-      timestamp: new Date(Date.now() - 3000000),
-      isAI: true
+      senderId: '2',
+      senderName: 'Mike Johnson',
+      senderAvatar: AVATAR_URLS.mike,
+      content: 'Nice! I was thinking of heading there too. Anyone want to grab lunch after? I found an amazing Lebanese place nearby.',
+      timestamp: new Date(Date.now() - 4200000)
     },
     {
       id: '3',
       senderId: '1',
       senderName: 'Sarah Chen',
       senderAvatar: AVATAR_URLS.sarah,
-      content: 'Perfect! I can be there by 10am. Anyone interested in a design feedback session?',
+      content: 'Count me in! I need to step away from Figma for a bit 😅 Also — has anyone tried the new rooftop café on the 40th floor?',
+      timestamp: new Date(Date.now() - 3600000)
+    },
+    {
+      id: '4',
+      senderId: 'ai',
+      senderName: 'SuperNomad AI',
+      senderAvatar: '🤖',
+      content: '📍 Based on your locations, I suggest meeting at Salt Café, Dubai Marina at 12:30pm — it\'s a 5-min walk for everyone and has great reviews from 847 nomads. I can reserve a table for 4 if you\'d like!',
+      timestamp: new Date(Date.now() - 3000000),
+      isAI: true
+    },
+    {
+      id: '5',
+      senderId: '5',
+      senderName: 'Elena Rossi',
+      senderAvatar: AVATAR_URLS.elena,
+      content: 'Yes please! Reserve it 🙌 Also, anyone up for a sunset photography walk after? The light here is unreal this time of year.',
       timestamp: new Date(Date.now() - 1800000)
+    },
+    {
+      id: '6',
+      senderId: '2',
+      senderName: 'Mike Johnson',
+      senderAvatar: AVATAR_URLS.mike,
+      content: 'I\'m in for both! This is why I love this community — best spontaneous plans ever.',
+      timestamp: new Date(Date.now() - 900000)
     }
   ]);
 
@@ -80,7 +104,7 @@ export const useCommunityChat = () => {
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         senderId: 'ai',
-        senderName: 'AI Assistant',
+        senderName: 'SuperNomad AI',
         senderAvatar: '🤖',
         content: data.response,
         timestamp: new Date(),
@@ -95,9 +119,9 @@ export const useCommunityChat = () => {
       const demoResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         senderId: 'ai',
-        senderName: 'AI Assistant',
+        senderName: 'SuperNomad AI',
         senderAvatar: '🤖',
-        content: 'Great suggestion! I can help coordinate with the group. Would you like me to create a poll for the best time and location?',
+        content: 'Great idea! I\'ve found 3 people nearby who are interested. Want me to create a group and suggest a meeting spot based on everyone\'s location?',
         timestamp: new Date(),
         isAI: true
       };

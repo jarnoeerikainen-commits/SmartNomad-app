@@ -206,12 +206,12 @@ const translations: Record<string, Record<string, string>> = {
     'common.manage_profile': 'Manage your profile, privacy, and preferences',
     
     // Upgrade Banner
-    'upgrade.free_premium_title': '🎉 Get 3 Months Premium FREE!',
-    'upgrade.special_offer': 'Special Offer',
-    'upgrade.share_preferences': 'Share your travel preferences and unlock Premium features for 3 months - completely free!',
-    'upgrade.get_free_premium': 'Get Free Premium',
+    'upgrade.free_premium_title': '👑 Upgrade to Premium',
+    'upgrade.special_offer': 'Premium',
+    'upgrade.share_preferences': 'Get 10,000 AI requests, tax reports, and advanced features.',
+    'upgrade.get_free_premium': 'Upgrade Now',
     'upgrade.unlock_premium': 'Unlock Premium Features',
-    'upgrade.from_price': 'From $0.99/year',
+    'upgrade.from_price': '$4.99/month',
     'upgrade.benefits': 'Get automatic tracking, unlimited countries, tax residence monitoring, and more!',
     'upgrade.view_plans': 'View Plans',
     'upgrade.personalized_alerts': '✈️ Personalized Alerts',

@@ -19,9 +19,9 @@ interface ProfileCardProps {
 
 export const ProfileCard = ({ profile, onStartChat }: ProfileCardProps) => {
   const statusColor = {
-    online: 'bg-green-500',
-    away: 'bg-yellow-500',
-    offline: 'bg-gray-500'
+    online: 'bg-success',
+    away: 'bg-warning',
+    offline: 'bg-muted-foreground'
   }[profile.status];
 
   const travelerTypeLabel = {
@@ -54,7 +54,7 @@ export const ProfileCard = ({ profile, onStartChat }: ProfileCardProps) => {
             <CardTitle className="text-lg flex items-center gap-2">
               {profile.basicInfo.name}
               {profile.verification.level === 'premium' && (
-                <Shield className="h-4 w-4 text-blue-500" />
+                <Shield className="h-4 w-4 text-primary" />
               )}
             </CardTitle>
             <CardDescription className="text-sm">
