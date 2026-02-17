@@ -18,21 +18,21 @@ const GlobalCityServices = () => {
           <h1 className="text-4xl font-bold">Global City Services</h1>
         </div>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Comprehensive service coverage across 512 cities worldwide
+          Comprehensive service coverage across 100 major cities worldwide — all services rated 4+ stars
         </p>
         
         {/* Key Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mt-8">
           <Card className="p-6 text-center">
-            <div className="text-4xl font-bold text-primary mb-2">200</div>
+            <div className="text-4xl font-bold text-primary mb-2">50</div>
             <div className="text-sm text-muted-foreground">Cities with Full Coverage</div>
           </Card>
           <Card className="p-6 text-center">
-            <div className="text-4xl font-bold text-primary mb-2">150</div>
+            <div className="text-4xl font-bold text-primary mb-2">30</div>
             <div className="text-sm text-muted-foreground">Cities with Growing Networks</div>
           </Card>
           <Card className="p-6 text-center">
-            <div className="text-4xl font-bold text-primary mb-2">162</div>
+            <div className="text-4xl font-bold text-primary mb-2">20</div>
             <div className="text-sm text-muted-foreground">Cities with Basic Coverage</div>
           </Card>
         </div>
@@ -75,8 +75,8 @@ const GlobalCityServices = () => {
               <div>
                 <h4 className="text-lg font-semibold mb-3">Global Reach</h4>
                 <p className="text-muted-foreground mb-4">
-                  SuperNomad now covers 512 cities across 6 continents, providing comprehensive
-                  service intelligence for digital nomads worldwide.
+                  SuperNomad now covers 100 cities across 6 continents, with all services rated 4+ stars,
+                  providing premium service intelligence for digital nomads worldwide.
                 </p>
               </div>
               
