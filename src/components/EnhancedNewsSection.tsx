@@ -15,7 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { 
   Newspaper, ExternalLink, RefreshCw, Bell, Globe, Filter, Calendar, Settings,
   Clock, Zap, TrendingUp, Shield, MapPin, Search, ChevronDown, ChevronUp,
-  AlertTriangle, Star, BookOpen, Radio, Megaphone
+  AlertTriangle, Star, BookOpen, Radio, Megaphone, Plus, X, Save, Check, Tag
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import NewsService, { NewsItem } from '@/services/NewsService';
@@ -90,14 +90,22 @@ const SOURCE_OPTIONS: { value: SourceType; label: string; desc: string; icon: Re
 ];
 
 const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) => {
-  const [selectedCountries, setSelectedCountries] = useState<string[]>(['US', 'GB', 'DE']);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(NEWS_CATEGORIES.map(c => c.id));
-  const [prefs, setPrefs] = useState<NewsPreferences>(DEFAULT_PREFS);
+  // Load saved state from localStorage
+  const loadSaved = <T,>(key: string, fallback: T): T => {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+  };
+
+  const [selectedCountries, setSelectedCountries] = useState<string[]>(() => loadSaved('news_countries', ['US', 'GB', 'DE']));
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => loadSaved('news_categories', NEWS_CATEGORIES.map(c => c.id)));
+  const [customTopics, setCustomTopics] = useState<string[]>(() => loadSaved('news_custom_topics', []));
+  const [newTopicInput, setNewTopicInput] = useState('');
+  const [prefs, setPrefs] = useState<NewsPreferences>(() => loadSaved('news_prefs', DEFAULT_PREFS));
   const [news, setNews] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [countrySearch, setCountrySearch] = useState('');
   const [showAllCountries, setShowAllCountries] = useState(false);
+  const [hasSaved, setHasSaved] = useState(false);
   const { toast } = useToast();
 
   const newsService = NewsService.getInstance();
@@ -135,6 +143,35 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
 
   const selectAllCategories = () => setSelectedCategories(NEWS_CATEGORIES.map(c => c.id));
   const clearAllCategories = () => setSelectedCategories([]);
+
+  const addCustomTopic = () => {
+    const topic = newTopicInput.trim().slice(0, 50);
+    if (!topic) return;
+    if (customTopics.includes(topic)) {
+      toast({ title: "Topic already exists", variant: "destructive" });
+      return;
+    }
+    if (customTopics.length >= 20) {
+      toast({ title: "Max 20 custom topics", variant: "destructive" });
+      return;
+    }
+    setCustomTopics(prev => [...prev, topic]);
+    setNewTopicInput('');
+  };
+
+  const removeCustomTopic = (topic: string) => {
+    setCustomTopics(prev => prev.filter(t => t !== topic));
+  };
+
+  const savePreferences = () => {
+    localStorage.setItem('news_countries', JSON.stringify(selectedCountries));
+    localStorage.setItem('news_categories', JSON.stringify(selectedCategories));
+    localStorage.setItem('news_custom_topics', JSON.stringify(customTopics));
+    localStorage.setItem('news_prefs', JSON.stringify(prefs));
+    setHasSaved(true);
+    toast({ title: "✅ Preferences saved!", description: "Your news settings have been saved." });
+    setTimeout(() => setHasSaved(false), 2000);
+  };
 
   const getCategoryMeta = (category: string) => NEWS_CATEGORIES.find(c => c.id === category);
   const getCountryFlag = (code: string) => COUNTRIES.find(c => c.code === code)?.flag || '🌍';
@@ -538,7 +575,7 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2"><Filter className="w-5 h-5 text-primary" />News Topics</CardTitle>
-                  <CardDescription>Select the topics you care about</CardDescription>
+                  <CardDescription>Select built-in topics or add your own</CardDescription>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={selectAllCategories}>All</Button>
@@ -546,7 +583,7 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {NEWS_CATEGORIES.map(cat => (
                   <label key={cat.id}
@@ -562,10 +599,71 @@ const EnhancedNewsSection: React.FC<EnhancedNewsSectionProps> = ({ className }) 
                   </label>
                 ))}
               </div>
+
+              <Separator />
+
+              {/* Custom Topics */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Tag className="w-5 h-5 text-primary" />
+                  <h3 className="font-semibold text-foreground">Custom Topics</h3>
+                  <Badge variant="outline" className="text-xs">{customTopics.length}/20</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">Add your own topics to track specific interests not covered above</p>
+
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="e.g. Cryptocurrency, Remote Work, Healthcare…"
+                    value={newTopicInput}
+                    onChange={e => setNewTopicInput(e.target.value)}
+                    maxLength={50}
+                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomTopic(); } }}
+                    className="flex-1"
+                  />
+                  <Button onClick={addCustomTopic} disabled={!newTopicInput.trim() || customTopics.length >= 20}>
+                    <Plus className="w-4 h-4 mr-1.5" />Add
+                  </Button>
+                </div>
+
+                {customTopics.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {customTopics.map(topic => (
+                      <Badge key={topic}
+                        className="bg-accent/10 text-accent border-accent/20 pl-3 pr-1.5 py-1.5 text-sm flex items-center gap-1.5 cursor-default">
+                        <Tag className="w-3 h-3" />
+                        {topic}
+                        <button onClick={() => removeCustomTopic(topic)}
+                          className="ml-1 p-0.5 rounded-full hover:bg-destructive/20 hover:text-destructive transition-colors">
+                          <X className="w-3 h-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 border-2 border-dashed rounded-xl">
+                    <Tag className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-50" />
+                    <p className="text-sm text-muted-foreground">No custom topics yet — add one above!</p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Floating Save Button */}
+      <div className="sticky bottom-4 flex justify-center z-10">
+        <Button size="lg" onClick={savePreferences}
+          className={`shadow-xl px-8 transition-all duration-300 ${
+            hasSaved ? 'bg-emerald-600 hover:bg-emerald-700' : ''
+          }`}>
+          {hasSaved ? (
+            <><Check className="w-5 h-5 mr-2" />Saved!</>
+          ) : (
+            <><Save className="w-5 h-5 mr-2" />Save Preferences</>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };
