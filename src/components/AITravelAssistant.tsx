@@ -31,15 +31,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: `Hello and a huge welcome! ✈️ I'm Voyager, your personal travel assistant, and I'm absolutely thrilled to be adventuring with you.${currentLocation ? ` I see you're in ${currentLocation.city}, ${currentLocation.country}—what a wonderful place!` : ''}
+      content: `Hey there! 👋 I'm your SuperNomad Concierge — think of me as a proactive personal assistant that lives in your pocket.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
 
-Where shall we begin?
+I don't just answer questions — **I think ahead for you:**
 
-🌍 **Planning a new getaway?** I can dream up destinations tailored just for you
-✈️ **Already have a trip?** I can manage bookings, check you in, or find the perfect dinner spot
-🆘 **Need help right now?** Flight delays, lost reservations, or just questions—I'm here to fix it
+🗓️ I'm already checking your **week ahead** — weather changes, local events, and things you shouldn't miss
+💼 Need a co-working spot, restaurant, or gym? Just ask — I'll book it
+🛡️ I'm monitoring your **visa days, tax residency, and travel alerts** in the background
+✈️ Got a trip coming? I'll prep everything — packing tips, transfers, local SIM, currency rates
+🍽️ Tell me what you're craving — I'll find the best spot within walking distance right now
 
-So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to make everything smooth and wonderful! 🌟`,
+**I learn from every conversation** — the more we chat, the better I get at anticipating what you need before you even ask.
+
+So — what can I handle for you today? 🚀`,
       isUser: false,
       timestamp: new Date()
     }
@@ -215,7 +219,7 @@ So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to ma
         >
           <div className="relative">
             <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
           </div>
         </Button>
       </div>
@@ -232,8 +236,8 @@ So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to ma
             <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
               <Bot className="h-5 w-5 text-white" />
             </div>
-            <CardTitle className="text-sm font-semibold">AI Travel Assistant</CardTitle>
-            <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse shadow-glow" />
+            <CardTitle className="text-sm font-semibold">SuperNomad Concierge</CardTitle>
+            <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow" />
           </div>
           <div className="flex gap-1">
             <Button
@@ -283,12 +287,12 @@ So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to ma
                 {isTyping && (
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-lg px-3 py-2 text-sm">
-                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
                         <Bot className="h-4 w-4" />
                         <div className="flex gap-1">
-                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" />
-                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
+                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                         </div>
                       </div>
                     </div>
@@ -318,7 +322,7 @@ So, what's on your mind? Tell me your travel dreams or dilemmas—I'm here to ma
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                AI-powered travel assistant • Real-time support
+                Your proactive concierge • Always thinking ahead
               </p>
             </div>
           </CardContent>
