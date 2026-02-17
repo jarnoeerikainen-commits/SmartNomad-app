@@ -9,28 +9,35 @@ export interface GDPRConsent {
 }
 
 export interface CoreProfile {
-  // Basic Identification
   personal: {
     firstName: string;
     lastName: string;
     email: string;
     phone?: string;
-    birthDate?: Date;
+    birthDate?: string;
+    age?: number;
+    gender?: 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
     profilePhoto?: string;
+    bio?: string;
+    nickname?: string;
   };
   
-  // Legal & Compliance (Required)
   legal: {
     passportCountries: string[];
     taxResidencyCountry: string;
     currentResidencyCountry: string;
     visaStatus: 'citizen' | 'resident' | 'visa' | 'tourist';
+    drivingLicense: {
+      hasLicense: boolean;
+      countries?: string[];
+      internationalPermit?: boolean;
+      categories?: ('A' | 'B' | 'C' | 'D' | 'motorcycle')[];
+    };
     gdprConsent: GDPRConsent;
   };
 }
 
 export interface LifestyleProfile {
-  // Family & Relationships (Opt-in)
   family: {
     maritalStatus: 'single' | 'married' | 'partnered' | 'divorced' | 'widowed' | 'prefer-not-to-say';
     dependents: {
@@ -40,50 +47,70 @@ export interface LifestyleProfile {
     };
     pets: {
       hasPets: boolean;
-      types?: ('dog' | 'cat' | 'bird' | 'other')[];
+      types?: ('dog' | 'cat' | 'bird' | 'fish' | 'reptile' | 'rabbit' | 'other')[];
+      names?: string[];
       count?: number;
       travelFriendly?: boolean;
     };
   };
 
-  // Work & Business (Opt-in)
   professional: {
-    employmentStatus: 'employed' | 'self-employed' | 'freelancer' | 'student' | 'retired' | 'seeking';
+    employmentStatus: 'employed' | 'self-employed' | 'freelancer' | 'entrepreneur' | 'student' | 'retired' | 'seeking';
+    jobTitle?: string;
+    company?: string;
+    industry?: string;
+    yearsExperience?: number;
+    incomeBracket?: '<30k' | '30-60k' | '60-100k' | '100-150k' | '150-250k' | '250k+';
+    incomeCurrency?: string;
     remoteWork: {
       isRemoteWorker: boolean;
-      workType?: 'full-time' | 'part-time' | 'project-based';
+      workType?: 'full-time' | 'part-time' | 'project-based' | 'hybrid';
       timezoneCompatibility?: string[];
-      internetRequirements?: 'basic' | 'high-speed' | 'video-calls';
+      internetRequirements?: 'basic' | 'high-speed' | 'video-calls' | 'streaming';
+      preferredWorkHours?: string;
     };
-    industry?: string;
-    incomeBracket?: '<30k' | '30-60k' | '60-100k' | '100-150k' | '150k+';
+    skills?: string[];
+    linkedIn?: string;
+  };
+
+  education?: {
+    level: 'high-school' | 'bachelors' | 'masters' | 'phd' | 'self-taught' | 'other';
+    field?: string;
+    certifications?: string[];
   };
 }
 
 export interface TravelProfile {
-  // Travel Patterns (Opt-in)
   preferences: {
     favoriteDestinations: {
       regions: string[];
       countries: string[];
       cities: string[];
-      types: ('beach' | 'mountain' | 'city' | 'rural' | 'adventure')[];
+      types: ('beach' | 'mountain' | 'city' | 'rural' | 'adventure' | 'cultural' | 'island' | 'desert' | 'arctic')[];
     };
     
     timing: {
       preferredSeasons: ('winter' | 'spring' | 'summer' | 'autumn')[];
       holidayMonths: number[];
       advancePlanning: 'spontaneous' | '1-3-months' | '3-6-months' | '6-plus-months';
+      averageTripLength?: string;
     };
     
     budget: {
-      accommodation: 'budget' | 'mid-range' | 'luxury';
-      transportation: 'economy' | 'premium' | 'business';
-      activities: 'minimal' | 'moderate' | 'extensive';
+      accommodation: 'budget' | 'mid-range' | 'luxury' | 'ultra-luxury';
+      transportation: 'economy' | 'premium' | 'business' | 'first-class';
+      activities: 'minimal' | 'moderate' | 'extensive' | 'unlimited';
+      dailyBudget?: string;
+    };
+
+    travelStyle: {
+      purpose: ('business' | 'pleasure' | 'digital-nomad' | 'family' | 'adventure' | 'wellness' | 'education' | 'retirement')[];
+      pacePreference: 'slow-travel' | 'moderate' | 'fast-paced';
+      groupPreference: 'solo' | 'couple' | 'family' | 'friends' | 'group-tour';
+      luggageStyle: 'carry-on-only' | 'light-packer' | 'normal' | 'heavy-packer';
     };
   };
 
-  // Mobility & Accessibility (Opt-in)
   mobility: {
     impairments: {
       hasMobilityIssues: boolean;
@@ -93,7 +120,6 @@ export interface TravelProfile {
     fitnessLevel: 'sedentary' | 'moderate' | 'active' | 'athletic';
   };
 
-  // Learning & Memory (Auto-tracked)
   learnedPreferences?: {
     frequentDestinationTypes: string[];
     preferredAirlines: string[];
@@ -107,31 +133,68 @@ export interface TravelProfile {
 }
 
 export interface PersonalPreferences {
-  // Lifestyle & Hobbies (Opt-in)
+  sports: {
+    active: ('tennis' | 'padel' | 'golf' | 'swimming' | 'running' | 'cycling' | 'yoga' | 'pilates' | 'boxing' | 'surfing' | 'skiing' | 'snowboarding' | 'hiking' | 'climbing' | 'martial-arts' | 'basketball' | 'football' | 'volleyball' | 'sailing' | 'diving' | 'gym' | 'crossfit' | 'dance')[];
+    spectator: ('formula1' | 'football' | 'tennis' | 'basketball' | 'cricket' | 'rugby' | 'boxing' | 'mma' | 'golf' | 'horse-racing')[];
+    fitnessGoals?: string;
+    weeklyFrequency?: number;
+  };
+
   hobbies: {
-    activities: ('hiking' | 'swimming' | 'reading' | 'photography' | 'cooking' | 'sports' | 'gaming' | 'yoga' | 'cycling' | 'tennis')[];
-    interests: ('art' | 'music' | 'technology' | 'nature' | 'history' | 'food' | 'wellness' | 'culture')[];
-    socialPreferences: 'solo' | 'small-groups' | 'large-communities';
+    activities: ('photography' | 'cooking' | 'reading' | 'gaming' | 'music' | 'painting' | 'writing' | 'gardening' | 'meditation' | 'wine-tasting' | 'scuba-diving' | 'skydiving' | 'pottery' | 'board-games' | 'podcasts' | 'blogging' | 'volunteering')[];
+    interests: ('art' | 'music' | 'technology' | 'nature' | 'history' | 'food' | 'wellness' | 'culture' | 'fashion' | 'architecture' | 'cinema' | 'theater' | 'literature' | 'science' | 'politics' | 'cryptocurrency' | 'investing' | 'sustainability')[];
+    socialPreferences: 'solo' | 'small-groups' | 'large-communities' | 'mixed';
   };
 
-  // Food & Dining (Opt-in)
   dietary: {
-    preferences: ('vegetarian' | 'vegan' | 'gluten-free' | 'halal' | 'kosher' | 'pescatarian' | 'none')[];
+    preferences: ('vegetarian' | 'vegan' | 'gluten-free' | 'halal' | 'kosher' | 'pescatarian' | 'keto' | 'paleo' | 'lactose-free' | 'none')[];
     allergies: string[];
-    favoriteCuisines: string[];
+    favoriteCuisines: ('italian' | 'japanese' | 'thai' | 'mexican' | 'indian' | 'chinese' | 'french' | 'mediterranean' | 'korean' | 'vietnamese' | 'middle-eastern' | 'greek' | 'spanish' | 'american' | 'brazilian' | 'turkish' | 'ethiopian' | 'peruvian')[];
     cookingHabits: 'eats-out' | 'cooks-at-home' | 'meal-delivery' | 'mixed';
+    mealPreference?: 'breakfast-person' | 'brunch-lover' | 'dinner-person' | 'snacker';
+    coffeeTea?: 'coffee-addict' | 'tea-lover' | 'both' | 'neither';
+    alcoholPreference?: 'wine' | 'beer' | 'cocktails' | 'spirits' | 'non-drinker' | 'social-drinker';
   };
 
-  // Accommodation Preferences (Opt-in)
   accommodation: {
-    types: ('hotel' | 'apartment' | 'hostel' | 'villa' | 'house-sit' | 'resort')[];
-    amenities: ('wifi' | 'kitchen' | 'pool' | 'gym' | 'workspace' | 'parking' | 'pet-friendly')[];
-    locations: ('city-center' | 'suburbs' | 'beachfront' | 'countryside' | 'mountains')[];
+    types: ('hotel' | 'apartment' | 'hostel' | 'villa' | 'house-sit' | 'resort' | 'boutique-hotel' | 'airbnb' | 'coliving')[];
+    amenities: ('wifi' | 'kitchen' | 'pool' | 'gym' | 'workspace' | 'parking' | 'pet-friendly' | 'laundry' | 'balcony' | 'air-conditioning' | 'heating' | 'sauna' | 'rooftop')[];
+    locations: ('city-center' | 'suburbs' | 'beachfront' | 'countryside' | 'mountains' | 'near-airport' | 'near-coworking')[];
+  };
+
+  health: {
+    bloodType?: string;
+    chronicConditions?: string[];
+    medications?: string[];
+    insuranceProvider?: string;
+    emergencyContact?: {
+      name: string;
+      phone: string;
+      relation: string;
+    };
+    sleepPattern?: 'early-bird' | 'night-owl' | 'flexible';
+    mentalWellness?: ('meditation' | 'therapy' | 'journaling' | 'mindfulness' | 'none')[];
+  };
+
+  languages?: {
+    spoken: { language: string; level: 'basic' | 'conversational' | 'fluent' | 'native' }[];
+    learning?: string[];
+  };
+
+  entertainment?: {
+    musicGenres?: string[];
+    movieGenres?: string[];
+    bookGenres?: string[];
+    streamingServices?: ('netflix' | 'spotify' | 'youtube-premium' | 'disney-plus' | 'hbo' | 'apple-tv' | 'amazon-prime')[];
+  };
+
+  shopping?: {
+    style: 'minimalist' | 'moderate' | 'shopaholic';
+    preferences: ('online' | 'local-markets' | 'luxury-brands' | 'vintage' | 'sustainable' | 'duty-free')[];
   };
 }
 
 export interface AIConsentSettings {
-  // Service-Specific Permissions
   permissions: {
     taxOptimization: boolean;
     travelPlanning: boolean;
@@ -139,9 +202,10 @@ export interface AIConsentSettings {
     insuranceRecommendations: boolean;
     socialConnections: boolean;
     promotionalOffers: boolean;
+    healthRecommendations: boolean;
+    fitnessRecommendations: boolean;
   };
   
-  // Data Sharing Levels
   dataSharing: {
     anonymizedAnalytics: boolean;
     partnerRecommendations: boolean;
@@ -149,7 +213,6 @@ export interface AIConsentSettings {
     researchParticipation: boolean;
   };
   
-  // Automation Preferences
   automation: {
     autoBookFlights: boolean;
     autoExtendVisas: boolean;
@@ -164,22 +227,12 @@ export interface ComprehensiveUserProfile {
   updatedAt: Date;
   completionLevel: 'basic' | 'core' | 'enhanced' | 'complete';
   
-  // Tier 1: Core (Required)
   core: CoreProfile;
-  
-  // Tier 2: Lifestyle (Opt-in)
   lifestyle?: LifestyleProfile;
-  
-  // Tier 3: Travel (Opt-in)
   travel?: TravelProfile;
-  
-  // Tier 4: Personal (Opt-in)
   personal?: PersonalPreferences;
-  
-  // AI & Consent
   aiConsent?: AIConsentSettings;
   
-  // Legacy compatibility
   languages?: string[];
   followedEmbassies?: string[];
 }
