@@ -331,8 +331,23 @@ I don't just answer questions — **I think ahead AND find the perfect gear for 
                       if (isListening) {
                         stopListening();
                       } else {
-                        startListening((text) => {
+                    startListening((text) => {
                           setInputMessage(text);
+                          // Auto-send after a short delay to show the text
+                          setTimeout(() => {
+                            if (text.trim()) {
+                              const userMsg: Message = {
+                                id: Date.now().toString(),
+                                content: text,
+                                isUser: true,
+                                timestamp: new Date()
+                              };
+                              setMessages(prev => [...prev, userMsg]);
+                              setInputMessage('');
+                              setIsTyping(true);
+                              streamChat(text);
+                            }
+                          }, 500);
                         });
                       }
                     }}
