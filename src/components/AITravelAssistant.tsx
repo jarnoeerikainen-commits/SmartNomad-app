@@ -31,19 +31,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: `Hey there! 👋 I'm your SuperNomad Concierge — think of me as a proactive personal assistant that lives in your pocket.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
+      content: `Hey there! 👋 I'm your SuperNomad Concierge — your proactive personal assistant AND lifestyle curator, right in your pocket.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
 
-I don't just answer questions — **I think ahead for you:**
+I don't just answer questions — **I think ahead AND find the perfect gear for your lifestyle:**
 
-🗓️ I'm already checking your **week ahead** — weather changes, local events, and things you shouldn't miss
-💼 Need a co-working spot, restaurant, or gym? Just ask — I'll book it
-🛡️ I'm monitoring your **visa days, tax residency, and travel alerts** in the background
-✈️ Got a trip coming? I'll prep everything — packing tips, transfers, local SIM, currency rates
-🍽️ Tell me what you're craving — I'll find the best spot within walking distance right now
+🗓️ Already checking your **week ahead** — weather, events, visa deadlines
+💼 Need a co-working spot, restaurant, padel court? Just ask — I'll find it
+🛡️ Monitoring your **visa days, tax residency & travel alerts** in the background
+🛍️ I curate **SuperNomad 100 picks** — the best tech, gear & services matched to YOUR situation right now
+✈️ Got a trip coming? I'll prep everything — packing, transfers, eSIM, insurance
 
-**I learn from every conversation** — the more we chat, the better I get at anticipating what you need before you even ask.
-
-So — what can I handle for you today? 🚀`,
+**Try me:** Ask about your day, a destination, or just say "What should I do today?" 🚀`,
       isUser: false,
       timestamp: new Date()
     }
