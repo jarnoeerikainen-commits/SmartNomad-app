@@ -123,66 +123,66 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const menuGroups = [
     {
       id: 'main',
-      label: 'Quick Actions',
+      label: t('sidebar.quick_actions'),
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
-        { id: 'upgrade', label: 'Upgrade Plan', icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
+        { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
       ]
     },
     {
       id: 'tax',
-      label: 'Tax & Compliance',
+      label: t('sidebar.tax_compliance'),
       items: [
-        { id: 'tax', label: 'Tax Residency Dashboard', icon: Calculator },
-        { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, badge: 'Core', variant: 'default' as const },
-        { id: 'visas', label: 'Visa Manager', icon: Plane },
-        { id: 'vault', label: 'Document Vault', icon: Shield },
+        { id: 'tax', label: t('sidebar.tax_dashboard'), icon: Calculator },
+        { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
+        { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
+        { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
       ]
     },
     {
       id: 'travel',
-      label: 'Travel Essentials',
+      label: t('sidebar.travel_essentials'),
       items: [
-        { id: 'public-transport', label: 'Transportation', icon: Bus },
-        { id: 'esim', label: 'eSIM & VPN', icon: Wifi },
-        { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield },
+        { id: 'public-transport', label: t('sidebar.transportation'), icon: Bus },
+        { id: 'esim', label: t('sidebar.esim_vpn'), icon: Wifi },
+        { id: 'travel-insurance', label: t('sidebar.travel_insurance'), icon: Shield },
       ]
     },
     {
       id: 'local',
-      label: 'Local Living',
+      label: t('sidebar.local_living'),
       items: [
-        { id: 'global-city-services', label: 'City Services', icon: Building2 },
-        { id: 'language-learning', label: 'Language Learning', icon: BookOpen },
-        { id: 'local-nomads', label: 'Local Nomads', icon: Users },
-        { id: 'explore-local', label: 'Local Events & Markets', icon: Calendar, badge: 'LIVE', variant: 'secondary' as const },
-        { id: 'family-services', label: 'Nanny & Family Services', icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
-        { id: 'pet-services', label: 'Pet Services', icon: Cat },
-        { id: 'moving-services', label: 'Moving Services', icon: Truck, badge: 'AI', variant: 'secondary' as const },
-        { id: 'marketplace', label: 'Expat Marketplace', icon: Store, badge: 'AI', variant: 'secondary' as const },
-        { id: 'social-chat', label: 'SuperNomad Vibe', icon: Users, badge: 'AI', variant: 'secondary' as const },
-        { id: 'nomad-chat', label: 'SuperNomad Pulse', icon: MessageSquare, badge: 'AI', variant: 'secondary' as const },
-        { id: 'news', label: 'News & Updates', icon: Newspaper },
+        { id: 'global-city-services', label: t('sidebar.city_services'), icon: Building2 },
+        { id: 'language-learning', label: t('sidebar.language_learning'), icon: BookOpen },
+        { id: 'local-nomads', label: t('sidebar.local_nomads'), icon: Users },
+        { id: 'explore-local', label: t('sidebar.local_events'), icon: Calendar, badge: 'LIVE', variant: 'secondary' as const },
+        { id: 'family-services', label: t('sidebar.family_services'), icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
+        { id: 'pet-services', label: t('sidebar.pet_services'), icon: Cat },
+        { id: 'moving-services', label: t('sidebar.moving_services'), icon: Truck, badge: 'AI', variant: 'secondary' as const },
+        { id: 'marketplace', label: t('sidebar.marketplace'), icon: Store, badge: 'AI', variant: 'secondary' as const },
+        { id: 'social-chat', label: t('sidebar.social_vibe'), icon: Users, badge: 'AI', variant: 'secondary' as const },
+        { id: 'nomad-chat', label: t('sidebar.nomad_pulse'), icon: MessageSquare, badge: 'AI', variant: 'secondary' as const },
+        { id: 'news', label: t('sidebar.news_updates'), icon: Newspaper },
       ]
     },
     {
       id: 'premium',
-      label: 'Premium Services',
+      label: t('sidebar.premium_services'),
       items: [
-        { id: 'guardian', label: 'SuperNomad Guardian', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'threats', label: 'Threat Intelligence', icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
-        { id: 'emergency', label: 'Emergency Contacts', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
-        { id: 'embassy', label: 'Embassy Directory', icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
-        { id: 'sos-services', label: 'SOS Services', icon: Siren, badge: '24/7', variant: 'destructive' as const },
-        { id: 'private-protection', label: 'Private Protection', icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
-        { id: 'cyber-helpline', label: 'Cyber Security', icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
-        { id: 'ai-doctor', label: 'AI Health Advisor', icon: Stethoscope, badge: 'AI' },
-        { id: 'ai-lawyer', label: 'AI Legal Advisor', icon: Scale, badge: 'AI' },
-        { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, badge: 'AI' },
-        { id: 'tax-advisors', label: 'Tax Advisors', icon: Calculator, badge: 'VIP', variant: 'secondary' as const },
-        { id: 'business-centers', label: 'Business Centers', icon: Building2, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'airport-lounges', label: 'VIP Lounges', icon: Crown, badge: 'VIP', variant: 'secondary' as const },
-        { id: 'private-clubs', label: 'Private Clubs', icon: Crown, badge: 'ELITE', variant: 'secondary' as const },
+        { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
+        { id: 'emergency', label: t('sidebar.emergency'), icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'embassy', label: t('sidebar.embassy'), icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
+        { id: 'sos-services', label: t('sidebar.sos'), icon: Siren, badge: '24/7', variant: 'destructive' as const },
+        { id: 'private-protection', label: t('sidebar.protection'), icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
+        { id: 'cyber-helpline', label: t('sidebar.cyber'), icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
+        { id: 'ai-doctor', label: t('sidebar.ai_doctor'), icon: Stethoscope, badge: 'AI' },
+        { id: 'ai-lawyer', label: t('sidebar.ai_lawyer'), icon: Scale, badge: 'AI' },
+        { id: 'ai-planner', label: t('sidebar.ai_planner'), icon: Plane, badge: 'AI' },
+        { id: 'tax-advisors', label: t('sidebar.tax_advisors'), icon: Calculator, badge: 'VIP', variant: 'secondary' as const },
+        { id: 'business-centers', label: t('sidebar.business_centers'), icon: Building2, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'airport-lounges', label: t('sidebar.lounges'), icon: Crown, badge: 'VIP', variant: 'secondary' as const },
+        { id: 'private-clubs', label: t('sidebar.clubs'), icon: Crown, badge: 'ELITE', variant: 'secondary' as const },
       ]
     },
   ];
@@ -326,7 +326,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                   size="lg"
                 >
                   <TrendingUp className="h-5 w-5 mr-2" />
-                  Upgrade to Premium
+                  {t('sidebar.upgrade_premium')}
                 </Button>
                 <Separator className="my-4" />
               </>
@@ -365,7 +365,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
             {subscription && (
               <div className="mb-3 p-2 bg-primary/10 rounded-lg text-center">
                 <p className="text-xs font-semibold text-primary capitalize">
-                  {subscription.tier} Plan
+                  {subscription.tier} {t('sidebar.plan_label')}
                 </p>
                 {subscription.tier === 'free' && onUpgradeClick && (
                   <Button
@@ -377,7 +377,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     }}
                     className="h-auto p-0 text-xs text-primary"
                   >
-                    Upgrade Now →
+                    {t('sidebar.upgrade_now')}
                   </Button>
                 )}
               </div>

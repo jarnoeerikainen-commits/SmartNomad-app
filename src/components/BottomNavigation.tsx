@@ -2,6 +2,7 @@ import React from 'react';
 import { Home, BarChart3, AlertCircle, Bot, User } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -9,12 +10,14 @@ interface BottomNavigationProps {
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
+  const { t } = useLanguage();
+  
   const tabs = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'tracking', label: 'Tracking', icon: BarChart3 },
-    { id: 'emergency', label: 'Emergency', icon: AlertCircle },
-    { id: 'ai', label: 'AI', icon: Bot },
-    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'home', labelKey: 'bottomnav.home', icon: Home },
+    { id: 'tracking', labelKey: 'bottomnav.tracking', icon: BarChart3 },
+    { id: 'emergency', labelKey: 'bottomnav.emergency', icon: AlertCircle },
+    { id: 'ai', labelKey: 'bottomnav.ai', icon: Bot },
+    { id: 'profile', labelKey: 'bottomnav.profile', icon: User },
   ];
 
   return (
@@ -48,7 +51,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabCha
                 "text-xs font-medium",
                 isActive && "font-semibold"
               )}>
-                {tab.label}
+                {t(tab.labelKey)}
               </span>
             </Button>
           );
