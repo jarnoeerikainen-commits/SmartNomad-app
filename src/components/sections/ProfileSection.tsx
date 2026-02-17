@@ -19,12 +19,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
 
   const getTierBadge = () => {
     switch (subscription.tier) {
-      case 'diamond':
-        return <Badge className="bg-gold text-gold-foreground">Diamond</Badge>;
       case 'premium':
         return <Badge variant="default">Premium</Badge>;
-      case 'premium-lite':
-        return <Badge variant="secondary">Premium Lite</Badge>;
       default:
         return <Badge variant="secondary">Free</Badge>;
     }
