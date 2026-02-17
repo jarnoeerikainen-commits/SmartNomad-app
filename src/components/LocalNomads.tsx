@@ -362,6 +362,127 @@ const communityGroups: CommunityGroup[] = [
   // Belgrade, Serbia
   { id: 'beg1', name: 'Belgrade Startup Scene', platform: 'linkedin', location: 'Belgrade', country: 'Serbia', members: 9800, category: 'Business', description: 'Balkan tech hub', link: 'https://linkedin.com/groups/example', verified: true },
   { id: 'beg2', name: 'Belgrade Nightlife', platform: 'telegram', location: 'Belgrade', country: 'Serbia', members: 14500, category: 'Social', description: 'Famous club scene', link: 'https://t.me/example', verified: true },
+
+  // Delhi, India
+  { id: 'del1', name: 'Delhi Startup Network', platform: 'linkedin', location: 'Delhi', country: 'India', members: 32000, category: 'Business', description: 'Northern India tech ecosystem', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'del2', name: 'Delhi Street Food Walks', platform: 'meetup', location: 'Delhi', country: 'India', members: 14500, category: 'Social', description: 'Old Delhi culinary tours', link: 'https://meetup.com/example', verified: true },
+  { id: 'del3', name: 'Delhi Cricket Fanatics', platform: 'whatsapp', location: 'Delhi', country: 'India', members: 22000, category: 'Sports', description: 'IPL and gully cricket', link: 'https://wa.me/example', verified: true },
+
+  // Shanghai, China
+  { id: 'sha1', name: 'Shanghai Expat Business', platform: 'linkedin', location: 'Shanghai', country: 'China', members: 28000, category: 'Business', description: 'Finance and trade hub', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'sha2', name: 'Shanghai Tech Builders', platform: 'discord', location: 'Shanghai', country: 'China', members: 16200, category: 'Tech', description: 'Chinese tech innovation', link: 'https://discord.gg/example', verified: true },
+
+  // Beijing, China
+  { id: 'bjn1', name: 'Beijing Entrepreneurs', platform: 'linkedin', location: 'Beijing', country: 'China', members: 24000, category: 'Business', description: 'Zhongguancun startup scene', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'bjn2', name: 'Beijing Culture Club', platform: 'meetup', location: 'Beijing', country: 'China', members: 8200, category: 'Hobbies', description: 'Hutong walks and cultural tours', link: 'https://meetup.com/example', verified: true },
+
+  // Shenzhen, China
+  { id: 'szx1', name: 'Shenzhen Hardware Makers', platform: 'discord', location: 'Shenzhen', country: 'China', members: 18700, category: 'Tech', description: 'Hardware capital of the world', link: 'https://discord.gg/example', verified: true },
+  { id: 'szx2', name: 'Shenzhen Business Forum', platform: 'linkedin', location: 'Shenzhen', country: 'China', members: 14200, category: 'Business', description: 'Pearl River Delta entrepreneurs', link: 'https://linkedin.com/groups/example', verified: true },
+
+  // Osaka, Japan
+  { id: 'osa1', name: 'Osaka Food Lovers', platform: 'meetup', location: 'Osaka', country: 'Japan', members: 12400, category: 'Social', description: 'Japan kitchen city food tours', link: 'https://meetup.com/example', verified: true },
+  { id: 'osa2', name: 'Osaka Business Network', platform: 'linkedin', location: 'Osaka', country: 'Japan', members: 9800, category: 'Business', description: 'Kansai business community', link: 'https://linkedin.com/groups/example', verified: true },
+
+  // Madrid, Spain
+  { id: 'mad1', name: 'Madrid Startup Ecosystem', platform: 'linkedin', location: 'Madrid', country: 'Spain', members: 22000, category: 'Business', description: 'Spanish capital entrepreneurs', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'mad2', name: 'Madrid Football Fans', platform: 'whatsapp', location: 'Madrid', country: 'Spain', members: 34000, category: 'Sports', description: 'Real Madrid and Atletico fans', link: 'https://wa.me/example', verified: true },
+  { id: 'mad3', name: 'Madrid Tapas Tours', platform: 'meetup', location: 'Madrid', country: 'Spain', members: 8900, category: 'Social', description: 'Authentic Spanish tapas crawls', link: 'https://meetup.com/example', verified: true },
+
+  // Munich, Germany
+  { id: 'muc1', name: 'Munich Tech Hub', platform: 'linkedin', location: 'Munich', country: 'Germany', members: 18200, category: 'Tech', description: 'Bavarian tech scene', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'muc2', name: 'Munich Oktoberfest Community', platform: 'meetup', location: 'Munich', country: 'Germany', members: 12400, category: 'Social', description: 'Beer gardens and festivals', link: 'https://meetup.com/example', verified: true },
+
+  // Zurich, Switzerland
+  { id: 'zrh1', name: 'Zurich Finance Network', platform: 'linkedin', location: 'Zurich', country: 'Switzerland', members: 24000, category: 'Business', description: 'Swiss banking and finance', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'zrh2', name: 'Zurich Hiking Club', platform: 'meetup', location: 'Zurich', country: 'Switzerland', members: 9200, category: 'Sports', description: 'Swiss Alps adventures', link: 'https://meetup.com/example', verified: true },
+
+  // Brussels, Belgium
+  { id: 'bru1', name: 'Brussels EU Affairs', platform: 'linkedin', location: 'Brussels', country: 'Belgium', members: 16800, category: 'Business', description: 'EU policy and lobbying network', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'bru2', name: 'Brussels Beer Culture', platform: 'meetup', location: 'Brussels', country: 'Belgium', members: 7200, category: 'Social', description: 'Belgian beer tastings', link: 'https://meetup.com/example', verified: true },
+
+  // Milan, Italy
+  { id: 'mxp1', name: 'Milan Fashion Business', platform: 'linkedin', location: 'Milan', country: 'Italy', members: 22000, category: 'Business', description: 'Fashion capital networking', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'mxp2', name: 'Milan Design Community', platform: 'meetup', location: 'Milan', country: 'Italy', members: 11200, category: 'Arts', description: 'Design Week and exhibitions', link: 'https://meetup.com/example', verified: true },
+
+  // Abu Dhabi, UAE
+  { id: 'auh1', name: 'Abu Dhabi Business Leaders', platform: 'linkedin', location: 'Abu Dhabi', country: 'UAE', members: 18700, category: 'Business', description: 'Capital city networking', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'auh2', name: 'Abu Dhabi F1 Fans', platform: 'whatsapp', location: 'Abu Dhabi', country: 'UAE', members: 8900, category: 'Sports', description: 'Yas Marina Circuit community', link: 'https://wa.me/example', verified: true },
+
+  // Bangalore, India
+  { id: 'blr1', name: 'Bangalore Tech Hub', platform: 'discord', location: 'Bangalore', country: 'India', members: 45000, category: 'Tech', description: 'Silicon Valley of India', link: 'https://discord.gg/example', verified: true },
+  { id: 'blr2', name: 'Bangalore Startup Network', platform: 'linkedin', location: 'Bangalore', country: 'India', members: 38000, category: 'Business', description: 'Indian startup capital', link: 'https://linkedin.com/groups/example', verified: true },
+
+  // Washington DC, USA
+  { id: 'dca1', name: 'DC Policy & Tech', platform: 'linkedin', location: 'Washington DC', country: 'USA', members: 28000, category: 'Business', description: 'Policy meets technology', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'dca2', name: 'DC Running Club', platform: 'meetup', location: 'Washington DC', country: 'USA', members: 12400, category: 'Sports', description: 'National Mall morning runs', link: 'https://meetup.com/example', verified: true },
+
+  // São Paulo communities (additional)
+  { id: 'sao4', name: 'SP Art & Culture', platform: 'meetup', location: 'São Paulo', country: 'Brazil', members: 9800, category: 'Arts', description: 'Museum visits and galleries', link: 'https://meetup.com/example', verified: true },
+
+  // Porto, Portugal
+  { id: 'opo1', name: 'Porto Digital Nomads', platform: 'facebook', location: 'Porto', country: 'Portugal', members: 14200, category: 'Business', description: 'Northern Portugal remote workers', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'opo2', name: 'Porto Wine Tours', platform: 'meetup', location: 'Porto', country: 'Portugal', members: 6700, category: 'Social', description: 'Port wine tastings in Gaia', link: 'https://meetup.com/example', verified: true },
+
+  // Tbilisi, Georgia
+  { id: 'tbs1', name: 'Tbilisi Digital Nomads', platform: 'facebook', location: 'Tbilisi', country: 'Georgia', members: 18200, category: 'Business', description: 'Caucasus nomad hub', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'tbs2', name: 'Tbilisi Wine & Dine', platform: 'meetup', location: 'Tbilisi', country: 'Georgia', members: 5600, category: 'Social', description: 'Georgian cuisine and wine', link: 'https://meetup.com/example', verified: true },
+
+  // Marrakech, Morocco
+  { id: 'rak1', name: 'Marrakech Creatives', platform: 'facebook', location: 'Marrakech', country: 'Morocco', members: 8900, category: 'Arts', description: 'Artists and designers in Morocco', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'rak2', name: 'Marrakech Nomads', platform: 'telegram', location: 'Marrakech', country: 'Morocco', members: 6200, category: 'Business', description: 'North African remote workers', link: 'https://t.me/example', verified: true },
+
+  // Kyiv, Ukraine
+  { id: 'kbp1', name: 'Kyiv Tech Community', platform: 'discord', location: 'Kyiv', country: 'Ukraine', members: 16200, category: 'Tech', description: 'Ukrainian developers and founders', link: 'https://discord.gg/example', verified: true },
+  { id: 'kbp2', name: 'Kyiv Entrepreneurs', platform: 'linkedin', location: 'Kyiv', country: 'Ukraine', members: 11200, category: 'Business', description: 'Resilient Ukrainian startups', link: 'https://linkedin.com/groups/example', verified: true },
+
+  // Phnom Penh, Cambodia
+  { id: 'pnh1', name: 'Phnom Penh Expats', platform: 'facebook', location: 'Phnom Penh', country: 'Cambodia', members: 12400, category: 'Social', description: 'Cambodia expat community', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'pnh2', name: 'PP Digital Nomads', platform: 'telegram', location: 'Phnom Penh', country: 'Cambodia', members: 4200, category: 'Business', description: 'Southeast Asia on a budget', link: 'https://t.me/example', verified: true },
+
+  // Da Nang, Vietnam
+  { id: 'dad1', name: 'Da Nang Nomads', platform: 'facebook', location: 'Da Nang', country: 'Vietnam', members: 16800, category: 'Business', description: 'Beach city remote workers', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'dad2', name: 'Da Nang Surf Club', platform: 'whatsapp', location: 'Da Nang', country: 'Vietnam', members: 3200, category: 'Sports', description: 'Central Vietnam surf culture', link: 'https://wa.me/example', verified: true },
+
+  // Canggu, Indonesia
+  { id: 'cgg1', name: 'Canggu Digital Nomads', platform: 'facebook', location: 'Canggu', country: 'Indonesia', members: 28000, category: 'Business', description: 'Bali nomad epicenter', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'cgg2', name: 'Canggu Surf & Skate', platform: 'whatsapp', location: 'Canggu', country: 'Indonesia', members: 5600, category: 'Sports', description: 'Daily surf sessions at Echo Beach', link: 'https://wa.me/example', verified: true },
+
+  // Playa del Carmen, Mexico
+  { id: 'pdc1', name: 'Playa Nomad Community', platform: 'facebook', location: 'Playa del Carmen', country: 'Mexico', members: 14200, category: 'Business', description: 'Riviera Maya digital workers', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'pdc2', name: 'Playa Scuba Diving', platform: 'whatsapp', location: 'Playa del Carmen', country: 'Mexico', members: 4800, category: 'Sports', description: 'Cenote and reef diving', link: 'https://wa.me/example', verified: true },
+
+  // Tulum, Mexico
+  { id: 'tul1', name: 'Tulum Wellness Community', platform: 'meetup', location: 'Tulum', country: 'Mexico', members: 9200, category: 'Wellness', description: 'Yoga retreats and cacao ceremonies', link: 'https://meetup.com/example', verified: true },
+  { id: 'tul2', name: 'Tulum Digital Nomads', platform: 'telegram', location: 'Tulum', country: 'Mexico', members: 7800, category: 'Business', description: 'Jungle co-working lifestyle', link: 'https://t.me/example', verified: true },
+
+  // Colombo, Sri Lanka
+  { id: 'cmb1', name: 'Colombo Startup Hub', platform: 'linkedin', location: 'Colombo', country: 'Sri Lanka', members: 8200, category: 'Business', description: 'Sri Lankan entrepreneurs', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'cmb2', name: 'Colombo Surf & Beach', platform: 'whatsapp', location: 'Colombo', country: 'Sri Lanka', members: 3400, category: 'Sports', description: 'Southern coast surf trips', link: 'https://wa.me/example', verified: true },
+
+  // Montevideo, Uruguay
+  { id: 'mvd1', name: 'Montevideo Tech Scene', platform: 'linkedin', location: 'Montevideo', country: 'Uruguay', members: 6800, category: 'Tech', description: 'Uruguayan developers', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'mvd2', name: 'Montevideo Mate Culture', platform: 'meetup', location: 'Montevideo', country: 'Uruguay', members: 4200, category: 'Social', description: 'Share mate on the Rambla', link: 'https://meetup.com/example', verified: true },
+
+  // Split, Croatia
+  { id: 'spu1', name: 'Split Digital Nomads', platform: 'facebook', location: 'Split', country: 'Croatia', members: 5600, category: 'Business', description: 'Adriatic coast remote workers', link: 'https://facebook.com/groups/example', verified: true },
+  { id: 'spu2', name: 'Split Sailing Club', platform: 'whatsapp', location: 'Split', country: 'Croatia', members: 3200, category: 'Sports', description: 'Island hopping adventures', link: 'https://wa.me/example', verified: true },
+
+  // Valletta, Malta
+  { id: 'mla1', name: 'Malta iGaming Network', platform: 'linkedin', location: 'Valletta', country: 'Malta', members: 12400, category: 'Business', description: 'iGaming capital of Europe', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'mla2', name: 'Malta Diving Community', platform: 'meetup', location: 'Valletta', country: 'Malta', members: 4800, category: 'Sports', description: 'Mediterranean diving spots', link: 'https://meetup.com/example', verified: true },
+
+  // Casablanca, Morocco
+  { id: 'cmn1', name: 'Casablanca Business Club', platform: 'linkedin', location: 'Casablanca', country: 'Morocco', members: 14200, category: 'Business', description: 'Morocco financial center', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'cmn2', name: 'Casa Tech Devs', platform: 'discord', location: 'Casablanca', country: 'Morocco', members: 6800, category: 'Tech', description: 'Moroccan tech community', link: 'https://discord.gg/example', verified: true },
+
+  // Florianópolis, Brazil
+  { id: 'fln1', name: 'Floripa Tech Island', platform: 'linkedin', location: 'Florianópolis', country: 'Brazil', members: 8900, category: 'Tech', description: 'Brazilian Silicon Island', link: 'https://linkedin.com/groups/example', verified: true },
+  { id: 'fln2', name: 'Floripa Surf Community', platform: 'whatsapp', location: 'Florianópolis', country: 'Brazil', members: 4200, category: 'Sports', description: 'Beach lifestyle and surfing', link: 'https://wa.me/example', verified: true },
+
+  // Batumi, Georgia
+  { id: 'bus1', name: 'Batumi Beach Nomads', platform: 'telegram', location: 'Batumi', country: 'Georgia', members: 5600, category: 'Business', description: 'Black Sea nomad hub', link: 'https://t.me/example', verified: true },
+  { id: 'bus2', name: 'Batumi Nightlife', platform: 'whatsapp', location: 'Batumi', country: 'Georgia', members: 2800, category: 'Social', description: 'Vibrant summer scene', link: 'https://wa.me/example', verified: true },
 ];
 
 const categories = [
