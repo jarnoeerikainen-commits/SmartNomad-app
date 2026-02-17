@@ -229,7 +229,7 @@ const visaServices: VisaService[] = [
 export const VisaAssistanceServices = ({ currentLocation, subscription }: VisaAssistanceServicesProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState<VisaService | null>(null);
-  const isPremium = subscription?.tier === 'premium' || subscription?.tier === 'diamond' || subscription?.tier === 'premium-lite';
+  const isPremium = subscription?.tier === 'premium';
   const currentLocationString = currentLocation?.city || currentLocation?.country || "";
 
   const filteredServices = visaServices.filter(service =>

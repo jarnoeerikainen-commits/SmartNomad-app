@@ -17,9 +17,9 @@ const Index = () => {
     tier: 'free',
     isActive: true,
     expiryDate: null,
-    features: ['✈️ Basic travel tracking', '📊 Simple day counting', '📍 Manual location entry', '⚠️ Basic alerts'],
-    aiRequestsRemaining: 0,
-    aiRequestsLimit: 0
+    features: ['1,000 AI requests/month', 'Country tracking', 'Dashboard & analytics', 'Emergency contacts'],
+    aiRequestsRemaining: 1000,
+    aiRequestsLimit: 1000
   });
   const { toast } = useToast();
 
@@ -136,58 +136,30 @@ const Index = () => {
   };
 
   const handleUpgrade = (tier: string) => {
-    // Update subscription with enhanced features based on tier
-    const tierFeatures = {
-      free: ['✈️ Basic travel tracking', '📊 Simple day counting', '📍 Manual location entry', '⚠️ Basic alerts'],
-      'premium-lite': [
-        '✈️ Multiple country tracking',
-        '🤖 AI travel assistant (100 requests/month)',
-        '📊 Enhanced analytics',
-        '🗺️ Smart recommendations',
-        '📱 Mobile app access',
-        '💰 Tax residency basics',
-        '📋 Document reminders'
-      ],
+    const tierFeatures: Record<string, string[]> = {
+      free: ['1,000 AI requests/month', 'Country tracking', 'Dashboard & analytics', 'Emergency contacts'],
       premium: [
-        '✈️ Unlimited country tracking',
-        '🤖 Advanced AI assistant (500 requests/month)',
-        '🚨 Smart alerts & notifications',
-        '💰 Advanced tax residency tracking',
-        '📄 Document vault',
-        '🌍 Visa requirement checker',
-        '📊 Comprehensive analytics',
-        '🔐 Priority support',
-        '📱 Premium mobile features'
-      ],
-      diamond: [
-        '✈️ VIP unlimited tracking',
-        '🤖 Premium AI assistant (2000 requests/month)',
-        '💎 Concierge service',
-        '💰 Expert tax consultations',
-        '🏛️ Embassy connections',
-        '📄 Advanced document management',
-        '🌐 Multi-passport support',
-        '✈️ Travel planning assistance',
-        '📊 Executive reporting',
-        '🔐 Dedicated support',
-        '🎯 Custom integrations'
+        '10,000 AI requests/month',
+        'Advanced tax reports & exports',
+        'PDF report generation',
+        'Unlimited document storage',
+        'Smart alerts & notifications',
+        'Priority 24/7 support'
       ]
     };
 
-    const aiLimits = {
-      free: 0,
-      'premium-lite': 100,
-      premium: 500,
-      diamond: 2000
+    const aiLimits: Record<string, number> = {
+      free: 1000,
+      premium: 10000
     };
 
     const newSubscription: Subscription = {
       tier: tier as any,
       isActive: true,
       expiryDate: null,
-      features: tierFeatures[tier as keyof typeof tierFeatures] || tierFeatures.free,
-      aiRequestsRemaining: aiLimits[tier as keyof typeof aiLimits] || 0,
-      aiRequestsLimit: aiLimits[tier as keyof typeof aiLimits] || 0
+      features: tierFeatures[tier] || tierFeatures.free,
+      aiRequestsRemaining: aiLimits[tier] || 1000,
+      aiRequestsLimit: aiLimits[tier] || 1000
     };
 
     setSubscription(newSubscription);
@@ -200,32 +172,7 @@ const Index = () => {
   };
 
   const handleProfileComplete = (profileData: any) => {
-    // Grant 3 months of Premium
-    const expiryDate = new Date();
-    expiryDate.setMonth(expiryDate.getMonth() + 3);
-
-    const premiumSubscription: Subscription = {
-      tier: 'premium',
-      isActive: true,
-      expiryDate: expiryDate.toISOString(),
-      features: [
-        '✈️ Unlimited country tracking',
-        '🤖 Advanced AI assistant (500 requests/month)',
-        '🚨 Smart alerts & notifications',
-        '💰 Advanced tax residency tracking',
-        '📄 Document vault',
-        '🌍 Visa requirement checker',
-        '📊 Comprehensive analytics',
-        '🔐 Priority support',
-        '📱 Premium mobile features'
-      ],
-      aiRequestsRemaining: 500,
-      aiRequestsLimit: 500
-    };
-
-    setSubscription(premiumSubscription);
     setUserProfile(profileData);
-    localStorage.setItem('subscription', JSON.stringify(premiumSubscription));
     localStorage.setItem('userProfile', JSON.stringify(profileData));
   };
 

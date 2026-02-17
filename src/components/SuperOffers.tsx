@@ -64,18 +64,6 @@ const SuperOffers: React.FC<SuperOffersProps> = ({
       gradient: 'from-accent via-primary to-accent',
       show: isFreeUser,
       onClick: onUpgradeClick
-    },
-    {
-      id: 'diamond-upgrade',
-      title: '💎 Diamond Plan',
-      description: 'Ultimate features for serious nomads and digital entrepreneurs',
-      value: '$9.99/month',
-      features: ['Everything in Premium', 'Tax Consultant Access', 'Legal Document Templates', 'Business Setup Guides'],
-      action: 'Go Diamond',
-      icon: Sparkles,
-      gradient: 'from-purple-500 via-pink-500 to-purple-500',
-      show: subscription.tier !== 'diamond',
-      onClick: onUpgradeClick
     }
   ];
 

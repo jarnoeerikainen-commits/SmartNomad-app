@@ -1,6 +1,6 @@
 
 export interface Subscription {
-  tier: 'free' | 'premium-lite' | 'premium' | 'diamond';
+  tier: 'free' | 'premium';
   isActive: boolean;
   expiryDate: string | null;
   features: string[];

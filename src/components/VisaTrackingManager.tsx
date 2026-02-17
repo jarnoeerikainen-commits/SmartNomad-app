@@ -573,9 +573,7 @@ const [selectedTaxCountryFlag, setSelectedTaxCountryFlag] = useState('');
   const getVisaTrackingLimit = () => {
     switch (currentSubscription.tier) {
       case 'free': return 1;
-      case 'premium-lite': return 3;
-      case 'premium': return 999; // unlimited
-      case 'diamond': return 999; // unlimited
+      case 'premium': return 999;
       default: return 1;
     }
   };
@@ -587,9 +585,7 @@ const [selectedTaxCountryFlag, setSelectedTaxCountryFlag] = useState('');
   const getAllowedVisaTypes = () => {
     switch (currentSubscription.tier) {
       case 'free': return ['tourist'];
-      case 'premium-lite': return ['tourist', 'business', 'student', 'schengen', 'transit'];
-      case 'premium': return VISA_TYPES.map(v => v.id); // all types
-      case 'diamond': return VISA_TYPES.map(v => v.id); // all types
+      case 'premium': return VISA_TYPES.map(v => v.id);
       default: return ['tourist'];
     }
   };
@@ -671,9 +667,7 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
   const getTaxTrackingLimit = () => {
     switch (currentSubscription.tier) {
       case 'free': return 1;
-      case 'premium-lite': return 3;
-      case 'premium': return 10;
-      case 'diamond': return 50;
+      case 'premium': return 50;
       default: return 1;
     }
   };
