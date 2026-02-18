@@ -7,6 +7,7 @@ import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, V
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
+import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 
 interface Message {
   id: string;
@@ -34,7 +35,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       id: '1',
       content: `Hey! 👋 ${currentLocation ? `You're in **${currentLocation.city}** — ` : ''}What can I help with today?
 
-Ask me anything — destinations, visa stuff, where to eat, coworking spots, or just "what should I do today?"`,
+Ask me anything — or try: "Find flights from London to Tokyo next week" or "Hotels in Lisbon for this weekend" ✈️🏨🚗`,
       isUser: false,
       timestamp: new Date()
     }
@@ -276,26 +277,43 @@ Ask me anything — destinations, visa stuff, where to eat, coworking spots, or 
           <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
             <ScrollArea className="flex-1 px-4">
               <div className="space-y-4 pb-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                  >
+                {messages.map((message) => {
+                  const { text, bookings } = !message.isUser 
+                    ? parseBookingBlocks(message.content) 
+                    : { text: message.content, bookings: [] };
+                  
+                  // Split text by booking placeholders
+                  const parts = text.split(/\{\{BOOKING_CARD_(\d+)\}\}/);
+                  
+                  return (
                     <div
-                      className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
-                        message.isUser
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted text-muted-foreground'
-                      }`}
+                      key={message.id}
+                      className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className="flex items-start gap-2">
-                        {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
-                        <span className="whitespace-pre-wrap">{message.content}</span>
-                        {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                      <div
+                        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                          message.isUser
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-muted-foreground'
+                        }`}
+                      >
+                        <div className="flex items-start gap-2">
+                          {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                          <div className="flex-1 min-w-0">
+                            {parts.map((part, i) => {
+                              if (i % 2 === 1) {
+                                const idx = parseInt(part);
+                                return bookings[idx] ? <BookingCards key={`b-${i}`} items={bookings[idx]} /> : null;
+                              }
+                              return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
+                            })}
+                          </div>
+                          {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 {isTyping && (
                   <div className="flex justify-start">
