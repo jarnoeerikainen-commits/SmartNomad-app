@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import WiFiHotspotFinder from '@/components/WiFiHotspotFinder';
 import { Subscription } from '@/types/subscription';
-import { LocationData } from '@/types/country';
 import AppHeader from '@/components/AppHeader';
+import { useLocation } from '@/contexts/LocationContext';
 
 const WiFiFinder = () => {
   const navigate = useNavigate();
+  const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
     isActive: true,
@@ -17,31 +18,18 @@ const WiFiFinder = () => {
     aiRequestsRemaining: 0,
     aiRequestsLimit: 0
   });
-  const [detectedLocation, setDetectedLocation] = useState<LocationData | null>(null);
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    // Load subscription from localStorage
     const savedSubscription = localStorage.getItem('subscription');
     if (savedSubscription) {
       setSubscription(JSON.parse(savedSubscription));
     }
 
-    // Load countries from localStorage
     const savedCountries = localStorage.getItem('trackedCountries');
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
     }
-
-    // Mock location detection
-    setDetectedLocation({
-      latitude: 13.7563,
-      longitude: 100.5018,
-      city: 'Bangkok',
-      country: 'Thailand',
-      country_code: 'TH',
-      timestamp: Date.now()
-    });
   }, []);
 
   const handleUpgradeClick = () => {
