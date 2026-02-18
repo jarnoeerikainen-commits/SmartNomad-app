@@ -1,269 +1,54 @@
 import { ThreatIncident, WatchlistLocation, ThreatStatistics } from '@/types/threat';
 
 export const dummyThreats: ThreatIncident[] = [
-  {
-    id: 'T001',
-    type: 'civil_unrest',
-    severity: 'critical',
-    title: 'Major Protests in City Center',
-    description: 'Large-scale protests reported near central square. Road closures in effect. Avoid the area.',
-    location: {
-      lat: 51.5074,
-      lng: -0.1278,
-      radius: 5,
-      address: 'Trafalgar Square',
-      city: 'London',
-      country: 'United Kingdom'
-    },
-    timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-    distanceFromUser: 2.3,
-    recommendedActions: [
-      'Avoid central square area',
-      'Use alternative routes',
-      'Monitor local news',
-      'Keep emergency contacts ready'
-    ],
-    sources: ['Local Police', 'Intelligence Fusion', 'Media Reports'],
-    confidence: 95,
-    isActive: true
-  },
-  {
-    id: 'T002',
-    type: 'terrorism',
-    severity: 'high',
-    title: 'Terrorism Alert - Increased Security',
-    description: 'Security services have raised threat level. Increased security measures at public venues.',
-    location: {
-      lat: 51.5074,
-      lng: -0.1278,
-      radius: 50,
-      address: 'London Metropolitan Area',
-      city: 'London',
-      country: 'United Kingdom'
-    },
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 15,
-    recommendedActions: [
-      'Be vigilant in crowded places',
-      'Report suspicious activities',
-      'Follow official guidance',
-      'Have evacuation plan ready'
-    ],
-    sources: ['UK Home Office', 'Intelligence Fusion'],
-    confidence: 88,
-    isActive: true
-  },
-  {
-    id: 'T003',
-    type: 'severe_weather',
-    severity: 'medium',
-    title: 'Severe Storm Warning',
-    description: 'Heavy rainfall and strong winds expected. Possible flooding in low-lying areas.',
-    location: {
-      lat: 13.7563,
-      lng: 100.5018,
-      radius: 30,
-      address: 'Bangkok Metropolitan',
-      city: 'Bangkok',
-      country: 'Thailand'
-    },
-    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 5420,
-    recommendedActions: [
-      'Secure loose outdoor items',
-      'Stay indoors during peak storm',
-      'Avoid flood-prone areas',
-      'Keep emergency supplies ready'
-    ],
-    sources: ['Thai Meteorological Department', 'Intelligence Fusion'],
-    confidence: 92,
-    isActive: true
-  },
-  {
-    id: 'T004',
-    type: 'crime',
-    severity: 'high',
-    title: 'High Crime Alert - Tourist Areas',
-    description: 'Increased reports of pickpocketing and scams targeting tourists. Extra caution advised.',
-    location: {
-      lat: 19.4326,
-      lng: -99.1332,
-      radius: 10,
-      address: 'Historic Center',
-      city: 'Mexico City',
-      country: 'Mexico'
-    },
-    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 8950,
-    recommendedActions: [
-      'Keep valuables secure',
-      'Stay in well-lit areas',
-      'Use official taxi services only',
-      'Travel in groups when possible'
-    ],
-    sources: ['Local Police', 'US Embassy', 'Intelligence Fusion'],
-    confidence: 85,
-    isActive: true
-  },
-  {
-    id: 'T005',
-    type: 'transport_disruption',
-    severity: 'low',
-    title: 'Metro Service Delays',
-    description: 'Signal failure causing delays on multiple lines. Allow extra travel time.',
-    location: {
-      lat: 48.8566,
-      lng: 2.3522,
-      radius: 15,
-      address: 'Paris Metro Network',
-      city: 'Paris',
-      country: 'France'
-    },
-    timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 340,
-    recommendedActions: [
-      'Use alternative transport',
-      'Allow extra travel time',
-      'Check real-time updates'
-    ],
-    sources: ['RATP', 'Intelligence Fusion'],
-    confidence: 98,
-    isActive: true
-  },
-  {
-    id: 'T006',
-    type: 'cyber_attack',
-    severity: 'medium',
-    title: 'Phishing Campaign Targeting Travelers',
-    description: 'Sophisticated phishing emails targeting hotel bookings and travel documents.',
-    location: {
-      lat: 0,
-      lng: 0,
-      radius: 0,
-      address: 'Global',
-      city: 'Worldwide',
-      country: 'Global'
-    },
-    timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 0,
-    recommendedActions: [
-      'Verify sender email addresses',
-      'Do not click suspicious links',
-      'Use official booking platforms only',
-      'Enable two-factor authentication'
-    ],
-    sources: ['Cyber Security Agencies', 'Intelligence Fusion'],
-    confidence: 90,
-    isActive: true
-  },
-  {
-    id: 'T007',
-    type: 'health_emergency',
-    severity: 'info',
-    title: 'Health Advisory - Flu Season',
-    description: 'Seasonal flu cases rising. Vaccination recommended for travelers.',
-    location: {
-      lat: 1.3521,
-      lng: 103.8198,
-      radius: 50,
-      address: 'Singapore',
-      city: 'Singapore',
-      country: 'Singapore'
-    },
-    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 10800,
-    recommendedActions: [
-      'Consider flu vaccination',
-      'Practice good hygiene',
-      'Carry hand sanitizer'
-    ],
-    sources: ['WHO', 'Singapore Health Ministry'],
-    confidence: 95,
-    isActive: false
-  },
-  {
-    id: 'T008',
-    type: 'natural_disaster',
-    severity: 'medium',
-    title: 'Seismic Activity Detected',
-    description: 'Minor earthquake recorded. No damage reported but aftershocks possible.',
-    location: {
-      lat: 35.6762,
-      lng: 139.6503,
-      radius: 100,
-      address: 'Tokyo Region',
-      city: 'Tokyo',
-      country: 'Japan'
-    },
-    timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-    distanceFromUser: 9580,
-    recommendedActions: [
-      'Review emergency procedures',
-      'Identify safe spaces',
-      'Keep emergency kit ready',
-      'Monitor official updates'
-    ],
-    sources: ['Japan Meteorological Agency', 'Intelligence Fusion'],
-    confidence: 100,
-    isActive: true
-  }
+  // Europe
+  { id: 'T001', type: 'civil_unrest', severity: 'critical', title: 'Major Protests in City Center', description: 'Large-scale protests near central square. Road closures in effect.', location: { lat: 51.5074, lng: -0.1278, radius: 5, address: 'Trafalgar Square', city: 'London', country: 'United Kingdom' }, timestamp: new Date(Date.now() - 30 * 60000).toISOString(), distanceFromUser: 2.3, recommendedActions: ['Avoid central square area', 'Use alternative routes', 'Monitor local news', 'Keep emergency contacts ready'], sources: ['Local Police', 'Intelligence Fusion'], confidence: 95, isActive: true },
+  { id: 'T002', type: 'terrorism', severity: 'high', title: 'Terrorism Alert - Increased Security', description: 'Security services have raised threat level. Increased security at public venues.', location: { lat: 51.5074, lng: -0.1278, radius: 50, address: 'London Metropolitan Area', city: 'London', country: 'United Kingdom' }, timestamp: new Date(Date.now() - 2 * 3600000).toISOString(), distanceFromUser: 15, recommendedActions: ['Be vigilant in crowded places', 'Report suspicious activities', 'Follow official guidance'], sources: ['UK Home Office', 'Intelligence Fusion'], confidence: 88, isActive: true },
+  { id: 'T005', type: 'transport_disruption', severity: 'low', title: 'Metro Service Delays', description: 'Signal failure causing delays on multiple lines.', location: { lat: 48.8566, lng: 2.3522, radius: 15, address: 'Paris Metro Network', city: 'Paris', country: 'France' }, timestamp: new Date(Date.now() - 1 * 3600000).toISOString(), distanceFromUser: 340, recommendedActions: ['Use alternative transport', 'Allow extra travel time'], sources: ['RATP', 'Intelligence Fusion'], confidence: 98, isActive: true },
+  { id: 'T010', type: 'civil_unrest', severity: 'medium', title: 'Strike Action - Public Transport', description: 'National transport strike affecting trains and buses across major cities.', location: { lat: 52.52, lng: 13.405, radius: 25, address: 'Berlin Central', city: 'Berlin', country: 'Germany' }, timestamp: new Date(Date.now() - 5 * 3600000).toISOString(), distanceFromUser: 920, recommendedActions: ['Plan alternative transport', 'Check schedules in advance'], sources: ['Deutsche Bahn', 'Local Media'], confidence: 95, isActive: true },
+  { id: 'T015', type: 'crime', severity: 'medium', title: 'Organized Pickpocket Ring Active', description: 'Coordinated pickpocketing targeting tourists near major attractions.', location: { lat: 41.9028, lng: 12.4964, radius: 8, address: 'Historic Center', city: 'Rome', country: 'Italy' }, timestamp: new Date(Date.now() - 3 * 3600000).toISOString(), distanceFromUser: 1400, recommendedActions: ['Keep valuables secure', 'Use money belts', 'Avoid crowded tourist spots'], sources: ['Carabinieri', 'Tourism Board'], confidence: 82, isActive: true },
+
+  // Asia Pacific
+  { id: 'T003', type: 'severe_weather', severity: 'medium', title: 'Severe Storm Warning', description: 'Heavy rainfall and strong winds expected. Possible flooding.', location: { lat: 13.7563, lng: 100.5018, radius: 30, address: 'Bangkok Metropolitan', city: 'Bangkok', country: 'Thailand' }, timestamp: new Date(Date.now() - 4 * 3600000).toISOString(), distanceFromUser: 5420, recommendedActions: ['Secure outdoor items', 'Stay indoors during storm', 'Avoid flood-prone areas'], sources: ['Thai Met Department', 'Intelligence Fusion'], confidence: 92, isActive: true },
+  { id: 'T008', type: 'natural_disaster', severity: 'medium', title: 'Seismic Activity Detected', description: 'Minor earthquake recorded. No damage but aftershocks possible.', location: { lat: 35.6762, lng: 139.6503, radius: 100, address: 'Tokyo Region', city: 'Tokyo', country: 'Japan' }, timestamp: new Date(Date.now() - 8 * 3600000).toISOString(), distanceFromUser: 9580, recommendedActions: ['Review emergency procedures', 'Identify safe spaces', 'Keep emergency kit ready'], sources: ['JMA', 'Intelligence Fusion'], confidence: 100, isActive: true },
+  { id: 'T007', type: 'health_emergency', severity: 'info', title: 'Health Advisory - Flu Season', description: 'Seasonal flu cases rising. Vaccination recommended.', location: { lat: 1.3521, lng: 103.8198, radius: 50, address: 'Singapore', city: 'Singapore', country: 'Singapore' }, timestamp: new Date(Date.now() - 24 * 3600000).toISOString(), distanceFromUser: 10800, recommendedActions: ['Consider flu vaccination', 'Practice good hygiene'], sources: ['WHO', 'Singapore MOH'], confidence: 95, isActive: false },
+  { id: 'T011', type: 'severe_weather', severity: 'high', title: 'Typhoon Warning Active', description: 'Category 3 typhoon approaching. Prepare for evacuation.', location: { lat: 14.5995, lng: 120.9842, radius: 80, address: 'Manila Metro', city: 'Manila', country: 'Philippines' }, timestamp: new Date(Date.now() - 2 * 3600000).toISOString(), distanceFromUser: 10600, recommendedActions: ['Stock emergency supplies', 'Secure property', 'Know evacuation routes', 'Monitor PAGASA updates'], sources: ['PAGASA', 'JTWC'], confidence: 94, isActive: true },
+  { id: 'T016', type: 'health_emergency', severity: 'medium', title: 'Dengue Outbreak Warning', description: 'Elevated dengue fever cases reported in multiple districts.', location: { lat: 3.139, lng: 101.6869, radius: 40, address: 'Kuala Lumpur Area', city: 'Kuala Lumpur', country: 'Malaysia' }, timestamp: new Date(Date.now() - 6 * 3600000).toISOString(), distanceFromUser: 10200, recommendedActions: ['Use mosquito repellent', 'Wear long sleeves', 'Remove standing water'], sources: ['Malaysia MOH', 'WHO'], confidence: 88, isActive: true },
+
+  // Americas
+  { id: 'T004', type: 'crime', severity: 'high', title: 'High Crime Alert - Tourist Areas', description: 'Increased pickpocketing and scams targeting tourists.', location: { lat: 19.4326, lng: -99.1332, radius: 10, address: 'Historic Center', city: 'Mexico City', country: 'Mexico' }, timestamp: new Date(Date.now() - 6 * 3600000).toISOString(), distanceFromUser: 8950, recommendedActions: ['Keep valuables secure', 'Stay in well-lit areas', 'Use official taxis'], sources: ['Local Police', 'US Embassy'], confidence: 85, isActive: true },
+  { id: 'T012', type: 'crime', severity: 'high', title: 'Armed Robbery Hotspot', description: 'Multiple armed robberies reported in tourist district after dark.', location: { lat: -23.5505, lng: -46.6333, radius: 8, address: 'Paulista District', city: 'São Paulo', country: 'Brazil' }, timestamp: new Date(Date.now() - 10 * 3600000).toISOString(), distanceFromUser: 9400, recommendedActions: ['Avoid walking alone at night', 'Use ride-sharing apps', 'Do not display valuables', 'Stay in tourist-safe zones'], sources: ['Military Police', 'US Consulate'], confidence: 87, isActive: true },
+  { id: 'T017', type: 'civil_unrest', severity: 'medium', title: 'Political Demonstrations Planned', description: 'Large political rallies scheduled this weekend near government buildings.', location: { lat: -34.6037, lng: -58.3816, radius: 12, address: 'Plaza de Mayo', city: 'Buenos Aires', country: 'Argentina' }, timestamp: new Date(Date.now() - 4 * 3600000).toISOString(), distanceFromUser: 11000, recommendedActions: ['Avoid protest areas', 'Check local news', 'Have alternate plans'], sources: ['Local Media', 'UK FCO'], confidence: 80, isActive: true },
+
+  // Middle East & Africa
+  { id: 'T013', type: 'terrorism', severity: 'high', title: 'Elevated Threat Level', description: 'Security forces report elevated threat level near diplomatic zone.', location: { lat: 24.4539, lng: 54.3773, radius: 20, address: 'Diplomatic Quarter', city: 'Abu Dhabi', country: 'UAE' }, timestamp: new Date(Date.now() - 12 * 3600000).toISOString(), distanceFromUser: 5500, recommendedActions: ['Follow local authority guidance', 'Avoid large gatherings', 'Register with your embassy'], sources: ['UAE Security Forces', 'Intelligence Fusion'], confidence: 75, isActive: true },
+  { id: 'T014', type: 'health_emergency', severity: 'medium', title: 'Cholera Outbreak Advisory', description: 'Cholera cases reported. Boil drinking water and avoid street food.', location: { lat: -1.2921, lng: 36.8219, radius: 30, address: 'Nairobi Metro', city: 'Nairobi', country: 'Kenya' }, timestamp: new Date(Date.now() - 18 * 3600000).toISOString(), distanceFromUser: 6800, recommendedActions: ['Boil or purify all water', 'Avoid raw foods', 'Wash hands frequently', 'Seek medical attention if symptomatic'], sources: ['Kenya MOH', 'WHO', 'CDC'], confidence: 90, isActive: true },
+
+  // Cyber / Global
+  { id: 'T006', type: 'cyber_attack', severity: 'medium', title: 'Phishing Campaign Targeting Travelers', description: 'Sophisticated phishing emails targeting hotel bookings and travel documents.', location: { lat: 0, lng: 0, radius: 0, address: 'Global', city: 'Worldwide', country: 'Global' }, timestamp: new Date(Date.now() - 12 * 3600000).toISOString(), distanceFromUser: 0, recommendedActions: ['Verify sender addresses', 'Do not click suspicious links', 'Use official platforms', 'Enable 2FA'], sources: ['Cyber Security Agencies', 'Intelligence Fusion'], confidence: 90, isActive: true },
+  { id: 'T009', type: 'cyber_attack', severity: 'high', title: 'Airport WiFi Credential Theft', description: 'Fake WiFi hotspots at major airports stealing login credentials and financial data.', location: { lat: 0, lng: 0, radius: 0, address: 'Multiple International Airports', city: 'Global', country: 'Global' }, timestamp: new Date(Date.now() - 6 * 3600000).toISOString(), distanceFromUser: 0, recommendedActions: ['Use VPN on public WiFi', 'Verify network names with staff', 'Avoid banking on public networks', 'Use mobile data when possible'], sources: ['Airport Security', 'Interpol Cybercrime'], confidence: 85, isActive: true },
 ];
 
 export const dummyWatchlist: WatchlistLocation[] = [
-  {
-    id: 'W001',
-    name: 'London, UK',
-    coordinates: { lat: 51.5074, lng: -0.1278 },
-    radius: 25,
-    alertLevel: ['critical', 'high', 'medium'],
-    activeThreats: 2,
-    currentStatus: 'danger'
-  },
-  {
-    id: 'W002',
-    name: 'Bangkok, Thailand',
-    coordinates: { lat: 13.7563, lng: 100.5018 },
-    radius: 30,
-    alertLevel: ['critical', 'high', 'medium'],
-    activeThreats: 1,
-    currentStatus: 'caution'
-  },
-  {
-    id: 'W003',
-    name: 'Mexico City, Mexico',
-    coordinates: { lat: 19.4326, lng: -99.1332 },
-    radius: 20,
-    alertLevel: ['critical', 'high'],
-    activeThreats: 1,
-    currentStatus: 'danger'
-  },
-  {
-    id: 'W004',
-    name: 'Paris, France',
-    coordinates: { lat: 48.8566, lng: 2.3522 },
-    radius: 15,
-    alertLevel: ['critical', 'high', 'medium'],
-    activeThreats: 1,
-    currentStatus: 'caution'
-  },
-  {
-    id: 'W005',
-    name: 'Singapore',
-    coordinates: { lat: 1.3521, lng: 103.8198 },
-    radius: 50,
-    alertLevel: ['critical', 'high', 'medium', 'low'],
-    activeThreats: 0,
-    currentStatus: 'safe'
-  }
+  { id: 'W001', name: 'London, UK', coordinates: { lat: 51.5074, lng: -0.1278 }, radius: 25, alertLevel: ['critical', 'high', 'medium'], activeThreats: 2, currentStatus: 'danger' },
+  { id: 'W002', name: 'Bangkok, Thailand', coordinates: { lat: 13.7563, lng: 100.5018 }, radius: 30, alertLevel: ['critical', 'high', 'medium'], activeThreats: 1, currentStatus: 'caution' },
+  { id: 'W003', name: 'Mexico City, Mexico', coordinates: { lat: 19.4326, lng: -99.1332 }, radius: 20, alertLevel: ['critical', 'high'], activeThreats: 1, currentStatus: 'danger' },
+  { id: 'W004', name: 'Paris, France', coordinates: { lat: 48.8566, lng: 2.3522 }, radius: 15, alertLevel: ['critical', 'high', 'medium'], activeThreats: 1, currentStatus: 'caution' },
+  { id: 'W005', name: 'Singapore', coordinates: { lat: 1.3521, lng: 103.8198 }, radius: 50, alertLevel: ['critical', 'high', 'medium', 'low'], activeThreats: 0, currentStatus: 'safe' },
+  { id: 'W006', name: 'Tokyo, Japan', coordinates: { lat: 35.6762, lng: 139.6503 }, radius: 30, alertLevel: ['critical', 'high', 'medium'], activeThreats: 1, currentStatus: 'caution' },
+  { id: 'W007', name: 'São Paulo, Brazil', coordinates: { lat: -23.5505, lng: -46.6333 }, radius: 20, alertLevel: ['critical', 'high'], activeThreats: 1, currentStatus: 'danger' },
+  { id: 'W008', name: 'Dubai, UAE', coordinates: { lat: 25.2048, lng: 55.2708 }, radius: 25, alertLevel: ['critical', 'high', 'medium'], activeThreats: 0, currentStatus: 'safe' },
+  { id: 'W009', name: 'Berlin, Germany', coordinates: { lat: 52.52, lng: 13.405 }, radius: 20, alertLevel: ['critical', 'high', 'medium'], activeThreats: 1, currentStatus: 'caution' },
+  { id: 'W010', name: 'Nairobi, Kenya', coordinates: { lat: -1.2921, lng: 36.8219 }, radius: 25, alertLevel: ['critical', 'high'], activeThreats: 1, currentStatus: 'caution' },
 ];
 
 export const dummyStatistics: ThreatStatistics = {
-  total: 8,
+  total: 18,
   critical: 1,
-  high: 2,
-  medium: 3,
+  high: 5,
+  medium: 7,
   low: 1,
   info: 1,
-  activeNearby: 2,
+  activeNearby: 3,
   trend: 'stable'
 };
