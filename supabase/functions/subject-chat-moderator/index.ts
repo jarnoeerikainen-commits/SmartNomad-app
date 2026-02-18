@@ -21,7 +21,12 @@ serve(async (req) => {
 
     const { chatSubject, category, recentMessages, strictness, topicEnforcement } = context;
 
-    let systemPrompt = `You are an AI moderator for a subject-based chat room about "${chatSubject}" in the ${category} category.
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+    let systemPrompt = `Current date and time: ${currentDateTime} (UTC).
+
+You are an AI moderator for a subject-based chat room about "${chatSubject}" in the ${category} category.
 
 Your role:
 - Keep discussions focused on the subject: ${chatSubject}

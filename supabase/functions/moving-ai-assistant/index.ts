@@ -18,11 +18,14 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
     let systemPrompt = '';
     let userPrompt = '';
 
     if (action === 'assess-inventory') {
-      systemPrompt = `You are an expert moving consultant. Analyze room inventories and provide accurate estimates for boxes, weight, and container sizes for international moves.`;
+      systemPrompt = `Current date: ${currentDateTime} (UTC). You are an expert moving consultant. Analyze room inventories and provide accurate estimates for boxes, weight, and container sizes for international moves.`;
       
       userPrompt = `Analyze these rooms and provide estimates:
 ${JSON.stringify(rooms, null, 2)}
@@ -36,7 +39,7 @@ Provide:
 
 Respond in JSON format with: estimatedBoxes, estimatedWeight, recommendedContainer, suggestedServices (array), timeline (string), warnings (array)`;
     } else if (action === 'estimate-pricing') {
-      systemPrompt = `You are a moving cost estimation expert. Provide realistic cost estimates for international and local moves based on route, inventory, and services.`;
+      systemPrompt = `Current date: ${currentDateTime} (UTC). You are a moving cost estimation expert. Provide realistic cost estimates for international and local moves based on route, inventory, and services.`;
       
       userPrompt = `Estimate moving costs for:
 Route: ${moveRequest.route?.from?.city}, ${moveRequest.route?.from?.country} → ${moveRequest.route?.to?.city}, ${moveRequest.route?.to?.country}

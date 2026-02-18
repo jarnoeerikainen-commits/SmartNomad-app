@@ -20,7 +20,12 @@ serve(async (req) => {
 
     if (type === 'match') {
       // AI-powered matching logic
-      const systemPrompt = `You are an intelligent social matching assistant for travelers and expats. 
+      const now = new Date();
+      const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+      const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
+
+You are an intelligent social matching assistant for travelers and expats.
 Analyze the user's profile and available profiles to suggest the best 5 matches based on:
 - Location overlap (current or upcoming)
 - Professional interests and industry
@@ -90,7 +95,9 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
 
     if (type === 'conversation') {
       // AI conversation assistance
-      const systemPrompt = `You are a helpful conversation assistant for a social travel platform. 
+      const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
+
+You are a helpful conversation assistant for a social travel platform.
 Help travelers connect meaningfully by:
 - Suggesting relevant topics based on their profiles
 - Encouraging cultural exchange and local insights

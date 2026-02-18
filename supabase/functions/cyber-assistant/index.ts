@@ -18,7 +18,12 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are an AI Cyber Guardian - a specialized tech support and cybersecurity assistant for travelers. Your role is to provide immediate, actionable help for tech emergencies and security issues.
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+    const systemPrompt = `Current date and time: ${currentDateTime} (UTC). Use this for time-aware responses.
+
+You are an AI Cyber Guardian - a specialized tech support and cybersecurity assistant for travelers. Your role is to provide immediate, actionable help for tech emergencies and security issues.
 
 KEY CAPABILITIES:
 1. Device Security: Help with stolen/lost devices, remote locking, data protection

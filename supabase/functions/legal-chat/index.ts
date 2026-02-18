@@ -23,7 +23,12 @@ serve(async (req) => {
     }
 
     // Build system prompt for legal AI
-    const systemPrompt = `You are an elite international legal advisory team specialized in travel emergencies and law.
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+    const systemPrompt = `Current date and time: ${currentDateTime} (UTC). Use this for time-aware responses and deadline calculations.
+
+You are an elite international legal advisory team specialized in travel emergencies and law.
 
 YOUR IDENTITY:
 - World's top legal experts helping travelers in crisis
