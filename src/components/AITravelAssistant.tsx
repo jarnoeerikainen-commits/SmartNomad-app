@@ -32,17 +32,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: `Hey there! 👋 I'm your SuperNomad Concierge — your proactive personal assistant AND lifestyle curator, right in your pocket.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
+      content: `Hey! 👋 ${currentLocation ? `You're in **${currentLocation.city}** — ` : ''}What can I help with today?
 
-I don't just answer questions — **I think ahead AND find the perfect gear for your lifestyle:**
-
-🗓️ Already checking your **week ahead** — weather, events, visa deadlines
-💼 Need a co-working spot, restaurant, padel court? Just ask — I'll find it
-🛡️ Monitoring your **visa days, tax residency & travel alerts** in the background
-🛍️ I curate **SuperNomad 100 picks** — the best tech, gear & services matched to YOUR situation right now
-✈️ Got a trip coming? I'll prep everything — packing, transfers, eSIM, insurance
-
-**Try me:** Ask about your day, a destination, or just say "What should I do today?" 🚀`,
+Ask me anything — destinations, visa stuff, where to eat, coworking spots, or just "what should I do today?"`,
       isUser: false,
       timestamp: new Date()
     }
