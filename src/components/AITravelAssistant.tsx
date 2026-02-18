@@ -35,7 +35,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       id: '1',
       content: `Hi there 👋 I'm your personal concierge.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
 
-The more we chat, the better I get at looking out for you — from flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.
+The more we chat — and the more you fill out your profile and share your calendar — the better I get at looking out for you. From flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.
 
 Think of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`,
       isUser: false,
