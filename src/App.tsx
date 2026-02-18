@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
 import Investors from "./pages/Investors";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { LocationProvider } from "./contexts/LocationContext";
 import { InvestorDocument } from "./components/InvestorDocument";
 import { InvestorOnePager } from "./components/InvestorOnePager";
 import { TranslationManager } from "./components/TranslationManager";
@@ -32,6 +33,7 @@ const App = () => {
       <LanguageProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
+          <LocationProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -47,6 +49,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
+          </LocationProvider>
           </TooltipProvider>
         </QueryClientProvider>
       </LanguageProvider>

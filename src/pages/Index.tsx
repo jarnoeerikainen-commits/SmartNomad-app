@@ -3,16 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
-import { Country, LocationData } from '@/types/country';
+import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocation } from '@/contexts/LocationContext';
 
 const Index = () => {
   const { t } = useLanguage();
   const [countries, setCountries] = useState<Country[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [detectedLocation, setDetectedLocation] = useState<LocationData | null>(null);
+  const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
     isActive: true,
