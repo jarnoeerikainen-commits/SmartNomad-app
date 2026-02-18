@@ -52,12 +52,21 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
     toggleVoice, sttSupported, ttsSupported
   } = useVoiceConversation();
 
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only auto-scroll to bottom when there are user messages (not just the welcome)
+    if (messages.length > 1) {
+      scrollToBottom();
+    } else {
+      // For welcome message, scroll to top so user sees the greeting
+      const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+      if (viewport) viewport.scrollTop = 0;
+    }
   }, [messages]);
 
   const streamChat = async (userMessage: string) => {
@@ -277,7 +286,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
 
         {!isMinimized && (
           <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
-            <ScrollArea className="flex-1 px-4">
+            <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
               <div className="space-y-4 pb-4">
                 {messages.map((message) => {
                   const { text, bookings } = !message.isUser 
