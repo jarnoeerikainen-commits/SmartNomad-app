@@ -18,7 +18,12 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    const systemPrompt = `You are an AI assistant for a digital nomad community chat platform. 
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+    const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
+
+You are an AI assistant for a digital nomad community chat platform.
 You help nomads connect, coordinate activities, and share local knowledge. 
 Be friendly, helpful, and suggest practical ways for the group to connect.
 Keep responses concise and actionable.

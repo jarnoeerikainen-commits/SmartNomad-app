@@ -19,7 +19,12 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are "Voyager," an expert AI travel planner with deep knowledge of global destinations, seasons, activities, and traveler preferences.
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
+    const systemPrompt = `Current date and time: ${currentDateTime} (UTC). Use this to understand seasons, "this weekend", "next month", and provide time-aware recommendations.
+
+You are "Voyager," an expert AI travel planner with deep knowledge of global destinations, seasons, activities, and traveler preferences.
 
 **YOUR MISSION:**
 Create perfectly personalized travel recommendations based on user profiles, preferences, and search criteria. Every suggestion should feel custom-tailored.

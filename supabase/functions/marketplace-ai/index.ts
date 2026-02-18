@@ -19,6 +19,9 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+
     // Handle AI Pricing
     if (action === 'pricing') {
       const { category, condition, title, description, originalPrice, location } = data;
@@ -52,7 +55,7 @@ Consider: condition depreciation, local market demand, category popularity, and 
         body: JSON.stringify({
           model: 'google/gemini-2.5-flash',
           messages: [
-            { role: 'system', content: 'You are an expert marketplace pricing AI. Always respond with valid JSON only.' },
+            { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert marketplace pricing AI. Always respond with valid JSON only.` },
             { role: 'user', content: pricingPrompt }
           ],
         }),
@@ -126,7 +129,7 @@ Provide JSON:
         body: JSON.stringify({
           model: 'google/gemini-2.5-flash',
           messages: [
-            { role: 'system', content: 'You are an expert copywriter for marketplace listings. Always respond with valid JSON only.' },
+            { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert copywriter for marketplace listings. Always respond with valid JSON only.` },
             { role: 'user', content: descriptionPrompt }
           ],
         }),
