@@ -33,9 +33,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: `Hey! 👋 ${currentLocation ? `You're in **${currentLocation.city}** — ` : ''}What can I help with today?
+      content: `Hi there 👋 I'm your personal concierge.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
 
-Ask me anything — or try: "Find flights from London to Tokyo next week" or "Hotels in Lisbon for this weekend" ✈️🏨🚗`,
+The more we chat, the better I get at looking out for you — from flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.
+
+Think of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`,
       isUser: false,
       timestamp: new Date()
     }
