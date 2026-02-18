@@ -1,53 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, MapPin, Clock, TrendingUp, TrendingDown, Minus, Bell, Settings, Radio } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Shield, AlertTriangle, MapPin, Clock, TrendingUp, TrendingDown, Minus, Bell, Radio, Search, X, Filter } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
-import { ThreatIncident, ThreatSeverity } from '@/types/threat';
+import { ThreatIncident, ThreatSeverity, ThreatCategory } from '@/types/threat';
+
+const CATEGORY_CHIPS: { id: ThreatCategory | 'all'; label: string; icon: string }[] = [
+  { id: 'all', label: 'All', icon: '🌐' },
+  { id: 'terrorism', label: 'Terrorism', icon: '💣' },
+  { id: 'civil_unrest', label: 'Civil Unrest', icon: '⚠️' },
+  { id: 'natural_disaster', label: 'Natural Disaster', icon: '🌪️' },
+  { id: 'cyber_attack', label: 'Cyber', icon: '💻' },
+  { id: 'crime', label: 'Crime', icon: '🚨' },
+  { id: 'health_emergency', label: 'Health', icon: '🏥' },
+  { id: 'severe_weather', label: 'Weather', icon: '⛈️' },
+  { id: 'transport_disruption', label: 'Transport', icon: '🚇' },
+];
+
+const SEVERITY_CHIPS: { id: ThreatSeverity | 'all'; label: string; color: string }[] = [
+  { id: 'all', label: 'All', color: '' },
+  { id: 'critical', label: 'Critical', color: 'bg-red-500/10 text-red-500 border-red-500/30' },
+  { id: 'high', label: 'High', color: 'bg-orange-500/10 text-orange-500 border-orange-500/30' },
+  { id: 'medium', label: 'Medium', color: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30' },
+  { id: 'low', label: 'Low', color: 'bg-green-500/10 text-green-500 border-green-500/30' },
+];
 
 const ThreatDashboard: React.FC = () => {
-  const [activeThreats, setActiveThreats] = useState<ThreatIncident[]>([]);
+  const [allThreats, setAllThreats] = useState<ThreatIncident[]>([]);
   const [isInDanger, setIsInDanger] = useState(false);
   const [statistics, setStatistics] = useState(ThreatIntelligenceService.getStatistics());
   const [watchlist, setWatchlist] = useState(ThreatIntelligenceService.getWatchlist());
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<ThreatCategory | 'all'>('all');
+  const [severityFilter, setSeverityFilter] = useState<ThreatSeverity | 'all'>('all');
 
   useEffect(() => {
     loadData();
-    
-    // Simulate real-time updates
-    const interval = setInterval(loadData, 30000); // Update every 30 seconds
-    
+    const interval = setInterval(loadData, 30000);
     return () => clearInterval(interval);
   }, []);
 
   const loadData = () => {
-    const threats = ThreatIntelligenceService.getActiveThreats();
-    setActiveThreats(threats);
+    setAllThreats(ThreatIntelligenceService.getActiveThreats());
     setIsInDanger(ThreatIntelligenceService.isUserInDangerZone());
     setStatistics(ThreatIntelligenceService.getStatistics());
     setWatchlist(ThreatIntelligenceService.getWatchlist());
   };
 
-  const getSeverityColor = (severity: ThreatSeverity): string => {
-    switch (severity) {
-      case 'critical':
-        return 'destructive';
-      case 'high':
-        return 'destructive';
-      case 'medium':
-        return 'secondary';
-      case 'low':
-        return 'default';
-      case 'info':
-        return 'outline';
-      default:
-        return 'default';
-    }
+  const filteredThreats = useMemo(() => {
+    return allThreats.filter(t => {
+      if (categoryFilter !== 'all' && t.type !== categoryFilter) return false;
+      if (severityFilter !== 'all' && t.severity !== severityFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        return t.title.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || t.location.city.toLowerCase().includes(q) || t.location.country.toLowerCase().includes(q);
+      }
+      return true;
+    });
+  }, [allThreats, search, categoryFilter, severityFilter]);
+
+  const getSeverityVariant = (severity: ThreatSeverity) => {
+    if (severity === 'critical' || severity === 'high') return 'destructive' as const;
+    return 'secondary' as const;
   };
 
   const getTrendIcon = () => {
@@ -57,327 +77,159 @@ const ThreatDashboard: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-6">
-      {/* Header with Live Status */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Shield className="h-8 w-8" />
-            Threat Intelligence
+            <Shield className="h-8 w-8" />Threat Intelligence
           </h1>
-          <p className="text-muted-foreground mt-1">
-            Real-time global threat monitoring powered by Intelligence Fusion
-          </p>
+          <p className="text-muted-foreground mt-1">Real-time global threat monitoring — {allThreats.length} active incidents</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <Radio className={`h-4 w-4 ${isInDanger ? 'text-red-500 animate-pulse' : 'text-green-500'}`} />
             <span className="text-sm font-medium">Live</span>
           </div>
-          <Button variant="outline" size="sm">
-            <Bell className="h-4 w-4 mr-2" />
-            Alerts
-          </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
-      {/* Critical Alert Banner */}
+      {/* Critical Alert */}
       {isInDanger && (
         <Alert variant="destructive" className="animate-pulse border-2">
           <AlertTriangle className="h-5 w-5" />
           <AlertTitle className="text-lg font-bold">Critical Threats Detected Near You!</AlertTitle>
-          <AlertDescription className="text-base">
-            {ThreatIntelligenceService.getCriticalThreats().length} active high-priority threats within 25km. 
-            Review immediate actions below and stay safe.
-          </AlertDescription>
+          <AlertDescription>{ThreatIntelligenceService.getCriticalThreats().length} active high-priority threats within 25km.</AlertDescription>
         </Alert>
       )}
 
-      {/* Statistics Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="bg-gradient-to-br from-red-500/10 to-red-500/5 border-red-500/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Critical</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-red-500">{statistics.critical}</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-orange-500/10 to-orange-500/5 border-orange-500/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">High</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-orange-500">{statistics.high}</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border-yellow-500/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Medium</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-yellow-500">{statistics.medium}</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Near You</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-primary">{statistics.activeNearby}</div>
-          </CardContent>
-        </Card>
-        
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        {[
+          { label: 'Critical', value: statistics.critical, color: 'text-red-500', bg: 'from-red-500/10 to-red-500/5 border-red-500/20' },
+          { label: 'High', value: statistics.high, color: 'text-orange-500', bg: 'from-orange-500/10 to-orange-500/5 border-orange-500/20' },
+          { label: 'Medium', value: statistics.medium, color: 'text-yellow-500', bg: 'from-yellow-500/10 to-yellow-500/5 border-yellow-500/20' },
+          { label: 'Near You', value: statistics.activeNearby, color: 'text-primary', bg: 'from-primary/10 to-primary/5 border-primary/20' },
+        ].map(s => (
+          <Card key={s.label} className={`bg-gradient-to-br ${s.bg}`}>
+            <CardContent className="p-4">
+              <p className="text-xs text-muted-foreground">{s.label}</p>
+              <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+            </CardContent>
+          </Card>
+        ))}
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Trend</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              {getTrendIcon()}
-              <span className="text-lg font-semibold capitalize">{statistics.trend}</span>
-            </div>
+          <CardContent className="p-4">
+            <p className="text-xs text-muted-foreground">Trend</p>
+            <div className="flex items-center gap-2 mt-1">{getTrendIcon()}<span className="text-sm font-semibold capitalize">{statistics.trend}</span></div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Content Tabs */}
+      {/* Tabs */}
       <Tabs defaultValue="active" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="active">Active Threats</TabsTrigger>
-          <TabsTrigger value="watchlist">Watchlist</TabsTrigger>
-          <TabsTrigger value="map">Threat Map</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="active">Active Threats ({filteredThreats.length})</TabsTrigger>
+          <TabsTrigger value="watchlist">Watchlist ({watchlist.length})</TabsTrigger>
         </TabsList>
 
-        {/* Active Threats Tab */}
         <TabsContent value="active" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
-                Active Threats Near You
-              </CardTitle>
-              <CardDescription>
-                Showing {activeThreats.length} active threats globally
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[600px] pr-4">
-                <div className="space-y-4">
-                  {activeThreats.map((threat) => {
-                    const severityInfo = ThreatIntelligenceService.getSeverityInfo(threat.severity);
-                    const categoryInfo = ThreatIntelligenceService.getCategoryInfo(threat.type);
-                    
-                    return (
-                      <Card key={threat.id} className="overflow-hidden">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Badge variant={getSeverityColor(threat.severity) as any}>
-                                  {severityInfo.icon} {severityInfo.label}
-                                </Badge>
-                                <Badge variant="outline">
-                                  {categoryInfo.icon} {categoryInfo.label}
-                                </Badge>
-                                <Badge variant="outline" className="ml-auto">
-                                  <MapPin className="h-3 w-3 mr-1" />
-                                  {threat.distanceFromUser.toFixed(1)} km away
-                                </Badge>
-                              </div>
-                              <CardTitle className="text-xl">{threat.title}</CardTitle>
-                              <CardDescription className="mt-1 flex items-center gap-2">
-                                <Clock className="h-3 w-3" />
-                                {ThreatIntelligenceService.getTimeAgo(threat.timestamp)}
-                              </CardDescription>
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <p className="text-sm">{threat.description}</p>
-                          
-                          <div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <MapPin className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm font-medium">Location</span>
-                            </div>
-                            <p className="text-sm text-muted-foreground pl-6">
-                              {threat.location.address}, {threat.location.city}, {threat.location.country}
-                            </p>
-                            <p className="text-xs text-muted-foreground pl-6 mt-1">
-                              Affected radius: {threat.location.radius} km
-                            </p>
-                          </div>
+          {/* Search & Filters */}
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search threats by city, country, or keyword..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10 pr-10" />
+              {search && <Button variant="ghost" size="sm" className="absolute right-1 top-1" onClick={() => setSearch('')}><X className="h-4 w-4" /></Button>}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORY_CHIPS.map(c => (
+                <Badge key={c.id} variant={categoryFilter === c.id ? 'default' : 'outline'} className="cursor-pointer text-xs" onClick={() => setCategoryFilter(c.id)}>
+                  {c.icon} {c.label}
+                </Badge>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {SEVERITY_CHIPS.map(s => (
+                <Badge key={s.id} variant={severityFilter === s.id ? 'default' : 'outline'} className={`cursor-pointer text-xs ${severityFilter === s.id ? '' : s.color}`} onClick={() => setSeverityFilter(s.id)}>
+                  {s.label}
+                </Badge>
+              ))}
+            </div>
+          </div>
 
-                          <Separator />
-
-                          <div>
-                            <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                              <Shield className="h-4 w-4" />
-                              Recommended Actions
-                            </h4>
-                            <ul className="space-y-1 pl-6">
-                              {threat.recommendedActions.map((action, idx) => (
-                                <li key={idx} className="text-sm list-disc text-muted-foreground">
-                                  {action}
-                                </li>
-                              ))}
-                            </ul>
+          {/* Threats List */}
+          <ScrollArea className="h-[500px] pr-2">
+            <div className="space-y-3">
+              {filteredThreats.length === 0 ? (
+                <Card><CardContent className="py-12 text-center"><Shield className="h-12 w-12 mx-auto text-muted-foreground mb-3" /><p className="text-muted-foreground">No threats matching your filters</p></CardContent></Card>
+              ) : filteredThreats.map(threat => {
+                const severityInfo = ThreatIntelligenceService.getSeverityInfo(threat.severity);
+                const categoryInfo = ThreatIntelligenceService.getCategoryInfo(threat.type);
+                return (
+                  <Card key={threat.id} className="overflow-hidden">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap mb-1">
+                            <Badge variant={getSeverityVariant(threat.severity)} className="text-xs">{severityInfo.icon} {severityInfo.label}</Badge>
+                            <Badge variant="outline" className="text-xs">{categoryInfo.icon} {categoryInfo.label}</Badge>
                           </div>
-
-                          <div className="flex items-center justify-between pt-2">
-                            <div className="text-xs text-muted-foreground">
-                              Confidence: {threat.confidence}% | Sources: {threat.sources.join(', ')}
-                            </div>
-                            <Button size="sm" variant="outline">
-                              View Details
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Watchlist Tab */}
-        <TabsContent value="watchlist" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                Your Watchlist ({watchlist.length} Locations)
-              </CardTitle>
-              <CardDescription>
-                Monitor security status in locations you care about
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {watchlist.map((location) => {
-                  const statusColor = 
-                    location.currentStatus === 'safe' ? 'text-green-500' :
-                    location.currentStatus === 'caution' ? 'text-yellow-500' :
-                    'text-red-500';
-                  
-                  const statusBg = 
-                    location.currentStatus === 'safe' ? 'bg-green-500/10 border-green-500/20' :
-                    location.currentStatus === 'caution' ? 'bg-yellow-500/10 border-yellow-500/20' :
-                    'bg-red-500/10 border-red-500/20';
-
-                  return (
-                    <Card key={location.id} className={statusBg}>
-                      <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-lg">{location.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              Monitoring radius: {location.radius} km
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <div className={`text-2xl font-bold ${statusColor} capitalize`}>
-                              {location.currentStatus}
-                            </div>
-                            <div className="text-sm text-muted-foreground mt-1">
-                              {location.activeThreats} active {location.activeThreats === 1 ? 'threat' : 'threats'}
-                            </div>
-                          </div>
+                          <h3 className="font-semibold text-sm">{threat.title}</h3>
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-                
-                <Button variant="outline" className="w-full">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Add New Location
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                        <Badge variant="outline" className="text-xs shrink-0"><MapPin className="h-3 w-3 mr-1" />{threat.distanceFromUser > 0 ? `${threat.distanceFromUser.toFixed(0)} km` : 'Global'}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{threat.description}</p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{threat.location.city}, {threat.location.country}</span>
+                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{ThreatIntelligenceService.getTimeAgo(threat.timestamp)}</span>
+                        <span>Confidence: {threat.confidence}%</span>
+                      </div>
+                      <div className="bg-muted/50 rounded-md p-2">
+                        <p className="text-xs font-medium mb-1 flex items-center gap-1"><Shield className="h-3 w-3" /> Actions:</p>
+                        <ul className="text-xs text-muted-foreground space-y-0.5 pl-4 list-disc">
+                          {threat.recommendedActions.slice(0, 3).map((a, i) => <li key={i}>{a}</li>)}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </ScrollArea>
         </TabsContent>
 
-        {/* Threat Map Tab */}
-        <TabsContent value="map" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                Global Threat Map
-              </CardTitle>
-              <CardDescription>
-                Interactive visualization of global security threats
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-muted rounded-lg h-[500px] flex items-center justify-center">
-                <div className="text-center space-y-2">
-                  <MapPin className="h-12 w-12 mx-auto text-muted-foreground" />
-                  <p className="text-muted-foreground">Interactive threat map coming soon</p>
-                  <p className="text-xs text-muted-foreground">Diamond Plan Feature</p>
-                </div>
-              </div>
-              
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Map Controls</h4>
-                  <div className="space-y-1 text-xs text-muted-foreground">
-                    <p>• Real-time incident markers</p>
-                    <p>• Heat map visualization</p>
-                    <p>• Historical pattern analysis</p>
-                    <p>• Safe route suggestions</p>
+        <TabsContent value="watchlist" className="space-y-3">
+          {watchlist.map(loc => {
+            const statusColor = loc.currentStatus === 'safe' ? 'text-green-500' : loc.currentStatus === 'caution' ? 'text-yellow-500' : 'text-red-500';
+            const statusBg = loc.currentStatus === 'safe' ? 'bg-green-500/10 border-green-500/20' : loc.currentStatus === 'caution' ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-red-500/10 border-red-500/20';
+            return (
+              <Card key={loc.id} className={statusBg}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold">{loc.name}</h3>
+                      <p className="text-xs text-muted-foreground">Radius: {loc.radius} km</p>
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-lg font-bold ${statusColor} capitalize`}>{loc.currentStatus}</div>
+                      <div className="text-xs text-muted-foreground">{loc.activeThreats} active</div>
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm">Legend</h4>
-                  <div className="space-y-1 text-xs">
-                    <p>🔴 Critical - Immediate danger</p>
-                    <p>🟠 High - Serious threat</p>
-                    <p>🟡 Medium - Moderate risk</p>
-                    <p>🟢 Low - Minor concern</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+          <Button variant="outline" className="w-full"><MapPin className="h-4 w-4 mr-2" />Add Location</Button>
         </TabsContent>
       </Tabs>
 
-      {/* Emergency Contact Card */}
+      {/* Emergency Protocols */}
       <Card className="border-primary/20 bg-primary/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-primary" />
-            Emergency Protocols
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-4">
-            <Button variant="destructive" className="h-auto py-4 flex-col gap-2">
-              <Shield className="h-6 w-6" />
-              <span>Emergency Services</span>
-              <span className="text-xs">Call 112/911</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-              <MapPin className="h-6 w-6" />
-              <span>Nearest Embassy</span>
-              <span className="text-xs">Find Location</span>
-            </Button>
-            <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-              <Bell className="h-6 w-6" />
-              <span>Alert Contacts</span>
-              <span className="text-xs">Send SOS</span>
-            </Button>
+        <CardContent className="p-4">
+          <div className="grid grid-cols-3 gap-3">
+            <Button variant="destructive" className="h-auto py-3 flex-col gap-1 text-xs"><Shield className="h-5 w-5" /><span>Emergency</span><span className="opacity-70">112/911</span></Button>
+            <Button variant="outline" className="h-auto py-3 flex-col gap-1 text-xs"><MapPin className="h-5 w-5" /><span>Embassy</span><span className="opacity-70">Find</span></Button>
+            <Button variant="outline" className="h-auto py-3 flex-col gap-1 text-xs"><Bell className="h-5 w-5" /><span>Alert</span><span className="opacity-70">Send SOS</span></Button>
           </div>
         </CardContent>
       </Card>
