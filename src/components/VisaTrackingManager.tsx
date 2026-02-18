@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, Clock, AlertTriangle, Edit, FileText, Plane, Settings, MapPin, Calculator } from 'lucide-react';
+import { Calendar, Clock, AlertTriangle, Edit, FileText, Plane, Settings, MapPin, Calculator, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EnhancedLocationService from '@/services/EnhancedLocationService';
 import { Country } from '@/types/country';
@@ -807,22 +807,23 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
   const allowedVisaTypes = getAllowedVisaTypes();
 
   return (
-    <Card className="border-blue-200 bg-blue-50">
-      <CardHeader>
+    <Card>
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-blue-800">
-            <FileText className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-primary" />
             Travel Day Guardian
           </CardTitle>
           <div className="flex gap-2">
-            <Badge variant="outline" className="bg-blue-100 text-blue-700">
+            <Badge variant="outline">
               {visaTrackings.length}/{getVisaTrackingLimit()} Visas
             </Badge>
-            <Badge variant="outline" className="bg-green-100 text-green-700">
+            <Badge variant="secondary">
               {taxTrackings.length}/{getTaxTrackingLimit()} Tax
             </Badge>
           </div>
         </div>
+        <p className="text-sm text-muted-foreground">Track visa days, tax residency & document deadlines</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -839,9 +840,9 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
           <TabsContent value="visa" className="space-y-4">
           {/* Subscription Notice */}
           {currentSubscription.tier === 'free' && (
-            <Alert className="border-orange-200 bg-orange-50">
+            <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800">
               <AlertTriangle className="w-4 h-4" />
-              <AlertDescription className="text-orange-800">
+              <AlertDescription>
                 Free plan: Limited to 1 tourist visa tracking. Upgrade for multiple visa types and unlimited tracking.
               </AlertDescription>
             </Alert>
@@ -856,17 +857,17 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
             const visaTypeData = VISA_TYPES.find(v => v.id === visa.visaType);
 
             return (
-              <Card key={visa.id} className="border-white bg-white">
+              <Card key={visa.id} className="hover:shadow-md transition-all">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <span className="text-xl">{visaTypeData?.icon}</span>
                       <div>
-                        <h4 className="font-medium text-gray-900">
-                          {visa.countryName} - {visaTypeData?.name}
+                        <h4 className="font-semibold text-foreground">
+                          {visa.countryName} — {visaTypeData?.name}
                         </h4>
-                        <p className="text-sm text-gray-600">
-                          {visa.daysUsed}/{visa.dayLimit} days used • {remaining} days remaining
+                        <p className="text-sm text-muted-foreground">
+                          {visa.daysUsed}/{visa.dayLimit} days • {remaining} remaining
                         </p>
                       </div>
                     </div>
@@ -874,7 +875,7 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
                       size="sm"
                       variant="ghost"
                       onClick={() => handleEditVisa(visa)}
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-primary hover:text-primary/80"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -882,11 +883,11 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
 
                   {/* Progress Bar */}
                   <div className="mb-3">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2.5">
                       <div 
-                        className={`h-2 rounded-full transition-all ${
-                          progress > 80 ? 'bg-red-500' : 
-                          progress > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                        className={`h-2.5 rounded-full transition-all duration-500 ${
+                          progress > 80 ? 'bg-destructive' : 
+                          progress > 60 ? 'bg-amber-500' : 'bg-emerald-500'
                         }`}
                         style={{ width: `${progress}%` }}
                       />
@@ -928,9 +929,9 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
 
                   {/* Passport Warnings */}
                   {passportWarnings.length > 0 && (
-                    <Alert className="border-red-200 bg-red-50">
+                    <Alert className="border-destructive/30 bg-destructive/5">
                       <AlertTriangle className="w-4 h-4" />
-                      <AlertDescription className="text-red-800">
+                      <AlertDescription>
                         Passport expires in {passportWarnings[0]} months! Consider renewal.
                       </AlertDescription>
                     </Alert>
@@ -942,11 +943,11 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
         </div>
 
         {/* Add New Visa Button */}
-        <Button
-          onClick={() => setIsModalOpen(true)}
-          disabled={!canAddMoreVisas()}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-        >
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            disabled={!canAddMoreVisas()}
+            className="w-full disabled:opacity-50"
+            size="lg">
           <Plane className="w-4 h-4 mr-2" />
           {canAddMoreVisas() ? 'Add Visa Tracking' : `Upgrade for More (${visaTrackings.length}/${getVisaTrackingLimit()})`}
         </Button>
@@ -1159,9 +1160,9 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
         <TabsContent value="tax" className="space-y-4">
           {/* Location Tracking Status */}
           {isLocationTracking && (
-            <Alert className="border-green-200 bg-green-50">
+            <Alert className="border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800">
               <MapPin className="w-4 h-4" />
-              <AlertDescription className="text-green-800">
+              <AlertDescription>
                 Location tracking active. Current location: {currentLocation || 'Detecting...'}
               </AlertDescription>
             </Alert>
@@ -1175,24 +1176,24 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
               const isNearLimit = progress > 80;
 
               return (
-                <Card key={tax.id} className={`border-white bg-white ${isNearLimit ? 'ring-2 ring-red-200' : ''}`}>
+                <Card key={tax.id} className={`hover:shadow-md transition-all ${isNearLimit ? 'ring-2 ring-destructive/20' : ''}`}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Calculator className="w-5 h-5 text-blue-600" />
+                        <Calculator className="w-5 h-5 text-primary" />
                         <div>
-                          <h4 className="font-medium text-gray-900">
+                          <h4 className="font-semibold text-foreground">
                             {tax.countryName} Tax Residency
                           </h4>
-                          <p className="text-sm text-gray-600">
-                            {tax.daysSpent}/{tax.dayLimit} days • {remaining} days remaining
+                          <p className="text-sm text-muted-foreground">
+                            {tax.daysSpent}/{tax.dayLimit} days • {remaining} remaining
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <Switch
                               checked={tax.isActive}
                               onCheckedChange={() => toggleTaxTracking(tax.id)}
                             />
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-muted-foreground">
                               {tax.isActive ? 'Active' : 'Paused'}
                             </span>
                           </div>
@@ -1202,27 +1203,31 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
                         size="sm"
                         variant="ghost"
                         onClick={() => deleteTaxTracking(tax.id)}
-                        className="text-red-600 hover:text-red-800"
+                        className="text-destructive hover:text-destructive/80"
                       >
-                        <Edit className="w-4 h-4" />
+                        <X className="w-4 h-4" />
                       </Button>
                     </div>
 
                     {/* Progress Bar */}
                     <div className="mb-3">
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-muted rounded-full h-2.5">
                         <div 
-                          className={`h-2 rounded-full transition-all ${
-                            progress > 80 ? 'bg-red-500' : 
-                            progress > 60 ? 'bg-yellow-500' : 'bg-green-500'
+                          className={`h-2.5 rounded-full transition-all duration-500 ${
+                            progress > 80 ? 'bg-destructive' : 
+                            progress > 60 ? 'bg-amber-500' : 'bg-emerald-500'
                           }`}
                           style={{ width: `${progress}%` }}
                         />
                       </div>
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>{Math.round(progress)}% used</span>
+                        <span>{remaining > 0 ? `${remaining} days left` : 'Limit reached'}</span>
+                      </div>
                     </div>
 
                     {/* Manual Day Entry */}
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>Manual entry:</span>
                       <Input
                         type="date"
@@ -1233,15 +1238,16 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
                           }
                         }}
                       />
-                      <span>Auto-tracking: {tax.isAutoTracking ? '✅' : '❌'}</span>
+                      <Badge variant={tax.isAutoTracking ? 'default' : 'outline'} className="text-xs">
+                        {tax.isAutoTracking ? 'Auto' : 'Manual'}
+                      </Badge>
                     </div>
 
-                    {/* Warning for near limit */}
                     {isNearLimit && (
-                      <Alert className="border-red-200 bg-red-50 mt-3">
+                      <Alert className="border-destructive/30 bg-destructive/5 mt-3">
                         <AlertTriangle className="w-4 h-4" />
-                        <AlertDescription className="text-red-800">
-                          Warning: Approaching tax residency threshold of {tax.dayLimit} days!
+                        <AlertDescription>
+                          Approaching tax residency threshold of {tax.dayLimit} days!
                         </AlertDescription>
                       </Alert>
                     )}
@@ -1255,7 +1261,8 @@ const selectedVisaData = VISA_TYPES.find(v => v.id === selectedVisaType);
           <Button
             onClick={openTaxModal}
             disabled={taxTrackings.length >= getTaxTrackingLimit()}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50"
+            className="w-full disabled:opacity-50"
+            size="lg"
           >
             <Calculator className="w-4 h-4 mr-2" />
             {taxTrackings.length < getTaxTrackingLimit() ? 'Add Tax Residence Tracking' : `Upgrade for More (${taxTrackings.length}/${getTaxTrackingLimit()})`}
