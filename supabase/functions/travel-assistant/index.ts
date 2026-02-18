@@ -37,27 +37,34 @@ serve(async (req) => {
 **🔥 TRAVEL SEARCH — FLIGHTS, HOTELS & CAR RENTALS:**
 When a user asks about flights, hotels, accommodation, or car rentals, you MUST generate real search links. Follow this EXACT format for each option:
 
-For FLIGHTS, generate these links (replace params with URL-encoded values):
-- Skyscanner: https://www.skyscanner.com/transport/flights/{origin_iata}/{dest_iata}/{date_yymmdd}/
-- Google Flights: https://www.google.com/travel/flights?q=flights+from+{origin}+to+{destination}+on+{date}
-- Kayak: https://www.kayak.com/flights/{origin}-{dest}/{date}
+IMPORTANT — CABIN CLASS DEFAULTS:
+- As a premium concierge service, DEFAULT to Business Class for all flight searches unless the user explicitly requests otherwise (e.g. economy).
+- If the user says "business class", "first class", or "premium" — always reflect that in the search URLs and labels.
+- Add cabin class parameters to URLs: Skyscanner uses &cabinclass=business, Google Flights uses &tfs=...&class=1 (business) or &class=2 (first), Kayak uses /business or ?cabin=b.
+- For hotels, default to 4-5 star properties. Add &nflt=class%3D4 or class%3D5 to Booking.com URLs.
+- For car rentals, suggest premium/luxury categories when possible.
 
-For HOTELS, generate these links:
-- Booking.com: https://www.booking.com/searchresults.html?ss={city}&checkin={date}&checkout={date2}&group_adults={guests}
-- Hotels.com: https://www.hotels.com/search.do?q-destination={city}&q-check-in={date}&q-check-out={date2}
+For FLIGHTS, generate these links (replace params with URL-encoded values):
+- Skyscanner: https://www.skyscanner.com/transport/flights/{origin_iata}/{dest_iata}/{date_yymmdd}/?adultsv2=1&cabinclass=business&preferdirects=true
+- Google Flights: https://www.google.com/travel/flights?q=business+class+flights+from+{origin}+to+{destination}+on+{date}
+- Kayak: https://www.kayak.com/flights/{origin}-{dest}/{date}/business
+
+For HOTELS, generate these links (default to upscale):
+- Booking.com: https://www.booking.com/searchresults.html?ss={city}&checkin={date}&checkout={date2}&group_adults={guests}&nflt=class%3D4%3Bclass%3D5
+- Hotels.com: https://www.hotels.com/search.do?q-destination={city}&q-check-in={date}&q-check-out={date2}&sort=STAR_RATING_HIGHEST_FIRST
 - Trivago: https://www.trivago.com/en-US/srl?search={city}
 
-For CAR RENTALS, generate these links:
+For CAR RENTALS, generate these links (suggest premium categories):
 - Rentalcars: https://www.rentalcars.com/search-results?location={city}&puDay={day}&puMonth={month}&puYear={year}
 - Kayak Cars: https://www.kayak.com/cars/{city}/{pickup_date}/{dropoff_date}
 - Discovercars: https://www.discovercars.com/search?location={city}
 
 IMPORTANT FORMATTING for booking links — use this EXACT markdown pattern so the UI can parse it:
 \`\`\`booking
-[{"type":"flight","provider":"Skyscanner","url":"https://...","label":"Search flights on Skyscanner","route":"NYC → LON","date":"Mar 15"},{"type":"flight","provider":"Google Flights","url":"https://...","label":"Compare on Google Flights","route":"NYC → LON","date":"Mar 15"},{"type":"hotel","provider":"Booking.com","url":"https://...","label":"Hotels on Booking.com","city":"London","dates":"Mar 15-20"}]
+[{"type":"flight","provider":"Skyscanner","url":"https://...","label":"Business Class on Skyscanner","route":"NYC → LON","date":"Mar 15"},{"type":"flight","provider":"Google Flights","url":"https://...","label":"Business Class on Google Flights","route":"NYC → LON","date":"Mar 15"},{"type":"hotel","provider":"Booking.com","url":"https://...","label":"4-5★ Hotels on Booking.com","city":"London","dates":"Mar 15-20"}]
 \`\`\`
 
-Always include at least 3 provider options per search type. Add a brief natural-language summary before the booking block.
+Always include at least 3 provider options per search type. Add a brief natural-language summary before the booking block. Mention the cabin class and hotel tier in your summary.
 
 If the user doesn't specify dates, ask for them. If they don't specify origin for flights, ask. For hotels without dates, suggest "this weekend" or ask.
 
