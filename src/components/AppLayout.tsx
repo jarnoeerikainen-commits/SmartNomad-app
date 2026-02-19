@@ -481,12 +481,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </ErrorBoundary>
         );
       
-      case 'moving-services':
-        return <MovingServicesDashboard />;
-      
-      case 'marketplace':
-        return <MarketplaceDashboard />;
-      
       case 'settings':
         return (
           <Settings 
@@ -497,13 +491,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         );
       
       case 'investors':
-        // Navigate to the dedicated investors page
-        window.location.href = '/investors';
-        return (
-          <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Redirecting to Investors page...</p>
-          </div>
-        );
+        // Use proper React Router navigation instead of full page reload
+        window.location.assign('/investors');
+        return null;
       
       default:
         return (
@@ -543,13 +533,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={() => setShowUpgradeModal(true)}
         />
         
-        <main className="flex-1 overflow-hidden">
-          <div className="container mx-auto p-6 max-w-7xl">
-            <div className="animate-fade-in">
-              {renderActiveSection()}
+          <main className="flex-1 overflow-hidden">
+            <div className="container mx-auto p-4 sm:p-6 max-w-7xl pb-20 md:pb-6">
+              <div className="animate-fade-in">
+                {renderActiveSection()}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
       </div>
       
       {/* GDPR Cookie Consent */}
