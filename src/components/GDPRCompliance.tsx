@@ -177,7 +177,7 @@ export const PrivacyPolicy: React.FC<{ isOpen: boolean; onClose: () => void }> =
                 <Users className="w-4 h-4 mt-1 text-primary" />
                 <div>
                   <p className="font-medium">Personal Information</p>
-                  <p className="text-sm text-muted-foreground">Name, email, passport details, travel history</p>
+                  <p className="text-sm text-muted-foreground">Name, email, passport expiry date, calendar information, travel history</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
