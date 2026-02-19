@@ -94,13 +94,43 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
 export default BookingCards;
 
 export function parseBookingBlocks(content: string): { text: string; bookings: BookingItem[][] } {
-  const bookingRegex = /```booking\n([\s\S]*?)```/g;
+  // Match ```booking, ```json, or plain ``` blocks containing arrays
+  const blockRegex = /```(?:booking|json)?\s*\n([\s\S]*?)```/g;
   const bookings: BookingItem[][] = [];
-  const text = content.replace(bookingRegex, (_, json) => {
+  const text = content.replace(blockRegex, (_, raw) => {
     try {
-      const parsed = JSON.parse(json.trim());
-      if (Array.isArray(parsed)) {
-        bookings.push(parsed);
+      // Clean common LLM artifacts
+      let cleaned = raw.trim()
+        .replace(/,\s*([}\]])/g, '$1')       // trailing commas
+        .replace(/[\x00-\x1F\x7F]/g, '');    // control chars
+
+      const parsed = JSON.parse(cleaned);
+      if (!Array.isArray(parsed)) return '';
+
+      // Normalise: AI may return {search_engine, url} instead of BookingItem shape
+      const items: BookingItem[] = parsed.map((entry: any) => {
+        // Already in BookingItem format
+        if (entry.type && entry.provider && entry.url) return entry as BookingItem;
+
+        // Convert search-engine format → BookingItem
+        const provider = entry.search_engine || entry.provider || entry.name || 'Search';
+        const url = entry.url || entry.link || '#';
+        const label = entry.label || `Search on ${provider}`;
+
+        // Guess type from URL or provider name
+        let type: BookingItem['type'] = 'flight';
+        const lower = (url + ' ' + provider).toLowerCase();
+        if (lower.includes('hotel') || lower.includes('booking.com') || lower.includes('trivago') || lower.includes('hostel')) {
+          type = 'hotel';
+        } else if (lower.includes('car') || lower.includes('rental') || lower.includes('discover')) {
+          type = 'car';
+        }
+
+        return { type, provider, url, label, route: entry.route, date: entry.date, dates: entry.dates, city: entry.city, price: entry.price } as BookingItem;
+      });
+
+      if (items.length > 0) {
+        bookings.push(items);
         return '{{BOOKING_CARD_' + (bookings.length - 1) + '}}';
       }
     } catch (e) {
