@@ -112,25 +112,38 @@ export function parseBookingBlocks(content: string): { text: string; bookings: B
 
       // Normalise: AI may return {search_engine, url} instead of BookingItem shape
       const items: BookingItem[] = parsed.map((entry: any) => {
-        // Already in BookingItem format
-        if (entry.type && entry.provider && entry.url) return entry as BookingItem;
-
-        // Convert search-engine format → BookingItem
-        const provider = entry.search_engine || entry.provider || entry.name || 'Search';
+        const provider = entry.provider || entry.search_engine || entry.name || '';
         const url = entry.url || entry.link || '#';
-        const label = entry.label || `Search on ${provider}`;
+        const label = entry.label || '';
 
-        // Guess type from URL or provider name
-        let type: BookingItem['type'] = 'flight';
-        const lower = (url + ' ' + provider).toLowerCase();
-        if (lower.includes('hotel') || lower.includes('booking.com') || lower.includes('trivago') || lower.includes('hostel')) {
-          type = 'hotel';
-        } else if (lower.includes('car') || lower.includes('rental') || lower.includes('discover')) {
-          type = 'car';
+        // Determine type: prefer explicit, then guess from provider/url
+        let type: BookingItem['type'] = entry.type as BookingItem['type'];
+        if (!type || !['flight', 'hotel', 'car'].includes(type)) {
+          const lower = (url + ' ' + provider + ' ' + label).toLowerCase();
+          if (lower.includes('hotel') || lower.includes('booking.com') || lower.includes('trivago') || lower.includes('hostel') || lower.includes('hotels.com')) {
+            type = 'hotel';
+          } else if (lower.includes('car') || lower.includes('rental') || lower.includes('discover')) {
+            type = 'car';
+          } else {
+            type = 'flight';
+          }
         }
 
-        return { type, provider, url, label, route: entry.route, date: entry.date, dates: entry.dates, city: entry.city, price: entry.price } as BookingItem;
-      });
+        // Build a meaningful label if missing
+        const displayLabel = label || entry.route || entry.city || `Search on ${provider}`;
+
+        return {
+          type,
+          provider: provider || 'Search',
+          url,
+          label: displayLabel,
+          route: entry.route,
+          date: entry.date,
+          dates: entry.dates,
+          city: entry.city,
+          price: entry.price
+        } as BookingItem;
+      }).filter((item: BookingItem) => item.provider && item.provider !== 'Search' && item.url !== '#');
 
       if (items.length > 0) {
         bookings.push(items);
