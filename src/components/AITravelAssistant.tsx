@@ -355,22 +355,19 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                         stopListening();
                       } else {
                     startListening((text) => {
-                          setInputMessage(text);
-                          // Auto-send after a short delay to show the text
-                          setTimeout(() => {
-                            if (text.trim()) {
-                              const userMsg: Message = {
-                                id: Date.now().toString(),
-                                content: text,
-                                isUser: true,
-                                timestamp: new Date()
-                              };
-                              setMessages(prev => [...prev, userMsg]);
-                              setInputMessage('');
-                              setIsTyping(true);
-                              streamChat(text);
-                            }
-                          }, 500);
+                          // Speech recognition finished – send the result
+                          if (text.trim()) {
+                            setInputMessage('');
+                            const userMsg: Message = {
+                              id: Date.now().toString(),
+                              content: text,
+                              isUser: true,
+                              timestamp: new Date()
+                            };
+                            setMessages(prev => [...prev, userMsg]);
+                            setIsTyping(true);
+                            streamChat(text);
+                          }
                         });
                       }
                     }}

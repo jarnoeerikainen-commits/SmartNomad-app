@@ -34,18 +34,34 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
 
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.lang = 'en-US';
 
+    let finalTranscript = '';
+    let silenceTimer: ReturnType<typeof setTimeout> | null = null;
+
     recognition.onresult = (event: any) => {
-      const text = event.results[0][0].transcript;
-      onResult(text);
-      setIsListening(false);
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript + ' ';
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
+
+      // Reset silence timer on every result – gives user 2s of silence before auto-stop
+      if (silenceTimer) clearTimeout(silenceTimer);
+      silenceTimer = setTimeout(() => {
+        const result = finalTranscript.trim() || interim.trim();
+        if (result) onResult(result);
+        recognition.stop();
+      }, 2000);
     };
 
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => { if (silenceTimer) clearTimeout(silenceTimer); setIsListening(false); };
+    recognition.onend = () => { if (silenceTimer) clearTimeout(silenceTimer); setIsListening(false); };
 
     recognitionRef.current = recognition;
     recognition.start();
@@ -62,13 +78,28 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
 
     window.speechSynthesis.cancel();
 
-    // Strip markdown formatting for cleaner speech
+    // Smart filtering: strip booking blocks, URLs, domains, markdown for natural speech
     const clean = text
+      // Remove entire booking JSON blocks
+      .replace(/```json[\s\S]*?```/g, '')
+      .replace(/\[?\{[^{}]*"url"[^{}]*\}[\s,\]]*/g, '')
+      // Remove URLs and domain names
+      .replace(/https?:\/\/[^\s)]+/g, '')
+      .replace(/www\.[^\s)]+/g, '')
+      .replace(/[a-zA-Z0-9-]+\.(com|org|net|io|co|app|dev|travel)[^\s)]*\b/g, '')
+      // Remove markdown formatting
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/[*_~`#]/g, '')
       .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      // Remove lines that are just provider/search references
+      .replace(/^.*(?:Search on|Open in|Book (?:on|via|at)).*$/gm, '')
+      // Clean up emoji-heavy labels that read awkwardly
+      .replace(/[🔗🌐💻📱]/g, '')
+      // Collapse whitespace
       .replace(/\n{2,}/g, '. ')
-      .replace(/\n/g, ' ');
+      .replace(/\n/g, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
 
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.rate = 1;
