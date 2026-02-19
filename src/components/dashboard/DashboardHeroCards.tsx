@@ -15,7 +15,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
     {
       id: 'nomad-chat',
       title: 'SuperNomad Pulse',
-      subtitle: 'Supernomad Pulse uses advanced AI to instantly connect you with your perfect adventure partners, wherever you are.',
+      subtitle: 'Supernomad Pulse uses advanced AI to instantly connect you with your perfect adventure partners, wherever you are. Fast ID & Face Match verification in 1 min.',
       buttonText: 'Explore Groups',
       icon: MessageSquare,
       gradient: 'from-primary/20 via-primary/10 to-transparent',
