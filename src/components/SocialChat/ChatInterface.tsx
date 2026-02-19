@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { ChatRoom } from '@/types/socialChat';
+import { useState, useRef, useEffect } from 'react';
+import { ChatRoom, ChatMessage } from '@/types/socialChat';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, Send, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { format } from 'date-fns';
 import { useSocialChat } from '@/hooks/useSocialChat';
+import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 
 interface ChatInterfaceProps {
   chatRoom: ChatRoom;
@@ -17,12 +18,27 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
   const [message, setMessage] = useState('');
   const { sendMessage } = useSocialChat();
   const currentUserId = '1'; // Demo user ID
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const {
+    isListening, isSpeaking, voiceEnabled,
+    startListening, stopListening, speak,
+    toggleVoice, sttSupported, ttsSupported
+  } = useVoiceConversation();
 
-  const handleSend = async () => {
-    if (!message.trim()) return;
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatRoom.messages]);
+
+  const handleSend = async (text?: string) => {
+    const content = text || message;
+    if (!content.trim()) return;
     
-    await sendMessage(chatRoom.id, message, currentUserId);
-    setMessage('');
+    await sendMessage(chatRoom.id, content, currentUserId);
+    if (!text) setMessage('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -31,6 +47,15 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
       handleSend();
     }
   };
+
+  // Auto-speak new non-user messages
+  useEffect(() => {
+    if (!voiceEnabled || chatRoom.messages.length === 0) return;
+    const last = chatRoom.messages[chatRoom.messages.length - 1];
+    if (last.senderId !== currentUserId) {
+      speak(last.content);
+    }
+  }, [chatRoom.messages.length, voiceEnabled]);
 
   return (
     <Card className="h-[600px] flex flex-col">
@@ -60,6 +85,19 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
               </p>
             </div>
           </div>
+          <div className="flex gap-1">
+            {ttsSupported && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleVoice}
+                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
+              >
+                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
 
@@ -82,13 +120,11 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                 return (
                   <div
                     key={msg.id}
-                    className={`flex gap-3 ${
-                      isCurrentUser ? 'flex-row-reverse' : ''
-                    } ${isAI ? 'opacity-70' : ''}`}
+                    className={`flex gap-3 ${isCurrentUser ? 'flex-row-reverse' : ''} ${isAI ? 'opacity-80' : ''}`}
                   >
                     {!isCurrentUser && (
                       <img
-                        src={msg.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName)}&background=random&size=150`}
+                        src={isAI ? `https://ui-avatars.com/api/?name=AI&background=6366f1&color=fff&size=150` : (msg.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName)}&background=random&size=150`)}
                         alt={msg.senderName}
                         className="w-8 h-8 rounded-full object-cover"
                         onError={(e) => {
@@ -96,21 +132,12 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                         }}
                       />
                     )}
-                    <div
-                      className={`flex flex-col ${
-                        isCurrentUser ? 'items-end' : 'items-start'
-                      } max-w-[70%]`}
-                    >
-                      {!isCurrentUser && !isAI && (
-                        <span className="text-xs text-muted-foreground mb-1">
-                          {msg.senderName}
-                        </span>
-                      )}
-                      {isAI && (
+                    <div className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'} max-w-[70%]`}>
+                      {!isCurrentUser && (
                         <div className="flex items-center gap-1 mb-1">
-                          <Sparkles className="h-3 w-3 text-muted-foreground" />
+                          {isAI && <Sparkles className="h-3 w-3 text-primary" />}
                           <span className="text-xs text-muted-foreground">
-                            AI Suggestion
+                            {isAI ? 'SuperNomad AI' : msg.senderName}
                           </span>
                         </div>
                       )}
@@ -119,7 +146,7 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                           isCurrentUser
                             ? 'bg-primary text-primary-foreground'
                             : isAI
-                            ? 'bg-accent border border-border'
+                            ? 'bg-accent border border-primary/20'
                             : 'bg-muted'
                         }`}
                       >
@@ -133,18 +160,38 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
                 );
               })
             )}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
 
         <div className="border-t p-4">
           <div className="flex gap-2">
+            {sttSupported && (
+              <Button
+                onClick={() => {
+                  if (isListening) {
+                    stopListening();
+                  } else {
+                    startListening((text) => {
+                      if (text.trim()) handleSend(text);
+                    });
+                  }
+                }}
+                variant={isListening ? 'default' : 'outline'}
+                size="sm"
+                className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                title={isListening ? 'Stop listening' : 'Voice input'}
+              >
+                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              </Button>
+            )}
             <Input
-              placeholder="Type your message..."
+              placeholder={isListening ? 'Listening...' : 'Type your message...'}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
             />
-            <Button onClick={handleSend} disabled={!message.trim()}>
+            <Button onClick={() => handleSend()} disabled={!message.trim()}>
               <Send className="h-4 w-4" />
             </Button>
           </div>

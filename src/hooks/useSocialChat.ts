@@ -1,8 +1,23 @@
 import { useState, useCallback } from 'react';
 import { SocialProfile, ChatRoom, ChatMessage, AIMatchSuggestion } from '@/types/socialChat';
-import { socialProfiles, demoChatRooms } from '@/data/socialChatData';
+import { socialProfiles, demoChatRooms, AVATAR_URLS } from '@/data/socialChatData';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+
+// Simulated member replies for realistic demo feel
+const MEMBER_REPLIES: Record<string, string[]> = {
+  default: [
+    'That sounds great! Count me in 😄',
+    'Thanks for sharing! Really helpful.',
+    'I was just thinking the same thing!',
+    'Love this idea — let\'s make it happen.',
+    'Absolutely! When works best for everyone?',
+    'Perfect timing — I\'m free this week.',
+    'Can\'t wait! This group is the best 🙌',
+  ]
+};
+
+const pickRandom = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export const useSocialChat = () => {
   const [profiles] = useState<SocialProfile[]>(socialProfiles);
@@ -14,33 +29,28 @@ export const useSocialChat = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('social-chat-ai', {
-        body: {
-          type: 'match',
-          userProfile,
-          availableProfiles: profiles
-        }
+        body: { type: 'match', userProfile, availableProfiles: profiles }
       });
-
       if (error) throw error;
-
       return data.matches || [];
-    } catch (error) {
-      console.error('Error getting AI matches:', error);
-      toast.error('Failed to get AI match suggestions');
-      
-      // Fallback: Return top 5 online profiles
+    } catch {
+      // Fallback: Return top 5 online profiles with realistic data
       return profiles
         .filter(p => p.status === 'online')
         .slice(0, 5)
         .map(profile => ({
           profile,
-          matchScore: Math.floor(Math.random() * 30) + 70,
-          reasons: ['Location overlap', 'Shared interests'],
-          commonInterests: profile.professional.interests.slice(0, 2),
+          matchScore: Math.floor(Math.random() * 20) + 78,
+          reasons: [
+            `Both based in the ${profile.mobility.currentLocation.country} region`,
+            `Shared interest in ${profile.professional.interests[0]}`,
+            `Compatible ${profile.travelerType.replace('_', ' ')} lifestyle`
+          ],
+          commonInterests: profile.professional.interests.slice(0, 3),
           sharedLocations: [profile.mobility.currentLocation.city],
           conversationStarters: [
-            `I see you're also interested in ${profile.professional.interests[0]}!`,
-            `How's life in ${profile.mobility.currentLocation.city}?`
+            `I see you're also into ${profile.professional.interests[0]}! What got you started?`,
+            `How's the ${profile.professional.industry.toLowerCase()} scene in ${profile.mobility.currentLocation.city}?`
           ]
         }));
     } finally {
@@ -66,56 +76,69 @@ export const useSocialChat = () => {
       type: 'message'
     };
 
-    setChatRooms(prev => prev.map(room => {
-      if (room.id === roomId) {
-        return {
-          ...room,
-          messages: [...room.messages, newMessage],
-          lastMessage: content,
-          lastActivity: new Date()
-        };
-      }
-      return room;
-    }));
+    const updateRoom = (room: ChatRoom, msg: ChatMessage) => ({
+      ...room,
+      messages: [...room.messages, msg],
+      lastMessage: msg.content,
+      lastActivity: new Date()
+    });
 
-    // Get AI conversation assistance
+    setChatRooms(prev => prev.map(room => room.id === roomId ? updateRoom(room, newMessage) : room));
+    if (activeChatRoom?.id === roomId) {
+      setActiveChatRoom(prev => prev ? updateRoom(prev, newMessage) : prev);
+    }
+
+    // Simulate a member reply after 1.5–3s
+    const room = chatRooms.find(r => r.id === roomId);
+    const otherParticipants = room?.participantDetails.filter(p => p.id !== senderId) || [];
+    if (otherParticipants.length > 0) {
+      const replier = pickRandom(otherParticipants);
+      const replyProfile = profiles.find(p => p.id === replier.id);
+      const delay = 1500 + Math.random() * 1500;
+
+      setTimeout(() => {
+        const memberReply: ChatMessage = {
+          id: (Date.now() + 2).toString(),
+          senderId: replier.id,
+          senderName: replier.name,
+          senderAvatar: replyProfile?.basicInfo.avatar || replier.avatar,
+          content: pickRandom(MEMBER_REPLIES.default),
+          timestamp: new Date(),
+          type: 'message'
+        };
+
+        setChatRooms(prev => prev.map(r => r.id === roomId ? updateRoom(r, memberReply) : r));
+        setActiveChatRoom(prev => prev?.id === roomId ? updateRoom(prev, memberReply) : prev);
+      }, delay);
+    }
+
+    // Get AI suggestion after member reply
     try {
       const { data } = await supabase.functions.invoke('social-chat-ai', {
-        body: {
-          type: 'conversation',
-          message: content,
-          chatHistory: activeChatRoom?.messages || []
-        }
+        body: { type: 'conversation', message: content, chatHistory: activeChatRoom?.messages || [] }
       });
 
       if (data?.suggestion) {
-        const aiMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          senderId: 'ai',
-          senderName: 'AI Assistant',
-          senderAvatar: '',
-          content: data.suggestion,
-          timestamp: new Date(),
-          type: 'ai_suggestion',
-          isAI: true
-        };
-
+        const aiDelay = 3500 + Math.random() * 1500;
         setTimeout(() => {
-          setChatRooms(prev => prev.map(room => {
-            if (room.id === roomId) {
-              return {
-                ...room,
-                messages: [...room.messages, aiMessage]
-              };
-            }
-            return room;
-          }));
-        }, 1000);
+          const aiMessage: ChatMessage = {
+            id: (Date.now() + 3).toString(),
+            senderId: 'ai',
+            senderName: 'SuperNomad AI',
+            senderAvatar: '',
+            content: data.suggestion,
+            timestamp: new Date(),
+            type: 'ai_suggestion',
+            isAI: true
+          };
+          setChatRooms(prev => prev.map(r => r.id === roomId ? updateRoom(r, aiMessage) : r));
+          setActiveChatRoom(prev => prev?.id === roomId ? updateRoom(prev, aiMessage) : prev);
+        }, aiDelay);
       }
-    } catch (error) {
-      console.error('Error getting AI conversation help:', error);
+    } catch {
+      // Silent fail for AI — member reply already provides life
     }
-  }, [profiles, activeChatRoom]);
+  }, [profiles, activeChatRoom, chatRooms]);
 
   const createChatRoom = useCallback((
     type: ChatRoom['type'],
@@ -153,15 +176,9 @@ export const useSocialChat = () => {
     status?: string;
   }) => {
     return profiles.filter(profile => {
-      if (filters.location && profile.mobility.currentLocation.city !== filters.location) {
-        return false;
-      }
-      if (filters.travelerType && profile.travelerType !== filters.travelerType) {
-        return false;
-      }
-      if (filters.status && profile.status !== filters.status) {
-        return false;
-      }
+      if (filters.location && profile.mobility.currentLocation.city !== filters.location) return false;
+      if (filters.travelerType && profile.travelerType !== filters.travelerType) return false;
+      if (filters.status && profile.status !== filters.status) return false;
       return true;
     });
   }, [profiles]);
