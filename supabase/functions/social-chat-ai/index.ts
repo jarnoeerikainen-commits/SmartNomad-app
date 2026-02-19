@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 serve(async (req) => {
@@ -11,18 +11,17 @@ serve(async (req) => {
   }
 
   try {
-    const { type, userProfile, availableProfiles, message, chatHistory } = await req.json();
+    const { type, userProfile, availableProfiles, message, chatHistory, userCity, userInterests } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    if (type === 'match') {
-      // AI-powered matching logic
-      const now = new Date();
-      const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
+    const now = new Date();
+    const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
+    if (type === 'match') {
       const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
 
 You are an intelligent social matching assistant for travelers and expats.
@@ -32,6 +31,12 @@ Analyze the user's profile and available profiles to suggest the best 5 matches 
 - Travel preferences and frequency
 - Social connection types they're seeking
 - Common languages and interests
+- Shared upcoming travel plans and activity interests
+
+Also look for contextual scenarios like:
+- Both planning to be in the same city at the same time
+- Similar weekend activity interests (biking, hiking, dining)
+- Attending the same events or conferences
 
 Return a JSON array of match suggestions with scores and reasons.`;
 
@@ -39,7 +44,7 @@ Return a JSON array of match suggestions with scores and reasons.`;
 
 Available Profiles: ${JSON.stringify(availableProfiles.slice(0, 10), null, 2)}
 
-Provide 5 best matches with scores (70-99), reasons for the match, common interests, shared locations, and 2-3 conversation starters for each.`;
+Provide 5 best matches with scores (70-99), reasons for the match, common interests, shared locations, and 2-3 conversation starters for each. Focus on actionable connections — same city overlap, shared activities, events they could attend together.`;
 
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
@@ -48,7 +53,7 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
@@ -60,21 +65,30 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
       if (!response.ok) {
         const errorText = await response.text();
         console.error('AI API error:', response.status, errorText);
+        if (response.status === 429) {
+          return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
+            status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        if (response.status === 402) {
+          return new Response(JSON.stringify({ error: 'Payment required, please add funds.' }), {
+            status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
         throw new Error('Failed to get AI matches');
       }
 
       const data = await response.json();
       const aiResponse = data.choices[0].message.content;
 
-      // Parse AI response and return matches
       try {
-        const matches = JSON.parse(aiResponse);
+        const cleanJson = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const matches = JSON.parse(cleanJson);
         return new Response(JSON.stringify({ matches }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       } catch (e) {
         console.error('Failed to parse AI response:', e);
-        // Return fallback matches
         return new Response(JSON.stringify({ 
           matches: availableProfiles.slice(0, 5).map((profile: any) => ({
             profile,
@@ -94,17 +108,27 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
     }
 
     if (type === 'conversation') {
-      // AI conversation assistance
+      const cityContext = userCity ? `The user is currently in or planning to visit: ${userCity}.` : '';
+      const interestsContext = userInterests?.length ? `User interests: ${userInterests.join(', ')}.` : '';
+
       const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
 
-You are a helpful conversation assistant for a social travel platform.
-Help travelers connect meaningfully by:
-- Suggesting relevant topics based on their profiles
-- Encouraging cultural exchange and local insights
-- Facilitating meetup planning when appropriate
-- Keeping conversations friendly and constructive
+You are SuperNomad AI — a helpful, proactive social travel assistant. ${cityContext} ${interestsContext}
 
-When suggesting conversation topics, keep them relevant to travel, location, and shared interests.`;
+Your job is to:
+1. Help travelers connect meaningfully
+2. Proactively suggest REAL happenings, events, and places in the target city based on user interests:
+   - Theater performances, concerts, opera shows
+   - Sports events (football, basketball, tennis matches)
+   - Movies at top cinemas
+   - Michelin star restaurants and trending dining spots
+   - Art exhibitions, gallery openings
+   - Local festivals and cultural events
+   - Co-working meetups and tech events
+3. Suggest meeting friends/matches at these events
+4. Keep conversations warm, contextual, and actionable
+
+When recommending events or places, be SPECIFIC — use real venue names, realistic dates (near current date), and actual event types for that city. Make it feel like a knowledgeable local friend.`;
 
       const conversationContext = chatHistory?.map((msg: any) => 
         `${msg.senderName}: ${msg.content}`
@@ -115,7 +139,7 @@ ${conversationContext}
 
 Latest message: "${message}"
 
-Suggest a helpful, contextual response or conversation topic (1-2 sentences max).`;
+Suggest a helpful response (2-3 sentences max). If relevant, recommend a specific event, restaurant, or activity in the user's city that matches their interests. Be specific with venue names and dates.`;
 
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
@@ -124,7 +148,7 @@ Suggest a helpful, contextual response or conversation topic (1-2 sentences max)
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
@@ -134,6 +158,11 @@ Suggest a helpful, contextual response or conversation topic (1-2 sentences max)
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          return new Response(JSON.stringify({ error: 'Rate limited, try again.' }), {
+            status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
         throw new Error('Failed to get conversation assistance');
       }
 
