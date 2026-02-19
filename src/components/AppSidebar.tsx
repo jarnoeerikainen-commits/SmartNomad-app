@@ -192,15 +192,16 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black/50 md:hidden" 
-          onClick={onClose}
+          className="fixed inset-0 z-[55] bg-black/50 md:hidden cursor-pointer" 
+          onClick={() => onClose?.()}
+          aria-hidden="true"
         />
       )}
       
       <aside className={`
-        fixed left-0 top-16 z-50 h-[calc(100dvh-4rem-4rem)] w-64 transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
+        fixed left-0 top-16 z-[60] h-[calc(100dvh-4rem-4rem)] w-64 transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:top-0 md:h-[calc(100dvh-4rem)] md:translate-x-0
+        md:relative md:top-0 md:z-auto md:h-[calc(100dvh-4rem)] md:translate-x-0
       `}>
         <div className="flex h-full flex-col">
           {/* Navigation */}
