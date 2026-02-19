@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
+import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./countryKnowledge.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -243,62 +243,34 @@ Official government apps and portals for 50+ countries:
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════
 
-function getSeasonInfo(month: number, latitude: number): string {
-  const isNorthern = latitude >= 0;
-  if (isNorthern) {
-    if (month >= 3 && month <= 5) return "Spring (March-May). Weather transitioning, pack layers.";
-    if (month >= 6 && month <= 8) return "Summer (June-August). Peak travel season, book ahead.";
-    if (month >= 9 && month <= 11) return "Autumn (September-November). Shoulder season, fewer crowds.";
-    return "Winter (December-February). Cold, check heating in accommodations.";
-  } else {
-    if (month >= 3 && month <= 5) return "Autumn (March-May). Cooling down, shoulder season.";
-    if (month >= 6 && month <= 8) return "Winter (June-August). Cold season, check conditions.";
-    if (month >= 9 && month <= 11) return "Spring (September-November). Warming up, pleasant travel.";
-    return "Summer (December-February). Peak season, book ahead.";
-  }
-}
-
-function getRegionalContext(city: string, country: string): string {
-  const cityLower = (city || '').toLowerCase();
-  const countryLower = (country || '').toLowerCase();
-  
-  // Typical business hours and cultural notes per region
-  const contexts: Record<string, string> = {
-    'japan': "Business hours: 9AM-5PM. Many restaurants close 2-4PM. Trains stop ~midnight. Convenience stores 24/7. Cash still widely needed. Tipping NOT expected.",
-    'thailand': "Business hours: 8:30AM-5PM. Street food available late. 7-Eleven/FamilyMart 24/7. Many shops close Sunday. Tipping not required but appreciated.",
-    'united arab emirates': "Business hours: Sun-Thu 8AM-6PM. Friday is weekend. Malls open 10AM-10PM (midnight Thu-Sat). Ramadan affects hours significantly. Alcohol only in licensed venues.",
-    'singapore': "Business hours: Mon-Fri 9AM-6PM. MRT runs 5:30AM-midnight. Hawker centers open early-late. Chewing gum banned. Very strict laws.",
-    'united kingdom': "Business hours: Mon-Fri 9AM-5:30PM. Pubs close 11PM weekdays, midnight weekends. Sunday trading laws limit large store hours (10AM-4PM). NHS for emergencies.",
-    'france': "Business hours: Mon-Fri 9AM-6PM. Lunch break 12-2PM is sacred. Many shops closed Sunday & Monday. August = mass vacation closures. Pharmacies marked with green cross.",
-    'germany': "Business hours: Mon-Fri 9AM-6PM. Shops CLOSED Sundays (except bakeries/gas stations). Quiet hours (Ruhezeit) 10PM-6AM and all Sunday. Cash preferred in many places.",
-    'spain': "Business hours: 9AM-2PM, then 5PM-8PM. Siesta culture. Dinner starts 9-10PM. Shops closed Sunday. August closures common in cities.",
-    'italy': "Business hours: 9AM-1PM, 3:30PM-7:30PM. Riposo (siesta) varies by region. Coffee at the bar is cheaper than sitting. Many museums closed Mondays.",
-    'united states': "Business hours: Mon-Fri 9AM-5PM. 24/7 culture in major cities. Tipping 18-25% expected everywhere. Sales tax added at checkout (not in displayed price). Healthcare is expensive—always have insurance.",
-    'australia': "Business hours: Mon-Fri 9AM-5PM. Sunday penalty rates mean some places close. UV is extreme—sunscreen essential. Pharmacies close early. Medicare doesn't cover tourists.",
-    'finland': "Business hours: Mon-Fri 8AM-4PM (early!). Many places close by 6PM. Sauna etiquette matters. Dark winters (Nov-Jan). Most things closed on public holidays. Tap water excellent everywhere.",
-  };
-  
-  return contexts[countryLower] || "Check local business hours before visiting. Hours vary significantly by country and city. Government offices typically close earlier than shops.";
-}
-
 function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const now = new Date();
   const month = now.getUTCMonth() + 1;
   const hour = now.getUTCHours();
   const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
   
-  // Determine user's approximate hemisphere from context
   const userCity = userContext?.currentCity || '';
   const userCountry = userContext?.currentCountry || '';
-  const regionalContext = getRegionalContext(userCity, userCountry);
-  
-  // Northern hemisphere approximation for season
-  const seasonInfo = getSeasonInfo(month, 45); // default northern
-  
+  const regionalContext = getRegionalContext(userCountry);
+  const seasonInfo = getSeasonInfo(month, 45);
+  const userCountryBriefing = getCountryBriefing(userCountry);
+
   return `**CURRENT DATE & TIME:** ${currentDateTime} (UTC). Day: ${dayOfWeek}. Current month: ${month}. 
 **CURRENT SEASON (user's approximate):** ${seasonInfo}
+${userCountryBriefing}
 
 You are the SuperNomad Concierge — think of yourself as the user's ridiculously well-connected, globe-trotting best friend who happens to know everything about travel.
+
+**🌍 PROACTIVE FIRST-VISIT BRIEFING — CRITICAL:**
+When a user mentions traveling to ANY country, IMMEDIATELY check if they seem unfamiliar with it and proactively offer a SHORT cultural briefing covering:
+1. Currency & payment (cash vs cards, tipping norms)
+2. Key manners & taboos (what NOT to do)
+3. Current season there & what to pack
+4. Business hours (especially Sunday/holiday closures)
+5. Emergency number
+Keep it to 3-4 punchy bullet points — don't lecture. Frame as "quick heads up" from a friend.
+
+You have detailed briefings for 100 countries. When a user mentions a destination, use the exact data — never guess. If the country isn't in your database, say so honestly.
 
 ${PLATFORM_KNOWLEDGE}
 
