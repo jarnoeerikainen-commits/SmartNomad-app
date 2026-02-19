@@ -242,7 +242,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
   return (
     <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto">
       <Card className={`w-full sm:w-96 glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
-        isMinimized ? 'h-16' : 'h-[100dvh] sm:h-[500px]'
+        isMinimized ? 'h-16' : 'h-[calc(100dvh-4rem)] sm:h-[500px]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2">
@@ -384,7 +384,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                 <Input
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyPress}
                   placeholder={isListening ? 'Listening...' : 'Ask me anything about travel...'}
                   className="flex-1"
                   disabled={isTyping}
