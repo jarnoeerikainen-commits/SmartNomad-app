@@ -2,12 +2,21 @@ import { useState, useCallback } from 'react';
 import { ChatMessage } from '@/types/communityChat';
 import { DEMO_USERS, AVATAR_URLS } from '@/data/communityChatData';
 
-// Hardcoded Supabase config for consistent API calls
-const SUPABASE_URL = 'https://xeunjlpzvitnrepyzatg.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhldW5qbHB6dml0bnJlcHl6YXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyNjUxMDUsImV4cCI6MjA3Njg0MTEwNX0.eiTYJpSpLpY7o860HSFDB7wQPPt5y9bIYRfzmPGEgU0';
-
 // Current user avatar - professional photo
 const CURRENT_USER_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face';
+
+const MEMBER_REPLIES = [
+  'Totally agree! 🙌 Let\'s do it.',
+  'Great idea — I was about to suggest the same thing!',
+  'I\'m in! What time works best?',
+  'Love it! Just sent you a DM with more details.',
+  'Perfect. I know a great spot nearby — I\'ll share the location.',
+  'Count me in! Can I bring a friend who just arrived in town?',
+  'This is exactly why I love this community ❤️',
+  'Sounds fun! I\'ll be there in 15 minutes.',
+];
+
+const pickRandom = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export const useCommunityChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -76,59 +85,66 @@ export const useCommunityChat = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
 
+    // Simulate a member reply after 1–2s
+    const replier = pickRandom(DEMO_USERS.filter(u => u.id !== 'current-user'));
+    setTimeout(() => {
+      const memberReply: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        senderId: replier.id,
+        senderName: replier.name,
+        senderAvatar: replier.avatar,
+        content: pickRandom(MEMBER_REPLIES),
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, memberReply]);
+    }, 1200 + Math.random() * 1200);
+
+    // Get AI response
+    setIsLoading(true);
     try {
-      // Call AI with consistent authentication
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/community-chat`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/community-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
         },
         body: JSON.stringify({
           message: content,
-          context: {
-            recentMessages: messages.slice(-5),
-            users: DEMO_USERS,
-            location: 'Dubai'
-          }
+          context: { recentMessages: messages.slice(-5), users: DEMO_USERS, location: 'Dubai' }
         })
       });
 
       if (!response.ok) throw new Error('AI response failed');
-
       const data = await response.json();
 
-      // Add AI response
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        senderId: 'ai',
-        senderName: 'SuperNomad AI',
-        senderAvatar: '🤖',
-        content: data.response,
-        timestamp: new Date(),
-        isAI: true
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      
-      // Fallback demo response
-      const demoResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        senderId: 'ai',
-        senderName: 'SuperNomad AI',
-        senderAvatar: '🤖',
-        content: 'Great idea! I\'ve found 3 people nearby who are interested. Want me to create a group and suggest a meeting spot based on everyone\'s location?',
-        timestamp: new Date(),
-        isAI: true
-      };
-
-      setMessages(prev => [...prev, demoResponse]);
-    } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        const aiMessage: ChatMessage = {
+          id: (Date.now() + 2).toString(),
+          senderId: 'ai',
+          senderName: 'SuperNomad AI',
+          senderAvatar: '🤖',
+          content: data.response,
+          timestamp: new Date(),
+          isAI: true
+        };
+        setMessages(prev => [...prev, aiMessage]);
+        setIsLoading(false);
+      }, 2500 + Math.random() * 1000);
+    } catch {
+      setTimeout(() => {
+        const demoResponse: ChatMessage = {
+          id: (Date.now() + 2).toString(),
+          senderId: 'ai',
+          senderName: 'SuperNomad AI',
+          senderAvatar: '🤖',
+          content: 'Great idea! I\'ve found 3 people nearby who are interested. Want me to create a group and suggest a meeting spot based on everyone\'s location? 📍',
+          timestamp: new Date(),
+          isAI: true
+        };
+        setMessages(prev => [...prev, demoResponse]);
+        setIsLoading(false);
+      }, 2500);
     }
   }, [messages]);
 

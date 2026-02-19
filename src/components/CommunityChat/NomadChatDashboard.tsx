@@ -8,19 +8,26 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCommunityChat } from '@/hooks/useCommunityChat';
 import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS, AVATAR_URLS } from '@/data/communityChatData';
-import { Send, Users, Sparkles, MapPin, TrendingUp, Plus } from 'lucide-react';
+import { Send, Users, Sparkles, MapPin, TrendingUp, Plus, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { SubjectChatView } from './SubjectChatView';
+import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 
 export const NomadChatDashboard = () => {
   const { messages, sendMessage, isLoading } = useCommunityChat();
   const [messageInput, setMessageInput] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
   const [triggerCreateGroup, setTriggerCreateGroup] = useState(false);
+  const {
+    isListening, isSpeaking, voiceEnabled,
+    startListening, stopListening, speak,
+    toggleVoice, sttSupported, ttsSupported
+  } = useVoiceConversation();
 
-  const handleSend = () => {
-    if (messageInput.trim()) {
-      sendMessage(messageInput);
-      setMessageInput('');
+  const handleSend = (text?: string) => {
+    const content = text || messageInput;
+    if (content.trim()) {
+      sendMessage(content);
+      if (!text) setMessageInput('');
     }
   };
 
@@ -28,6 +35,14 @@ export const NomadChatDashboard = () => {
     setActiveTab('subjects');
     setTriggerCreateGroup(true);
   };
+
+  // Auto-speak AI responses
+  const lastMsg = messages[messages.length - 1];
+  const lastMsgIdRef = useState<string | null>(null);
+  if (lastMsg && lastMsg.isAI && voiceEnabled && lastMsg.id !== lastMsgIdRef[0]) {
+    lastMsgIdRef[1](lastMsg.id);
+    speak(lastMsg.content);
+  }
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -132,9 +147,22 @@ export const NomadChatDashboard = () => {
               <span className="text-2xl">💼</span>
               <h2 className="text-xl font-semibold">Dubai Marina Co-workers</h2>
               <Badge variant="secondary">6 members</Badge>
-              <div className="ml-auto flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                <span className="text-xs text-muted-foreground">Live</span>
+              <div className="ml-auto flex items-center gap-2">
+                {ttsSupported && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleVoice}
+                    className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                    title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
+                  >
+                    {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+                  </Button>
+                )}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                  <span className="text-xs text-muted-foreground">Live</span>
+                </div>
               </div>
             </div>
 
@@ -208,14 +236,34 @@ export const NomadChatDashboard = () => {
             </ScrollArea>
 
             <div className="flex gap-2">
+              {sttSupported && (
+                <Button
+                  onClick={() => {
+                    if (isListening) {
+                      stopListening();
+                    } else {
+                      startListening((text) => {
+                        if (text.trim()) handleSend(text);
+                      });
+                    }
+                  }}
+                  variant={isListening ? 'default' : 'outline'}
+                  size="sm"
+                  className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                  disabled={isLoading}
+                  title={isListening ? 'Stop listening' : 'Voice input'}
+                >
+                  {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+              )}
               <Input
-                placeholder="Type your message..."
+                placeholder={isListening ? 'Listening...' : 'Type your message...'}
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 disabled={isLoading}
               />
-              <Button onClick={handleSend} disabled={isLoading || !messageInput.trim()}>
+              <Button onClick={() => handleSend()} disabled={isLoading || !messageInput.trim()}>
                 <Send className="w-4 h-4" />
               </Button>
             </div>
