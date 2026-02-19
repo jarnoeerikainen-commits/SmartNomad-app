@@ -169,8 +169,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'premium',
       label: t('sidebar.premium_services'),
       items: [
-        { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
         { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
+        { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
         { id: 'emergency', label: t('sidebar.emergency'), icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'embassy', label: t('sidebar.embassy'), icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
         { id: 'sos-services', label: t('sidebar.sos'), icon: Siren, badge: '24/7', variant: 'destructive' as const },
