@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Users, MessageCircle, Calendar, Sparkles, Search, Filter } from 'lucide-react';
+import { Users, MessageCircle, Calendar, Sparkles, Search, Filter, ShieldCheck, ScanFace, Bot, Lock } from 'lucide-react';
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { ProfileCard } from './ProfileCard';
 import { ChatInterface } from './ChatInterface';
@@ -53,6 +53,33 @@ export const SocialDashboard = () => {
 
   return (
     <div className="space-y-6">
+      {/* Trust & Safety Banner */}
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="py-4">
+          <div className="flex items-center gap-3 mb-3">
+            <ShieldCheck className="h-6 w-6 text-primary flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-sm">Verified & AI-Protected Community</h3>
+              <p className="text-xs text-muted-foreground">Every member is verified. Every conversation is safe.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="flex items-center gap-2 text-xs">
+              <ScanFace className="h-4 w-4 text-primary flex-shrink-0" />
+              <span><strong>ID & Face Match</strong> — 1 min verification for all members</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <Bot className="h-4 w-4 text-primary flex-shrink-0" />
+              <span><strong>AI Moderated</strong> — Zero tolerance for harassment & scams</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <Lock className="h-4 w-4 text-primary flex-shrink-0" />
+              <span><strong>End-to-End Encrypted</strong> — Your privacy, always protected</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Header Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>

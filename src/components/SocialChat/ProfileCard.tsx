@@ -8,7 +8,9 @@ import {
   Briefcase, 
   Calendar, 
   Shield,
-  Globe
+  Globe,
+  ScanFace,
+  ShieldCheck
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -118,7 +120,15 @@ export const ProfileCard = ({ profile, onStartChat }: ProfileCardProps) => {
 
         {/* Verification Badges */}
         <div className="flex flex-wrap gap-1">
-          {profile.verification.badges.slice(0, 2).map((badge) => (
+          <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
+            <ScanFace className="h-3 w-3 mr-1" />
+            ID Verified
+          </Badge>
+          <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
+            <ShieldCheck className="h-3 w-3 mr-1" />
+            Face Match ✓
+          </Badge>
+          {profile.verification.badges.slice(0, 1).map((badge) => (
             <Badge key={badge} variant="secondary" className="text-xs">
               {badge}
             </Badge>
