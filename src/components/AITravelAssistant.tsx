@@ -224,10 +224,10 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
         <Button
           onClick={() => setIsOpen(true)}
-          className="h-16 w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
+          className="h-14 w-14 sm:h-16 sm:w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
           size="lg"
         >
           <div className="relative">
@@ -240,9 +240,9 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
-      <Card className={`w-96 glass-morphism shadow-large transition-all duration-300 ${
-        isMinimized ? 'h-16' : 'h-[500px]'
+    <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto">
+      <Card className={`w-full sm:w-96 glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
+        isMinimized ? 'h-16' : 'h-[100dvh] sm:h-[500px]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2">
