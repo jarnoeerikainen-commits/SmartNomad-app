@@ -536,7 +536,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={() => setShowUpgradeModal(true)}
         />
         
-          <main className="flex-1 overflow-hidden">
+          <main className="flex-1 overflow-hidden" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
             <div className="container mx-auto p-4 sm:p-6 max-w-7xl pb-20 md:pb-6">
               <div className="animate-fade-in">
                 {renderActiveSection()}
@@ -564,6 +564,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         activeTab={bottomNavTab}
         onTabChange={(tab) => {
           setBottomNavTab(tab);
+          setActiveSection('dashboard');
           setSidebarOpen(false);
         }}
       />
