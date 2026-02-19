@@ -65,21 +65,24 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
             {groupItems.map((item, idx) => (
               <Card
                 key={idx}
-                className={`p-2.5 border cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.01] ${PROVIDER_COLORS[item.provider] || 'bg-muted/50'}`}
+                className={`p-3 border cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.01] ${PROVIDER_COLORS[item.provider] || 'bg-muted/50'}`}
                 onClick={() => window.open(item.url, '_blank', 'noopener,noreferrer')}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <TypeIcon type={item.type} />
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-background/80 shrink-0">
+                      <TypeIcon type={item.type} />
+                    </div>
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold truncate">{item.provider}</p>
-                      <p className="text-[10px] opacity-75 truncate">
-                        {item.route || item.city || ''} {item.date || item.dates || ''}
+                      <p className="text-sm font-bold truncate">{item.provider}</p>
+                      <p className="text-[11px] opacity-75 truncate">
+                        {item.route || item.city || item.label || `Search on ${item.provider}`}
+                        {(item.date || item.dates) && ` · ${item.date || item.dates}`}
                       </p>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" className="h-7 px-2 text-xs shrink-0 gap-1">
-                    Search <ExternalLink className="h-3 w-3" />
+                  <Button variant="secondary" size="sm" className="h-8 px-3 text-xs shrink-0 gap-1 font-semibold">
+                    Open <ExternalLink className="h-3 w-3" />
                   </Button>
                 </div>
               </Card>

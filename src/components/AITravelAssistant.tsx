@@ -30,7 +30,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 }) => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
