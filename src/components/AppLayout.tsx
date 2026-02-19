@@ -526,7 +526,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       <div className="flex">
         <AppSidebar 
           activeSection={activeSection}
-          onSectionChange={setActiveSection}
+          onSectionChange={(section) => {
+            setActiveSection(section);
+            setBottomNavTab('home');
+          }}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           subscription={subscription}

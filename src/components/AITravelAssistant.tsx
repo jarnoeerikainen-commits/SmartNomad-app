@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -28,7 +29,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   userProfile
 }) => {
   const { t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(true);
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -224,7 +226,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
+      <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40">
         <Button
           onClick={() => setIsOpen(true)}
           className="h-14 w-14 sm:h-16 sm:w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
@@ -240,9 +242,9 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
   }
 
   return (
-    <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto">
+    <div className="fixed bottom-16 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto">
       <Card className={`w-full sm:w-96 glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
-        isMinimized ? 'h-16' : 'h-[calc(100dvh-4rem)] sm:h-[500px]'
+        isMinimized ? 'h-16' : 'h-[calc(100dvh-8rem)] sm:h-[500px]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2">
