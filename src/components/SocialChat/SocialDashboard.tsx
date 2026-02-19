@@ -66,7 +66,7 @@ export const SocialDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="flex items-center gap-2 text-xs">
               <ScanFace className="h-4 w-4 text-primary flex-shrink-0" />
-              <span><strong>ID & Face Match</strong> — 1 min verification for all members</span>
+              <span><strong>Fast ID & Face Match</strong> — 1 min verification for all members</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
               <Bot className="h-4 w-4 text-primary flex-shrink-0" />

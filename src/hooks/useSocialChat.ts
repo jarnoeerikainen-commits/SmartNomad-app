@@ -112,10 +112,13 @@ export const useSocialChat = () => {
       }, delay);
     }
 
-    // Get AI suggestion after member reply
+    // Get AI suggestion after member reply — pass city & interests for event discovery
     try {
+      const senderProfile = profiles.find(p => p.id === senderId);
+      const userCity = senderProfile?.mobility?.currentLocation?.city || '';
+      const userInterests = senderProfile?.professional?.interests || [];
       const { data } = await supabase.functions.invoke('social-chat-ai', {
-        body: { type: 'conversation', message: content, chatHistory: activeChatRoom?.messages || [] }
+        body: { type: 'conversation', message: content, chatHistory: activeChatRoom?.messages || [], userCity, userInterests }
       });
 
       if (data?.suggestion) {
