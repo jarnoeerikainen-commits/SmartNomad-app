@@ -5,13 +5,30 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_MSG_LEN = 5000;
+const MAX_MSGS = 50;
+
+function validateMessages(msgs: unknown): { role: string; content: string }[] {
+  if (!Array.isArray(msgs)) throw new Error('messages must be an array');
+  if (msgs.length > MAX_MSGS) throw new Error(`Max ${MAX_MSGS} messages`);
+  return msgs.map((m: any, i: number) => {
+    if (!m || typeof m.content !== 'string') throw new Error(`Invalid message at ${i}`);
+    if (m.content.length > MAX_MSG_LEN) throw new Error(`Message ${i} too long`);
+    return { role: ['user','assistant'].includes(m.role) ? m.role : 'user', content: m.content.slice(0, MAX_MSG_LEN) };
+  });
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const messages = validateMessages(body.messages);
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {

@@ -5,13 +5,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_STR = 500;
+const MAX_ARRAY = 20;
+
+function sanitize(v: unknown, max = MAX_STR): string {
+  return typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { action, rooms, moveRequest } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const action = sanitize(body.action, 50);
+    if (!['assess-inventory', 'estimate-pricing'].includes(action)) {
+      return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const rooms = Array.isArray(body.rooms) ? body.rooms.slice(0, MAX_ARRAY) : [];
+    const moveRequest = body.moveRequest && typeof body.moveRequest === 'object' ? body.moveRequest : {};
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {

@@ -6,20 +6,40 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_MSG = 5000;
+const MAX_STR = 200;
+const MAX_ARRAY = 20;
+
+function sanitize(v: unknown, max = MAX_STR): string {
+  return typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { message, context } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const message = sanitize(body.message, MAX_MSG);
+    if (!message) {
+      return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const context = body.context || {};
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const { chatSubject, category, recentMessages, strictness, topicEnforcement } = context;
+    const chatSubject = sanitize(context.chatSubject);
+    const category = sanitize(context.category);
+    const recentMessages = Array.isArray(context.recentMessages) ? context.recentMessages.slice(0, MAX_ARRAY).map((m: any) => ({ senderName: sanitize(m.senderName, 100), content: sanitize(m.content, MAX_MSG) })) : [];
+    const strictness = sanitize(context.strictness, 50);
+    const topicEnforcement = !!context.topicEnforcement;
 
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
@@ -73,10 +93,11 @@ Respond in a helpful, engaging way that adds value to the discussion. Keep respo
 
   } catch (error) {
     console.error('Error in subject-chat-moderator:', error);
+    const isValidation = error instanceof Error && (error.message.includes('must be') || error.message.includes('required') || error.message.includes('too long'));
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: isValidation ? error.message : 'An error occurred' }),
       { 
-        status: 500,
+        status: isValidation ? 400 : 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );

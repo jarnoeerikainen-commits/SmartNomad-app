@@ -419,13 +419,49 @@ Based on the user's mode and context, PROACTIVELY suggest things they haven't as
 // EDGE FUNCTION HANDLER
 // ═══════════════════════════════════════════════════════════
 
+// Input validation helpers
+const MAX_MESSAGE_LENGTH = 5000;
+const MAX_MESSAGES = 50;
+const MAX_STRING = 200;
+
+function validateMessages(messages: unknown): { role: string; content: string }[] {
+  if (!Array.isArray(messages)) throw new Error('messages must be an array');
+  if (messages.length > MAX_MESSAGES) throw new Error(`Maximum ${MAX_MESSAGES} messages allowed`);
+  return messages.map((m: any, i: number) => {
+    if (!m || typeof m.content !== 'string') throw new Error(`Invalid message at index ${i}`);
+    if (m.content.length > MAX_MESSAGE_LENGTH) throw new Error(`Message ${i} exceeds ${MAX_MESSAGE_LENGTH} chars`);
+    const role = ['user', 'assistant', 'system'].includes(m.role) ? m.role : 'user';
+    return { role, content: m.content.slice(0, MAX_MESSAGE_LENGTH) };
+  });
+}
+
+function sanitizeString(val: unknown, maxLen = MAX_STRING): string {
+  if (typeof val !== 'string') return '';
+  return val.replace(/<[^>]*>/g, '').slice(0, maxLen);
+}
+
+function sanitizeContext(ctx: unknown): Record<string, string> | undefined {
+  if (!ctx || typeof ctx !== 'object') return undefined;
+  const c = ctx as Record<string, unknown>;
+  return {
+    currentCountry: sanitizeString(c.currentCountry),
+    currentCity: sanitizeString(c.currentCity),
+    citizenship: sanitizeString(c.citizenship),
+  };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages, userContext } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch { 
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const messages = validateMessages(body.messages);
+    const userContext = sanitizeContext(body.userContext);
     console.log("Travel assistant request received");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
