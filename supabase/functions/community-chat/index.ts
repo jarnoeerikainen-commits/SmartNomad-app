@@ -5,13 +5,33 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_MSG = 5000;
+const MAX_STR = 200;
+const MAX_ARRAY = 20;
+
+function sanitize(v: unknown, max = MAX_STR): string {
+  return typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { message, context } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const message = sanitize(body.message, MAX_MSG);
+    if (!message) {
+      return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const context = {
+      location: sanitize(body.context?.location),
+      recentMessages: Array.isArray(body.context?.recentMessages) ? body.context.recentMessages.slice(0, MAX_ARRAY).map((m: any) => ({ senderName: sanitize(m.senderName, 100), content: sanitize(m.content, MAX_MSG) })) : [],
+      users: Array.isArray(body.context?.users) ? body.context.users.slice(0, MAX_ARRAY).map((u: any) => ({ name: sanitize(u.name, 100), profession: sanitize(u.profession, 100) })) : [],
+    };
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -65,9 +85,10 @@ Current context:
     );
   } catch (error) {
     console.error('Error:', error);
+    const isValidation = error instanceof Error && (error.message.includes('must be') || error.message.includes('required') || error.message.includes('too long'));
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: isValidation ? error.message : 'An error occurred' }),
+      { status: isValidation ? 400 : 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

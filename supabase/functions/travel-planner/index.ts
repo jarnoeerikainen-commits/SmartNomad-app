@@ -11,7 +11,21 @@ serve(async (req) => {
   }
 
   try {
-    const { destination, tripType, budget, pace, duration, groupSize, interests, month, region, userProfile } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const sanitize = (v: unknown, max = 200): string => typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
+    const destination = body.destination && typeof body.destination === 'object' ? body.destination : null;
+    const tripType = sanitize(body.tripType, 100);
+    const budget = sanitize(body.budget, 50);
+    const pace = sanitize(body.pace, 50);
+    const duration = sanitize(body.duration, 50);
+    const groupSize = sanitize(body.groupSize, 50);
+    const interests = Array.isArray(body.interests) ? body.interests.slice(0, 20).map((i: any) => sanitize(i, 100)) : [];
+    const month = sanitize(body.month, 50);
+    const region = sanitize(body.region, 100);
+    const userProfile = body.userProfile || null;
     console.log("Travel planner full-plan request:", destination?.name || "general");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -170,7 +184,7 @@ Generate the full plan now.`;
     });
   } catch (error) {
     console.error("Error in travel-planner function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'An error occurred' }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

@@ -5,13 +5,34 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const MAX_MSG = 5000;
+const MAX_STR = 200;
+const MAX_ARRAY = 20;
+
+function sanitize(v: unknown, max = MAX_STR): string {
+  return typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { type, userProfile, availableProfiles, message, chatHistory, userCity, userInterests } = await req.json();
+    let body: any;
+    try { body = await req.json(); } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const type = sanitize(body.type, 50);
+    if (!['match', 'conversation'].includes(type)) {
+      return new Response(JSON.stringify({ error: 'Invalid type' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const userProfile = body.userProfile || {};
+    const availableProfiles = Array.isArray(body.availableProfiles) ? body.availableProfiles.slice(0, MAX_ARRAY) : [];
+    const message = sanitize(body.message, MAX_MSG);
+    const chatHistory = Array.isArray(body.chatHistory) ? body.chatHistory.slice(0, MAX_ARRAY).map((m: any) => ({ senderName: sanitize(m.senderName, 100), content: sanitize(m.content, MAX_MSG) })) : [];
+    const userCity = sanitize(body.userCity);
+    const userInterests = Array.isArray(body.userInterests) ? body.userInterests.slice(0, 10).map((i: any) => sanitize(i, 100)) : [];
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
@@ -182,7 +203,7 @@ Suggest a helpful response (2-3 sentences max). If relevant, recommend a specifi
   } catch (error) {
     console.error('Error in social-chat-ai function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'An error occurred' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
