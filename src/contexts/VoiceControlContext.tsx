@@ -106,7 +106,7 @@ const VOICE_COMMANDS: VoiceCommand[] = [
   { patterns: [/\bstop\s*(talking|speaking)?\b/i, /\bshut\s*up\b/i, /\bquiet\b/i, /\bsilence\b/i], action: 'voice:stop', description: 'Stop speaking' },
   { patterns: [/\b(enable|turn\s*on)\s*voice\b/i, /\bspeak\s*(to\s*me|back)\b/i], action: 'voice:enable', description: 'Enable voice responses' },
   { patterns: [/\b(disable|turn\s*off)\s*voice\b/i, /\bmute\b/i], action: 'voice:disable', description: 'Disable voice responses' },
-  { patterns: [/\bwhat\s*can\s*(you|i)\s*(do|say)\b/i, /\bhelp\b/i, /\bcommands?\b/i], action: 'voice:help', description: 'List voice commands' },
+  { patterns: [/\bwhat\s*can\s*(you|i)\s*(do|say)\b/i, /\bsuper\s*nomad\b/i, /\bcommands?\b/i], action: 'voice:help', description: 'List voice commands' },
 ];
 
 interface VoiceControlProviderProps {
@@ -194,7 +194,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
     }
 
     // No match found
-    const feedback = `I didn't understand "${transcript}". Say "help" to hear available commands.`;
+    const feedback = `I didn't understand "${transcript}". Say "SuperNomad" to hear available commands.`;
     setLastFeedback(feedback);
     voice.speak(feedback);
   }, [voice]);
