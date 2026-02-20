@@ -105,7 +105,7 @@ export const VoiceControlButton: React.FC = () => {
               ) : (
                 <div className="space-y-1">
                   <p className="font-medium">Voice Control</p>
-                  <p className="text-xs text-muted-foreground">Say "help" for all commands</p>
+                  <p className="text-xs text-muted-foreground">Say "SuperNomad" for all commands</p>
                 </div>
               )}
             </TooltipContent>
