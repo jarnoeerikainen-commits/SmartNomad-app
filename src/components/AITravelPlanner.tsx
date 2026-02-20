@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +9,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useVoiceConversation } from '@/hooks/useVoiceConversation';
+import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import {
   Plane, Users, Briefcase, GraduationCap, Baby, Heart,
   Mountain, Waves, Sun, Cloud, Snowflake,
@@ -18,7 +20,8 @@ import {
   Camera, Tent, Palmtree, Building2, Compass,
   BookOpen, Wine, Sailboat, TreePine, Gamepad2,
   Swords, Trophy, ChevronRight, ArrowLeft, Bookmark, BookmarkCheck,
-  X, SlidersHorizontal, Zap, RotateCcw
+  X, SlidersHorizontal, Zap, RotateCcw, Loader2, Volume2, VolumeX,
+  FileText, Mic, MicOff
 } from 'lucide-react';
 
 // ─── TRIP TYPES ─────────────────────────────────────────────
@@ -392,7 +395,7 @@ const DESTINATIONS: Destination[] = [
     highlights:['Edinburgh Castle','Arthur\'s Seat','Fringe Festival (Aug)'], idealDuration:'week' },
   { id:'34', name:'Maui', country:'USA', region:'North America', rating:4.8, priceLevel:4,
     bestMonths:['Apr','May','Jun','Sep','Oct','Nov'], avgTemp:{Apr:24,May:25,Jun:26,Sep:27,Oct:26,Nov:25},
-    activities:['beach','surfing','hiking','whale-watching','snorkeling','photography'],
+    activities:['beach','surfing','hiking','photography'],
     facilities:['spa','restaurant','accessible'],
     suitableFor:['couple','family','adventure','wellness','friends'],
     description:'Hawaiian paradise — Road to Hana, Haleakalā sunrise, and pristine beaches.',
@@ -460,86 +463,147 @@ const DESTINATIONS: Destination[] = [
     facilities:['coworking','restaurant','accessible'],
     suitableFor:['digital-nomad','solo','couple','cultural','student','business'],
     description:'Medieval meets digital — the world\'s most advanced e-society in a fairytale old town.',
-    weatherPattern:'Maritime. Short warm summers, cold winters.', accessibility:8,
-    highlights:['Medieval Old Town','E-residency hub','Telliskivi Creative City'], idealDuration:'week' },
-  { id:'43', name:'Cairns & Great Barrier Reef', country:'Australia', region:'Oceania', rating:4.7, priceLevel:3,
-    bestMonths:['Jun','Jul','Aug','Sep','Oct'], avgTemp:{Jun:22,Jul:21,Aug:22,Sep:24,Oct:26},
-    activities:['diving','beach','wildlife','hiking','sailing','photography'],
-    facilities:['spa','restaurant','medical'],
-    suitableFor:['adventure','couple','family','friends','solo'],
-    description:'Gateway to the Great Barrier Reef and Daintree Rainforest — bucket list territory.',
-    weatherPattern:'Tropical. Dry season Jun-Oct is ideal.', accessibility:7,
-    highlights:['Great Barrier Reef','Daintree Rainforest','Skyrail Cableway'], idealDuration:'2weeks' },
-  { id:'44', name:'Tbilisi', country:'Georgia', region:'Eastern Europe', rating:4.5, priceLevel:1,
-    bestMonths:['May','Jun','Sep','Oct'], avgTemp:{May:18,Jun:22,Sep:21,Oct:15},
-    activities:['city-walking','food-tours','wine-tasting','hiking','nightlife','photography'],
-    facilities:['coworking','spa','restaurant'],
-    suitableFor:['digital-nomad','solo','couple','student','cultural','friends','adventure'],
-    description:'Europe\'s hidden gem — ancient wine culture, jaw-dropping mountains, and $10 feasts.',
-    weatherPattern:'Continental. Pleasant spring and autumn.', accessibility:6,
-    highlights:['Sulfur baths','Natural wine bars','Kazbegi mountains'], idealDuration:'2weeks' },
-  { id:'45', name:'Osaka', country:'Japan', region:'East Asia', rating:4.7, priceLevel:3,
-    bestMonths:['Mar','Apr','May','Oct','Nov'], avgTemp:{Mar:10,Apr:16,May:21,Oct:18,Nov:13},
-    activities:['food-tours','city-walking','temple-tours','nightlife','shopping','museums'],
-    facilities:['restaurant','metro','accessible','medical'],
-    suitableFor:['cultural','friends','couple','solo','student','family'],
-    description:'Japan\'s kitchen — takoyaki, neon-lit Dotonbori, and the friendliest locals in Japan.',
-    weatherPattern:'Humid subtropical. Cherry blossoms in spring.', accessibility:9,
-    highlights:['Dotonbori','Osaka Castle','Street food capital'], idealDuration:'week' },
-  { id:'46', name:'Zanzibar', country:'Tanzania', region:'Sub-Saharan Africa', rating:4.5, priceLevel:2,
-    bestMonths:['Jun','Jul','Aug','Sep','Oct','Jan','Feb'], avgTemp:{Jun:25,Jul:24,Aug:25,Sep:26,Oct:27,Jan:28,Feb:28},
-    activities:['beach','diving','food-tours','city-walking','sailing','photography'],
-    facilities:['eco-lodge','spa','restaurant'],
-    suitableFor:['couple','solo','adventure','friends','cultural'],
-    description:'Spice Island paradise — Stone Town heritage, pristine beaches, and Swahili culture.',
-    weatherPattern:'Tropical. Dry seasons Jun-Oct and Jan-Feb.', accessibility:4,
-    highlights:['Stone Town UNESCO site','Spice tours','Nungwi Beach'], idealDuration:'week' },
-  { id:'47', name:'Val Thorens', country:'France', region:'Western Europe', rating:4.7, priceLevel:3,
-    bestMonths:['Dec','Jan','Feb','Mar','Apr'], avgTemp:{Dec:-5,Jan:-7,Feb:-5,Mar:-2,Apr:2},
-    activities:['skiing','snowboarding','spa'], facilities:['ski-lifts','spa','restaurant','gym'],
-    suitableFor:['sports','friends','couple','adventure'],
-    description:'Europe\'s highest ski resort — guaranteed snow and access to 600km of Les 3 Vallées.',
-    weatherPattern:'Alpine. Reliable snow Dec-Apr.', accessibility:6,
-    highlights:['600km ski area','Snow guaranteed','Après-ski culture'], idealDuration:'week' },
-  { id:'48', name:'Cartagena', country:'Colombia', region:'South America', rating:4.5, priceLevel:2,
-    bestMonths:['Dec','Jan','Feb','Mar'], avgTemp:{Dec:28,Jan:28,Feb:28,Mar:29},
-    activities:['beach','city-walking','food-tours','nightlife','photography','sailing'],
-    facilities:['spa','restaurant','pool'],
-    suitableFor:['couple','friends','cultural','solo','student'],
-    description:'Colonial gem on the Caribbean — colorful walled city, salsa dancing, and ceviche.',
-    weatherPattern:'Tropical. Dry season Dec-Mar.', accessibility:6,
-    highlights:['Walled Old City','Rosario Islands','Street art'], idealDuration:'week' },
-  { id:'49', name:'Porto', country:'Portugal', region:'Western Europe', rating:4.6, priceLevel:2,
-    bestMonths:['May','Jun','Jul','Aug','Sep'], avgTemp:{May:16,Jun:19,Jul:21,Aug:21,Sep:20},
-    activities:['city-walking','wine-tasting','food-tours','photography','museums','beach'],
-    facilities:['coworking','restaurant','accessible'],
-    suitableFor:['cultural','couple','solo','digital-nomad','senior','friends'],
-    description:'Port wine cellars, azulejo tiles, and Harry Potter inspiration at half Lisbon\'s prices.',
-    weatherPattern:'Mediterranean. Warm dry summers.', accessibility:7,
-    highlights:['Livraria Lello','Port wine tasting','Ribeira district'], idealDuration:'week' },
-  { id:'50', name:'Bora Bora', country:'French Polynesia', region:'Pacific Islands', rating:4.9, priceLevel:5,
+    weatherPattern:'Cool summers, freezing winters. Best May-Aug.', accessibility:7,
+    highlights:['Old Town','e-Residency hub','Telliskivi Creative City'], idealDuration:'week' },
+  { id:'43', name:'Bora Bora', country:'French Polynesia', region:'Pacific Islands', rating:4.9, priceLevel:5,
     bestMonths:['May','Jun','Jul','Aug','Sep','Oct'], avgTemp:{May:27,Jun:26,Jul:25,Aug:25,Sep:26,Oct:27},
     activities:['beach','diving','sailing','spa','sunset-viewing','photography'],
     facilities:['spa','fine-dining','pool'],
     suitableFor:['couple','wellness'],
-    description:'The most beautiful island in the world — overwater bungalows and lagoon perfection.',
+    description:'The most beautiful island on Earth — overwater bungalows and Mount Otemanu views.',
     weatherPattern:'Tropical. Dry season May-Oct.', accessibility:3,
-    highlights:['Overwater villas','Lagoon tours','Mount Otemanu views'], idealDuration:'week' },
+    highlights:['Mount Otemanu','Lagoon snorkeling','Overwater bungalows'], idealDuration:'week' },
+  { id:'44', name:'Havana', country:'Cuba', region:'Caribbean', rating:4.3, priceLevel:1,
+    bestMonths:['Nov','Dec','Jan','Feb','Mar','Apr'], avgTemp:{Nov:25,Dec:24,Jan:22,Feb:23,Mar:24,Apr:26},
+    activities:['city-walking','music','food-tours','photography','beach'],
+    facilities:['restaurant','accessible'],
+    suitableFor:['cultural','solo','couple','friends','student'],
+    description:'Classic cars, salsa clubs, colonial architecture, and the spirit of revolution.',
+    weatherPattern:'Tropical. Dry season Nov-Apr.', accessibility:4,
+    highlights:['Old Havana','Tropicana show','Viñales Valley'], idealDuration:'week' },
+  { id:'45', name:'Lofoten Islands', country:'Norway', region:'Northern Europe', rating:4.7, priceLevel:4,
+    bestMonths:['Jun','Jul','Aug','Sep','Jan','Feb','Mar'], avgTemp:{Jun:11,Jul:13,Aug:13,Sep:10,Jan:-1,Feb:-1,Mar:1},
+    activities:['hiking','photography','fishing','camping','wildlife','surfing'],
+    facilities:['eco-lodge','restaurant'],
+    suitableFor:['adventure','couple','solo','photography'],
+    description:'Dramatic fjords, midnight sun, and Arctic surfing above the Arctic Circle.',
+    weatherPattern:'Surprisingly mild for Arctic. Midnight sun Jun-Jul, northern lights Oct-Mar.', accessibility:4,
+    highlights:['Midnight sun','Reine fishing village','Arctic surfing'], idealDuration:'week' },
+  { id:'46', name:'Jaipur', country:'India', region:'South Asia', rating:4.5, priceLevel:1,
+    bestMonths:['Oct','Nov','Dec','Jan','Feb','Mar'], avgTemp:{Oct:27,Nov:22,Dec:17,Jan:16,Feb:19,Mar:24},
+    activities:['city-walking','temple-tours','shopping','food-tours','photography'],
+    facilities:['spa','restaurant','accessible'],
+    suitableFor:['cultural','couple','solo','student','friends'],
+    description:'The Pink City — maharajas\' palaces, vibrant bazaars, and the gateway to Rajasthan.',
+    weatherPattern:'Semi-arid. Cool winters Oct-Mar, scorching summers.', accessibility:5,
+    highlights:['Hawa Mahal','Amber Fort','Block printing workshops'], idealDuration:'week' },
+  { id:'47', name:'Fiji - Nadi & Mamanuca', country:'Fiji', region:'Pacific Islands', rating:4.6, priceLevel:3,
+    bestMonths:['May','Jun','Jul','Aug','Sep','Oct'], avgTemp:{May:26,Jun:24,Jul:24,Aug:24,Sep:25,Oct:26},
+    activities:['beach','diving','sailing','spa','wildlife'],
+    facilities:['spa','restaurant','pool'],
+    suitableFor:['couple','family','wellness','friends'],
+    description:'Bula! Crystal-clear waters, friendly locals, and barefoot luxury island life.',
+    weatherPattern:'Tropical. Dry season May-Oct.', accessibility:5,
+    highlights:['Mamanuca Islands','Cloud 9 bar','Coral reefs'], idealDuration:'week' },
+  { id:'48', name:'Cartagena', country:'Colombia', region:'South America', rating:4.5, priceLevel:1,
+    bestMonths:['Dec','Jan','Feb','Mar','Apr'], avgTemp:{Dec:28,Jan:27,Feb:28,Mar:28,Apr:29},
+    activities:['city-walking','beach','food-tours','nightlife','photography'],
+    facilities:['restaurant','spa','accessible'],
+    suitableFor:['couple','friends','solo','cultural','student'],
+    description:'Colorful colonial walled city with Caribbean beaches, salsa, and incredible seafood.',
+    weatherPattern:'Tropical. Dry season Dec-Apr.', accessibility:6,
+    highlights:['Walled City','Rosario Islands','Street food tours'], idealDuration:'week' },
+  { id:'49', name:'Val Thorens', country:'France', region:'Western Europe', rating:4.6, priceLevel:3,
+    bestMonths:['Dec','Jan','Feb','Mar','Apr'], avgTemp:{Dec:-6,Jan:-8,Feb:-6,Mar:-3,Apr:0},
+    activities:['skiing','snowboarding','spa'],
+    facilities:['ski-lifts','spa','restaurant','gym'],
+    suitableFor:['sports','friends','couple','adventure'],
+    description:'Highest ski resort in Europe (2,300m) — guaranteed snow and 600km of linked slopes.',
+    weatherPattern:'Alpine. Guaranteed snow Nov-May at this altitude.', accessibility:6,
+    highlights:['600km 3 Valleys','Guaranteed snow','Après-ski'], idealDuration:'week' },
+  { id:'50', name:'Zanzibar', country:'Tanzania', region:'Sub-Saharan Africa', rating:4.5, priceLevel:2,
+    bestMonths:['Jun','Jul','Aug','Sep','Dec','Jan','Feb'], avgTemp:{Jun:26,Jul:25,Aug:25,Sep:26,Dec:28,Jan:29,Feb:29},
+    activities:['beach','diving','food-tours','city-walking','photography','sailing'],
+    facilities:['spa','restaurant','eco-lodge'],
+    suitableFor:['couple','solo','adventure','cultural','friends'],
+    description:'Spice Island — pristine beaches, Stone Town history, and dhow sailing at sunset.',
+    weatherPattern:'Tropical. Dry seasons Jun-Oct and Dec-Feb.', accessibility:5,
+    highlights:['Stone Town','Spice tours','Nungwi Beach'], idealDuration:'week' },
 ];
 
-// ─── COMPONENT ──────────────────────────────────────────────
-interface AITravelPlannerProps {
-  currentLocation?: { country: string; city: string };
-}
-
+// ── Types
 type BudgetType = 'budget' | 'value' | 'luxury';
 type PaceType = 'relaxed' | 'moderate' | 'active';
+type ViewType = 'choose' | 'customize' | 'results' | 'fullplan';
 
-export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
+const PLAN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-planner`;
+
+// ─── Markdown renderer (simple) ─────────────────────
+function SimpleMarkdown({ content }: { content: string }) {
+  const { text, bookings } = parseBookingBlocks(content);
+
+  const parts = text.split(/({{BOOKING_CARD_\d+}})/);
+
+  return (
+    <div className="prose prose-sm dark:prose-invert max-w-none">
+      {parts.map((part, i) => {
+        const match = part.match(/{{BOOKING_CARD_(\d+)}}/);
+        if (match) {
+          const idx = parseInt(match[1]);
+          return bookings[idx] ? <BookingCards key={i} items={bookings[idx]} /> : null;
+        }
+        // render markdown lines
+        return (
+          <div key={i}>
+            {part.split('\n').map((line, li) => {
+              if (line.startsWith('## ')) return <h2 key={li} className="text-lg font-bold mt-4 mb-2 flex items-center gap-2">{line.slice(3)}</h2>;
+              if (line.startsWith('### ')) return <h3 key={li} className="text-base font-semibold mt-3 mb-1">{line.slice(4)}</h3>;
+              if (line.startsWith('| ')) {
+                // table row
+                const cells = line.split('|').filter(c => c.trim()).map(c => c.trim());
+                const isHeader = cells.every(c => /^[-:]+$/.test(c));
+                if (isHeader) return null;
+                return (
+                  <div key={li} className="grid grid-cols-4 gap-1 text-xs py-1 border-b border-border/50">
+                    {cells.map((cell, ci) => (
+                      <span key={ci} className={ci === 0 ? 'font-medium' : 'text-right'}>{cell}</span>
+                    ))}
+                  </div>
+                );
+              }
+              if (line.startsWith('- **')) {
+                const boldMatch = line.match(/^- \*\*(.+?)\*\*:?\s*(.*)/);
+                if (boldMatch) return (
+                  <div key={li} className="flex gap-2 text-sm py-0.5">
+                    <span className="font-semibold shrink-0">{boldMatch[1]}:</span>
+                    <span className="text-muted-foreground">{renderInlineMarkdown(boldMatch[2])}</span>
+                  </div>
+                );
+              }
+              if (line.startsWith('- ')) return <div key={li} className="flex gap-2 text-sm py-0.5"><span>•</span><span>{renderInlineMarkdown(line.slice(2))}</span></div>;
+              if (line.trim() === '') return <div key={li} className="h-1" />;
+              return <p key={li} className="text-sm leading-relaxed">{renderInlineMarkdown(line)}</p>;
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function renderInlineMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1');
+}
+
+// ─── COMPONENT ────────────────────────────────────────────
+export default function AITravelPlanner() {
   const { toast } = useToast();
+  const voice = useVoiceConversation();
 
   // ── State
-  const [view, setView] = useState<'choose' | 'customize' | 'results'>('choose');
+  const [view, setView] = useState<ViewType>('choose');
   const [tripType, setTripType] = useState('');
   const [budget, setBudget] = useState<BudgetType>('value');
   const [pace, setPace] = useState<PaceType>('moderate');
@@ -555,6 +619,20 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [detailDest, setDetailDest] = useState<Destination | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+
+  // AI Plan state
+  const [planContent, setPlanContent] = useState('');
+  const [planLoading, setPlanLoading] = useState(false);
+  const [planDest, setPlanDest] = useState<Destination | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Current location
+  const [currentLocation] = useState<{ city: string; country: string } | null>(() => {
+    try {
+      const loc = localStorage.getItem('user-location');
+      return loc ? JSON.parse(loc) : null;
+    } catch { return null; }
+  });
 
   // ── Handlers
   const toggleInterest = useCallback((id: string) => {
@@ -592,52 +670,229 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
     setGroupSize('');
     setSearchText('');
     setShowSavedOnly(false);
+    setPlanContent('');
+    setPlanDest(null);
+  }, []);
+
+  // ── Generate Full Plan (streaming)
+  const generateFullPlan = useCallback(async (dest: Destination | null) => {
+    setPlanLoading(true);
+    setPlanContent('');
+    setPlanDest(dest);
+    setView('fullplan');
+
+    abortRef.current = new AbortController();
+
+    try {
+      const resp = await fetch(PLAN_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          destination: dest,
+          tripType: tripType || undefined,
+          budget,
+          pace,
+          duration: duration || dest?.idealDuration || 'week',
+          groupSize: groupSize || undefined,
+          interests,
+          month: month || undefined,
+          region: region || undefined,
+        }),
+        signal: abortRef.current.signal,
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: 'Unknown error' }));
+        toast({ title: 'Error', description: err.error || `Error ${resp.status}`, variant: 'destructive' });
+        setPlanLoading(false);
+        return;
+      }
+
+      const reader = resp.body?.getReader();
+      if (!reader) { setPlanLoading(false); return; }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
+          let line = buffer.slice(0, newlineIndex);
+          buffer = buffer.slice(newlineIndex + 1);
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              fullText += content;
+              setPlanContent(fullText);
+            }
+          } catch {
+            buffer = line + '\n' + buffer;
+            break;
+          }
+        }
+      }
+
+      // Final flush
+      if (buffer.trim()) {
+        for (let raw of buffer.split('\n')) {
+          if (!raw) continue;
+          if (raw.endsWith('\r')) raw = raw.slice(0, -1);
+          if (!raw.startsWith('data: ')) continue;
+          const jsonStr = raw.slice(6).trim();
+          if (jsonStr === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              fullText += content;
+              setPlanContent(fullText);
+            }
+          } catch {}
+        }
+      }
+
+      setPlanLoading(false);
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      }
+      setPlanLoading(false);
+    }
+  }, [tripType, budget, pace, duration, groupSize, interests, month, region, toast]);
+
+  const stopPlan = useCallback(() => {
+    abortRef.current?.abort();
+    setPlanLoading(false);
   }, []);
 
   // ── Filtering
   const filteredResults = useMemo(() => {
     let list = DESTINATIONS;
-
-    // trip type suitability
     if (tripType) list = list.filter(d => d.suitableFor.includes(tripType));
-
-    // interests
     if (interests.length > 0) list = list.filter(d => interests.some(i => d.activities.includes(i)));
-
-    // month
     if (month) list = list.filter(d => d.bestMonths.includes(month));
-
-    // region
     if (region && region !== 'Any Region') list = list.filter(d => d.region === region);
-
-    // duration
     if (duration) list = list.filter(d => d.idealDuration === duration);
-
-    // budget
     const maxPrice = budget === 'budget' ? 2 : budget === 'value' ? 3 : 5;
     list = list.filter(d => d.priceLevel <= maxPrice);
-
-    // search text
     if (searchText.trim()) {
       const q = searchText.toLowerCase();
       list = list.filter(d =>
-        d.name.toLowerCase().includes(q) ||
-        d.country.toLowerCase().includes(q) ||
-        d.region.toLowerCase().includes(q) ||
-        d.activities.some(a => a.toLowerCase().includes(q)) ||
+        d.name.toLowerCase().includes(q) || d.country.toLowerCase().includes(q) ||
+        d.region.toLowerCase().includes(q) || d.activities.some(a => a.toLowerCase().includes(q)) ||
         d.description.toLowerCase().includes(q)
       );
     }
-
-    // saved filter
     if (showSavedOnly) list = list.filter(d => savedIds.includes(d.id));
-
-    // sort by rating
     list.sort((a, b) => b.rating - a.rating);
     return list;
   }, [tripType, interests, month, region, duration, budget, searchText, showSavedOnly, savedIds]);
 
   const activeFilterCount = [month, region !== '' && region !== 'Any Region' ? region : '', duration, groupSize].filter(Boolean).length;
+
+  // ─── RENDER: FULL PLAN VIEW ───────────────────────────────
+  if (view === 'fullplan') {
+    return (
+      <div className="container mx-auto p-4 max-w-4xl space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => { stopPlan(); setView('results'); }}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                <FileText className="h-6 w-6 text-primary" />
+                {planDest ? `${planDest.name} Plan` : 'Your Travel Plan'}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {planDest ? `${planDest.country} · ${planDest.region}` : 'AI-generated full itinerary'}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            {planLoading && (
+              <Button variant="destructive" size="sm" onClick={stopPlan}>
+                <X className="h-4 w-4 mr-1" /> Stop
+              </Button>
+            )}
+            {/* Voice controls */}
+            {voice.ttsSupported && planContent && !planLoading && (
+              <Button
+                variant={voice.isSpeaking ? 'default' : 'outline'}
+                size="icon"
+                onClick={() => voice.isSpeaking ? voice.stopSpeaking() : voice.speak(planContent)}
+                title={voice.isSpeaking ? 'Stop reading' : 'Read plan aloud'}
+              >
+                {voice.isSpeaking ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
+            )}
+            <Button variant="ghost" size="sm" onClick={resetAll}>
+              <RotateCcw className="h-4 w-4 mr-1" /> New Plan
+            </Button>
+          </div>
+        </div>
+
+        {/* Plan badges */}
+        <div className="flex flex-wrap gap-2">
+          {tripType && <Badge>{TRIP_TYPES.find(t => t.id === tripType)?.emoji} {TRIP_TYPES.find(t => t.id === tripType)?.label}</Badge>}
+          <Badge variant="outline">💰 {budget}</Badge>
+          <Badge variant="outline">🏃 {pace}</Badge>
+          {month && <Badge variant="outline">📅 {month}</Badge>}
+          {duration && <Badge variant="outline">⏱️ {duration}</Badge>}
+          {groupSize && <Badge variant="outline">👥 {groupSize}</Badge>}
+        </div>
+
+        {/* Plan content */}
+        <Card>
+          <CardContent className="pt-6">
+            {planLoading && !planContent && (
+              <div className="flex flex-col items-center justify-center py-16 gap-4">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="text-muted-foreground animate-pulse">Crafting your perfect trip plan...</p>
+              </div>
+            )}
+            {planContent && (
+              <ScrollArea className="max-h-[70vh]">
+                <SimpleMarkdown content={planContent} />
+                {planLoading && (
+                  <div className="flex items-center gap-2 mt-4 text-primary">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">Still generating...</span>
+                  </div>
+                )}
+              </ScrollArea>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Regenerate button */}
+        {!planLoading && planContent && (
+          <div className="flex gap-2">
+            <Button className="flex-1" onClick={() => generateFullPlan(planDest)}>
+              <RotateCcw className="mr-2 h-4 w-4" /> Regenerate Plan
+            </Button>
+            <Button variant="outline" className="flex-1" onClick={() => setView('results')}>
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Destinations
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   // ─── RENDER: TRIP TYPE SELECTION ──────────────────────────
   if (view === 'choose') {
@@ -649,7 +904,7 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
             AI Travel Planner
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            What kind of trip are you planning? We'll pre-fill everything to save you time.
+            What kind of trip are you planning? We'll create a complete plan with flights, hotels, restaurants, events & costs.
           </p>
           {currentLocation && (
             <Badge variant="outline" className="gap-2">
@@ -713,6 +968,11 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
           {view === 'customize' && (
             <Button size="sm" onClick={() => { setView('results'); toast({ title: `Found ${filteredResults.length} destinations` }); }}>
               <Zap className="h-4 w-4 mr-1" /> Show {filteredResults.length} Results
+            </Button>
+          )}
+          {view === 'results' && (
+            <Button size="sm" variant="default" onClick={() => generateFullPlan(null)} className="gap-1">
+              <FileText className="h-4 w-4" /> Make Full Plan
             </Button>
           )}
         </div>
@@ -941,6 +1201,15 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
                       </span>
                       <span>{'💰'.repeat(Math.min(dest.priceLevel, 4))}</span>
                     </div>
+
+                    {/* Make Full Plan button on each card */}
+                    <Button
+                      size="sm"
+                      className="w-full gap-2"
+                      onClick={e => { e.stopPropagation(); generateFullPlan(dest); }}
+                    >
+                      <FileText className="h-3.5 w-3.5" /> Make Full Plan
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -1101,11 +1370,11 @@ export function AITravelPlanner({ currentLocation }: AITravelPlannerProps) {
               </Tabs>
 
               <div className="flex gap-2 mt-4">
-                <Button className="flex-1" onClick={() => { toast({ title: 'Saved!', description: `${detailDest.name} added to your plans` }); toggleSave(detailDest.id); }}>
-                  <Bookmark className="mr-2 h-4 w-4" /> Save to Plans
+                <Button className="flex-1 gap-2" onClick={() => { setDetailDest(null); generateFullPlan(detailDest); }}>
+                  <FileText className="h-4 w-4" /> Make Full Plan
                 </Button>
-                <Button variant="outline" className="flex-1" onClick={() => setDetailDest(null)}>
-                  Close
+                <Button variant="outline" className="gap-2" onClick={() => { toggleSave(detailDest.id); }}>
+                  <Bookmark className="h-4 w-4" /> Save
                 </Button>
               </div>
             </>

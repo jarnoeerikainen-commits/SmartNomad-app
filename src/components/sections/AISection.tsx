@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, Stethoscope, Scale, Plane, MessageSquare } from 'lucide-react';
 import { AITravelDoctor } from '../AITravelDoctor';
 import { AITravelLawyer } from '../AITravelLawyer';
-import { AITravelPlanner } from '../AITravelPlanner';
+import AITravelPlanner from '../AITravelPlanner';
 import AITravelAssistant from '../AITravelAssistant';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

@@ -30,7 +30,7 @@ import { CookieConsent } from './GDPRCompliance';
 import AITravelAssistant from './AITravelAssistant';
 import { AITravelDoctor } from './AITravelDoctor';
 import { AITravelLawyer } from './AITravelLawyer';
-import { AITravelPlanner } from './AITravelPlanner';
+import AITravelPlanner from './AITravelPlanner';
 import { TaxAdvisors } from './TaxAdvisors';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
@@ -417,7 +417,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <AITravelLawyer currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
       
       case 'ai-planner':
-        return <AITravelPlanner currentLocation={detectedLocation} />;
+        return <AITravelPlanner />;
       
       case 'medical-services':
         return (
