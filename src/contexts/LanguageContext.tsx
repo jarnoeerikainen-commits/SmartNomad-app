@@ -37,7 +37,7 @@ const translations: Record<string, Record<string, string>> = {
   en: {
     // App Header & Navigation
     'app.title': 'SuperNomad',
-    'app.tagline': 'Your Digital Assistant for Global Living',
+    'app.tagline': 'Your proactive platform for Global Living',
     'header.profile': 'Profile',
     'header.profile_settings': 'Profile Settings',
     'header.app_settings': 'App Settings',
@@ -260,7 +260,7 @@ const translations: Record<string, Record<string, string>> = {
   // ──────────────────── SPANISH ────────────────────
   es: {
     'app.title': 'SuperNomad',
-    'app.tagline': 'Tu asistente digital para la vida global',
+    'app.tagline': 'Tu plataforma proactiva para la vida global',
     'header.profile': 'Perfil',
     'header.profile_settings': 'Configuración del perfil',
     'header.app_settings': 'Configuración de la aplicación',
@@ -449,7 +449,7 @@ const translations: Record<string, Record<string, string>> = {
   // ──────────────────── PORTUGUESE ────────────────────
   pt: {
     'app.title': 'SuperNomad',
-    'app.tagline': 'Seu assistente digital para a vida global',
+    'app.tagline': 'Sua plataforma proativa para a vida global',
     'header.profile': 'Perfil',
     'header.profile_settings': 'Configurações do perfil',
     'header.app_settings': 'Configurações do aplicativo',
@@ -638,7 +638,7 @@ const translations: Record<string, Record<string, string>> = {
   // ──────────────────── CHINESE (Simplified) ────────────────────
   zh: {
     'app.title': 'SuperNomad',
-    'app.tagline': '您的全球生活数字助手',
+    'app.tagline': '您的全球生活主动平台',
     'header.profile': '个人资料',
     'header.profile_settings': '个人资料设置',
     'header.app_settings': '应用设置',
@@ -827,7 +827,7 @@ const translations: Record<string, Record<string, string>> = {
   // ──────────────────── FRENCH ────────────────────
   fr: {
     'app.title': 'SuperNomad',
-    'app.tagline': 'Votre assistant numérique pour la vie mondiale',
+    'app.tagline': 'Votre plateforme proactive pour la vie mondiale',
     'header.profile': 'Profil',
     'header.profile_settings': 'Paramètres du profil',
     'header.app_settings': "Paramètres de l'application",
@@ -1015,7 +1015,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ──────────────────── GERMAN ────────────────────
   de: {
-    'app.title': 'SuperNomad', 'app.tagline': 'Ihr digitaler Assistent für das globale Leben',
+    'app.title': 'SuperNomad', 'app.tagline': 'Ihre proaktive Plattform für das globale Leben',
     'header.profile': 'Profil', 'header.profile_settings': 'Profileinstellungen', 'header.app_settings': 'App-Einstellungen', 'header.upgrade_plan': 'Plan upgraden', 'header.privacy_data': 'Datenschutz und Daten', 'header.sign_out': 'Abmelden',
     'nav.dashboard': 'Dashboard', 'nav.tracking': 'Reiseverfolgung', 'nav.tax': 'Steuerlicher Wohnsitz', 'nav.visas': 'Visa-Manager', 'nav.documents': 'Dokumente', 'nav.health': 'Gesundheit und Impfungen', 'nav.news': 'Reisenachrichten', 'nav.alerts': 'Intelligente Benachrichtigungen', 'nav.services': 'Reisedienste', 'nav.settings': 'Einstellungen', 'nav.help': 'Hilfe und Support', 'nav.footer_version': 'TravelTracker v2.0', 'nav.footer_tagline': 'Weltweit konform bleiben',
     'stats.countries_tracked': 'Verfolgte Länder', 'stats.active_destinations': 'Aktive Ziele', 'stats.active_tracking': 'Aktive Verfolgung', 'stats.with_recorded_visits': 'Mit aufgezeichneten Besuchen', 'stats.critical_alerts': 'Kritische Warnungen', 'stats.require_attention': 'Erfordern Aufmerksamkeit', 'stats.warnings': 'Warnungen', 'stats.urgent': 'Dringend', 'stats.monitor_closely': 'Genau überwachen',
@@ -1034,7 +1034,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ──────────────────── ARABIC ────────────────────
   ar: {
-    'app.title': 'SuperNomad', 'app.tagline': 'مساعدك الرقمي للحياة العالمية',
+    'app.title': 'SuperNomad', 'app.tagline': 'منصتك الاستباقية للحياة العالمية',
     'header.profile': 'الملف الشخصي', 'header.profile_settings': 'إعدادات الملف الشخصي', 'header.app_settings': 'إعدادات التطبيق', 'header.upgrade_plan': 'ترقية الخطة', 'header.privacy_data': 'الخصوصية والبيانات', 'header.sign_out': 'تسجيل الخروج',
     'nav.dashboard': 'لوحة التحكم', 'nav.tracking': 'تتبع السفر', 'nav.tax': 'الإقامة الضريبية', 'nav.visas': 'مدير التأشيرات', 'nav.documents': 'المستندات', 'nav.health': 'الصحة واللقاحات', 'nav.news': 'أخبار السفر', 'nav.alerts': 'التنبيهات الذكية', 'nav.services': 'خدمات السفر', 'nav.settings': 'الإعدادات', 'nav.help': 'المساعدة والدعم', 'nav.footer_version': 'TravelTracker v2.0', 'nav.footer_tagline': 'ابقَ ملتزماً في جميع أنحاء العالم',
     'stats.countries_tracked': 'الدول المتتبعة', 'stats.active_destinations': 'الوجهات النشطة', 'stats.active_tracking': 'التتبع النشط', 'stats.with_recorded_visits': 'مع الزيارات المسجلة', 'stats.critical_alerts': 'التنبيهات الحرجة', 'stats.require_attention': 'تتطلب الانتباه', 'stats.warnings': 'التحذيرات', 'stats.urgent': 'عاجل', 'stats.monitor_closely': 'مراقبة عن كثب',
@@ -1053,7 +1053,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ──────────────────── JAPANESE ────────────────────
   ja: {
-    'app.title': 'SuperNomad', 'app.tagline': 'グローバルライフのためのデジタルアシスタント',
+    'app.title': 'SuperNomad', 'app.tagline': 'グローバルライフのためのプロアクティブプラットフォーム',
     'header.profile': 'プロフィール', 'header.profile_settings': 'プロフィール設定', 'header.app_settings': 'アプリ設定', 'header.upgrade_plan': 'プランをアップグレード', 'header.privacy_data': 'プライバシーとデータ', 'header.sign_out': 'サインアウト',
     'nav.dashboard': 'ダッシュボード', 'nav.tracking': '旅行追跡', 'nav.tax': '税務居住', 'nav.visas': 'ビザ管理', 'nav.documents': '書類', 'nav.health': '健康とワクチン', 'nav.news': '旅行ニュース', 'nav.alerts': 'スマート通知', 'nav.services': '旅行サービス', 'nav.settings': '設定', 'nav.help': 'ヘルプとサポート', 'nav.footer_version': 'TravelTracker v2.0', 'nav.footer_tagline': '世界中でコンプライアンスを維持',
     'stats.countries_tracked': '追跡中の国', 'stats.active_destinations': 'アクティブな目的地', 'stats.active_tracking': 'アクティブな追跡', 'stats.with_recorded_visits': '記録された訪問あり', 'stats.critical_alerts': '重要な通知', 'stats.require_attention': '注意が必要', 'stats.warnings': '警告', 'stats.urgent': '緊急', 'stats.monitor_closely': '注意深く監視',
@@ -1072,7 +1072,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ──────────────────── ITALIAN ────────────────────
   it: {
-    'app.title': 'SuperNomad', 'app.tagline': 'Il tuo assistente digitale per la vita globale',
+    'app.title': 'SuperNomad', 'app.tagline': 'La tua piattaforma proattiva per la vita globale',
     'header.profile': 'Profilo', 'header.profile_settings': 'Impostazioni profilo', 'header.app_settings': 'Impostazioni app', 'header.upgrade_plan': 'Aggiorna piano', 'header.privacy_data': 'Privacy e dati', 'header.sign_out': 'Esci',
     'nav.dashboard': 'Pannello', 'nav.tracking': 'Monitoraggio viaggi', 'nav.tax': 'Residenza fiscale', 'nav.visas': 'Gestione visti', 'nav.documents': 'Documenti', 'nav.health': 'Salute e vaccini', 'nav.news': 'Notizie di viaggio', 'nav.alerts': 'Avvisi intelligenti', 'nav.services': 'Servizi di viaggio', 'nav.settings': 'Impostazioni', 'nav.help': 'Aiuto e supporto', 'nav.footer_version': 'TravelTracker v2.0', 'nav.footer_tagline': 'Resta conforme in tutto il mondo',
     'stats.countries_tracked': 'Paesi tracciati', 'stats.active_destinations': 'Destinazioni attive', 'stats.active_tracking': 'Tracciamento attivo', 'stats.with_recorded_visits': 'Con visite registrate', 'stats.critical_alerts': 'Avvisi critici', 'stats.require_attention': 'Richiedono attenzione', 'stats.warnings': 'Avvertimenti', 'stats.urgent': 'Urgente', 'stats.monitor_closely': 'Monitorare attentamente',
