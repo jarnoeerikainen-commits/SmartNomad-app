@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
@@ -83,6 +83,7 @@ import { SocialDashboard } from './SocialChat/SocialDashboard';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
 
 interface AppLayoutProps {
   countries: Country[];
@@ -126,6 +127,19 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
+
+  // Voice control navigation callbacks
+  const handleVoiceNavigate = useCallback((section: string) => {
+    setActiveSection(section);
+    setBottomNavTab('home');
+    setSidebarOpen(false);
+  }, []);
+
+  const handleVoiceTabChange = useCallback((tab: string) => {
+    setBottomNavTab(tab);
+    setActiveSection('dashboard');
+    setSidebarOpen(false);
+  }, []);
 
   // Return to dashboard when home event is triggered (e.g., clicking logo)
   useEffect(() => {
@@ -505,6 +519,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   };
 
   return (
+    <VoiceControlProvider onNavigate={handleVoiceNavigate} onTabChange={handleVoiceTabChange}>
     <div className="min-h-screen bg-background">
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
@@ -614,6 +629,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         />
       )}
     </div>
+    </VoiceControlProvider>
   );
 };
 

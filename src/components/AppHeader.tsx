@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { LanguageSelector } from './LanguageSelector';
+import { VoiceControlButton } from './VoiceControlButton';
 import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
 import { Subscription } from '@/types/subscription';
@@ -92,6 +93,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
               <Zap className="h-3 w-3" />
               <span className="capitalize text-xs">{subscription.tier.replace('-', ' ')}</span>
             </Badge>}
+          
+          {/* Voice Control */}
+          <VoiceControlButton />
           
           {/* Language Selector */}
           <LanguageSelector />
