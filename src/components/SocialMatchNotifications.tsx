@@ -28,21 +28,19 @@ function pickLocalMatch(
 
   if (localPool.length === 0) return null;
 
-  // Prefer unseen, and always exclude last shown to avoid back-to-back repeats
-  const unseen = localPool.filter(m => !shownIds.has(m.id) && m.id !== lastId);
-  const noRepeat = localPool.filter(m => m.id !== lastId);
-  const candidates = unseen.length > 0 ? unseen : (noRepeat.length > 0 ? noRepeat : localPool);
+  // Strictly exclude already-shown matches — never repeat in the same session
+  const unseen = localPool.filter(m => !shownIds.has(m.id));
+  if (unseen.length === 0) return null; // All local matches exhausted — stop showing
 
-  // Prioritize same city
   const sameCity = cityNorm
-    ? candidates.filter(m => m.city.toLowerCase().includes(cityNorm) || cityNorm.includes(m.city.toLowerCase()))
+    ? unseen.filter(m => m.city.toLowerCase().includes(cityNorm) || cityNorm.includes(m.city.toLowerCase()))
     : [];
 
   if (sameCity.length > 0) {
     return sameCity[Math.floor(Math.random() * sameCity.length)];
   }
 
-  return candidates[Math.floor(Math.random() * candidates.length)];
+  return unseen[Math.floor(Math.random() * unseen.length)];
 }
 
 const SocialMatchNotifications: React.FC = () => {
