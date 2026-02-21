@@ -11,6 +11,7 @@ import { MATCH_POOL, MatchEntry } from '@/data/socialMatchProfiles';
 function pickLocalMatch(
   pool: MatchEntry[],
   shownIds: Set<string>,
+  lastId: string | null,
   userCity?: string,
   userCountryCode?: string,
 ): MatchEntry | null {
@@ -27,9 +28,10 @@ function pickLocalMatch(
 
   if (localPool.length === 0) return null;
 
-  // Prefer unseen
-  const unseen = localPool.filter(m => !shownIds.has(m.id));
-  const candidates = unseen.length > 0 ? unseen : localPool;
+  // Prefer unseen, and always exclude last shown to avoid back-to-back repeats
+  const unseen = localPool.filter(m => !shownIds.has(m.id) && m.id !== lastId);
+  const noRepeat = localPool.filter(m => m.id !== lastId);
+  const candidates = unseen.length > 0 ? unseen : (noRepeat.length > 0 ? noRepeat : localPool);
 
   // Prioritize same city
   const sameCity = cityNorm
@@ -45,6 +47,7 @@ function pickLocalMatch(
 
 const SocialMatchNotifications: React.FC = () => {
   const shownRef = useRef<Set<string>>(new Set());
+  const lastIdRef = useRef<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { location } = useLocation();
 
@@ -67,6 +70,7 @@ const SocialMatchNotifications: React.FC = () => {
     const match = pickLocalMatch(
       MATCH_POOL,
       shownRef.current,
+      lastIdRef.current,
       location?.city,
       location?.country_code,
     );
@@ -75,6 +79,7 @@ const SocialMatchNotifications: React.FC = () => {
     if (!match) return;
 
     shownRef.current.add(match.id);
+    lastIdRef.current = match.id;
     if (shownRef.current.size >= MATCH_POOL.length) shownRef.current.clear();
 
     toast.custom(
