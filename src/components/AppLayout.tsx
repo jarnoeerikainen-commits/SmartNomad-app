@@ -81,6 +81,7 @@ import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { SocialDashboard } from './SocialChat/SocialDashboard';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
+import SocialMatchNotifications from './SocialMatchNotifications';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
@@ -562,6 +563,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </main>
       </div>
       
+      {/* Social Match Push Notifications (Demo) */}
+      <SocialMatchNotifications />
+
       {/* GDPR Cookie Consent */}
       <CookieConsent />
       
