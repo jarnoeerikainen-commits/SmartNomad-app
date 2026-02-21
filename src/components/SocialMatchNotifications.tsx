@@ -4,14 +4,31 @@ import { MessageCircle, Shield } from 'lucide-react';
 import { useLocation } from '@/contexts/LocationContext';
 import { MATCH_POOL, MatchEntry } from '@/data/socialMatchProfiles';
 
+// Session-level storage keys
+const SHOWN_IDS_KEY = 'supernomad_match_shown_ids';
+const SHOWN_COUNTRIES_KEY = 'supernomad_match_shown_countries';
+
+function getSessionSet(key: string): Set<string> {
+  try {
+    const raw = sessionStorage.getItem(key);
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch { return new Set(); }
+}
+
+function saveSessionSet(key: string, set: Set<string>) {
+  try { sessionStorage.setItem(key, JSON.stringify([...set])); } catch {}
+}
+
 /**
- * Picks a match ONLY from the user's current city/country.
- * Returns null if no match is available for the location.
+ * Picks a match from the user's current country.
+ * - Never repeats the same person in a session
+ * - Never repeats the same country in a session
+ * Returns null when no fresh match is available.
  */
 function pickLocalMatch(
   pool: MatchEntry[],
   shownIds: Set<string>,
-  lastId: string | null,
+  shownCountries: Set<string>,
   userCity?: string,
   userCountryCode?: string,
 ): MatchEntry | null {
@@ -20,37 +37,44 @@ function pickLocalMatch(
   const cityNorm = userCity?.toLowerCase().trim();
   const codeNorm = userCountryCode?.toUpperCase().trim();
 
-  // Strict filter: only same country matches
-  const localPool = pool.filter(m => {
-    const matchCountry = m.countryCode.replace(/\d+$/, '').toUpperCase(); // handle IT2, ES2 etc.
-    return matchCountry === codeNorm;
+  // Filter to same country, exclude already-shown IDs AND already-shown countries
+  const candidates = pool.filter(m => {
+    const matchCountry = m.countryCode.replace(/\d+$/, '').toUpperCase();
+    if (matchCountry !== codeNorm) return false;
+    if (shownIds.has(m.id)) return false;
+    if (shownCountries.has(matchCountry)) return false;
+    return true;
   });
 
-  if (localPool.length === 0) return null;
+  if (candidates.length === 0) return null;
 
-  // Strictly exclude already-shown matches — never repeat in the same session
-  const unseen = localPool.filter(m => !shownIds.has(m.id));
-  if (unseen.length === 0) return null; // All local matches exhausted — stop showing
-
+  // Prioritize same city
   const sameCity = cityNorm
-    ? unseen.filter(m => m.city.toLowerCase().includes(cityNorm) || cityNorm.includes(m.city.toLowerCase()))
+    ? candidates.filter(m => m.city.toLowerCase().includes(cityNorm) || cityNorm.includes(m.city.toLowerCase()))
     : [];
 
   if (sameCity.length > 0) {
     return sameCity[Math.floor(Math.random() * sameCity.length)];
   }
 
-  return unseen[Math.floor(Math.random() * unseen.length)];
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 const SocialMatchNotifications: React.FC = () => {
-  const shownRef = useRef<Set<string>>(new Set());
-  const lastIdRef = useRef<string | null>(null);
+  const shownIdsRef = useRef<Set<string>>(getSessionSet(SHOWN_IDS_KEY));
+  const shownCountriesRef = useRef<Set<string>>(getSessionSet(SHOWN_COUNTRIES_KEY));
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const locationRef = useRef<{ city?: string; country_code?: string } | null>(null);
+  const mountedRef = useRef(true);
   const { location } = useLocation();
 
   // Only run on published site, not in the editor preview
   const isPublishedSite = typeof window !== 'undefined' && !window.location.hostname.includes('preview');
+
+  // Keep location in a ref so the stable callback always reads the latest
+  useEffect(() => {
+    locationRef.current = location;
+  }, [location]);
 
   const speakNotification = useCallback((text: string) => {
     if ('speechSynthesis' in window && !speechSynthesis.speaking) {
@@ -67,21 +91,25 @@ const SocialMatchNotifications: React.FC = () => {
     }
   }, []);
 
+  // Stable ref-based function — never changes identity, reads location from ref
   const showNotification = useCallback(() => {
+    const loc = locationRef.current;
     const match = pickLocalMatch(
       MATCH_POOL,
-      shownRef.current,
-      lastIdRef.current,
-      location?.city,
-      location?.country_code,
+      shownIdsRef.current,
+      shownCountriesRef.current,
+      loc?.city,
+      loc?.country_code,
     );
 
-    // Only show if we have a local match
-    if (!match) return;
+    if (!match) return; // No fresh match available
 
-    shownRef.current.add(match.id);
-    lastIdRef.current = match.id;
-    // Don't clear shownRef — never repeat a match in the same session
+    // Record this person + country as shown — persist to sessionStorage
+    shownIdsRef.current.add(match.id);
+    const matchCountryNorm = match.countryCode.replace(/\d+$/, '').toUpperCase();
+    shownCountriesRef.current.add(matchCountryNorm);
+    saveSessionSet(SHOWN_IDS_KEY, shownIdsRef.current);
+    saveSessionSet(SHOWN_COUNTRIES_KEY, shownCountriesRef.current);
 
     toast.custom(
       (id) => (
@@ -137,30 +165,36 @@ const SocialMatchNotifications: React.FC = () => {
     );
 
     speakNotification(match.voiceMessage);
-  }, [speakNotification, location]);
+  }, [speakNotification]); // stable — no location dependency
 
   useEffect(() => {
-    // Skip notifications entirely on non-published sites (editor preview)
     if (!isPublishedSite) return;
-
-    // First notification after 60-90s, then every 180-240s
-    const initialDelay = 60000 + Math.random() * 30000;
+    mountedRef.current = true;
 
     const scheduleNext = () => {
+      if (!mountedRef.current) return;
       const delay = 180000 + Math.random() * 60000; // 180-240s
       timerRef.current = setTimeout(() => {
-        showNotification();
-        scheduleNext();
+        if (mountedRef.current) {
+          showNotification();
+          scheduleNext();
+        }
       }, delay);
     };
 
+    const initialDelay = 60000 + Math.random() * 30000;
     timerRef.current = setTimeout(() => {
-      showNotification();
-      scheduleNext();
+      if (mountedRef.current) {
+        showNotification();
+        scheduleNext();
+      }
     }, initialDelay);
 
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [showNotification, isPublishedSite]);
+    return () => {
+      mountedRef.current = false;
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isPublishedSite]); // showNotification removed — it's stable via refs
 
   return null;
 };
