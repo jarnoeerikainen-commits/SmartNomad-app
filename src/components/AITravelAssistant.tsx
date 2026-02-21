@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
+import { dummyThreats } from '@/data/threatData';
 
 interface Message {
   id: string;
@@ -94,6 +95,10 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
             currentCountry: currentLocation?.country,
             currentCity: currentLocation?.city,
             citizenship,
+            threatIntelligence: dummyThreats
+              .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
+              .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description}`)
+              .join('\n') || 'No active threats.',
           }
         }),
       });
@@ -143,10 +148,16 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
     
+    const activeThreats = dummyThreats
+      .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
+      .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description} (Distance: ${t.distanceFromUser}km)`)
+      .join('\n');
+
     const userContext = {
       currentCountry: currentLocation?.country,
       currentCity: currentLocation?.city,
       citizenship,
+      threatIntelligence: activeThreats || 'No active threats.',
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,
