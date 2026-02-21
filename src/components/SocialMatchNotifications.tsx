@@ -51,6 +51,9 @@ const SocialMatchNotifications: React.FC = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { location } = useLocation();
 
+  // Only run on published site, not in the editor preview
+  const isPublishedSite = typeof window !== 'undefined' && !window.location.hostname.includes('preview');
+
   const speakNotification = useCallback((text: string) => {
     if ('speechSynthesis' in window && !speechSynthesis.speaking) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -139,6 +142,9 @@ const SocialMatchNotifications: React.FC = () => {
   }, [speakNotification, location]);
 
   useEffect(() => {
+    // Skip notifications entirely on non-published sites (editor preview)
+    if (!isPublishedSite) return;
+
     // First notification after 60-90s, then every 180-240s
     const initialDelay = 60000 + Math.random() * 30000;
 
@@ -156,7 +162,7 @@ const SocialMatchNotifications: React.FC = () => {
     }, initialDelay);
 
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [showNotification]);
+  }, [showNotification, isPublishedSite]);
 
   return null;
 };
