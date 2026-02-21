@@ -80,7 +80,7 @@ const SocialMatchNotifications: React.FC = () => {
 
     shownRef.current.add(match.id);
     lastIdRef.current = match.id;
-    if (shownRef.current.size >= MATCH_POOL.length) shownRef.current.clear();
+    // Don't clear shownRef — never repeat a match in the same session
 
     toast.custom(
       (id) => (
@@ -139,11 +139,11 @@ const SocialMatchNotifications: React.FC = () => {
   }, [speakNotification, location]);
 
   useEffect(() => {
-    // First notification after 35-50s, then every 75-150s — comfortable pace
-    const initialDelay = 35000 + Math.random() * 15000;
+    // First notification after 60-90s, then every 180-240s
+    const initialDelay = 60000 + Math.random() * 30000;
 
     const scheduleNext = () => {
-      const delay = 75000 + Math.random() * 75000;
+      const delay = 180000 + Math.random() * 60000; // 180-240s
       timerRef.current = setTimeout(() => {
         showNotification();
         scheduleNext();
