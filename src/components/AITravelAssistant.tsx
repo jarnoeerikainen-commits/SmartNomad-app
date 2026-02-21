@@ -32,6 +32,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
+  const exchangeCountRef = useRef(0);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -70,6 +71,74 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       if (viewport) viewport.scrollTop = 0;
     }
   }, [messages]);
+
+  const triggerFollowUp = async (lastAIResponse: string, lastUserMessage: string) => {
+    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
+    try {
+      setIsTyping(true);
+      const followUpPrompt = `The user just asked: "${lastUserMessage.slice(0, 200)}" and you answered. Now send ONE short, natural follow-up (max 2 sentences). Either: (a) ask if they need something related (like insurance, eSIM, VPN, transport, etc. from your knowledge base), or (b) share a quick related tip they might not have thought of. Be casual — like a friend still thinking about their question. Don't repeat what you already said. Don't say "by the way" every time — vary your opener.`;
+
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          messages: [
+            { role: 'user', content: lastUserMessage },
+            { role: 'assistant', content: lastAIResponse },
+            { role: 'user', content: followUpPrompt }
+          ],
+          userContext: {
+            currentCountry: currentLocation?.country,
+            currentCity: currentLocation?.city,
+            citizenship,
+          }
+        }),
+      });
+
+      if (!resp.ok || !resp.body) { setIsTyping(false); return; }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let followUpContent = "";
+      const followUpId = (Date.now() + 10).toString();
+
+      setMessages(prev => [...prev, { id: followUpId, content: "", isUser: false, timestamp: new Date() }]);
+
+      let streamDone = false;
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") { streamDone = true; break; }
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              followUpContent += content;
+              setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
+            }
+          } catch { textBuffer = line + "\n" + textBuffer; break; }
+        }
+      }
+
+      if (followUpContent && voiceEnabled) speak(followUpContent);
+      setIsTyping(false);
+    } catch {
+      setIsTyping(false);
+    }
+  };
 
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
@@ -189,6 +258,15 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       }
 
       setIsTyping(false);
+
+      // Proactive follow-up: max every 3rd exchange, with 50% randomness
+      exchangeCountRef.current += 1;
+      if (exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent) {
+        const followUpDelay = 3000 + Math.random() * 2000;
+        setTimeout(() => {
+          triggerFollowUp(assistantContent, userMessage);
+        }, followUpDelay);
+      }
     } catch (error) {
       console.error("Chat error:", error);
       toast({
