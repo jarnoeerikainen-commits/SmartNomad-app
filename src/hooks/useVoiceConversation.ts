@@ -6,7 +6,7 @@ interface UseVoiceConversationReturn {
   voiceEnabled: boolean;
   startListening: (onResult: (text: string) => void) => void;
   stopListening: () => void;
-  speak: (text: string) => void;
+  speak: (text: string, onComplete?: () => void) => void;
   stopSpeaking: () => void;
   toggleVoice: () => void;
   sttSupported: boolean;
@@ -73,39 +73,37 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
     setIsListening(false);
   }, []);
 
-  const speak = useCallback((text: string) => {
-    if (!ttsSupported || !voiceEnabled) return;
+  const speak = useCallback((text: string, onComplete?: () => void) => {
+    if (!ttsSupported || !voiceEnabled) {
+      onComplete?.();
+      return;
+    }
 
     window.speechSynthesis.cancel();
 
     // Smart filtering: strip booking blocks, URLs, domains, markdown for natural speech
     const clean = text
-      // Remove entire booking JSON blocks
-      .replace(/```json[\s\S]*?```/g, '')
+      .replace(/```(?:json|booking)[\s\S]*?```/g, '')
       .replace(/\[?\{[^{}]*"url"[^{}]*\}[\s,\]]*/g, '')
-      // Remove URLs and domain names
       .replace(/https?:\/\/[^\s)]+/g, '')
       .replace(/www\.[^\s)]+/g, '')
       .replace(/[a-zA-Z0-9-]+\.(com|org|net|io|co|app|dev|travel)[^\s)]*\b/g, '')
-      // Remove markdown formatting
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/[*_~`#]/g, '')
       .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      // Remove lines that are just provider/search references
       .replace(/^.*(?:Search on|Open in|Book (?:on|via|at)).*$/gm, '')
-      // Clean up emoji-heavy labels that read awkwardly
       .replace(/[🔗🌐💻📱]/g, '')
-      // Collapse whitespace
       .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ' ')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
+    if (!clean) { onComplete?.(); return; }
+
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.rate = 1;
     utterance.pitch = 1;
 
-    // Pick a good voice if available
     const voices = window.speechSynthesis.getVoices();
     const preferred = voices.find(v =>
       v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))
@@ -113,8 +111,8 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
     if (preferred) utterance.voice = preferred;
 
     utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onend = () => { setIsSpeaking(false); onComplete?.(); };
+    utterance.onerror = () => { setIsSpeaking(false); onComplete?.(); };
 
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);

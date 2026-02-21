@@ -252,21 +252,23 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
         }
       }
 
-      // Auto-speak the final response if voice is enabled
+      // Proactive follow-up: max every 3rd exchange, with 50% randomness
+      exchangeCountRef.current += 1;
+      const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
+
+      // Auto-speak the final response; chain follow-up after speech ends
       if (assistantContent && voiceEnabled) {
-        speak(assistantContent);
+        speak(assistantContent, () => {
+          if (shouldFollowUp) {
+            setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
+          }
+        });
+      } else if (shouldFollowUp) {
+        const followUpDelay = 3000 + Math.random() * 2000;
+        setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
 
       setIsTyping(false);
-
-      // Proactive follow-up: max every 3rd exchange, with 50% randomness
-      exchangeCountRef.current += 1;
-      if (exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent) {
-        const followUpDelay = 3000 + Math.random() * 2000;
-        setTimeout(() => {
-          triggerFollowUp(assistantContent, userMessage);
-        }, followUpDelay);
-      }
     } catch (error) {
       console.error("Chat error:", error);
       toast({
