@@ -58,7 +58,7 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
   }, [chatRoom.messages.length, voiceEnabled]);
 
   return (
-    <Card className="h-[600px] flex flex-col">
+    <Card className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] min-h-[400px] max-h-[800px]">
       <CardHeader className="border-b">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={onBack}>
@@ -101,8 +101,8 @@ export const ChatInterface = ({ chatRoom, onBack }: ChatInterfaceProps) => {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4">
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+        <ScrollArea className="flex-1 p-4" style={{ minHeight: 0 }}>
           <div className="space-y-4">
             {chatRoom.messages.length === 0 ? (
               <div className="text-center py-12">

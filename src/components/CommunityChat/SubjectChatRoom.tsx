@@ -115,7 +115,7 @@ export const SubjectChatRoom = ({ chatRoom, onSendMessage, onBack, isLoading }: 
 
       {/* Chat Messages */}
       <Card className="p-4">
-        <ScrollArea className="h-[400px] pr-4">
+        <ScrollArea className="h-[calc(100vh-28rem)] min-h-[200px] max-h-[500px] pr-4">
           <div className="space-y-4">
             {chatRoom.messages.map((message) => (
               <div
