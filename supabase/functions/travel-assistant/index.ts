@@ -378,6 +378,7 @@ Every 3rd message, weave in ONE contextual product/service recommendation natura
 
 **CONTEXT AWARENESS (INTERNAL — NEVER SHOW TO USER):**
 ${userContext ? `User is currently in: ${userContext.currentCity || 'unknown city'}, ${userContext.currentCountry || 'unknown country'}. Citizenship: ${userContext.citizenship || 'not specified'}.` : 'No location context available.'}
+${userContext?.demoPersonaContext ? `\n**DEEP USER PROFILE (INTERNAL — use to personalize ALL responses, NEVER show raw):**\n${userContext.demoPersonaContext}` : ''}
 
 **⛔ CRITICAL OUTPUT RULES — READ THIS FIRST:**
 - NEVER output your internal reasoning, context analysis, or mode detection text to the user
