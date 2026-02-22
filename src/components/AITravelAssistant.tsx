@@ -366,17 +366,17 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
   }
 
   return (
-    <div className="fixed bottom-16 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto">
-      <Card className={`w-full sm:w-96 glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
+    <div className="fixed bottom-16 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto max-w-full">
+      <Card className={`w-full sm:w-96 max-w-full glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
         isMinimized ? 'h-16' : 'h-[calc(100dvh-8rem)] sm:h-[500px]'
       }`}>
-        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center">
-              <Bot className="h-5 w-5 text-white" />
+        <CardHeader className="flex flex-row items-center justify-between p-3 sm:p-4 pb-2 gradient-mesh">
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
+              <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
-            <CardTitle className="text-sm font-semibold">SuperNomad Concierge</CardTitle>
-            <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow" />
+            <CardTitle className="text-xs sm:text-sm font-semibold truncate">Concierge</CardTitle>
+            <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
           </div>
           <div className="flex gap-1">
             {ttsSupported && (
@@ -470,7 +470,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
               </div>
             </ScrollArea>
 
-            <div className="border-t p-4">
+            <div className="border-t p-3 sm:p-4">
             <div className="flex gap-2">
                 {sttSupported && (
                   <Button
