@@ -10,6 +10,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import { dummyThreats } from '@/data/threatData';
+import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 
 interface Message {
   id: string;
@@ -30,18 +31,32 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   userProfile
 }) => {
   const { t } = useLanguage();
+  const { activePersona } = useDemoPersona();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const exchangeCountRef = useRef(0);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: `Hi there 👋 I'm your personal concierge.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
+  const getWelcomeMessage = (): string => {
+    if (activePersona) {
+      const p = activePersona;
+      const nextTrip = p.travel.upcomingTrips[0];
+      return `Hi ${p.profile.firstName} 👋 Welcome back! I see you're in **${p.profile.city}** right now.
+
+I've got your calendar loaded and I know your upcoming trips. ${nextTrip ? `Your next trip to **${nextTrip.destination}** (${nextTrip.dates}) is coming up — ${nextTrip.purpose}.` : ''}
+
+Need me to help with anything? Flights, hotels${p.accommodation.mustHave.includes('gym') ? ' with a gym & sauna' : ''}, ${p.services.usesFrequently[0]?.toLowerCase()}, or something else? Just ask! ✈️`;
+    }
+    return `Hi there 👋 I'm your personal concierge.${currentLocation ? ` I see you're in **${currentLocation.city}** right now.` : ''}
 
 The more we chat — and the more you fill out your profile and share your calendar — the better I get at looking out for you. From flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.
 
-Think of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`,
+Think of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`;
+  };
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: getWelcomeMessage(),
       isUser: false,
       timestamp: new Date()
     }
@@ -55,6 +70,16 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
     startListening, stopListening, speak, stopSpeaking,
     toggleVoice, sttSupported, ttsSupported
   } = useVoiceConversation();
+
+  // Reset chat when persona changes
+  useEffect(() => {
+    setMessages([{
+      id: '1',
+      content: getWelcomeMessage(),
+      isUser: false,
+      timestamp: new Date()
+    }]);
+  }, [activePersona?.id]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -153,11 +178,14 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description} (Distance: ${t.distanceFromUser}km)`)
       .join('\n');
 
+    const demoAiContext = localStorage.getItem('demoAiContext') || '';
+    
     const userContext = {
-      currentCountry: currentLocation?.country,
-      currentCity: currentLocation?.city,
-      citizenship,
+      currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
+      currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
+      citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       threatIntelligence: activeThreats || 'No active threats.',
+      demoPersonaContext: demoAiContext || undefined,
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,

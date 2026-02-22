@@ -11,6 +11,7 @@ import Investors from "./pages/Investors";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LocationProvider } from "./contexts/LocationContext";
 import { InvestorDocument } from "./components/InvestorDocument";
+import { DemoPersonaProvider } from "./contexts/DemoPersonaContext";
 import { InvestorOnePager } from "./components/InvestorOnePager";
 import { TranslationManager } from "./components/TranslationManager";
 import { BusinessCentersPage } from "./components/BusinessCenters/BusinessCentersPage";
@@ -34,6 +35,7 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
           <LocationProvider>
+          <DemoPersonaProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -49,6 +51,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
+          </DemoPersonaProvider>
           </LocationProvider>
           </TooltipProvider>
         </QueryClientProvider>

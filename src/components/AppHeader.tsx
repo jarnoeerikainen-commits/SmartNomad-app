@@ -12,7 +12,7 @@ import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { TimeZoneHeader } from './TimeZoneHeader';
+import { DemoPersonaSelector } from './DemoPersonaSelector';
 import { Country } from '@/types/country';
 import { AlertCircle } from 'lucide-react';
 interface AppHeaderProps {
@@ -83,8 +83,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </Link>
         </div>
 
-        {/* Center - Time Zones */}
-        <TimeZoneHeader countries={countries} onNavigateToTax={onNavigateToTax} />
+        {/* Center - Demo Personas */}
+        <DemoPersonaSelector />
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-2">
