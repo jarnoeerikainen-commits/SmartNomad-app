@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { MessageCircle, Shield } from 'lucide-react';
 import { useLocation } from '@/contexts/LocationContext';
-import { MATCH_POOL, MatchEntry } from '@/data/socialMatchProfiles';
+import { MATCH_POOL, MEGHAN_SPORTS_MATCHES, JOHN_SPORTS_MATCHES, MatchEntry } from '@/data/socialMatchProfiles';
+import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 
 // Session-level storage keys
 const SHOWN_IDS_KEY = 'supernomad_match_shown_ids';
 const SHOWN_COUNTRIES_KEY = 'supernomad_match_shown_countries';
+const SHOWN_PERSONA_SPORTS_KEY = 'supernomad_persona_sports_shown';
 
 function getSessionSet(key: string): Set<string> {
   try {
@@ -63,18 +65,25 @@ function pickLocalMatch(
 const SocialMatchNotifications: React.FC = () => {
   const shownIdsRef = useRef<Set<string>>(getSessionSet(SHOWN_IDS_KEY));
   const shownCountriesRef = useRef<Set<string>>(getSessionSet(SHOWN_COUNTRIES_KEY));
+  const shownPersonaSportsRef = useRef<Set<string>>(getSessionSet(SHOWN_PERSONA_SPORTS_KEY));
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const locationRef = useRef<{ city?: string; country_code?: string } | null>(null);
   const mountedRef = useRef(true);
   const { location } = useLocation();
+  const { activePersona } = useDemoPersona();
+  const personaRef = useRef(activePersona);
 
   // Only run on published site, not in the editor preview
   const isPublishedSite = typeof window !== 'undefined' && !window.location.hostname.includes('preview');
 
-  // Keep location in a ref so the stable callback always reads the latest
+  // Keep refs up to date
   useEffect(() => {
     locationRef.current = location;
   }, [location]);
+
+  useEffect(() => {
+    personaRef.current = activePersona;
+  }, [activePersona]);
 
   const speakNotification = useCallback((text: string) => {
     if ('speechSynthesis' in window && !speechSynthesis.speaking) {
@@ -94,17 +103,34 @@ const SocialMatchNotifications: React.FC = () => {
   // Stable ref-based function — never changes identity, reads location from ref
   const showNotification = useCallback(() => {
     const loc = locationRef.current;
-    const match = pickLocalMatch(
-      MATCH_POOL,
-      shownIdsRef.current,
-      shownCountriesRef.current,
-      loc?.city,
-      loc?.country_code,
-    );
+    const persona = personaRef.current;
+    let match: MatchEntry | null = null;
 
-    if (!match) return; // No fresh match available
+    // First priority: persona-specific sports matches (1 per session per persona)
+    if (persona) {
+      const sportsPool = persona.id === 'meghan' ? MEGHAN_SPORTS_MATCHES : persona.id === 'john' ? JOHN_SPORTS_MATCHES : [];
+      const unseenSports = sportsPool.filter(m => !shownPersonaSportsRef.current.has(m.id));
+      if (unseenSports.length > 0) {
+        match = unseenSports[Math.floor(Math.random() * unseenSports.length)];
+        shownPersonaSportsRef.current.add(match.id);
+        saveSessionSet(SHOWN_PERSONA_SPORTS_KEY, shownPersonaSportsRef.current);
+      }
+    }
 
-    // Record this person + country as shown — persist to sessionStorage
+    // Fallback: regular location-based match
+    if (!match) {
+      match = pickLocalMatch(
+        MATCH_POOL,
+        shownIdsRef.current,
+        shownCountriesRef.current,
+        loc?.city,
+        loc?.country_code,
+      );
+    }
+
+    if (!match) return;
+
+    // Record this person + country as shown
     shownIdsRef.current.add(match.id);
     const matchCountryNorm = match.countryCode.replace(/\d+$/, '').toUpperCase();
     shownCountriesRef.current.add(matchCountryNorm);

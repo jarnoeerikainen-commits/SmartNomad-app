@@ -71,7 +71,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
     toggleVoice, sttSupported, ttsSupported
   } = useVoiceConversation();
 
-  // Reset chat when persona changes
+  // Reset chat when persona changes, auto-enable voice for demo personas
   useEffect(() => {
     setMessages([{
       id: '1',
@@ -79,6 +79,10 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       isUser: false,
       timestamp: new Date()
     }]);
+    // Auto-enable voice for demo personas so speak-back works out of the box
+    if (activePersona && !voiceEnabled && ttsSupported) {
+      toggleVoice();
+    }
   }, [activePersona?.id]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -117,9 +121,10 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
             { role: 'user', content: followUpPrompt }
           ],
           userContext: {
-            currentCountry: currentLocation?.country,
-            currentCity: currentLocation?.city,
-            citizenship,
+            currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
+            currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
+            citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+            demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
             threatIntelligence: dummyThreats
               .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
               .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description}`)
