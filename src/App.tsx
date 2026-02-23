@@ -12,6 +12,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { LocationProvider } from "./contexts/LocationContext";
 import { InvestorDocument } from "./components/InvestorDocument";
 import { DemoPersonaProvider } from "./contexts/DemoPersonaContext";
+import { VoiceControlProvider } from "./contexts/VoiceControlContext";
 import { InvestorOnePager } from "./components/InvestorOnePager";
 import { TranslationManager } from "./components/TranslationManager";
 import { BusinessCentersPage } from "./components/BusinessCenters/BusinessCentersPage";
@@ -36,6 +37,7 @@ const App = () => {
           <TooltipProvider>
           <LocationProvider>
           <DemoPersonaProvider>
+          <VoiceControlProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -51,6 +53,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
+          </VoiceControlProvider>
           </DemoPersonaProvider>
           </LocationProvider>
           </TooltipProvider>
