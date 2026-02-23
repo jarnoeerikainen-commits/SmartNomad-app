@@ -73,8 +73,9 @@ const SocialMatchNotifications: React.FC = () => {
   const { activePersona } = useDemoPersona();
   const personaRef = useRef(activePersona);
 
-  // Only run on published site, not in the editor preview
+  // Run on published site OR when a demo persona is active (for testing)
   const isPublishedSite = typeof window !== 'undefined' && !window.location.hostname.includes('preview');
+  const shouldRunNotifications = isPublishedSite || !!activePersona;
 
   // Keep refs up to date
   useEffect(() => {
@@ -194,24 +195,36 @@ const SocialMatchNotifications: React.FC = () => {
   }, [speakNotification]); // stable — no location dependency
 
   useEffect(() => {
-    if (!isPublishedSite) return;
+    if (!shouldRunNotifications) return;
     mountedRef.current = true;
+
+    // Demo persona: faster but controlled (60-90s between notifications, max 3 total in preview)
+    const isDemoMode = !!personaRef.current && !isPublishedSite;
+    let notifCount = 0;
+    const maxDemoNotifs = 3;
 
     const scheduleNext = () => {
       if (!mountedRef.current) return;
-      const delay = 180000 + Math.random() * 60000; // 180-240s
+      if (isDemoMode && notifCount >= maxDemoNotifs) return;
+      const delay = isDemoMode
+        ? 45000 + Math.random() * 30000  // 45-75s in demo
+        : 180000 + Math.random() * 60000; // 180-240s on live
       timerRef.current = setTimeout(() => {
         if (mountedRef.current) {
           showNotification();
+          notifCount++;
           scheduleNext();
         }
       }, delay);
     };
 
-    const initialDelay = 60000 + Math.random() * 30000;
+    const initialDelay = isDemoMode
+      ? 15000 + Math.random() * 10000  // 15-25s in demo
+      : 60000 + Math.random() * 30000; // 60-90s on live
     timerRef.current = setTimeout(() => {
       if (mountedRef.current) {
         showNotification();
+        notifCount++;
         scheduleNext();
       }
     }, initialDelay);
@@ -220,7 +233,7 @@ const SocialMatchNotifications: React.FC = () => {
       mountedRef.current = false;
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [isPublishedSite]); // showNotification removed — it's stable via refs
+  }, [shouldRunNotifications, activePersona?.id]); // re-run when persona changes
 
   return null;
 };
