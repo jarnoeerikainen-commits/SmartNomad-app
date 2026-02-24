@@ -217,7 +217,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                           <Button
                             key={item.id}
                             variant="default"
-                            className="w-full justify-start gap-3 gradient-success shadow-medium hover:shadow-lg"
+                            className="w-full justify-start gap-3 border-0 text-foreground font-semibold shadow-medium hover:shadow-lg hover:scale-[1.02] transition-all"
+                            style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
                             onClick={() => {
                               onUpgradeClick();
                               onClose?.();
@@ -323,10 +324,11 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                     onUpgradeClick();
                     onClose?.();
                   }}
-                  className="w-full gradient-success shadow-lg hover:shadow-xl transition-all mb-4"
+                  className="w-full border-0 text-foreground font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all mb-4"
+                  style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
                   size="lg"
                 >
-                  <TrendingUp className="h-5 w-5 mr-2" />
+                  <Crown className="h-5 w-5 mr-2" />
                   {t('sidebar.upgrade_premium')}
                 </Button>
                 <Separator className="my-4" />
@@ -364,8 +366,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Footer */}
           <div className="border-t p-4">
             {subscription && (
-              <div className="mb-3 p-2 bg-primary/10 rounded-lg text-center">
-                <p className="text-xs font-semibold text-primary capitalize">
+              <div className="mb-3 p-2 bg-[hsl(var(--gold)/0.1)] rounded-lg text-center">
+                <p className="text-xs font-semibold text-[hsl(var(--gold-dark))] capitalize">
                   {subscription.tier} {t('sidebar.plan_label')}
                 </p>
                 {subscription.tier === 'free' && onUpgradeClick && (
@@ -376,7 +378,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                       onUpgradeClick();
                       onClose?.();
                     }}
-                    className="h-auto p-0 text-xs text-primary"
+                    className="h-auto p-0 text-xs text-[hsl(var(--gold-dark))] hover:text-[hsl(var(--gold))]"
                   >
                     {t('sidebar.upgrade_now')}
                   </Button>
