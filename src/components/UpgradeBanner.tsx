@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Crown, X, Gift } from 'lucide-react';
+import { Sparkles, Crown, X } from 'lucide-react';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -29,13 +29,13 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   return (
     <div className="space-y-4">
       {/* Standard Upgrade Banner */}
-      <Card className="border-primary/40 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 shadow-lg relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 animate-pulse" />
+      <Card className="border-[hsl(var(--gold)/0.3)] bg-gradient-to-r from-[hsl(var(--gold-dark)/0.08)] via-[hsl(var(--gold)/0.05)] to-[hsl(var(--gold-dark)/0.08)] shadow-lg relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--gold)/0.03)] to-[hsl(var(--gold-dark)/0.03)]" />
         <CardContent className="p-6 relative">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4 flex-1 min-w-[200px]">
-              <div className="p-3 bg-primary/20 rounded-full">
-                <Crown className="w-8 h-8 text-primary" />
+              <div className="p-3 bg-[hsl(var(--gold)/0.15)] rounded-full">
+                <Crown className="w-8 h-8 text-[hsl(var(--gold-dark))]" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -61,10 +61,11 @@ const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
             <div className="flex items-center gap-2">
                 <Button 
                   onClick={onUpgradeClick}
-                  className="gradient-success shadow-lg hover:shadow-xl transition-all"
+                  className="border-0 text-foreground font-semibold tracking-wide shadow-lg hover:shadow-xl transition-all hover:scale-[1.03]"
+                  style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
                   size="lg"
                 >
-                  <Sparkles className="w-4 h-4 mr-2" />
+                  <Crown className="w-4 h-4 mr-2" />
                   {t('upgrade.view_plans')}
                 </Button>
               {onDismiss && (

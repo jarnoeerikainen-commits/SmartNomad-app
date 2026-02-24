@@ -111,7 +111,8 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
         
         <Button 
           onClick={onUpgradeClick}
-          className="w-full gradient-success hover:opacity-90"
+          className="w-full border-0 text-foreground font-semibold tracking-wide hover:scale-[1.02] transition-all"
+          style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
           size="sm"
         >
           {subscription.tier === 'free' ? 'Upgrade Now' : 'Change Plan'}
