@@ -507,10 +507,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           />
         );
       
-      case 'investors':
-        // Use proper React Router navigation instead of full page reload
-        window.location.assign('/investors');
-        return null;
       
       default:
         return (
