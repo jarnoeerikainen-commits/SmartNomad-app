@@ -89,8 +89,9 @@ const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose, subscripti
                 <Button 
                   onClick={() => handleSelectPlan(tier.id)}
                   disabled={subscription.tier === tier.id}
-                  className={`w-full ${tier.popular ? 'gradient-success' : ''}`}
+                  className={`w-full font-semibold tracking-wide transition-all ${tier.popular ? 'border-0 text-foreground hover:scale-[1.02]' : ''}`}
                   variant={tier.popular ? 'default' : 'outline'}
+                  style={tier.popular ? { background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' } : undefined}
                 >
                   {subscription.tier === tier.id ? '✓ Current Plan' : 'Select Plan'}
                 </Button>

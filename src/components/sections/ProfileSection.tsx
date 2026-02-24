@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Settings as SettingsIcon, Award, TrendingUp } from 'lucide-react';
+import { User, Settings as SettingsIcon, Award, Crown } from 'lucide-react';
 import ComprehensiveUserProfile from '../ComprehensiveUserProfile';
 import Settings from '../Settings';
 import MyAwards from '../MyAwards';
@@ -42,9 +42,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
             <div className="flex items-center gap-2">
               {getTierBadge()}
               {subscription.tier === 'free' && (
-                <Button size="sm" onClick={onUpgradeClick} className="ml-2">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Upgrade
+                <Button size="sm" onClick={onUpgradeClick} className="ml-2 border-0 text-foreground font-semibold tracking-wide hover:scale-[1.02] transition-all" style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}>
+                  <Crown className="h-4 w-4 mr-2" />
+                  PRO
                 </Button>
               )}
             </div>

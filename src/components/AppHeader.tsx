@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Menu, Settings, User, Bell, Zap, CreditCard } from 'lucide-react';
+import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import superNomadLogo from '@/assets/supernomad-logo-v2.png';
 import { Button } from '@/components/ui/button';
@@ -110,9 +110,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             </Button>}
           
           {/* Upgrade Button for Free Users */}
-          {subscription?.tier === 'free' && onUpgradeClick && <Button variant="default" size="sm" className="gradient-success shadow-medium hover:shadow-lg transition-all hidden md:flex" onClick={onUpgradeClick}>
-                <Zap className="h-4 w-4 mr-1" />
-                <span className="font-semibold">{t('common.upgrade')}</span>
+          {subscription?.tier === 'free' && onUpgradeClick && <Button variant="default" size="sm" className="hidden md:flex items-center gap-1.5 border-0 text-foreground font-semibold tracking-wide shadow-lg hover:shadow-xl transition-all hover:scale-[1.03]" style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }} onClick={onUpgradeClick}>
+                <Crown className="h-4 w-4" />
+                <span>PRO</span>
             </Button>}
 
           {/* User Menu */}
