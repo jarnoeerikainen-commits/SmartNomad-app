@@ -73,10 +73,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         }} role="link" tabIndex={0}>
             <img alt={`${t('app.title')} Logo`} className="h-10 w-10 rounded-xl shadow-medium transition-transform group-hover:scale-105" src="/lovable-uploads/5283b382-e775-4a15-adef-263a22fdddc5.png" />
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent transition-all group-hover:from-accent group-hover:to-primary">
-                {t('app.title')}
+              <h1 className="text-xl font-bold font-display tracking-tight">
+                <span className="text-foreground">Super</span>
+                <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
               </h1>
-              <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-semibold group-hover:text-foreground transition-colors">
                 {t('app.tagline')}
               </p>
             </div>

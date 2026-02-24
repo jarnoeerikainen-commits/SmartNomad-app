@@ -27,7 +27,8 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
         </div>
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-display">
           <span className="text-foreground">Welcome to </span>
-          <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">SuperNomad</span>
+          <span className="text-foreground">Super</span>
+          <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
         </h1>
         <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           {t('home.subtitle')}
