@@ -1,8 +1,10 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, Users, Calendar } from 'lucide-react';
+import { MessageSquare, Users, Calendar, ArrowRight, Shield } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import heroPulse from '@/assets/hero-pulse.jpg';
+import heroVibe from '@/assets/hero-vibe.jpg';
+import heroEvents from '@/assets/hero-events.jpg';
 
 interface DashboardHeroCardsProps {
   onNavigate: (section: string) => void;
@@ -18,9 +20,9 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
       subtitle: 'Supernomad Pulse uses advanced AI to instantly connect you with your perfect adventure partners, wherever you are. Fast ID & Face Match verification in 1 min.',
       buttonText: 'Explore Groups',
       icon: MessageSquare,
-      gradient: 'from-primary/20 via-primary/10 to-transparent',
-      iconColor: 'text-primary',
-      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80'
+      image: heroPulse,
+      accentClass: 'from-primary to-primary/80',
+      badgeText: 'AI-Powered Matching',
     },
     {
       id: 'social-chat',
@@ -28,9 +30,9 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
       subtitle: 'AI Breaks the Ice, Not Your Privacy. Fast ID & Face Match verification in 1 min. Experience spontaneous chats with verified nomads, backed by intelligent safety systems that let you be yourself, freely and securely.',
       buttonText: 'Start Chatting',
       icon: Users,
-      gradient: 'from-accent/20 via-accent/10 to-transparent',
-      iconColor: 'text-accent',
-      image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80'
+      image: heroVibe,
+      accentClass: 'from-accent to-accent/80',
+      badgeText: 'Privacy-First Chat',
     },
     {
       id: 'explore-local-life',
@@ -38,65 +40,79 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
       subtitle: 'Discover workshops, meetups, and hidden gems.',
       buttonText: 'Discover Events',
       icon: Calendar,
-      gradient: 'from-secondary/20 via-secondary/10 to-transparent',
-      iconColor: 'text-secondary',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80'
+      image: heroEvents,
+      accentClass: 'from-secondary to-secondary/80',
+      badgeText: 'Curated Locally',
     }
   ];
 
   return (
-    <div className="space-y-4 pb-6">
-      {heroCards.map((card) => {
+    <div className="space-y-6 pb-6">
+      {heroCards.map((card, index) => {
         const Icon = card.icon;
+        const isReversed = index % 2 === 1;
+
         return (
-          <Card 
+          <div
             key={card.id}
-            className="relative overflow-hidden border-0 shadow-large hover:shadow-glow transition-all duration-500 cursor-pointer group"
+            className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-large hover:shadow-glow transition-all duration-500"
             onClick={() => onNavigate(card.id)}
           >
-            {/* Background Image with Overlay */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-              style={{ 
-                backgroundImage: `url(${card.image})`,
-              }}
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} backdrop-blur-[2px]`} />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-background/20" />
-            </div>
+            {/* Full-bleed image */}
+            <div className="relative h-[320px] md:h-[380px] overflow-hidden">
+              <img
+                src={card.image}
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
 
-            {/* Content */}
-            <CardContent className="relative z-10 p-8 md:p-10">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div className="space-y-3 flex-1">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-xl bg-background/80 backdrop-blur-sm border border-border/50 shadow-soft ${card.iconColor}`}>
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                        {card.title}
-                      </h2>
-                      <p className="text-sm md:text-base text-muted-foreground mt-1 max-w-md">
-                        {card.subtitle}
-                      </p>
-                    </div>
-                  </div>
+              {/* Cinematic overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/95 via-foreground/50 to-foreground/10" />
+              <div className={`absolute inset-0 bg-gradient-to-br ${card.accentClass} opacity-[0.12] mix-blend-overlay`} />
+
+              {/* Content positioned over image */}
+              <div className={`absolute inset-0 flex flex-col justify-end p-6 md:p-10 ${isReversed ? 'md:items-end md:text-right' : ''}`}>
+                {/* Badge */}
+                <div className={`flex items-center gap-2 mb-4 ${isReversed ? 'md:justify-end' : ''}`}>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 text-primary-foreground text-xs font-semibold tracking-wide uppercase">
+                    <Shield className="w-3 h-3" />
+                    {card.badgeText}
+                  </span>
                 </div>
-                
-                <Button 
-                  size="lg"
-                  className="w-full md:w-auto shadow-medium hover:shadow-large transition-all duration-300 text-base font-semibold px-8"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onNavigate(card.id);
-                  }}
-                >
-                  {card.buttonText}
-                </Button>
+
+                {/* Title */}
+                <div className={`flex items-center gap-3 mb-3 ${isReversed ? 'md:flex-row-reverse' : ''}`}>
+                  <div className="p-2.5 rounded-xl bg-primary/20 backdrop-blur-md border border-primary/20">
+                    <Icon className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-primary-foreground font-display">
+                    {card.title}
+                  </h2>
+                </div>
+
+                {/* Subtitle */}
+                <p className={`text-sm md:text-base text-primary-foreground/80 max-w-lg mb-5 leading-relaxed ${isReversed ? 'md:ml-auto' : ''}`}>
+                  {card.subtitle}
+                </p>
+
+                {/* CTA Button */}
+                <div className={isReversed ? 'md:ml-auto' : ''}>
+                  <Button
+                    size="lg"
+                    className="group/btn gap-2 shadow-medium hover:shadow-large transition-all duration-300 text-sm font-semibold px-6 rounded-xl"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate(card.id);
+                    }}
+                  >
+                    {card.buttonText}
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Button>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         );
       })}
     </div>

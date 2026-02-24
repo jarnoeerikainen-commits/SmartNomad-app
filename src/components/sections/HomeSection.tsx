@@ -20,11 +20,16 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6">
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-          {t('home.welcome')}
+      <div className="text-center space-y-4 mb-10 pt-2">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
+          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
+        </div>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-display">
+          <span className="text-foreground">Welcome to </span>
+          <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">SuperNomad</span>
         </h1>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           {t('home.subtitle')}
         </p>
       </div>
