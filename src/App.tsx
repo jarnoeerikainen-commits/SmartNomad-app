@@ -7,6 +7,8 @@ import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import WiFiFinder from "./pages/WiFiFinder";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LocationProvider } from "./contexts/LocationContext";
 import { DemoPersonaProvider } from "./contexts/DemoPersonaContext";
@@ -42,6 +44,8 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/wifi-finder" element={<WiFiFinder />} />
                 <Route path="/business-centers" element={<BusinessCentersPage />} />
+                <Route path="/terms" element={<TermsAndConditions />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/translation-manager" element={<TranslationManager />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
