@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Shield, Cookie, FileText, Users, Lock, Eye, Download, Trash2 } from 'lucide-react';
+import { Shield, Cookie, FileText, Download, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 
 export const CookieConsent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -78,7 +76,9 @@ export const CookieConsent: React.FC = () => {
             Cookie Preferences
           </CardTitle>
           <CardDescription>
-            We use cookies to enhance your experience and comply with GDPR regulations.
+            We use cookies to enhance your experience. See our{' '}
+            <a href="/privacy-policy" className="text-primary underline">Privacy Policy</a> and{' '}
+            <a href="/terms" className="text-primary underline">Terms & Conditions</a>.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -141,144 +141,12 @@ export const CookieConsent: React.FC = () => {
   );
 };
 
-export const PrivacyPolicy: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5" />
-            Privacy Policy & GDPR Compliance
-          </DialogTitle>
-          <DialogDescription>
-            Last updated: {new Date().toLocaleDateString()}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="space-y-6 mt-6">
-          <section>
-            <h3 className="text-lg font-semibold mb-3">1. Data Controller Information</h3>
-            <p className="text-sm text-muted-foreground mb-2">
-              TravelTracker is committed to protecting your privacy and ensuring GDPR compliance.
-            </p>
-            <div className="bg-muted p-4 rounded-lg">
-              <p className="text-sm"><strong>Data Controller:</strong> TravelTracker Ltd.</p>
-              <p className="text-sm"><strong>Contact:</strong> privacy@traveltracker.com</p>
-              <p className="text-sm"><strong>DPO:</strong> dpo@traveltracker.com</p>
-            </div>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h3 className="text-lg font-semibold mb-3">2. Data We Collect</h3>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <Users className="w-4 h-4 mt-1 text-primary" />
-                <div>
-                  <p className="font-medium">Personal Information</p>
-                  <p className="text-sm text-muted-foreground">Name, email, passport expiry date, calendar information, travel history</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Eye className="w-4 h-4 mt-1 text-primary" />
-                <div>
-                  <p className="font-medium">Usage Data</p>
-                  <p className="text-sm text-muted-foreground">App interactions, preferences, device information</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Lock className="w-4 h-4 mt-1 text-primary" />
-                <div>
-                  <p className="font-medium">Location Data</p>
-                  <p className="text-sm text-muted-foreground">GPS coordinates for travel tracking (with consent)</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h3 className="text-lg font-semibold mb-3">3. Your Rights Under GDPR</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 border rounded-lg">
-                <p className="font-medium text-sm">Right to Access</p>
-                <p className="text-xs text-muted-foreground">Request copies of your data</p>
-              </div>
-              <div className="p-3 border rounded-lg">
-                <p className="font-medium text-sm">Right to Rectification</p>
-                <p className="text-xs text-muted-foreground">Correct inaccurate data</p>
-              </div>
-              <div className="p-3 border rounded-lg">
-                <p className="font-medium text-sm">Right to Erasure</p>
-                <p className="text-xs text-muted-foreground">Delete your data</p>
-              </div>
-              <div className="p-3 border rounded-lg">
-                <p className="font-medium text-sm">Right to Portability</p>
-                <p className="text-xs text-muted-foreground">Transfer your data</p>
-              </div>
-            </div>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h3 className="text-lg font-semibold mb-3">4. Data Processing Legal Basis</h3>
-            <div className="space-y-2">
-              <Badge variant="outline">Consent - for location tracking and marketing</Badge>
-              <Badge variant="outline">Contractual necessity - for service provision</Badge>
-              <Badge variant="outline">Legitimate interest - for app improvement</Badge>
-              <Badge variant="outline">Legal compliance - for tax and visa tracking</Badge>
-            </div>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h3 className="text-lg font-semibold mb-3">5. Data Retention</h3>
-            <p className="text-sm text-muted-foreground mb-2">
-              We retain your data only as long as necessary for the purposes outlined in this policy:
-            </p>
-            <ul className="text-sm text-muted-foreground space-y-1 ml-4">
-              <li>• Account data: Until account deletion + 30 days</li>
-              <li>• Travel history: 7 years (for tax compliance purposes)</li>
-              <li>• Usage analytics: 2 years</li>
-              <li>• Marketing data: Until consent withdrawal</li>
-            </ul>
-          </section>
-
-          <Separator />
-
-          <section>
-            <h3 className="text-lg font-semibold mb-3">6. International Transfers</h3>
-            <p className="text-sm text-muted-foreground">
-              Your data may be transferred outside the EEA only with appropriate safeguards, including:
-            </p>
-            <ul className="text-sm text-muted-foreground space-y-1 ml-4 mt-2">
-              <li>• EU Commission adequacy decisions</li>
-              <li>• Standard contractual clauses</li>
-              <li>• Binding corporate rules</li>
-            </ul>
-          </section>
-
-          <div className="flex gap-2 pt-4">
-            <Button onClick={onClose} className="flex-1">
-              I Understand
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
+// PrivacyPolicy dialog removed - now a standalone page at /privacy-policy
 
 export const DataManagement: React.FC = () => {
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const { toast } = useToast();
 
   const downloadData = () => {
-    // In a real app, this would generate and download user data
     const userData = {
       profile: "User data export",
       countries: "Travel tracking data",
@@ -289,11 +157,9 @@ export const DataManagement: React.FC = () => {
     const dataStr = JSON.stringify(userData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = 'traveltracker-data-export.json';
-    
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.setAttribute('download', 'supernomad-data-export.json');
     linkElement.click();
     
     toast({
@@ -303,7 +169,6 @@ export const DataManagement: React.FC = () => {
   };
 
   const deleteAllData = () => {
-    // In a real app, this would trigger account deletion
     toast({
       title: "Account deletion requested",
       description: "Your account deletion request has been submitted. This action cannot be undone.",
@@ -320,19 +185,23 @@ export const DataManagement: React.FC = () => {
             Data & Privacy Management
           </CardTitle>
           <CardDescription>
-            Exercise your GDPR rights and manage your personal data
+            Exercise your GDPR & CCPA rights and manage your personal data
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowPrivacyPolicy(true)}
-              className="flex items-center gap-2"
-            >
-              <FileText className="w-4 h-4" />
-              View Privacy Policy
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="/privacy-policy">
+              <Button variant="outline" className="w-full flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Privacy Policy
+              </Button>
+            </a>
+            <a href="/terms">
+              <Button variant="outline" className="w-full flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Terms & Conditions
+              </Button>
+            </a>
             <Button
               variant="outline"
               onClick={downloadData}
@@ -359,8 +228,6 @@ export const DataManagement: React.FC = () => {
           </div>
         </CardContent>
       </Card>
-
-      <PrivacyPolicy isOpen={showPrivacyPolicy} onClose={() => setShowPrivacyPolicy(false)} />
     </div>
   );
 };
