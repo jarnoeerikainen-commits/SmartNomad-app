@@ -354,7 +354,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.cards.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                💳 Credit & Debit Cards
+                💳 {t('payment.credit_debit')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.cards.length}</Badge>
               </h3>
               <div className="space-y-2">
