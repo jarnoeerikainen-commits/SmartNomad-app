@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Settings as SettingsIcon, Award, Crown } from 'lucide-react';
+import { User, Settings as SettingsIcon, Award, Crown, Headphones } from 'lucide-react';
 import ComprehensiveUserProfile from '../ComprehensiveUserProfile';
 import Settings from '../Settings';
 import MyAwards from '../MyAwards';
+import SupportTicketing from '../SupportTicketing';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -60,10 +61,14 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Profile</span>
+          </TabsTrigger>
+          <TabsTrigger value="support" className="flex items-center gap-2">
+            <Headphones className="h-4 w-4" />
+            <span className="hidden sm:inline">Support</span>
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <SettingsIcon className="h-4 w-4" />
@@ -77,6 +82,10 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
 
         <TabsContent value="profile" className="mt-6 animate-fade-in">
           <ComprehensiveUserProfile />
+        </TabsContent>
+
+        <TabsContent value="support" className="mt-6 animate-fade-in">
+          <SupportTicketing />
         </TabsContent>
 
         <TabsContent value="settings" className="mt-6 animate-fade-in">

@@ -17,7 +17,7 @@ import {
   Shield, Sparkles, CheckCircle2, AlertCircle, Crown, Lock,
   TrendingUp, Target, Zap, Gift, Mic, MicOff, Car,
   Dumbbell, Coffee, Music, BookOpen, Stethoscope, GraduationCap,
-  ShoppingBag, Baby, PawPrint, Languages
+  ShoppingBag, Baby, PawPrint, Languages, Building2, CreditCard, Receipt
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ComprehensiveUserProfile, ProfileProgress } from '@/types/userProfile';
@@ -255,7 +255,7 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
 
       {/* Profile Sections */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="core" className="flex items-center gap-1 text-xs">
             <User className="w-3 h-3" />
             <span className="hidden sm:inline">Core</span>
@@ -263,6 +263,10 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
           <TabsTrigger value="lifestyle" className="flex items-center gap-1 text-xs">
             <Briefcase className="w-3 h-3" />
             <span className="hidden sm:inline">Work</span>
+          </TabsTrigger>
+          <TabsTrigger value="business" className="flex items-center gap-1 text-xs">
+            <Building2 className="w-3 h-3" />
+            <span className="hidden sm:inline">Business</span>
           </TabsTrigger>
           <TabsTrigger value="travel" className="flex items-center gap-1 text-xs">
             <Plane className="w-3 h-3" />
@@ -589,6 +593,309 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
                     <VoiceButton onResult={t => updateNested('lifestyle.education.field', t)} />
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* BUSINESS TRAVEL TAB */}
+        <TabsContent value="business" className="space-y-4 mt-6">
+          {/* Travel Mode Toggle — Hero */}
+          <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`p-4 rounded-2xl transition-all ${getNested('businessTravel.travelMode', 'personal') === 'business' ? 'bg-primary/20' : 'bg-muted'}`}>
+                    {getNested('businessTravel.travelMode', 'personal') === 'business'
+                      ? <Building2 className="w-8 h-8 text-primary" />
+                      : <Plane className="w-8 h-8 text-muted-foreground" />
+                    }
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">
+                      {getNested('businessTravel.travelMode', 'personal') === 'business' ? '💼 Business Travel Mode' : '🌴 Personal Travel Mode'}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {getNested('businessTravel.travelMode', 'personal') === 'business' 
+                        ? 'Expenses billed to your company' 
+                        : 'Expenses on your personal account'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground">Personal</span>
+                  <Switch 
+                    checked={getNested('businessTravel.travelMode', 'personal') === 'business'}
+                    onCheckedChange={v => updateNested('businessTravel.travelMode', v ? 'business' : 'personal')}
+                  />
+                  <span className="text-sm font-semibold text-primary">Business</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Company Details */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Building2 className="w-5 h-5" /> Company Details</CardTitle>
+              <CardDescription>Your employer or company information for business travel</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Company Name *</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="Acme Corporation" value={getNested('businessTravel.company.name')} onChange={e => updateNested('businessTravel.company.name', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.name', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Registration Number</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="Company reg. number" value={getNested('businessTravel.company.registrationNumber')} onChange={e => updateNested('businessTravel.company.registrationNumber', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.registrationNumber', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>VAT Number</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="VAT / Tax ID" value={getNested('businessTravel.company.vatNumber')} onChange={e => updateNested('businessTravel.company.vatNumber', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.vatNumber', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Company Address</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="123 Business St." value={getNested('businessTravel.company.address')} onChange={e => updateNested('businessTravel.company.address', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.address', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>City</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="London" value={getNested('businessTravel.company.city')} onChange={e => updateNested('businessTravel.company.city', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.city', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Country</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="United Kingdom" value={getNested('businessTravel.company.country')} onChange={e => updateNested('businessTravel.company.country', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.country', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Department</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="Sales / Engineering / Executive" value={getNested('businessTravel.company.department')} onChange={e => updateNested('businessTravel.company.department', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.department', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Cost Center</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="CC-12345" value={getNested('businessTravel.company.costCenter')} onChange={e => updateNested('businessTravel.company.costCenter', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.costCenter', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Manager / Approver Name</Label>
+                  <div className="flex gap-2">
+                    <Input placeholder="Jane Smith" value={getNested('businessTravel.company.managerName')} onChange={e => updateNested('businessTravel.company.managerName', e.target.value)} />
+                    <VoiceButton onResult={t => updateNested('businessTravel.company.managerName', t)} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Manager Email</Label>
+                  <Input type="email" placeholder="manager@company.com" value={getNested('businessTravel.company.managerEmail')} onChange={e => updateNested('businessTravel.company.managerEmail', e.target.value)} />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Travel Policy URL</Label>
+                  <Input placeholder="https://company.com/travel-policy" value={getNested('businessTravel.company.travelPolicyUrl')} onChange={e => updateNested('businessTravel.company.travelPolicyUrl', e.target.value)} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Billing */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><CreditCard className="w-5 h-5" /> Billing & Payment</CardTitle>
+              <CardDescription>How should business travel expenses be handled?</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Payment Method</Label>
+                <Select value={getNested('businessTravel.billing.method', 'company-card')} onValueChange={v => updateNested('businessTravel.billing.method', v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="company-card">💳 Company Card</SelectItem>
+                    <SelectItem value="personal-reimbursed">🧾 Personal Card (Reimbursed)</SelectItem>
+                    <SelectItem value="supernomad-monthly">📋 SuperNomad Monthly Invoice</SelectItem>
+                    <SelectItem value="direct-invoice">🏢 Direct Company Invoice</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {getNested('businessTravel.billing.method') === 'company-card' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="space-y-2">
+                    <Label>Card Last 4 Digits</Label>
+                    <Input placeholder="1234" maxLength={4} value={getNested('businessTravel.billing.companyCardLast4')} onChange={e => updateNested('businessTravel.billing.companyCardLast4', e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Card Type</Label>
+                    <Select value={getNested('businessTravel.billing.companyCardType', 'visa')} onValueChange={v => updateNested('businessTravel.billing.companyCardType', v)}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="visa">Visa</SelectItem>
+                        <SelectItem value="mastercard">Mastercard</SelectItem>
+                        <SelectItem value="amex">American Express</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              {(getNested('businessTravel.billing.method') === 'supernomad-monthly' || getNested('businessTravel.billing.method') === 'direct-invoice') && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="space-y-2">
+                    <Label>Invoice Email</Label>
+                    <Input type="email" placeholder="billing@company.com" value={getNested('businessTravel.billing.invoiceEmail')} onChange={e => updateNested('businessTravel.billing.invoiceEmail', e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>PO Number</Label>
+                    <div className="flex gap-2">
+                      <Input placeholder="PO-2026-001" value={getNested('businessTravel.billing.poNumber')} onChange={e => updateNested('businessTravel.billing.poNumber', e.target.value)} />
+                      <VoiceButton onResult={t => updateNested('businessTravel.billing.poNumber', t)} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Billing Currency</Label>
+                  <Select value={getNested('businessTravel.billing.billingCurrency', 'USD')} onValueChange={v => updateNested('businessTravel.billing.billingCurrency', v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {['USD', 'EUR', 'GBP', 'CHF', 'CAD', 'AUD', 'JPY', 'SGD', 'AED', 'SEK', 'NOK', 'DKK'].map(c => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Monthly Travel Budget</Label>
+                  <Input type="number" placeholder="5000" value={getNested('businessTravel.billing.monthlyLimit', '')} onChange={e => updateNested('businessTravel.billing.monthlyLimit', Number(e.target.value) || undefined)} />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Approval Required</Label>
+                    <p className="text-xs text-muted-foreground">Manager must approve bookings before confirmation</p>
+                  </div>
+                  <Switch
+                    checked={getNested('businessTravel.billing.approvalRequired', false)}
+                    onCheckedChange={v => updateNested('businessTravel.billing.approvalRequired', v)}
+                  />
+                </div>
+                {getNested('businessTravel.billing.approvalRequired') && (
+                  <div className="space-y-2 pl-4">
+                    <Label>Approver Email</Label>
+                    <Input type="email" placeholder="approver@company.com" value={getNested('businessTravel.billing.approverEmail')} onChange={e => updateNested('businessTravel.billing.approverEmail', e.target.value)} />
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Business Travel Preferences */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Receipt className="w-5 h-5" /> Business Travel Preferences</CardTitle>
+              <CardDescription>Company policy defaults for bookings</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Max Flight Class Allowed</Label>
+                  <Select value={getNested('businessTravel.preferences.maxFlightClass', 'business')} onValueChange={v => updateNested('businessTravel.preferences.maxFlightClass', v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="economy">Economy</SelectItem>
+                      <SelectItem value="premium-economy">Premium Economy</SelectItem>
+                      <SelectItem value="business">Business Class</SelectItem>
+                      <SelectItem value="first">First Class</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Max Hotel Stars</Label>
+                  <Select value={String(getNested('businessTravel.preferences.maxHotelStars', 4))} onValueChange={v => updateNested('businessTravel.preferences.maxHotelStars', Number(v))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {[3, 4, 5].map(s => (
+                        <SelectItem key={s} value={String(s)}>{'⭐'.repeat(s)} ({s} Star)</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Max Daily Budget</Label>
+                  <Input type="number" placeholder="250" value={getNested('businessTravel.preferences.maxDailyBudget', '')} onChange={e => updateNested('businessTravel.preferences.maxDailyBudget', Number(e.target.value) || undefined)} />
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Require Receipts</Label>
+                    <p className="text-xs text-muted-foreground">Automatically prompt for receipt photos after each expense</p>
+                  </div>
+                  <Switch
+                    checked={getNested('businessTravel.preferences.requireReceipts', true)}
+                    onCheckedChange={v => updateNested('businessTravel.preferences.requireReceipts', v)}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Auto Expense Reports</Label>
+                    <p className="text-xs text-muted-foreground">Generate monthly expense reports automatically</p>
+                  </div>
+                  <Switch
+                    checked={getNested('businessTravel.preferences.autoExpenseReport', false)}
+                    onCheckedChange={v => updateNested('businessTravel.preferences.autoExpenseReport', v)}
+                  />
+                </div>
+              </div>
+
+              {/* Loyalty Programs */}
+              <div className="space-y-2">
+                <Label>Preferred Airlines</Label>
+                <ChipSelector
+                  options={['British Airways', 'Lufthansa', 'Emirates', 'Singapore Airlines', 'Qatar Airways', 'United', 'Delta', 'American Airlines', 'Air France', 'KLM', 'Swiss', 'Finnair', 'SAS', 'Turkish Airlines', 'Cathay Pacific', 'Japan Airlines', 'ANA']}
+                  selected={getNested('businessTravel.preferences.preferredAirlines', [])}
+                  onChange={v => updateNested('businessTravel.preferences.preferredAirlines', v)}
+                  columns={4}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Preferred Hotel Chains</Label>
+                <ChipSelector
+                  options={['Marriott', 'Hilton', 'IHG', 'Hyatt', 'Accor', 'Four Seasons', 'Ritz-Carlton', 'Shangri-La', 'Mandarin Oriental', 'Fairmont', 'Radisson', 'Best Western', 'Melia', 'NH Hotels', 'CitizenM']}
+                  selected={getNested('businessTravel.preferences.preferredHotelChains', [])}
+                  onChange={v => updateNested('businessTravel.preferences.preferredHotelChains', v)}
+                  columns={4}
+                />
               </div>
             </CardContent>
           </Card>
