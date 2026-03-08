@@ -176,7 +176,7 @@ const AwardCardsDashboard: React.FC = () => {
           <CardContent className="p-4 text-center">
             <TrendingUp className="w-5 h-5 mx-auto mb-1 text-blue-600 dark:text-blue-400" />
             <div className="text-2xl font-bold text-foreground">{totalPoints.toLocaleString()}</div>
-            <div className="text-xs text-muted-foreground">Total Points</div>
+            <div className="text-xs text-muted-foreground">{t('award.total_points')}</div>
           </CardContent>
         </Card>
         <Card className={`${expiringCards.length > 0 ? 'border-destructive/50' : 'border-muted'}`}>
