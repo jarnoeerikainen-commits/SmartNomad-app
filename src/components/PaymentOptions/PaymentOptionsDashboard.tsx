@@ -384,7 +384,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.crypto.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🪙 Cryptocurrency Wallets
+                🪙 {t('payment.cryptocurrency')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.crypto.length}</Badge>
               </h3>
               <div className="space-y-2">
