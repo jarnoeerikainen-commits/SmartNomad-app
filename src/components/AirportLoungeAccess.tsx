@@ -302,7 +302,9 @@ const AirportLoungeAccess: React.FC<AirportLoungeAccessProps> = ({ currentLocati
   const { toast } = useToast();
   const { t } = useLanguage();
   const [flightsPerYear, setFlightsPerYear] = useState<number>(8);
-  const [selectedTab, setSelectedTab] = useState('overview');
+  const [selectedTab, setSelectedTab] = useState('lounges');
+  const [loungeSearch, setLoungeSearch] = useState('');
+  const [loungeRegion, setLoungeRegion] = useState('All');
 
   // Major lounge networks data
   const loungeNetworks: LoungeNetwork[] = [
