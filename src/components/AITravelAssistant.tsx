@@ -524,7 +524,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                Your proactive concierge • {voiceEnabled ? '🔊 Voice on' : 'Always thinking ahead'}
+                {t('ai.concierge_label')} • {voiceEnabled ? t('ai.voice_on') : t('ai.always_thinking')}
               </p>
             </div>
           </CardContent>
