@@ -189,7 +189,6 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({ is
           </TabsContent>
 
           <TabsContent value="crypto" className="space-y-4 mt-4">
-            {(() => { setMethodType('crypto'); return null; })()}
             <div>
               <Label>Cryptocurrency</Label>
               <Select value={cryptoType} onValueChange={(v) => setCryptoType(v as CryptoType)}>
