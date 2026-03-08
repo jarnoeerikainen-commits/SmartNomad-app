@@ -221,6 +221,63 @@ export interface AIConsentSettings {
   };
 }
 
+export interface BusinessTravelProfile {
+  travelMode: 'personal' | 'business';
+  company: {
+    name: string;
+    registrationNumber?: string;
+    vatNumber?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    department?: string;
+    costCenter?: string;
+    managerName?: string;
+    managerEmail?: string;
+    travelPolicyUrl?: string;
+  };
+  billing: {
+    method: 'company-card' | 'personal-reimbursed' | 'supernomad-monthly' | 'direct-invoice';
+    companyCardLast4?: string;
+    companyCardType?: 'visa' | 'mastercard' | 'amex' | 'other';
+    invoiceEmail?: string;
+    poNumber?: string;
+    billingCurrency?: string;
+    monthlyLimit?: number;
+    approvalRequired: boolean;
+    approverEmail?: string;
+  };
+  preferences: {
+    maxFlightClass: 'economy' | 'premium-economy' | 'business' | 'first';
+    maxHotelStars: 1 | 2 | 3 | 4 | 5;
+    maxDailyBudget?: number;
+    preferredAirlines?: string[];
+    preferredHotelChains?: string[];
+    loyaltyPrograms?: { name: string; number: string }[];
+    requireReceipts: boolean;
+    autoExpenseReport: boolean;
+  };
+}
+
+export interface SupportTicket {
+  id: string;
+  userId: string;
+  subject: string;
+  description: string;
+  category: 'billing' | 'booking' | 'technical' | 'account' | 'compliance' | 'other';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'open' | 'in-progress' | 'waiting-response' | 'resolved' | 'closed';
+  messages: {
+    id: string;
+    sender: 'user' | 'support';
+    content: string;
+    timestamp: string;
+  }[];
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string;
+}
+
 export interface ComprehensiveUserProfile {
   id: string;
   createdAt: Date;
@@ -232,12 +289,13 @@ export interface ComprehensiveUserProfile {
   travel?: TravelProfile;
   personal?: PersonalPreferences;
   aiConsent?: AIConsentSettings;
+  businessTravel?: BusinessTravelProfile;
   
   languages?: string[];
   followedEmbassies?: string[];
 }
 
-export type ProfileTier = 'core' | 'lifestyle' | 'travel' | 'personal' | 'ai-consent';
+export type ProfileTier = 'core' | 'lifestyle' | 'travel' | 'personal' | 'ai-consent' | 'business';
 
 export interface ProfileProgress {
   core: number;
