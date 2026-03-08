@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Train, Bus, MapPin, ExternalLink, Search, Navigation, Plane, Cable, Ship, Tram } from 'lucide-react';
+import { Train, Bus, MapPin, ExternalLink, Search, Navigation, Plane, Cable, Ship, TramFront } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 type TransportType = 'metro' | 'bus' | 'tram' | 'train' | 'airport' | 'cablecar' | 'ferry' | 'combined';
