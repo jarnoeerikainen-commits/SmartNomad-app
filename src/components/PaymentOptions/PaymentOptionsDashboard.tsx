@@ -399,7 +399,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.bank.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🏦 Bank Accounts
+                🏦 {t('payment.bank_accounts')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.bank.length}</Badge>
               </h3>
               <div className="space-y-2">
