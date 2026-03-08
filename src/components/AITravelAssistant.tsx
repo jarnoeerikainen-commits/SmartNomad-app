@@ -124,6 +124,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
             currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
             currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+            language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
             threatIntelligence: dummyThreats
               .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
