@@ -82,7 +82,13 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({ is
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={(tab) => {
+          setActiveTab(tab);
+          if (tab === 'crypto') setMethodType('crypto');
+          else if (tab === 'bank') setMethodType('bank-transfer');
+          else if (tab === 'card' && !['visa','mastercard','amex'].includes(methodType)) setMethodType('visa');
+          else if (tab === 'digital' && !['paypal','google-pay','apple-pay','stripe','wise'].includes(methodType)) setMethodType('paypal');
+        }}>
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="card">💳 Card</TabsTrigger>
             <TabsTrigger value="digital">🔵 Digital</TabsTrigger>
