@@ -41,7 +41,8 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
   }, [messages]);
 
   const streamChat = async (userMessage: string) => {
-    const userContext = { currentCountry: currentLocation?.country, currentCity: currentLocation?.city, citizenship };
+    const savedLang = localStorage.getItem('app_language') || 'en';
+    const userContext = { currentCountry: currentLocation?.country, currentCity: currentLocation?.city, citizenship, language: savedLang };
 
     try {
       const response = await fetch(

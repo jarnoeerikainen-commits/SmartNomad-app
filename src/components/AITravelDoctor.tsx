@@ -75,7 +75,8 @@ export const AITravelDoctor: React.FC<AITravelDoctorProps> = ({
   }, [messages]);
 
   const streamChat = async (userMessage: string) => {
-    const userContext = { currentCountry: currentLocation?.country, currentCity: currentLocation?.city, citizenship };
+    const savedLang = localStorage.getItem('app_language') || 'en';
+    const userContext = { currentCountry: currentLocation?.country, currentCity: currentLocation?.city, citizenship, language: savedLang };
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/medical-chat`,

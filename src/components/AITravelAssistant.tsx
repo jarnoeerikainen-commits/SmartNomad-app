@@ -510,7 +510,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder={isListening ? 'Listening...' : 'Ask me anything about travel...'}
+                  placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
                   className="flex-1"
                   disabled={isTyping}
                 />
