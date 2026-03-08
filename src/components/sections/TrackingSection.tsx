@@ -183,6 +183,35 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
         )}
       </div>
 
+      {/* Quick Add Country Bar */}
+      <div className="relative overflow-hidden rounded-xl bg-primary/10 border-2 border-primary/30 p-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+            <MapPin className="h-5 w-5 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-foreground text-sm sm:text-base">Track a New Country</p>
+            <p className="text-xs text-muted-foreground truncate">Add countries to monitor tax residency thresholds</p>
+          </div>
+        </div>
+        <Button
+          onClick={() => setIsQuickAddOpen(true)}
+          className="shrink-0 gap-2 font-bold shadow-md hover:shadow-lg transition-all hover:scale-105"
+          size="lg"
+        >
+          <Plus className="h-5 w-5" />
+          <span className="hidden sm:inline">Add Country</span>
+          <span className="sm:hidden">Add</span>
+        </Button>
+      </div>
+
+      <CountrySelector
+        isOpen={isQuickAddOpen}
+        onClose={() => setIsQuickAddOpen(false)}
+        onSelect={handleQuickAddCountry}
+        existingCountries={countries}
+      />
+
       {/* Smart Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <OverviewStat
