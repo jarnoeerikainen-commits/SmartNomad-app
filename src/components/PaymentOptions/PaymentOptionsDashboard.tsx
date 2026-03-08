@@ -337,15 +337,15 @@ const PaymentOptionsDashboard: React.FC = () => {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="methods" className="gap-2">
             <CreditCard className="h-4 w-4" />
-            <span className="hidden sm:inline">Methods</span>
+            <span className="hidden sm:inline">{t('payment.methods_tab')}</span>
           </TabsTrigger>
           <TabsTrigger value="rules" className="gap-2">
             <Settings2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Rules</span>
+            <span className="hidden sm:inline">{t('payment.rules_tab')}</span>
           </TabsTrigger>
           <TabsTrigger value="activity" className="gap-2">
             <ArrowRightLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Activity</span>
+            <span className="hidden sm:inline">{t('payment.activity_tab')}</span>
           </TabsTrigger>
         </TabsList>
 
