@@ -516,6 +516,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           />
         );
       
+      case 'help':
+        return <HelpSupportCenter />;
+      
       
       default:
         return (
