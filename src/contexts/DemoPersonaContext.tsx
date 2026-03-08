@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { DEMO_PERSONAS, DemoPersona } from '@/data/demoPersonas';
+import { MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, getAwardCardsAIContext } from '@/data/awardProgramsData';
 
 interface DemoPersonaContextType {
   activePersona: DemoPersona | null;
