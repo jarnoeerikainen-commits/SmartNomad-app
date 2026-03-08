@@ -607,11 +607,78 @@ const AirportLoungeAccess: React.FC<AirportLoungeAccessProps> = ({ currentLocati
 
       {/* Main Options Tabs */}
       <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">Networks & Memberships</TabsTrigger>
-          <TabsTrigger value="single">Single Visit Passes</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="lounges">VIP Lounges</TabsTrigger>
+          <TabsTrigger value="overview">Networks</TabsTrigger>
+          <TabsTrigger value="single">Single Visit</TabsTrigger>
           <TabsTrigger value="cards">Credit Cards</TabsTrigger>
         </TabsList>
+
+        {/* VIP Lounges Directory */}
+        <TabsContent value="lounges" className="space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Search className="h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search lounges by name, airport, country..." value={loungeSearch} onChange={e => setLoungeSearch(e.target.value)} className="max-w-md" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {LOUNGE_REGIONS.map(r => (
+                <Badge key={r} variant={loungeRegion === r ? 'default' : 'outline'} className="cursor-pointer" onClick={() => setLoungeRegion(r)}>
+                  {r} {r === 'All' ? `(${VIP_LOUNGES.length})` : `(${VIP_LOUNGES.filter(l => l.region === r).length})`}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {VIP_LOUNGES.filter(l => {
+              if (loungeRegion !== 'All' && l.region !== loungeRegion) return false;
+              if (loungeSearch) {
+                const q = loungeSearch.toLowerCase();
+                return l.name.toLowerCase().includes(q) || l.airport.toLowerCase().includes(q) || l.country.toLowerCase().includes(q) || l.airportCode.toLowerCase().includes(q);
+              }
+              return true;
+            }).map((lounge, idx) => (
+              <Card key={idx} className={`${lounge.rating >= 4.7 ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50' : 'border-border'}`}>
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        {lounge.name}
+                        {lounge.rating >= 4.7 && <Badge className="bg-yellow-400 text-yellow-900 text-xs"><Star className="w-3 h-3 mr-0.5" />Top</Badge>}
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        ✈️ {lounge.airport} ({lounge.airportCode}) {lounge.terminal && `• ${lounge.terminal}`}
+                      </CardDescription>
+                      <p className="text-xs text-muted-foreground">📍 {lounge.country} • ⏰ {lounge.operatingHours}</p>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <Star className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
+                      <span className="text-sm font-semibold">{lounge.rating}</span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2 pt-0">
+                  <div className="flex flex-wrap gap-1">
+                    {lounge.features.slice(0, 4).map((f, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">{f}</Badge>
+                    ))}
+                  </div>
+                  <div className="space-y-1">
+                    {lounge.accessMethods.map((m, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-xs"><CheckCircle2 className="w-3 h-3 text-green-600 shrink-0" /><span>{m}</span></div>
+                    ))}
+                  </div>
+                  {lounge.pricePerVisit && (
+                    <div className="bg-blue-50 rounded p-2 text-center">
+                      <p className="text-lg font-bold text-blue-600">${lounge.pricePerVisit}</p>
+                      <p className="text-xs text-gray-600">per visit</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
         {/* Networks & Annual Memberships */}
         <TabsContent value="overview" className="space-y-4">
