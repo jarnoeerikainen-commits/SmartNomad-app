@@ -26,6 +26,7 @@ serve(async (req) => {
     const month = sanitize(body.month, 50);
     const region = sanitize(body.region, 100);
     const userProfile = body.userProfile || null;
+    const language = sanitize(body.language, 50);
     console.log("Travel planner full-plan request:", destination?.name || "general");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -114,7 +115,8 @@ After the plan, output a JSON booking block with real search links for flights, 
 - If solo, include social/meetup opportunities
 - If business, include coworking spots and business-friendly hotels
 - Factor in current season and weather for the destination
-- Maximum 800 words for the entire plan — be dense and actionable`;
+- Maximum 800 words for the entire plan — be dense and actionable
+${language && language !== 'en' ? `\n**🌍 LANGUAGE: Write the ENTIRE travel plan in the user's language (code: "${language}"). All descriptions, tips, recommendations — everything in this language. Only proper nouns (hotel names, airline names, place names) can stay in their original form.**` : ''}`;
 
     const destInfo = destination
       ? `Destination: ${destination.name}, ${destination.country} (${destination.region})

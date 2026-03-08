@@ -30,7 +30,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   citizenship,
   userProfile
 }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const { activePersona } = useDemoPersona();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
@@ -124,6 +124,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
             currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
             currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+            language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
             threatIntelligence: dummyThreats
               .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
@@ -189,6 +190,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
       currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+      language: currentLanguage,
       threatIntelligence: activeThreats || 'No active threats.',
       demoPersonaContext: demoAiContext || undefined,
       userProfile: userProfile ? {
@@ -508,7 +510,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder={isListening ? 'Listening...' : 'Ask me anything about travel...'}
+                  placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
                   className="flex-1"
                   disabled={isTyping}
                 />
@@ -522,7 +524,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-2 text-center">
-                Your proactive concierge • {voiceEnabled ? '🔊 Voice on' : 'Always thinking ahead'}
+                {t('ai.concierge_label')} • {voiceEnabled ? t('ai.voice_on') : t('ai.always_thinking')}
               </p>
             </div>
           </CardContent>

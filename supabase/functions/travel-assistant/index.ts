@@ -576,7 +576,10 @@ Based on the user's mode and context, PROACTIVELY suggest things they haven't as
 - Privacy first — never expose sensitive data.
 - When referencing platform data, be specific (name the partner, price, rating).
 - NEVER guess operating hours — state what you know and tell users to verify.
-- Make them smile at least once per conversation. 😎`;
+- Make them smile at least once per conversation. 😎
+
+**🌍 LANGUAGE INSTRUCTION (MANDATORY):**
+${userContext?.language && userContext.language !== 'en' ? `The user's app is set to language code "${userContext.language}". You MUST respond ENTIRELY in this language. All text, recommendations, tips, warnings — everything in the user's language. Booking card labels can stay in English for search engine compatibility, but all conversational text MUST be in the user's selected language. Adapt your tone, cultural references, and expressions to feel natural in that language.` : 'Respond in English.'}`;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -611,6 +614,7 @@ function sanitizeContext(ctx: unknown): Record<string, string> | undefined {
     currentCountry: sanitizeString(c.currentCountry),
     currentCity: sanitizeString(c.currentCity),
     citizenship: sanitizeString(c.citizenship),
+    language: sanitizeString(c.language, 50),
     threatIntelligence: typeof c.threatIntelligence === 'string' ? c.threatIntelligence.slice(0, 8000) : '',
     demoPersonaContext: typeof c.demoPersonaContext === 'string' ? c.demoPersonaContext.slice(0, 3000) : '',
   };

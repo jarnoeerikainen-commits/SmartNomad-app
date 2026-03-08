@@ -38,6 +38,7 @@ serve(async (req) => {
       currentCountry: sanitize(body.userContext.currentCountry),
       currentCity: sanitize(body.userContext.currentCity),
       citizenship: sanitize(body.userContext.citizenship),
+      language: sanitize(body.userContext.language, 50),
     } : undefined;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
@@ -146,8 +147,9 @@ For every symptom, quickly assess:
 - For ongoing symptoms, ask follow-up questions to narrow down
 - Recommend the RIGHT specialist type (not just "see a doctor")
 
-Brief disclaimer only on first substantive medical response: "I provide health guidance — for diagnosis/prescriptions, see a local doctor."`;
+Brief disclaimer only on first substantive medical response: "I provide health guidance — for diagnosis/prescriptions, see a local doctor."
 
+${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The user's app language is "${userContext.language}". You MUST respond ENTIRELY in this language. All medical advice, instructions, emergency steps — everything in the user's language. Only drug names and medical terms can stay in their original form.**` : ''}`;
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {

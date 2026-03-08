@@ -1,5 +1,12 @@
 import { useState, useCallback, useRef } from 'react';
 
+// Map app language codes to BCP-47 locale codes for STT/TTS
+const LANG_TO_LOCALE: Record<string, string> = {
+  en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR',
+  de: 'de-DE', ar: 'ar-SA', ja: 'ja-JP', it: 'it-IT', ko: 'ko-KR',
+  hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
+};
+
 interface UseVoiceConversationReturn {
   isListening: boolean;
   isSpeaking: boolean;
@@ -11,19 +18,25 @@ interface UseVoiceConversationReturn {
   toggleVoice: () => void;
   sttSupported: boolean;
   ttsSupported: boolean;
+  setLanguage: (lang: string) => void;
 }
 
-export const useVoiceConversation = (): UseVoiceConversationReturn => {
+export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationReturn => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const langRef = useRef(initialLang);
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
   const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+  const setLanguage = useCallback((lang: string) => {
+    langRef.current = lang;
+  }, []);
 
   const startListening = useCallback((onResult: (text: string) => void) => {
     if (!sttSupported) return;
@@ -36,7 +49,7 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
 
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = LANG_TO_LOCALE[langRef.current] || 'en-US';
 
     let finalTranscript = '';
     let silenceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -104,11 +117,19 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
     utterance.rate = 1;
     utterance.pitch = 1;
 
+    const locale = LANG_TO_LOCALE[langRef.current] || 'en-US';
+    const langPrefix = locale.split('-')[0];
+
     const voices = window.speechSynthesis.getVoices();
     const preferred = voices.find(v =>
-      v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))
-    ) || voices.find(v => v.lang.startsWith('en'));
-    if (preferred) utterance.voice = preferred;
+      v.lang.startsWith(langPrefix) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))
+    ) || voices.find(v => v.lang.startsWith(langPrefix));
+    if (preferred) {
+      utterance.voice = preferred;
+      utterance.lang = preferred.lang;
+    } else {
+      utterance.lang = locale;
+    }
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => { setIsSpeaking(false); onComplete?.(); };
@@ -141,5 +162,6 @@ export const useVoiceConversation = (): UseVoiceConversationReturn => {
     toggleVoice,
     sttSupported,
     ttsSupported,
+    setLanguage,
   };
 };

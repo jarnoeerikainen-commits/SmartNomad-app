@@ -1,5 +1,11 @@
 import { useState, useCallback, useRef } from 'react';
 
+const LANG_TO_LOCALE: Record<string, string> = {
+  en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR',
+  de: 'de-DE', ar: 'ar-SA', ja: 'ja-JP', it: 'it-IT', ko: 'ko-KR',
+  hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
+};
+
 interface UseVoiceInputReturn {
   isListening: boolean;
   transcript: string;
@@ -8,7 +14,7 @@ interface UseVoiceInputReturn {
   isSupported: boolean;
 }
 
-export const useVoiceInput = (): UseVoiceInputReturn => {
+export const useVoiceInput = (language = 'en'): UseVoiceInputReturn => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const recognitionRef = useRef<any>(null);
@@ -26,7 +32,7 @@ export const useVoiceInput = (): UseVoiceInputReturn => {
     
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-US';
+    recognition.lang = LANG_TO_LOCALE[language] || 'en-US';
 
     recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
@@ -41,7 +47,7 @@ export const useVoiceInput = (): UseVoiceInputReturn => {
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
-  }, [isSupported]);
+  }, [isSupported, language]);
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop();
