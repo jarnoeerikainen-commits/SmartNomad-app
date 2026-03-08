@@ -273,6 +273,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'visas':
         return <VisaTrackingManager subscription={subscription} countries={countries} />;
       
+      case 'payment-options':
+        return <PaymentOptionsDashboard />;
+      
       case 'public-transport':
         return <PublicTransport currentLocation={detectedLocation} />;
       
