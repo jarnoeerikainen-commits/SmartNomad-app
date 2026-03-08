@@ -578,6 +578,8 @@ Based on the user's mode and context, PROACTIVELY suggest things they haven't as
 - NEVER guess operating hours — state what you know and tell users to verify.
 - Make them smile at least once per conversation. 😎
 
+${userContext?.awardCardsContext ? `${userContext.awardCardsContext}` : ''}
+
 **🌍 LANGUAGE INSTRUCTION (MANDATORY):**
 ${userContext?.language && userContext.language !== 'en' ? `The user's app is set to language code "${userContext.language}". You MUST respond ENTIRELY in this language. All text, recommendations, tips, warnings — everything in the user's language. Booking card labels can stay in English for search engine compatibility, but all conversational text MUST be in the user's selected language. Adapt your tone, cultural references, and expressions to feel natural in that language.` : 'Respond in English.'}`;
 }
