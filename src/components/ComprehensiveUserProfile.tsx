@@ -17,7 +17,7 @@ import {
   Shield, Sparkles, CheckCircle2, AlertCircle, Crown, Lock,
   TrendingUp, Target, Zap, Gift, Mic, MicOff, Car,
   Dumbbell, Coffee, Music, BookOpen, Stethoscope, GraduationCap,
-  ShoppingBag, Baby, PawPrint, Languages
+  ShoppingBag, Baby, PawPrint, Languages, Building2, CreditCard, Receipt
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ComprehensiveUserProfile, ProfileProgress } from '@/types/userProfile';
