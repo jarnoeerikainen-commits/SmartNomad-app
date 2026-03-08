@@ -183,7 +183,7 @@ const AwardCardsDashboard: React.FC = () => {
           <CardContent className="p-4 text-center">
             <AlertTriangle className={`w-5 h-5 mx-auto mb-1 ${expiringCards.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
             <div className="text-2xl font-bold text-foreground">{expiringCards.length}</div>
-            <div className="text-xs text-muted-foreground">Expiring 90d</div>
+            <div className="text-xs text-muted-foreground">{t('award.expiring_90d')}</div>
           </CardContent>
         </Card>
       </div>
