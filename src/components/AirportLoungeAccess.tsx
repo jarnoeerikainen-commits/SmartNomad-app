@@ -26,6 +26,250 @@ import {
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Input } from '@/components/ui/input';
+
+interface VIPLounge {
+  name: string;
+  airport: string;
+  airportCode: string;
+  country: string;
+  region: string;
+  terminal?: string;
+  features: string[];
+  accessMethods: string[];
+  rating: number;
+  pricePerVisit?: number;
+  operatingHours: string;
+}
+
+const VIP_LOUNGES: VIPLounge[] = [
+  // UNITED STATES
+  { name: 'The Centurion Lounge', airport: 'JFK International', airportCode: 'JFK', country: 'United States', region: 'North America', terminal: 'Terminal 4', features: ['Premium dining', 'Cocktail bar', 'Spa treatments', 'Private workspaces'], accessMethods: ['Amex Platinum', 'Amex Centurion'], rating: 4.8, operatingHours: '6:00 AM - 10:00 PM' },
+  { name: 'United Polaris Lounge', airport: 'Newark Liberty', airportCode: 'EWR', country: 'United States', region: 'North America', terminal: 'Terminal C', features: ['À la carte dining', 'Shower suites', 'Daybeds', 'Quiet zone'], accessMethods: ['United Polaris ticket', 'Star Alliance First'], rating: 4.7, operatingHours: '5:00 AM - 11:00 PM' },
+  { name: 'The Centurion Lounge', airport: 'LAX', airportCode: 'LAX', country: 'United States', region: 'North America', terminal: 'Tom Bradley', features: ['Full dining', 'Premium bar', 'Spa', 'Business center'], accessMethods: ['Amex Platinum', 'Amex Centurion'], rating: 4.7, operatingHours: '6:00 AM - 11:00 PM' },
+  { name: 'Capital One Lounge', airport: 'Dallas/Fort Worth', airportCode: 'DFW', country: 'United States', region: 'North America', terminal: 'Terminal D', features: ['Craft cocktails', 'Multi-sensory room', 'Grab-and-go market', 'Yoga room'], accessMethods: ['Capital One Venture X', 'Pay per visit $65'], rating: 4.6, pricePerVisit: 65, operatingHours: '5:30 AM - 10:30 PM' },
+  { name: 'Delta Sky Club', airport: 'Atlanta Hartsfield-Jackson', airportCode: 'ATL', country: 'United States', region: 'North America', features: ['Full bar', 'Hot buffet', 'Shower facilities', 'Sky Deck'], accessMethods: ['Delta One', 'Sky Club membership', 'Amex Delta Reserve'], rating: 4.4, operatingHours: '5:00 AM - 11:00 PM' },
+  { name: 'The Centurion Lounge', airport: 'Miami International', airportCode: 'MIA', country: 'United States', region: 'North America', terminal: 'Concourse D', features: ['Curated menu', 'Wine room', 'Spa treatments', 'Business center'], accessMethods: ['Amex Platinum', 'Amex Centurion'], rating: 4.6, operatingHours: '6:00 AM - 9:00 PM' },
+  { name: 'The Centurion Lounge', airport: 'San Francisco', airportCode: 'SFO', country: 'United States', region: 'North America', terminal: 'Terminal 3', features: ['Chef menu', 'Cocktail program', 'Relaxation room'], accessMethods: ['Amex Platinum', 'Amex Centurion'], rating: 4.6, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // UNITED KINGDOM
+  { name: 'Virgin Atlantic Clubhouse', airport: 'London Heathrow', airportCode: 'LHR', country: 'United Kingdom', region: 'Europe', terminal: 'Terminal 3', features: ['Restaurant', 'Cocktail bar', 'Spa & salon', 'Pool table', 'Jacuzzi'], accessMethods: ['Virgin Atlantic Upper Class', 'Flying Club Gold'], rating: 4.8, operatingHours: '5:30 AM - 10:00 PM' },
+  { name: 'British Airways Galleries First', airport: 'London Heathrow', airportCode: 'LHR', country: 'United Kingdom', region: 'Europe', terminal: 'Terminal 5', features: ['Fine dining', 'Champagne bar', 'Shower suites', 'Work pods'], accessMethods: ['BA First Class', 'Oneworld Emerald'], rating: 4.7, operatingHours: '5:00 AM - 10:30 PM' },
+  { name: 'The Concorde Room', airport: 'London Heathrow', airportCode: 'LHR', country: 'United Kingdom', region: 'Europe', terminal: 'Terminal 5', features: ['Private cabanas', 'Exclusive dining', 'Elemis spa', 'Concorde memorabilia'], accessMethods: ['BA First Class ticket', 'Invitation only'], rating: 4.9, operatingHours: '5:30 AM - 10:00 PM' },
+  { name: 'No.1 Lounge', airport: 'London Gatwick', airportCode: 'LGW', country: 'United Kingdom', region: 'Europe', terminal: 'South Terminal', features: ['Hot meals', 'Bar', 'Runway views', 'Workstations'], accessMethods: ['Priority Pass', 'Pay per visit £40'], rating: 4.3, pricePerVisit: 50, operatingHours: '4:00 AM - 10:00 PM' },
+
+  // UAE
+  { name: 'Emirates First Class Lounge', airport: 'Dubai International', airportCode: 'DXB', country: 'United Arab Emirates', region: 'Middle East', terminal: 'Terminal 3', features: ['Fine dining', 'Moët & Chandon bar', 'Cigar lounge', 'Shower spa', 'Chauffeur service'], accessMethods: ['Emirates First Class'], rating: 4.9, operatingHours: '24 hours' },
+  { name: 'Emirates Business Class Lounge', airport: 'Dubai International', airportCode: 'DXB', country: 'United Arab Emirates', region: 'Middle East', terminal: 'Terminal 3', features: ['Buffet dining', 'Full bar', 'Shower facilities', 'Kids area'], accessMethods: ['Emirates Business', 'Skywards Gold/Platinum'], rating: 4.6, operatingHours: '24 hours' },
+  { name: 'Etihad First Class Lounge', airport: 'Abu Dhabi International', airportCode: 'AUH', country: 'United Arab Emirates', region: 'Middle East', terminal: 'Terminal 3', features: ['Six Senses spa', 'À la carte dining', 'Cigar lounge', 'Nap rooms'], accessMethods: ['Etihad First Class', 'The Residence'], rating: 4.8, operatingHours: '24 hours' },
+
+  // QATAR
+  { name: 'Qatar Airways Al Safwa First Lounge', airport: 'Hamad International', airportCode: 'DOH', country: 'Qatar', region: 'Middle East', features: ['Restaurant', 'Spa', 'Family zone', 'Business center', 'Prayer rooms', 'Nap suites'], accessMethods: ['Qatar Airways First Class'], rating: 4.9, operatingHours: '24 hours' },
+  { name: 'Qatar Airways Al Mourjan Business Lounge', airport: 'Hamad International', airportCode: 'DOH', country: 'Qatar', region: 'Middle East', features: ['Dining hall', 'Quiet rooms', 'Spa', 'Gaming zone', 'Nursery'], accessMethods: ['Qatar Airways Business', 'Oneworld Sapphire+'], rating: 4.7, operatingHours: '24 hours' },
+
+  // SINGAPORE
+  { name: 'Singapore Airlines The Private Room', airport: 'Changi Airport', airportCode: 'SIN', country: 'Singapore', region: 'Asia', terminal: 'Terminal 3', features: ['À la carte dining', 'Private suites', 'Sommelier service', 'Exclusive entry'], accessMethods: ['Singapore Airlines Suites Class'], rating: 4.9, operatingHours: '24 hours' },
+  { name: 'SilverKris First Class Lounge', airport: 'Changi Airport', airportCode: 'SIN', country: 'Singapore', region: 'Asia', terminal: 'Terminal 3', features: ['Fine dining', 'Champagne bar', 'Shower suites', 'Business center'], accessMethods: ['SQ First Class', 'Star Alliance Gold (First)'], rating: 4.7, operatingHours: '24 hours' },
+
+  // HONG KONG
+  { name: 'Cathay Pacific The Pier First Class', airport: 'Hong Kong International', airportCode: 'HKG', country: 'China', region: 'Asia', features: ['The Haven restaurant', 'The Retreat spa', 'Day suites', 'Shower rooms'], accessMethods: ['Cathay Pacific First Class', 'Oneworld Emerald'], rating: 4.8, operatingHours: '5:30 AM - 12:30 AM' },
+  { name: 'Cathay Pacific The Wing First Class', airport: 'Hong Kong International', airportCode: 'HKG', country: 'China', region: 'Asia', features: ['The Long Bar', 'The Haven dining', 'Cabanas', 'Shower suites'], accessMethods: ['Cathay Pacific First Class', 'Oneworld Emerald'], rating: 4.7, operatingHours: '5:30 AM - 12:30 AM' },
+  { name: 'Plaza Premium First', airport: 'Hong Kong International', airportCode: 'HKG', country: 'China', region: 'Asia', features: ['Hot meals', 'Shower suites', 'Private resting suites', 'Bar'], accessMethods: ['Priority Pass', 'Pay per visit $80'], rating: 4.4, pricePerVisit: 80, operatingHours: '24 hours' },
+
+  // JAPAN
+  { name: 'ANA Suite Lounge', airport: 'Tokyo Haneda', airportCode: 'HND', country: 'Japan', region: 'Asia', terminal: 'Terminal 3', features: ['Japanese fine dining', 'Sake bar', 'Shower rooms', 'Nap rooms'], accessMethods: ['ANA First Class', 'Star Alliance Gold (First)'], rating: 4.8, operatingHours: '5:00 AM - 11:30 PM' },
+  { name: 'JAL First Class Lounge', airport: 'Tokyo Narita', airportCode: 'NRT', country: 'Japan', region: 'Asia', terminal: 'Terminal 2', features: ['Sushi bar', 'JAL Original cocktails', 'Shoe shine', 'Massage chairs'], accessMethods: ['JAL First Class', 'Oneworld Emerald'], rating: 4.7, operatingHours: '7:30 AM - 9:00 PM' },
+
+  // SOUTH KOREA
+  { name: 'Korean Air First Class Lounge', airport: 'Incheon International', airportCode: 'ICN', country: 'South Korea', region: 'Asia', terminal: 'Terminal 2', features: ['Korean cuisine', 'Nap rooms', 'Shower suites', 'Business center'], accessMethods: ['Korean Air First Class', 'SkyTeam Elite Plus'], rating: 4.6, operatingHours: '6:00 AM - 10:00 PM' },
+  { name: 'Asiana First Class Lounge', airport: 'Incheon International', airportCode: 'ICN', country: 'South Korea', region: 'Asia', terminal: 'Terminal 1', features: ['Korean dining', 'Wine cellar', 'Shower rooms', 'Relaxation area'], accessMethods: ['Asiana First Class', 'Star Alliance Gold'], rating: 4.5, operatingHours: '6:30 AM - 10:00 PM' },
+
+  // THAILAND
+  { name: 'Thai Airways Royal First Class Lounge', airport: 'Suvarnabhumi', airportCode: 'BKK', country: 'Thailand', region: 'Asia', features: ['Thai fine dining', 'Spa treatments', 'Day rooms', 'Royal Service'], accessMethods: ['Thai First Class', 'Star Alliance Gold (First)'], rating: 4.6, operatingHours: '24 hours' },
+  { name: 'Miracle First Class Lounge', airport: 'Suvarnabhumi', airportCode: 'BKK', country: 'Thailand', region: 'Asia', features: ['Hot meals', 'Spa massage', 'Shower rooms', 'Sleeping pods'], accessMethods: ['Priority Pass', 'DragonPass', 'Pay per visit $50'], rating: 4.3, pricePerVisit: 50, operatingHours: '24 hours' },
+
+  // GERMANY
+  { name: 'Lufthansa First Class Terminal', airport: 'Frankfurt', airportCode: 'FRA', country: 'Germany', region: 'Europe', features: ['Private terminal', 'Fine dining', 'Cigar lounge', 'Personal assistant', 'Porsche transfer to plane'], accessMethods: ['Lufthansa First Class', 'HON Circle'], rating: 4.9, operatingHours: '6:00 AM - 10:00 PM' },
+  { name: 'Lufthansa Senator Lounge', airport: 'Munich', airportCode: 'MUC', country: 'Germany', region: 'Europe', terminal: 'Terminal 2', features: ['Hot buffet', 'Bar', 'Shower suites', 'Business center', 'Rest area'], accessMethods: ['Lufthansa Senator', 'Star Alliance Gold'], rating: 4.5, operatingHours: '5:30 AM - 10:00 PM' },
+
+  // FRANCE
+  { name: 'Air France La Première Lounge', airport: 'Paris Charles de Gaulle', airportCode: 'CDG', country: 'France', region: 'Europe', terminal: 'Terminal 2E', features: ['Alain Ducasse dining', 'Biologique Recherche spa', 'Sommelier', 'Personal assistant'], accessMethods: ['Air France La Première'], rating: 4.8, operatingHours: '6:00 AM - 11:00 PM' },
+  { name: 'Star Alliance Lounge', airport: 'Paris Charles de Gaulle', airportCode: 'CDG', country: 'France', region: 'Europe', terminal: 'Terminal 1', features: ['Buffet dining', 'Bar', 'Rest area', 'Shower rooms'], accessMethods: ['Star Alliance Gold', 'Business Class ticket'], rating: 4.3, operatingHours: '5:30 AM - 11:00 PM' },
+
+  // TURKEY
+  { name: 'Turkish Airlines Lounge Istanbul', airport: 'Istanbul Airport', airportCode: 'IST', country: 'Turkey', region: 'Middle East', features: ['Turkish cuisine', 'Massage service', 'Golf simulator', 'Cinema', 'Library', 'Game room', 'Sleep pods'], accessMethods: ['Turkish Airlines Business', 'Star Alliance Gold', 'Miles&Smiles Elite'], rating: 4.8, operatingHours: '24 hours' },
+
+  // AUSTRALIA
+  { name: 'Qantas First Lounge', airport: 'Sydney Kingsford Smith', airportCode: 'SYD', country: 'Australia', region: 'Oceania', terminal: 'International', features: ['Neil Perry dining', 'Spa by Payot', 'Full bar', 'Shower suites'], accessMethods: ['Qantas First Class', 'Oneworld Emerald', 'Qantas Chairman Lounge invite'], rating: 4.7, operatingHours: '5:30 AM - 11:00 PM' },
+  { name: 'Qantas Business Lounge', airport: 'Melbourne Tullamarine', airportCode: 'MEL', country: 'Australia', region: 'Oceania', terminal: 'International', features: ['Rockpool menu', 'Cocktail bar', 'Barista coffee', 'Shower suites'], accessMethods: ['Qantas Business', 'Oneworld Sapphire'], rating: 4.5, operatingHours: '5:00 AM - 11:00 PM' },
+
+  // NEW ZEALAND
+  { name: 'Air New Zealand Strata Lounge', airport: 'Auckland Airport', airportCode: 'AKL', country: 'New Zealand', region: 'Oceania', features: ['NZ cuisine', 'Cocktail bar', 'Shower suites', 'Work pods'], accessMethods: ['Air NZ Business Premier', 'Star Alliance Gold', 'Priority Pass'], rating: 4.4, operatingHours: '4:30 AM - Last departure' },
+
+  // SOUTH AFRICA
+  { name: 'SLOW Lounge', airport: 'O.R. Tambo International', airportCode: 'JNB', country: 'South Africa', region: 'Africa', terminal: 'International', features: ['South African cuisine', 'Full bar', 'Business center', 'Shower facilities'], accessMethods: ['Priority Pass', 'Bidvest membership', 'Pay per visit $35'], rating: 4.3, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // KENYA
+  { name: 'Pride Lounge', airport: 'Jomo Kenyatta International', airportCode: 'NBO', country: 'Kenya', region: 'Africa', terminal: 'Terminal 1A', features: ['African cuisine', 'Bar', 'WiFi', 'Shower rooms'], accessMethods: ['Priority Pass', 'Pay per visit $40'], rating: 4.1, pricePerVisit: 40, operatingHours: '24 hours' },
+
+  // EGYPT
+  { name: 'Star Alliance Gold Lounge', airport: 'Cairo International', airportCode: 'CAI', country: 'Egypt', region: 'Africa', terminal: 'Terminal 3', features: ['Egyptian cuisine', 'Full bar', 'Shower rooms', 'Business center'], accessMethods: ['Star Alliance Gold', 'Priority Pass'], rating: 4.2, operatingHours: '24 hours' },
+
+  // BRAZIL
+  { name: 'Star Alliance Lounge GRU', airport: 'São Paulo Guarulhos', airportCode: 'GRU', country: 'Brazil', region: 'South America', terminal: 'Terminal 3', features: ['Brazilian cuisine', 'Bar', 'Shower suites', 'Rest area'], accessMethods: ['Star Alliance Gold', 'Business Class ticket'], rating: 4.3, operatingHours: '24 hours' },
+  { name: 'LATAM VIP Lounge', airport: 'São Paulo Guarulhos', airportCode: 'GRU', country: 'Brazil', region: 'South America', terminal: 'Terminal 3', features: ['Hot buffet', 'Bar', 'Shower rooms', 'Kids area'], accessMethods: ['LATAM Business', 'LATAM Pass Black'], rating: 4.2, operatingHours: '5:00 AM - 11:00 PM' },
+
+  // ARGENTINA
+  { name: 'Aerolíneas Argentinas Salón Cóndor', airport: 'Buenos Aires Ezeiza', airportCode: 'EZE', country: 'Argentina', region: 'South America', features: ['Argentine cuisine', 'Malbec wine bar', 'Shower rooms'], accessMethods: ['AA Business', 'SkyTeam Elite Plus', 'Priority Pass'], rating: 4.1, operatingHours: '24 hours' },
+
+  // MEXICO
+  { name: 'Centurion Lounge MEX', airport: 'Mexico City International', airportCode: 'MEX', country: 'Mexico', region: 'North America', terminal: 'Terminal 2', features: ['Mexican chef menu', 'Tequila bar', 'Spa', 'Business center'], accessMethods: ['Amex Platinum', 'Amex Centurion'], rating: 4.6, operatingHours: '6:00 AM - 10:00 PM' },
+
+  // CANADA
+  { name: 'Air Canada Maple Leaf Lounge', airport: 'Toronto Pearson', airportCode: 'YYZ', country: 'Canada', region: 'North America', terminal: 'Terminal 1', features: ['Hot buffet', 'Full bar', 'Shower suites', 'Business center'], accessMethods: ['Air Canada Business', 'Star Alliance Gold', 'Maple Leaf membership'], rating: 4.4, operatingHours: '5:00 AM - 10:00 PM' },
+  { name: 'Plaza Premium Lounge', airport: 'Vancouver International', airportCode: 'YVR', country: 'Canada', region: 'North America', terminal: 'International', features: ['Asian & Western dining', 'Nap zone', 'Shower suites', 'Live kitchen'], accessMethods: ['Priority Pass', 'Pay per visit $55'], rating: 4.5, pricePerVisit: 55, operatingHours: '24 hours' },
+
+  // INDIA
+  { name: 'GVK Lounge', airport: 'Mumbai Chhatrapati Shivaji', airportCode: 'BOM', country: 'India', region: 'Asia', terminal: 'Terminal 2', features: ['Indian cuisine', 'Bar', 'Spa treatments', 'Nap rooms', 'Shower suites'], accessMethods: ['Priority Pass', 'Business Class ticket', 'Pay per visit $45'], rating: 4.4, pricePerVisit: 45, operatingHours: '24 hours' },
+  { name: 'ITC Green Lounge', airport: 'Delhi Indira Gandhi', airportCode: 'DEL', country: 'India', region: 'Asia', terminal: 'Terminal 3', features: ['Indian & international cuisine', 'Bar', 'Business center', 'Shower rooms'], accessMethods: ['Priority Pass', 'Pay per visit $40'], rating: 4.3, pricePerVisit: 40, operatingHours: '24 hours' },
+
+  // MALAYSIA
+  { name: 'Malaysia Airlines Golden Lounge', airport: 'Kuala Lumpur International', airportCode: 'KUL', country: 'Malaysia', region: 'Asia', terminal: 'KLIA Main', features: ['Malaysian cuisine', 'Bar', 'Shower suites', 'Business center', 'Nap rooms'], accessMethods: ['Malaysia Airlines Business', 'Oneworld Sapphire+', 'Enrich Platinum'], rating: 4.5, operatingHours: '24 hours' },
+
+  // INDONESIA
+  { name: 'Garuda Indonesia First Class Lounge', airport: 'Jakarta Soekarno-Hatta', airportCode: 'CGK', country: 'Indonesia', region: 'Asia', terminal: 'Terminal 3', features: ['Indonesian cuisine', 'Spa massage', 'Shower suites', 'Private rooms'], accessMethods: ['Garuda First Class', 'SkyTeam Elite Plus'], rating: 4.4, operatingHours: '24 hours' },
+
+  // NETHERLANDS
+  { name: 'KLM Crown Lounge', airport: 'Amsterdam Schiphol', airportCode: 'AMS', country: 'Netherlands', region: 'Europe', features: ['Dutch cuisine', 'Heineken bar', 'Shower suites', 'Business pods', 'Panoramic views'], accessMethods: ['KLM Business', 'SkyTeam Elite Plus', 'Flying Blue Platinum'], rating: 4.5, operatingHours: '5:00 AM - 11:00 PM' },
+
+  // SWITZERLAND
+  { name: 'SWISS First Class Lounge', airport: 'Zürich Airport', airportCode: 'ZRH', country: 'Switzerland', region: 'Europe', features: ['Swiss fine dining', 'Swiss wines', 'Day rooms', 'Shower suites'], accessMethods: ['SWISS First Class', 'Lufthansa HON Circle'], rating: 4.7, operatingHours: '5:30 AM - 10:00 PM' },
+
+  // FINLAND
+  { name: 'Finnair Premium Lounge', airport: 'Helsinki-Vantaa', airportCode: 'HEL', country: 'Finland', region: 'Europe', features: ['Nordic cuisine', 'Sauna', 'Shower suites', 'Quiet zone'], accessMethods: ['Finnair Business', 'Oneworld Sapphire+', 'Finnair Plus Platinum'], rating: 4.5, operatingHours: '5:00 AM - 11:00 PM' },
+
+  // SPAIN
+  { name: 'Iberia Velázquez Premium Lounge', airport: 'Madrid Barajas', airportCode: 'MAD', country: 'Spain', region: 'Europe', terminal: 'Terminal 4S', features: ['Spanish tapas', 'Full bar', 'Shower suites', 'Relaxation zone'], accessMethods: ['Iberia Business Plus', 'Oneworld Emerald'], rating: 4.5, operatingHours: '5:30 AM - 11:00 PM' },
+
+  // PORTUGAL
+  { name: 'ANA Star Alliance Lounge', airport: 'Lisbon Humberto Delgado', airportCode: 'LIS', country: 'Portugal', region: 'Europe', terminal: 'Terminal 1', features: ['Portuguese cuisine', 'Port wine', 'Shower rooms', 'Business center'], accessMethods: ['Star Alliance Gold', 'TAP Business'], rating: 4.3, operatingHours: '6:00 AM - 10:00 PM' },
+
+  // ITALY
+  { name: 'Sala Montale VIP Lounge', airport: 'Milan Malpensa', airportCode: 'MXP', country: 'Italy', region: 'Europe', terminal: 'Terminal 1', features: ['Italian dining', 'Full bar', 'Shower suites', 'Rest zone'], accessMethods: ['Priority Pass', 'Pay per visit €40'], rating: 4.3, pricePerVisit: 45, operatingHours: '6:00 AM - 10:00 PM' },
+
+  // SAUDI ARABIA
+  { name: 'Al Fursan Golden Lounge', airport: 'King Abdulaziz International', airportCode: 'JED', country: 'Saudi Arabia', region: 'Middle East', features: ['Arabian cuisine', 'Prayer rooms', 'Business center', 'Shower suites'], accessMethods: ['Saudia First Class', 'SkyTeam Elite Plus'], rating: 4.4, operatingHours: '24 hours' },
+
+  // OMAN
+  { name: 'Oman Air First & Business Class Lounge', airport: 'Muscat International', airportCode: 'MCT', country: 'Oman', region: 'Middle East', features: ['Omani cuisine', 'Full bar', 'Spa', 'Nap rooms', 'Kids play area'], accessMethods: ['Oman Air First/Business', 'Priority Pass'], rating: 4.5, operatingHours: '24 hours' },
+
+  // BAHRAIN
+  { name: 'Gulf Air Falcon Gold Lounge', airport: 'Bahrain International', airportCode: 'BAH', country: 'Bahrain', region: 'Middle East', features: ['Arabic cuisine', 'Full bar', 'Spa treatments', 'Gaming area'], accessMethods: ['Gulf Air Business', 'FalconFlyer Gold'], rating: 4.3, operatingHours: '24 hours' },
+
+  // MOROCCO
+  { name: 'Pearl Lounge', airport: 'Marrakech Menara', airportCode: 'RAK', country: 'Morocco', region: 'Africa', features: ['Moroccan cuisine', 'Tea service', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $35'], rating: 4.1, pricePerVisit: 35, operatingHours: '6:00 AM - Last flight' },
+
+  // ETHIOPIA
+  { name: 'Ethiopian Airlines Cloud 9 Lounge', airport: 'Addis Ababa Bole', airportCode: 'ADD', country: 'Ethiopia', region: 'Africa', features: ['Ethiopian cuisine', 'Full bar', 'Shower rooms', 'Business center'], accessMethods: ['Ethiopian Business', 'Star Alliance Gold', 'Priority Pass'], rating: 4.3, operatingHours: '24 hours' },
+
+  // COLOMBIA
+  { name: 'Avianca Sala VIP', airport: 'Bogotá El Dorado', airportCode: 'BOG', country: 'Colombia', region: 'South America', features: ['Colombian cuisine', 'Bar', 'Shower rooms', 'Rest area'], accessMethods: ['Avianca Business', 'Star Alliance Gold', 'LifeMiles Diamond'], rating: 4.2, operatingHours: '24 hours' },
+
+  // CHILE
+  { name: 'LATAM VIP Lounge SCL', airport: 'Santiago Arturo Merino Benítez', airportCode: 'SCL', country: 'Chile', region: 'South America', features: ['Chilean cuisine', 'Wine tasting', 'Shower suites', 'Business center'], accessMethods: ['LATAM Business', 'LATAM Pass Black', 'Oneworld Emerald'], rating: 4.3, operatingHours: '24 hours' },
+
+  // PANAMA
+  { name: 'Copa Club', airport: 'Panama City Tocumen', airportCode: 'PTY', country: 'Panama', region: 'South America', terminal: 'Terminal 2', features: ['Latin cuisine', 'Full bar', 'Shower rooms', 'Rest area'], accessMethods: ['Copa Business', 'Star Alliance Gold', 'ConnectMiles Platinum'], rating: 4.2, operatingHours: '24 hours' },
+
+  // TAIWAN
+  { name: 'EVA Air The Infinity', airport: 'Taipei Taoyuan', airportCode: 'TPE', country: 'Taiwan', region: 'Asia', terminal: 'Terminal 2', features: ['Taiwanese cuisine', 'Bar', 'Shower suites', 'Nap rooms', 'Business pods'], accessMethods: ['EVA Air Royal Laurel', 'Star Alliance Gold'], rating: 4.5, operatingHours: '24 hours' },
+
+  // PHILIPPINES
+  { name: 'PAGSS Premium Lounge', airport: 'Manila Ninoy Aquino', airportCode: 'MNL', country: 'Philippines', region: 'Asia', terminal: 'Terminal 3', features: ['Filipino cuisine', 'Bar', 'Massage chairs', 'Shower rooms'], accessMethods: ['Priority Pass', 'Pay per visit $35'], rating: 4.1, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // VIETNAM
+  { name: 'Vietnam Airlines Lotus Lounge', airport: 'Ho Chi Minh City Tan Son Nhat', airportCode: 'SGN', country: 'Vietnam', region: 'Asia', terminal: 'International', features: ['Vietnamese cuisine', 'Bar', 'Shower rooms', 'WiFi'], accessMethods: ['Vietnam Airlines Business', 'SkyTeam Elite Plus', 'Lotus Miles Titanium'], rating: 4.2, operatingHours: '24 hours' },
+
+  // IRELAND
+  { name: 'US Preclearance Lounge', airport: 'Dublin Airport', airportCode: 'DUB', country: 'Ireland', region: 'Europe', terminal: 'Terminal 2', features: ['Irish cuisine', 'Bar', 'Business center', 'Shower rooms'], accessMethods: ['Priority Pass', 'Aer Lingus Business', 'Pay per visit €35'], rating: 4.3, pricePerVisit: 40, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // GREECE
+  { name: 'Goldair Handling CIP Lounge', airport: 'Athens Eleftherios Venizelos', airportCode: 'ATH', country: 'Greece', region: 'Europe', features: ['Greek cuisine', 'Full bar', 'Shower rooms', 'Business center'], accessMethods: ['Priority Pass', 'Pay per visit €40'], rating: 4.2, pricePerVisit: 45, operatingHours: '24 hours' },
+
+  // NORWAY
+  { name: 'OSL Lounge', airport: 'Oslo Gardermoen', airportCode: 'OSL', country: 'Norway', region: 'Europe', features: ['Scandinavian cuisine', 'Full bar', 'Shower rooms', 'Quiet zone'], accessMethods: ['Priority Pass', 'SAS Business', 'Star Alliance Gold'], rating: 4.3, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // DENMARK
+  { name: 'SAS Lounge', airport: 'Copenhagen Kastrup', airportCode: 'CPH', country: 'Denmark', region: 'Europe', features: ['Danish cuisine', 'Bar', 'Shower rooms', 'Work pods', 'Kids area'], accessMethods: ['SAS Business', 'Star Alliance Gold', 'EuroBonus Gold'], rating: 4.4, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // CZECH REPUBLIC
+  { name: 'Erste Premier Lounge', airport: 'Prague Václav Havel', airportCode: 'PRG', country: 'Czech Republic', region: 'Europe', features: ['Czech cuisine', 'Czech beer', 'Shower rooms', 'Business center'], accessMethods: ['Priority Pass', 'Pay per visit €35'], rating: 4.2, pricePerVisit: 40, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // POLAND
+  { name: 'Polonez Lounge', airport: 'Warsaw Chopin', airportCode: 'WAW', country: 'Poland', region: 'Europe', features: ['Polish cuisine', 'Full bar', 'Shower rooms', 'Rest area'], accessMethods: ['LOT Business', 'Star Alliance Gold', 'Priority Pass'], rating: 4.2, operatingHours: '24 hours' },
+
+  // RUSSIA
+  { name: 'Aeroflot Jazz Lounge', airport: 'Moscow Sheremetyevo', airportCode: 'SVO', country: 'Russia', region: 'Europe', terminal: 'Terminal D', features: ['Russian cuisine', 'Bar', 'Shower rooms', 'Business center'], accessMethods: ['Aeroflot Business', 'SkyTeam Elite Plus', 'Priority Pass'], rating: 4.3, operatingHours: '24 hours' },
+
+  // ISRAEL
+  { name: 'Dan Lounge', airport: 'Tel Aviv Ben Gurion', airportCode: 'TLV', country: 'Israel', region: 'Middle East', terminal: 'Terminal 3', features: ['Israeli cuisine', 'Full bar', 'Shower rooms', 'Business center'], accessMethods: ['Priority Pass', 'El Al Business', 'Pay per visit $45'], rating: 4.4, pricePerVisit: 45, operatingHours: '24 hours' },
+
+  // JORDAN
+  { name: 'Royal Jordanian Crown Lounge', airport: 'Amman Queen Alia', airportCode: 'AMM', country: 'Jordan', region: 'Middle East', features: ['Arabic cuisine', 'Full bar', 'Shower rooms', 'Prayer rooms'], accessMethods: ['Royal Jordanian Business', 'Oneworld Emerald', 'Priority Pass'], rating: 4.2, operatingHours: '24 hours' },
+
+  // MALDIVES
+  { name: 'Moonimaa Lounge', airport: 'Velana International', airportCode: 'MLE', country: 'Maldives', region: 'Asia', features: ['Maldivian cuisine', 'Cocktail bar', 'Shower rooms', 'Terrace'], accessMethods: ['Priority Pass', 'Pay per visit $40'], rating: 4.1, pricePerVisit: 40, operatingHours: '24 hours' },
+
+  // SRI LANKA
+  { name: 'SriLankan Airlines Serenity Lounge', airport: 'Bandaranaike International', airportCode: 'CMB', country: 'Sri Lanka', region: 'Asia', features: ['Sri Lankan cuisine', 'Full bar', 'Shower rooms', 'Nap area'], accessMethods: ['SriLankan Business', 'Oneworld Sapphire+', 'Priority Pass'], rating: 4.2, operatingHours: '24 hours' },
+
+  // NEPAL
+  { name: 'TIA VIP Lounge', airport: 'Tribhuvan International', airportCode: 'KTM', country: 'Nepal', region: 'Asia', features: ['Nepali cuisine', 'Bar', 'WiFi', 'Mountain views'], accessMethods: ['Priority Pass', 'Pay per visit $25'], rating: 3.8, pricePerVisit: 25, operatingHours: '6:00 AM - 10:00 PM' },
+
+  // GEORGIA
+  { name: 'Business Lounge TBS', airport: 'Tbilisi International', airportCode: 'TBS', country: 'Georgia', region: 'Europe', features: ['Georgian cuisine', 'Wine bar', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $30'], rating: 4.2, pricePerVisit: 30, operatingHours: '24 hours' },
+
+  // COSTA RICA
+  { name: 'VIP Lounge SJO', airport: 'Juan Santamaría International', airportCode: 'SJO', country: 'Costa Rica', region: 'North America', features: ['Costa Rican cuisine', 'Full bar', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $40'], rating: 4.0, pricePerVisit: 40, operatingHours: '5:00 AM - 10:00 PM' },
+
+  // PERU
+  { name: 'Sumaq VIP Lounge', airport: 'Lima Jorge Chávez', airportCode: 'LIM', country: 'Peru', region: 'South America', features: ['Peruvian cuisine', 'Pisco bar', 'Shower rooms', 'Business center'], accessMethods: ['Priority Pass', 'Pay per visit $45'], rating: 4.2, pricePerVisit: 45, operatingHours: '24 hours' },
+
+  // NIGERIA
+  { name: 'GAT VIP Lounge', airport: 'Lagos Murtala Muhammed', airportCode: 'LOS', country: 'Nigeria', region: 'Africa', terminal: 'International', features: ['Nigerian cuisine', 'Full bar', 'Business center', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $40'], rating: 3.9, pricePerVisit: 40, operatingHours: '24 hours' },
+
+  // GHANA
+  { name: 'Aviance Ghana VIP Lounge', airport: 'Kotoka International', airportCode: 'ACC', country: 'Ghana', region: 'Africa', terminal: 'Terminal 3', features: ['Ghanaian cuisine', 'Bar', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $35'], rating: 4.0, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // TANZANIA
+  { name: 'CIP Lounge', airport: 'Julius Nyerere International', airportCode: 'DAR', country: 'Tanzania', region: 'Africa', features: ['East African cuisine', 'Bar', 'WiFi', 'Rest area'], accessMethods: ['Priority Pass', 'Pay per visit $30'], rating: 3.8, pricePerVisit: 30, operatingHours: '24 hours' },
+
+  // URUGUAY
+  { name: 'VIP Lounge Carrasco', airport: 'Montevideo Carrasco', airportCode: 'MVD', country: 'Uruguay', region: 'South America', features: ['Uruguayan cuisine', 'Wine bar', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $35'], rating: 4.1, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // ECUADOR
+  { name: 'VIP Lounge UIO', airport: 'Quito Mariscal Sucre', airportCode: 'UIO', country: 'Ecuador', region: 'South America', features: ['Ecuadorian cuisine', 'Bar', 'Shower rooms', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $35'], rating: 4.0, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // MONGOLIA
+  { name: 'Best VIP Lounge', airport: 'Chinggis Khaan International', airportCode: 'UBN', country: 'Mongolia', region: 'Asia', features: ['Mongolian cuisine', 'Bar', 'Rest area', 'WiFi'], accessMethods: ['Priority Pass', 'Pay per visit $25'], rating: 3.7, pricePerVisit: 25, operatingHours: '6:00 AM - 10:00 PM' },
+
+  // ICELAND
+  { name: 'Saga Lounge', airport: 'Keflavík International', airportCode: 'KEF', country: 'Iceland', region: 'Europe', features: ['Icelandic cuisine', 'Bar', 'Shower rooms', 'Northern lights view room'], accessMethods: ['Icelandair Saga Class', 'Priority Pass', 'Pay per visit $50'], rating: 4.4, pricePerVisit: 50, operatingHours: '4:00 AM - Last departure' },
+
+  // FIJI
+  { name: 'Fiji Airways Tabua Club', airport: 'Nadi International', airportCode: 'NAN', country: 'Fiji', region: 'Oceania', features: ['Fijian cuisine', 'Bar', 'Shower rooms', 'Garden views'], accessMethods: ['Fiji Airways Business', 'Priority Pass', 'Pay per visit $35'], rating: 4.0, pricePerVisit: 35, operatingHours: '24 hours' },
+
+  // MAURITIUS
+  { name: 'Amédée Maingard Lounge', airport: 'Sir Seewoosagur Ramgoolam', airportCode: 'MRU', country: 'Mauritius', region: 'Africa', features: ['Mauritian cuisine', 'Bar', 'Shower rooms', 'WiFi'], accessMethods: ['Air Mauritius Business', 'Priority Pass'], rating: 4.1, operatingHours: '24 hours' },
+
+  // JAMAICA
+  { name: 'Club Kingston', airport: 'Norman Manley International', airportCode: 'KIN', country: 'Jamaica', region: 'North America', features: ['Jamaican cuisine', 'Cocktail bar', 'Shower rooms', 'Business center'], accessMethods: ['Priority Pass', 'Pay per visit $45'], rating: 4.2, pricePerVisit: 45, operatingHours: '24 hours' },
+
+  // PHILIPPINES (Manila addition - Clark)
+  { name: 'Aerotel Transit Hotel & Lounge', airport: 'Clark International', airportCode: 'CRK', country: 'Philippines', region: 'Asia', features: ['Filipino cuisine', 'Nap rooms', 'Shower suites', 'WiFi'], accessMethods: ['Pay per visit $30'], rating: 3.9, pricePerVisit: 30, operatingHours: '24 hours' },
+];
+
+const LOUNGE_REGIONS = ['All', 'North America', 'Europe', 'Asia', 'Middle East', 'Oceania', 'Africa', 'South America'];
 
 interface AirportLoungeAccessProps {
   currentLocation: LocationData | null;
