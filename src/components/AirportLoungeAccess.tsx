@@ -7,24 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Crown, Plane, Wifi, Coffee, Utensils, Briefcase, Sparkles, TrendingUp, CreditCard, DollarSign, MapPin, Star, Shield, CheckCircle2, ExternalLink, Calculator, Globe, Search
 } from 'lucide-react';
-  Crown, 
-  Plane, 
-  Wifi, 
-  Coffee, 
-  Utensils, 
-  Briefcase, 
-  Sparkles,
-  TrendingUp,
-  CreditCard,
-  DollarSign,
-  MapPin,
-  Star,
-  Shield,
-  CheckCircle2,
-  ExternalLink,
-  Calculator,
-  Globe
-} from 'lucide-react';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
