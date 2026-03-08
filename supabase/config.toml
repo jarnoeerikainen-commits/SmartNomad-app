@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.moving-ai-assistant]
 verify_jwt = false
+
+[functions.city-services]
+verify_jwt = false
