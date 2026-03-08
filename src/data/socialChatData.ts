@@ -1,462 +1,416 @@
 import { SocialProfile, ChatRoom, ChatMessage } from '@/types/socialChat';
 
 // Beautiful, professional avatar URLs using Unsplash - diverse and attractive
-const AVATAR_URLS = {
-  // Women - beautiful and professional
-  sarah: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
-  lena: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-  elena: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
-  maria: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face',
-  sophie: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-  nina: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face',
-  emma: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
-  lisa: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face',
-  yuki: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face',
-  rachel: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=face',
-  anna: 'https://images.unsplash.com/photo-1499887142886-791eca5918cd?w=150&h=150&fit=crop&crop=face',
-  priya: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
-  fatima: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face',
-  
-  // Men - handsome and professional
-  mike: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-  tom: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-  alex: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
-  raj: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face',
-  marcus: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face',
-  chris: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop&crop=face',
-  david: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop&crop=face',
-  john: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face',
-  james: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
-  carlos: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
-  lucas: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face',
-  omar: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop&crop=face',
-  miguel: 'https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?w=150&h=150&fit=crop&crop=face',
+export const AVATAR_URLS: Record<string, string> = {
+  // Women
+  w1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=face',
+  w2: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+  w3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face',
+  w4: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face',
+  w5: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+  w6: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face',
+  w7: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150&h=150&fit=crop&crop=face',
+  w8: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop&crop=face',
+  w9: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face',
+  w10: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=150&h=150&fit=crop&crop=face',
+  w11: 'https://images.unsplash.com/photo-1499887142886-791eca5918cd?w=150&h=150&fit=crop&crop=face',
+  w12: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face',
+  w13: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face',
+  w14: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=150&h=150&fit=crop&crop=face',
+  w15: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&h=150&fit=crop&crop=face',
+  w16: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=150&h=150&fit=crop&crop=face',
+  w17: 'https://images.unsplash.com/photo-1485893086445-ed75865251e0?w=150&h=150&fit=crop&crop=face',
+  w18: 'https://images.unsplash.com/photo-1521146764736-56c929d59c83?w=150&h=150&fit=crop&crop=face',
+  w19: 'https://images.unsplash.com/photo-1546961342-ea1f71b193f3?w=150&h=150&fit=crop&crop=face',
+  w20: 'https://images.unsplash.com/photo-1557862921-37829c790f19?w=150&h=150&fit=crop&crop=face',
+  // Men
+  m1: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+  m2: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+  m3: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
+  m4: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face',
+  m5: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face',
+  m6: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop&crop=face',
+  m7: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&h=150&fit=crop&crop=face',
+  m8: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face',
+  m9: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+  m10: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
+  m11: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=face',
+  m12: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=150&h=150&fit=crop&crop=face',
+  m13: 'https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?w=150&h=150&fit=crop&crop=face',
+  m14: 'https://images.unsplash.com/photo-1548372290-8d01b6c8e78c?w=150&h=150&fit=crop&crop=face',
+  m15: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&h=150&fit=crop&crop=face',
+  m16: 'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?w=150&h=150&fit=crop&crop=face',
+  m17: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=150&h=150&fit=crop&crop=face',
+  m18: 'https://images.unsplash.com/photo-1545167622-3a6ac756afa4?w=150&h=150&fit=crop&crop=face',
+  m19: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop&crop=face',
+  m20: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&h=150&fit=crop&crop=face',
 };
 
-export const socialProfiles: SocialProfile[] = [
-  {
-    id: '1',
-    basicInfo: {
-      name: 'Sarah Chen',
-      avatar: AVATAR_URLS.sarah,
-      age: 29,
-      languages: ['English', 'Mandarin', 'Portuguese'],
-      tagline: 'UX designer building the future of remote work'
-    },
-    travelerType: 'digital_nomad',
-    professional: {
-      industry: 'Tech',
-      company: 'Remote Startup',
-      skills: ['UX Design', 'Frontend Development', 'Product Strategy'],
-      interests: ['Co-working', 'Hiking', 'Photography', 'Coffee Culture']
-    },
+const av = (key: string) => AVATAR_URLS[key] || AVATAR_URLS.m1;
+
+// 20 Major Cities
+const CITIES = [
+  'London', 'New York', 'Tokyo', 'Singapore', 'Dubai', 'Paris', 'Berlin', 'Bangkok', 'Lisbon', 'Barcelona',
+  'Sydney', 'Toronto', 'Amsterdam', 'Seoul', 'Miami', 'Bali', 'Hong Kong', 'Milan', 'Stockholm', 'Helsinki'
+] as const;
+
+const COUNTRIES: Record<string, string> = {
+  London: 'UK', 'New York': 'USA', Tokyo: 'Japan', Singapore: 'Singapore', Dubai: 'UAE',
+  Paris: 'France', Berlin: 'Germany', Bangkok: 'Thailand', Lisbon: 'Portugal', Barcelona: 'Spain',
+  Sydney: 'Australia', Toronto: 'Canada', Amsterdam: 'Netherlands', Seoul: 'South Korea',
+  Miami: 'USA', Bali: 'Indonesia', 'Hong Kong': 'China', Milan: 'Italy', Stockholm: 'Sweden', Helsinki: 'Finland'
+};
+
+type TType = SocialProfile['travelerType'];
+type TFreq = SocialProfile['mobility']['travelFrequency'];
+type Status = SocialProfile['status'];
+
+interface ProfileSeed {
+  name: string; age: number; avatar: string; langs: string[]; tagline: string;
+  type: TType; industry: string; company: string; skills: string[]; interests: string[];
+  city: string; freq: TFreq; status: Status;
+  nextCity?: string; nextDate?: string; nextPurpose?: string;
+}
+
+// Helper to build profile from seed
+function buildProfile(id: number, s: ProfileSeed): SocialProfile {
+  const country = COUNTRIES[s.city] || 'Unknown';
+  const nextDests = s.nextCity ? [{
+    city: s.nextCity, country: COUNTRIES[s.nextCity] || 'Unknown',
+    arrivalDate: new Date(s.nextDate || '2026-04-01'),
+    purpose: s.nextPurpose || 'Travel', visibility: 'public' as const,
+  }] : [];
+  const trustScore = 82 + Math.floor(Math.random() * 16);
+  const vLevel = trustScore > 92 ? 'premium' : trustScore > 85 ? 'verified' : 'basic';
+  return {
+    id: String(id),
+    basicInfo: { name: s.name, avatar: s.avatar, age: s.age, languages: s.langs, tagline: s.tagline },
+    travelerType: s.type,
+    professional: { industry: s.industry, company: s.company, skills: s.skills, interests: s.interests },
     mobility: {
-      currentLocation: { city: 'Lisbon', country: 'Portugal', since: new Date('2025-11-01') },
-      nextDestinations: [
-        { city: 'Bangkok', country: 'Thailand', arrivalDate: new Date('2026-03-15'), departureDate: new Date('2026-05-30'), purpose: 'Digital nomad work', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
+      currentLocation: { city: s.city, country, since: new Date('2025-11-01') },
+      nextDestinations: nextDests,
+      travelFrequency: s.freq,
     },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Co-working partners, local insights, hiking buddies', visibility: 'public' },
-    verification: { level: 'verified', badges: ['SuperNomad Member', 'Frequent Traveler', 'Community Endorsed'], trustScore: 92 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '2',
-    basicInfo: { name: 'James Rodriguez', avatar: AVATAR_URLS.james, age: 42, languages: ['English', 'Spanish'], tagline: 'Investment banker connecting global markets' },
-    travelerType: 'business_traveler',
-    professional: { industry: 'Finance', company: 'Global Bank Inc', skills: ['Investment Banking', 'Market Analysis', 'M&A'], interests: ['Golf', 'Fine Dining', 'Networking Events', 'Wine'] },
-    mobility: {
-      currentLocation: { city: 'New York', country: 'USA', since: new Date('2026-01-10') },
-      nextDestinations: [
-        { city: 'London', country: 'UK', arrivalDate: new Date('2026-03-01'), departureDate: new Date('2026-03-06'), purpose: 'Client meetings', visibility: 'connections' },
-        { city: 'Singapore', country: 'Singapore', arrivalDate: new Date('2026-03-20'), departureDate: new Date('2026-03-25'), purpose: 'Finance conference', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional'], lookingFor: 'Industry contacts, business networking, local insights', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Business Traveler', 'Industry Leader'], trustScore: 95 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '3',
-    basicInfo: { name: 'Lena Schmidt', avatar: AVATAR_URLS.lena, age: 23, languages: ['German', 'English', 'Spanish'], tagline: 'Exchange student discovering the world' },
-    travelerType: 'student',
-    professional: { industry: 'Education', company: 'University of Berlin', skills: ['Research', 'Languages', 'Cultural Studies'], interests: ['Cultural Exchange', 'Student Life', 'Budget Travel', 'Museums'] },
-    mobility: {
-      currentLocation: { city: 'Berlin', country: 'Germany', since: new Date('2025-09-01') },
-      nextDestinations: [
-        { city: 'Barcelona', country: 'Spain', arrivalDate: new Date('2026-03-10'), departureDate: new Date('2026-07-30'), purpose: 'Exchange program', visibility: 'public' }
-      ],
-      travelFrequency: 'occasional'
-    },
-    socialPreferences: { connectionTypes: ['friendship', 'mentorship'], lookingFor: 'Student groups, local friends, study partners', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Student Verified', 'SuperNomad Member'], trustScore: 88 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '4',
-    basicInfo: { name: 'Captain Mike Thompson', avatar: AVATAR_URLS.mike, age: 38, languages: ['English', 'Arabic'], tagline: 'Airline pilot connecting continents' },
-    travelerType: 'aviation',
-    professional: { industry: 'Aviation', company: 'Global Airlines', skills: ['Commercial Pilot', 'Crew Management', 'Safety'], interests: ['Aviation Tech', 'Travel Hacking', 'Layover Exploration', 'Photography'] },
-    mobility: {
-      currentLocation: { city: 'Dubai', country: 'UAE', since: new Date('2026-02-10') },
-      nextDestinations: [
-        { city: 'Tokyo', country: 'Japan', arrivalDate: new Date('2026-02-25'), departureDate: new Date('2026-02-27'), purpose: 'Layover', visibility: 'connections' },
-        { city: 'Sydney', country: 'Australia', arrivalDate: new Date('2026-03-04'), departureDate: new Date('2026-03-06'), purpose: 'Flight crew', visibility: 'connections' }
-      ],
-      travelFrequency: 'constant'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Crew connections, layover activities, aviation enthusiasts', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Aviation Crew', 'Frequent Traveler'], trustScore: 96 },
-    status: 'away',
-    lastActive: new Date(Date.now() - 30 * 60000)
-  },
-  {
-    id: '5',
-    basicInfo: { name: 'Maria Gonzalez', avatar: AVATAR_URLS.maria, age: 35, languages: ['Spanish', 'English'], tagline: 'Tech sales bringing innovation to market' },
-    travelerType: 'trade_show_visitor',
-    professional: { industry: 'Tech Hardware', company: 'Innovation Tech Corp', skills: ['Product Demos', 'B2B Sales', 'Market Strategy'], interests: ['Tech Innovations', 'Industry Trends', 'Networking'] },
-    mobility: {
-      currentLocation: { city: 'San Francisco', country: 'USA', since: new Date('2025-12-01') },
-      nextDestinations: [
-        { city: 'Las Vegas', country: 'USA', arrivalDate: new Date('2026-03-15'), departureDate: new Date('2026-03-18'), purpose: 'CES exhibition', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional'], lookingFor: 'Industry contacts, potential clients, trade show partners', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Professional Verified', 'Trade Show Regular'], trustScore: 91 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '6',
-    basicInfo: { name: 'Alex Kim', avatar: AVATAR_URLS.alex, age: 31, languages: ['Korean', 'English', 'Japanese'], tagline: 'Software engineer living the nomad dream' },
-    travelerType: 'digital_nomad',
-    professional: { industry: 'Tech', company: 'Freelance Developer', skills: ['Full Stack Development', 'DevOps', 'AI/ML'], interests: ['Coding', 'Gaming', 'Street Food', 'Martial Arts'] },
-    mobility: {
-      currentLocation: { city: 'Seoul', country: 'South Korea', since: new Date('2025-10-15') },
-      nextDestinations: [
-        { city: 'Tokyo', country: 'Japan', arrivalDate: new Date('2026-03-01'), purpose: 'Work and explore', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Tech meetups, coding buddies, local food guides', visibility: 'public' },
-    verification: { level: 'verified', badges: ['SuperNomad Member', 'Tech Professional'], trustScore: 89 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '7',
-    basicInfo: { name: 'Emma Wilson', avatar: AVATAR_URLS.emma, age: 27, languages: ['English', 'French'], tagline: 'Expat teacher sharing knowledge across borders' },
-    travelerType: 'expat',
-    professional: { industry: 'Education', company: 'International School Bangkok', skills: ['Teaching', 'Curriculum Development', 'ESL'], interests: ['Reading', 'Yoga', 'Local Culture', 'Cooking Classes'] },
-    mobility: {
-      currentLocation: { city: 'Bangkok', country: 'Thailand', since: new Date('2024-08-01') },
-      nextDestinations: [],
-      travelFrequency: 'occasional'
-    },
-    socialPreferences: { connectionTypes: ['friendship', 'mentorship'], lookingFor: 'Expat community, local events, language exchange', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Expat', 'Community Leader', 'Long-term Resident'], trustScore: 94 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '8',
-    basicInfo: { name: 'Carlos Mendez', avatar: AVATAR_URLS.carlos, age: 45, languages: ['Spanish', 'English', 'Portuguese'], tagline: 'Entrepreneur building bridges across Latin America' },
-    travelerType: 'business_traveler',
-    professional: { industry: 'Consulting', company: 'Own Consulting Firm', skills: ['Business Strategy', 'Market Entry', 'Partnership Development'], interests: ['Entrepreneurship', 'Salsa Dancing', 'Local Cuisine'] },
-    mobility: {
-      currentLocation: { city: 'Mexico City', country: 'Mexico', since: new Date('2026-01-15') },
-      nextDestinations: [
-        { city: 'Buenos Aires', country: 'Argentina', arrivalDate: new Date('2026-03-20'), purpose: 'Business development', visibility: 'connections' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional'], lookingFor: 'Business partners, investors, local entrepreneurs', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Entrepreneur', 'Industry Expert'], trustScore: 93 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '9',
-    basicInfo: { name: 'Yuki Tanaka', avatar: AVATAR_URLS.yuki, age: 26, languages: ['Japanese', 'English'], tagline: 'Conference organizer connecting tech communities' },
-    travelerType: 'conference_attendee',
-    professional: { industry: 'Tech Events', company: 'Tech Conferences Asia', skills: ['Event Planning', 'Community Building', 'Public Speaking'], interests: ['Tech Trends', 'Networking', 'Japanese Culture', 'Anime'] },
-    mobility: {
-      currentLocation: { city: 'Tokyo', country: 'Japan', since: new Date('2025-06-01') },
-      nextDestinations: [
-        { city: 'Singapore', country: 'Singapore', arrivalDate: new Date('2026-03-05'), departureDate: new Date('2026-03-08'), purpose: 'Tech conference', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Conference attendees, speakers, tech enthusiasts', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Professional Verified', 'Event Organizer'], trustScore: 90 },
-    status: 'away',
-    lastActive: new Date(Date.now() - 15 * 60000)
-  },
-  {
-    id: '10',
-    basicInfo: { name: 'Sophie Laurent', avatar: AVATAR_URLS.sophie, age: 33, languages: ['French', 'English', 'Italian'], tagline: 'Fashion buyer discovering global trends' },
-    travelerType: 'business_traveler',
-    professional: { industry: 'Fashion', company: 'Luxury Brand Paris', skills: ['Fashion Buying', 'Trend Forecasting', 'Negotiations'], interests: ['Fashion Shows', 'Art Galleries', 'Wine Tasting', 'Shopping'] },
-    mobility: {
-      currentLocation: { city: 'Paris', country: 'France', since: new Date('2026-01-20') },
-      nextDestinations: [
-        { city: 'Milan', country: 'Italy', arrivalDate: new Date('2026-03-22'), departureDate: new Date('2026-03-26'), purpose: 'Fashion week', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Fashion industry contacts, art lovers, culture enthusiasts', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Professional Verified', 'Fashion Industry'], trustScore: 91 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '11',
-    basicInfo: { name: 'David Okonkwo', avatar: AVATAR_URLS.david, age: 29, languages: ['English', 'Yoruba', 'French'], tagline: 'Tech entrepreneur building Africa\'s digital future' },
-    travelerType: 'digital_nomad',
-    professional: { industry: 'Tech Startup', company: 'African Fintech Startup', skills: ['Entrepreneurship', 'Fintech', 'Product Management'], interests: ['Startups', 'African Music', 'Football', 'Innovation'] },
-    mobility: {
-      currentLocation: { city: 'Lagos', country: 'Nigeria', since: new Date('2025-12-15') },
-      nextDestinations: [
-        { city: 'Nairobi', country: 'Kenya', arrivalDate: new Date('2026-03-10'), purpose: 'Tech hub exploration', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Startup founders, investors, tech community', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Entrepreneur', 'Tech Professional', 'SuperNomad Member'], trustScore: 88 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '12',
-    basicInfo: { name: 'Anna Kowalski', avatar: AVATAR_URLS.anna, age: 24, languages: ['Polish', 'English', 'German'], tagline: 'Master\'s student exploring European opportunities' },
-    travelerType: 'student',
-    professional: { industry: 'Engineering', company: 'Technical University Munich', skills: ['Mechanical Engineering', 'CAD Design', 'Research'], interests: ['Cycling', 'Beer Gardens', 'Mountain Hiking', 'Tech Meetups'] },
-    mobility: {
-      currentLocation: { city: 'Munich', country: 'Germany', since: new Date('2025-10-01') },
-      nextDestinations: [],
-      travelFrequency: 'occasional'
-    },
-    socialPreferences: { connectionTypes: ['friendship', 'professional'], lookingFor: 'Study groups, outdoor activities, career mentorship', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Student Verified', 'SuperNomad Member'], trustScore: 87 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '13',
-    basicInfo: { name: 'Rachel Cohen', avatar: AVATAR_URLS.rachel, age: 36, languages: ['English', 'Hebrew'], tagline: 'Marketing director scaling global brands' },
-    travelerType: 'business_traveler',
-    professional: { industry: 'Marketing', company: 'Global Consumer Brand', skills: ['Digital Marketing', 'Brand Strategy', 'Campaign Management'], interests: ['Marketing Tech', 'Fitness', 'Healthy Eating', 'Podcasts'] },
-    mobility: {
-      currentLocation: { city: 'Tel Aviv', country: 'Israel', since: new Date('2026-02-05') },
-      nextDestinations: [
-        { city: 'New York', country: 'USA', arrivalDate: new Date('2026-03-12'), departureDate: new Date('2026-03-18'), purpose: 'Marketing summit', visibility: 'connections' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional'], lookingFor: 'Marketing professionals, industry events, networking', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Marketing Expert', 'Industry Leader'], trustScore: 94 },
-    status: 'away',
-    lastActive: new Date(Date.now() - 45 * 60000)
-  },
-  {
-    id: '14',
-    basicInfo: { name: 'Lucas Silva', avatar: AVATAR_URLS.lucas, age: 28, languages: ['Portuguese', 'English', 'Spanish'], tagline: 'Remote developer coding from paradise' },
-    travelerType: 'digital_nomad',
-    professional: { industry: 'Tech', company: 'Remote Agency', skills: ['React', 'Node.js', 'Cloud Architecture'], interests: ['Beach Life', 'Surfing', 'Electronic Music', 'Co-working'] },
-    mobility: {
-      currentLocation: { city: 'Florianopolis', country: 'Brazil', since: new Date('2026-01-01') },
-      nextDestinations: [
-        { city: 'Medellin', country: 'Colombia', arrivalDate: new Date('2026-04-01'), purpose: 'Digital nomad community', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['friendship', 'professional'], lookingFor: 'Co-working buddies, beach activities, tech community', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Tech Professional', 'Digital Nomad', 'Community Endorsed'], trustScore: 90 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '15',
-    basicInfo: { name: 'Priya Sharma', avatar: AVATAR_URLS.priya, age: 32, languages: ['Hindi', 'English', 'Tamil'], tagline: 'Expat HR leader building diverse teams' },
-    travelerType: 'expat',
-    professional: { industry: 'Human Resources', company: 'Multinational Tech Corp', skills: ['Talent Acquisition', 'DEI', 'Leadership Development'], interests: ['Yoga', 'Indian Cooking', 'Cultural Events', 'Reading'] },
-    mobility: {
-      currentLocation: { city: 'Singapore', country: 'Singapore', since: new Date('2024-03-01') },
-      nextDestinations: [],
-      travelFrequency: 'occasional'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Expat community, professional networking, cultural exchange', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Expat', 'Long-term Resident', 'HR Professional'], trustScore: 95 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '16',
-    basicInfo: { name: 'Tom Anderson', avatar: AVATAR_URLS.tom, age: 41, languages: ['English', 'Swedish'], tagline: 'Investment analyst exploring Nordic markets' },
-    travelerType: 'business_traveler',
-    professional: { industry: 'Finance', company: 'Nordic Investment Fund', skills: ['Financial Analysis', 'Portfolio Management', 'Due Diligence'], interests: ['Skiing', 'Scandinavian Design', 'Sauna Culture', 'Nordic Noir'] },
-    mobility: {
-      currentLocation: { city: 'Stockholm', country: 'Sweden', since: new Date('2026-02-08') },
-      nextDestinations: [
-        { city: 'Copenhagen', country: 'Denmark', arrivalDate: new Date('2026-02-28'), departureDate: new Date('2026-03-02'), purpose: 'Investor meetings', visibility: 'connections' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional'], lookingFor: 'Investment opportunities, financial professionals, Nordic business culture', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Finance Expert', 'Business Traveler'], trustScore: 93 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '17',
-    basicInfo: { name: 'Fatima Al-Hassan', avatar: AVATAR_URLS.fatima, age: 30, languages: ['Arabic', 'English', 'French'], tagline: 'Architect designing sustainable cities' },
-    travelerType: 'conference_attendee',
-    professional: { industry: 'Architecture', company: 'Sustainable Design Studio', skills: ['Sustainable Architecture', 'Urban Planning', '3D Modeling'], interests: ['Green Building', 'Art', 'Desert Hiking', 'Photography'] },
-    mobility: {
-      currentLocation: { city: 'Dubai', country: 'UAE', since: new Date('2025-11-01') },
-      nextDestinations: [
-        { city: 'Amsterdam', country: 'Netherlands', arrivalDate: new Date('2026-03-18'), departureDate: new Date('2026-03-22'), purpose: 'Architecture conference', visibility: 'public' }
-      ],
-      travelFrequency: 'occasional'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Architecture professionals, sustainable design enthusiasts', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Professional Verified', 'Architecture Industry'], trustScore: 89 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '18',
-    basicInfo: { name: 'Miguel Santos', avatar: AVATAR_URLS.miguel, age: 25, languages: ['Portuguese', 'English'], tagline: 'Backpacker exploring Southeast Asia' },
-    travelerType: 'tourist',
-    professional: { industry: 'Gap Year', company: 'Traveling', skills: ['Photography', 'Content Creation', 'Budget Travel'], interests: ['Backpacking', 'Street Food', 'Local Culture', 'Diving'] },
-    mobility: {
-      currentLocation: { city: 'Chiang Mai', country: 'Thailand', since: new Date('2026-02-01') },
-      nextDestinations: [
-        { city: 'Hanoi', country: 'Vietnam', arrivalDate: new Date('2026-03-01'), purpose: 'Backpacking', visibility: 'public' }
-      ],
-      travelFrequency: 'constant'
-    },
-    socialPreferences: { connectionTypes: ['friendship'], lookingFor: 'Travel buddies, local experiences, budget tips', visibility: 'public' },
-    verification: { level: 'basic', badges: ['Traveler', 'SuperNomad Member'], trustScore: 85 },
-    status: 'online',
-    lastActive: new Date()
-  },
-  {
-    id: '19',
-    basicInfo: { name: 'Nina Petrov', avatar: AVATAR_URLS.nina, age: 37, languages: ['Russian', 'English', 'German'], tagline: 'Medical professional serving global health' },
-    travelerType: 'expat',
-    professional: { industry: 'Healthcare', company: 'International Medical Center', skills: ['Internal Medicine', 'Public Health', 'Medical Research'], interests: ['Healthcare Innovation', 'Running', 'Classical Music', 'Volunteering'] },
-    mobility: {
-      currentLocation: { city: 'Geneva', country: 'Switzerland', since: new Date('2024-01-15') },
-      nextDestinations: [],
-      travelFrequency: 'rare'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Healthcare professionals, expat community, running groups', visibility: 'public' },
-    verification: { level: 'premium', badges: ['Professional Verified', 'Healthcare', 'Expat', 'Long-term Resident'], trustScore: 96 },
-    status: 'away',
-    lastActive: new Date(Date.now() - 20 * 60000)
-  },
-  {
-    id: '20',
-    basicInfo: { name: 'Omar Abdullah', avatar: AVATAR_URLS.omar, age: 34, languages: ['Arabic', 'English'], tagline: 'E-commerce entrepreneur scaling globally' },
-    travelerType: 'digital_nomad',
-    professional: { industry: 'E-commerce', company: 'Own Online Store', skills: ['E-commerce', 'Digital Marketing', 'Logistics'], interests: ['Entrepreneurship', 'Fitness', 'Traveling', 'Food Blogging'] },
-    mobility: {
-      currentLocation: { city: 'Bali', country: 'Indonesia', since: new Date('2025-11-01') },
-      nextDestinations: [
-        { city: 'Ho Chi Minh City', country: 'Vietnam', arrivalDate: new Date('2026-03-15'), purpose: 'Business expansion', visibility: 'public' }
-      ],
-      travelFrequency: 'frequent'
-    },
-    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Entrepreneurs, e-commerce community, fitness buddies', visibility: 'public' },
-    verification: { level: 'verified', badges: ['Entrepreneur', 'Digital Nomad', 'E-commerce Expert'], trustScore: 91 },
-    status: 'online',
-    lastActive: new Date()
-  }
+    socialPreferences: { connectionTypes: ['professional', 'friendship'], lookingFor: 'Connections, local insights, activities', visibility: 'public' },
+    verification: { level: vLevel, badges: ['SuperNomad Member', 'ID Verified'], trustScore },
+    status: s.status,
+    lastActive: s.status === 'online' ? new Date() : new Date(Date.now() - Math.random() * 3600000 * 2),
+  };
+}
+
+// 200 Profile Seeds — 10 per city
+const SEEDS: ProfileSeed[] = [
+  // ─── LONDON (1-10) ──────────────────────────────────────────
+  { name: 'Sarah Chen', age: 29, avatar: av('w1'), langs: ['English', 'Mandarin'], tagline: 'UX designer building the future of remote work', type: 'digital_nomad', industry: 'Tech', company: 'Remote Startup', skills: ['UX Design', 'Frontend Dev'], interests: ['Co-working', 'Hiking', 'Photography'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Bangkok', nextDate: '2026-04-15', nextPurpose: 'Nomad work' },
+  { name: 'James Rodriguez', age: 42, avatar: av('m9'), langs: ['English', 'Spanish'], tagline: 'Investment banker connecting global markets', type: 'business_traveler', industry: 'Finance', company: 'Global Bank Inc', skills: ['Investment Banking', 'M&A'], interests: ['Golf', 'Fine Dining', 'Wine'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-20', nextPurpose: 'Finance conference' },
+  { name: 'Sophie Laurent', age: 33, avatar: av('w5'), langs: ['French', 'English', 'Italian'], tagline: 'Fashion buyer discovering global trends', type: 'business_traveler', industry: 'Fashion', company: 'Luxury Brand Paris', skills: ['Fashion Buying', 'Trend Forecasting'], interests: ['Fashion Shows', 'Art Galleries', 'Wine'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Milan', nextDate: '2026-03-22', nextPurpose: 'Fashion week' },
+  { name: 'Nina Petrov', age: 37, avatar: av('w6'), langs: ['Russian', 'English', 'German'], tagline: 'Medical professional serving global health', type: 'expat', industry: 'Healthcare', company: 'International Medical Center', skills: ['Internal Medicine', 'Public Health'], interests: ['Running', 'Classical Music', 'Volunteering'], city: 'London', freq: 'rare', status: 'away' },
+  { name: 'Oliver Wright', age: 35, avatar: av('m14'), langs: ['English'], tagline: 'Fintech founder disrupting payments', type: 'digital_nomad', industry: 'Fintech', company: 'PayFlow', skills: ['Product Strategy', 'Blockchain'], interests: ['Startups', 'Cycling', 'Craft Beer'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-04-05', nextPurpose: 'Investor meetings' },
+  { name: 'Aisha Mohammed', age: 28, avatar: av('w14'), langs: ['English', 'Arabic'], tagline: 'Data scientist exploring AI applications', type: 'digital_nomad', industry: 'AI/ML', company: 'DeepMind Alum', skills: ['Machine Learning', 'Python'], interests: ['AI Ethics', 'Running', 'Board Games'], city: 'London', freq: 'occasional', status: 'online' },
+  { name: 'Marcus Webb', age: 40, avatar: av('m15'), langs: ['English', 'French'], tagline: 'Executive coach for global leaders', type: 'business_traveler', industry: 'Consulting', company: 'Webb & Partners', skills: ['Leadership Coaching', 'Strategy'], interests: ['Mindfulness', 'Whisky', 'Golf'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'New York', nextDate: '2026-03-25', nextPurpose: 'Client sessions' },
+  { name: 'Lara Petrova', age: 26, avatar: av('w15'), langs: ['Bulgarian', 'English'], tagline: 'Travel photographer capturing London life', type: 'expat', industry: 'Creative', company: 'Freelance', skills: ['Photography', 'Video'], interests: ['Street Photography', 'Street Food', 'Markets'], city: 'London', freq: 'occasional', status: 'online' },
+  { name: 'Tom Anderson', age: 41, avatar: av('m2'), langs: ['English', 'Swedish'], tagline: 'Investment analyst exploring Nordic markets', type: 'business_traveler', industry: 'Finance', company: 'Nordic Fund', skills: ['Financial Analysis', 'Portfolio Mgmt'], interests: ['Skiing', 'Scandinavian Design', 'Sauna'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Stockholm', nextDate: '2026-03-28', nextPurpose: 'Investor meetings' },
+  { name: 'Hannah Kim', age: 31, avatar: av('w16'), langs: ['Korean', 'English'], tagline: 'K-beauty entrepreneur scaling globally', type: 'business_traveler', industry: 'Beauty', company: 'Glow Seoul', skills: ['E-commerce', 'Brand Strategy'], interests: ['Skincare', 'Yoga', 'Cooking'], city: 'London', freq: 'frequent', status: 'online', nextCity: 'Seoul', nextDate: '2026-04-10', nextPurpose: 'Supplier meetings' },
+
+  // ─── NEW YORK (11-20) ──────────────────────────────────────
+  { name: 'Rachel Cohen', age: 36, avatar: av('w10'), langs: ['English', 'Hebrew'], tagline: 'Marketing director scaling global brands', type: 'business_traveler', industry: 'Marketing', company: 'Global Consumer Brand', skills: ['Digital Marketing', 'Brand Strategy'], interests: ['Fitness', 'Healthy Eating', 'Podcasts'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-12', nextPurpose: 'Marketing summit' },
+  { name: 'Michael Torres', age: 34, avatar: av('m16'), langs: ['English', 'Spanish'], tagline: 'VC investor backing the next unicorns', type: 'business_traveler', industry: 'Venture Capital', company: 'Horizon Ventures', skills: ['Deal Flow', 'Due Diligence'], interests: ['Basketball', 'Jazz', 'Startup Events'], city: 'New York', freq: 'constant', status: 'online', nextCity: 'San Francisco', nextDate: '2026-04-01', nextPurpose: 'Portfolio reviews' },
+  { name: 'Emily Chang', age: 29, avatar: av('w17'), langs: ['English', 'Mandarin'], tagline: 'Content creator documenting nomad life', type: 'digital_nomad', industry: 'Media', company: 'Self-Employed', skills: ['Content Strategy', 'Video Production'], interests: ['Vlogging', 'Street Food', 'Yoga'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-04-15', nextPurpose: 'Content creation' },
+  { name: 'David Klein', age: 45, avatar: av('m7'), langs: ['English', 'German'], tagline: 'Real estate investor in global markets', type: 'business_traveler', industry: 'Real Estate', company: 'Klein Properties', skills: ['Property Investment', 'Market Analysis'], interests: ['Architecture', 'Tennis', 'Wine'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-03-30', nextPurpose: 'Property viewing' },
+  { name: 'Jasmine Williams', age: 27, avatar: av('w18'), langs: ['English'], tagline: 'Software engineer turned digital nomad', type: 'digital_nomad', industry: 'Tech', company: 'Remote Dev', skills: ['React', 'Node.js', 'AWS'], interests: ['Coding', 'Surfing', 'Coffee'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-04-01', nextPurpose: 'Remote work' },
+  { name: 'Anthony Brooks', age: 38, avatar: av('m17'), langs: ['English'], tagline: 'Wall Street trader exploring crypto', type: 'business_traveler', industry: 'Trading', company: 'Quant Capital', skills: ['Algo Trading', 'Risk Management'], interests: ['Crypto', 'Boxing', 'Chess'], city: 'New York', freq: 'occasional', status: 'away' },
+  { name: 'Mia Rodriguez', age: 25, avatar: av('w19'), langs: ['English', 'Spanish'], tagline: 'Graduate student exploring the world', type: 'student', industry: 'Education', company: 'Columbia University', skills: ['Research', 'Data Analysis'], interests: ['Hiking', 'Museums', 'Languages'], city: 'New York', freq: 'occasional', status: 'online' },
+  { name: 'Chris Nguyen', age: 32, avatar: av('m18'), langs: ['English', 'Vietnamese'], tagline: 'Product manager at top tech company', type: 'digital_nomad', industry: 'Tech', company: 'Meta', skills: ['Product Management', 'Growth'], interests: ['Basketball', 'Photography', 'Cooking'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'Tokyo', nextDate: '2026-04-20', nextPurpose: 'Team offsite' },
+  { name: 'Sandra Müller', age: 39, avatar: av('w20'), langs: ['German', 'English'], tagline: 'UN diplomat based in New York', type: 'expat', industry: 'Diplomacy', company: 'United Nations', skills: ['Negotiation', 'Policy'], interests: ['Opera', 'Running', 'Languages'], city: 'New York', freq: 'occasional', status: 'online' },
+  { name: 'Ryan O\'Brien', age: 30, avatar: av('m19'), langs: ['English', 'Irish'], tagline: 'Startup founder in healthtech', type: 'digital_nomad', industry: 'Healthtech', company: 'MedSync', skills: ['Entrepreneurship', 'Healthcare AI'], interests: ['Running', 'Craft Beer', 'Live Music'], city: 'New York', freq: 'frequent', status: 'online', nextCity: 'Dublin', nextDate: '2026-03-17', nextPurpose: 'St. Patrick\'s & family' },
+
+  // ─── TOKYO (21-30) ──────────────────────────────────────────
+  { name: 'Yuki Tanaka', age: 26, avatar: av('w9'), langs: ['Japanese', 'English'], tagline: 'Conference organizer connecting tech communities', type: 'conference_attendee', industry: 'Tech Events', company: 'Tech Conferences Asia', skills: ['Event Planning', 'Community Building'], interests: ['Tech Trends', 'Anime', 'Networking'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-05', nextPurpose: 'Tech conference' },
+  { name: 'Alex Kim', age: 31, avatar: av('m3'), langs: ['Korean', 'English', 'Japanese'], tagline: 'Software engineer living the nomad dream', type: 'digital_nomad', industry: 'Tech', company: 'Freelance Developer', skills: ['Full Stack', 'AI/ML'], interests: ['Coding', 'Gaming', 'Street Food'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Seoul', nextDate: '2026-03-15', nextPurpose: 'Family visit & work' },
+  { name: 'Haruki Sato', age: 35, avatar: av('m20'), langs: ['Japanese', 'English'], tagline: 'Game developer pushing boundaries', type: 'digital_nomad', industry: 'Gaming', company: 'Indie Studio', skills: ['Unity', 'Game Design'], interests: ['Gaming', 'Anime', 'Ramen'], city: 'Tokyo', freq: 'occasional', status: 'online' },
+  { name: 'Mei Lin Wang', age: 28, avatar: av('w8'), langs: ['Mandarin', 'English', 'Japanese'], tagline: 'Fashion tech startup founder', type: 'digital_nomad', industry: 'Fashion Tech', company: 'StyleAI', skills: ['AI', 'Fashion'], interests: ['Fashion', 'Technology', 'Tea Ceremony'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Hong Kong', nextDate: '2026-04-05', nextPurpose: 'Investor meetings' },
+  { name: 'Kenji Oshiro', age: 43, avatar: av('m1'), langs: ['Japanese', 'English'], tagline: 'Architect designing sustainable spaces', type: 'expat', industry: 'Architecture', company: 'Kengo Kuma Studio', skills: ['Sustainable Architecture', '3D Modeling'], interests: ['Architecture', 'Cycling', 'Tea'], city: 'Tokyo', freq: 'rare', status: 'away' },
+  { name: 'Lisa Park', age: 30, avatar: av('w2'), langs: ['Korean', 'English', 'Japanese'], tagline: 'K-pop event manager touring Asia', type: 'conference_attendee', industry: 'Entertainment', company: 'SM Entertainment', skills: ['Event Management', 'PR'], interests: ['K-pop', 'Dance', 'Photography'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Bangkok', nextDate: '2026-03-25', nextPurpose: 'Concert tour' },
+  { name: 'Takeshi Yamamoto', age: 38, avatar: av('m4'), langs: ['Japanese', 'English'], tagline: 'Robotics engineer at the cutting edge', type: 'digital_nomad', industry: 'Robotics', company: 'SoftBank Robotics', skills: ['Robotics', 'Python'], interests: ['Robotics', 'Martial Arts', 'Sake'], city: 'Tokyo', freq: 'occasional', status: 'online' },
+  { name: 'Emma Fischer', age: 25, avatar: av('w3'), langs: ['German', 'English', 'Japanese'], tagline: 'Exchange student studying Japanese culture', type: 'student', industry: 'Education', company: 'Waseda University', skills: ['Research', 'Languages'], interests: ['Japanese Culture', 'Anime', 'Hiking'], city: 'Tokyo', freq: 'occasional', status: 'online' },
+  { name: 'Daniel Okafor', age: 33, avatar: av('m5'), langs: ['English', 'Igbo'], tagline: 'Fintech founder connecting Africa & Asia', type: 'business_traveler', industry: 'Fintech', company: 'PayBridge', skills: ['Fintech', 'Partnerships'], interests: ['Entrepreneurship', 'Football', 'Karaoke'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-10', nextPurpose: 'Fintech summit' },
+  { name: 'Sakura Aoki', age: 27, avatar: av('w4'), langs: ['Japanese', 'English'], tagline: 'Food blogger exploring global cuisines', type: 'digital_nomad', industry: 'Media', company: 'Food & Travel Blog', skills: ['Content Creation', 'Photography'], interests: ['Ramen', 'Sushi', 'Food Tours'], city: 'Tokyo', freq: 'frequent', status: 'online', nextCity: 'Bangkok', nextDate: '2026-04-01', nextPurpose: 'Food content creation' },
+
+  // ─── SINGAPORE (31-40) ──────────────────────────────────────
+  { name: 'Priya Sharma', age: 32, avatar: av('w12'), langs: ['Hindi', 'English', 'Tamil'], tagline: 'Expat HR leader building diverse teams', type: 'expat', industry: 'Human Resources', company: 'Multinational Tech Corp', skills: ['Talent Acquisition', 'DEI'], interests: ['Yoga', 'Indian Cooking', 'Cultural Events'], city: 'Singapore', freq: 'occasional', status: 'online' },
+  { name: 'Wei Zhang', age: 36, avatar: av('m6'), langs: ['Mandarin', 'English'], tagline: 'Private equity fund manager', type: 'business_traveler', industry: 'Private Equity', company: 'Temasek Holdings', skills: ['Fund Management', 'Due Diligence'], interests: ['Golf', 'Wine Tasting', 'Classical Music'], city: 'Singapore', freq: 'frequent', status: 'online', nextCity: 'Hong Kong', nextDate: '2026-04-08', nextPurpose: 'Deal closing' },
+  { name: 'Ananya Patel', age: 28, avatar: av('w13'), langs: ['Hindi', 'English', 'Gujarati'], tagline: 'Cloud engineer automating everything', type: 'digital_nomad', industry: 'Cloud Computing', company: 'AWS', skills: ['AWS', 'Terraform', 'Kubernetes'], interests: ['Coding', 'Badminton', 'Cooking'], city: 'Singapore', freq: 'occasional', status: 'online' },
+  { name: 'Jason Tan', age: 40, avatar: av('m8'), langs: ['English', 'Mandarin', 'Malay'], tagline: 'Serial entrepreneur in foodtech', type: 'digital_nomad', industry: 'Foodtech', company: 'GrabFood Alum', skills: ['Entrepreneurship', 'Product'], interests: ['Hawker Food', 'Running', 'Startups'], city: 'Singapore', freq: 'frequent', status: 'online', nextCity: 'Bangkok', nextDate: '2026-03-18', nextPurpose: 'Market research' },
+  { name: 'Maria Gonzalez', age: 35, avatar: av('w4'), langs: ['Spanish', 'English'], tagline: 'Tech sales bringing innovation to market', type: 'trade_show_visitor', industry: 'Tech Hardware', company: 'Innovation Tech Corp', skills: ['Product Demos', 'B2B Sales'], interests: ['Tech Innovations', 'Networking'], city: 'Singapore', freq: 'frequent', status: 'online' },
+  { name: 'Ravi Krishnan', age: 44, avatar: av('m10'), langs: ['Tamil', 'English', 'Hindi'], tagline: 'Shipping magnate connecting trade routes', type: 'business_traveler', industry: 'Logistics', company: 'KLine Shipping', skills: ['Supply Chain', 'Trade'], interests: ['Cricket', 'Chess', 'History'], city: 'Singapore', freq: 'frequent', status: 'away' },
+  { name: 'Chloe Dubois', age: 27, avatar: av('w7'), langs: ['French', 'English'], tagline: 'Luxury hospitality consultant', type: 'expat', industry: 'Hospitality', company: 'Aman Resorts', skills: ['Hotel Operations', 'F&B'], interests: ['Fine Dining', 'Spa', 'Travel'], city: 'Singapore', freq: 'occasional', status: 'online' },
+  { name: 'Joshua Lee', age: 30, avatar: av('m11'), langs: ['English', 'Mandarin'], tagline: 'Crypto trader and DeFi builder', type: 'digital_nomad', industry: 'Crypto', company: 'DeFi Labs', skills: ['Solidity', 'Trading'], interests: ['Crypto', 'Gaming', 'Surfing'], city: 'Singapore', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-04-15', nextPurpose: 'Crypto conference' },
+  { name: 'Samantha Ng', age: 33, avatar: av('w11'), langs: ['English', 'Cantonese'], tagline: 'Corporate lawyer specializing in M&A', type: 'business_traveler', industry: 'Legal', company: 'Baker McKenzie', skills: ['M&A Law', 'Corporate Governance'], interests: ['Tennis', 'Wine', 'Art'], city: 'Singapore', freq: 'frequent', status: 'online', nextCity: 'Hong Kong', nextDate: '2026-03-25', nextPurpose: 'Deal negotiations' },
+  { name: 'Ahmed Hassan', age: 29, avatar: av('m12'), langs: ['Arabic', 'English'], tagline: 'Sustainability consultant for APAC', type: 'expat', industry: 'Sustainability', company: 'Green Future Consulting', skills: ['ESG', 'Carbon Credits'], interests: ['Diving', 'Hiking', 'Photography'], city: 'Singapore', freq: 'occasional', status: 'online' },
+
+  // ─── DUBAI (41-50) ──────────────────────────────────────────
+  { name: 'Captain Mike Thompson', age: 38, avatar: av('m1'), langs: ['English', 'Arabic'], tagline: 'Airline pilot connecting continents', type: 'aviation', industry: 'Aviation', company: 'Emirates', skills: ['Commercial Pilot', 'Crew Mgmt'], interests: ['Aviation Tech', 'Photography', 'Travel Hacking'], city: 'Dubai', freq: 'constant', status: 'online', nextCity: 'Tokyo', nextDate: '2026-03-25', nextPurpose: 'Layover' },
+  { name: 'Fatima Al-Hassan', age: 30, avatar: av('w13'), langs: ['Arabic', 'English', 'French'], tagline: 'Architect designing sustainable cities', type: 'conference_attendee', industry: 'Architecture', company: 'Sustainable Design Studio', skills: ['Sustainable Architecture', 'Urban Planning'], interests: ['Green Building', 'Art', 'Photography'], city: 'Dubai', freq: 'occasional', status: 'online', nextCity: 'Amsterdam', nextDate: '2026-03-18', nextPurpose: 'Architecture conference' },
+  { name: 'Khalid Al-Rashid', age: 45, avatar: av('m13'), langs: ['Arabic', 'English'], tagline: 'Real estate developer in luxury sector', type: 'business_traveler', industry: 'Real Estate', company: 'Emaar Properties', skills: ['Property Dev', 'Investment'], interests: ['Cars', 'Horse Racing', 'Golf'], city: 'Dubai', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-04-01', nextPurpose: 'Property showcase' },
+  { name: 'Layla Mahmoud', age: 27, avatar: av('w14'), langs: ['Arabic', 'English', 'French'], tagline: 'Fashion influencer & brand ambassador', type: 'digital_nomad', industry: 'Fashion', company: 'Self-Employed', skills: ['Social Media', 'Brand Partnerships'], interests: ['Fashion', 'Luxury Travel', 'Fitness'], city: 'Dubai', freq: 'frequent', status: 'online', nextCity: 'Milan', nextDate: '2026-03-22', nextPurpose: 'Fashion week' },
+  { name: 'Robert Stevens', age: 39, avatar: av('m14'), langs: ['English'], tagline: 'Oil & gas consultant advising MENA', type: 'expat', industry: 'Energy', company: 'Shell', skills: ['Energy Consulting', 'Project Mgmt'], interests: ['Rugby', 'BBQ', 'Desert Driving'], city: 'Dubai', freq: 'occasional', status: 'online' },
+  { name: 'Nadia El-Sayed', age: 32, avatar: av('w15'), langs: ['Arabic', 'English'], tagline: 'EdTech founder empowering Arab youth', type: 'digital_nomad', industry: 'EdTech', company: 'LearnArab', skills: ['Product', 'Education'], interests: ['Education', 'Startups', 'Reading'], city: 'Dubai', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-04-10', nextPurpose: 'Web Summit MENA' },
+  { name: 'Viktor Petrov', age: 36, avatar: av('m15'), langs: ['Russian', 'English'], tagline: 'Crypto whale & angel investor', type: 'business_traveler', industry: 'Crypto', company: 'Digital Assets Fund', skills: ['Investment', 'Blockchain'], interests: ['Crypto', 'Yachting', 'Art Collection'], city: 'Dubai', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-15', nextPurpose: 'Token 2049' },
+  { name: 'Amira Khalil', age: 24, avatar: av('w16'), langs: ['Arabic', 'English'], tagline: 'Med student interning abroad', type: 'student', industry: 'Medicine', company: 'Dubai Medical University', skills: ['Clinical Research', 'Surgery'], interests: ['Medicine', 'Yoga', 'Cooking'], city: 'Dubai', freq: 'rare', status: 'online' },
+  { name: 'Carlos Mendez', age: 45, avatar: av('m10'), langs: ['Spanish', 'English', 'Portuguese'], tagline: 'Entrepreneur building bridges across LatAm', type: 'business_traveler', industry: 'Consulting', company: 'Own Consulting Firm', skills: ['Business Strategy', 'Market Entry'], interests: ['Entrepreneurship', 'Salsa', 'Local Cuisine'], city: 'Dubai', freq: 'frequent', status: 'online', nextCity: 'Buenos Aires', nextDate: '2026-04-20', nextPurpose: 'Business development' },
+  { name: 'Elena Volkova', age: 29, avatar: av('w3'), langs: ['Russian', 'English', 'Arabic'], tagline: 'Luxury travel advisor for UHNW clients', type: 'business_traveler', industry: 'Travel', company: 'Quintessentially', skills: ['Travel Planning', 'VIP Services'], interests: ['Luxury Travel', 'Spa', 'Art'], city: 'Dubai', freq: 'frequent', status: 'online' },
+
+  // ─── PARIS (51-60) ──────────────────────────────────────────
+  { name: 'Camille Beaumont', age: 31, avatar: av('w1'), langs: ['French', 'English', 'Italian'], tagline: 'Art curator at a major gallery', type: 'expat', industry: 'Art', company: 'Galerie Perrotin', skills: ['Art Curation', 'Gallery Mgmt'], interests: ['Art', 'Wine', 'Philosophy'], city: 'Paris', freq: 'occasional', status: 'online' },
+  { name: 'Pierre Moreau', age: 37, avatar: av('m2'), langs: ['French', 'English'], tagline: 'Luxury brand strategist', type: 'business_traveler', industry: 'Luxury', company: 'LVMH', skills: ['Brand Strategy', 'Marketing'], interests: ['Fashion', 'Wine', 'Cycling'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'Milan', nextDate: '2026-03-22', nextPurpose: 'Fashion week' },
+  { name: 'Isabelle Martin', age: 28, avatar: av('w2'), langs: ['French', 'English', 'Spanish'], tagline: 'Pastry chef creating edible art', type: 'expat', industry: 'Culinary', company: 'Pierre Hermé', skills: ['Pastry', 'Food Art'], interests: ['Cooking', 'Food Tours', 'Photography'], city: 'Paris', freq: 'occasional', status: 'online' },
+  { name: 'Lucas Dubois', age: 34, avatar: av('m11'), langs: ['French', 'English'], tagline: 'AI researcher at top lab', type: 'digital_nomad', industry: 'AI Research', company: 'Mistral AI', skills: ['Deep Learning', 'NLP'], interests: ['AI', 'Chess', 'Jazz'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-28', nextPurpose: 'AI conference' },
+  { name: 'Clara Schmidt', age: 25, avatar: av('w17'), langs: ['German', 'French', 'English'], tagline: 'Fashion design student at Parsons Paris', type: 'student', industry: 'Fashion', company: 'Parsons Paris', skills: ['Fashion Design', 'Illustration'], interests: ['Fashion', 'Sketching', 'Vintage Markets'], city: 'Paris', freq: 'occasional', status: 'online' },
+  { name: 'Antoine Lefèvre', age: 42, avatar: av('m3'), langs: ['French', 'English'], tagline: 'Wine merchant connecting producers & restaurants', type: 'business_traveler', industry: 'Wine', company: 'Maison Lefèvre', skills: ['Wine Trading', 'Sommelier'], interests: ['Wine', 'Gastronomy', 'Rugby'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'Barcelona', nextDate: '2026-04-05', nextPurpose: 'Wine fair' },
+  { name: 'Marie Fontaine', age: 30, avatar: av('w18'), langs: ['French', 'English'], tagline: 'Tech startup PM in SaaS', type: 'digital_nomad', industry: 'SaaS', company: 'Doctolib', skills: ['Product Management', 'Agile'], interests: ['Startups', 'Yoga', 'Cooking'], city: 'Paris', freq: 'occasional', status: 'online' },
+  { name: 'Hugo Bernard', age: 29, avatar: av('m4'), langs: ['French', 'English', 'Portuguese'], tagline: 'DJ & music producer touring Europe', type: 'digital_nomad', industry: 'Music', company: 'Independent', skills: ['Music Production', 'DJing'], interests: ['Electronic Music', 'Night Life', 'Surfing'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'Berlin', nextDate: '2026-03-20', nextPurpose: 'Club tour' },
+  { name: 'Adèle Rousseau', age: 33, avatar: av('w19'), langs: ['French', 'English', 'Italian'], tagline: 'Sustainability consultant for luxury brands', type: 'business_traveler', industry: 'Sustainability', company: 'EcoLux Consulting', skills: ['ESG', 'Supply Chain'], interests: ['Sustainability', 'Hiking', 'Organic Food'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'Amsterdam', nextDate: '2026-03-15', nextPurpose: 'EU sustainability summit' },
+  { name: 'Maxime Durand', age: 26, avatar: av('m5'), langs: ['French', 'English'], tagline: 'Esports team manager going global', type: 'conference_attendee', industry: 'Esports', company: 'Team Vitality', skills: ['Esports Mgmt', 'Marketing'], interests: ['Gaming', 'Esports', 'Fitness'], city: 'Paris', freq: 'frequent', status: 'online', nextCity: 'Seoul', nextDate: '2026-04-12', nextPurpose: 'Esports tournament' },
+
+  // ─── BERLIN (61-70) ──────────────────────────────────────────
+  { name: 'Lena Schmidt', age: 23, avatar: av('w2'), langs: ['German', 'English', 'Spanish'], tagline: 'Exchange student discovering the world', type: 'student', industry: 'Education', company: 'University of Berlin', skills: ['Research', 'Languages'], interests: ['Cultural Exchange', 'Budget Travel', 'Museums'], city: 'Berlin', freq: 'occasional', status: 'online', nextCity: 'Barcelona', nextDate: '2026-03-10', nextPurpose: 'Exchange program' },
+  { name: 'Felix Krause', age: 29, avatar: av('m6'), langs: ['German', 'English'], tagline: 'Sound engineer & techno producer', type: 'digital_nomad', industry: 'Music', company: 'Independent', skills: ['Sound Engineering', 'Ableton'], interests: ['Techno', 'Vinyl', 'Club Culture'], city: 'Berlin', freq: 'frequent', status: 'online' },
+  { name: 'Anna Kowalski', age: 24, avatar: av('w11'), langs: ['Polish', 'English', 'German'], tagline: 'Master\'s student exploring European opportunities', type: 'student', industry: 'Engineering', company: 'TU Munich', skills: ['Mechanical Engineering', 'CAD'], interests: ['Cycling', 'Hiking', 'Tech Meetups'], city: 'Berlin', freq: 'occasional', status: 'online' },
+  { name: 'Stefan Wolf', age: 35, avatar: av('m7'), langs: ['German', 'English'], tagline: 'Climate tech founder saving the planet', type: 'digital_nomad', industry: 'Climate Tech', company: 'GreenByte', skills: ['Cleantech', 'Product'], interests: ['Sustainability', 'Cycling', 'Beer Gardens'], city: 'Berlin', freq: 'frequent', status: 'online', nextCity: 'Amsterdam', nextDate: '2026-03-20', nextPurpose: 'Climate conference' },
+  { name: 'Katarina Novak', age: 31, avatar: av('w20'), langs: ['Czech', 'German', 'English'], tagline: 'UX researcher improving digital health', type: 'digital_nomad', industry: 'Health Tech', company: 'Ada Health', skills: ['UX Research', 'Design Thinking'], interests: ['Health', 'Yoga', 'Board Games'], city: 'Berlin', freq: 'occasional', status: 'online' },
+  { name: 'Max Richter', age: 40, avatar: av('m8'), langs: ['German', 'English', 'French'], tagline: 'Media executive scaling European content', type: 'business_traveler', industry: 'Media', company: 'Axel Springer', skills: ['Media Strategy', 'Digital Transformation'], interests: ['Journalism', 'Skiing', 'Art'], city: 'Berlin', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-04-01', nextPurpose: 'Media conference' },
+  { name: 'Julia Bergmann', age: 27, avatar: av('w5'), langs: ['German', 'English'], tagline: 'Industrial designer creating sustainable products', type: 'digital_nomad', industry: 'Design', company: 'Freelance', skills: ['Industrial Design', '3D Printing'], interests: ['Design', 'Sustainability', 'Markets'], city: 'Berlin', freq: 'frequent', status: 'online', nextCity: 'Milan', nextDate: '2026-04-08', nextPurpose: 'Salone del Mobile' },
+  { name: 'Tobias Engel', age: 33, avatar: av('m9'), langs: ['German', 'English'], tagline: 'Cybersecurity consultant protecting startups', type: 'digital_nomad', industry: 'Cybersecurity', company: 'SecureNode', skills: ['Penetration Testing', 'Security Audits'], interests: ['CTF Competitions', 'Running', 'Board Games'], city: 'Berlin', freq: 'frequent', status: 'online' },
+  { name: 'Marta Nowak', age: 26, avatar: av('w8'), langs: ['Polish', 'German', 'English'], tagline: 'Biotech researcher at charité', type: 'expat', industry: 'Biotech', company: 'Charité Hospital', skills: ['Molecular Biology', 'Research'], interests: ['Science', 'Hiking', 'Cooking'], city: 'Berlin', freq: 'rare', status: 'online' },
+  { name: 'David Schneider', age: 38, avatar: av('m10'), langs: ['German', 'English'], tagline: 'E-commerce guru scaling DTC brands', type: 'business_traveler', industry: 'E-commerce', company: 'Zalando Alum', skills: ['E-commerce', 'Growth Marketing'], interests: ['Startups', 'Football', 'Photography'], city: 'Berlin', freq: 'frequent', status: 'online', nextCity: 'Stockholm', nextDate: '2026-03-25', nextPurpose: 'Nordic expansion' },
+
+  // ─── BANGKOK (71-80) ──────────────────────────────────────────
+  { name: 'Emma Wilson', age: 27, avatar: av('w7'), langs: ['English', 'French'], tagline: 'Expat teacher sharing knowledge across borders', type: 'expat', industry: 'Education', company: 'International School Bangkok', skills: ['Teaching', 'ESL'], interests: ['Yoga', 'Local Culture', 'Cooking Classes'], city: 'Bangkok', freq: 'occasional', status: 'online' },
+  { name: 'Miguel Santos', age: 25, avatar: av('m13'), langs: ['Portuguese', 'English'], tagline: 'Backpacker exploring Southeast Asia', type: 'tourist', industry: 'Gap Year', company: 'Traveling', skills: ['Photography', 'Content Creation'], interests: ['Backpacking', 'Street Food', 'Diving'], city: 'Bangkok', freq: 'constant', status: 'online', nextCity: 'Bali', nextDate: '2026-04-01', nextPurpose: 'Backpacking' },
+  { name: 'Natt Chaiyaporn', age: 30, avatar: av('m16'), langs: ['Thai', 'English'], tagline: 'Thai food tour guide & chef', type: 'expat', industry: 'Culinary', company: 'Bangkok Food Tours', skills: ['Cooking', 'Tour Guide'], interests: ['Thai Cuisine', 'Street Food', 'Night Markets'], city: 'Bangkok', freq: 'rare', status: 'online' },
+  { name: 'Sarah Müller', age: 28, avatar: av('w9'), langs: ['German', 'English', 'Thai'], tagline: 'Digital marketing nomad in Bangkok', type: 'digital_nomad', industry: 'Marketing', company: 'Remote Agency', skills: ['SEO', 'Content Marketing'], interests: ['Muay Thai', 'Temples', 'Co-working'], city: 'Bangkok', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-04-15', nextPurpose: 'Remote work' },
+  { name: 'Jake Morrison', age: 32, avatar: av('m17'), langs: ['English', 'Thai'], tagline: 'Dive instructor turned tech bro', type: 'digital_nomad', industry: 'Tech', company: 'Freelance Dev', skills: ['Python', 'Django'], interests: ['Diving', 'Surfing', 'Beer'], city: 'Bangkok', freq: 'frequent', status: 'online' },
+  { name: 'Ploy Srisawat', age: 26, avatar: av('w10'), langs: ['Thai', 'English', 'Japanese'], tagline: 'Wellness retreat organizer', type: 'expat', industry: 'Wellness', company: 'Zen Retreat Bangkok', skills: ['Wellness', 'Event Planning'], interests: ['Meditation', 'Yoga', 'Herbal Medicine'], city: 'Bangkok', freq: 'occasional', status: 'online' },
+  { name: 'Tom Hardy', age: 35, avatar: av('m18'), langs: ['English', 'Thai'], tagline: 'Australian expat running a bar empire', type: 'expat', industry: 'Hospitality', company: 'Hardy\'s Bars', skills: ['F&B Operations', 'Marketing'], interests: ['Nightlife', 'Muay Thai', 'Fishing'], city: 'Bangkok', freq: 'rare', status: 'online' },
+  { name: 'Maria Fernandez', age: 29, avatar: av('w14'), langs: ['Spanish', 'English', 'Thai'], tagline: 'Yoga teacher traveling Asia', type: 'digital_nomad', industry: 'Wellness', company: 'Freelance', skills: ['Yoga', 'Meditation'], interests: ['Yoga', 'Vegan Cooking', 'Temples'], city: 'Bangkok', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-03-20', nextPurpose: 'Yoga retreat' },
+  { name: 'Chris O\'Connor', age: 41, avatar: av('m19'), langs: ['English'], tagline: 'Retired early, living the dream in Bangkok', type: 'expat', industry: 'Retired', company: 'N/A', skills: ['Investing', 'Mentoring'], interests: ['Golf', 'Thai Cooking', 'Travel'], city: 'Bangkok', freq: 'rare', status: 'away' },
+  { name: 'Yumi Nakamura', age: 24, avatar: av('w15'), langs: ['Japanese', 'English', 'Thai'], tagline: 'Exchange student studying Thai culture', type: 'student', industry: 'Education', company: 'Chulalongkorn University', skills: ['Thai Studies', 'Research'], interests: ['Thai Culture', 'Photography', 'Cooking'], city: 'Bangkok', freq: 'occasional', status: 'online' },
+
+  // ─── LISBON (81-90) ──────────────────────────────────────────
+  { name: 'João Ferreira', age: 33, avatar: av('m20'), langs: ['Portuguese', 'English', 'Spanish'], tagline: 'Startup founder in green energy', type: 'digital_nomad', industry: 'Clean Energy', company: 'SolarWave', skills: ['Solar Tech', 'Product'], interests: ['Surfing', 'Sustainability', 'Fado Music'], city: 'Lisbon', freq: 'occasional', status: 'online' },
+  { name: 'Lucas Silva', age: 28, avatar: av('m11'), langs: ['Portuguese', 'English', 'Spanish'], tagline: 'Remote developer coding from paradise', type: 'digital_nomad', industry: 'Tech', company: 'Remote Agency', skills: ['React', 'Node.js'], interests: ['Beach Life', 'Surfing', 'Electronic Music'], city: 'Lisbon', freq: 'frequent', status: 'online', nextCity: 'Barcelona', nextDate: '2026-04-01', nextPurpose: 'Nomad meetup' },
+  { name: 'Ana Ribeiro', age: 30, avatar: av('w1'), langs: ['Portuguese', 'English', 'French'], tagline: 'Wine & food tour operator', type: 'expat', industry: 'Tourism', company: 'Taste Lisbon', skills: ['Tourism', 'Wine'], interests: ['Wine', 'Portuguese Cuisine', 'Fado'], city: 'Lisbon', freq: 'rare', status: 'online' },
+  { name: 'Max Hartmann', age: 31, avatar: av('m12'), langs: ['German', 'English', 'Portuguese'], tagline: 'Remote PM living the Lisbon dream', type: 'digital_nomad', industry: 'Tech', company: 'Spotify', skills: ['Product Management', 'Agile'], interests: ['Surfing', 'Pastéis de Nata', 'Co-working'], city: 'Lisbon', freq: 'frequent', status: 'online' },
+  { name: 'Sofia Marques', age: 26, avatar: av('w3'), langs: ['Portuguese', 'English'], tagline: 'Graphic designer & illustrator', type: 'digital_nomad', industry: 'Design', company: 'Freelance', skills: ['Graphic Design', 'Illustration'], interests: ['Art', 'Street Art', 'Skateboarding'], city: 'Lisbon', freq: 'frequent', status: 'online', nextCity: 'Berlin', nextDate: '2026-04-05', nextPurpose: 'Design conference' },
+  { name: 'Daniel Costa', age: 35, avatar: av('m13'), langs: ['Portuguese', 'English'], tagline: 'Surf instructor & co-working space owner', type: 'expat', industry: 'Lifestyle', company: 'Surf & Work Lisbon', skills: ['Surfing', 'Community Building'], interests: ['Surfing', 'Community', 'Beach Life'], city: 'Lisbon', freq: 'rare', status: 'online' },
+  { name: 'Klara Johansson', age: 29, avatar: av('w5'), langs: ['Swedish', 'English', 'Portuguese'], tagline: 'Swedish nomad writing from Lisbon cafés', type: 'digital_nomad', industry: 'Writing', company: 'Freelance Writer', skills: ['Copywriting', 'Content Strategy'], interests: ['Writing', 'Coffee', 'Jazz'], city: 'Lisbon', freq: 'frequent', status: 'online' },
+  { name: 'Pedro Almeida', age: 40, avatar: av('m14'), langs: ['Portuguese', 'English', 'Spanish'], tagline: 'Fado musician & cultural ambassador', type: 'expat', industry: 'Music', company: 'Fado House Lisbon', skills: ['Music', 'Performance'], interests: ['Fado', 'Guitar', 'Portuguese History'], city: 'Lisbon', freq: 'rare', status: 'online' },
+  { name: 'Tina Bergström', age: 27, avatar: av('w17'), langs: ['Swedish', 'English'], tagline: 'Fitness influencer doing Lisbon', type: 'digital_nomad', industry: 'Fitness', company: 'Self-Employed', skills: ['Personal Training', 'Social Media'], interests: ['CrossFit', 'Healthy Eating', 'Beach Workouts'], city: 'Lisbon', freq: 'frequent', status: 'online', nextCity: 'Barcelona', nextDate: '2026-03-28', nextPurpose: 'CrossFit Games' },
+  { name: 'Marco Oliveira', age: 32, avatar: av('m15'), langs: ['Portuguese', 'English', 'French'], tagline: 'Data engineer at a Lisbon unicorn', type: 'expat', industry: 'Tech', company: 'Feedzai', skills: ['Data Engineering', 'Spark'], interests: ['Football', 'Wine', 'Cycling'], city: 'Lisbon', freq: 'occasional', status: 'online' },
+
+  // ─── BARCELONA (91-100) ──────────────────────────────────────
+  { name: 'Marta García', age: 29, avatar: av('w6'), langs: ['Spanish', 'Catalan', 'English'], tagline: 'UX designer at a Barcelona startup', type: 'digital_nomad', industry: 'Tech', company: 'Glovo', skills: ['UX Design', 'Figma'], interests: ['Beach', 'Tapas', 'Design'], city: 'Barcelona', freq: 'frequent', status: 'online' },
+  { name: 'Diego López', age: 34, avatar: av('m16'), langs: ['Spanish', 'English'], tagline: 'Football scout & sports consultant', type: 'business_traveler', industry: 'Sports', company: 'FC Barcelona Academy', skills: ['Scouting', 'Sports Analytics'], interests: ['Football', 'Running', 'Padel'], city: 'Barcelona', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-04-10', nextPurpose: 'EPL scouting' },
+  { name: 'Laura Vidal', age: 26, avatar: av('w8'), langs: ['Spanish', 'Catalan', 'English', 'French'], tagline: 'Architect preserving Gaudí\'s legacy', type: 'expat', industry: 'Architecture', company: 'Barcelona Architecture Studio', skills: ['Architecture', 'Restoration'], interests: ['Architecture', 'Art', 'Wine'], city: 'Barcelona', freq: 'rare', status: 'online' },
+  { name: 'Pablo Romero', age: 31, avatar: av('m17'), langs: ['Spanish', 'English'], tagline: 'Growth hacker for European startups', type: 'digital_nomad', industry: 'Growth Marketing', company: 'Freelance', skills: ['Growth Hacking', 'SEO'], interests: ['Startups', 'Padel', 'Wine'], city: 'Barcelona', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-03-20', nextPurpose: 'Client meetings' },
+  { name: 'Inès Petit', age: 28, avatar: av('w9'), langs: ['French', 'Spanish', 'English'], tagline: 'Sommelier exploring Catalan wines', type: 'expat', industry: 'Wine', company: 'Vinoteca Barcelona', skills: ['Wine Tasting', 'Hospitality'], interests: ['Wine', 'Tapas', 'Hiking'], city: 'Barcelona', freq: 'occasional', status: 'online' },
+  { name: 'Marc Puig', age: 37, avatar: av('m18'), langs: ['Spanish', 'Catalan', 'English'], tagline: 'Biotech CEO changing healthcare', type: 'business_traveler', industry: 'Biotech', company: 'BioTech BCN', skills: ['Biotech', 'Leadership'], interests: ['Sailing', 'Tennis', 'Innovation'], city: 'Barcelona', freq: 'frequent', status: 'online', nextCity: 'Paris', nextDate: '2026-04-15', nextPurpose: 'Pharma conference' },
+  { name: 'Claudia Ferrari', age: 25, avatar: av('w10'), langs: ['Italian', 'Spanish', 'English'], tagline: 'Digital art student at BAU', type: 'student', industry: 'Art', company: 'BAU Barcelona', skills: ['Digital Art', '3D Modeling'], interests: ['Art', 'Museums', 'Street Food'], city: 'Barcelona', freq: 'occasional', status: 'online' },
+  { name: 'Erik Lindgren', age: 33, avatar: av('m19'), langs: ['Swedish', 'English', 'Spanish'], tagline: 'Nordic fintech consultant in Barcelona', type: 'digital_nomad', industry: 'Fintech', company: 'Klarna Alum', skills: ['Fintech', 'Product Strategy'], interests: ['Padel', 'Sailing', 'Coffee'], city: 'Barcelona', freq: 'frequent', status: 'online', nextCity: 'Stockholm', nextDate: '2026-03-25', nextPurpose: 'Board meeting' },
+  { name: 'Carmen Ruiz', age: 30, avatar: av('w11'), langs: ['Spanish', 'English'], tagline: 'Content creator covering travel & food', type: 'digital_nomad', industry: 'Media', company: 'Self-Employed', skills: ['Video Production', 'Social Media'], interests: ['Food', 'Travel', 'Photography'], city: 'Barcelona', freq: 'frequent', status: 'online' },
+  { name: 'Andreas Papadopoulos', age: 36, avatar: av('m20'), langs: ['Greek', 'English', 'Spanish'], tagline: 'Shipping exec overseeing Med routes', type: 'business_traveler', industry: 'Shipping', company: 'Mediterranean Shipping Co', skills: ['Logistics', 'Maritime Law'], interests: ['Sailing', 'History', 'Seafood'], city: 'Barcelona', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-04-01', nextPurpose: 'Trade meetings' },
+
+  // ─── SYDNEY (101-110) ──────────────────────────────────────────
+  { name: 'Liam Crawford', age: 30, avatar: av('m1'), langs: ['English'], tagline: 'Surf instructor turned web developer', type: 'digital_nomad', industry: 'Tech', company: 'Freelance', skills: ['React', 'TypeScript'], interests: ['Surfing', 'Beach', 'Coffee'], city: 'Sydney', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-04-10', nextPurpose: 'Surf & code retreat' },
+  { name: 'Olivia Bennett', age: 28, avatar: av('w12'), langs: ['English'], tagline: 'Marine biologist protecting reefs', type: 'expat', industry: 'Marine Science', company: 'Great Barrier Reef Foundation', skills: ['Marine Biology', 'Research'], interests: ['Diving', 'Conservation', 'Photography'], city: 'Sydney', freq: 'occasional', status: 'online' },
+  { name: 'Jack Turner', age: 35, avatar: av('m2'), langs: ['English'], tagline: 'Mining exec going green', type: 'business_traveler', industry: 'Mining', company: 'BHP', skills: ['Mining Operations', 'ESG'], interests: ['Golf', 'Wine', 'Rugby'], city: 'Sydney', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-30', nextPurpose: 'Investor meetings' },
+  { name: 'Isabella Cook', age: 26, avatar: av('w13'), langs: ['English', 'Italian'], tagline: 'Barista & coffee entrepreneur', type: 'digital_nomad', industry: 'F&B', company: 'Own Coffee Brand', skills: ['Barista', 'Brand Building'], interests: ['Coffee', 'Specialty Beans', 'Surfing'], city: 'Sydney', freq: 'frequent', status: 'online' },
+  { name: 'Nathan Cooper', age: 32, avatar: av('m3'), langs: ['English'], tagline: 'SaaS sales leader for APAC', type: 'business_traveler', industry: 'SaaS', company: 'Atlassian', skills: ['Enterprise Sales', 'SaaS'], interests: ['Cricket', 'BBQ', 'Hiking'], city: 'Sydney', freq: 'frequent', status: 'online', nextCity: 'Tokyo', nextDate: '2026-04-15', nextPurpose: 'Enterprise sales' },
+  { name: 'Mia Davis', age: 24, avatar: av('w14'), langs: ['English'], tagline: 'Environmental law student', type: 'student', industry: 'Law', company: 'UNSW', skills: ['Environmental Law', 'Research'], interests: ['Surfing', 'Bushwalking', 'Sustainability'], city: 'Sydney', freq: 'occasional', status: 'online' },
+  { name: 'Ethan Walsh', age: 38, avatar: av('m4'), langs: ['English'], tagline: 'Film producer creating Aussie content', type: 'business_traveler', industry: 'Film', company: 'Outback Films', skills: ['Film Production', 'Screenwriting'], interests: ['Film', 'Photography', 'Surfing'], city: 'Sydney', freq: 'frequent', status: 'online', nextCity: 'Toronto', nextDate: '2026-04-20', nextPurpose: 'Film festival' },
+  { name: 'Sophie Wu', age: 29, avatar: av('w15'), langs: ['English', 'Mandarin'], tagline: 'Physiotherapist & pilates instructor', type: 'expat', industry: 'Health', company: 'Own Practice', skills: ['Physiotherapy', 'Pilates'], interests: ['Pilates', 'Beach Running', 'Cooking'], city: 'Sydney', freq: 'rare', status: 'online' },
+  { name: 'James Murphy', age: 42, avatar: av('m5'), langs: ['English'], tagline: 'Tech CTO building next-gen platforms', type: 'business_traveler', industry: 'Tech', company: 'Canva', skills: ['Engineering Leadership', 'Architecture'], interests: ['Tech', 'Cricket', 'BBQ'], city: 'Sydney', freq: 'frequent', status: 'online' },
+  { name: 'Tara Singh', age: 27, avatar: av('w16'), langs: ['English', 'Hindi'], tagline: 'Data analyst at a Big 4 firm', type: 'expat', industry: 'Consulting', company: 'Deloitte', skills: ['Data Analysis', 'Tableau'], interests: ['Bollywood Dance', 'Hiking', 'Food'], city: 'Sydney', freq: 'occasional', status: 'online' },
+
+  // ─── TORONTO (111-120) ──────────────────────────────────────────
+  { name: 'Ryan Mitchell', age: 33, avatar: av('m6'), langs: ['English', 'French'], tagline: 'AI startup founder in Toronto', type: 'digital_nomad', industry: 'AI', company: 'NeuralPath', skills: ['AI/ML', 'Entrepreneurship'], interests: ['Hockey', 'Craft Beer', 'Skiing'], city: 'Toronto', freq: 'frequent', status: 'online', nextCity: 'New York', nextDate: '2026-03-15', nextPurpose: 'YC Demo Day' },
+  { name: 'Nicole LeBlanc', age: 28, avatar: av('w17'), langs: ['English', 'French'], tagline: 'Bilingual journalist covering tech', type: 'digital_nomad', industry: 'Media', company: 'The Globe & Mail', skills: ['Journalism', 'Podcasting'], interests: ['Media', 'Podcasts', 'Running'], city: 'Toronto', freq: 'occasional', status: 'online' },
+  { name: 'Vikram Agarwal', age: 36, avatar: av('m7'), langs: ['English', 'Hindi'], tagline: 'Immigrant entrepreneur in e-commerce', type: 'expat', industry: 'E-commerce', company: 'ShopCanada', skills: ['E-commerce', 'Supply Chain'], interests: ['Cricket', 'Cooking', 'Community'], city: 'Toronto', freq: 'occasional', status: 'online' },
+  { name: 'Amy Chen', age: 25, avatar: av('w18'), langs: ['English', 'Mandarin'], tagline: 'Med student at U of T', type: 'student', industry: 'Medicine', company: 'University of Toronto', skills: ['Medicine', 'Research'], interests: ['Medicine', 'Baking', 'Hiking'], city: 'Toronto', freq: 'rare', status: 'online' },
+  { name: 'Josh Palmer', age: 31, avatar: av('m8'), langs: ['English'], tagline: 'Hockey player turned sports tech founder', type: 'digital_nomad', industry: 'Sports Tech', company: 'PuckTrack', skills: ['Sports Analytics', 'Product'], interests: ['Hockey', 'Fitness', 'Startups'], city: 'Toronto', freq: 'frequent', status: 'online' },
+  { name: 'Sarah MacKenzie', age: 34, avatar: av('w19'), langs: ['English', 'French'], tagline: 'Environmental policy advisor', type: 'business_traveler', industry: 'Government', company: 'Environment Canada', skills: ['Policy Analysis', 'Climate'], interests: ['Hiking', 'Kayaking', 'Reading'], city: 'Toronto', freq: 'occasional', status: 'online', nextCity: 'Paris', nextDate: '2026-04-05', nextPurpose: 'Climate summit' },
+  { name: 'Omar Mahmoud', age: 29, avatar: av('m9'), langs: ['Arabic', 'English', 'French'], tagline: 'Refugee turned successful tech founder', type: 'expat', industry: 'Tech', company: 'BridgeTech', skills: ['Full Stack', 'Leadership'], interests: ['Soccer', 'Mentoring', 'Community'], city: 'Toronto', freq: 'occasional', status: 'online' },
+  { name: 'Danielle Roberts', age: 27, avatar: av('w20'), langs: ['English'], tagline: 'Fitness coach & wellness entrepreneur', type: 'digital_nomad', industry: 'Wellness', company: 'FitLife Toronto', skills: ['Personal Training', 'Nutrition'], interests: ['CrossFit', 'Meal Prep', 'Yoga'], city: 'Toronto', freq: 'frequent', status: 'online' },
+  { name: 'Kevin Huang', age: 40, avatar: av('m10'), langs: ['English', 'Mandarin'], tagline: 'Real estate developer in GTA', type: 'business_traveler', industry: 'Real Estate', company: 'Concord Pacific', skills: ['Development', 'Investment'], interests: ['Golf', 'Wine', 'Art'], city: 'Toronto', freq: 'frequent', status: 'online', nextCity: 'Hong Kong', nextDate: '2026-03-28', nextPurpose: 'Investor roadshow' },
+  { name: 'Lindsay Brown', age: 30, avatar: av('w1'), langs: ['English'], tagline: 'Film producer at TIFF', type: 'business_traveler', industry: 'Film', company: 'TIFF', skills: ['Film Production', 'Programming'], interests: ['Film', 'Theatre', 'Food'], city: 'Toronto', freq: 'occasional', status: 'online' },
+
+  // ─── AMSTERDAM (121-130) ──────────────────────────────────────
+  { name: 'Jan de Vries', age: 34, avatar: av('m11'), langs: ['Dutch', 'English', 'German'], tagline: 'Fintech VP scaling to Europe', type: 'business_traveler', industry: 'Fintech', company: 'Adyen', skills: ['Payments', 'Business Dev'], interests: ['Cycling', 'Beer Brewing', 'Football'], city: 'Amsterdam', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-20', nextPurpose: 'Client meetings' },
+  { name: 'Eva Bakker', age: 28, avatar: av('w2'), langs: ['Dutch', 'English'], tagline: 'Sustainability designer at major brand', type: 'digital_nomad', industry: 'Design', company: 'Patagonia', skills: ['Sustainable Design', 'Circular Economy'], interests: ['Sustainability', 'Cycling', 'Art'], city: 'Amsterdam', freq: 'occasional', status: 'online' },
+  { name: 'Tom Janssen', age: 31, avatar: av('m12'), langs: ['Dutch', 'English'], tagline: 'Cannabis tech entrepreneur', type: 'digital_nomad', industry: 'Cannabis Tech', company: 'GreenVenture', skills: ['AgTech', 'Compliance'], interests: ['Horticulture', 'Cycling', 'Music'], city: 'Amsterdam', freq: 'frequent', status: 'online' },
+  { name: 'Iris van Dijk', age: 27, avatar: av('w3'), langs: ['Dutch', 'English', 'French'], tagline: 'Fashion sustainability researcher', type: 'student', industry: 'Fashion', company: 'University of Amsterdam', skills: ['Research', 'Sustainable Fashion'], interests: ['Fashion', 'Vintage', 'Museums'], city: 'Amsterdam', freq: 'occasional', status: 'online' },
+  { name: 'Pieter Smit', age: 39, avatar: av('m13'), langs: ['Dutch', 'English'], tagline: 'Booking.com alumni building travel tech', type: 'digital_nomad', industry: 'Travel Tech', company: 'TripStack', skills: ['Travel Tech', 'Product'], interests: ['Sailing', 'Photography', 'Cooking'], city: 'Amsterdam', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-04-10', nextPurpose: 'Web Summit Europe' },
+  { name: 'Lotte Visser', age: 30, avatar: av('w4'), langs: ['Dutch', 'English', 'Spanish'], tagline: 'Human rights lawyer at ICC', type: 'expat', industry: 'Legal', company: 'ICC', skills: ['International Law', 'Human Rights'], interests: ['Law', 'Running', 'Documentary Films'], city: 'Amsterdam', freq: 'occasional', status: 'online' },
+  { name: 'Wouter de Groot', age: 36, avatar: av('m14'), langs: ['Dutch', 'English'], tagline: 'Logistics tech CEO optimizing supply chains', type: 'business_traveler', industry: 'Logistics', company: 'FlowPort', skills: ['Supply Chain', 'IoT'], interests: ['Rowing', 'Beer', 'Tech'], city: 'Amsterdam', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-30', nextPurpose: 'APAC expansion' },
+  { name: 'Maaike Hendriks', age: 25, avatar: av('w5'), langs: ['Dutch', 'English'], tagline: 'Graphic designer & zine maker', type: 'digital_nomad', industry: 'Design', company: 'Freelance', skills: ['Graphic Design', 'Print'], interests: ['Zines', 'Art', 'Cycling'], city: 'Amsterdam', freq: 'frequent', status: 'online' },
+  { name: 'Bram Kuiper', age: 33, avatar: av('m15'), langs: ['Dutch', 'English', 'German'], tagline: 'Quantum computing researcher', type: 'expat', industry: 'Quantum Computing', company: 'QuTech', skills: ['Quantum Physics', 'Programming'], interests: ['Science', 'Board Games', 'Hiking'], city: 'Amsterdam', freq: 'rare', status: 'online' },
+  { name: 'Sophie Wijs', age: 29, avatar: av('w6'), langs: ['Dutch', 'English'], tagline: 'Food tech product manager', type: 'digital_nomad', industry: 'Food Tech', company: 'Too Good To Go', skills: ['Product Management', 'Sustainability'], interests: ['Food', 'Sustainability', 'Yoga'], city: 'Amsterdam', freq: 'frequent', status: 'online' },
+
+  // ─── SEOUL (131-140) ──────────────────────────────────────────
+  { name: 'Ji-Yeon Park', age: 27, avatar: av('w7'), langs: ['Korean', 'English'], tagline: 'K-drama screenwriter & producer', type: 'digital_nomad', industry: 'Entertainment', company: 'CJ ENM', skills: ['Screenwriting', 'Production'], interests: ['K-drama', 'Coffee', 'Fashion'], city: 'Seoul', freq: 'occasional', status: 'online' },
+  { name: 'Sung-Ho Lee', age: 34, avatar: av('m16'), langs: ['Korean', 'English', 'Japanese'], tagline: 'Samsung exec exploring AI strategy', type: 'business_traveler', industry: 'Tech', company: 'Samsung Electronics', skills: ['AI Strategy', 'Product'], interests: ['AI', 'Basketball', 'Gaming'], city: 'Seoul', freq: 'frequent', status: 'online', nextCity: 'Tokyo', nextDate: '2026-03-22', nextPurpose: 'Partnership meetings' },
+  { name: 'Min-Jee Kim', age: 25, avatar: av('w8'), langs: ['Korean', 'English'], tagline: 'K-beauty influencer & entrepreneur', type: 'digital_nomad', industry: 'Beauty', company: 'Glow Lab Seoul', skills: ['Social Media', 'Beauty'], interests: ['Skincare', 'Photography', 'Café Hopping'], city: 'Seoul', freq: 'frequent', status: 'online', nextCity: 'Tokyo', nextDate: '2026-04-01', nextPurpose: 'Beauty expo' },
+  { name: 'Hyun-Woo Choi', age: 29, avatar: av('m17'), langs: ['Korean', 'English'], tagline: 'Esports pro turned coach', type: 'digital_nomad', industry: 'Esports', company: 'T1', skills: ['Coaching', 'Analytics'], interests: ['Gaming', 'Fitness', 'Streaming'], city: 'Seoul', freq: 'frequent', status: 'online' },
+  { name: 'Soo-Yeon Jung', age: 31, avatar: av('w9'), langs: ['Korean', 'English', 'French'], tagline: 'Art dealer connecting Korean artists globally', type: 'business_traveler', industry: 'Art', company: 'Gallery Hyundai', skills: ['Art Sales', 'Curation'], interests: ['Art', 'Wine', 'Fashion'], city: 'Seoul', freq: 'frequent', status: 'online', nextCity: 'Paris', nextDate: '2026-04-08', nextPurpose: 'Art Basel preview' },
+  { name: 'Dong-Hyuk Bae', age: 38, avatar: av('m18'), langs: ['Korean', 'English'], tagline: 'Crypto exchange CEO', type: 'business_traveler', industry: 'Crypto', company: 'Upbit', skills: ['Blockchain', 'Business'], interests: ['Crypto', 'Golf', 'Whisky'], city: 'Seoul', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-15', nextPurpose: 'Token 2049' },
+  { name: 'Eun-Ji Yoon', age: 26, avatar: av('w10'), langs: ['Korean', 'English'], tagline: 'Food vlogger exploring street food', type: 'digital_nomad', industry: 'Media', company: 'YouTube', skills: ['Video', 'Food Photography'], interests: ['Korean BBQ', 'Street Food', 'Cooking'], city: 'Seoul', freq: 'frequent', status: 'online', nextCity: 'Bangkok', nextDate: '2026-03-25', nextPurpose: 'Food content' },
+  { name: 'Jae-Hyun Kang', age: 33, avatar: av('m19'), langs: ['Korean', 'English', 'Mandarin'], tagline: 'Supply chain VP at Hyundai', type: 'business_traveler', industry: 'Automotive', company: 'Hyundai Motor', skills: ['Supply Chain', 'Procurement'], interests: ['Cars', 'Golf', 'Mountain Biking'], city: 'Seoul', freq: 'frequent', status: 'away' },
+  { name: 'Ha-Na Song', age: 24, avatar: av('w11'), langs: ['Korean', 'English'], tagline: 'Music production student at Berklee Korea', type: 'student', industry: 'Music', company: 'Berklee Korea', skills: ['Music Production', 'Piano'], interests: ['K-pop', 'Jazz', 'Café Hopping'], city: 'Seoul', freq: 'occasional', status: 'online' },
+  { name: 'Tae-Min Yoo', age: 30, avatar: av('m20'), langs: ['Korean', 'English'], tagline: 'Biotech researcher at Samsung Bio', type: 'expat', industry: 'Biotech', company: 'Samsung Biologics', skills: ['Biotech', 'Research'], interests: ['Science', 'Hiking', 'Photography'], city: 'Seoul', freq: 'rare', status: 'online' },
+
+  // ─── MIAMI (141-150) ──────────────────────────────────────────
+  { name: 'Carlos Reyes', age: 35, avatar: av('m1'), langs: ['Spanish', 'English'], tagline: 'LatAm VC fund manager', type: 'business_traveler', industry: 'Venture Capital', company: 'SoftBank LatAm', skills: ['VC', 'Deal Flow'], interests: ['Startups', 'Sailing', 'Cuban Food'], city: 'Miami', freq: 'frequent', status: 'online', nextCity: 'New York', nextDate: '2026-03-20', nextPurpose: 'LP meetings' },
+  { name: 'Valentina Rossi', age: 28, avatar: av('w12'), langs: ['Italian', 'English', 'Spanish'], tagline: 'Fashion designer in Miami Beach', type: 'expat', industry: 'Fashion', company: 'Own Brand', skills: ['Fashion Design', 'Swimwear'], interests: ['Fashion', 'Beach', 'Yoga'], city: 'Miami', freq: 'occasional', status: 'online' },
+  { name: 'Marcus Johnson', age: 32, avatar: av('m2'), langs: ['English'], tagline: 'Real estate investor in Miami condo market', type: 'business_traveler', industry: 'Real Estate', company: 'Compass', skills: ['Luxury Real Estate', 'Investment'], interests: ['Real Estate', 'Basketball', 'Cars'], city: 'Miami', freq: 'frequent', status: 'online' },
+  { name: 'Ana Lucia Gomez', age: 26, avatar: av('w13'), langs: ['Spanish', 'English', 'Portuguese'], tagline: 'Content creator covering Miami lifestyle', type: 'digital_nomad', industry: 'Media', company: 'Self-Employed', skills: ['Content Creation', 'Photography'], interests: ['Beach Life', 'Food', 'Dance'], city: 'Miami', freq: 'frequent', status: 'online', nextCity: 'Barcelona', nextDate: '2026-04-05', nextPurpose: 'Content trip' },
+  { name: 'Derek Williams', age: 40, avatar: av('m3'), langs: ['English'], tagline: 'Yacht broker for the ultra-wealthy', type: 'business_traveler', industry: 'Luxury', company: 'Fraser Yachts', skills: ['Yacht Sales', 'Client Relations'], interests: ['Sailing', 'Fishing', 'Fine Dining'], city: 'Miami', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-03-28', nextPurpose: 'Boat show' },
+  { name: 'Isabella Santos', age: 24, avatar: av('w14'), langs: ['Portuguese', 'English', 'Spanish'], tagline: 'Dance instructor & choreographer', type: 'expat', industry: 'Dance', company: 'Miami Dance Academy', skills: ['Choreography', 'Latin Dance'], interests: ['Salsa', 'Samba', 'Fitness'], city: 'Miami', freq: 'rare', status: 'online' },
+  { name: 'Tommy Lee', age: 29, avatar: av('m4'), langs: ['English', 'Korean'], tagline: 'Crypto bro turned legit fintech founder', type: 'digital_nomad', industry: 'Fintech', company: 'PayLater', skills: ['Fintech', 'Blockchain'], interests: ['Crypto', 'Jet Skiing', 'Clubbing'], city: 'Miami', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-04-15', nextPurpose: 'Crypto retreat' },
+  { name: 'Gabriela Cruz', age: 33, avatar: av('w15'), langs: ['Spanish', 'English'], tagline: 'Immigration lawyer helping dreamers', type: 'expat', industry: 'Legal', company: 'Cruz Law Group', skills: ['Immigration Law', 'Business Law'], interests: ['Law', 'Salsa', 'Community'], city: 'Miami', freq: 'occasional', status: 'online' },
+  { name: 'Andre Pierre', age: 36, avatar: av('m5'), langs: ['English', 'Haitian Creole', 'French'], tagline: 'Chef bringing Caribbean flavors to Miami', type: 'expat', industry: 'F&B', company: 'Kreyol Kitchen', skills: ['Culinary Arts', 'Restaurant Mgmt'], interests: ['Cooking', 'Music', 'Community'], city: 'Miami', freq: 'rare', status: 'online' },
+  { name: 'Sofia Alvarez', age: 27, avatar: av('w16'), langs: ['Spanish', 'English'], tagline: 'Marine biology researcher at UM', type: 'student', industry: 'Marine Science', company: 'University of Miami', skills: ['Marine Biology', 'Data Analysis'], interests: ['Diving', 'Conservation', 'Surfing'], city: 'Miami', freq: 'occasional', status: 'online' },
+
+  // ─── BALI (151-160) ──────────────────────────────────────────
+  { name: 'Omar Abdullah', age: 34, avatar: av('m12'), langs: ['Arabic', 'English'], tagline: 'E-commerce entrepreneur scaling globally', type: 'digital_nomad', industry: 'E-commerce', company: 'Own Store', skills: ['E-commerce', 'Digital Marketing'], interests: ['Entrepreneurship', 'Fitness', 'Food'], city: 'Bali', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-04-15', nextPurpose: 'Supplier meetings' },
+  { name: 'Tiffany Blake', age: 27, avatar: av('w17'), langs: ['English'], tagline: 'Yoga teacher & retreat leader', type: 'digital_nomad', industry: 'Wellness', company: 'Bali Bliss Retreats', skills: ['Yoga', 'Meditation'], interests: ['Yoga', 'Surfing', 'Raw Food'], city: 'Bali', freq: 'frequent', status: 'online' },
+  { name: 'Wayan Suardana', age: 32, avatar: av('m6'), langs: ['Indonesian', 'English'], tagline: 'Bali villa manager & local guide', type: 'expat', industry: 'Hospitality', company: 'Ubud Villas', skills: ['Property Mgmt', 'Tourism'], interests: ['Surfing', 'Temple Visits', 'Balinese Cooking'], city: 'Bali', freq: 'rare', status: 'online' },
+  { name: 'Natasha Smirnova', age: 29, avatar: av('w18'), langs: ['Russian', 'English'], tagline: 'Fashion photographer shooting in paradise', type: 'digital_nomad', industry: 'Photography', company: 'Freelance', skills: ['Fashion Photography', 'Retouching'], interests: ['Photography', 'Beach', 'Vegan Food'], city: 'Bali', freq: 'frequent', status: 'online', nextCity: 'Tokyo', nextDate: '2026-04-20', nextPurpose: 'Fashion shoot' },
+  { name: 'Jake Henderson', age: 30, avatar: av('m7'), langs: ['English', 'Indonesian'], tagline: 'Surf school owner in Canggu', type: 'expat', industry: 'Surfing', company: 'Indo Surf Co', skills: ['Surfing', 'Business'], interests: ['Surfing', 'Skateboarding', 'Music'], city: 'Bali', freq: 'rare', status: 'online' },
+  { name: 'Klara Novotná', age: 26, avatar: av('w19'), langs: ['Czech', 'English'], tagline: 'Digital nomad copywriter', type: 'digital_nomad', industry: 'Marketing', company: 'Freelance', skills: ['Copywriting', 'SEO'], interests: ['Writing', 'Yoga', 'Snorkeling'], city: 'Bali', freq: 'frequent', status: 'online' },
+  { name: 'Putu Wirawan', age: 35, avatar: av('m8'), langs: ['Indonesian', 'English'], tagline: 'Bali coffee farmer & roaster', type: 'expat', industry: 'Coffee', company: 'Bali Bean Co', skills: ['Coffee Roasting', 'Agriculture'], interests: ['Coffee', 'Farming', 'Culture'], city: 'Bali', freq: 'rare', status: 'online' },
+  { name: 'Steph Marshall', age: 28, avatar: av('w20'), langs: ['English', 'Indonesian'], tagline: 'Aussie nomad building community apps', type: 'digital_nomad', industry: 'Tech', company: 'NomadApp', skills: ['iOS Dev', 'Swift'], interests: ['Coding', 'Surfing', 'Beach Parties'], city: 'Bali', freq: 'frequent', status: 'online' },
+  { name: 'Romain Blanc', age: 33, avatar: av('m9'), langs: ['French', 'English'], tagline: 'French chef running a beach restaurant', type: 'expat', industry: 'F&B', company: 'La Plage Bali', skills: ['Culinary', 'Restaurant Mgmt'], interests: ['French Cooking', 'Surfing', 'Wine'], city: 'Bali', freq: 'rare', status: 'online' },
+  { name: 'Ava Lindström', age: 25, avatar: av('w1'), langs: ['Swedish', 'English'], tagline: 'Travel blogger & sustainability advocate', type: 'digital_nomad', industry: 'Media', company: 'Self-Employed', skills: ['Blogging', 'Photography'], interests: ['Travel', 'Sustainability', 'Yoga'], city: 'Bali', freq: 'frequent', status: 'online', nextCity: 'Lisbon', nextDate: '2026-04-01', nextPurpose: 'Content creation' },
+
+  // ─── HONG KONG (161-170) ──────────────────────────────────────
+  { name: 'William Chan', age: 38, avatar: av('m10'), langs: ['Cantonese', 'English', 'Mandarin'], tagline: 'Hedge fund manager at peak performance', type: 'business_traveler', industry: 'Finance', company: 'Citadel Asia', skills: ['Hedge Fund', 'Quant Trading'], interests: ['Horse Racing', 'Wine', 'Golf'], city: 'Hong Kong', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-20', nextPurpose: 'Investor conference' },
+  { name: 'Victoria Leung', age: 30, avatar: av('w2'), langs: ['Cantonese', 'English', 'Mandarin'], tagline: 'Luxury brand director for Greater China', type: 'business_traveler', industry: 'Luxury', company: 'Hermès Asia', skills: ['Brand Management', 'Retail'], interests: ['Fashion', 'Art', 'Dim Sum'], city: 'Hong Kong', freq: 'frequent', status: 'online', nextCity: 'Paris', nextDate: '2026-04-05', nextPurpose: 'Fashion meetings' },
+  { name: 'Andrew Cheng', age: 35, avatar: av('m11'), langs: ['Cantonese', 'English'], tagline: 'Startup ecosystem builder', type: 'digital_nomad', industry: 'Tech', company: 'Cyberport', skills: ['Ecosystem Building', 'VC'], interests: ['Startups', 'Hiking', 'Dim Sum'], city: 'Hong Kong', freq: 'frequent', status: 'online' },
+  { name: 'Jennifer Wu', age: 28, avatar: av('w3'), langs: ['Cantonese', 'English', 'Mandarin'], tagline: 'Fintech product lead', type: 'digital_nomad', industry: 'Fintech', company: 'WeLab', skills: ['Product', 'Fintech'], interests: ['Fintech', 'Hiking', 'Photography'], city: 'Hong Kong', freq: 'frequent', status: 'online', nextCity: 'Singapore', nextDate: '2026-03-25', nextPurpose: 'Fintech summit' },
+  { name: 'Peter Lo', age: 42, avatar: av('m12'), langs: ['Cantonese', 'English'], tagline: 'IPO advisor at major bank', type: 'business_traveler', industry: 'Investment Banking', company: 'Goldman Sachs HK', skills: ['IPOs', 'Capital Markets'], interests: ['Golf', 'Fine Dining', 'Art Collection'], city: 'Hong Kong', freq: 'frequent', status: 'online' },
+  { name: 'Grace Lam', age: 26, avatar: av('w4'), langs: ['Cantonese', 'English'], tagline: 'Food blogger exploring HK street food', type: 'digital_nomad', industry: 'Media', company: 'Self-Employed', skills: ['Food Photography', 'Writing'], interests: ['Street Food', 'Dim Sum', 'Coffee'], city: 'Hong Kong', freq: 'occasional', status: 'online' },
+  { name: 'Richard Yip', age: 37, avatar: av('m13'), langs: ['Cantonese', 'English', 'Mandarin'], tagline: 'Shipping tycoon modernizing logistics', type: 'business_traveler', industry: 'Shipping', company: 'Orient Overseas', skills: ['Maritime', 'Logistics'], interests: ['Sailing', 'Whisky', 'Art'], city: 'Hong Kong', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-04-10', nextPurpose: 'Lloyd\'s meetings' },
+  { name: 'Cindy Tsang', age: 29, avatar: av('w5'), langs: ['Cantonese', 'English'], tagline: 'Sustainability consultant for Asia', type: 'expat', industry: 'Sustainability', company: 'ESG Asia Consulting', skills: ['ESG', 'Sustainability'], interests: ['Hiking', 'Yoga', 'Green Living'], city: 'Hong Kong', freq: 'occasional', status: 'online' },
+  { name: 'Danny Kwok', age: 31, avatar: av('m14'), langs: ['Cantonese', 'English'], tagline: 'Crypto & Web3 developer', type: 'digital_nomad', industry: 'Web3', company: 'Animoca Brands', skills: ['Blockchain', 'NFTs'], interests: ['Web3', 'Gaming', 'Rock Climbing'], city: 'Hong Kong', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-03-18', nextPurpose: 'Web3 summit' },
+  { name: 'Michelle Ho', age: 33, avatar: av('w6'), langs: ['Cantonese', 'English', 'Mandarin'], tagline: 'International school principal', type: 'expat', industry: 'Education', company: 'Hong Kong International School', skills: ['Education Leadership', 'IB Curriculum'], interests: ['Education', 'Hiking', 'Tennis'], city: 'Hong Kong', freq: 'rare', status: 'online' },
+
+  // ─── MILAN (171-180) ──────────────────────────────────────────
+  { name: 'Giulia Moretti', age: 29, avatar: av('w7'), langs: ['Italian', 'English', 'French'], tagline: 'Fashion editor at Vogue Italia', type: 'business_traveler', industry: 'Fashion', company: 'Vogue Italia', skills: ['Fashion Journalism', 'Styling'], interests: ['Fashion', 'Art', 'Opera'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'Paris', nextDate: '2026-04-01', nextPurpose: 'Paris Fashion Week' },
+  { name: 'Marco Bianchi', age: 36, avatar: av('m15'), langs: ['Italian', 'English'], tagline: 'Luxury car brand manager', type: 'business_traveler', industry: 'Automotive', company: 'Ferrari', skills: ['Brand Management', 'Marketing'], interests: ['Cars', 'Formula 1', 'Design'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-03-22', nextPurpose: 'Auto show' },
+  { name: 'Chiara Romano', age: 25, avatar: av('w8'), langs: ['Italian', 'English', 'Spanish'], tagline: 'Architecture student at Politecnico', type: 'student', industry: 'Architecture', company: 'Politecnico di Milano', skills: ['Architecture', 'BIM'], interests: ['Architecture', 'Design', 'Aperitivo'], city: 'Milan', freq: 'occasional', status: 'online' },
+  { name: 'Andrea Conti', age: 33, avatar: av('m16'), langs: ['Italian', 'English'], tagline: 'Fintech founder revolutionizing payments', type: 'digital_nomad', industry: 'Fintech', company: 'Satispay', skills: ['Fintech', 'Growth'], interests: ['Football', 'Design', 'Wine'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-28', nextPurpose: 'Investor roadshow' },
+  { name: 'Valentina Ferrari', age: 31, avatar: av('w9'), langs: ['Italian', 'English', 'French'], tagline: 'Michelin-star chef & cookbook author', type: 'expat', industry: 'Culinary', company: 'Osteria Francescana', skills: ['Fine Dining', 'Italian Cuisine'], interests: ['Cooking', 'Wine', 'Travel'], city: 'Milan', freq: 'occasional', status: 'online' },
+  { name: 'Luca Ricci', age: 28, avatar: av('m17'), langs: ['Italian', 'English'], tagline: 'Industrial designer at Alessi', type: 'digital_nomad', industry: 'Design', company: 'Alessi', skills: ['Industrial Design', 'Product'], interests: ['Design', 'Coffee', 'Cycling'], city: 'Milan', freq: 'occasional', status: 'online' },
+  { name: 'Francesca Galli', age: 34, avatar: av('w10'), langs: ['Italian', 'English', 'German'], tagline: 'Luxury travel planner for UHNW clients', type: 'business_traveler', industry: 'Luxury Travel', company: 'Virtuoso', skills: ['Luxury Travel', 'Client Relations'], interests: ['Travel', 'Opera', 'Art'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'Dubai', nextDate: '2026-04-05', nextPurpose: 'Luxury summit' },
+  { name: 'Matteo Rossi', age: 30, avatar: av('m18'), langs: ['Italian', 'English'], tagline: 'AC Milan data analyst', type: 'expat', industry: 'Sports', company: 'AC Milan', skills: ['Sports Analytics', 'Data Science'], interests: ['Football', 'Running', 'Beer'], city: 'Milan', freq: 'occasional', status: 'online' },
+  { name: 'Elena Colombo', age: 27, avatar: av('w11'), langs: ['Italian', 'English', 'Spanish'], tagline: 'Sustainability consultant for fashion brands', type: 'business_traveler', industry: 'Sustainability', company: 'EcoFashion Milan', skills: ['ESG', 'Circular Fashion'], interests: ['Fashion', 'Sustainability', 'Yoga'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'Amsterdam', nextDate: '2026-03-20', nextPurpose: 'Sustainability summit' },
+  { name: 'Stefano Marchetti', age: 39, avatar: av('m19'), langs: ['Italian', 'English'], tagline: 'Venture partner backing European startups', type: 'business_traveler', industry: 'VC', company: 'Italian Angels', skills: ['VC', 'Startup Advisory'], interests: ['Startups', 'Sailing', 'Wine'], city: 'Milan', freq: 'frequent', status: 'online', nextCity: 'Berlin', nextDate: '2026-04-12', nextPurpose: 'Startup Berlin' },
+
+  // ─── STOCKHOLM (181-190) ──────────────────────────────────────
+  { name: 'Erik Nilsson', age: 32, avatar: av('m20'), langs: ['Swedish', 'English'], tagline: 'Spotify alum building music AI', type: 'digital_nomad', industry: 'Music Tech', company: 'SoundAI', skills: ['AI/ML', 'Music Tech'], interests: ['Music', 'Skiing', 'Coffee'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-25', nextPurpose: 'Music conference' },
+  { name: 'Astrid Johansson', age: 28, avatar: av('w12'), langs: ['Swedish', 'English', 'German'], tagline: 'Sustainability strategist for Nordic brands', type: 'business_traveler', industry: 'Sustainability', company: 'H&M Foundation', skills: ['Sustainability', 'Strategy'], interests: ['Sustainability', 'Hiking', 'Design'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'Amsterdam', nextDate: '2026-04-05', nextPurpose: 'EU Climate Summit' },
+  { name: 'Axel Bergström', age: 35, avatar: av('m1'), langs: ['Swedish', 'English'], tagline: 'Klarna co-founding team member', type: 'business_traveler', industry: 'Fintech', company: 'Klarna', skills: ['Fintech', 'Product'], interests: ['Hockey', 'Skiing', 'Design'], city: 'Stockholm', freq: 'frequent', status: 'online' },
+  { name: 'Linnea Gustafsson', age: 26, avatar: av('w13'), langs: ['Swedish', 'English'], tagline: 'UX designer at gaming studio', type: 'digital_nomad', industry: 'Gaming', company: 'King', skills: ['UX Design', 'Game Design'], interests: ['Gaming', 'Illustration', 'Fika'], city: 'Stockholm', freq: 'occasional', status: 'online' },
+  { name: 'Oscar Eklund', age: 40, avatar: av('m2'), langs: ['Swedish', 'English', 'Finnish'], tagline: 'Nordic VC partner', type: 'business_traveler', industry: 'VC', company: 'Northzone', skills: ['VC', 'Strategy'], interests: ['Startups', 'Sailing', 'Classical Music'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'Helsinki', nextDate: '2026-03-20', nextPurpose: 'Portfolio review' },
+  { name: 'Saga Lindqvist', age: 24, avatar: av('w14'), langs: ['Swedish', 'English'], tagline: 'Environmental science student', type: 'student', industry: 'Environment', company: 'KTH Royal Institute', skills: ['Environmental Science', 'Data'], interests: ['Climate Action', 'Hiking', 'Photography'], city: 'Stockholm', freq: 'rare', status: 'online' },
+  { name: 'Filip Andersson', age: 31, avatar: av('m3'), langs: ['Swedish', 'English'], tagline: 'E-commerce growth hacker', type: 'digital_nomad', industry: 'E-commerce', company: 'NA-KD', skills: ['Growth Marketing', 'E-commerce'], interests: ['Fashion', 'Running', 'Coffee'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'Berlin', nextDate: '2026-04-01', nextPurpose: 'Partner meetings' },
+  { name: 'Elsa Magnusson', age: 29, avatar: av('w15'), langs: ['Swedish', 'English'], tagline: 'Health tech PM improving patient care', type: 'digital_nomad', industry: 'Health Tech', company: 'Kry', skills: ['Product Mgmt', 'Healthcare'], interests: ['Health', 'Yoga', 'Cooking'], city: 'Stockholm', freq: 'occasional', status: 'online' },
+  { name: 'Nils Persson', age: 37, avatar: av('m4'), langs: ['Swedish', 'English'], tagline: 'Clean energy investor', type: 'business_traveler', industry: 'Energy', company: 'Vattenfall Ventures', skills: ['Energy Investment', 'M&A'], interests: ['Sustainability', 'Sailing', 'Whisky'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-03-30', nextPurpose: 'Energy conference' },
+  { name: 'Vera Dahlberg', age: 33, avatar: av('w16'), langs: ['Swedish', 'English', 'French'], tagline: 'Interior designer for Scandinavian brands', type: 'digital_nomad', industry: 'Design', company: 'Freelance', skills: ['Interior Design', 'Styling'], interests: ['Design', 'Architecture', 'Fika'], city: 'Stockholm', freq: 'frequent', status: 'online', nextCity: 'Milan', nextDate: '2026-04-08', nextPurpose: 'Salone del Mobile' },
+
+  // ─── HELSINKI (191-200) ──────────────────────────────────────
+  { name: 'Mikko Virtanen', age: 34, avatar: av('m5'), langs: ['Finnish', 'English', 'Swedish'], tagline: 'Nokia veteran turned startup mentor', type: 'business_traveler', industry: 'Tech', company: 'Slush', skills: ['Mentoring', 'Tech Strategy'], interests: ['Sauna', 'Hockey', 'Startups'], city: 'Helsinki', freq: 'frequent', status: 'online', nextCity: 'Stockholm', nextDate: '2026-03-22', nextPurpose: 'Startup event' },
+  { name: 'Aino Korhonen', age: 27, avatar: av('w17'), langs: ['Finnish', 'English'], tagline: 'Game designer at Supercell', type: 'digital_nomad', industry: 'Gaming', company: 'Supercell', skills: ['Game Design', 'Unity'], interests: ['Gaming', 'Sauna', 'Nordic Design'], city: 'Helsinki', freq: 'occasional', status: 'online' },
+  { name: 'Juha Heikkinen', age: 39, avatar: av('m6'), langs: ['Finnish', 'English'], tagline: 'Clean tech CEO', type: 'business_traveler', industry: 'Clean Tech', company: 'Fortum', skills: ['Clean Tech', 'Leadership'], interests: ['Skiing', 'Sauna', 'Ice Swimming'], city: 'Helsinki', freq: 'frequent', status: 'online', nextCity: 'London', nextDate: '2026-04-01', nextPurpose: 'Climate investors' },
+  { name: 'Emilia Mäkelä', age: 25, avatar: av('w18'), langs: ['Finnish', 'English', 'Swedish'], tagline: 'Sustainable fashion designer', type: 'digital_nomad', industry: 'Fashion', company: 'Marimekko', skills: ['Fashion Design', 'Sustainability'], interests: ['Fashion', 'Nature', 'Photography'], city: 'Helsinki', freq: 'occasional', status: 'online' },
+  { name: 'Lauri Tuominen', age: 31, avatar: av('m7'), langs: ['Finnish', 'English'], tagline: 'AI researcher at Aalto University', type: 'expat', industry: 'AI Research', company: 'Aalto University', skills: ['AI', 'NLP', 'Research'], interests: ['AI', 'Board Games', 'Cross-Country Skiing'], city: 'Helsinki', freq: 'rare', status: 'online' },
+  { name: 'Saara Niemi', age: 29, avatar: av('w19'), langs: ['Finnish', 'English'], tagline: 'Wellness app founder', type: 'digital_nomad', industry: 'Health Tech', company: 'Oura Ring Team', skills: ['Product', 'Wellness Tech'], interests: ['Biohacking', 'Sauna', 'Yoga'], city: 'Helsinki', freq: 'frequent', status: 'online', nextCity: 'Bali', nextDate: '2026-04-10', nextPurpose: 'Wellness retreat' },
+  { name: 'Kalle Laine', age: 36, avatar: av('m8'), langs: ['Finnish', 'English', 'Russian'], tagline: 'Cybersecurity expert protecting Nordic banks', type: 'business_traveler', industry: 'Cybersecurity', company: 'F-Secure', skills: ['Cybersecurity', 'Incident Response'], interests: ['Security', 'Chess', 'Ice Hockey'], city: 'Helsinki', freq: 'frequent', status: 'online', nextCity: 'Berlin', nextDate: '2026-03-28', nextPurpose: 'Security conference' },
+  { name: 'Hanna Saarinen', age: 28, avatar: av('w20'), langs: ['Finnish', 'English'], tagline: 'Environmental policy analyst at EU', type: 'expat', industry: 'Government', company: 'EU Commission Helsinki', skills: ['Policy', 'Environmental Law'], interests: ['Climate', 'Hiking', 'Reading'], city: 'Helsinki', freq: 'occasional', status: 'online' },
+  { name: 'Matti Koivisto', age: 33, avatar: av('m9'), langs: ['Finnish', 'English'], tagline: 'Esports team owner & investor', type: 'business_traveler', industry: 'Esports', company: 'ENCE', skills: ['Esports Mgmt', 'Investment'], interests: ['Esports', 'Hockey', 'Sauna'], city: 'Helsinki', freq: 'frequent', status: 'online', nextCity: 'Seoul', nextDate: '2026-04-15', nextPurpose: 'Tournament' },
+  { name: 'Iida Hämäläinen', age: 24, avatar: av('w1'), langs: ['Finnish', 'English', 'Swedish'], tagline: 'Music student at Sibelius Academy', type: 'student', industry: 'Music', company: 'Sibelius Academy', skills: ['Violin', 'Composition'], interests: ['Classical Music', 'Nature', 'Hiking'], city: 'Helsinki', freq: 'rare', status: 'online' },
 ];
 
-// Realistic pre-populated chat messages
+// Build all 200 profiles
+export const socialProfiles: SocialProfile[] = SEEDS.map((s, i) => buildProfile(i + 1, s));
+
+// Pre-populated chat messages for demo rooms
 const bangkokMessages: ChatMessage[] = [
-  { id: 'bm1', senderId: '1', senderName: 'Sarah Chen', senderAvatar: AVATAR_URLS.sarah, content: 'Hey Emma! I\'m planning to be in Bangkok from March 15. Any co-working space recommendations near Silom?', timestamp: new Date(Date.now() - 7200000), type: 'message' },
-  { id: 'bm2', senderId: '7', senderName: 'Emma Wilson', senderAvatar: AVATAR_URLS.emma, content: 'Welcome! 🎉 You\'ll love it here. Check out Hubba-To on Silom — fast wifi, great coffee, and lots of nomads. I go there every Tuesday.', timestamp: new Date(Date.now() - 6600000), type: 'message' },
-  { id: 'bm3', senderId: '1', senderName: 'Sarah Chen', senderAvatar: AVATAR_URLS.sarah, content: 'Perfect! Also, is the Chatuchak weekend market as good as everyone says? I\'m a sucker for street food.', timestamp: new Date(Date.now() - 5400000), type: 'message' },
-  { id: 'bm4', senderId: '7', senderName: 'Emma Wilson', senderAvatar: AVATAR_URLS.emma, content: 'It\'s incredible — go early though, before 10am to beat the heat. The coconut ice cream stall near Section 27 is legendary 🍦', timestamp: new Date(Date.now() - 4800000), type: 'message' },
-  { id: 'bm5', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '💡 Sarah, I noticed you both share an interest in photography! Emma organizes a monthly photo walk through Old Bangkok — next one is March 22. Want me to add it to your calendar?', timestamp: new Date(Date.now() - 3600000), type: 'ai_suggestion', isAI: true },
-  { id: 'bm6', senderId: '1', senderName: 'Sarah Chen', senderAvatar: AVATAR_URLS.sarah, content: 'Yes please! That sounds amazing. Can\'t wait to meet everyone 📸', timestamp: new Date(Date.now() - 1800000), type: 'message' },
+  { id: 'bm1', senderId: '1', senderName: 'Sarah Chen', senderAvatar: av('w1'), content: 'Hey Emma! I\'m planning to be in Bangkok from April 15. Any co-working space recommendations near Silom?', timestamp: new Date(Date.now() - 7200000), type: 'message' },
+  { id: 'bm2', senderId: '71', senderName: 'Emma Wilson', senderAvatar: av('w7'), content: 'Welcome! 🎉 You\'ll love it here. Check out Hubba-To on Silom — fast wifi, great coffee, and lots of nomads. I go there every Tuesday.', timestamp: new Date(Date.now() - 6600000), type: 'message' },
+  { id: 'bm3', senderId: '1', senderName: 'Sarah Chen', senderAvatar: av('w1'), content: 'Perfect! Also, is the Chatuchak weekend market as good as everyone says?', timestamp: new Date(Date.now() - 5400000), type: 'message' },
+  { id: 'bm4', senderId: '71', senderName: 'Emma Wilson', senderAvatar: av('w7'), content: 'It\'s incredible — go early though, before 10am to beat the heat. The coconut ice cream stall near Section 27 is legendary 🍦', timestamp: new Date(Date.now() - 4800000), type: 'message' },
+  { id: 'bm5', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '💡 Sarah & Emma, I noticed you both love photography! Emma runs a monthly photo walk through Old Bangkok — next one is March 22. Want me to add it to your calendar?', timestamp: new Date(Date.now() - 3600000), type: 'ai_suggestion', isAI: true },
+  { id: 'bm6', senderId: '1', senderName: 'Sarah Chen', senderAvatar: av('w1'), content: 'Yes please! That sounds amazing 📸', timestamp: new Date(Date.now() - 1800000), type: 'message' },
 ];
 
 const financeMessages: ChatMessage[] = [
-  { id: 'fm1', senderId: '2', senderName: 'James Rodriguez', senderAvatar: AVATAR_URLS.james, content: 'Just finished the quarterly review — European markets are looking strong heading into Q2. Anyone else seeing similar patterns?', timestamp: new Date(Date.now() - 86400000), type: 'message' },
-  { id: 'fm2', senderId: '16', senderName: 'Tom Anderson', senderAvatar: AVATAR_URLS.tom, content: 'Absolutely. The Nordic tech sector is outperforming. We\'re seeing 23% YoY growth in our portfolio. Happy to share our thesis if you\'re interested.', timestamp: new Date(Date.now() - 82800000), type: 'message' },
-  { id: 'fm3', senderId: '13', senderName: 'Rachel Cohen', senderAvatar: AVATAR_URLS.rachel, content: 'On the marketing side, fintech ad spend is surging. If either of you need consumer insights for those markets, I have some great data from our latest campaign.', timestamp: new Date(Date.now() - 79200000), type: 'message' },
-  { id: 'fm4', senderId: '2', senderName: 'James Rodriguez', senderAvatar: AVATAR_URLS.james, content: 'That would be incredibly useful, Rachel. Tom — I\'ll be in Singapore for the APAC Finance Summit on March 20. Are you going?', timestamp: new Date(Date.now() - 72000000), type: 'message' },
-  { id: 'fm5', senderId: '16', senderName: 'Tom Anderson', senderAvatar: AVATAR_URLS.tom, content: 'Wouldn\'t miss it. Let\'s grab dinner one evening — I know a fantastic spot at Marina Bay. Rachel, you should join us if you\'re in town!', timestamp: new Date(Date.now() - 43200000), type: 'message' },
-  { id: 'fm6', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '📊 I\'ve matched your schedules — all three of you overlap in Singapore March 20-22. I found a private dining room at CÉ LA VI for up to 6 guests. Want me to book March 21 at 8pm?', timestamp: new Date(Date.now() - 36000000), type: 'ai_suggestion', isAI: true },
+  { id: 'fm1', senderId: '2', senderName: 'James Rodriguez', senderAvatar: av('m9'), content: 'Just finished the quarterly review — European markets are looking strong heading into Q2.', timestamp: new Date(Date.now() - 86400000), type: 'message' },
+  { id: 'fm2', senderId: '9', senderName: 'Tom Anderson', senderAvatar: av('m2'), content: 'Absolutely. The Nordic tech sector is outperforming. 23% YoY growth in our portfolio.', timestamp: new Date(Date.now() - 82800000), type: 'message' },
+  { id: 'fm3', senderId: '11', senderName: 'Rachel Cohen', senderAvatar: av('w10'), content: 'On the marketing side, fintech ad spend is surging. I have some great data from our latest campaign.', timestamp: new Date(Date.now() - 79200000), type: 'message' },
+  { id: 'fm4', senderId: '2', senderName: 'James Rodriguez', senderAvatar: av('m9'), content: 'That would be incredibly useful, Rachel. I\'ll be in Singapore for the APAC Finance Summit March 20.', timestamp: new Date(Date.now() - 72000000), type: 'message' },
+  { id: 'fm5', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '📊 I\'ve matched your schedules — all three of you overlap in Singapore March 20-22. CÉ LA VI has a private dining room available March 21 at 8pm. Shall I book?', timestamp: new Date(Date.now() - 36000000), type: 'ai_suggestion', isAI: true },
 ];
 
 const techConfMessages: ChatMessage[] = [
-  { id: 'tc1', senderId: '9', senderName: 'Yuki Tanaka', senderAvatar: AVATAR_URLS.yuki, content: 'The speaker lineup for Singapore Tech Conference is 🔥 this year. Keynote on AI governance just got confirmed!', timestamp: new Date(Date.now() - 172800000), type: 'message' },
-  { id: 'tc2', senderId: '15', senderName: 'Priya Sharma', senderAvatar: AVATAR_URLS.priya, content: 'I\'ll be there! Particularly excited about the DEI in Tech panel. Our company is sponsoring it this year.', timestamp: new Date(Date.now() - 158400000), type: 'message' },
-  { id: 'tc3', senderId: '2', senderName: 'James Rodriguez', senderAvatar: AVATAR_URLS.james, content: 'Count me in too. Is there a fintech track this year? Last year\'s blockchain session was standing room only.', timestamp: new Date(Date.now() - 144000000), type: 'message' },
-  { id: 'tc4', senderId: '9', senderName: 'Yuki Tanaka', senderAvatar: AVATAR_URLS.yuki, content: 'Yes! Day 2 is all about fintech and DeFi. I can get you VIP passes to the after-party — it\'s at the Sands rooftop 🎉', timestamp: new Date(Date.now() - 129600000), type: 'message' },
-  { id: 'tc5', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '🎯 Great news! I found 8 other SuperNomad members attending the same conference. Want me to create a group meetup on March 6 at 6pm near the convention center?', timestamp: new Date(Date.now() - 86400000), type: 'ai_suggestion', isAI: true },
+  { id: 'tc1', senderId: '21', senderName: 'Yuki Tanaka', senderAvatar: av('w9'), content: 'The speaker lineup for Singapore Tech Conference is 🔥 this year. AI governance keynote confirmed!', timestamp: new Date(Date.now() - 172800000), type: 'message' },
+  { id: 'tc2', senderId: '31', senderName: 'Priya Sharma', senderAvatar: av('w12'), content: 'I\'ll be there! Particularly excited about the DEI in Tech panel. Our company is sponsoring it.', timestamp: new Date(Date.now() - 158400000), type: 'message' },
+  { id: 'tc3', senderId: '2', senderName: 'James Rodriguez', senderAvatar: av('m9'), content: 'Count me in too. Is there a fintech track this year?', timestamp: new Date(Date.now() - 144000000), type: 'message' },
+  { id: 'tc4', senderId: '21', senderName: 'Yuki Tanaka', senderAvatar: av('w9'), content: 'Yes! Day 2 is all about fintech and DeFi. I can get you VIP passes to the after-party 🎉', timestamp: new Date(Date.now() - 129600000), type: 'message' },
+  { id: 'tc5', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '', content: '🎯 I found 8 other SuperNomad members attending the same conference. Want me to create a group meetup on March 6 at 6pm?', timestamp: new Date(Date.now() - 86400000), type: 'ai_suggestion', isAI: true },
 ];
 
 export const demoChatRooms: ChatRoom[] = [
   {
-    id: '1',
-    type: 'location',
-    name: 'Bangkok Digital Nomads',
-    participants: ['1', '7'],
+    id: '1', type: 'location', name: 'Bangkok Digital Nomads',
+    participants: ['1', '71'],
     participantDetails: [
-      { id: '1', name: 'Sarah Chen', avatar: AVATAR_URLS.sarah },
-      { id: '7', name: 'Emma Wilson', avatar: AVATAR_URLS.emma }
+      { id: '1', name: 'Sarah Chen', avatar: av('w1') },
+      { id: '71', name: 'Emma Wilson', avatar: av('w7') }
     ],
-    messages: bangkokMessages,
-    unreadCount: 2,
-    lastMessage: 'Yes please! That sounds amazing. Can\'t wait to meet everyone 📸',
+    messages: bangkokMessages, unreadCount: 2,
+    lastMessage: 'Yes please! That sounds amazing 📸',
     lastActivity: new Date(Date.now() - 1800000),
     metadata: { location: 'Bangkok', purpose: 'Digital nomad networking' }
   },
   {
-    id: '2',
-    type: 'professional',
-    name: 'Finance Professionals Network',
-    participants: ['2', '13', '16'],
+    id: '2', type: 'professional', name: 'Finance Professionals Network',
+    participants: ['2', '11', '9'],
     participantDetails: [
-      { id: '2', name: 'James Rodriguez', avatar: AVATAR_URLS.james },
-      { id: '13', name: 'Rachel Cohen', avatar: AVATAR_URLS.rachel },
-      { id: '16', name: 'Tom Anderson', avatar: AVATAR_URLS.tom }
+      { id: '2', name: 'James Rodriguez', avatar: av('m9') },
+      { id: '11', name: 'Rachel Cohen', avatar: av('w10') },
+      { id: '9', name: 'Tom Anderson', avatar: av('m2') }
     ],
-    messages: financeMessages,
-    unreadCount: 3,
-    lastMessage: 'I found a private dining room at CÉ LA VI for up to 6 guests.',
+    messages: financeMessages, unreadCount: 3,
+    lastMessage: 'CÉ LA VI private dining room available March 21.',
     lastActivity: new Date(Date.now() - 36000000),
     metadata: { purpose: 'Financial industry networking' }
   },
   {
-    id: '3',
-    type: 'event',
-    name: 'Singapore Tech Conference 2026',
-    participants: ['2', '9', '15'],
+    id: '3', type: 'event', name: 'Singapore Tech Conference 2026',
+    participants: ['2', '21', '31'],
     participantDetails: [
-      { id: '2', name: 'James Rodriguez', avatar: AVATAR_URLS.james },
-      { id: '9', name: 'Yuki Tanaka', avatar: AVATAR_URLS.yuki },
-      { id: '15', name: 'Priya Sharma', avatar: AVATAR_URLS.priya }
+      { id: '2', name: 'James Rodriguez', avatar: av('m9') },
+      { id: '21', name: 'Yuki Tanaka', avatar: av('w9') },
+      { id: '31', name: 'Priya Sharma', avatar: av('w12') }
     ],
-    messages: techConfMessages,
-    unreadCount: 5,
+    messages: techConfMessages, unreadCount: 5,
     lastMessage: 'Want me to create a group meetup on March 6 at 6pm?',
     lastActivity: new Date(Date.now() - 86400000),
     metadata: { event: 'Singapore Tech Conference', location: 'Singapore' }
   }
 ];
 
-// Export avatar URLs for reuse across components
-export { AVATAR_URLS };
+// Export for city filter buttons in UI
+export const MAJOR_CITIES = CITIES;

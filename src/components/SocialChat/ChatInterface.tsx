@@ -10,7 +10,6 @@ import { format } from 'date-fns';
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 
 interface ChatInterfaceProps {
   chatRoom: ChatRoom;
@@ -89,7 +88,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
         speak(`Here's what you missed: ${data.suggestion}`);
       }
     } catch {
-      // Fallback summary from messages
       const topics = chatRoom.messages
         .filter(m => !m.isAI)
         .slice(-5)
@@ -118,7 +116,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
           </Button>
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="flex -space-x-2 flex-shrink-0">
-              {chatRoom.participantDetails.slice(0, 3).map((participant) => (
+              {chatRoom.participantDetails.filter(p => p.avatar).slice(0, 3).map((participant) => (
                 <img
                   key={participant.id}
                   src={participant.avatar}
@@ -138,65 +136,35 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
             </div>
           </div>
           <div className="flex gap-1 flex-shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSearch(!showSearch)}
-              className="h-8 w-8 p-0"
-              title="Search messages"
-            >
+            <Button variant="ghost" size="sm" onClick={() => setShowSearch(!showSearch)} className="h-8 w-8 p-0" title="Search messages">
               <Search className="h-4 w-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={generateCatchUp}
-              className="h-8 w-8 p-0"
-              title="AI Catch-up Summary"
-            >
+            <Button variant="ghost" size="sm" onClick={generateCatchUp} className="h-8 w-8 p-0" title="AI Catch-up Summary">
               <FileText className="h-4 w-4" />
             </Button>
             {ttsSupported && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleVoice}
-                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
-                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
-              >
+              <Button variant="ghost" size="sm" onClick={toggleVoice} className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`} title={voiceEnabled ? 'Disable voice' : 'Enable voice'}>
                 {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
               </Button>
             )}
           </div>
         </div>
 
-        {/* Search bar */}
         {showSearch && (
           <div className="flex gap-2 mt-2">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input
-                placeholder="Search messages..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 h-8 text-sm"
-                autoFocus
-              />
+              <Input placeholder="Search messages..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-8 h-8 text-sm" autoFocus />
             </div>
             <Button variant="ghost" size="sm" onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
-            {searchQuery && (
-              <Badge variant="secondary" className="text-xs self-center">
-                {displayMessages.length} found
-              </Badge>
-            )}
+            {searchQuery && <Badge variant="secondary" className="text-xs self-center">{displayMessages.length} found</Badge>}
           </div>
         )}
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-        {/* Catch-up Summary Banner */}
         {showCatchUp && (
           <div className="border-b bg-accent/50 p-3">
             <div className="flex items-center justify-between mb-1">
@@ -236,10 +204,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
                 const isHighlighted = searchQuery && msg.content.toLowerCase().includes(searchQuery.toLowerCase());
 
                 return (
-                  <div
-                    key={msg.id}
-                    className={`flex gap-3 ${isCurrentUser ? 'flex-row-reverse' : ''} ${isAI ? 'opacity-80' : ''}`}
-                  >
+                  <div key={msg.id} className={`flex gap-3 ${isCurrentUser ? 'flex-row-reverse' : ''} ${isAI ? 'opacity-80' : ''}`}>
                     {!isCurrentUser && (
                       <img
                         src={isAI ? `https://ui-avatars.com/api/?name=AI&background=6366f1&color=fff&size=150` : (msg.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName)}&background=random&size=150`)}

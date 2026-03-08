@@ -6,6 +6,10 @@ import { Sparkles, MapPin, Briefcase, MessageCircle, Bike, Coffee, Utensils, The
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { AIMatchSuggestion } from '@/types/socialChat';
 
+interface AIMatchingSuggestionsProps {
+  onStartChat?: (profileId: string) => void;
+}
+
 interface SmartScenario {
   icon: React.ReactNode;
   title: string;
@@ -16,67 +20,73 @@ interface SmartScenario {
   activity: string;
   when: string;
   tag: string;
+  profileId?: string;
 }
 
 const SMART_SCENARIOS: SmartScenario[] = [
   {
     icon: <Bike className="h-5 w-5 text-primary" />,
     title: '🚴 Saturday Ride Buddy Found!',
-    description: 'You planned biking this Saturday — John is also looking for a cycling partner near you!',
-    matchName: 'John Harris',
-    matchAvatar: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=150&h=150&fit=crop&crop=face',
-    matchCity: 'Your area',
-    activity: 'Mountain biking, 25km trail',
-    when: 'Saturday, Feb 21 • 9:00 AM',
-    tag: 'Activity Match'
+    description: 'You planned biking this Saturday — Oliver is also looking for a cycling partner in London!',
+    matchName: 'Oliver Wright',
+    matchAvatar: 'https://images.unsplash.com/photo-1548372290-8d01b6c8e78c?w=150&h=150&fit=crop&crop=face',
+    matchCity: 'London',
+    activity: 'Richmond Park cycling, 30km route',
+    when: 'Saturday, March 14 • 9:00 AM',
+    tag: 'Activity Match',
+    profileId: '5',
   },
   {
     icon: <Coffee className="h-5 w-5 text-primary" />,
     title: '☕ Your Match is in Milano Too!',
-    description: 'Lena Schmidt will be in Milano the same dates as you. Perfect for a coffee or dinner meetup!',
-    matchName: 'Lena Schmidt',
-    matchAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+    description: 'Sophie Laurent will be in Milano the same dates as you. Perfect for a coffee or dinner meetup!',
+    matchName: 'Sophie Laurent',
+    matchAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
     matchCity: 'Milano, Italy',
     activity: 'Coffee at Marchesi 1824 or dinner at Langosteria',
     when: 'March 22–26 • You both overlap',
-    tag: 'Travel Overlap'
+    tag: 'Travel Overlap',
+    profileId: '3',
   },
   {
     icon: <Theater className="h-5 w-5 text-primary" />,
     title: '🎭 La Scala Has Your Show!',
     description: 'Based on your love of theater — "La Traviata" at Teatro alla Scala, Milano. Limited tickets available!',
-    matchName: 'Sophie Laurent',
-    matchAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+    matchName: 'Giulia Moretti',
+    matchAvatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face',
     matchCity: 'Milano, Italy',
     activity: 'La Traviata — Teatro alla Scala',
     when: 'March 23 • 8:00 PM',
-    tag: 'Event Discovery'
+    tag: 'Event Discovery',
+    profileId: '171',
   },
   {
     icon: <Trophy className="h-5 w-5 text-primary" />,
     title: '⚽ AC Milan vs Inter — Derby!',
     description: 'You mentioned sports — the Milan Derby is happening while you\'re in town. 3 other nomads are going!',
-    matchName: 'Carlos Mendez',
-    matchAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face',
+    matchName: 'Matteo Rossi',
+    matchAvatar: 'https://images.unsplash.com/photo-1545167622-3a6ac756afa4?w=150&h=150&fit=crop&crop=face',
     matchCity: 'Milano, Italy',
     activity: 'Serie A: AC Milan vs Inter at San Siro',
     when: 'March 24 • 8:45 PM',
-    tag: 'Sports Event'
+    tag: 'Sports Event',
+    profileId: '178',
   },
   {
     icon: <Utensils className="h-5 w-5 text-primary" />,
     title: '🍽️ Michelin Star Experience',
     description: 'AI found a 2-Michelin star restaurant matching your fine dining interest — reservation for 2 available!',
-    matchName: 'James Rodriguez',
-    matchAvatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face',
+    matchName: 'Valentina Ferrari',
+    matchAvatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=150&h=150&fit=crop&crop=face',
     matchCity: 'Milano, Italy',
     activity: 'Enrico Bartolini al Mudec ⭐⭐ Michelin',
     when: 'March 25 • 7:30 PM',
-    tag: 'Fine Dining'
+    tag: 'Fine Dining',
+    profileId: '175',
   }
 ];
 
-export const AIMatchingSuggestions = () => {
+export const AIMatchingSuggestions = ({ onStartChat }: AIMatchingSuggestionsProps) => {
   const { getAIMatches, profiles } = useSocialChat();
   const [matches, setMatches] = useState<AIMatchSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -96,6 +106,12 @@ export const AIMatchingSuggestions = () => {
     });
     setMatches(suggestions);
     setIsLoading(false);
+  };
+
+  const handleConnect = (profileId?: string) => {
+    if (profileId && onStartChat) {
+      onStartChat(profileId);
+    }
   };
 
   if (isLoading) {
@@ -155,8 +171,8 @@ export const AIMatchingSuggestions = () => {
                 </div>
                 <p className="text-xs font-medium text-primary mt-1">{scenario.activity}</p>
                 <div className="flex gap-2 mt-3">
-                  <Button size="sm" variant="default" className="text-xs h-7">
-                    <MessageCircle className="h-3 w-3 mr-1" /> Connect
+                  <Button size="sm" variant="default" className="text-xs h-7" onClick={() => handleConnect(scenario.profileId)}>
+                    <MessageCircle className="h-3 w-3 mr-1" /> Connect & Chat
                   </Button>
                   <Button size="sm" variant="outline" className="text-xs h-7">
                     View Details
@@ -257,18 +273,20 @@ export const AIMatchingSuggestions = () => {
                 </div>
               )}
 
-              <div>
-                <h4 className="text-sm font-semibold mb-2">Conversation starters:</h4>
-                <div className="space-y-1">
-                  {match.conversationStarters.slice(0, 2).map((starter, idx) => (
-                    <p key={idx} className="text-sm text-muted-foreground italic">
-                      "{starter}"
-                    </p>
-                  ))}
+              {match.conversationStarters && match.conversationStarters.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Conversation starters:</h4>
+                  <div className="space-y-1">
+                    {match.conversationStarters.slice(0, 2).map((starter, idx) => (
+                      <p key={idx} className="text-sm text-muted-foreground italic">
+                        "{starter}"
+                      </p>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <Button className="w-full">
+              <Button className="w-full" onClick={() => handleConnect(match.profile.id)}>
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Start Conversation
               </Button>
