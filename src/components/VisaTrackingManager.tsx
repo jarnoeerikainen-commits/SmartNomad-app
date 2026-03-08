@@ -68,105 +68,49 @@ interface TaxTrackingManagerProps {
 
 const VISA_TYPES = [
   // Electronic Travel Authorizations (ETAs)
-  { 
-    id: 'uk-eta', 
-    name: 'UK ETA', 
-    icon: '🇬🇧', 
-    description: 'UK Electronic Travel Authorisation',
-    commonDays: [180]
-  },
-  { 
-    id: 'us-esta', 
-    name: 'US ESTA', 
-    icon: '🇺🇸', 
-    description: 'Electronic System for Travel Authorization',
-    commonDays: [90]
-  },
-  { 
-    id: 'canada-eta', 
-    name: 'Canada eTA', 
-    icon: '🇨🇦', 
-    description: 'Canada Electronic Travel Authorization',
-    commonDays: [180]
-  },
-  { 
-    id: 'australia-eta', 
-    name: 'Australia ETA', 
-    icon: '🇦🇺', 
-    description: 'Australia Electronic Travel Authority',
-    commonDays: [90]
-  },
-  { 
-    id: 'nz-nzeta', 
-    name: 'New Zealand NZeTA', 
-    icon: '🇳🇿', 
-    description: 'New Zealand Electronic Travel Authority',
-    commonDays: [90]
-  },
+  { id: 'uk-eta', name: 'UK ETA', icon: '🇬🇧', description: 'UK Electronic Travel Authorisation', commonDays: [180], persona: ['traveller'] },
+  { id: 'us-esta', name: 'US ESTA', icon: '🇺🇸', description: 'Electronic System for Travel Authorization', commonDays: [90], persona: ['traveller'] },
+  { id: 'canada-eta', name: 'Canada eTA', icon: '🇨🇦', description: 'Canada Electronic Travel Authorization', commonDays: [180], persona: ['traveller'] },
+  { id: 'australia-eta', name: 'Australia ETA', icon: '🇦🇺', description: 'Australia Electronic Travel Authority', commonDays: [90], persona: ['traveller'] },
+  { id: 'nz-nzeta', name: 'New Zealand NZeTA', icon: '🇳🇿', description: 'New Zealand Electronic Travel Authority', commonDays: [90], persona: ['traveller'] },
   // Traditional Visas
-  { 
-    id: 'tourist', 
-    name: 'Tourist Visa', 
-    icon: '🏖️', 
-    description: 'Leisure travel and sightseeing',
-    commonDays: [30, 60, 90, 180]
-  },
-  { 
-    id: 'business', 
-    name: 'Business Visa', 
-    icon: '💼', 
-    description: 'Business meetings and conferences',
-    commonDays: [30, 90, 180]
-  },
-  { 
-    id: 'student-visa', 
-    name: 'Student Visa', 
-    icon: '🎓', 
-    description: 'Academic studies and education',
-    commonDays: [180, 365, 730]
-  },
-  { 
-    id: 'student', 
-    name: 'Student Entry', 
-    icon: '📚', 
-    description: 'Student exchange programs',
-    commonDays: [90, 180, 365]
-  },
-  { 
-    id: 'work', 
-    name: 'Work Permit', 
-    icon: '🏢', 
-    description: 'Employment authorization',
-    commonDays: [90, 180, 365, 730]
-  },
-  { 
-    id: 'schengen', 
-    name: 'Schengen Area', 
-    icon: '🇪🇺', 
-    description: 'EU Schengen zone travel',
-    commonDays: [90]
-  },
-  { 
-    id: 'transit', 
-    name: 'Transit Visa', 
-    icon: '✈️', 
-    description: 'Airport or country transit',
-    commonDays: [1, 3, 5, 10]
-  },
-  { 
-    id: 'digital-nomad', 
-    name: 'Digital Nomad', 
-    icon: '💻', 
-    description: 'Remote work visa',
-    commonDays: [180, 365]
-  },
-  { 
-    id: 'tax-residence', 
-    name: 'Tax Residence', 
-    icon: '📊', 
-    description: 'Tax residency tracking',
-    commonDays: [183, 365]
-  }
+  { id: 'tourist', name: 'Tourist Visa', icon: '🏖️', description: 'Leisure travel and sightseeing', commonDays: [30, 60, 90, 180], persona: ['traveller'] },
+  { id: 'business', name: 'Business Visa', icon: '💼', description: 'Business meetings and conferences', commonDays: [30, 90, 180], persona: ['traveller', 'expat'] },
+  { id: 'student-visa', name: 'Student Visa', icon: '🎓', description: 'Academic studies and education', commonDays: [180, 365, 730], persona: ['traveller'] },
+  { id: 'student', name: 'Student Entry', icon: '📚', description: 'Student exchange programs', commonDays: [90, 180, 365], persona: ['traveller'] },
+  { id: 'work', name: 'Work Permit', icon: '🏢', description: 'Employment authorization', commonDays: [90, 180, 365, 730], persona: ['expat'] },
+  { id: 'schengen', name: 'Schengen Area', icon: '🇪🇺', description: 'EU Schengen zone travel (90/180)', commonDays: [90], persona: ['traveller'] },
+  { id: 'transit', name: 'Transit Visa', icon: '✈️', description: 'Airport or country transit', commonDays: [1, 3, 5, 10], persona: ['traveller'] },
+  { id: 'digital-nomad', name: 'Digital Nomad', icon: '💻', description: 'Remote work visa', commonDays: [180, 365], persona: ['traveller', 'expat'] },
+  { id: 'tax-residence', name: 'Tax Residence', icon: '📊', description: 'Tax residency tracking', commonDays: [183, 365], persona: ['expat'] },
+  // Diplomat & Government
+  { id: 'diplomatic', name: 'Diplomatic Visa', icon: '🏛️', description: 'Official government/diplomatic mission', commonDays: [365, 730, 1095], persona: ['diplomat'] },
+  { id: 'official', name: 'Official/Service Visa', icon: '📋', description: 'Government official duty travel', commonDays: [90, 180, 365], persona: ['diplomat', 'politics'] },
+  { id: 'courtesy', name: 'Courtesy Visa', icon: '🤝', description: 'Extended to foreign dignitaries', commonDays: [30, 90, 180], persona: ['diplomat', 'politics'] },
+  { id: 'un-laissez', name: 'UN Laissez-Passer', icon: '🇺🇳', description: 'United Nations travel document', commonDays: [365, 730], persona: ['diplomat'] },
+  // Military & NATO
+  { id: 'nato-sofa', name: 'NATO SOFA', icon: '🎖️', description: 'NATO Status of Forces Agreement', commonDays: [365, 730, 1095], persona: ['military'] },
+  { id: 'military-orders', name: 'Military Orders', icon: '⭐', description: 'PCS/TDY military deployment', commonDays: [180, 365, 730, 1095], persona: ['military'] },
+  { id: 'military-leave', name: 'Military R&R Leave', icon: '🏠', description: 'Rest & recuperation leave', commonDays: [14, 30, 45], persona: ['military'] },
+  { id: 'military-dependent', name: 'Military Dependent', icon: '👨‍👩‍👧', description: 'SOFA-covered family member', commonDays: [365, 730, 1095], persona: ['military'] },
+  // Political & Special
+  { id: 'asylum', name: 'Asylum / Refugee', icon: '🕊️', description: 'Refugee or asylum seeker status', commonDays: [365, 730, 1825], persona: ['politics'] },
+  { id: 'humanitarian', name: 'Humanitarian Visa', icon: '❤️', description: 'Humanitarian protection visa', commonDays: [180, 365], persona: ['politics'] },
+  { id: 'journalist', name: 'Journalist/Media Visa', icon: '📰', description: 'Press and media credentials', commonDays: [30, 90, 180, 365], persona: ['politics'] },
+  // Investment & Residency
+  { id: 'investor', name: 'Investor Visa', icon: '💰', description: 'Investment-based entry/residency', commonDays: [365, 730, 1825], persona: ['expat'] },
+  { id: 'golden-visa', name: 'Golden Visa', icon: '🏆', description: 'Residency by investment programme', commonDays: [365, 730, 1825], persona: ['expat'] },
+  { id: 'retirement', name: 'Retirement Visa', icon: '🌴', description: 'Retiree residency programme', commonDays: [365, 730], persona: ['expat'] },
+  { id: 'entrepreneur', name: 'Entrepreneur Visa', icon: '🚀', description: 'Startup/entrepreneur programme', commonDays: [365, 730], persona: ['expat'] },
+  // Crew & Special
+  { id: 'crew', name: 'Crew Visa (C1/D)', icon: '🚢', description: 'Airline/maritime crew transit', commonDays: [29, 90], persona: ['traveller'] },
+  { id: 'religious', name: 'Religious Worker', icon: '⛪', description: 'Religious mission or ministry', commonDays: [180, 365, 730], persona: ['traveller'] },
+  { id: 'medical', name: 'Medical Treatment', icon: '🏥', description: 'Medical travel and treatment', commonDays: [30, 90, 180], persona: ['traveller'] },
+  { id: 'exchange', name: 'Exchange Visitor (J-1)', icon: '🔄', description: 'Cultural exchange programme', commonDays: [365, 730], persona: ['traveller'] },
+  { id: 'fiancee', name: 'Fiancé(e) Visa (K-1)', icon: '💍', description: 'Marriage-based entry', commonDays: [90], persona: ['traveller'] },
+  { id: 'family-reunion', name: 'Family Reunification', icon: '👪', description: 'Join family members abroad', commonDays: [365, 730, 1825], persona: ['expat'] },
+  { id: 'permanent-resident', name: 'Permanent Residency', icon: '🏠', description: 'Long-term/permanent residence', commonDays: [1825, 3650], persona: ['expat'] },
+  { id: 'citizenship-track', name: 'Citizenship Track', icon: '🛂', description: 'Naturalisation day tracking', commonDays: [1825, 3650], persona: ['expat'] },
 ];
 
 const COUNTRIES = [

@@ -151,6 +151,12 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
     'Business travel limit',
     'Student visa limit',
     'Digital nomad visa',
+    'Diplomatic mission',
+    'Military deployment (SOFA)',
+    'Golden Visa / Investor',
+    'Retirement residency',
+    'Citizenship track',
+    'Family reunification',
     'Custom tracking'
   ];
 
