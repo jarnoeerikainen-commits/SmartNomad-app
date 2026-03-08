@@ -116,7 +116,7 @@ const AwardCardsDashboard: React.FC = () => {
   const deleteCard = (id: string) => {
     const newCards = cards.filter(c => c.id !== id);
     saveCards(newCards);
-    toast({ title: 'Card Removed', description: 'Award card has been removed from your wallet.' });
+    toast({ title: t('award.card_removed'), description: t('award.card_removed_desc') });
   };
 
   const filteredCards = cards.filter(c => {
