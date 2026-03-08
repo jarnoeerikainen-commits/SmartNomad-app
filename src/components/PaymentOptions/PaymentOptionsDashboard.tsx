@@ -317,7 +317,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">🪙</span>
             <div>
               <p className="text-xl font-bold">{stats.crypto}</p>
-              <p className="text-xs text-muted-foreground">Crypto Wallets</p>
+              <p className="text-xs text-muted-foreground">{t('payment.crypto_wallets')}</p>
             </div>
           </div>
         </Card>
