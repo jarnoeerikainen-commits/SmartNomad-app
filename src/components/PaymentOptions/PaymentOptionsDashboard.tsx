@@ -267,9 +267,9 @@ const PaymentOptionsDashboard: React.FC = () => {
             <Lock className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-foreground text-sm">End-to-End Encrypted</p>
+            <p className="font-semibold text-foreground text-sm">{t('payment.encrypted')}</p>
             <p className="text-xs text-muted-foreground">
-              All payment data is AES-256 encrypted and stored locally. Zero-knowledge architecture — your data never leaves your device.
+              {t('payment.encrypted_desc')}
             </p>
           </div>
           <div className="flex items-center gap-2">
