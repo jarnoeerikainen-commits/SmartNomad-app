@@ -2,13 +2,17 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp, Plus } from 'lucide-react';
 import CountryTracker from '../CountryTracker';
 import TaxResidencyHub from '../TaxResidencyHub';
 import VisaTrackingManager from '../VisaTrackingManager';
 import { DocumentTracker } from '../DocumentTracker';
+import { CountrySelector } from '../CountrySelector';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { ALL_COUNTRIES } from '@/data/countries';
+import { useToast } from '@/hooks/use-toast';
 
 interface TrackingSectionProps {
   countries: Country[];
