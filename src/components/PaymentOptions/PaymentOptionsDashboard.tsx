@@ -290,7 +290,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <CreditCard className="h-5 w-5 text-primary" />
             <div>
               <p className="text-xl font-bold">{stats.total}</p>
-              <p className="text-xs text-muted-foreground">Active Methods</p>
+              <p className="text-xs text-muted-foreground">{t('payment.active_methods')}</p>
             </div>
           </div>
         </Card>
