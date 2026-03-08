@@ -401,7 +401,7 @@ const PublicTransport: React.FC<PublicTransportProps> = ({ currentLocation }) =>
       case 'metro':
       case 'train': return <Train className="h-4 w-4" />;
       case 'bus': return <Bus className="h-4 w-4" />;
-      case 'tram': return <Tram className="h-4 w-4" />;
+      case 'tram': return <TramFront className="h-4 w-4" />;
       case 'airport': return <Plane className="h-4 w-4" />;
       case 'cablecar': return <Cable className="h-4 w-4" />;
       case 'ferry': return <Ship className="h-4 w-4" />;
