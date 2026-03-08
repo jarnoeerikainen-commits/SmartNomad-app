@@ -78,6 +78,7 @@ import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
 import { NannyDirectory } from './FamilyServices/NannyDirectory';
 import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
 import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
+import PaymentOptionsDashboard from './PaymentOptions/PaymentOptionsDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { SocialDashboard } from './SocialChat/SocialDashboard';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
@@ -271,6 +272,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'visas':
         return <VisaTrackingManager subscription={subscription} countries={countries} />;
+      
+      case 'payment-options':
+        return <PaymentOptionsDashboard />;
       
       case 'public-transport':
         return <PublicTransport currentLocation={detectedLocation} />;
