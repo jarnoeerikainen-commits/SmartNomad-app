@@ -255,7 +255,7 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
 
       {/* Profile Sections */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="core" className="flex items-center gap-1 text-xs">
             <User className="w-3 h-3" />
             <span className="hidden sm:inline">Core</span>
@@ -263,6 +263,10 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
           <TabsTrigger value="lifestyle" className="flex items-center gap-1 text-xs">
             <Briefcase className="w-3 h-3" />
             <span className="hidden sm:inline">Work</span>
+          </TabsTrigger>
+          <TabsTrigger value="business" className="flex items-center gap-1 text-xs">
+            <Building2 className="w-3 h-3" />
+            <span className="hidden sm:inline">Business</span>
           </TabsTrigger>
           <TabsTrigger value="travel" className="flex items-center gap-1 text-xs">
             <Plane className="w-3 h-3" />
