@@ -249,14 +249,14 @@ const PaymentOptionsDashboard: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
             <Wallet className="h-8 w-8 text-primary" />
-            Payment Options
+            {t('payment.title')}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage all your payment methods securely — cards, wallets, crypto & bank accounts
+            {t('payment.subtitle')}
           </p>
         </div>
         <Button onClick={() => { setEditMethod(null); setShowAddModal(true); }} className="gap-2 shadow-md">
-          <Plus className="h-5 w-5" /> Add Method
+          <Plus className="h-5 w-5" /> {t('payment.add_method')}
         </Button>
       </div>
 
