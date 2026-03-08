@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Car, Star, ExternalLink, Search, Navigation, Crown, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -26,1178 +25,342 @@ interface CityTaxis {
   services: TaxiService[];
 }
 
+const svc = (
+  name: string, type: 'standard' | 'premium' | 'luxury', rating: number,
+  bookingUrl: string, priceLevel: string, availability: string,
+  features: string[]
+): TaxiService => ({ name, type, rating, bookingUrl, appAvailable: true, features, priceLevel, availability });
+
+const ct = (city: string, country: string, countryCode: string, services: TaxiService[]): CityTaxis =>
+  ({ city, country, countryCode, services });
+
 const taxiServicesData: CityTaxis[] = [
-  // Europe - Major Cities
-  {
-    city: 'London',
-    country: 'United Kingdom',
-    countryCode: 'GB',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/gb/en/ride/',
-        appAvailable: true,
-        features: ['24/7 service', 'Split fare', 'Multiple vehicle types', 'Safety features'],
-        priceLevel: '£8-15 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en-gb/cities/london/',
-        appAvailable: true,
-        features: ['Lower prices', 'Quick arrival', 'Carbon neutral rides', 'Scheduled rides'],
-        priceLevel: '£6-12 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'Gett',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://gett.com/uk/',
-        appAvailable: true,
-        features: ['Professional drivers', 'Business accounts', 'Fixed pricing', 'Premium vehicles'],
-        priceLevel: '£15-30 average ride',
-        availability: 'Central London'
-      },
-      {
-        name: 'Addison Lee',
-        type: 'luxury',
-        rating: 4.7,
-        bookingUrl: 'https://www.addisonlee.com/',
-        appAvailable: true,
-        features: ['Luxury fleet', 'Chauffeur service', 'Airport transfers', 'Corporate accounts'],
-        priceLevel: '£40-100+ per trip',
-        availability: 'London & major airports'
-      }
-    ]
-  },
-  {
-    city: 'Paris',
-    country: 'France',
-    countryCode: 'FR',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/fr/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'UberGreen', 'UberVan', 'Airport service'],
-        priceLevel: '€10-20 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en-fr/cities/paris/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Eco-friendly options', 'Quick booking', 'Reliable service'],
-        priceLevel: '€8-16 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'G7 Taxi',
-        type: 'premium',
-        rating: 4.5,
-        bookingUrl: 'https://www.g7.fr/',
-        appAvailable: true,
-        features: ['Official Paris taxis', 'Fixed airport rates', 'Professional drivers', 'Business class'],
-        priceLevel: '€15-35 average ride',
-        availability: 'Paris & suburbs'
-      },
-      {
-        name: 'Blacklane',
-        type: 'luxury',
-        rating: 4.8,
-        bookingUrl: 'https://www.blacklane.com/en/chauffeur-service-paris/',
-        appAvailable: true,
-        features: ['Chauffeur service', 'Premium vehicles', 'Airport meet & greet', 'Fixed pricing'],
-        priceLevel: '€80-200+ per trip',
-        availability: 'Paris & CDG/Orly airports'
-      }
-    ]
-  },
-  {
-    city: 'Berlin',
-    country: 'Germany',
-    countryCode: 'DE',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/de/en/ride/',
-        appAvailable: true,
-        features: ['Multiple options', 'Green rides', 'Split payment', 'Reliable service'],
-        priceLevel: '€8-18 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/berlin/',
-        appAvailable: true,
-        features: ['Lower fares', 'Quick arrival', 'Professional drivers', 'Safety features'],
-        priceLevel: '€6-14 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'FREE NOW',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://www.free-now.com/',
-        appAvailable: true,
-        features: ['Licensed taxis', 'Fixed pricing', 'Business accounts', 'Multiple payment options'],
-        priceLevel: '€12-25 average ride',
-        availability: 'Berlin city center'
-      }
-    ]
-  },
-  {
-    city: 'Madrid',
-    country: 'Spain',
-    countryCode: 'ES',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/es/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Multiple options', 'Airport transfers'],
-        priceLevel: '€8-15 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/madrid/',
-        appAvailable: true,
-        features: ['Affordable rates', 'Quick service', 'Scheduled rides', 'Safety features'],
-        priceLevel: '€6-12 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'Cabify',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://cabify.com/en/spain',
-        appAvailable: true,
-        features: ['Premium service', 'Corporate accounts', 'Executive cars', 'Fixed pricing'],
-        priceLevel: '€12-30 average ride',
-        availability: 'Madrid & suburbs'
-      }
-    ]
-  },
-  {
-    city: 'Barcelona',
-    country: 'Spain',
-    countryCode: 'ES',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.2,
-        bookingUrl: 'https://www.uber.com/es-es/ride/',
-        appAvailable: true,
-        features: ['Multiple vehicle types', 'Airport service', 'Split fare', '24/7 availability'],
-        priceLevel: '€8-16 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/barcelona/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Eco options', 'Quick booking', 'Professional drivers'],
-        priceLevel: '€6-13 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'Cabify',
-        type: 'premium',
-        rating: 4.7,
-        bookingUrl: 'https://cabify.com/en/barcelona',
-        appAvailable: true,
-        features: ['Premium vehicles', 'Business class', 'Fixed rates', 'Airport transfers'],
-        priceLevel: '€15-35 average ride',
-        availability: 'Barcelona city'
-      }
-    ]
-  },
-  {
-    city: 'Rome',
-    country: 'Italy',
-    countryCode: 'IT',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.2,
-        bookingUrl: 'https://www.uber.com/it/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Black', 'Green', 'Airport transfers'],
-        priceLevel: '€10-18 average ride',
-        availability: 'Rome center'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/rome/',
-        appAvailable: true,
-        features: ['Lower prices', 'Quick service', 'Reliable drivers', 'Safety features'],
-        priceLevel: '€8-15 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'IT Taxi',
-        type: 'premium',
-        rating: 4.5,
-        bookingUrl: 'https://www.ittaxi.it/',
-        appAvailable: true,
-        features: ['Official taxis', 'Fixed airport rates', 'English-speaking drivers', 'Advance booking'],
-        priceLevel: '€15-40 average ride',
-        availability: 'Rome & Fiumicino'
-      }
-    ]
-  },
-  {
-    city: 'Amsterdam',
-    country: 'Netherlands',
-    countryCode: 'NL',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/nl/en/ride/',
-        appAvailable: true,
-        features: ['Multiple options', 'Green rides', 'Split payment', 'Airport service'],
-        priceLevel: '€10-20 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/amsterdam/',
-        appAvailable: true,
-        features: ['Affordable rates', 'Quick arrival', 'Professional service', 'Scheduled rides'],
-        priceLevel: '€8-16 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'FREE NOW',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://www.free-now.com/nl/',
-        appAvailable: true,
-        features: ['Licensed taxis', 'Fixed pricing', 'Business accounts', 'Taxi vouchers'],
-        priceLevel: '€15-30 average ride',
-        availability: 'Amsterdam & Schiphol'
-      }
-    ]
-  },
-  {
-    city: 'Vienna',
-    country: 'Austria',
-    countryCode: 'AT',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/at/en/ride/',
-        appAvailable: true,
-        features: ['Comfort', 'Green', 'Multiple options', 'Airport transfers'],
-        priceLevel: '€8-16 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.6,
-        bookingUrl: 'https://bolt.eu/en/cities/vienna/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Quick service', 'Professional drivers', 'Eco-friendly'],
-        priceLevel: '€6-12 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
+  // ===== EUROPE =====
+  ct('London', 'United Kingdom', 'GB', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/gb/en/ride/', '£8-15 avg', 'Excellent', ['24/7', 'Split fare', 'Multiple types', 'Safety features']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en-gb/cities/london/', '£6-12 avg', 'Wide coverage', ['Lower prices', 'Carbon neutral', 'Scheduled rides']),
+    svc('Gett', 'premium', 4.6, 'https://gett.com/uk/', '£15-30 avg', 'Central London', ['Professional drivers', 'Business accounts', 'Fixed pricing']),
+    svc('Addison Lee', 'luxury', 4.7, 'https://www.addisonlee.com/', '£40-100+', 'London & airports', ['Luxury fleet', 'Chauffeur service', 'Airport transfers', 'Corporate']),
+  ]),
+  ct('Paris', 'France', 'FR', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/fr/en/ride/', '€10-20 avg', 'Excellent', ['UberX', 'UberGreen', 'Airport service']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en-fr/cities/paris/', '€8-16 avg', 'Wide coverage', ['Competitive pricing', 'Eco-friendly']),
+    svc('G7 Taxi', 'premium', 4.5, 'https://www.g7.fr/', '€15-35 avg', 'Paris & suburbs', ['Official taxis', 'Fixed airport rates', 'Business class']),
+    svc('Blacklane', 'luxury', 4.8, 'https://www.blacklane.com/en/chauffeur-service-paris/', '€80-200+', 'Paris & CDG/Orly', ['Chauffeur', 'Premium vehicles', 'Meet & greet']),
+  ]),
+  ct('Berlin', 'Germany', 'DE', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/de/en/ride/', '€8-18 avg', 'Excellent', ['Green rides', 'Split payment']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/berlin/', '€6-14 avg', 'Wide coverage', ['Lower fares', 'Quick arrival']),
+    svc('FREE NOW', 'premium', 4.6, 'https://www.free-now.com/', '€12-25 avg', 'Berlin city', ['Licensed taxis', 'Fixed pricing', 'Business accounts']),
+  ]),
+  ct('Madrid', 'Spain', 'ES', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/es/en/ride/', '€8-15 avg', 'Excellent', ['UberX', 'Comfort', 'Airport transfers']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/madrid/', '€6-12 avg', 'Wide coverage', ['Affordable rates', 'Scheduled rides']),
+    svc('Cabify', 'premium', 4.6, 'https://cabify.com/en/spain', '€12-30 avg', 'Madrid & suburbs', ['Premium service', 'Corporate', 'Executive cars']),
+  ]),
+  ct('Barcelona', 'Spain', 'ES', [
+    svc('Uber', 'standard', 4.2, 'https://www.uber.com/es-es/ride/', '€8-16 avg', 'Good coverage', ['Multiple types', 'Airport service']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/barcelona/', '€6-13 avg', 'Wide coverage', ['Competitive pricing', 'Eco options']),
+    svc('Cabify', 'premium', 4.7, 'https://cabify.com/en/barcelona', '€15-35 avg', 'Barcelona city', ['Premium vehicles', 'Fixed rates', 'Airport transfers']),
+  ]),
+  ct('Rome', 'Italy', 'IT', [
+    svc('Uber', 'standard', 4.2, 'https://www.uber.com/it/en/ride/', '€10-18 avg', 'Rome center', ['UberX', 'Black', 'Green']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/rome/', '€8-15 avg', 'Good coverage', ['Lower prices', 'Reliable']),
+    svc('IT Taxi', 'premium', 4.5, 'https://www.ittaxi.it/', '€15-40 avg', 'Rome & Fiumicino', ['Official taxis', 'Fixed airport rates', 'English drivers']),
+  ]),
+  ct('Milan', 'Italy', 'IT', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/it/en/ride/', '€8-16 avg', 'Good coverage', ['UberX', 'Comfort', 'Black']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/milan/', '€6-13 avg', 'Wide coverage', ['Competitive', 'Quick service']),
+    svc('Blacklane', 'luxury', 4.8, 'https://www.blacklane.com/', '€70-200+', 'Milan & Malpensa', ['Chauffeur', 'Luxury vehicles', 'Meet & greet']),
+  ]),
+  ct('Amsterdam', 'Netherlands', 'NL', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/nl/en/ride/', '€10-20 avg', 'Excellent', ['Green rides', 'Airport service']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/amsterdam/', '€8-16 avg', 'Wide coverage', ['Affordable', 'Quick arrival']),
+    svc('FREE NOW', 'premium', 4.6, 'https://www.free-now.com/nl/', '€15-30 avg', 'Amsterdam & Schiphol', ['Licensed taxis', 'Fixed pricing']),
+  ]),
+  ct('Vienna', 'Austria', 'AT', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/at/en/ride/', '€8-16 avg', 'Excellent', ['Comfort', 'Green', 'Airport']),
+    svc('Bolt', 'standard', 4.6, 'https://bolt.eu/en/cities/vienna/', '€6-12 avg', 'Wide coverage', ['Competitive', 'Eco-friendly']),
+  ]),
+  ct('Prague', 'Czech Republic', 'CZ', [
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/prague/', '€4-10 avg', 'Excellent', ['Cheap rides', 'Quick service']),
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/cz/en/ride/', '€5-12 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Liftago', 'premium', 4.4, 'https://www.liftago.com/', '€8-20 avg', 'Prague', ['Local taxis', 'Transparent pricing', 'Driver rating']),
+  ]),
+  ct('Lisbon', 'Portugal', 'PT', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/pt/en/ride/', '€6-15 avg', 'Excellent', ['UberX', 'Comfort', 'Green']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/lisbon/', '€5-12 avg', 'Wide coverage', ['Affordable', 'Quick arrival']),
+    svc('FREE NOW', 'premium', 4.3, 'https://www.free-now.com/pt/', '€8-20 avg', 'Lisbon metro', ['Licensed taxis', 'Fixed pricing']),
+  ]),
+  ct('Budapest', 'Hungary', 'HU', [
+    svc('Bolt', 'standard', 4.6, 'https://bolt.eu/en/cities/budapest/', '€3-8 avg', 'Excellent', ['Very cheap', 'Quick service', 'Reliable']),
+    svc('Főtaxi', 'premium', 4.4, 'https://www.fotaxi.hu/', '€6-15 avg', 'Budapest', ['Official taxis', 'Fixed rates', 'Airport service']),
+  ]),
+  ct('Warsaw', 'Poland', 'PL', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/pl/en/ride/', '€4-10 avg', 'Excellent', ['UberX', 'Comfort', 'Green']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/warsaw/', '€3-8 avg', 'Wide coverage', ['Lower prices', 'Quick arrival']),
+    svc('FREE NOW', 'premium', 4.3, 'https://www.free-now.com/pl/', '€6-15 avg', 'Warsaw center', ['Licensed taxis', 'Fixed pricing']),
+  ]),
+  ct('Zurich', 'Switzerland', 'CH', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/ch/en/ride/', 'CHF 15-35 avg', 'Good coverage', ['Comfort', 'Green', 'XL']),
+    svc('Blacklane', 'luxury', 4.8, 'https://www.blacklane.com/', 'CHF 100-300+', 'Zurich & ZRH airport', ['Chauffeur', 'Luxury vehicles', 'Meet & greet']),
+  ]),
+  ct('Munich', 'Germany', 'DE', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/de/en/ride/', '€8-16 avg', 'Good coverage', ['UberX', 'Green', 'Comfort']),
+    svc('FREE NOW', 'premium', 4.5, 'https://www.free-now.com/', '€10-22 avg', 'Munich city', ['Licensed taxis', 'Business accounts']),
+  ]),
+  ct('Stockholm', 'Sweden', 'SE', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/se/en/ride/', 'SEK 100-250 avg', 'Good coverage', ['UberX', 'Comfort', 'Green']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/stockholm/', 'SEK 80-200 avg', 'Wide coverage', ['Lower fares', 'Professional']),
+  ]),
+  ct('Copenhagen', 'Denmark', 'DK', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/dk/en/ride/', 'DKK 80-200 avg', 'Good coverage', ['UberX', 'Comfort', 'Premium']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/copenhagen/', 'DKK 60-160 avg', 'Wide coverage', ['Competitive', 'Quick booking']),
+  ]),
+  ct('Oslo', 'Norway', 'NO', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/no/en/ride/', 'NOK 120-300 avg', 'Good coverage', ['UberX', 'Comfort', 'Green']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/oslo/', 'NOK 100-250 avg', 'Wide coverage', ['Competitive pricing', 'Eco-friendly']),
+  ]),
+  ct('Helsinki', 'Finland', 'FI', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/fi/en/ride/', '€8-18 avg', 'Good coverage', ['UberX', 'Comfort', 'Green']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/helsinki/', '€6-14 avg', 'Wide coverage', ['Affordable', 'Quick service']),
+  ]),
+  ct('Dublin', 'Ireland', 'IE', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/ie/en/ride/', '€8-18 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/dublin/', '€6-14 avg', 'Wide coverage', ['Lower prices', 'Quick arrival']),
+    svc('FREE NOW', 'premium', 4.5, 'https://www.free-now.com/ie/', '€10-25 avg', 'Dublin metro', ['Licensed taxis', 'Fixed pricing']),
+  ]),
+  ct('Athens', 'Greece', 'GR', [
+    svc('Uber', 'standard', 4.2, 'https://www.uber.com/gr/en/ride/', '€5-12 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/athens/', '€4-10 avg', 'Wide coverage', ['Affordable', 'Quick service']),
+    svc('BEAT', 'premium', 4.5, 'https://thebeat.co/en/', '€6-15 avg', 'Athens city', ['Licensed taxis', 'Transparent fares', 'Popular local app']),
+  ]),
+  ct('Istanbul', 'Turkey', 'TR', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/tr/en/ride/', '₺80-200 avg', 'Good coverage', ['Comfort', 'Taxi', 'Van']),
+    svc('BiTaksi', 'standard', 4.5, 'https://www.bitaksi.com/', '₺70-180 avg', 'Excellent', ['Official taxis', 'Lower fares', 'Quick booking']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/istanbul/', '₺60-150 avg', 'Wide coverage', ['Competitive', 'Professional drivers']),
+  ]),
+  ct('Moscow', 'Russia', 'RU', [
+    svc('Yandex Go', 'standard', 4.6, 'https://taxi.yandex.com/', '₽300-800 avg', 'Excellent', ['Dominant app', 'Comfort+', 'Business class', 'Cargo']),
+    svc('Citymobil', 'standard', 4.3, 'https://city-mobil.ru/', '₽250-700 avg', 'Wide coverage', ['Competitive', 'Multiple types']),
+    svc('Wheely', 'luxury', 4.8, 'https://wheely.com/', '₽2,000-5,000+', 'Moscow city', ['Luxury chauffeur', 'Premium fleet', 'Business class']),
+  ]),
+  ct('Bucharest', 'Romania', 'RO', [
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/bucharest/', '€3-8 avg', 'Excellent', ['Very affordable', 'Quick service']),
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/ro/en/ride/', '€4-10 avg', 'Good coverage', ['UberX', 'Comfort']),
+  ]),
+  ct('Tbilisi', 'Georgia', 'GE', [
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/tbilisi/', '₾3-8 avg', 'Wide coverage', ['Very cheap', 'Quick service']),
+    svc('Yandex Go', 'standard', 4.4, 'https://taxi.yandex.com/', '₾4-10 avg', 'Good coverage', ['Multiple types', 'Popular locally']),
+  ]),
 
-  // North America
-  {
-    city: 'New York',
-    country: 'United States',
-    countryCode: 'US',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/us/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'XL', 'Pool', 'Pet-friendly'],
-        priceLevel: '$15-30 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.lyft.com/',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Lux', 'Scheduled rides', 'Round trip'],
-        priceLevel: '$14-28 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Via',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://ridewithvia.com/',
-        appAvailable: true,
-        features: ['Shared rides', 'Lower cost', 'Eco-friendly', 'Fixed routes'],
-        priceLevel: '$5-15 average ride',
-        availability: 'Manhattan & outer boroughs'
-      },
-      {
-        name: 'Blacklane',
-        type: 'luxury',
-        rating: 4.8,
-        bookingUrl: 'https://www.blacklane.com/en/chauffeur-service-new-york/',
-        appAvailable: true,
-        features: ['Chauffeur service', 'Premium vehicles', 'Airport meet & greet', 'Business class'],
-        priceLevel: '$100-300+ per trip',
-        availability: 'NYC & major airports'
-      }
-    ]
-  },
-  {
-    city: 'Los Angeles',
-    country: 'United States',
-    countryCode: 'US',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/us/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'SUV', 'Lux'],
-        priceLevel: '$12-25 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.lyft.com/',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Lux', 'Lux Black', 'Scheduled'],
-        priceLevel: '$11-23 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Blacklane',
-        type: 'luxury',
-        rating: 4.7,
-        bookingUrl: 'https://www.blacklane.com/en/chauffeur-service-los-angeles/',
-        appAvailable: true,
-        features: ['Chauffeur service', 'Luxury vehicles', 'Airport transfers', 'Hourly bookings'],
-        priceLevel: '$90-250+ per trip',
-        availability: 'LA & LAX airport'
-      }
-    ]
-  },
-  {
-    city: 'San Francisco',
-    country: 'United States',
-    countryCode: 'US',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/us/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'XL', 'Premium'],
-        priceLevel: '$15-30 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.lyft.com/',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Lux', 'Green mode', 'Wait & Save'],
-        priceLevel: '$14-28 average ride',
-        availability: 'Excellent coverage'
-      }
-    ]
-  },
-  {
-    city: 'Chicago',
-    country: 'United States',
-    countryCode: 'US',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/us/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'XL', 'Black', 'Premier'],
-        priceLevel: '$12-22 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.lyft.com/',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Lux', 'Lux Black XL', 'Scheduled rides'],
-        priceLevel: '$11-20 average ride',
-        availability: 'Excellent coverage'
-      }
-    ]
-  },
-  {
-    city: 'Toronto',
-    country: 'Canada',
-    countryCode: 'CA',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/ca/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'XL', 'Green', 'Premium'],
-        priceLevel: 'CAD $15-30 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.lyft.com/rider/cities/toronto-on',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Lux', 'Scheduled rides', 'Airport service'],
-        priceLevel: 'CAD $14-28 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Beck Taxi',
-        type: 'premium',
-        rating: 4.3,
-        bookingUrl: 'https://www.becktaxi.com/',
-        appAvailable: true,
-        features: ['Licensed taxis', 'Airport flat rates', 'Advance booking', 'Accessible vehicles'],
-        priceLevel: 'CAD $20-40 average ride',
-        availability: 'Toronto GTA'
-      }
-    ]
-  },
-  {
-    city: 'Vancouver',
-    country: 'Canada',
-    countryCode: 'CA',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/ca/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'XL', 'Green', 'Pet'],
-        priceLevel: 'CAD $12-25 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Lyft',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.lyft.com/rider/cities/vancouver-bc',
-        appAvailable: true,
-        features: ['Standard', 'XL', 'Scheduled', 'Airport rides', 'Business profiles'],
-        priceLevel: 'CAD $11-23 average ride',
-        availability: 'Good coverage'
-      }
-    ]
-  },
-  {
-    city: 'Mexico City',
-    country: 'Mexico',
-    countryCode: 'MX',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/mx/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'Flash', 'Green'],
-        priceLevel: 'MXN $60-150 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Didi',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://web.didiglobal.com/mx/',
-        appAvailable: true,
-        features: ['Express', 'Taxi', 'Preferred', 'Scheduled rides', 'Split payment'],
-        priceLevel: 'MXN $50-130 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'Cabify',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://cabify.com/mexico',
-        appAvailable: true,
-        features: ['Premium service', 'Executive cars', 'Corporate accounts', 'Fixed pricing'],
-        priceLevel: 'MXN $100-250 average ride',
-        availability: 'Mexico City'
-      }
-    ]
-  },
+  // ===== NORTH AMERICA =====
+  ct('New York', 'United States', 'US', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/us/en/ride/', '$15-30 avg', 'Excellent', ['UberX', 'Comfort', 'XL', 'Pool', 'Pet-friendly']),
+    svc('Lyft', 'standard', 4.4, 'https://www.lyft.com/', '$14-28 avg', 'Excellent', ['Standard', 'XL', 'Lux', 'Scheduled']),
+    svc('Via', 'standard', 4.3, 'https://ridewithvia.com/', '$5-15 avg', 'Manhattan & boroughs', ['Shared rides', 'Lower cost', 'Eco-friendly']),
+    svc('Blacklane', 'luxury', 4.8, 'https://www.blacklane.com/en/chauffeur-service-new-york/', '$100-300+', 'NYC & airports', ['Chauffeur', 'Premium vehicles', 'Meet & greet']),
+  ]),
+  ct('Los Angeles', 'United States', 'US', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/us/en/ride/', '$12-25 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'SUV']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', '$11-23 avg', 'Excellent', ['Standard', 'XL', 'Lux']),
+    svc('Blacklane', 'luxury', 4.7, 'https://www.blacklane.com/', '$90-250+', 'LA & LAX', ['Chauffeur', 'Luxury', 'Airport transfers']),
+  ]),
+  ct('San Francisco', 'United States', 'US', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/us/en/ride/', '$15-30 avg', 'Excellent', ['UberX', 'Comfort', 'Green']),
+    svc('Lyft', 'standard', 4.4, 'https://www.lyft.com/', '$14-28 avg', 'Excellent', ['Standard', 'XL', 'Lux', 'Wait & Save']),
+  ]),
+  ct('Chicago', 'United States', 'US', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/us/en/ride/', '$12-22 avg', 'Excellent', ['UberX', 'Comfort', 'Black']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', '$11-20 avg', 'Excellent', ['Standard', 'XL', 'Lux']),
+  ]),
+  ct('Washington DC', 'United States', 'US', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/us/en/ride/', '$12-25 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'XL']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', '$11-23 avg', 'Excellent', ['Standard', 'XL', 'Lux']),
+  ]),
+  ct('Miami', 'United States', 'US', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/us/en/ride/', '$10-22 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'Español']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', '$9-20 avg', 'Good coverage', ['Standard', 'XL']),
+  ]),
+  ct('Toronto', 'Canada', 'CA', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/ca/en/ride/', 'CAD $15-30 avg', 'Excellent', ['UberX', 'Comfort', 'Green']),
+    svc('Lyft', 'standard', 4.4, 'https://www.lyft.com/', 'CAD $14-28 avg', 'Good coverage', ['Standard', 'XL', 'Airport']),
+    svc('Beck Taxi', 'premium', 4.3, 'https://www.becktaxi.com/', 'CAD $20-40 avg', 'Toronto GTA', ['Licensed taxis', 'Airport flat rates']),
+  ]),
+  ct('Vancouver', 'Canada', 'CA', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/ca/en/ride/', 'CAD $12-25 avg', 'Excellent', ['UberX', 'Comfort', 'Pet']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', 'CAD $11-23 avg', 'Good coverage', ['Standard', 'XL']),
+  ]),
+  ct('Montreal', 'Canada', 'CA', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/ca/en/ride/', 'CAD $10-22 avg', 'Excellent', ['UberX', 'Comfort', 'Green']),
+    svc('Lyft', 'standard', 4.3, 'https://www.lyft.com/', 'CAD $9-20 avg', 'Good coverage', ['Standard', 'XL']),
+  ]),
+  ct('Mexico City', 'Mexico', 'MX', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/mx/en/ride/', 'MXN $60-150 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'Flash']),
+    svc('Didi', 'standard', 4.4, 'https://web.didiglobal.com/mx/', 'MXN $50-130 avg', 'Wide coverage', ['Express', 'Taxi', 'Preferred']),
+    svc('Cabify', 'premium', 4.6, 'https://cabify.com/mexico', 'MXN $100-250 avg', 'Mexico City', ['Premium', 'Executive', 'Corporate']),
+  ]),
 
-  // Asia
-  {
-    city: 'Tokyo',
-    country: 'Japan',
-    countryCode: 'JP',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/jp/en/ride/',
-        appAvailable: true,
-        features: ['Taxi', 'Premium', 'Black', 'English support', 'Airport service'],
-        priceLevel: '¥1,500-3,500 average ride',
-        availability: 'Tokyo 23 wards'
-      },
-      {
-        name: 'JapanTaxi (GO)',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://go.mo-t.com/',
-        appAvailable: true,
-        features: ['Official taxis', 'Fixed pricing', 'English app', 'Advance booking'],
-        priceLevel: '¥1,200-3,000 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'S.RIDE',
-        type: 'premium',
-        rating: 4.6,
-        bookingUrl: 'https://www.sride.jp/',
-        appAvailable: true,
-        features: ['Premium taxis', 'One-tap booking', 'AI dispatch', 'Corporate plans'],
-        priceLevel: '¥2,000-5,000 average ride',
-        availability: 'Tokyo metropolitan'
-      }
-    ]
-  },
-  {
-    city: 'Singapore',
-    country: 'Singapore',
-    countryCode: 'SG',
-    services: [
-      {
-        name: 'Grab',
-        type: 'standard',
-        rating: 4.6,
-        bookingUrl: 'https://www.grab.com/sg/',
-        appAvailable: true,
-        features: ['JustGrab', 'GrabCar', 'Premium', 'Airport transfers', 'Scheduled rides'],
-        priceLevel: 'SGD $8-20 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Gojek',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.gojek.com/sg/',
-        appAvailable: true,
-        features: ['GoRide', 'GoCar', 'Lower fares', 'Multi-service app', 'Promo codes'],
-        priceLevel: 'SGD $6-16 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'ComfortDelGro',
-        type: 'premium',
-        rating: 4.5,
-        bookingUrl: 'https://www.cdgtaxi.com.sg/',
-        appAvailable: true,
-        features: ['Official taxis', 'Limousine service', 'Fixed rates', 'Corporate accounts'],
-        priceLevel: 'SGD $12-35 average ride',
-        availability: 'Island-wide'
-      }
-    ]
-  },
-  {
-    city: 'Hong Kong',
-    country: 'Hong Kong',
-    countryCode: 'HK',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/hk/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'Pet', 'Airport service'],
-        priceLevel: 'HKD $50-150 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'HKTaxi',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.hktaxi.com/',
-        appAvailable: true,
-        features: ['Official taxis', 'English app', 'Fixed routes', 'Airport taxis'],
-        priceLevel: 'HKD $40-120 average ride',
-        availability: 'Hong Kong Island & Kowloon'
-      }
-    ]
-  },
-  {
-    city: 'Seoul',
-    country: 'South Korea',
-    countryCode: 'KR',
-    services: [
-      {
-        name: 'Kakao T',
-        type: 'standard',
-        rating: 4.7,
-        bookingUrl: 'https://www.kakaomobility.com/',
-        appAvailable: true,
-        features: ['Standard taxi', 'Black', 'Venti', 'English support', 'Quick booking'],
-        priceLevel: '₩5,000-15,000 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Uber',
-        type: 'premium',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/kr/en/ride/',
-        appAvailable: true,
-        features: ['Uber Black', 'Premium vehicles', 'English app', 'Airport service'],
-        priceLevel: '₩15,000-40,000 average ride',
-        availability: 'Seoul city center'
-      }
-    ]
-  },
-  {
-    city: 'Bangkok',
-    country: 'Thailand',
-    countryCode: 'TH',
-    services: [
-      {
-        name: 'Grab',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.grab.com/th/',
-        appAvailable: true,
-        features: ['JustGrab', 'GrabCar', 'Premium', '6-seater', 'Airport transfers'],
-        priceLevel: '฿80-200 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/bangkok/',
-        appAvailable: true,
-        features: ['Lower prices', 'Quick service', 'Professional drivers', 'Safety features'],
-        priceLevel: '฿60-160 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'inDrive',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://indrive.com/en/home/',
-        appAvailable: true,
-        features: ['Negotiate price', 'Choose driver', 'Lower costs', 'City & intercity'],
-        priceLevel: '฿50-150 average ride',
-        availability: 'Good coverage'
-      }
-    ]
-  },
-  {
-    city: 'Dubai',
-    country: 'United Arab Emirates',
-    countryCode: 'AE',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/ae/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'XL', 'Yacht'],
-        priceLevel: 'AED 20-50 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Careem',
-        type: 'standard',
-        rating: 4.6,
-        bookingUrl: 'https://www.careem.com/',
-        appAvailable: true,
-        features: ['Go', 'Go+', 'Kids', 'Business', 'Delivery'],
-        priceLevel: 'AED 18-45 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Dubai Taxi',
-        type: 'premium',
-        rating: 4.4,
-        bookingUrl: 'https://www.dubaitaxi.ae/',
-        appAvailable: true,
-        features: ['Official taxis', 'Ladies taxis', 'Airport service', 'Luxury cabs'],
-        priceLevel: 'AED 25-70 average ride',
-        availability: 'Dubai city'
-      },
-      {
-        name: 'Blacklane',
-        type: 'luxury',
-        rating: 4.8,
-        bookingUrl: 'https://www.blacklane.com/en/chauffeur-service-dubai/',
-        appAvailable: true,
-        features: ['Chauffeur service', 'Luxury vehicles', 'Airport meet & greet', 'Business class'],
-        priceLevel: 'AED 300-800+ per trip',
-        availability: 'Dubai & DXB airport'
-      }
-    ]
-  },
-  {
-    city: 'Mumbai',
-    country: 'India',
-    countryCode: 'IN',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/in/en/ride/',
-        appAvailable: true,
-        features: ['Go', 'Premier', 'XL', 'Auto', 'Intercity'],
-        priceLevel: '₹150-400 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Ola',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.olacabs.com/',
-        appAvailable: true,
-        features: ['Mini', 'Prime', 'Lux', 'Share', 'Outstation'],
-        priceLevel: '₹120-350 average ride',
-        availability: 'Excellent coverage'
-      }
-    ]
-  },
-  {
-    city: 'Delhi',
-    country: 'India',
-    countryCode: 'IN',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.2,
-        bookingUrl: 'https://www.uber.com/in/en/ride/',
-        appAvailable: true,
-        features: ['Go', 'Premier', 'Auto', 'XL', 'Intercity'],
-        priceLevel: '₹140-380 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Ola',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.olacabs.com/',
-        appAvailable: true,
-        features: ['Mini', 'Prime', 'Lux', 'Auto', 'Airport'],
-        priceLevel: '₹110-330 average ride',
-        availability: 'Excellent coverage'
-      }
-    ]
-  },
+  // ===== ASIA =====
+  ct('Tokyo', 'Japan', 'JP', [
+    svc('JapanTaxi (GO)', 'standard', 4.5, 'https://go.mo-t.com/', '¥1,200-3,000 avg', 'Excellent', ['Official taxis', 'English app', 'Advance booking']),
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/jp/en/ride/', '¥1,500-3,500 avg', 'Tokyo 23 wards', ['Taxi', 'Premium', 'Black']),
+    svc('S.RIDE', 'premium', 4.6, 'https://www.sride.jp/', '¥2,000-5,000 avg', 'Tokyo metro', ['Premium taxis', 'One-tap booking', 'AI dispatch']),
+  ]),
+  ct('Osaka', 'Japan', 'JP', [
+    svc('GO', 'standard', 4.5, 'https://go.mo-t.com/', '¥1,000-2,500 avg', 'Excellent', ['Official taxis', 'English app']),
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/jp/en/ride/', '¥1,200-3,000 avg', 'Good coverage', ['Taxi', 'Premium']),
+  ]),
+  ct('Singapore', 'Singapore', 'SG', [
+    svc('Grab', 'standard', 4.6, 'https://www.grab.com/sg/', 'SGD $8-20 avg', 'Excellent', ['JustGrab', 'GrabCar', 'Premium', 'Airport']),
+    svc('Gojek', 'standard', 4.4, 'https://www.gojek.com/sg/', 'SGD $6-16 avg', 'Wide coverage', ['GoRide', 'GoCar', 'Lower fares']),
+    svc('ComfortDelGro', 'premium', 4.5, 'https://www.cdgtaxi.com.sg/', 'SGD $12-35 avg', 'Island-wide', ['Official taxis', 'Limousine', 'Fixed rates']),
+  ]),
+  ct('Hong Kong', 'Hong Kong', 'HK', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/hk/en/ride/', 'HKD $50-150 avg', 'Excellent', ['UberX', 'Comfort', 'Black']),
+    svc('HKTaxi', 'standard', 4.3, 'https://www.hktaxi.com/', 'HKD $40-120 avg', 'HK Island & Kowloon', ['Official taxis', 'English app']),
+  ]),
+  ct('Seoul', 'South Korea', 'KR', [
+    svc('Kakao T', 'standard', 4.7, 'https://www.kakaomobility.com/', '₩5,000-15,000 avg', 'Excellent', ['Standard', 'Black', 'Venti', 'English support']),
+    svc('Uber', 'premium', 4.4, 'https://www.uber.com/kr/en/ride/', '₩15,000-40,000 avg', 'Seoul center', ['Uber Black', 'Premium', 'English app']),
+  ]),
+  ct('Bangkok', 'Thailand', 'TH', [
+    svc('Grab', 'standard', 4.5, 'https://www.grab.com/th/', '฿80-200 avg', 'Excellent', ['JustGrab', 'GrabCar', 'Premium', 'Airport']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/bangkok/', '฿60-160 avg', 'Wide coverage', ['Lower prices', 'Quick service']),
+    svc('inDrive', 'standard', 4.3, 'https://indrive.com/', '฿50-150 avg', 'Good coverage', ['Negotiate price', 'Choose driver']),
+  ]),
+  ct('Shanghai', 'China', 'CN', [
+    svc('Didi', 'standard', 4.5, 'https://web.didiglobal.com/', '¥15-50 avg', 'Excellent', ['Express', 'Premier', 'Luxe', 'English app']),
+  ]),
+  ct('Beijing', 'China', 'CN', [
+    svc('Didi', 'standard', 4.5, 'https://web.didiglobal.com/', '¥14-45 avg', 'Excellent', ['Express', 'Premier', 'English support']),
+  ]),
+  ct('Dubai', 'United Arab Emirates', 'AE', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/ae/en/ride/', 'AED 20-50 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'Yacht']),
+    svc('Careem', 'standard', 4.6, 'https://www.careem.com/', 'AED 18-45 avg', 'Excellent', ['Go', 'Go+', 'Kids', 'Business']),
+    svc('Dubai Taxi', 'premium', 4.4, 'https://www.dubaitaxi.ae/', 'AED 25-70 avg', 'Dubai city', ['Official taxis', 'Ladies taxis', 'Luxury cabs']),
+    svc('Blacklane', 'luxury', 4.8, 'https://www.blacklane.com/', 'AED 300-800+', 'Dubai & DXB', ['Chauffeur', 'Luxury', 'Meet & greet']),
+  ]),
+  ct('Abu Dhabi', 'United Arab Emirates', 'AE', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/ae/en/ride/', 'AED 18-40 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Careem', 'standard', 4.5, 'https://www.careem.com/', 'AED 15-35 avg', 'Excellent', ['Go', 'Business']),
+  ]),
+  ct('Doha', 'Qatar', 'QA', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/qa/en/ride/', 'QAR 15-40 avg', 'Good coverage', ['UberX', 'Comfort', 'XL']),
+    svc('Careem', 'standard', 4.5, 'https://www.careem.com/', 'QAR 12-35 avg', 'Excellent', ['Go', 'Business']),
+    svc('Karwa Taxi', 'premium', 4.3, 'https://www.mowasalat.com/', 'QAR 20-60 avg', 'Doha city', ['Official taxis', 'Airport service', 'Limousine']),
+  ]),
+  ct('Mumbai', 'India', 'IN', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/in/en/ride/', '₹150-400 avg', 'Excellent', ['Go', 'Premier', 'XL', 'Auto']),
+    svc('Ola', 'standard', 4.4, 'https://www.olacabs.com/', '₹120-350 avg', 'Excellent', ['Mini', 'Prime', 'Lux', 'Auto']),
+  ]),
+  ct('Delhi', 'India', 'IN', [
+    svc('Uber', 'standard', 4.2, 'https://www.uber.com/in/en/ride/', '₹140-380 avg', 'Excellent', ['Go', 'Premier', 'Auto']),
+    svc('Ola', 'standard', 4.3, 'https://www.olacabs.com/', '₹110-330 avg', 'Excellent', ['Mini', 'Prime', 'Auto']),
+  ]),
+  ct('Bangalore', 'India', 'IN', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/in/en/ride/', '₹120-350 avg', 'Excellent', ['Go', 'Premier', 'Auto', 'Moto']),
+    svc('Ola', 'standard', 4.4, 'https://www.olacabs.com/', '₹100-300 avg', 'Excellent', ['Mini', 'Prime', 'Auto']),
+    svc('Rapido', 'standard', 4.2, 'https://www.rapido.bike/', '₹30-100 avg', 'Wide coverage', ['Bike taxi', 'Auto', 'Very cheap']),
+  ]),
+  ct('Kuala Lumpur', 'Malaysia', 'MY', [
+    svc('Grab', 'standard', 4.5, 'https://www.grab.com/my/', 'MYR 8-25 avg', 'Excellent', ['GrabCar', 'Premium', 'Airport']),
+    svc('AirAsia Ride', 'standard', 4.3, 'https://www.airasia.com/ride/', 'MYR 7-22 avg', 'Good coverage', ['Competitive', 'Super app']),
+  ]),
+  ct('Jakarta', 'Indonesia', 'ID', [
+    svc('Grab', 'standard', 4.5, 'https://www.grab.com/id/', 'IDR 20,000-60,000 avg', 'Excellent', ['GrabCar', 'GrabBike', 'Premium']),
+    svc('Gojek', 'standard', 4.5, 'https://www.gojek.com/', 'IDR 15,000-50,000 avg', 'Excellent', ['GoRide', 'GoCar', 'Multi-service']),
+  ]),
+  ct('Taipei', 'Taiwan', 'TW', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/tw/en/ride/', 'TWD 100-300 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('LINE TAXI', 'standard', 4.5, 'https://taxi.line.me/', 'TWD 85-250 avg', 'Excellent', ['LINE integration', 'Official taxis', 'Popular locally']),
+  ]),
+  ct('Manila', 'Philippines', 'PH', [
+    svc('Grab', 'standard', 4.4, 'https://www.grab.com/ph/', 'PHP 100-300 avg', 'Excellent', ['GrabCar', 'GrabShare', 'Premium']),
+    svc('Angkas', 'standard', 4.3, 'https://www.angkas.com/', 'PHP 50-150 avg', 'Metro Manila', ['Motorcycle taxi', 'Beat traffic']),
+  ]),
+  ct('Ho Chi Minh City', 'Vietnam', 'VN', [
+    svc('Grab', 'standard', 4.5, 'https://www.grab.com/vn/', 'VND 30,000-80,000 avg', 'Excellent', ['GrabCar', 'GrabBike', 'Premium']),
+    svc('Be', 'standard', 4.4, 'https://be.com.vn/', 'VND 25,000-70,000 avg', 'Wide coverage', ['Vietnamese app', 'Bike & car', 'Lower fares']),
+  ]),
+  ct('Tel Aviv', 'Israel', 'IL', [
+    svc('Gett', 'standard', 4.5, 'https://gett.com/il/', 'ILS 25-60 avg', 'Excellent', ['Official taxis', 'Fixed pricing', 'Popular locally']),
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/il/en/ride/', 'ILS 30-70 avg', 'Good coverage', ['UberX', 'Comfort']),
+  ]),
 
-  // Australia & Oceania
-  {
-    city: 'Sydney',
-    country: 'Australia',
-    countryCode: 'AU',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/au/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'XL', 'Pet'],
-        priceLevel: 'AUD $15-35 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'DiDi',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://web.didiglobal.com/au/',
-        appAvailable: true,
-        features: ['Express', 'Max', 'Share', 'Preferred', 'Lower fares'],
-        priceLevel: 'AUD $12-30 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: '13cabs',
-        type: 'premium',
-        rating: 4.3,
-        bookingUrl: 'https://www.13cabs.com.au/',
-        appAvailable: true,
-        features: ['Official taxis', 'Maxi cabs', 'Silver Service', 'Airport transfers'],
-        priceLevel: 'AUD $20-50 average ride',
-        availability: 'Sydney metro'
-      }
-    ]
-  },
-  {
-    city: 'Melbourne',
-    country: 'Australia',
-    countryCode: 'AU',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/au/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Premium', 'Green', 'XL'],
-        priceLevel: 'AUD $14-32 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'DiDi',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://web.didiglobal.com/au/',
-        appAvailable: true,
-        features: ['Express', 'Max', 'Share', 'Preferred', 'Competitive pricing'],
-        priceLevel: 'AUD $11-28 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: '13cabs',
-        type: 'premium',
-        rating: 4.2,
-        bookingUrl: 'https://www.13cabs.com.au/',
-        appAvailable: true,
-        features: ['Official taxis', 'Wheelchair access', 'Silver Service', 'Fixed airport rates'],
-        priceLevel: 'AUD $18-45 average ride',
-        availability: 'Melbourne metro'
-      }
-    ]
-  },
+  // ===== AUSTRALIA & OCEANIA =====
+  ct('Sydney', 'Australia', 'AU', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/au/en/ride/', 'AUD $15-35 avg', 'Excellent', ['UberX', 'Comfort', 'Green', 'Pet']),
+    svc('DiDi', 'standard', 4.4, 'https://web.didiglobal.com/au/', 'AUD $12-30 avg', 'Wide coverage', ['Express', 'Max', 'Share']),
+    svc('13cabs', 'premium', 4.3, 'https://www.13cabs.com.au/', 'AUD $20-50 avg', 'Sydney metro', ['Official taxis', 'Maxi cabs', 'Silver Service']),
+  ]),
+  ct('Melbourne', 'Australia', 'AU', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/au/en/ride/', 'AUD $14-32 avg', 'Excellent', ['UberX', 'Comfort', 'Premium']),
+    svc('DiDi', 'standard', 4.3, 'https://web.didiglobal.com/au/', 'AUD $11-28 avg', 'Wide coverage', ['Express', 'Max', 'Share']),
+    svc('13cabs', 'premium', 4.2, 'https://www.13cabs.com.au/', 'AUD $18-45 avg', 'Melbourne metro', ['Official taxis', 'Silver Service']),
+  ]),
+  ct('Auckland', 'New Zealand', 'NZ', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/nz/en/ride/', 'NZD $12-30 avg', 'Good coverage', ['UberX', 'Comfort', 'XL']),
+    svc('Ola', 'standard', 4.3, 'https://www.olacabs.com/nz/', 'NZD $10-25 avg', 'Auckland', ['Standard', 'Comfort', 'Competitive']),
+  ]),
 
-  // South America
-  {
-    city: 'São Paulo',
-    country: 'Brazil',
-    countryCode: 'BR',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/br/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'Moto', 'Flash'],
-        priceLevel: 'R$15-40 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: '99',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://99app.com/',
-        appAvailable: true,
-        features: ['Pop', 'Comfort', 'Top', 'Taxi', 'Lower prices'],
-        priceLevel: 'R$12-35 average ride',
-        availability: 'Excellent coverage'
-      }
-    ]
-  },
-  {
-    city: 'Buenos Aires',
-    country: 'Argentina',
-    countryCode: 'AR',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/ar/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Black', 'Flash', 'Pet'],
-        priceLevel: 'ARS $800-2,000 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Cabify',
-        type: 'premium',
-        rating: 4.5,
-        bookingUrl: 'https://cabify.com/argentina',
-        appAvailable: true,
-        features: ['Lite', 'Executive', 'Group', 'Fixed pricing', 'Corporate accounts'],
-        priceLevel: 'ARS $1,000-2,500 average ride',
-        availability: 'Buenos Aires city'
-      },
-      {
-        name: 'BA Taxi',
-        type: 'standard',
-        rating: 4.2,
-        bookingUrl: 'https://www.bataxiapp.com/',
-        appAvailable: true,
-        features: ['Official taxis', 'Advance booking', 'Airport service', 'Fixed routes'],
-        priceLevel: 'ARS $900-2,200 average ride',
-        availability: 'Buenos Aires'
-      }
-    ]
-  },
+  // ===== SOUTH AMERICA =====
+  ct('São Paulo', 'Brazil', 'BR', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/br/en/ride/', 'R$15-40 avg', 'Excellent', ['UberX', 'Comfort', 'Black', 'Flash']),
+    svc('99', 'standard', 4.5, 'https://99app.com/', 'R$12-35 avg', 'Excellent', ['Pop', 'Comfort', 'Top', 'Lower prices']),
+  ]),
+  ct('Buenos Aires', 'Argentina', 'AR', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/ar/en/ride/', 'ARS $800-2,000 avg', 'Good coverage', ['UberX', 'Comfort', 'Black']),
+    svc('Cabify', 'premium', 4.5, 'https://cabify.com/argentina', 'ARS $1,000-2,500 avg', 'Buenos Aires', ['Lite', 'Executive', 'Fixed pricing']),
+    svc('BA Taxi', 'standard', 4.2, 'https://www.bataxiapp.com/', 'ARS $900-2,200 avg', 'Buenos Aires', ['Official taxis', 'Airport service']),
+  ]),
+  ct('Bogotá', 'Colombia', 'CO', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/co/en/ride/', 'COP $8,000-20,000 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Didi', 'standard', 4.4, 'https://web.didiglobal.com/co/', 'COP $7,000-18,000 avg', 'Wide coverage', ['Express', 'Taxi']),
+    svc('InDriver', 'standard', 4.2, 'https://indrive.com/', 'COP $6,000-15,000 avg', 'Good coverage', ['Negotiate price', 'Choose driver']),
+  ]),
+  ct('Santiago', 'Chile', 'CL', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/cl/en/ride/', 'CLP $3,000-8,000 avg', 'Excellent', ['UberX', 'Comfort', 'Black']),
+    svc('Didi', 'standard', 4.3, 'https://web.didiglobal.com/cl/', 'CLP $2,500-7,000 avg', 'Wide coverage', ['Express', 'Taxi']),
+  ]),
+  ct('Lima', 'Peru', 'PE', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/pe/en/ride/', 'PEN 8-25 avg', 'Good coverage', ['UberX', 'Flash']),
+    svc('Didi', 'standard', 4.4, 'https://web.didiglobal.com/pe/', 'PEN 7-22 avg', 'Wide coverage', ['Express', 'Taxi', 'Competitive']),
+    svc('InDriver', 'standard', 4.2, 'https://indrive.com/', 'PEN 6-20 avg', 'Good coverage', ['Negotiate price']),
+  ]),
+  ct('Medellín', 'Colombia', 'CO', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/co/en/ride/', 'COP $7,000-18,000 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Didi', 'standard', 4.3, 'https://web.didiglobal.com/co/', 'COP $6,000-15,000 avg', 'Wide coverage', ['Express', 'Taxi']),
+  ]),
 
-  // Middle East & Africa
-  {
-    city: 'Istanbul',
-    country: 'Turkey',
-    countryCode: 'TR',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/tr/en/ride/',
-        appAvailable: true,
-        features: ['Comfort', 'Taxi', 'Van', 'Airport transfers'],
-        priceLevel: '₺80-200 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'BiTaksi',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.bitaksi.com/',
-        appAvailable: true,
-        features: ['Official taxis', 'Lower fares', 'Quick booking', 'Corporate accounts'],
-        priceLevel: '₺70-180 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/istanbul/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Professional drivers', 'Safety features', 'Scheduled rides'],
-        priceLevel: '₺60-150 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
-  {
-    city: 'Cape Town',
-    country: 'South Africa',
-    countryCode: 'ZA',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://www.uber.com/za/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'XL', 'Van', 'Airport service'],
-        priceLevel: 'ZAR 50-150 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.6,
-        bookingUrl: 'https://bolt.eu/en/cities/cape-town/',
-        appAvailable: true,
-        features: ['Lower fares', 'Quick service', 'Professional drivers', 'Safety features'],
-        priceLevel: 'ZAR 40-120 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
-
-  // Additional Major Cities
-  {
-    city: 'Lisbon',
-    country: 'Portugal',
-    countryCode: 'PT',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/pt/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'Van', 'Pet'],
-        priceLevel: '€6-15 average ride',
-        availability: 'Excellent coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/lisbon/',
-        appAvailable: true,
-        features: ['Affordable rates', 'Quick arrival', 'Professional service', 'Eco-friendly'],
-        priceLevel: '€5-12 average ride',
-        availability: 'Wide coverage'
-      },
-      {
-        name: 'FREE NOW',
-        type: 'premium',
-        rating: 4.3,
-        bookingUrl: 'https://www.free-now.com/pt/',
-        appAvailable: true,
-        features: ['Licensed taxis', 'Fixed pricing', 'Business accounts', 'Airport service'],
-        priceLevel: '€8-20 average ride',
-        availability: 'Lisbon metro'
-      }
-    ]
-  },
-  {
-    city: 'Brussels',
-    country: 'Belgium',
-    countryCode: 'BE',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/be/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'Van', 'XL'],
-        priceLevel: '€8-18 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/brussels/',
-        appAvailable: true,
-        features: ['Lower prices', 'Quick service', 'Professional drivers', 'Scheduled rides'],
-        priceLevel: '€6-14 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
-  {
-    city: 'Copenhagen',
-    country: 'Denmark',
-    countryCode: 'DK',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/dk/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'Van', 'Premium'],
-        priceLevel: 'DKK 80-200 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/copenhagen/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Quick booking', 'Professional service', 'Eco options'],
-        priceLevel: 'DKK 60-160 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
-  {
-    city: 'Stockholm',
-    country: 'Sweden',
-    countryCode: 'SE',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://www.uber.com/se/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'XL', 'Van'],
-        priceLevel: 'SEK 100-250 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.5,
-        bookingUrl: 'https://bolt.eu/en/cities/stockholm/',
-        appAvailable: true,
-        features: ['Lower fares', 'Quick service', 'Professional drivers', 'Safety features'],
-        priceLevel: 'SEK 80-200 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
-  {
-    city: 'Oslo',
-    country: 'Norway',
-    countryCode: 'NO',
-    services: [
-      {
-        name: 'Uber',
-        type: 'standard',
-        rating: 4.3,
-        bookingUrl: 'https://www.uber.com/no/en/ride/',
-        appAvailable: true,
-        features: ['UberX', 'Comfort', 'Green', 'Van', 'XL'],
-        priceLevel: 'NOK 120-300 average ride',
-        availability: 'Good coverage'
-      },
-      {
-        name: 'Bolt',
-        type: 'standard',
-        rating: 4.4,
-        bookingUrl: 'https://bolt.eu/en/cities/oslo/',
-        appAvailable: true,
-        features: ['Competitive pricing', 'Quick arrival', 'Professional service', 'Eco-friendly'],
-        priceLevel: 'NOK 100-250 average ride',
-        availability: 'Wide coverage'
-      }
-    ]
-  },
+  // ===== AFRICA =====
+  ct('Cape Town', 'South Africa', 'ZA', [
+    svc('Uber', 'standard', 4.5, 'https://www.uber.com/za/en/ride/', 'ZAR 50-150 avg', 'Excellent', ['UberX', 'Comfort', 'XL']),
+    svc('Bolt', 'standard', 4.6, 'https://bolt.eu/en/cities/cape-town/', 'ZAR 40-120 avg', 'Wide coverage', ['Lower fares', 'Quick service']),
+  ]),
+  ct('Johannesburg', 'South Africa', 'ZA', [
+    svc('Uber', 'standard', 4.4, 'https://www.uber.com/za/en/ride/', 'ZAR 45-140 avg', 'Excellent', ['UberX', 'Comfort', 'XL']),
+    svc('Bolt', 'standard', 4.5, 'https://bolt.eu/en/cities/johannesburg/', 'ZAR 35-110 avg', 'Wide coverage', ['Lower fares', 'Professional']),
+  ]),
+  ct('Nairobi', 'Kenya', 'KE', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/ke/en/ride/', 'KES 200-600 avg', 'Good coverage', ['UberX', 'Comfort', 'Boda (motorcycle)']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/nairobi/', 'KES 150-500 avg', 'Wide coverage', ['Lower fares', 'Quick service']),
+    svc('Little Cab', 'standard', 4.2, 'https://www.little.bz/', 'KES 180-550 avg', 'Nairobi', ['Kenyan app', 'M-Pesa payment']),
+  ]),
+  ct('Cairo', 'Egypt', 'EG', [
+    svc('Uber', 'standard', 4.3, 'https://www.uber.com/eg/en/ride/', 'EGP 30-80 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Careem', 'standard', 4.4, 'https://www.careem.com/', 'EGP 25-70 avg', 'Excellent', ['Go', 'Go+', 'Popular locally']),
+    svc('Didi', 'standard', 4.2, 'https://web.didiglobal.com/', 'EGP 20-60 avg', 'Growing coverage', ['Express', 'Competitive pricing']),
+  ]),
+  ct('Lagos', 'Nigeria', 'NG', [
+    svc('Uber', 'standard', 4.2, 'https://www.uber.com/ng/en/ride/', 'NGN 800-3,000 avg', 'Good coverage', ['UberX', 'Comfort']),
+    svc('Bolt', 'standard', 4.4, 'https://bolt.eu/en/cities/lagos/', 'NGN 600-2,500 avg', 'Wide coverage', ['Lower fares', 'Quick']),
+    svc('InDriver', 'standard', 4.1, 'https://indrive.com/', 'NGN 500-2,000 avg', 'Good coverage', ['Negotiate price']),
+  ]),
+  ct('Casablanca', 'Morocco', 'MA', [
+    svc('Careem', 'standard', 4.4, 'https://www.careem.com/', 'MAD 15-40 avg', 'Good coverage', ['Go', 'Business']),
+    svc('InDriver', 'standard', 4.2, 'https://indrive.com/', 'MAD 10-30 avg', 'Growing', ['Negotiate price']),
+  ]),
 ];
 
 interface TaxiServicesProps {
@@ -1210,54 +373,45 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [selectedServiceType, setSelectedServiceType] = useState<string>('all');
 
-  // Get unique countries for filter
   const countries = useMemo(() => {
     const countrySet = new Set(taxiServicesData.map(item => item.country));
     return Array.from(countrySet).sort();
   }, []);
 
-  // Detect user's current location and prioritize it
   const sortedData = useMemo(() => {
     const userCountryCode = currentLocation?.countryCode?.toUpperCase();
     const userCity = currentLocation?.city?.toLowerCase();
 
     return [...taxiServicesData].sort((a, b) => {
-      // Prioritize exact city match
       if (userCity) {
         if (a.city.toLowerCase() === userCity && b.city.toLowerCase() !== userCity) return -1;
         if (b.city.toLowerCase() === userCity && a.city.toLowerCase() !== userCity) return 1;
       }
-      // Then prioritize country match
       if (userCountryCode) {
         if (a.countryCode === userCountryCode && b.countryCode !== userCountryCode) return -1;
         if (b.countryCode === userCountryCode && a.countryCode !== userCountryCode) return 1;
       }
-      // Default alphabetical
       return a.city.localeCompare(b.city);
     });
   }, [currentLocation]);
 
-  // Filter data
   const filteredData = useMemo(() => {
     return sortedData.filter(item => {
-      const matchesSearch = searchQuery === '' || 
+      const matchesSearch = searchQuery === '' ||
         item.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.country.toLowerCase().includes(searchQuery.toLowerCase());
-      
       const matchesCountry = selectedCountry === 'all' || item.country === selectedCountry;
-      
-      const matchesServiceType = selectedServiceType === 'all' || 
-        item.services.some(service => service.type === selectedServiceType);
-
+      const matchesServiceType = selectedServiceType === 'all' ||
+        item.services.some(s => s.type === selectedServiceType);
       return matchesSearch && matchesCountry && matchesServiceType;
     });
   }, [sortedData, searchQuery, selectedCountry, selectedServiceType]);
 
   const getServiceBadgeVariant = (type: string) => {
     switch (type) {
-      case 'luxury': return 'default';
-      case 'premium': return 'secondary';
-      default: return 'outline';
+      case 'luxury': return 'default' as const;
+      case 'premium': return 'secondary' as const;
+      default: return 'outline' as const;
     }
   };
 
@@ -1271,29 +425,26 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold gradient-text">Taxi & Ride Services</h1>
+        <h1 className="text-3xl font-bold gradient-text">🚕 Taxi & Ride Services</h1>
         <p className="text-muted-foreground">
-          Premium taxi services, ride-sharing, and luxury chauffeurs worldwide
+          Standard, premium & VIP luxury chauffeurs — {taxiServicesData.length} cities worldwide
         </p>
       </div>
 
-      {/* Location Notice */}
       {currentLocation?.city && (
         <Card className="border-primary/20 bg-primary/5">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 text-primary">
               <Navigation className="h-5 w-5" />
               <p className="font-medium">
-                Showing {currentLocation.city} first based on your location
+                📍 Showing {currentLocation.city} first based on your location
               </p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Filters */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -1309,36 +460,27 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
                 placeholder="e.g. New York, London, Tokyo..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full"
               />
             </div>
-
             <div className="space-y-2">
               <label className="text-sm font-medium">Country</label>
               <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Countries" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="All Countries" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Countries</SelectItem>
-                  {countries.map(country => (
-                    <SelectItem key={country} value={country}>{country}</SelectItem>
-                  ))}
+                  {countries.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
               <label className="text-sm font-medium">Service Type</label>
               <Select value={selectedServiceType} onValueChange={setSelectedServiceType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Types" />
-                </SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="All Types" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="standard">Standard (Uber, Bolt)</SelectItem>
-                  <SelectItem value="premium">Premium</SelectItem>
-                  <SelectItem value="luxury">Luxury / Limousine</SelectItem>
+                  <SelectItem value="standard">🚗 Standard (Uber, Bolt, Grab)</SelectItem>
+                  <SelectItem value="premium">⭐ Premium</SelectItem>
+                  <SelectItem value="luxury">👑 VIP / Luxury Chauffeur</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1346,12 +488,10 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
         </CardContent>
       </Card>
 
-      {/* Results */}
       <div className="text-sm text-muted-foreground">
-        Showing {filteredData.length} {filteredData.length === 1 ? 'city' : 'cities'}
+        Showing {filteredData.length} of {taxiServicesData.length} cities
       </div>
 
-      {/* Service Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredData.map((cityData) => (
           <Card key={`${cityData.city}-${cityData.countryCode}`} className="hover:shadow-large transition-shadow">
@@ -1364,12 +504,17 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
                   </CardTitle>
                   <CardDescription>{cityData.country}</CardDescription>
                 </div>
-                {currentLocation?.city?.toLowerCase() === cityData.city.toLowerCase() && (
-                  <Badge variant="default" className="gradient-trust">
-                    <Navigation className="h-3 w-3 mr-1" />
-                    Your Location
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {cityData.services.length} services
                   </Badge>
-                )}
+                  {currentLocation?.city?.toLowerCase() === cityData.city.toLowerCase() && (
+                    <Badge variant="default" className="gradient-trust">
+                      <Navigation className="h-3 w-3 mr-1" />
+                      You're Here
+                    </Badge>
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1388,8 +533,7 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
                       {service.rating}
                     </div>
                   </div>
-
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-1 text-sm">
                     <div className="flex items-start gap-2">
                       <span className="text-muted-foreground min-w-24">Price Range:</span>
                       <span className="font-medium">{service.priceLevel}</span>
@@ -1401,29 +545,22 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
                     {service.appAvailable && (
                       <div className="flex items-start gap-2">
                         <span className="text-muted-foreground min-w-24">Mobile App:</span>
-                        <Badge variant="secondary" className="text-xs">
-                          ✓ Available
-                        </Badge>
+                        <Badge variant="secondary" className="text-xs">✓ Available</Badge>
                       </div>
                     )}
                   </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature, featureIdx) => (
-                      <Badge key={featureIdx} variant="outline" className="text-xs">
-                        {feature}
-                      </Badge>
+                  <div className="flex flex-wrap gap-1.5">
+                    {service.features.map((feature, fi) => (
+                      <Badge key={fi} variant="outline" className="text-xs">{feature}</Badge>
                     ))}
                   </div>
-
                   <Button
                     className={`w-full ${
-                      service.type === 'luxury' 
-                        ? 'gradient-trust' 
-                        : service.type === 'premium'
-                        ? 'gradient-success'
+                      service.type === 'luxury' ? 'gradient-trust'
+                        : service.type === 'premium' ? 'gradient-success'
                         : 'bg-primary hover:bg-primary/90'
                     }`}
+                    size="sm"
                     onClick={() => window.open(service.bookingUrl, '_blank')}
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
@@ -1440,38 +577,28 @@ const TaxiServices: React.FC<TaxiServicesProps> = ({ currentLocation }) => {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">
-              No services found matching your search criteria. Try adjusting your filters.
+              No services found matching your criteria. Try adjusting your filters.
             </p>
           </CardContent>
         </Card>
       )}
 
-      {/* Safety Tips */}
       <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-        <CardHeader>
-          <CardTitle>Taxi & Ride Safety Tips</CardTitle>
-        </CardHeader>
+        <CardHeader><CardTitle>🌍 Taxi & Ride Safety Tips</CardTitle></CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex gap-3">
-            <div className="text-primary font-bold">1.</div>
-            <p className="text-sm">Always verify the driver and vehicle details before entering</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold">2.</div>
-            <p className="text-sm">Share your trip details with a friend or family member</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold">3.</div>
-            <p className="text-sm">Check ratings and reviews before booking premium services</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold">4.</div>
-            <p className="text-sm">Use in-app payment methods for security and convenience</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold">5.</div>
-            <p className="text-sm">For luxury services, book in advance for better availability</p>
-          </div>
+          {[
+            'Always verify driver and vehicle details before entering',
+            'Share your trip details with a friend or family member',
+            'Use in-app payment for security and convenience',
+            'Check ratings and reviews before booking premium services',
+            'For luxury services, book in advance for better availability',
+            'In some cities, local apps (Grab, Kakao T, Yandex Go) work better than Uber',
+          ].map((tip, i) => (
+            <div key={i} className="flex gap-3">
+              <div className="text-primary font-bold">{i + 1}.</div>
+              <p className="text-sm">{tip}</p>
+            </div>
+          ))}
         </CardContent>
       </Card>
     </div>
