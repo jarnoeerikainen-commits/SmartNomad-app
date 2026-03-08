@@ -413,10 +413,10 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methods.length === 0 && (
             <Card className="p-8 text-center">
               <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-              <h3 className="font-semibold mb-1">No Payment Methods</h3>
-              <p className="text-sm text-muted-foreground mb-4">Add your first payment method to get started</p>
+              <h3 className="font-semibold mb-1">{t('payment.no_methods')}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t('payment.add_first')}</p>
               <Button onClick={() => setShowAddModal(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Add Payment Method
+                <Plus className="h-4 w-4" /> {t('payment.add_payment_method')}
               </Button>
             </Card>
           )}
