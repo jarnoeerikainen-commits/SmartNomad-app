@@ -93,6 +93,8 @@ const VOICE_COMMANDS: VoiceCommand[] = [
   { patterns: [/\bcrypto\b/i, /\bdigital\s*money\b/i], action: 'section:crypto-cash', description: 'Crypto' },
   { patterns: [/\bcurrency\s*(convert(er)?|exchange)?\b/i, /\bexchange\s*rate\b/i], action: 'section:currency-converter', description: 'Currency converter' },
   { patterns: [/\bcredit\s*card(s)?\b/i, /\bemergency\s*card\b/i], action: 'section:emergency-cards', description: 'Emergency cards' },
+  { patterns: [/\bpayment\s*(option|method)s?\b/i, /\b(opciones\s*de\s*pago|options\s*de\s*paiement|zahlungsoptionen|支払い|결제|оплат|الدفع|भुगतान|ödeme)\b/i], action: 'section:payment-options', description: 'Payment options' },
+  { patterns: [/\baward\s*card(s)?\b/i, /\bloyalty\s*(card|program)s?\b/i, /\b(tarjetas?\s*de\s*premios?|cartes?\s*de\s*fidélité|prämienkarten|アワードカード|리워드|лояльност|مكافآت|पुरस्कार|ödül\s*kart)\b/i], action: 'section:award-cards', description: 'Award cards' },
 
   // Misc
   { patterns: [/\bweather\b/i, /\bforecast\b/i, /\b(clima|météo|wetter|天気|날씨|погода|طقس|मौसम|hava)\b/i], action: 'section:weather', description: 'Weather' },
