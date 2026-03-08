@@ -12,6 +12,7 @@ import { PaymentMethodCard } from './PaymentMethodCard';
 import { AddPaymentMethodModal } from './AddPaymentMethodModal';
 import { PaymentPreferences } from './PaymentPreferences';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Simple encrypt/decrypt for demo (in production use Web Crypto API)
 const encryptData = (data: any): string => {
