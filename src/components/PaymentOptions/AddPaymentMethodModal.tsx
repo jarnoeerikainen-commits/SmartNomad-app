@@ -218,7 +218,6 @@ export const AddPaymentMethodModal: React.FC<AddPaymentMethodModalProps> = ({ is
           </TabsContent>
 
           <TabsContent value="bank" className="space-y-4 mt-4">
-            {(() => { setMethodType('bank-transfer'); return null; })()}
             <div>
               <Label>Bank Name</Label>
               <Input placeholder="e.g., Deutsche Bank" value={bankName} onChange={(e) => setBankName(e.target.value)} />
