@@ -189,6 +189,7 @@ Think of me as that well-traveled friend who's always one step ahead. Let's get 
       currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
       currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+      language: currentLanguage,
       threatIntelligence: activeThreats || 'No active threats.',
       demoPersonaContext: demoAiContext || undefined,
       userProfile: userProfile ? {
