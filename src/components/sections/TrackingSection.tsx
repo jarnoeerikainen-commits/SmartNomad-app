@@ -2,13 +2,17 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp, Plus } from 'lucide-react';
 import CountryTracker from '../CountryTracker';
 import TaxResidencyHub from '../TaxResidencyHub';
 import VisaTrackingManager from '../VisaTrackingManager';
 import { DocumentTracker } from '../DocumentTracker';
+import { CountrySelector } from '../CountrySelector';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
+import { ALL_COUNTRIES } from '@/data/countries';
+import { useToast } from '@/hooks/use-toast';
 
 interface TrackingSectionProps {
   countries: Country[];
@@ -85,6 +89,40 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
   onUpgradeClick
 }) => {
   const [activeTab, setActiveTab] = useState('countries');
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleQuickAddCountry = (countryCode: string, countryName: string, countryFlag: string) => {
+    const existing = countries.find(c => c.code === countryCode);
+    if (existing) {
+      toast({ title: "Already Tracked", description: `${countryName} is already being tracked.`, variant: "destructive" });
+      setIsQuickAddOpen(false);
+      return;
+    }
+    const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+    const newCountry: Country = {
+      id: `${countryCode}-${Date.now()}`,
+      code: countryCode,
+      name: countryName,
+      flag: countryFlag,
+      dayLimit: countryInfo?.taxResidencyDays || 183,
+      daysSpent: 0,
+      reason: 'Tax Residency Tracking',
+      lastUpdate: new Date().toISOString(),
+      countTravelDays: true,
+      yearlyDaysSpent: 0,
+      lastEntry: null,
+      totalEntries: 0,
+      followEmbassyNews: false,
+      countingMode: 'days',
+      partialDayRule: 'full',
+      countDepartureDay: true,
+      countArrivalDay: true
+    };
+    onAddCountry(newCountry);
+    setIsQuickAddOpen(false);
+    toast({ title: "✅ Country Added", description: `${countryName} — threshold: ${countryInfo?.taxResidencyDays || 183} days.` });
+  };
 
   // Compute smart overview stats
   const stats = useMemo(() => {
@@ -144,6 +182,35 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
           </Badge>
         )}
       </div>
+
+      {/* Quick Add Country Bar */}
+      <div className="relative overflow-hidden rounded-xl bg-primary/10 border-2 border-primary/30 p-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+            <MapPin className="h-5 w-5 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-foreground text-sm sm:text-base">Track a New Country</p>
+            <p className="text-xs text-muted-foreground truncate">Add countries to monitor tax residency thresholds</p>
+          </div>
+        </div>
+        <Button
+          onClick={() => setIsQuickAddOpen(true)}
+          className="shrink-0 gap-2 font-bold shadow-md hover:shadow-lg transition-all hover:scale-105"
+          size="lg"
+        >
+          <Plus className="h-5 w-5" />
+          <span className="hidden sm:inline">Add Country</span>
+          <span className="sm:hidden">Add</span>
+        </Button>
+      </div>
+
+      <CountrySelector
+        isOpen={isQuickAddOpen}
+        onClose={() => setIsQuickAddOpen(false)}
+        onSelect={handleQuickAddCountry}
+        existingCountries={countries}
+      />
 
       {/* Smart Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
