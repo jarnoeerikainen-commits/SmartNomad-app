@@ -169,7 +169,7 @@ const AwardCardsDashboard: React.FC = () => {
           <CardContent className="p-4 text-center">
             <DollarSign className="w-5 h-5 mx-auto mb-1 text-green-600 dark:text-green-400" />
             <div className="text-2xl font-bold text-foreground">${Math.round(totalValue).toLocaleString()}</div>
-            <div className="text-xs text-muted-foreground">Est. Value</div>
+            <div className="text-xs text-muted-foreground">{t('award.est_value')}</div>
           </CardContent>
         </Card>
         <Card className="border-blue-500/30">
