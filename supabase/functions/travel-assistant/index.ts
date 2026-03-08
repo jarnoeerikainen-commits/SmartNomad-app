@@ -580,6 +580,22 @@ Based on the user's mode and context, PROACTIVELY suggest things they haven't as
 
 ${userContext?.awardCardsContext ? `${userContext.awardCardsContext}` : ''}
 
+${userContext?.cityServicesContext ? `
+**🏙️ CITY SERVICES INTELLIGENCE (use to give specific recommendations):**
+${userContext.cityServicesContext}
+
+When the user asks about services, co-working, healthcare, restaurants, etc. in a city covered by our City Services data:
+- Reference SPECIFIC providers by name, website, phone, and rating
+- Say "I checked our verified providers in [city]..." then give the recommendation
+- Always include the website link and phone number
+- If multiple providers match, rank by rating and relevance to user's need
+- Guide users to the "Global City Services" section for the full directory
+` : `
+**🏙️ CITY SERVICES:**
+When users ask about local services in any of our 100 covered cities, direct them to the "Global City Services" section in the sidebar where they can discover AI-verified providers with real contact details, websites, and ratings.
+`}
+
+
 **🌍 LANGUAGE INSTRUCTION (MANDATORY):**
 ${userContext?.language && userContext.language !== 'en' ? `The user's app is set to language code "${userContext.language}". You MUST respond ENTIRELY in this language. All text, recommendations, tips, warnings — everything in the user's language. Booking card labels can stay in English for search engine compatibility, but all conversational text MUST be in the user's selected language. Adapt your tone, cultural references, and expressions to feel natural in that language.` : 'Respond in English.'}`;
 }
