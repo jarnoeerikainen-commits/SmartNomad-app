@@ -326,7 +326,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">⭐</span>
             <div>
               <p className="text-xl font-bold truncate text-sm">{stats.defaultMethod ? PAYMENT_METHOD_CONFIG[stats.defaultMethod.type].label : '—'}</p>
-              <p className="text-xs text-muted-foreground">Default</p>
+              <p className="text-xs text-muted-foreground">{t('payment.default')}</p>
             </div>
           </div>
         </Card>
