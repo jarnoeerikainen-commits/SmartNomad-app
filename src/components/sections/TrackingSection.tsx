@@ -89,6 +89,40 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
   onUpgradeClick
 }) => {
   const [activeTab, setActiveTab] = useState('countries');
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleQuickAddCountry = (countryCode: string, countryName: string, countryFlag: string) => {
+    const existing = countries.find(c => c.code === countryCode);
+    if (existing) {
+      toast({ title: "Already Tracked", description: `${countryName} is already being tracked.`, variant: "destructive" });
+      setIsQuickAddOpen(false);
+      return;
+    }
+    const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+    const newCountry: Country = {
+      id: `${countryCode}-${Date.now()}`,
+      code: countryCode,
+      name: countryName,
+      flag: countryFlag,
+      dayLimit: countryInfo?.taxResidencyDays || 183,
+      daysSpent: 0,
+      reason: 'Tax Residency Tracking',
+      lastUpdate: new Date().toISOString(),
+      countTravelDays: true,
+      yearlyDaysSpent: 0,
+      lastEntry: null,
+      totalEntries: 0,
+      followEmbassyNews: false,
+      countingMode: 'days',
+      partialDayRule: 'full',
+      countDepartureDay: true,
+      countArrivalDay: true
+    };
+    onAddCountry(newCountry);
+    setIsQuickAddOpen(false);
+    toast({ title: "✅ Country Added", description: `${countryName} — threshold: ${countryInfo?.taxResidencyDays || 183} days.` });
+  };
 
   // Compute smart overview stats
   const stats = useMemo(() => {
