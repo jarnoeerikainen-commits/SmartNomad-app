@@ -369,7 +369,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.digital.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🔵 Digital Wallets & Services
+                🔵 {t('payment.digital_services')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.digital.length}</Badge>
               </h3>
               <div className="space-y-2">
