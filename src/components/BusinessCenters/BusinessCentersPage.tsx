@@ -71,16 +71,28 @@ export const BusinessCentersPage = () => {
     detectUserLocation();
   };
 
-  // Search and filter business centers
+  // Search and filter business centers — user's country always first
   const businessCenters = useMemo(() => {
-    return BusinessCentersService.searchBusinessCenters({
+    const results = BusinessCentersService.searchBusinessCenters({
       cityId: selectedCityId,
       countryCode: selectedCountryCode,
       services: selectedServices.length > 0 ? selectedServices : undefined,
-      minRating: 4.0,
       sortBy,
       userLocation: userLocation || undefined,
     });
+
+    // If no country/city filter is set and we have user location, 
+    // sort so user's detected country appears first
+    if (!selectedCountryCode && !selectedCityId && userLocation) {
+      const nearestCity = BusinessCentersService.findNearestCity(userLocation.lat, userLocation.lng);
+      const userCountryCode = nearestCity.countryCode;
+      return [
+        ...results.filter(c => c.countryCode === userCountryCode),
+        ...results.filter(c => c.countryCode !== userCountryCode),
+      ];
+    }
+
+    return results;
   }, [selectedCityId, selectedCountryCode, selectedServices, sortBy, userLocation]);
 
   const selectedCity = selectedCityId
