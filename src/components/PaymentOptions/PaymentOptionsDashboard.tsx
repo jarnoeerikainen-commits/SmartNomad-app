@@ -157,6 +157,7 @@ const DEMO_PREFS: PaymentPreference[] = [
 
 const PaymentOptionsDashboard: React.FC = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [preferences, setPreferences] = useState<PaymentPreference[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
