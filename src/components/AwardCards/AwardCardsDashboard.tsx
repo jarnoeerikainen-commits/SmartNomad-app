@@ -162,7 +162,7 @@ const AwardCardsDashboard: React.FC = () => {
           <CardContent className="p-4 text-center">
             <CreditCard className="w-5 h-5 mx-auto mb-1 text-primary" />
             <div className="text-2xl font-bold text-foreground">{cards.length}</div>
-            <div className="text-xs text-muted-foreground">Programs</div>
+            <div className="text-xs text-muted-foreground">{t('award.programs')}</div>
           </CardContent>
         </Card>
         <Card className="border-green-500/30">
