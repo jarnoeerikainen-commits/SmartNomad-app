@@ -12,6 +12,7 @@ import { ChatInterface } from './ChatInterface';
 import { AIMatchingSuggestions } from './AIMatchingSuggestions';
 import { TravelCalendar } from './TravelCalendar';
 import { getPersonaGroups, VibeGroup } from '@/data/vibeGroupsData';
+import { MAJOR_CITIES } from '@/data/socialChatData';
 
 export const SocialDashboard = () => {
   const {
@@ -21,6 +22,7 @@ export const SocialDashboard = () => {
     setActiveChatRoom,
     filterProfiles,
     createChatRoom,
+    getCurrentUserId,
   } = useSocialChat();
   const { activePersona } = useDemoPersona();
 
@@ -28,6 +30,7 @@ export const SocialDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [showAllCities, setShowAllCities] = useState(false);
 
   const onlineCount = profiles.filter(p => p.status === 'online').length;
   const unreadMessages = chatRooms.reduce((sum, room) => sum + room.unreadCount, 0);
@@ -61,12 +64,14 @@ export const SocialDashboard = () => {
     setActiveChatRoom(room);
   };
 
+  const currentUserId = getCurrentUserId();
+
   if (activeChatRoom) {
     return (
       <ChatInterface
         chatRoom={activeChatRoom}
         onBack={() => setActiveChatRoom(null)}
-        currentUserId="demo-user"
+        currentUserId={currentUserId}
       />
     );
   }
@@ -77,6 +82,9 @@ export const SocialDashboard = () => {
     interest: <Sparkles className="h-4 w-4" />,
     location: <Globe className="h-4 w-4" />,
   };
+
+  // City filter buttons - show top 6 or all 20
+  const displayCities = showAllCities ? MAJOR_CITIES : MAJOR_CITIES.slice(0, 6);
 
   return (
     <div className="space-y-4">
@@ -146,8 +154,8 @@ export const SocialDashboard = () => {
           <CardContent className="py-3 px-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xl font-bold">12</p>
-                <p className="text-[10px] text-muted-foreground">AI Matches</p>
+                <p className="text-xl font-bold">{profiles.length}</p>
+                <p className="text-[10px] text-muted-foreground">Members</p>
               </div>
               <Sparkles className="h-4 w-4 text-muted-foreground" />
             </div>
@@ -263,7 +271,7 @@ export const SocialDashboard = () => {
             <CardHeader>
               <CardTitle className="text-base">Discover Travelers</CardTitle>
               <CardDescription className="text-xs">
-                Connect with {onlineCount} people online now
+                {onlineCount} people online across 20 major cities
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -285,10 +293,20 @@ export const SocialDashboard = () => {
               <div className="flex gap-2 flex-wrap">
                 <Button variant={statusFilter === 'online' ? 'default' : 'outline'} size="sm"
                   onClick={() => setStatusFilter(statusFilter === 'online' ? '' : 'online')}>Online Only</Button>
-                {['Bangkok', 'Singapore', 'Lisbon'].map(city => (
+                {displayCities.map(city => (
                   <Button key={city} variant={locationFilter === city ? 'default' : 'outline'} size="sm"
                     onClick={() => setLocationFilter(locationFilter === city ? '' : city)}>{city}</Button>
                 ))}
+                {!showAllCities && (
+                  <Button variant="ghost" size="sm" onClick={() => setShowAllCities(true)} className="text-primary">
+                    +{MAJOR_CITIES.length - 6} more cities
+                  </Button>
+                )}
+                {showAllCities && (
+                  <Button variant="ghost" size="sm" onClick={() => setShowAllCities(false)} className="text-primary">
+                    Show less
+                  </Button>
+                )}
                 {(searchQuery || locationFilter || statusFilter) && (
                   <Button variant="ghost" size="sm" onClick={() => { setSearchQuery(''); setLocationFilter(''); setStatusFilter(''); }}>
                     Clear All
@@ -296,11 +314,22 @@ export const SocialDashboard = () => {
                 )}
               </div>
 
+              <p className="text-xs text-muted-foreground">
+                Showing {filteredProfiles.length} of {profiles.length} members
+                {locationFilter && ` in ${locationFilter}`}
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredProfiles.map((profile) => (
+                {filteredProfiles.slice(0, 30).map((profile) => (
                   <ProfileCard key={profile.id} profile={profile} onStartChat={handleStartChat} />
                 ))}
               </div>
+
+              {filteredProfiles.length > 30 && (
+                <p className="text-center text-sm text-muted-foreground">
+                  Showing first 30 of {filteredProfiles.length} results. Use city filters or search to narrow down.
+                </p>
+              )}
 
               {filteredProfiles.length === 0 && (
                 <div className="text-center py-12">
@@ -329,7 +358,7 @@ export const SocialDashboard = () => {
                     onClick={() => setActiveChatRoom(room)}
                   >
                     <div className="flex -space-x-2">
-                      {room.participantDetails.slice(0, 3).map((participant) => (
+                      {room.participantDetails.filter(p => p.avatar).slice(0, 3).map((participant) => (
                         <img
                           key={participant.id}
                           src={participant.avatar}
@@ -365,7 +394,7 @@ export const SocialDashboard = () => {
         </TabsContent>
 
         <TabsContent value="ai-matches">
-          <AIMatchingSuggestions />
+          <AIMatchingSuggestions onStartChat={handleStartChat} />
         </TabsContent>
 
         <TabsContent value="calendar">
