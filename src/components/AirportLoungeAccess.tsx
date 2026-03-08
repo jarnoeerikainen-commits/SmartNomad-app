@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
+  Crown, Plane, Wifi, Coffee, Utensils, Briefcase, Sparkles, TrendingUp, CreditCard, DollarSign, MapPin, Star, Shield, CheckCircle2, ExternalLink, Calculator, Globe, Search
+} from 'lucide-react';
   Crown, 
   Plane, 
   Wifi, 
