@@ -277,6 +277,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'payment-options':
         return <PaymentOptionsDashboard />;
       
+      case 'award-cards':
+        return <AwardCardsDashboard />;
+      
       case 'public-transport':
         return <PublicTransport currentLocation={detectedLocation} />;
       
