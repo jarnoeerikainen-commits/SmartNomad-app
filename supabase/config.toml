@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.city-services]
 verify_jwt = false
+
+[functions.support-ai]
+verify_jwt = false
