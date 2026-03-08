@@ -30,7 +30,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   citizenship,
   userProfile
 }) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const { activePersona } = useDemoPersona();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
