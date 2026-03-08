@@ -82,6 +82,7 @@ import PaymentOptionsDashboard from './PaymentOptions/PaymentOptionsDashboard';
 import AwardCardsDashboard from './AwardCards/AwardCardsDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { SocialDashboard } from './SocialChat/SocialDashboard';
+import HelpSupportCenter from './HelpSupportCenter';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
 import SocialMatchNotifications from './SocialMatchNotifications';
 import { Country, LocationData } from '@/types/country';
