@@ -211,14 +211,35 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const demoAiContext = localStorage.getItem('demoAiContext') || '';
     const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
     
+    // Build city services context from cached AI data
+    const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
+    let cityServicesContext = '';
+    if (userCity) {
+      try {
+        const cacheKey = 'supernomad_city_services_' + userCity.toLowerCase().replace(/\s/g, '_');
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          const data = parsed.data;
+          if (data?.categories) {
+            cityServicesContext = `Verified providers in ${data.city}, ${data.country} (researched ${data.lastResearched}):\n` +
+              data.categories.map((cat: any) => 
+                `${cat.name}: ${cat.providers.map((p: any) => `${p.name} (★${p.rating}, ${p.website}, ${p.phone})`).join('; ')}`
+              ).join('\n');
+          }
+        }
+      } catch {}
+    }
+    
     const userContext = {
       currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
-      currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
+      currentCity: userCity,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       threatIntelligence: activeThreats || 'No active threats.',
       demoPersonaContext: demoAiContext || undefined,
       awardCardsContext: awardCardsContext || undefined,
+      cityServicesContext: cityServicesContext || undefined,
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,
