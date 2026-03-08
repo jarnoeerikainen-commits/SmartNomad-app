@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { DEMO_PERSONAS, DemoPersona } from '@/data/demoPersonas';
+import { MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, getAwardCardsAIContext } from '@/data/awardProgramsData';
 
 interface DemoPersonaContextType {
   activePersona: DemoPersona | null;
@@ -114,10 +115,14 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.setItem('demoCalendar', JSON.stringify(p.calendar));
       // Store AI context
       localStorage.setItem('demoAiContext', p.aiContext);
+      // Store award cards AI context for concierge
+      const awardCards = id === 'meghan' ? MEGHAN_AWARD_CARDS : JOHN_AWARD_CARDS;
+      localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));
     } else {
       // Clear demo data
       localStorage.removeItem('demoAiContext');
       localStorage.removeItem('demoCalendar');
+      localStorage.removeItem('awardCardsAIContext');
       // Don't clear userProfile/enhancedProfile — let user keep their own data
     }
   }, []);

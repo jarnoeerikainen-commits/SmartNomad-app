@@ -209,6 +209,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       .join('\n');
 
     const demoAiContext = localStorage.getItem('demoAiContext') || '';
+    const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
     
     const userContext = {
       currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
@@ -217,6 +218,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       language: currentLanguage,
       threatIntelligence: activeThreats || 'No active threats.',
       demoPersonaContext: demoAiContext || undefined,
+      awardCardsContext: awardCardsContext || undefined,
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,
