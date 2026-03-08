@@ -95,7 +95,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     toggleVoice, sttSupported, ttsSupported
   } = useVoiceConversation();
 
-  // Reset chat when persona changes, auto-enable voice for demo personas
+  // Reset chat when persona or language changes, auto-enable voice for demo personas
   useEffect(() => {
     setMessages([{
       id: '1',
@@ -107,7 +107,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     if (activePersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
-  }, [activePersona?.id]);
+  }, [activePersona?.id, currentLanguage]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
