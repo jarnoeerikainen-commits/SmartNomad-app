@@ -177,8 +177,9 @@ MEDICAL MALPRACTICE: Preserve records → Second opinion → Medical board compl
 - Remember everything user said for consistent advice
 - Distinguish between legal INFORMATION (allowed) and legal ADVICE (only from licensed attorneys)
 
-Brief disclaimer only on first response: "I provide legal information and emergency guidance — for formal legal advice, consult a licensed attorney in the relevant jurisdiction."`;
+Brief disclaimer only on first response: "I provide legal information and emergency guidance — for formal legal advice, consult a licensed attorney in the relevant jurisdiction."
 
+${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The user's app language is "${userContext.language}". You MUST respond ENTIRELY in this language. All legal advice, emergency steps, rights information — everything in the user's language. Legal terms can include the original + translation.**` : ''}`;
     console.log('Calling Lovable AI for legal chat');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
