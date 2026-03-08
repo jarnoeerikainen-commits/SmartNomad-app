@@ -26,6 +26,7 @@ serve(async (req) => {
     const month = sanitize(body.month, 50);
     const region = sanitize(body.region, 100);
     const userProfile = body.userProfile || null;
+    const language = sanitize(body.language, 50);
     console.log("Travel planner full-plan request:", destination?.name || "general");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
