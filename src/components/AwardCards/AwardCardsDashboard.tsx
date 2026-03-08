@@ -116,7 +116,7 @@ const AwardCardsDashboard: React.FC = () => {
   const deleteCard = (id: string) => {
     const newCards = cards.filter(c => c.id !== id);
     saveCards(newCards);
-    toast({ title: 'Card Removed', description: 'Award card has been removed from your wallet.' });
+    toast({ title: t('award.card_removed'), description: t('award.card_removed_desc') });
   };
 
   const filteredCards = cards.filter(c => {
@@ -143,15 +143,15 @@ const AwardCardsDashboard: React.FC = () => {
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <Award className="w-8 h-8 text-primary" />
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Award Cards</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('award.title')}</h1>
         </div>
         <p className="text-muted-foreground text-sm">
-          Track loyalty programs, maximize rewards, and let your concierge optimize every trip
+          {t('award.subtitle')}
         </p>
         {activePersona && (
           <Badge variant="outline" className="mt-2">
             <Sparkles className="w-3 h-3 mr-1" />
-            {activePersona.profile.firstName}'s Loyalty Portfolio
+            {activePersona.profile.firstName}{t('award.loyalty_portfolio')}
           </Badge>
         )}
       </div>
@@ -162,28 +162,28 @@ const AwardCardsDashboard: React.FC = () => {
           <CardContent className="p-4 text-center">
             <CreditCard className="w-5 h-5 mx-auto mb-1 text-primary" />
             <div className="text-2xl font-bold text-foreground">{cards.length}</div>
-            <div className="text-xs text-muted-foreground">Programs</div>
+            <div className="text-xs text-muted-foreground">{t('award.programs')}</div>
           </CardContent>
         </Card>
         <Card className="border-green-500/30">
           <CardContent className="p-4 text-center">
             <DollarSign className="w-5 h-5 mx-auto mb-1 text-green-600 dark:text-green-400" />
             <div className="text-2xl font-bold text-foreground">${Math.round(totalValue).toLocaleString()}</div>
-            <div className="text-xs text-muted-foreground">Est. Value</div>
+            <div className="text-xs text-muted-foreground">{t('award.est_value')}</div>
           </CardContent>
         </Card>
         <Card className="border-blue-500/30">
           <CardContent className="p-4 text-center">
             <TrendingUp className="w-5 h-5 mx-auto mb-1 text-blue-600 dark:text-blue-400" />
             <div className="text-2xl font-bold text-foreground">{totalPoints.toLocaleString()}</div>
-            <div className="text-xs text-muted-foreground">Total Points</div>
+            <div className="text-xs text-muted-foreground">{t('award.total_points')}</div>
           </CardContent>
         </Card>
         <Card className={`${expiringCards.length > 0 ? 'border-destructive/50' : 'border-muted'}`}>
           <CardContent className="p-4 text-center">
             <AlertTriangle className={`w-5 h-5 mx-auto mb-1 ${expiringCards.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
             <div className="text-2xl font-bold text-foreground">{expiringCards.length}</div>
-            <div className="text-xs text-muted-foreground">Expiring 90d</div>
+            <div className="text-xs text-muted-foreground">{t('award.expiring_90d')}</div>
           </CardContent>
         </Card>
       </div>

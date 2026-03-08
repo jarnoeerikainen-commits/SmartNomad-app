@@ -12,6 +12,7 @@ import { PaymentMethodCard } from './PaymentMethodCard';
 import { AddPaymentMethodModal } from './AddPaymentMethodModal';
 import { PaymentPreferences } from './PaymentPreferences';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Simple encrypt/decrypt for demo (in production use Web Crypto API)
 const encryptData = (data: any): string => {
@@ -156,6 +157,7 @@ const DEMO_PREFS: PaymentPreference[] = [
 
 const PaymentOptionsDashboard: React.FC = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [preferences, setPreferences] = useState<PaymentPreference[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -247,14 +249,14 @@ const PaymentOptionsDashboard: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
             <Wallet className="h-8 w-8 text-primary" />
-            Payment Options
+            {t('payment.title')}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage all your payment methods securely — cards, wallets, crypto & bank accounts
+            {t('payment.subtitle')}
           </p>
         </div>
         <Button onClick={() => { setEditMethod(null); setShowAddModal(true); }} className="gap-2 shadow-md">
-          <Plus className="h-5 w-5" /> Add Method
+          <Plus className="h-5 w-5" /> {t('payment.add_method')}
         </Button>
       </div>
 
@@ -265,9 +267,9 @@ const PaymentOptionsDashboard: React.FC = () => {
             <Lock className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="flex-1">
-            <p className="font-semibold text-foreground text-sm">End-to-End Encrypted</p>
+            <p className="font-semibold text-foreground text-sm">{t('payment.encrypted')}</p>
             <p className="text-xs text-muted-foreground">
-              All payment data is AES-256 encrypted and stored locally. Zero-knowledge architecture — your data never leaves your device.
+              {t('payment.encrypted_desc')}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -288,7 +290,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <CreditCard className="h-5 w-5 text-primary" />
             <div>
               <p className="text-xl font-bold">{stats.total}</p>
-              <p className="text-xs text-muted-foreground">Active Methods</p>
+              <p className="text-xs text-muted-foreground">{t('payment.active_methods')}</p>
             </div>
           </div>
         </Card>
@@ -297,7 +299,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">💳</span>
             <div>
               <p className="text-xl font-bold">{stats.cards}</p>
-              <p className="text-xs text-muted-foreground">Credit Cards</p>
+              <p className="text-xs text-muted-foreground">{t('payment.credit_cards')}</p>
             </div>
           </div>
         </Card>
@@ -306,7 +308,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">🔵</span>
             <div>
               <p className="text-xl font-bold">{stats.digital}</p>
-              <p className="text-xs text-muted-foreground">Digital Wallets</p>
+              <p className="text-xs text-muted-foreground">{t('payment.digital_wallets')}</p>
             </div>
           </div>
         </Card>
@@ -315,7 +317,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">🪙</span>
             <div>
               <p className="text-xl font-bold">{stats.crypto}</p>
-              <p className="text-xs text-muted-foreground">Crypto Wallets</p>
+              <p className="text-xs text-muted-foreground">{t('payment.crypto_wallets')}</p>
             </div>
           </div>
         </Card>
@@ -324,7 +326,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <span className="text-xl">⭐</span>
             <div>
               <p className="text-xl font-bold truncate text-sm">{stats.defaultMethod ? PAYMENT_METHOD_CONFIG[stats.defaultMethod.type].label : '—'}</p>
-              <p className="text-xs text-muted-foreground">Default</p>
+              <p className="text-xs text-muted-foreground">{t('payment.default')}</p>
             </div>
           </div>
         </Card>
@@ -335,15 +337,15 @@ const PaymentOptionsDashboard: React.FC = () => {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="methods" className="gap-2">
             <CreditCard className="h-4 w-4" />
-            <span className="hidden sm:inline">Methods</span>
+            <span className="hidden sm:inline">{t('payment.methods_tab')}</span>
           </TabsTrigger>
           <TabsTrigger value="rules" className="gap-2">
             <Settings2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Rules</span>
+            <span className="hidden sm:inline">{t('payment.rules_tab')}</span>
           </TabsTrigger>
           <TabsTrigger value="activity" className="gap-2">
             <ArrowRightLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Activity</span>
+            <span className="hidden sm:inline">{t('payment.activity_tab')}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -352,7 +354,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.cards.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                💳 Credit & Debit Cards
+                💳 {t('payment.credit_debit')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.cards.length}</Badge>
               </h3>
               <div className="space-y-2">
@@ -367,7 +369,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.digital.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🔵 Digital Wallets & Services
+                🔵 {t('payment.digital_services')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.digital.length}</Badge>
               </h3>
               <div className="space-y-2">
@@ -382,7 +384,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.crypto.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🪙 Cryptocurrency Wallets
+                🪙 {t('payment.cryptocurrency')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.crypto.length}</Badge>
               </h3>
               <div className="space-y-2">
@@ -397,7 +399,7 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methodsByCategory.bank.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
-                🏦 Bank Accounts
+                🏦 {t('payment.bank_accounts')}
                 <Badge variant="outline" className="text-xs">{methodsByCategory.bank.length}</Badge>
               </h3>
               <div className="space-y-2">
@@ -411,10 +413,10 @@ const PaymentOptionsDashboard: React.FC = () => {
           {methods.length === 0 && (
             <Card className="p-8 text-center">
               <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-              <h3 className="font-semibold mb-1">No Payment Methods</h3>
-              <p className="text-sm text-muted-foreground mb-4">Add your first payment method to get started</p>
+              <h3 className="font-semibold mb-1">{t('payment.no_methods')}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t('payment.add_first')}</p>
               <Button onClick={() => setShowAddModal(true)} className="gap-2">
-                <Plus className="h-4 w-4" /> Add Payment Method
+                <Plus className="h-4 w-4" /> {t('payment.add_payment_method')}
               </Button>
             </Card>
           )}
@@ -429,7 +431,7 @@ const PaymentOptionsDashboard: React.FC = () => {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <ArrowRightLeft className="h-5 w-5 text-primary" />
-                Recent Activity
+                {t('payment.recent_activity')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
