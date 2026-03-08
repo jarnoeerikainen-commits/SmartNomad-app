@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck, Globe } from 'lucide-react';
 import EmergencyContacts from '../EmergencyContacts';
 import SOSServices from '../SOSServices';
 import EmergencyCardNumbers from '../EmergencyCardNumbers';
 import CyberHelplineDashboard from '../CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from '../ThreatIntelligence/ThreatDashboard';
+import EmbassyDirectory from '../EmbassyDirectory';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -37,10 +38,14 @@ const EmergencySection: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
           <TabsTrigger value="contacts" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
             <span className="hidden sm:inline">Contacts</span>
+          </TabsTrigger>
+          <TabsTrigger value="embassies" className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            <span className="hidden sm:inline">Embassies</span>
           </TabsTrigger>
           <TabsTrigger value="sos" className="flex items-center gap-2">
             <Siren className="h-4 w-4" />
@@ -62,6 +67,10 @@ const EmergencySection: React.FC = () => {
 
         <TabsContent value="contacts" className="mt-6 animate-fade-in">
           <EmergencyContacts />
+        </TabsContent>
+
+        <TabsContent value="embassies" className="mt-6 animate-fade-in">
+          <EmbassyDirectory />
         </TabsContent>
 
         <TabsContent value="sos" className="mt-6 animate-fade-in">
