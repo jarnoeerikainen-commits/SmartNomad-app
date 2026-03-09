@@ -25,7 +25,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-display">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight font-display">
           <span className="text-foreground">Welcome to </span>
           <span className="text-foreground">Super</span>
           <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
