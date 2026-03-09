@@ -86,7 +86,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
                   <div className="p-2.5 rounded-xl bg-primary/20 backdrop-blur-md border border-primary/20">
                     <Icon className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-primary-foreground font-display">
+                  <h2 className="text-xl sm:text-2xl md:text-4xl font-bold tracking-tight text-primary-foreground font-display">
                     {card.title}
                   </h2>
                 </div>
