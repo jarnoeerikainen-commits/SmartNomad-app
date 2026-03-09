@@ -59,7 +59,7 @@ const DashboardBottomStats: React.FC<DashboardBottomStatsProps> = ({ countries, 
       onClick={onOpenTracking}
     >
       <div className="container max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-center gap-6 text-sm font-medium">
+        <div className="flex items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-primary" />
             <span className="text-muted-foreground">

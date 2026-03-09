@@ -415,9 +415,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   }
 
   return (
-    <div className="fixed bottom-16 right-0 sm:bottom-6 sm:right-6 z-40 w-full sm:w-auto max-w-full">
+    <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-auto max-w-full">
       <Card className={`w-full sm:w-96 max-w-full glass-morphism shadow-large transition-all duration-300 rounded-none sm:rounded-lg ${
-        isMinimized ? 'h-16' : 'h-[calc(100dvh-8rem)] sm:h-[500px]'
+        isMinimized ? 'h-16' : 'h-[100dvh] sm:h-[500px]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-3 sm:p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">

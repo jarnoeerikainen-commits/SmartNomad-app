@@ -229,7 +229,7 @@ const AISupportChat = () => {
   };
 
   return (
-    <div className="flex flex-col h-[600px] border rounded-xl overflow-hidden bg-background">
+    <div className="flex flex-col h-[calc(100dvh-16rem)] sm:h-[600px] border rounded-xl overflow-hidden bg-background">
       {/* Chat Header */}
       <div className="px-4 py-3 border-b bg-primary/5 flex items-center justify-between">
         <div className="flex items-center gap-3">

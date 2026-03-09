@@ -562,8 +562,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={() => setShowUpgradeModal(true)}
         />
         
-          <main className="flex-1 overflow-hidden" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
-            <div className="container mx-auto p-4 sm:p-6 max-w-7xl pb-20 md:pb-6">
+          <main className="flex-1 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
+            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-36 md:pb-6">
               <div className="animate-fade-in">
                 {renderActiveSection()}
               </div>
