@@ -72,7 +72,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
               <div className={`absolute inset-0 bg-gradient-to-br ${card.accentClass} opacity-[0.12] mix-blend-overlay`} />
 
               {/* Content positioned over image */}
-              <div className={`absolute inset-0 flex flex-col justify-end p-6 md:p-10 ${isReversed ? 'md:items-end md:text-right' : ''}`}>
+              <div className={`absolute inset-0 flex flex-col justify-end p-4 sm:p-6 md:p-10 ${isReversed ? 'md:items-end md:text-right' : ''}`}>
                 {/* Badge */}
                 <div className={`flex items-center gap-2 mb-4 ${isReversed ? 'md:justify-end' : ''}`}>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 text-primary-foreground text-xs font-semibold tracking-wide uppercase">
