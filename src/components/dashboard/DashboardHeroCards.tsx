@@ -59,7 +59,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
             onClick={() => onNavigate(card.id)}
           >
             {/* Full-bleed image */}
-            <div className="relative h-[320px] md:h-[380px] overflow-hidden">
+            <div className="relative h-[280px] sm:h-[320px] md:h-[380px] overflow-hidden">
               <img
                 src={card.image}
                 alt={card.title}
@@ -72,7 +72,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
               <div className={`absolute inset-0 bg-gradient-to-br ${card.accentClass} opacity-[0.12] mix-blend-overlay`} />
 
               {/* Content positioned over image */}
-              <div className={`absolute inset-0 flex flex-col justify-end p-6 md:p-10 ${isReversed ? 'md:items-end md:text-right' : ''}`}>
+              <div className={`absolute inset-0 flex flex-col justify-end p-4 sm:p-6 md:p-10 ${isReversed ? 'md:items-end md:text-right' : ''}`}>
                 {/* Badge */}
                 <div className={`flex items-center gap-2 mb-4 ${isReversed ? 'md:justify-end' : ''}`}>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md border border-primary/30 text-primary-foreground text-xs font-semibold tracking-wide uppercase">
@@ -86,13 +86,13 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
                   <div className="p-2.5 rounded-xl bg-primary/20 backdrop-blur-md border border-primary/20">
                     <Icon className="w-6 h-6 text-primary-foreground" />
                   </div>
-                  <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-primary-foreground font-display">
+                  <h2 className="text-xl sm:text-2xl md:text-4xl font-bold tracking-tight text-primary-foreground font-display">
                     {card.title}
                   </h2>
                 </div>
 
                 {/* Subtitle */}
-                <p className={`text-sm md:text-base text-primary-foreground/80 max-w-lg mb-5 leading-relaxed ${isReversed ? 'md:ml-auto' : ''}`}>
+                <p className={`text-xs sm:text-sm md:text-base text-primary-foreground/80 max-w-lg mb-4 sm:mb-5 leading-relaxed line-clamp-3 sm:line-clamp-none ${isReversed ? 'md:ml-auto' : ''}`}>
                   {card.subtitle}
                 </p>
 

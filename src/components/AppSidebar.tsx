@@ -201,9 +201,9 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       )}
       
       <aside className={`
-        fixed left-0 top-16 z-[60] h-[calc(100dvh-4rem-4rem)] w-64 transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
+        fixed left-0 top-16 z-[60] h-[calc(100dvh-4rem-4rem)] w-[280px] max-w-[85vw] transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:top-0 md:z-auto md:h-[calc(100dvh-4rem)] md:translate-x-0
+        md:relative md:top-0 md:z-auto md:h-[calc(100dvh-4rem)] md:w-64 md:max-w-64 md:translate-x-0
       `}>
         <div className="flex h-full flex-col">
           {/* Navigation */}
