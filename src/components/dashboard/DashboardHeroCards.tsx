@@ -59,7 +59,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
             onClick={() => onNavigate(card.id)}
           >
             {/* Full-bleed image */}
-            <div className="relative h-[320px] md:h-[380px] overflow-hidden">
+            <div className="relative h-[280px] sm:h-[320px] md:h-[380px] overflow-hidden">
               <img
                 src={card.image}
                 alt={card.title}
