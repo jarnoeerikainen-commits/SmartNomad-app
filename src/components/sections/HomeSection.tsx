@@ -19,7 +19,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
   const { t } = useLanguage();
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6">
+    <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
       <div className="text-center space-y-4 mb-10 pt-2">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
