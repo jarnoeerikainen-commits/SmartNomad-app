@@ -92,7 +92,7 @@ const DashboardHeroCards: React.FC<DashboardHeroCardsProps> = ({ onNavigate }) =
                 </div>
 
                 {/* Subtitle */}
-                <p className={`text-sm md:text-base text-primary-foreground/80 max-w-lg mb-5 leading-relaxed ${isReversed ? 'md:ml-auto' : ''}`}>
+                <p className={`text-xs sm:text-sm md:text-base text-primary-foreground/80 max-w-lg mb-4 sm:mb-5 leading-relaxed line-clamp-3 sm:line-clamp-none ${isReversed ? 'md:ml-auto' : ''}`}>
                   {card.subtitle}
                 </p>
 
