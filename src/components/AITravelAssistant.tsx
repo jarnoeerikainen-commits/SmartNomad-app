@@ -399,7 +399,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40">
+      <div className="fixed bottom-[8.5rem] right-4 sm:bottom-6 sm:right-6 z-40">
         <Button
           onClick={() => setIsOpen(true)}
           className="h-14 w-14 sm:h-16 sm:w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
