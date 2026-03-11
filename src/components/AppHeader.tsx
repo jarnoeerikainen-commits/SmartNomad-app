@@ -85,8 +85,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </Link>
         </div>
 
-        {/* Center - Demo Personas */}
-        <DemoPersonaSelector />
+        {/* Center - AQI + Demo Personas */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <AirQualityIndicator />
+          <div className="h-5 w-px bg-border hidden sm:block" />
+          <DemoPersonaSelector />
+        </div>
 
         {/* Right side - Actions */}
         <div className="flex items-center gap-1 sm:gap-2">
