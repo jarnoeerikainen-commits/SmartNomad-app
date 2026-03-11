@@ -13,6 +13,7 @@ import { DataManagement } from './GDPRCompliance';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { DemoPersonaSelector } from './DemoPersonaSelector';
+import AirQualityIndicator from './AirQualityIndicator';
 import { Country } from '@/types/country';
 import { AlertCircle } from 'lucide-react';
 interface AppHeaderProps {
