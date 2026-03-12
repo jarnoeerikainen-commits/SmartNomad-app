@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Wind, Droplets, CloudRain, Flame, Atom, FlaskConical } from 'lucide-react';
 import { useLocation } from '@/contexts/LocationContext';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { Progress } from '@/components/ui/progress';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PollutantData {
   pm25?: number;
@@ -52,6 +52,10 @@ const pollutantInfo = [
 
 const AirQualityIndicator: React.FC = () => {
   const { location } = useLocation();
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+  const hoverTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+
   const [aqiData, setAqiData] = useState<AQIData | null>(() => {
     try {
       const cached = localStorage.getItem(AQI_CACHE_KEY);
@@ -107,19 +111,42 @@ const AirQualityIndicator: React.FC = () => {
   const level = getAQILevel(aqiData.aqi);
   const availablePollutants = pollutantInfo.filter(p => aqiData.pollutants[p.key] != null);
 
+  const handleMouseEnter = () => {
+    if (isMobile) return;
+    hoverTimeout.current = setTimeout(() => setOpen(true), 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (isMobile) return;
+    clearTimeout(hoverTimeout.current);
+    setTimeout(() => setOpen(false), 100);
+  };
+
   return (
-    <HoverCard openDelay={200} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        <div className="flex items-center gap-1.5 cursor-default select-none">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          className="flex items-center gap-1.5 cursor-pointer select-none bg-transparent border-0 p-1 rounded-md hover:bg-muted/50 transition-colors"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={() => setOpen(!open)}
+          aria-label="Air Quality Index"
+        >
           <Wind className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-sm font-bold tabular-nums">{aqiData.aqi}</span>
           <span className={`hidden sm:inline text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full text-white ${level.bg}`}>
             {level.label}
           </span>
           <span className={`sm:hidden h-2 w-2 rounded-full ${level.bg}`} />
-        </div>
-      </HoverCardTrigger>
-      <HoverCardContent side="bottom" align="center" className="w-80 p-0 overflow-hidden">
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="center"
+        className="w-[calc(100vw-2rem)] sm:w-80 p-0 overflow-hidden"
+        onMouseEnter={() => { if (!isMobile) clearTimeout(hoverTimeout.current); }}
+        onMouseLeave={handleMouseLeave}
+      >
         {/* Header */}
         <div className={`px-4 py-3 ${level.bg} text-white`}>
           <div className="flex items-center justify-between">
@@ -150,7 +177,7 @@ const AirQualityIndicator: React.FC = () => {
                       <div className="flex items-center gap-1.5">
                         <Icon className="h-3 w-3 text-muted-foreground" />
                         <span className="font-medium">{label}</span>
-                        <span className="text-muted-foreground">{desc}</span>
+                        <span className="text-muted-foreground hidden sm:inline">{desc}</span>
                         {isDominant && (
                           <span className="text-[9px] bg-destructive/10 text-destructive px-1 py-0.5 rounded font-semibold">DOM</span>
                         )}
@@ -174,8 +201,8 @@ const AirQualityIndicator: React.FC = () => {
             <span>Updated {Math.round((Date.now() - aqiData.timestamp) / 60000)}m ago</span>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 

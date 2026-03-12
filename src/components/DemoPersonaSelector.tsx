@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserCircle, MapPin, Briefcase, Plane, Dumbbell, Users, Calendar } from 'lucide-react';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { DEMO_PERSONAS } from '@/data/demoPersonas';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProfileCardProps {
   personaId: 'meghan' | 'john';
@@ -13,6 +14,10 @@ interface ProfileCardProps {
 
 const ProfileHoverCard: React.FC<ProfileCardProps> = ({ personaId, children }) => {
   const persona = DEMO_PERSONAS[personaId];
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+  const hoverTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+
   if (!persona) return <>{children}</>;
 
   const p = persona.profile;
@@ -20,12 +25,34 @@ const ProfileHoverCard: React.FC<ProfileCardProps> = ({ personaId, children }) =
   const l = persona.lifestyle;
   const f = persona.family;
 
+  const handleMouseEnter = () => {
+    if (isMobile) return;
+    hoverTimeout.current = setTimeout(() => setOpen(true), 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (isMobile) return;
+    clearTimeout(hoverTimeout.current);
+    setTimeout(() => setOpen(false), 150);
+  };
+
   return (
-    <HoverCard openDelay={200} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        {children}
-      </HoverCardTrigger>
-      <HoverCardContent side="bottom" align="center" className="w-80 p-0 overflow-hidden">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <div
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {children}
+        </div>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="center"
+        className="w-[calc(100vw-2rem)] sm:w-80 p-0 overflow-hidden max-h-[70vh] overflow-y-auto"
+        onMouseEnter={() => { if (!isMobile) clearTimeout(hoverTimeout.current); }}
+        onMouseLeave={handleMouseLeave}
+      >
         {/* Header */}
         <div className="px-4 py-3 bg-gradient-to-r from-primary/90 to-accent/90 text-primary-foreground">
           <div className="flex items-center gap-3">
@@ -125,8 +152,8 @@ const ProfileHoverCard: React.FC<ProfileCardProps> = ({ personaId, children }) =
             <p className="text-[11px] text-muted-foreground leading-relaxed">{p.bio}</p>
           </div>
         </div>
-      </HoverCardContent>
-    </HoverCard>
+      </PopoverContent>
+    </Popover>
   );
 };
 
