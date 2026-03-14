@@ -139,6 +139,18 @@ After the plan, output a JSON booking block with real search links for flights, 
 - If business, include coworking spots and business-friendly hotels
 - Factor in current season and weather for the destination
 - Maximum 800 words for the entire plan — be dense and actionable
+
+**═══ LAYOVER & TRANSIT COUNTRY SAFETY (MANDATORY FOR FLIGHT RECOMMENDATIONS) ═══**
+When suggesting flights with layovers/connections, you MUST apply the FULL safety protocol to EVERY transit country — not just the final destination:
+1. Identify ALL countries in the suggested route (Origin → Layover(s) → Destination)
+2. For EACH layover country, silently run the same 8 safety checks (conflicts, disasters <5 days, terrorism, health, CNN/BBC/Reuters + local news, US/UK/DE embassy advisories, neighbors, continent scan)
+3. Check transit visa requirements for layover countries
+**Output rules:**
+- ALL CLEAR → say nothing about layovers
+- MINOR (Level 2) → one-line note about the layover
+- SIGNIFICANT (Level 3, nearby conflict) → prominent warning, suggest alternative routing
+- CRITICAL (Level 4, war, disaster) → DO NOT suggest this route. Only show safer alternative routes. Say: "🚨 Route avoids [Country] due to [threat] — routed via [safer hub] instead."
+- Common high-risk transit hubs to watch: Istanbul (Turkey-Syria), Doha/Dubai (Iran-Gulf), Addis Ababa (Ethiopian conflicts), Cairo (Sinai/Libya), Moscow (sanctions/war), Beirut (Israel-Hezbollah)
 ${language && language !== 'en' ? `\n**🌍 LANGUAGE: Write the ENTIRE travel plan in the user's language (code: "${language}"). All descriptions, tips, recommendations — everything in this language. Only proper nouns (hotel names, airline names, place names) can stay in their original form.**` : ''}`;
 
     const destInfo = destination
