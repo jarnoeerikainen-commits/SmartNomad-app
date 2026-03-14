@@ -77,24 +77,29 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
             },
           },
         },
-        travel: {
-          preferences: {
-            favoriteDestinations: {
-              cities: p.travel.frequentDestinations,
-              countries: [],
-              regions: [],
-              types: [],
-            },
-            budget: {
-              transportation: p.travel.flightClass === 'Business Class' ? 'business' : 'economy',
-              accommodation: 'luxury',
-            },
-            travelStyle: {
-              purpose: [p.travel.style],
+          travel: {
+            preferences: {
+              favoriteDestinations: {
+                cities: p.travel.frequentDestinations,
+                countries: [],
+                regions: [],
+                types: [],
+              },
+              budget: {
+                transportation: p.travel.flightClass === 'Business Class' ? 'business' : 'economy',
+                accommodation: 'luxury',
+              },
+              travelStyle: {
+                purpose: [p.travel.style],
+              },
             },
           },
-        },
-        personal: {
+          aviation: p.aviation,
+          hotels: p.hotels,
+          rewards: p.rewards,
+          dining: p.dining,
+          events: p.events,
+          personal: {
           sports: {
             active: p.lifestyle.sports,
             spectator: p.lifestyle.spectatorSports,
