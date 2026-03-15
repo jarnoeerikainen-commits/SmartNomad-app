@@ -56,13 +56,35 @@ Recommended partners:
 
 ---
 
-**🛡️ TRAVEL INSURANCE (6+ partners)**
+**🛡️ TRAVEL INSURANCE (6+ standard partners)**
 - **World Nomads** ⭐4.8 — 150+ adventure activities, buy while traveling, up to $10M medical. worldnomads.com
 - **SafetyWing** ⭐4.7 — Subscription-based, cancel anytime, $45/4 weeks, 180+ countries. safetywing.com
 - **Allianz** ⭐4.5 — Trusted global brand, multiple tiers, from $9/day. allianzassistance.com
 - **AXA** ⭐4.6 — Global coverage, business travel, annual plans. axa.com
 - **Genki** — For digital nomads, German provider
 - **IMG Global** — Student & long-term coverage
+
+**🚁 CONFLICT ZONE & MEDIVAC INSURANCE (SPECIALIZED — for high-risk destinations)**
+⚠️ Standard travel insurance (World Nomads, SafetyWing, Allianz, AXA) contains FORCE MAJEURE exclusions that void coverage during: wars, civil unrest, terrorism, coups, nuclear events, government-ordered evacuations, pandemics, and sanctions. These policies are USELESS in conflict zones.
+
+**SPECIALIZED PROVIDERS (cover what standard policies exclude):**
+- **Global Rescue** ⭐4.9 — Military-grade medical evacuation, extraction from conflict zones, 24/7 ops center with former Special Forces, covers war/terrorism/civil unrest EXPLICITLY. From $329/year. globalrescue.com
+- **International SOS** ⭐4.8 — World's largest medical & security assistance company, used by Fortune 500, crisis evacuation, conflict zone coverage, in-country medical teams in 90+ countries. internationalsos.com
+- **Battleface** ⭐4.6 — Insurance specifically DESIGNED for high-risk destinations, covers war zones, kidnap & ransom, terrorism, political evacuation, hostile environment. From $5/day. battleface.com
+- **Ripcord Rescue Travel Insurance** ⭐4.5 — Medivac to hospital of choice (not just nearest), covers civil unrest & terrorism, helicopter evacuation. ripcordrescuetravelinsurance.com
+- **FocusPoint International** ⭐4.5 — Crisis response, kidnap for ransom, political evacuation, active shooter, natural disaster extraction. focuspointintl.com
+- **Tangiers International** ⭐4.4 — War zone medical insurance, used by journalists/NGO workers/contractors in active conflict zones, covers hostile acts. tangiersinternational.com
+- **Drum Cussac (now WorldAware)** — Corporate travel risk management, war zone coverage, crisis response. worldaware.com
+
+**KIDNAP & RANSOM (K&R) INSURANCE:**
+- **Hiscox** — K&R coverage for executives, includes ransom payment, crisis negotiator, psychological support
+- **AIG** — Kidnap, extortion & detention insurance, global coverage
+- **Chubb** — Crisis management response, includes family support
+
+**MEDIVAC PROVIDERS (standalone evacuation memberships):**
+- **AMREF Flying Doctors** — Africa-focused air ambulance, Nairobi-based, covers East Africa. amrefflyingdoctors.org
+- **SOS International** — Helicopter & fixed-wing medical evacuation, Asia-Pacific & Middle East
+- **European Air Ambulance (EAA)** — Pan-European medivac, repatriation. air-ambulance.com
 
 ---
 
