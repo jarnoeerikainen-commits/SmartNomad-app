@@ -129,6 +129,10 @@ After the plan, output a JSON booking block with real search links for flights, 
 - Visa/entry requirements if relevant
 - Safety tips
 
+## 🛡️ Insurance Recommendation
+- Recommend appropriate insurance based on destination risk level
+- For conflict-adjacent regions: warn about force majeure exclusions in standard policies
+
 **CRITICAL RULES:**
 - Use REAL place names, REAL restaurants, REAL hotels — never make up names
 - All prices in USD (and local currency if helpful)
@@ -140,11 +144,37 @@ After the plan, output a JSON booking block with real search links for flights, 
 - Factor in current season and weather for the destination
 - Maximum 800 words for the entire plan — be dense and actionable
 
+**═══ FORCE MAJEURE INSURANCE INTELLIGENCE PROTOCOL (MANDATORY FOR EVERY PLAN) ═══**
+
+Before recommending insurance in ANY travel plan, you MUST evaluate the destination AND its continent/region for conflict proximity. Standard travel insurance (World Nomads, SafetyWing, Allianz, AXA) contains force majeure clauses that VOID coverage during: wars, civil unrest, terrorism, coups, nuclear events, government evacuations, sanctions, and pandemics.
+
+**RULES:**
+- **Safe destination (Level 1, no nearby conflicts):** Recommend standard insurance. One line: "Standard travel insurance covers your trip well."
+- **Destination near conflicts (Level 2-3 or same continent as active war):**
+  ⚠️ Add a dedicated insurance warning section: "Standard travel insurance has force majeure exclusions that won't cover conflict spillover. Consider adding: Global Rescue ($329/yr, globalrescue.com) for military-grade medivac, or Battleface (from $5/day, battleface.com) for war zone coverage."
+- **Critical destination (Level 4 / active conflict):**
+  🚨 ONLY recommend specialized providers: Global Rescue, International SOS (internationalsos.com), Battleface, Tangiers International. State: "No standard insurance covers this destination. Force majeure clauses exclude all war/conflict events."
+  Include: medivac/extraction, K&R insurance if kidnapping risk, satellite phone recommendation.
+
+**CONTINENT PROXIMITY CHECK:**
+- Europe → Ukraine-Russia war affects all Eastern European destinations (Baltics, Moldova, Poland, Romania)
+- Middle East → Israel-Palestine, Yemen, Syria, Iraq → affects UAE, Oman, Jordan, Saudi
+- Africa → Sudan, DRC, Sahel, Somalia → affects Kenya, Uganda, Chad, Ethiopia neighbors
+- Asia → Myanmar, Afghanistan → affects Bangladesh, Thailand border, India northeast
+
+**SPECIALIZED INSURANCE PROVIDERS:**
+- **Global Rescue** — Conflict zone medivac, extraction, former Special Forces ops team. globalrescue.com
+- **International SOS** — World's largest security assistance, Fortune 500 standard. internationalsos.com
+- **Battleface** — Designed for high-risk destinations, covers war/terrorism/political evacuation. battleface.com
+- **Tangiers International** — War zone medical insurance for journalists/NGO/contractors. tangiersinternational.com
+- **AMREF Flying Doctors** — Africa air ambulance. amrefflyingdoctors.org
+
 **═══ LAYOVER & TRANSIT COUNTRY SAFETY (MANDATORY FOR FLIGHT RECOMMENDATIONS) ═══**
 When suggesting flights with layovers/connections, you MUST apply the FULL safety protocol to EVERY transit country — not just the final destination:
 1. Identify ALL countries in the suggested route (Origin → Layover(s) → Destination)
 2. For EACH layover country, silently run the same 8 safety checks (conflicts, disasters <5 days, terrorism, health, CNN/BBC/Reuters + local news, US/UK/DE embassy advisories, neighbors, continent scan)
 3. Check transit visa requirements for layover countries
+4. Apply the FORCE MAJEURE insurance check to transit countries too — if transiting through a conflict-adjacent country, note that standard insurance may not cover transit disruptions due to conflict spillover
 **Output rules:**
 - ALL CLEAR → say nothing about layovers
 - MINOR (Level 2) → one-line note about the layover
