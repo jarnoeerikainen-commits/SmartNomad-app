@@ -807,18 +807,19 @@ export function getJetSearchAIContext(flights: CharterFlight[], homeAirport: str
   ctx += `\n**🤖 PRIVATE AVIATION AI BEHAVIOR — MANDATORY RULES:**\n`;
   ctx += `**⚠️ DEPARTURE LOCATION RULE (CRITICAL — NEVER VIOLATE):**\n`;
   ctx += `- All flights listed above depart from **${homeAirport}** (the user's current/home airport).\n`;
-  ctx += `- When the user mentions a DEPARTURE city in their question (e.g., "fly FROM Paris to Dubai"), ONLY recommend flights departing from that city. If no flights exist from that city in our data, say: "I don't have private jet availability from [city] right now, but I can check from your nearest FBO at ${homeAirport}."\n`;
+  ctx += `- When the user mentions a DEPARTURE city in their question (e.g., "fly FROM Paris to Dubai"), ONLY recommend flights departing from that city. If no flights exist from that city in our data, say so honestly.\n`;
   ctx += `- When the user does NOT mention a departure city (e.g., "I want to go to Dubai" or "flights to Tokyo"), assume departure from their CURRENT LOCATION (${homeAirport}). Only show flights from ${homeAirport}.\n`;
-  ctx += `- **NEVER** recommend a flight departing from a city the user is NOT in and did NOT mention as departure. If the user says "I'm going to London" and they're in Singapore, show Singapore→London flights, NOT London→somewhere.\n`;
+  ctx += `- **NEVER** recommend a flight departing from a city the user is NOT in and did NOT mention as departure.\n`;
   ctx += `- For INBOUND/RETURN flights (user asks about "coming back from X"), show flights FROM destination city TO ${homeAirport} if available in the reverse legs data.\n\n`;
-  ctx += `1. **PROACTIVE MATCHING:** When the user mentions ANY destination city, check the route list for flights FROM ${homeAirport} TO that city. If found, mention it: "I found an empty leg from ${homeAirport} to [city] on [date] for just €[price]/seat — that's [X]% cheaper than business class!"\n`;
-  ctx += `2. **ALWAYS SUGGEST PRIVATE OPTIONS alongside commercial:** Add a private jet recommendation after booking cards: "💎 **Private option:** There's a shared seat on a [aircraft] from ${homeAirport} to [city] for €[price]. Skip the airport chaos — 12-min FBO boarding."\n`;
-  ctx += `3. **EMPTY LEGS ARE YOUR SECRET WEAPON:** These are repositioning flights at 50-75% off. "Heads up — there's a [aircraft] repositioning from ${homeAirport} to [city] tomorrow for €[price]/seat. These deals disappear fast."\n`;
-  ctx += `4. **TIME SAVINGS:** "Private FBO: ${cheapestSeats[0]?.waitTimeMinutes || 12}-min door-to-plane | Commercial: 90-120 min. That's ~2 hours saved each way."\n`;
-  ctx += `5. **GROUP ECONOMICS:** For 3+ travelers, calculate charter vs individual biz class tickets.\n`;
-  ctx += `6. **AWARD POINTS STRATEGY:** Suggest miles for positioning flights, private jet for main leg.\n`;
-  ctx += `7. **NEVER skip the private option.** Even for commercial flight requests, always add: "I also checked our private aviation network from ${homeAirport}..."\n`;
-  ctx += `8. For LATAM routes, prioritize Flapper. For fixed-rate during peak, highlight Amalfi Jets.\n`;
-  ctx += `9. If no exact route match from ${homeAirport}, suggest closest available route and mention the 600+ airport directory.\n`;
+
+  ctx += `**⚠️ DATABASE-ONLY RULE (CRITICAL — NEVER FABRICATE):**\n`;
+  ctx += `1. **ONLY recommend private jet options that EXIST in the route list above.** If no route matches the user's requested destination from ${homeAirport}, DO NOT invent, guess, or suggest a private flight.\n`;
+  ctx += `2. **If NO matching private route exists:** Say: "I checked our private aviation network — no empty legs or shared seats from ${homeAirport} to [destination] right now. I'll save this route to your wishlist and notify you instantly if an empty leg or shared seat becomes available. 🔔"\n`;
+  ctx += `3. **Dates must match reality.** Only mention flight dates that appear in the data above. Never invent dates or modify existing ones.\n`;
+  ctx += `4. **COMMERCIAL FLIGHTS FIRST.** Always lead with commercial flight search links (Skyscanner, Google Flights, Kayak). Private jet options are a BONUS — only add them AFTER commercial results and ONLY if a matching route exists in the database.\n`;
+  ctx += `5. If a matching private route EXISTS: Add it after commercial links: "💎 **Private option available:** I found [empty leg/shared seat] from ${homeAirport} to [city] on [exact date from data] — €[exact price from data]/seat on a [exact aircraft from data]. That's [exact savings% from data] less than business class. [Provider]. 12-min FBO boarding vs 90+ min commercial."\n`;
+  ctx += `6. For empty legs with matches, emphasize urgency: "This is a repositioning flight — once it's gone, it's gone. Expires in [exact expiry from data]."\n`;
+  ctx += `7. For LATAM routes, prioritize Flapper. For fixed-rate during peak, highlight Amalfi Jets.\n`;
+  ctx += `8. **WISHLIST FEATURE:** When no private option exists, always offer: "Want me to set up an alert? I'll monitor empty legs and shared seats on this route and ping you the moment something comes up — could save you 50-75% vs chartering. 🛩️"\n`;
   return ctx;
 }
