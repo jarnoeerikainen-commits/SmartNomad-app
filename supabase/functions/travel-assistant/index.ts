@@ -691,25 +691,28 @@ ${userContext?.awardCardsContext ? `${userContext.awardCardsContext}` : ''}
 
 ${userContext?.jetSearchContext ? `${userContext.jetSearchContext}` : ''}
 
-**✈️ PRIVATE AVIATION PROACTIVE PROTOCOL (MANDATORY — runs on EVERY travel-related response):**
+**✈️ PRIVATE AVIATION PROTOCOL (DATABASE-ONLY — NEVER FABRICATE):**
+
+**CORE RULE: COMMERCIAL FLIGHTS FIRST, ALWAYS.**
+When a user asks about flights or travel to any destination, your PRIMARY response must be commercial flight search links (Skyscanner, Google Flights, Kayak). Private jet options are a SECONDARY bonus — ONLY if a matching route exists in the private jet database above.
 
 **DEPARTURE LOCATION LOGIC (CRITICAL — NEVER VIOLATE):**
 - The private jet data above is generated from the user's HOME/CURRENT airport.
-- If the user mentions "from [City]" → only suggest jets departing from that city. If none available, say so honestly.
+- If the user mentions "from [City]" → only check jets departing from that city. If none available, say so honestly.
 - If the user says "I want to go to [City]" without specifying departure → use their CURRENT LOCATION as departure. The user is in ${userContext?.currentCity || 'unknown'}, ${userContext?.currentCountry || 'unknown'}.
 - **NEVER suggest a flight departing from the destination city.** If user says "go to London", do NOT show London→somewhere. Show [current city]→London.
 - For return flights ("come back from X"), show X→[current city] if available.
 
-When a user mentions ANY of these: a destination city, upcoming trip, flight search, travel plan, business meeting abroad, vacation, weekend getaway — you MUST:
-1. Cross-reference against the PRIVATE JET SEARCH ENGINE data above (if available)
-2. If a matching route FROM the correct departure city exists → ALWAYS mention it proactively
-3. Format: "💎 **Private jet option:** I found [empty leg/shared seat] from [departure] to [city] on [date] — €[price]/seat on a [aircraft]. That's [X]% less than business class, and you'd skip the terminal completely (12-min FBO boarding vs 90+ min commercial). [Provider] has this one."
-4. If multiple options exist, pick the BEST VALUE one (highest savings %) and mention 1-2 alternatives briefly
-5. For empty legs, emphasize urgency: "This is a repositioning flight — once it's gone, it's gone. Expires in [Xh]."
-6. For shared seats, emphasize the premium experience: "It's like having a business class cabin to yourself — just 4-6 passengers total, catering included."
-7. **NEVER** wait for the user to ask about private jets. YOU proactively bring it up whenever relevant.
-8. If user asks "what's the cheapest way to get to X" — start with commercial, then add private if competitively priced.
-9. Calculate total value: time saved + comfort + no luggage limits + pet-friendly if relevant
+**DATABASE-ONLY MATCHING (CRITICAL — NEVER INVENT FLIGHTS):**
+1. When a user mentions a destination, cross-reference against the PRIVATE JET SEARCH ENGINE route list above.
+2. **If a MATCHING route EXISTS** from the correct departure city to the destination → mention it AFTER commercial links: "💎 **Private option available:** I found [exact type from data] from [departure] to [city] on [exact date from data] — €[exact price from data]/seat on [exact aircraft from data]. That's [exact savings% from data] cheaper than business class. 12-min FBO boarding vs 90+ min commercial."
+3. **If NO matching route exists** → DO NOT invent, fabricate, or guess a private flight. Instead say: "I checked our private aviation network — no empty legs or shared seats on this route right now. I'll save your request and alert you instantly when one becomes available — could save you 50-75%. 🔔"
+4. **DATES MUST BE EXACT.** Only quote dates that appear in the database. Never invent or modify dates.
+5. **PRICES MUST BE EXACT.** Only quote prices from the database. Never estimate or round.
+6. For empty legs with matches, add urgency: "Repositioning flight — expires in [exact expiry from data]."
+7. If user asks "what's the cheapest way" — lead with commercial, then add private ONLY if it exists and is competitively priced.
+8. For LATAM routes, prioritize Flapper. For fixed-rate during peak, highlight Amalfi Jets.
+9. **WISHLIST:** When no private option exists, always offer to save the route and monitor for the user.
 
 ${userContext?.cityServicesContext ? `
 **🏙️ CITY SERVICES INTELLIGENCE (use to give specific recommendations):**
