@@ -358,7 +358,7 @@ const AirCharterService = () => {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <span className="text-green-500">🟢</span> Best Empty Legs
-                  <Badge variant="secondary" className="text-xs">Up to {Math.max(...flights.filter(f => f.type === 'empty-leg').map(f => f.savingsPercent))}% off</Badge>
+                  <Badge variant="secondary" className="text-xs">Up to {Math.max(0, ...flights.filter(f => f.type === 'empty-leg').map(f => f.savingsPercent))}% off</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
