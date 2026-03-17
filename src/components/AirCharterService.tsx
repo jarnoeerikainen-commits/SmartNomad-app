@@ -358,7 +358,7 @@ const AirCharterService = () => {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <span className="text-green-500">🟢</span> Best Empty Legs
-                  <Badge variant="secondary" className="text-xs">Up to {Math.max(...flights.filter(f => f.type === 'empty-leg').map(f => f.savingsPercent))}% off</Badge>
+                  <Badge variant="secondary" className="text-xs">Up to {Math.max(0, ...flights.filter(f => f.type === 'empty-leg').map(f => f.savingsPercent))}% off</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -371,7 +371,7 @@ const AirCharterService = () => {
                       <span className="text-xs text-muted-foreground">{f.aircraft}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-green-500/20 text-green-600 text-xs">-{f.savingsPercent}%</Badge>
+                      {f.savingsPercent > 0 ? <Badge className="bg-green-500/20 text-green-600 text-xs">-{f.savingsPercent}%</Badge> : <Badge className="bg-purple-500/20 text-purple-600 text-xs">Premium</Badge>}
                       <span className="font-bold text-sm">€{f.pricePerSeat.toLocaleString()}</span>
                     </div>
                   </div>
@@ -529,8 +529,14 @@ const FlightCard = ({ flight, onSelect, onBook, awardInfo }: {
           {/* Price */}
           <div className="text-right shrink-0">
             <div className="flex items-center gap-1 justify-end mb-1">
-              <TrendingDown className="h-3 w-3 text-green-500" />
-              <Badge className="bg-green-500/20 text-green-600 text-xs">-{flight.savingsPercent}% vs Biz Class</Badge>
+              {flight.savingsPercent > 0 ? (
+                <>
+                  <TrendingDown className="h-3 w-3 text-green-500" />
+                  <Badge className="bg-green-500/20 text-green-600 text-xs">Save {flight.savingsPercent}% vs Biz</Badge>
+                </>
+              ) : (
+                <Badge className="bg-purple-500/20 text-purple-600 text-xs">Premium +{Math.abs(flight.savingsPercent)}%</Badge>
+              )}
             </div>
             <p className="text-xl font-bold">€{flight.pricePerSeat.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground line-through">€{flight.originalRetailPrice.toLocaleString()} commercial</p>
@@ -655,7 +661,11 @@ const FlightDetailModal = ({ flight, onClose, onBook, awardInfo }: {
               <div className="text-right">
                 <p className="text-xs text-muted-foreground">Full Charter</p>
                 <p className="text-xl font-bold">€{flight.fullCharterPrice.toLocaleString()}</p>
-                <Badge className="bg-green-500/20 text-green-600">Save {flight.savingsPercent}%</Badge>
+                {flight.savingsPercent > 0 ? (
+                  <Badge className="bg-green-500/20 text-green-600">Save {flight.savingsPercent}%</Badge>
+                ) : (
+                  <Badge className="bg-purple-500/20 text-purple-600">Premium experience</Badge>
+                )}
               </div>
             </div>
           </div>
@@ -695,18 +705,38 @@ const AirportDirectory = () => {
     const map: Record<string, Airport[]> = {};
     const regionMap: Record<string, string> = {
       UK: 'Europe', France: 'Europe', Germany: 'Europe', Switzerland: 'Europe', Italy: 'Europe',
-      Spain: 'Europe', Netherlands: 'Europe', Belgium: 'Europe', Austria: 'Europe', Denmark: 'Europe',
-      Norway: 'Europe', Sweden: 'Europe', Finland: 'Europe', Portugal: 'Europe', Greece: 'Europe',
-      Turkey: 'Europe', Poland: 'Europe', 'Czech Republic': 'Europe', Ireland: 'Europe',
-      UAE: 'Middle East', Qatar: 'Middle East', 'Saudi Arabia': 'Middle East', Israel: 'Middle East', Bahrain: 'Middle East',
+      Spain: 'Europe', Netherlands: 'Europe', Belgium: 'Europe', Luxembourg: 'Europe', Austria: 'Europe',
+      Denmark: 'Europe', Norway: 'Europe', Sweden: 'Europe', Finland: 'Europe', Iceland: 'Europe',
+      Portugal: 'Europe', Greece: 'Europe', Cyprus: 'Europe', Turkey: 'Europe', Poland: 'Europe',
+      'Czech Republic': 'Europe', Slovakia: 'Europe', Hungary: 'Europe', Romania: 'Europe',
+      Bulgaria: 'Europe', Croatia: 'Europe', Slovenia: 'Europe', Serbia: 'Europe', Albania: 'Europe',
+      Estonia: 'Europe', Latvia: 'Europe', Lithuania: 'Europe', Monaco: 'Europe', Malta: 'Europe',
+      Ireland: 'Europe',
+      UAE: 'Middle East', Qatar: 'Middle East', 'Saudi Arabia': 'Middle East', Israel: 'Middle East',
+      Bahrain: 'Middle East', Oman: 'Middle East', Kuwait: 'Middle East', Jordan: 'Middle East', Lebanon: 'Middle East',
       Singapore: 'Asia Pacific', China: 'Asia Pacific', Japan: 'Asia Pacific', 'South Korea': 'Asia Pacific',
-      Thailand: 'Asia Pacific', Malaysia: 'Asia Pacific', India: 'Asia Pacific', Philippines: 'Asia Pacific',
-      Indonesia: 'Asia Pacific', Vietnam: 'Asia Pacific',
+      Taiwan: 'Asia Pacific', Mongolia: 'Asia Pacific',
+      Thailand: 'Asia Pacific', Malaysia: 'Asia Pacific', Indonesia: 'Asia Pacific', Philippines: 'Asia Pacific',
+      Vietnam: 'Asia Pacific', Cambodia: 'Asia Pacific', Laos: 'Asia Pacific', Myanmar: 'Asia Pacific', Brunei: 'Asia Pacific',
+      India: 'Asia Pacific', 'Sri Lanka': 'Asia Pacific', Bangladesh: 'Asia Pacific', Nepal: 'Asia Pacific',
+      Pakistan: 'Asia Pacific', Maldives: 'Asia Pacific',
       USA: 'North America', Canada: 'North America', Mexico: 'North America',
-      Brazil: 'South America', Argentina: 'South America', Colombia: 'South America', Chile: 'South America', Peru: 'South America',
-      'South Africa': 'Africa', Kenya: 'Africa', Egypt: 'Africa', Morocco: 'Africa', Nigeria: 'Africa', Ethiopia: 'Africa',
-      Australia: 'Oceania', 'New Zealand': 'Oceania',
-      Bahamas: 'Caribbean', 'Sint Maarten': 'Caribbean', Maldives: 'Asia Pacific',
+      Brazil: 'South America', Argentina: 'South America', Colombia: 'South America', Chile: 'South America',
+      Peru: 'South America', Ecuador: 'South America', Venezuela: 'South America', Uruguay: 'South America',
+      Paraguay: 'South America', Bolivia: 'South America', Panama: 'South America', 'Costa Rica': 'South America',
+      'Dominican Republic': 'Caribbean', Bahamas: 'Caribbean', 'Sint Maarten': 'Caribbean', Jamaica: 'Caribbean',
+      Barbados: 'Caribbean', Trinidad: 'Caribbean', Aruba: 'Caribbean', 'Curaçao': 'Caribbean',
+      'Cayman Islands': 'Caribbean', 'Puerto Rico': 'Caribbean', 'British Virgin Islands': 'Caribbean',
+      'US Virgin Islands': 'Caribbean', Guadeloupe: 'Caribbean', Martinique: 'Caribbean', Cuba: 'Caribbean',
+      'South Africa': 'Africa', Kenya: 'Africa', Egypt: 'Africa', Morocco: 'Africa', Tunisia: 'Africa',
+      Algeria: 'Africa', Nigeria: 'Africa', Ghana: 'Africa', Ethiopia: 'Africa', Tanzania: 'Africa',
+      Uganda: 'Africa', Rwanda: 'Africa', Senegal: 'Africa', 'Ivory Coast': 'Africa',
+      Mauritius: 'Africa', Seychelles: 'Africa', Madagascar: 'Africa', Mozambique: 'Africa',
+      Zambia: 'Africa', Zimbabwe: 'Africa', Namibia: 'Africa', Botswana: 'Africa',
+      Australia: 'Oceania', 'New Zealand': 'Oceania', Fiji: 'Oceania', 'French Polynesia': 'Oceania', 'New Caledonia': 'Oceania',
+      Kazakhstan: 'Central Asia', Uzbekistan: 'Central Asia', Azerbaijan: 'Central Asia',
+      Georgia: 'Central Asia', Armenia: 'Central Asia', Kyrgyzstan: 'Central Asia',
+      Tajikistan: 'Central Asia', Turkmenistan: 'Central Asia',
     };
 
     let filtered = [...AIRPORTS];
@@ -737,6 +767,7 @@ const AirportDirectory = () => {
             <SelectItem value="all">All ({AIRPORTS.length})</SelectItem>
             <SelectItem value="major">Major ({AIRPORTS.filter(a => a.type === 'major').length})</SelectItem>
             <SelectItem value="business">Private/FBO ({AIRPORTS.filter(a => a.type === 'business').length})</SelectItem>
+            <SelectItem value="regional">Regional ({AIRPORTS.filter(a => a.type === 'regional').length})</SelectItem>
           </SelectContent>
         </Select>
       </div>

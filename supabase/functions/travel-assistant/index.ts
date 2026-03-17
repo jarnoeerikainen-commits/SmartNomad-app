@@ -740,7 +740,7 @@ function sanitizeContext(ctx: unknown): Record<string, string> | undefined {
     threatIntelligence: typeof c.threatIntelligence === 'string' ? c.threatIntelligence.slice(0, 8000) : '',
     demoPersonaContext: typeof c.demoPersonaContext === 'string' ? c.demoPersonaContext.slice(0, 3000) : '',
     awardCardsContext: typeof c.awardCardsContext === 'string' ? c.awardCardsContext.slice(0, 5000) : '',
-    jetSearchContext: typeof c.jetSearchContext === 'string' ? c.jetSearchContext.slice(0, 5000) : '',
+    jetSearchContext: typeof c.jetSearchContext === 'string' ? c.jetSearchContext.slice(0, 10000) : '',
     cityServicesContext: typeof c.cityServicesContext === 'string' ? c.cityServicesContext.slice(0, 8000) : '',
   };
 }
