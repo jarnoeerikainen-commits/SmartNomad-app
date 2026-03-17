@@ -661,7 +661,11 @@ const FlightDetailModal = ({ flight, onClose, onBook, awardInfo }: {
               <div className="text-right">
                 <p className="text-xs text-muted-foreground">Full Charter</p>
                 <p className="text-xl font-bold">€{flight.fullCharterPrice.toLocaleString()}</p>
-                <Badge className="bg-green-500/20 text-green-600">Save {flight.savingsPercent}%</Badge>
+                {flight.savingsPercent > 0 ? (
+                  <Badge className="bg-green-500/20 text-green-600">Save {flight.savingsPercent}%</Badge>
+                ) : (
+                  <Badge className="bg-purple-500/20 text-purple-600">Premium experience</Badge>
+                )}
               </div>
             </div>
           </div>
