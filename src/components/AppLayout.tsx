@@ -31,6 +31,7 @@ import AITravelAssistant from './AITravelAssistant';
 import { AITravelDoctor } from './AITravelDoctor';
 import { AITravelLawyer } from './AITravelLawyer';
 import AITravelPlanner from './AITravelPlanner';
+import AirCharterService from './AirCharterService';
 import { TaxAdvisors } from './TaxAdvisors';
 import FloatingActionButton from './FloatingActionButton';
 import DashboardQuickStats from './DashboardQuickStats';
