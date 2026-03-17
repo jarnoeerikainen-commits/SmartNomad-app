@@ -72,19 +72,19 @@ const AirCharterService = () => {
     if (nearby.length > 0) setHomeAirport(nearby[0]);
   }, [activePersonaId, locationCtx]);
 
-  // Generate flights from home airport
+  // Generate flights from home airport (persona-aware)
   const flights = useMemo(() => {
     if (!homeAirport) return [];
-    return generateDemoFlights(homeAirport.code);
-  }, [homeAirport]);
+    return generateDemoFlights(homeAirport.code, activePersonaId || undefined);
+  }, [homeAirport, activePersonaId]);
 
-  // Store jet context for concierge
+  // Store jet context for concierge (persona-aware)
   useEffect(() => {
     if (flights.length && homeAirport) {
-      const ctx = getJetSearchAIContext(flights, homeAirport.code);
+      const ctx = getJetSearchAIContext(flights, homeAirport.code, activePersonaId || undefined);
       localStorage.setItem('jetSearchAIContext', ctx);
     }
-  }, [flights, homeAirport]);
+  }, [flights, homeAirport, activePersonaId]);
 
   // Award wallet info for current persona
   const awardInfo = useMemo(() => {

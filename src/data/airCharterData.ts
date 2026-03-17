@@ -625,17 +625,31 @@ function calcPrice(distKm: number, aircraft: typeof AIRCRAFT_DB[0], flightType: 
   };
 }
 
+// Persona-specific must-have destinations (always generate routes to these)
+const PERSONA_DESTINATIONS: Record<string, string[]> = {
+  meghan: ['Singapore', 'Hong Kong', 'New York', 'Dubai', 'Oslo', 'Cannes', 'Maldives', 'Nairobi', 'São Paulo'],
+  john: ['San Francisco', 'São Paulo', 'London', 'Munich', 'Zürich', 'Verbier', 'Tokyo', 'Bali'],
+};
+
 // Generate 24+ demo flights dynamically based on a home airport
-export function generateDemoFlights(homeAirportCode: string): CharterFlight[] {
+export function generateDemoFlights(homeAirportCode: string, personaId?: string): CharterFlight[] {
   const home = AIRPORTS.find(a => a.code === homeAirportCode) || AIRPORTS[0];
   const flights: CharterFlight[] = [];
   const now = new Date();
 
-  // Get destinations sorted by relevance (mix of distances)
-  const destinations = AIRPORTS
-    .filter(a => a.code !== home.code && a.type === 'major')
+  // Persona-guaranteed destinations first
+  const personaDests = personaId ? (PERSONA_DESTINATIONS[personaId] || []) : [];
+  const guaranteedAirports = personaDests
+    .map(city => AIRPORTS.find(a => a.city.toLowerCase().includes(city.toLowerCase()) && a.type === 'major'))
+    .filter((a): a is Airport => !!a && a.code !== home.code);
+
+  // Get random major destinations for variety
+  const randomDests = AIRPORTS
+    .filter(a => a.code !== home.code && a.type === 'major' && !guaranteedAirports.find(g => g.code === a.code))
     .sort(() => Math.random() - 0.5)
-    .slice(0, 35);
+    .slice(0, 35 - guaranteedAirports.length);
+  
+  const destinations = [...guaranteedAirports, ...randomDests];
 
   // Generate 28 flights (mix of types)
   const types: CharterFlight['type'][] = ['empty-leg', 'empty-leg', 'empty-leg', 'shared-seat', 'shared-seat', 'full-charter', 'shared-seat'];
@@ -743,8 +757,8 @@ export function getNearbyAirports(lat: number, lng: number, radiusKm = 50): Airp
   });
 }
 
-// Get AI context for concierge — enhanced with destination matching
-export function getJetSearchAIContext(flights: CharterFlight[], homeAirport: string): string {
+// Get AI context for concierge — enhanced with destination matching and proactive suggestions
+export function getJetSearchAIContext(flights: CharterFlight[], homeAirport: string, personaId?: string): string {
   if (!flights.length) return '';
   const emptyLegs = flights.filter(f => f.type === 'empty-leg');
   const sharedSeats = flights.filter(f => f.type === 'shared-seat');
@@ -757,19 +771,23 @@ export function getJetSearchAIContext(flights: CharterFlight[], homeAirport: str
   ctx += `Providers: Jettly (23K+ aircraft aggregator), XO/Vista (seat deals), Amalfi Jets (fixed-rate guarantee), Flapper (LATAM/Florida shared network).\n`;
   ctx += `Airport directory: 600+ airports worldwide including private FBOs.\n\n`;
 
-  ctx += `**Top 8 Best-Value Seats (price per person):**\n`;
-  cheapestSeats.forEach(f => {
-    const savingsNote = f.savingsPercent > 0 ? `save ${f.savingsPercent}% vs biz class` : `${Math.abs(f.savingsPercent)}% premium over biz class`;
-    ctx += `- ${f.type === 'empty-leg' ? '🟢 EMPTY LEG' : '🔵 SHARED SEAT'}: ${f.from.city}(${f.from.code})→${f.to.city}(${f.to.code}) | ${f.departureDate} | ${f.aircraft} | **€${f.pricePerSeat.toLocaleString()}/seat** (${savingsNote}) | ${f.flightDuration} | FBO wait: ${f.waitTimeMinutes}min vs ${f.commercialAlternativeWait}min commercial terminal\n`;
+  ctx += `**🟢 EMPTY LEGS (repositioning flights — biggest savings, 50-75% off):**\n`;
+  emptyLegs.slice(0, 10).forEach(f => {
+    ctx += `- ${f.from.city}(${f.from.code})→${f.to.city}(${f.to.code}) | ${f.departureDate} ${f.departureTime} | ${f.aircraft} (${f.totalSeats} seats) | **€${f.pricePerSeat.toLocaleString()}/seat** (save ${f.savingsPercent}%) | ${f.flightDuration} | Provider: ${f.provider} | FBO: ${f.waitTimeMinutes}min boarding\n`;
   });
 
-  ctx += `\n**Top 5 Biggest Savings vs Commercial:**\n`;
+  ctx += `\n**🔵 SHARED SEATS (buy individual seats on private jets):**\n`;
+  sharedSeats.slice(0, 8).forEach(f => {
+    ctx += `- ${f.from.city}(${f.from.code})→${f.to.city}(${f.to.code}) | ${f.departureDate} ${f.departureTime} | ${f.aircraft} | **€${f.pricePerSeat.toLocaleString()}/seat** (${f.seatsAvailable} seats left) | ${f.savingsPercent > 0 ? `save ${f.savingsPercent}%` : `${Math.abs(f.savingsPercent)}% premium`} vs biz class | Provider: ${f.provider}\n`;
+  });
+
+  ctx += `\n**Top 5 Biggest Savings vs Commercial Business Class:**\n`;
   bestDeals.forEach(f => {
-    ctx += `- ${f.from.code}→${f.to.code}: €${f.pricePerSeat.toLocaleString()}/seat on ${f.aircraft} — save ${f.savingsPercent}% | Commercial biz: ~€${f.originalRetailPrice.toLocaleString()}\n`;
+    ctx += `- ${f.type === 'empty-leg' ? '🟢 EMPTY LEG' : f.type === 'shared-seat' ? '🔵 SHARED SEAT' : '🟡 CHARTER'}: ${f.from.code}→${f.to.code}: €${f.pricePerSeat.toLocaleString()}/seat on ${f.aircraft} — save ${f.savingsPercent}% | Commercial biz class: ~€${f.originalRetailPrice.toLocaleString()}\n`;
   });
 
   ctx += `\n**ALL available routes (for destination matching):**\n`;
-  const routeMap = new Map<string, { types: string[]; minPrice: number; aircraft: string[] }>();
+  const routeMap = new Map<string, { types: string[]; minPrice: number; aircraft: string[]; dates: string[] }>();
   flights.forEach(f => {
     const key = `${f.to.city}(${f.to.code})`;
     const existing = routeMap.get(key);
@@ -777,22 +795,24 @@ export function getJetSearchAIContext(flights: CharterFlight[], homeAirport: str
       if (!existing.types.includes(f.type)) existing.types.push(f.type);
       if (f.pricePerSeat < existing.minPrice) existing.minPrice = f.pricePerSeat;
       if (!existing.aircraft.includes(f.aircraft)) existing.aircraft.push(f.aircraft);
+      if (!existing.dates.includes(f.departureDate)) existing.dates.push(f.departureDate);
     } else {
-      routeMap.set(key, { types: [f.type], minPrice: f.pricePerSeat, aircraft: [f.aircraft] });
+      routeMap.set(key, { types: [f.type], minPrice: f.pricePerSeat, aircraft: [f.aircraft], dates: [f.departureDate] });
     }
   });
   routeMap.forEach((v, k) => {
-    ctx += `  ${k}: ${v.types.join('+')} from €${v.minPrice.toLocaleString()} (${v.aircraft.slice(0,2).join(', ')})\n`;
+    ctx += `  ${k}: ${v.types.join('+')} from €${v.minPrice.toLocaleString()} (${v.aircraft.slice(0,2).join(', ')}) — dates: ${v.dates.slice(0,3).join(', ')}\n`;
   });
 
-  ctx += `\n**🤖 AI INSTRUCTIONS for Private Jet recommendations:**\n`;
-  ctx += `1. When user discusses ANY travel destination, ALWAYS check if a matching route exists above. If yes, PROACTIVELY mention it: "By the way, there's an empty leg to [city] on [date] for just €X/seat — that's Y% less than business class!"\n`;
-  ctx += `2. Compare private jet per-seat price vs commercial business class. Note: some private jet seats cost MORE than biz class — that's OK for time savings, privacy, and FBO convenience. Be honest about pricing.\n`;
-  ctx += `3. ALWAYS mention time savings: "You'd spend ${cheapestSeats[0]?.waitTimeMinutes || 12} minutes at the FBO vs 90+ minutes at the commercial terminal"\n`;
-  ctx += `4. For groups of 3+, calculate if chartering is cheaper per-person than individual biz class tickets\n`;
-  ctx += `5. Factor in award points — suggest using miles for positioning flights and private jet for the main leg\n`;
-  ctx += `6. Highlight Amalfi Jets fixed-rate options during peak pricing periods\n`;
-  ctx += `7. For LATAM routes, prioritize Flapper shared flights network\n`;
-  ctx += `8. If no exact route match, suggest closest airport alternative and mention the 600+ airport directory\n`;
+  ctx += `\n**🤖 PRIVATE AVIATION AI BEHAVIOR — MANDATORY RULES:**\n`;
+  ctx += `1. **PROACTIVE MATCHING (CRITICAL):** When the user mentions ANY city or travel plan, IMMEDIATELY check the route list above. If a matching empty leg or shared seat exists, you MUST mention it naturally: "Oh nice — I actually found an empty leg to [city] on [date] for just €[price]/seat. That's [X]% cheaper than business class, and you'd board in ${cheapestSeats[0]?.waitTimeMinutes || 12} minutes flat at the FBO instead of the 90-minute commercial terminal grind."\n`;
+  ctx += `2. **ALWAYS SUGGEST PRIVATE OPTIONS alongside commercial:** When generating flight booking cards, ADD a private jet recommendation: "💎 **Private option:** There's a shared seat on a [aircraft] to [city] for €[price]. Skip the airport chaos — 12-min FBO boarding, champagne on board. Worth considering?"\n`;
+  ctx += `3. **EMPTY LEGS ARE YOUR SECRET WEAPON:** These are one-way repositioning flights at 50-75% off. Treat them like insider deals: "Heads up — there's a Bombardier Global 7500 repositioning to [city] tomorrow and they're selling seats at €[price]. That's basically first-class pricing for a private jet. These deals disappear fast."\n`;
+  ctx += `4. **TIME SAVINGS CALCULATION:** Always compare: "Private FBO: ${cheapestSeats[0]?.waitTimeMinutes || 12}-min door-to-plane | Commercial terminal: 90-120 min check-in + security + boarding. That's ~2 hours saved each way."\n`;
+  ctx += `5. **GROUP ECONOMICS:** For 3+ travelers, calculate: "For your group of [N], chartering the whole [aircraft] at €[charter_price] works out to €[per_person] each — actually cheaper than [N] × business class tickets at €[biz_price] each!"\n`;
+  ctx += `6. **AWARD POINTS STRATEGY:** Suggest using airline miles for positioning flights to the FBO city, then private jet for the main leg. "Use your [airline] miles for the short hop to [FBO city], then catch the empty leg to [destination]. Best of both worlds."\n`;
+  ctx += `7. **NEVER skip the private option.** Even if the user asks about commercial flights, always add: "By the way, I checked our private aviation network too..." This is a PREMIUM feature — make users feel it.\n`;
+  ctx += `8. For LATAM routes, prioritize Flapper shared flights network. For fixed-rate guarantees during peak, highlight Amalfi Jets.\n`;
+  ctx += `9. If no exact route match, suggest closest airport alternative and mention the 600+ airport directory in the Air Charter Service section.\n`;
   return ctx;
 }
