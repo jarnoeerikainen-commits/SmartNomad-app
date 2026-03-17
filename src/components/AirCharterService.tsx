@@ -63,8 +63,8 @@ const AirCharterService = () => {
     let lat = 51.47, lng = -0.46; // default London
     if (activePersonaId === 'meghan') { lat = 51.47; lng = -0.46; } // London
     else if (activePersonaId === 'john') { lat = 1.36; lng = 103.99; } // Singapore
-    else if (locationCtx?.latitude && locationCtx?.longitude) {
-      lat = locationCtx.latitude; lng = locationCtx.longitude;
+    else if (locationCtx?.location?.latitude && locationCtx?.location?.longitude) {
+      lat = locationCtx.location.latitude; lng = locationCtx.location.longitude;
     }
 
     const nearby = getNearbyAirports(lat, lng, 50);
