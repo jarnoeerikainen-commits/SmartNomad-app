@@ -371,7 +371,7 @@ const AirCharterService = () => {
                       <span className="text-xs text-muted-foreground">{f.aircraft}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge className="bg-green-500/20 text-green-600 text-xs">-{f.savingsPercent}%</Badge>
+                      {f.savingsPercent > 0 ? <Badge className="bg-green-500/20 text-green-600 text-xs">-{f.savingsPercent}%</Badge> : <Badge className="bg-purple-500/20 text-purple-600 text-xs">Premium</Badge>}
                       <span className="font-bold text-sm">€{f.pricePerSeat.toLocaleString()}</span>
                     </div>
                   </div>
