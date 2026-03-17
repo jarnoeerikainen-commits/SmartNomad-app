@@ -529,8 +529,14 @@ const FlightCard = ({ flight, onSelect, onBook, awardInfo }: {
           {/* Price */}
           <div className="text-right shrink-0">
             <div className="flex items-center gap-1 justify-end mb-1">
-              <TrendingDown className="h-3 w-3 text-green-500" />
-              <Badge className="bg-green-500/20 text-green-600 text-xs">-{flight.savingsPercent}% vs Biz Class</Badge>
+              {flight.savingsPercent > 0 ? (
+                <>
+                  <TrendingDown className="h-3 w-3 text-green-500" />
+                  <Badge className="bg-green-500/20 text-green-600 text-xs">Save {flight.savingsPercent}% vs Biz</Badge>
+                </>
+              ) : (
+                <Badge className="bg-purple-500/20 text-purple-600 text-xs">Premium +{Math.abs(flight.savingsPercent)}%</Badge>
+              )}
             </div>
             <p className="text-xl font-bold">€{flight.pricePerSeat.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground line-through">€{flight.originalRetailPrice.toLocaleString()} commercial</p>
