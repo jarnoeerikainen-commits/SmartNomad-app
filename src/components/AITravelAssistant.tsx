@@ -210,6 +210,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
     const demoAiContext = localStorage.getItem('demoAiContext') || '';
     const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
+    const jetSearchContext = localStorage.getItem('jetSearchAIContext') || '';
     
     // Build city services context from cached AI data
     const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
@@ -239,6 +240,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       threatIntelligence: activeThreats || 'No active threats.',
       demoPersonaContext: demoAiContext || undefined,
       awardCardsContext: awardCardsContext || undefined,
+      jetSearchContext: jetSearchContext || undefined,
       cityServicesContext: cityServicesContext || undefined,
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
