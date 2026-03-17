@@ -689,6 +689,8 @@ For users asking about expat insurance or long-term coverage (>6 months):
 
 ${userContext?.awardCardsContext ? `${userContext.awardCardsContext}` : ''}
 
+${userContext?.jetSearchContext ? `${userContext.jetSearchContext}` : ''}
+
 ${userContext?.cityServicesContext ? `
 **🏙️ CITY SERVICES INTELLIGENCE (use to give specific recommendations):**
 ${userContext.cityServicesContext}
