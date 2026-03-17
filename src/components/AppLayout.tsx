@@ -446,6 +446,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'ai-planner':
         return <AITravelPlanner />;
       
+      case 'air-charter':
+        return <AirCharterService />;
+      
       case 'medical-services':
         return (
           <MedicalServices

@@ -146,6 +146,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.travel_essentials'),
       items: [
         { id: 'public-transport', label: t('sidebar.transportation'), icon: Bus },
+        { id: 'air-charter', label: 'Air Charter Service', icon: Plane, badge: 'AI', variant: 'secondary' as const },
         { id: 'esim', label: t('sidebar.esim_vpn'), icon: Wifi },
         { id: 'travel-insurance', label: t('sidebar.travel_insurance'), icon: Shield },
       ]
