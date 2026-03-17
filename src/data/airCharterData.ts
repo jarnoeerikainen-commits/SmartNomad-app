@@ -625,17 +625,31 @@ function calcPrice(distKm: number, aircraft: typeof AIRCRAFT_DB[0], flightType: 
   };
 }
 
+// Persona-specific must-have destinations (always generate routes to these)
+const PERSONA_DESTINATIONS: Record<string, string[]> = {
+  meghan: ['Singapore', 'Hong Kong', 'New York', 'Dubai', 'Oslo', 'Cannes', 'Maldives', 'Nairobi', 'São Paulo'],
+  john: ['San Francisco', 'São Paulo', 'London', 'Munich', 'Zürich', 'Verbier', 'Tokyo', 'Bali'],
+};
+
 // Generate 24+ demo flights dynamically based on a home airport
-export function generateDemoFlights(homeAirportCode: string): CharterFlight[] {
+export function generateDemoFlights(homeAirportCode: string, personaId?: string): CharterFlight[] {
   const home = AIRPORTS.find(a => a.code === homeAirportCode) || AIRPORTS[0];
   const flights: CharterFlight[] = [];
   const now = new Date();
 
-  // Get destinations sorted by relevance (mix of distances)
-  const destinations = AIRPORTS
-    .filter(a => a.code !== home.code && a.type === 'major')
+  // Persona-guaranteed destinations first
+  const personaDests = personaId ? (PERSONA_DESTINATIONS[personaId] || []) : [];
+  const guaranteedAirports = personaDests
+    .map(city => AIRPORTS.find(a => a.city.toLowerCase().includes(city.toLowerCase()) && a.type === 'major'))
+    .filter((a): a is Airport => !!a && a.code !== home.code);
+
+  // Get random major destinations for variety
+  const randomDests = AIRPORTS
+    .filter(a => a.code !== home.code && a.type === 'major' && !guaranteedAirports.find(g => g.code === a.code))
     .sort(() => Math.random() - 0.5)
-    .slice(0, 35);
+    .slice(0, 35 - guaranteedAirports.length);
+  
+  const destinations = [...guaranteedAirports, ...randomDests];
 
   // Generate 28 flights (mix of types)
   const types: CharterFlight['type'][] = ['empty-leg', 'empty-leg', 'empty-leg', 'shared-seat', 'shared-seat', 'full-charter', 'shared-seat'];
