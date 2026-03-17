@@ -159,7 +159,7 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="w-48">
+            <DropdownMenuContent align="center" side="top" className="w-48">
               {flightSearchEngines.map((engine) => (
                 <DropdownMenuItem key={engine.name} asChild>
                   <a
