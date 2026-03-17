@@ -767,6 +767,7 @@ const AirportDirectory = () => {
             <SelectItem value="all">All ({AIRPORTS.length})</SelectItem>
             <SelectItem value="major">Major ({AIRPORTS.filter(a => a.type === 'major').length})</SelectItem>
             <SelectItem value="business">Private/FBO ({AIRPORTS.filter(a => a.type === 'business').length})</SelectItem>
+            <SelectItem value="regional">Regional ({AIRPORTS.filter(a => a.type === 'regional').length})</SelectItem>
           </SelectContent>
         </Select>
       </div>
