@@ -132,6 +132,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
+            conciergePreferences: {
+              userName: conciergePrefs.userName || undefined,
+              personalityMode: conciergePrefs.personalityMode,
+              aiName: conciergePrefs.aiName || 'Concierge',
+            },
             threatIntelligence: dummyThreats
               .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
               .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description}`)
