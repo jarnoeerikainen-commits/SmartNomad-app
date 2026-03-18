@@ -40,6 +40,10 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     langRef.current = lang;
   }, []);
 
+  const setVoiceGender = useCallback((gender: 'woman' | 'man') => {
+    voiceGenderRef.current = gender;
+  }, []);
+
   const startListening = useCallback((onResult: (text: string) => void) => {
     if (!sttSupported) return;
 
