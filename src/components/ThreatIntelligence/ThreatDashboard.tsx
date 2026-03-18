@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Shield, AlertTriangle, MapPin, Clock, TrendingUp, TrendingDown, Minus, Bell, Radio, Search, X, Filter } from 'lucide-react';
+import { Shield, AlertTriangle, MapPin, Clock, Bell, Radio, Search, X, Filter } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -71,11 +71,6 @@ const ThreatDashboard: React.FC = () => {
     return 'secondary' as const;
   };
 
-  const getTrendIcon = () => {
-    if (statistics.trend === 'improving') return <TrendingDown className="h-4 w-4 text-green-500" />;
-    if (statistics.trend === 'deteriorating') return <TrendingUp className="h-4 w-4 text-red-500" />;
-    return <Minus className="h-4 w-4 text-muted-foreground" />;
-  };
 
   return (
     <div className="space-y-6">
@@ -105,7 +100,7 @@ const ThreatDashboard: React.FC = () => {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
         {[
           { label: 'Critical', value: statistics.critical, color: 'text-red-500', bg: 'from-red-500/10 to-red-500/5 border-red-500/20' },
           { label: 'High', value: statistics.high, color: 'text-orange-500', bg: 'from-orange-500/10 to-orange-500/5 border-orange-500/20' },
@@ -119,15 +114,6 @@ const ThreatDashboard: React.FC = () => {
             </CardContent>
           </Card>
         ))}
-        <Card className="overflow-hidden">
-          <CardContent className="p-2.5 md:p-4">
-            <p className="text-[10px] md:text-xs text-muted-foreground">Trend</p>
-            <div className="flex items-center gap-1 md:gap-2 mt-1">
-              {getTrendIcon()}
-              <span className="text-xs md:text-sm font-semibold capitalize truncate">{statistics.trend}</span>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Tabs */}
