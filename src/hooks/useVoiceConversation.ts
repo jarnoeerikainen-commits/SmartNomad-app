@@ -92,7 +92,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     setIsListening(false);
   }, []);
 
-  const speak = useCallback((text: string, onComplete?: () => void) => {
+  const speak = useCallback(async (text: string, onComplete?: () => void) => {
     if (!ttsSupported || !voiceEnabled) {
       onComplete?.();
       return;
