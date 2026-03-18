@@ -436,7 +436,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <CardTitle className="text-xs sm:text-sm font-semibold truncate">Concierge</CardTitle>
             <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-0.5">
+            <ConciergeSettings onPrefsChange={setConciergePrefs} />
             {ttsSupported && (
               <Button
                 variant="ghost"
