@@ -77,7 +77,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);
 
-  // Reset chat when persona or language changes, auto-enable voice for demo personas
+  // Reset chat when persona, language, or concierge prefs change — so new personality/names take effect immediately
   useEffect(() => {
     setMessages([{
       id: '1',
@@ -89,7 +89,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     if (activePersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
-  }, [activePersona?.id, currentLanguage]);
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
