@@ -106,12 +106,8 @@ const WellnessDashboard: React.FC = () => {
       providers.sort((a, b) => b.reviewCount - a.reviewCount);
     }
 
-    // Hintsa always featured at top when showing performance category
-    if (selectedCategory === 'performance' || selectedCategory === 'all') {
-      const hintsa = providers.filter(p => p.isHintsa);
-      const others = providers.filter(p => !p.isHintsa);
-      providers = [...hintsa, ...others];
-    }
+    // Remove Hintsa from provider list - it's only shown in the featured banner at top
+    providers = providers.filter(p => !p.isHintsa);
 
     return providers;
   }, [selectedCity, selectedCategory, searchQuery, sortBy]);
