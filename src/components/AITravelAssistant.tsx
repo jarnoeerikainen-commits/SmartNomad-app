@@ -93,8 +93,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const {
     isListening, isSpeaking, voiceEnabled,
     startListening, stopListening, speak, stopSpeaking,
-    toggleVoice, sttSupported, ttsSupported
+    toggleVoice, sttSupported, ttsSupported, setVoiceGender
   } = useVoiceConversation();
+  const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
+
+  // Sync voice gender preference
+  useEffect(() => {
+    setVoiceGender(conciergePrefs.voiceGender);
+  }, [conciergePrefs.voiceGender, setVoiceGender]);
 
   // Reset chat when persona or language changes, auto-enable voice for demo personas
   useEffect(() => {
