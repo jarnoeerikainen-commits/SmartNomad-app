@@ -86,6 +86,7 @@ const VOICE_COMMANDS: VoiceCommand[] = [
   { patterns: [/\bpulse\b/i, /\bcommunity\s*chat\b/i], action: 'section:nomad-chat', description: 'Community pulse' },
   { patterns: [/\bnews\b/i, /\b(noticias|nouvelles|nachrichten|ニュース|뉴스|новости|أخبار|समाचार|haberler)\b/i], action: 'section:news', description: 'News' },
   { patterns: [/\bdeliver(y|ies)\b/i], action: 'section:delivery-services', description: 'Delivery services' },
+  { patterns: [/\bwellness\b/i, /\bfitness\b/i, /\bgym(s)?\b/i, /\bspa(s)?\b/i, /\byoga\b/i, /\bsauna(s)?\b/i, /\bmassage\b/i, /\bhintsa\b/i, /\b(bienestar|bien-être|フィットネス|피트니스|фитнес|لياقة|कल्याण)\b/i], action: 'section:wellness', description: 'Wellness & Fitness' },
 
   // Finance
   { patterns: [/\bdigital\s*bank(s|ing)?\b/i], action: 'section:digital-banks', description: 'Digital banks' },
