@@ -7,6 +7,7 @@ import { DashboardGamification } from '@/components/dashboard/DashboardGamificat
 import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActions';
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
+import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HomeSectionProps {
