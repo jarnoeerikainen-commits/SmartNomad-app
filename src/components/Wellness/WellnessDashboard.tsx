@@ -164,7 +164,7 @@ const WellnessDashboard: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">Wellness & Fitness</h1>
-            <p className="text-sm text-muted-foreground">100 cities · 4★+ rated · Gyms, Spas, Yoga, Saunas & more</p>
+            <p className="text-sm text-muted-foreground">500 cities · 4★+ rated · Gyms, Spas, Yoga, Saunas & more</p>
           </div>
         </div>
       </div>
