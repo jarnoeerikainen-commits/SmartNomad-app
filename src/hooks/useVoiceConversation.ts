@@ -126,17 +126,51 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     const locale = LANG_TO_LOCALE[langRef.current] || 'en-US';
     const langPrefix = locale.split('-')[0];
 
-    const voices = window.speechSynthesis.getVoices();
+    // Wait for voices to load if empty (Chrome loads async)
+    let voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      await new Promise<void>(resolve => {
+        const onVoices = () => { resolve(); window.speechSynthesis.removeEventListener('voiceschanged', onVoices); };
+        window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+        setTimeout(resolve, 500); // fallback timeout
+      });
+      voices = window.speechSynthesis.getVoices();
+    }
+
     const gender = voiceGenderRef.current;
     
-    // Gender-aware voice keywords
-    const femaleHints = ['Google', 'Natural', 'Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Female', 'Woman'];
-    const maleHints = ['David', 'James', 'Daniel', 'Mark', 'Google UK English Male', 'Male', 'Man', 'Fred'];
-    const hints = gender === 'man' ? maleHints : femaleHints;
+    // Comprehensive gender-aware voice matching — ordered by priority
+    const femaleNames = ['Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Tessa', 'Fiona', 'Allison', 'Ava', 'Susan', 'Catherine', 'Paulina', 'Monica', 'Luciana', 'Amelie', 'Anna', 'Milena', 'Yuna', 'Kyoko', 'Lekha', 'Meijia', 'Tingting'];
+    const maleNames = ['David', 'James', 'Daniel', 'Mark', 'Fred', 'Alex', 'Tom', 'Oliver', 'Aaron', 'Gordon', 'Jorge', 'Thomas', 'Jacques', 'Luca', 'Yuri', 'Ichiro', 'Rishi'];
+    const femaleKeywords = ['Female', 'Woman', 'female', 'woman'];
+    const maleKeywords = ['Male', 'Man', 'male', 'man'];
     
-    const preferred = voices.find(v =>
-      v.lang.startsWith(langPrefix) && hints.some(h => v.name.includes(h))
-    ) || voices.find(v => v.lang.startsWith(langPrefix));
+    const nameHints = gender === 'man' ? maleNames : femaleNames;
+    const keywordHints = gender === 'man' ? maleKeywords : femaleKeywords;
+    const antiKeywords = gender === 'man' ? femaleKeywords : maleKeywords;
+    
+    // Filter voices matching the language
+    const langVoices = voices.filter(v => v.lang.startsWith(langPrefix));
+    
+    // Priority 1: exact name match + right language
+    let preferred = langVoices.find(v => nameHints.some(n => v.name.includes(n)));
+    
+    // Priority 2: keyword match (e.g., "Google UK English Male")
+    if (!preferred) {
+      preferred = langVoices.find(v => keywordHints.some(k => v.name.includes(k)));
+    }
+    
+    // Priority 3: exclude wrong-gender voices, pick first remaining
+    if (!preferred && langVoices.length > 1) {
+      const filtered = langVoices.filter(v => !antiKeywords.some(k => v.name.includes(k)));
+      preferred = filtered[0] || langVoices[0];
+    }
+    
+    // Priority 4: any voice in the language
+    if (!preferred) {
+      preferred = langVoices[0];
+    }
+
     if (preferred) {
       utterance.voice = preferred;
       utterance.lang = preferred.lang;
