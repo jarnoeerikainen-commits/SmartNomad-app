@@ -249,6 +249,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       awardCardsContext: awardCardsContext || undefined,
       jetSearchContext: jetSearchContext || undefined,
       cityServicesContext: cityServicesContext || undefined,
+      conciergePreferences: {
+        userName: conciergePrefs.userName || undefined,
+        personalityMode: conciergePrefs.personalityMode,
+        aiName: conciergePrefs.aiName || 'Concierge',
+      },
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,
