@@ -845,9 +845,21 @@ function sanitizeString(val: unknown, maxLen = MAX_STRING): string {
   return val.replace(/<[^>]*>/g, '').slice(0, maxLen);
 }
 
-function sanitizeContext(ctx: unknown): Record<string, string> | undefined {
+function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
   if (!ctx || typeof ctx !== 'object') return undefined;
   const c = ctx as Record<string, unknown>;
+  
+  // Sanitize concierge preferences (nested object)
+  let conciergePreferences: Record<string, string> | undefined;
+  if (c.conciergePreferences && typeof c.conciergePreferences === 'object') {
+    const cp = c.conciergePreferences as Record<string, unknown>;
+    conciergePreferences = {
+      userName: sanitizeString(cp.userName, 100),
+      personalityMode: sanitizeString(cp.personalityMode, 20) || 'normal',
+      aiName: sanitizeString(cp.aiName, 100) || 'Concierge',
+    };
+  }
+  
   return {
     currentCountry: sanitizeString(c.currentCountry),
     currentCity: sanitizeString(c.currentCity),
@@ -858,6 +870,7 @@ function sanitizeContext(ctx: unknown): Record<string, string> | undefined {
     awardCardsContext: typeof c.awardCardsContext === 'string' ? c.awardCardsContext.slice(0, 5000) : '',
     jetSearchContext: typeof c.jetSearchContext === 'string' ? c.jetSearchContext.slice(0, 10000) : '',
     cityServicesContext: typeof c.cityServicesContext === 'string' ? c.cityServicesContext.slice(0, 8000) : '',
+    conciergePreferences,
   };
 }
 
