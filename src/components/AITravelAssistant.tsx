@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
@@ -92,8 +93,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const {
     isListening, isSpeaking, voiceEnabled,
     startListening, stopListening, speak, stopSpeaking,
-    toggleVoice, sttSupported, ttsSupported
+    toggleVoice, sttSupported, ttsSupported, setVoiceGender
   } = useVoiceConversation();
+  const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
+
+  // Sync voice gender preference
+  useEffect(() => {
+    setVoiceGender(conciergePrefs.voiceGender);
+  }, [conciergePrefs.voiceGender, setVoiceGender]);
 
   // Reset chat when persona or language changes, auto-enable voice for demo personas
   useEffect(() => {
@@ -242,6 +249,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       awardCardsContext: awardCardsContext || undefined,
       jetSearchContext: jetSearchContext || undefined,
       cityServicesContext: cityServicesContext || undefined,
+      conciergePreferences: {
+        userName: conciergePrefs.userName || undefined,
+        personalityMode: conciergePrefs.personalityMode,
+        aiName: conciergePrefs.aiName || 'Concierge',
+      },
       userProfile: userProfile ? {
         travelStyle: userProfile.travel?.preferences,
         dietaryPreferences: userProfile.personal?.dietary,
@@ -426,10 +438,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
               <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
-            <CardTitle className="text-xs sm:text-sm font-semibold truncate">Concierge</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
             <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-0.5">
+            <ConciergeSettings onPrefsChange={setConciergePrefs} />
             {ttsSupported && (
               <Button
                 variant="ghost"

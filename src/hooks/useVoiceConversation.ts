@@ -19,6 +19,7 @@ interface UseVoiceConversationReturn {
   sttSupported: boolean;
   ttsSupported: boolean;
   setLanguage: (lang: string) => void;
+  setVoiceGender: (gender: 'woman' | 'man') => void;
 }
 
 export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationReturn => {
@@ -28,6 +29,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const langRef = useRef(initialLang);
+  const voiceGenderRef = useRef<'woman' | 'man'>('woman');
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
@@ -36,6 +38,10 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
 
   const setLanguage = useCallback((lang: string) => {
     langRef.current = lang;
+  }, []);
+
+  const setVoiceGender = useCallback((gender: 'woman' | 'man') => {
+    voiceGenderRef.current = gender;
   }, []);
 
   const startListening = useCallback((onResult: (text: string) => void) => {
@@ -121,8 +127,15 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     const langPrefix = locale.split('-')[0];
 
     const voices = window.speechSynthesis.getVoices();
+    const gender = voiceGenderRef.current;
+    
+    // Gender-aware voice keywords
+    const femaleHints = ['Google', 'Natural', 'Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Female', 'Woman'];
+    const maleHints = ['David', 'James', 'Daniel', 'Mark', 'Google UK English Male', 'Male', 'Man', 'Fred'];
+    const hints = gender === 'man' ? maleHints : femaleHints;
+    
     const preferred = voices.find(v =>
-      v.lang.startsWith(langPrefix) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))
+      v.lang.startsWith(langPrefix) && hints.some(h => v.name.includes(h))
     ) || voices.find(v => v.lang.startsWith(langPrefix));
     if (preferred) {
       utterance.voice = preferred;
@@ -163,5 +176,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     sttSupported,
     ttsSupported,
     setLanguage,
+    setVoiceGender,
   };
 };
