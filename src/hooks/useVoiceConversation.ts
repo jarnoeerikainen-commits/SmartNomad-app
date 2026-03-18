@@ -120,11 +120,10 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     if (!clean) { onComplete?.(); return; }
 
     const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.rate = 1;
-    utterance.pitch = 1;
 
     const locale = LANG_TO_LOCALE[langRef.current] || 'en-US';
     const langPrefix = locale.split('-')[0];
+    const gender = voiceGenderRef.current;
 
     // Wait for voices to load if empty (Chrome loads async)
     let voices = window.speechSynthesis.getVoices();
@@ -132,43 +131,54 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       await new Promise<void>(resolve => {
         const onVoices = () => { resolve(); window.speechSynthesis.removeEventListener('voiceschanged', onVoices); };
         window.speechSynthesis.addEventListener('voiceschanged', onVoices);
-        setTimeout(resolve, 500); // fallback timeout
+        setTimeout(resolve, 500);
       });
       voices = window.speechSynthesis.getVoices();
     }
 
-    const gender = voiceGenderRef.current;
-    
-    // Comprehensive gender-aware voice matching — ordered by priority
-    const femaleNames = ['Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Tessa', 'Fiona', 'Allison', 'Ava', 'Susan', 'Catherine', 'Paulina', 'Monica', 'Luciana', 'Amelie', 'Anna', 'Milena', 'Yuna', 'Kyoko', 'Lekha', 'Meijia', 'Tingting'];
-    const maleNames = ['David', 'James', 'Daniel', 'Mark', 'Fred', 'Alex', 'Tom', 'Oliver', 'Aaron', 'Gordon', 'Jorge', 'Thomas', 'Jacques', 'Luca', 'Yuri', 'Ichiro', 'Rishi'];
+    // Gender-aware voice matching
+    const femaleNames = ['Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Tessa', 'Fiona', 'Allison', 'Ava', 'Susan', 'Catherine', 'Paulina', 'Monica', 'Luciana', 'Amelie', 'Anna', 'Milena', 'Yuna', 'Kyoko', 'Lekha', 'Meijia', 'Tingting', 'Joana', 'Nora', 'Sara', 'Ellen', 'Helena', 'Martha'];
+    const maleNames = ['David', 'James', 'Daniel', 'Mark', 'Fred', 'Alex', 'Tom', 'Oliver', 'Aaron', 'Gordon', 'Jorge', 'Thomas', 'Jacques', 'Luca', 'Yuri', 'Ichiro', 'Rishi', 'Albert', 'Arthur', 'Bruce', 'Charles', 'Ralph', 'Richard', 'Robert', 'Henry', 'Martin'];
     const femaleKeywords = ['Female', 'Woman', 'female', 'woman'];
     const maleKeywords = ['Male', 'Man', 'male', 'man'];
-    
+
     const nameHints = gender === 'man' ? maleNames : femaleNames;
     const keywordHints = gender === 'man' ? maleKeywords : femaleKeywords;
+    const antiNames = gender === 'man' ? femaleNames : maleNames;
     const antiKeywords = gender === 'man' ? femaleKeywords : maleKeywords;
-    
+
     // Filter voices matching the language
     const langVoices = voices.filter(v => v.lang.startsWith(langPrefix));
-    
+
+    let preferred: SpeechSynthesisVoice | undefined;
+
     // Priority 1: exact name match + right language
-    let preferred = langVoices.find(v => nameHints.some(n => v.name.includes(n)));
-    
+    preferred = langVoices.find(v => nameHints.some(n => v.name.includes(n)));
+
     // Priority 2: keyword match (e.g., "Google UK English Male")
     if (!preferred) {
       preferred = langVoices.find(v => keywordHints.some(k => v.name.includes(k)));
     }
-    
-    // Priority 3: exclude wrong-gender voices, pick first remaining
+
+    // Priority 3: exclude wrong-gender voices by both name and keyword
     if (!preferred && langVoices.length > 1) {
-      const filtered = langVoices.filter(v => !antiKeywords.some(k => v.name.includes(k)));
+      const filtered = langVoices.filter(v =>
+        !antiKeywords.some(k => v.name.includes(k)) &&
+        !antiNames.some(n => v.name.includes(n))
+      );
       preferred = filtered[0] || langVoices[0];
     }
-    
+
     // Priority 4: any voice in the language
     if (!preferred) {
       preferred = langVoices[0];
+    }
+
+    // Priority 5: fallback to ANY voice with gender hint
+    if (!preferred) {
+      preferred = voices.find(v => nameHints.some(n => v.name.includes(n))) ||
+                  voices.find(v => keywordHints.some(k => v.name.includes(k))) ||
+                  voices[0];
     }
 
     if (preferred) {
@@ -177,6 +187,13 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     } else {
       utterance.lang = locale;
     }
+
+    // Pitch/rate differentiation as fallback for limited voice browsers
+    // Subtle adjustments to reinforce gender perception
+    utterance.rate = 1;
+    utterance.pitch = gender === 'man' ? 0.85 : 1.1;
+
+    console.log(`[Voice] Gender: ${gender}, Selected: "${preferred?.name || 'default'}" (${preferred?.lang || locale}), Pitch: ${utterance.pitch}`);
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => { setIsSpeaking(false); onComplete?.(); };
