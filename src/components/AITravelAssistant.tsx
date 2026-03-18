@@ -41,16 +41,37 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const city = currentLocation?.city || '';
     const prefs = getConciergePrefs();
     const aiName = prefs.aiName || 'Concierge';
+    const mode = prefs.personalityMode || 'normal';
     const userName = activePersona ? activePersona.profile.firstName : prefs.userName;
+    const nameGreeting = userName ? userName : '';
 
     if (activePersona) {
       const p = activePersona;
       const nextTrip = p.travel.upcomingTrips[0];
-      return `Hi ${userName} 👋 I'm **${aiName}**, welcome back! I see you're in **${p.profile.city}** right now.\n\nI've got your calendar loaded and I know your upcoming trips. ${nextTrip ? `Your next trip to **${nextTrip.destination}** (${nextTrip.dates}) is coming up — ${nextTrip.purpose}.` : ''}\n\nNeed me to help with anything? Flights, hotels${p.accommodation.mustHave.includes('gym') ? ' with a gym & sauna' : ''}, ${p.services.usesFrequently[0]?.toLowerCase()}, or something else? Just ask! ✈️`;
+      const tripInfo = nextTrip ? `Your next trip to **${nextTrip.destination}** (${nextTrip.dates}) is coming up — ${nextTrip.purpose}.` : '';
+
+      switch (mode) {
+        case 'strict':
+          return `${nameGreeting}. ${aiName} ready.\n- Location: ${p.profile.city}\n${tripInfo ? `- Next trip: ${nextTrip!.destination} (${nextTrip!.dates})\n` : ''}- State your request.`;
+        case 'humor':
+          return `Hey ${nameGreeting}! 🎉 It's me, **${aiName}** — your favorite travel buddy who never sleeps (because I literally can't 😅)!\n\nYou're vibing in **${p.profile.city}** right now. ${tripInfo ? `Ooh, ${tripInfo} Exciting stuff! 🌴` : ''}\n\nSo what's the plan? Flights? Hotels with rooftop pools? An eSIM so you can Instagram your food? I'm ALL ears! 🤣✈️`;
+        case 'dark_humor':
+          return `Ah, ${nameGreeting}. **${aiName}** here — your reluctant digital companion. 💀\n\nI see you're in **${p.profile.city}**. How... geographical of you. ${tripInfo ? `${tripInfo} I'm sure nothing will go wrong. 🙃` : ''}\n\nSo, what fresh travel chaos can I help you navigate today? Overpriced flights? Hotels that call a closet a "cozy room"? I'm at your service. 😏`;
+        default:
+          return `Hi ${nameGreeting} 👋 I'm **${aiName}**, welcome back! I see you're in **${p.profile.city}** right now.\n\nI've got your calendar loaded and I know your upcoming trips. ${tripInfo}\n\nNeed me to help with anything? Flights, hotels${p.accommodation.mustHave.includes('gym') ? ' with a gym & sauna' : ''}, ${p.services.usesFrequently[0]?.toLowerCase()}, or something else? Just ask! ✈️`;
+      }
     }
 
-    const nameGreeting = userName ? `Hi ${userName} 👋` : 'Hi there 👋';
-    return `${nameGreeting} I'm **${aiName}**, your personal concierge.${city ? ` I see you're in **${city}** right now.` : ''}\n\nThe more we chat — and the more you fill out your profile and share your calendar — the better I get at looking out for you. From flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.\n\nThink of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`;
+    switch (mode) {
+      case 'strict':
+        return `${nameGreeting ? `${nameGreeting}.` : ''} ${aiName} online.${city ? ` Location: ${city}.` : ''}\n- Ready for queries.\n- State your request.`;
+      case 'humor':
+        return `${nameGreeting ? `Hey ${nameGreeting}!` : 'Hey there!'} 🎉 I'm **${aiName}** — part travel genius, part stand-up comedian, zero percent boring! 😎${city ? `\n\nI see you're in **${city}** — great choice! Well, any choice is great when you've got ME helping! 🤣` : ''}\n\nSo where are we going? Somewhere with beaches? Mountains? A place where the WiFi is faster than my jokes? Let's plan something epic! ✈️🌴`;
+      case 'dark_humor':
+        return `${nameGreeting ? `${nameGreeting}.` : 'Hello.'} **${aiName}** here. 💀${city ? ` I see you're in **${city}**. I'd say "how exciting" but we both know you're probably just staring at a screen.` : ' Another day, another traveler who thinks they can outrun their problems.'}\n\nI'm your concierge — which is a fancy word for "person who Googles things but makes it sound impressive." 🙃\n\nSo, what impossible travel fantasy shall I make slightly less impossible today? 😏`;
+      default:
+        return `${nameGreeting ? `Hi ${nameGreeting} 👋` : 'Hi there 👋'} I'm **${aiName}**, your personal concierge.${city ? ` I see you're in **${city}** right now.` : ''}\n\nThe more we chat — and the more you fill out your profile and share your calendar — the better I get at looking out for you. From flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.\n\nThink of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`;
+    }
   };
 
   const [messages, setMessages] = useState<Message[]>([
