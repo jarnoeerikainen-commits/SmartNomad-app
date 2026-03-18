@@ -19,6 +19,7 @@ interface UseVoiceConversationReturn {
   sttSupported: boolean;
   ttsSupported: boolean;
   setLanguage: (lang: string) => void;
+  setVoiceGender: (gender: 'woman' | 'man') => void;
 }
 
 export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationReturn => {
