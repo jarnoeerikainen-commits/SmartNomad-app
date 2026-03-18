@@ -29,6 +29,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const langRef = useRef(initialLang);
+  const voiceGenderRef = useRef<'woman' | 'man'>('woman');
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
