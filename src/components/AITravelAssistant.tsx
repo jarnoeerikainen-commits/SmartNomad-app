@@ -452,8 +452,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={voiceEnabled ? stopSpeaking : undefined}
-                onClickCapture={toggleVoice}
+                onClick={() => {
+                  if (voiceEnabled && isSpeaking) stopSpeaking();
+                  toggleVoice();
+                }}
                 className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
                 title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
               >
