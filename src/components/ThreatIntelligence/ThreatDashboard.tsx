@@ -71,11 +71,6 @@ const ThreatDashboard: React.FC = () => {
     return 'secondary' as const;
   };
 
-  const getTrendIcon = () => {
-    if (statistics.trend === 'improving') return <TrendingDown className="h-4 w-4 text-green-500" />;
-    if (statistics.trend === 'deteriorating') return <TrendingUp className="h-4 w-4 text-red-500" />;
-    return <Minus className="h-4 w-4 text-muted-foreground" />;
-  };
 
   return (
     <div className="space-y-6">
