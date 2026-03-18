@@ -157,6 +157,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.local_living'),
       items: [
         { id: 'global-city-services', label: t('sidebar.city_services'), icon: Building2 },
+        { id: 'wellness', label: 'Wellness & Fitness', icon: Dumbbell, badge: 'NEW', variant: 'secondary' as const },
         { id: 'language-learning', label: t('sidebar.language_learning'), icon: BookOpen },
         { id: 'local-nomads', label: t('sidebar.local_nomads'), icon: Users },
         { id: 'explore-local', label: t('sidebar.local_events'), icon: Calendar, badge: 'LIVE', variant: 'secondary' as const },
