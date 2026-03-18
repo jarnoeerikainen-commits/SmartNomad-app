@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Shield, AlertTriangle, MapPin, Clock, TrendingUp, TrendingDown, Minus, Bell, Radio, Search, X, Filter } from 'lucide-react';
+import { Shield, AlertTriangle, MapPin, Clock, Bell, Radio, Search, X, Filter } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
