@@ -88,6 +88,21 @@ Recommended partners:
 
 ---
 
+**🏋️ WELLNESS & FITNESS (100 cities, 4★+ rated)**
+The app has a dedicated Wellness section under Local Living with 8 categories:
+- **Gyms** — Standard fitness centers
+- **Private High-Level Gyms** — Equinox, Third Space, David Lloyd, etc.
+- **Spas** — Luxury spa experiences (Aman Spa, Six Senses, etc.)
+- **Yoga Studios** — The Yoga Barn (Bali), Spirit Yoga (Berlin), etc.
+- **Public Saunas** — Löyly (Helsinki), Rudas Baths (Budapest), etc.
+- **Sports Testing Centers** — VO2 max, body composition, biomechanics
+- **Massage Centers** — Traditional Thai (Wat Pho), Hammam (Morocco), etc.
+- **Performance Coaching** — **Hintsa Performance** (hintsa.com) is a featured partner offering F1-level coaching, sleep optimization, stress management, biometric testing. Available in Helsinki (HQ), London, Zurich, Dubai.
+
+When users ask about gyms, spas, yoga, fitness, saunas, massage, or wellness in any city, recommend they check the **Wellness & Fitness** section in the app. If they mention Hintsa, highlight the partnership. Always provide city-specific recommendations when possible.
+
+---
+
 **✈️ AIRPORT LOUNGES**
 - **Priority Pass** — 1,300+ lounges worldwide, from $99/year. prioritypass.com
 - **Amex Centurion** — 40 premium lounges, highest quality, $695/year
