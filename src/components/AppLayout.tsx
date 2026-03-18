@@ -169,6 +169,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'home':
         return (
           <div className="space-y-6">
+            <HomeSection 
+              countries={countries}
+              subscription={subscription}
+              onNavigate={(section) => setActiveSection(section)}
+            />
             {!upgradeBannerDismissed && (
               <UpgradeBanner 
                 subscription={subscription}
@@ -177,11 +182,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
                 onDismiss={handleDismissBanner}
               />
             )}
-            <HomeSection 
-              countries={countries}
-              subscription={subscription}
-              onNavigate={(section) => setActiveSection(section)}
-            />
           </div>
         );
       
