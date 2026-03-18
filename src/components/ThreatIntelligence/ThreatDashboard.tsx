@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 import { ThreatIncident, ThreatSeverity, ThreatCategory } from '@/types/threat';
+import { THREAT_DATA_SOURCES, ThreatDataSource } from '@/data/threatData';
 
 const CATEGORY_CHIPS: { id: ThreatCategory | 'all'; label: string; icon: string }[] = [
   { id: 'all', label: 'All', icon: '🌐' },
