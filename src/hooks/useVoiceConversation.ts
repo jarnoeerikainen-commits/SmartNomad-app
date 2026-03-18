@@ -188,10 +188,9 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       utterance.lang = locale;
     }
 
-    // Pitch/rate differentiation as fallback for limited voice browsers
-    // Subtle adjustments to reinforce gender perception
-    utterance.rate = 1;
-    utterance.pitch = gender === 'man' ? 0.85 : 1.1;
+    // Pitch/rate differentiation — man: deep, rich, charming baritone; woman: bright, warm
+    utterance.rate = gender === 'man' ? 0.92 : 1.0;
+    utterance.pitch = gender === 'man' ? 0.65 : 1.15;
 
     console.log(`[Voice] Gender: ${gender}, Selected: "${preferred?.name || 'default'}" (${preferred?.lang || locale}), Pitch: ${utterance.pitch}`);
 
