@@ -176,5 +176,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     sttSupported,
     ttsSupported,
     setLanguage,
+    setVoiceGender,
   };
 };
