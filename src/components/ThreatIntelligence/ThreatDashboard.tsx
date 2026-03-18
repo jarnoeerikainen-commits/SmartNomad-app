@@ -132,9 +132,10 @@ const ThreatDashboard: React.FC = () => {
 
       {/* Tabs */}
       <Tabs defaultValue="active" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="active">Active Threats ({filteredThreats.length})</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="active">Threats ({filteredThreats.length})</TabsTrigger>
           <TabsTrigger value="watchlist">Watchlist ({watchlist.length})</TabsTrigger>
+          <TabsTrigger value="sources">Sources ({THREAT_DATA_SOURCES.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="space-y-4">
@@ -183,10 +184,16 @@ const ThreatDashboard: React.FC = () => {
                         <Badge variant="outline" className="text-xs shrink-0"><MapPin className="h-3 w-3 mr-1" />{threat.distanceFromUser > 0 ? `${threat.distanceFromUser.toFixed(0)} km` : 'Global'}</Badge>
                       </div>
                       <p className="text-xs text-muted-foreground">{threat.description}</p>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                         <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{threat.location.city}, {threat.location.country}</span>
                         <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{ThreatIntelligenceService.getTimeAgo(threat.timestamp)}</span>
                         <span>Confidence: {threat.confidence}%</span>
+                      </div>
+                      {/* Sources */}
+                      <div className="flex flex-wrap gap-1">
+                        {threat.sources.map((src, i) => (
+                          <Badge key={i} variant="outline" className="text-[10px] px-1.5 py-0">{src}</Badge>
+                        ))}
                       </div>
                       <div className="bg-muted/50 rounded-md p-2">
                         <p className="text-xs font-medium mb-1 flex items-center gap-1"><Shield className="h-3 w-3" /> Actions:</p>
@@ -203,27 +210,64 @@ const ThreatDashboard: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="watchlist" className="space-y-3">
-          {watchlist.map(loc => {
-            const statusColor = loc.currentStatus === 'safe' ? 'text-green-500' : loc.currentStatus === 'caution' ? 'text-yellow-500' : 'text-red-500';
-            const statusBg = loc.currentStatus === 'safe' ? 'bg-green-500/10 border-green-500/20' : loc.currentStatus === 'caution' ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-red-500/10 border-red-500/20';
-            return (
-              <Card key={loc.id} className={statusBg}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold">{loc.name}</h3>
-                      <p className="text-xs text-muted-foreground">Radius: {loc.radius} km</p>
-                    </div>
-                    <div className="text-right">
-                      <div className={`text-lg font-bold ${statusColor} capitalize`}>{loc.currentStatus}</div>
-                      <div className="text-xs text-muted-foreground">{loc.activeThreats} active</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          <ScrollArea className="h-[500px] pr-2">
+            <div className="space-y-3">
+              {watchlist.map(loc => {
+                const statusColor = loc.currentStatus === 'safe' ? 'text-green-500' : loc.currentStatus === 'caution' ? 'text-yellow-500' : 'text-red-500';
+                const statusBg = loc.currentStatus === 'safe' ? 'bg-green-500/10 border-green-500/20' : loc.currentStatus === 'caution' ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-red-500/10 border-red-500/20';
+                return (
+                  <Card key={loc.id} className={statusBg}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold text-sm">{loc.name}</h3>
+                          <p className="text-xs text-muted-foreground">Radius: {loc.radius} km</p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`text-lg font-bold ${statusColor} capitalize`}>{loc.currentStatus}</div>
+                          <div className="text-xs text-muted-foreground">{loc.activeThreats} active</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </ScrollArea>
           <Button variant="outline" className="w-full"><MapPin className="h-4 w-4 mr-2" />Add Location</Button>
+        </TabsContent>
+
+        <TabsContent value="sources" className="space-y-4">
+          <p className="text-sm text-muted-foreground">Intelligence aggregated from {THREAT_DATA_SOURCES.length} verified sources across news, government, OSINT, and humanitarian networks.</p>
+          <ScrollArea className="h-[500px] pr-2">
+            <div className="space-y-2">
+              {(['news', 'intelligence', 'government', 'humanitarian', 'weather', 'health', 'cyber', 'conflict'] as const).map(type => {
+                const sources = THREAT_DATA_SOURCES.filter(s => s.type === type);
+                if (sources.length === 0) return null;
+                return (
+                  <div key={type} className="space-y-2">
+                    <h3 className="text-sm font-semibold capitalize text-foreground pt-2">{type === 'cyber' ? 'Cyber Security' : type.replace('_', ' ')}</h3>
+                    {sources.map(src => (
+                      <Card key={src.id} className="overflow-hidden">
+                        <CardContent className="p-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <h4 className="font-medium text-sm">{src.name}</h4>
+                                <Badge variant={src.reliability === 'verified' ? 'default' : 'outline'} className="text-[10px] px-1.5 py-0">{src.reliability}</Badge>
+                              </div>
+                              <p className="text-xs text-muted-foreground">{src.description}</p>
+                              <p className="text-[10px] text-muted-foreground mt-1">Update: {src.updateFrequency}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
         </TabsContent>
       </Tabs>
 
