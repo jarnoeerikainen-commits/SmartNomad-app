@@ -7,6 +7,7 @@ import { DashboardGamification } from '@/components/dashboard/DashboardGamificat
 import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActions';
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
+import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HomeSectionProps {
@@ -39,6 +40,9 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
       {/* Quick Stats */}
       <DashboardQuickStats countries={countries} />
+
+      {/* Threat Intelligence - Priority Section */}
+      <ThreatDashboard />
 
       {/* Two Column Layout for Dashboard Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
