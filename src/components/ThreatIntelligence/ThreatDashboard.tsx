@@ -104,24 +104,27 @@ const ThreatDashboard: React.FC = () => {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
         {[
           { label: 'Critical', value: statistics.critical, color: 'text-red-500', bg: 'from-red-500/10 to-red-500/5 border-red-500/20' },
           { label: 'High', value: statistics.high, color: 'text-orange-500', bg: 'from-orange-500/10 to-orange-500/5 border-orange-500/20' },
           { label: 'Medium', value: statistics.medium, color: 'text-yellow-500', bg: 'from-yellow-500/10 to-yellow-500/5 border-yellow-500/20' },
           { label: 'Near You', value: statistics.activeNearby, color: 'text-primary', bg: 'from-primary/10 to-primary/5 border-primary/20' },
         ].map(s => (
-          <Card key={s.label} className={`bg-gradient-to-br ${s.bg}`}>
-            <CardContent className="p-4">
-              <p className="text-xs text-muted-foreground">{s.label}</p>
-              <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+          <Card key={s.label} className={`bg-gradient-to-br ${s.bg} overflow-hidden`}>
+            <CardContent className="p-2.5 md:p-4">
+              <p className="text-[10px] md:text-xs text-muted-foreground truncate">{s.label}</p>
+              <p className={`text-lg md:text-2xl font-bold ${s.color}`}>{s.value}</p>
             </CardContent>
           </Card>
         ))}
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-xs text-muted-foreground">Trend</p>
-            <div className="flex items-center gap-2 mt-1">{getTrendIcon()}<span className="text-sm font-semibold capitalize">{statistics.trend}</span></div>
+        <Card className="overflow-hidden">
+          <CardContent className="p-2.5 md:p-4">
+            <p className="text-[10px] md:text-xs text-muted-foreground">Trend</p>
+            <div className="flex items-center gap-1 md:gap-2 mt-1">
+              {getTrendIcon()}
+              <span className="text-xs md:text-sm font-semibold capitalize truncate">{statistics.trend}</span>
+            </div>
           </CardContent>
         </Card>
       </div>
