@@ -255,34 +255,34 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
 
       {/* Profile Sections */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="core" className="flex items-center gap-1 text-xs">
-            <User className="w-3 h-3" />
-            <span className="hidden sm:inline">Core</span>
+        <TabsList className="flex w-full overflow-x-auto no-scrollbar">
+          <TabsTrigger value="core" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <User className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Core</span>
           </TabsTrigger>
-          <TabsTrigger value="lifestyle" className="flex items-center gap-1 text-xs">
-            <Briefcase className="w-3 h-3" />
-            <span className="hidden sm:inline">Work</span>
+          <TabsTrigger value="lifestyle" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Briefcase className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Work</span>
           </TabsTrigger>
-          <TabsTrigger value="business" className="flex items-center gap-1 text-xs">
-            <Building2 className="w-3 h-3" />
-            <span className="hidden sm:inline">Business</span>
+          <TabsTrigger value="business" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Building2 className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Business</span>
           </TabsTrigger>
-          <TabsTrigger value="travel" className="flex items-center gap-1 text-xs">
-            <Plane className="w-3 h-3" />
-            <span className="hidden sm:inline">Travel</span>
+          <TabsTrigger value="travel" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Plane className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Travel</span>
           </TabsTrigger>
-          <TabsTrigger value="personal" className="flex items-center gap-1 text-xs">
-            <Heart className="w-3 h-3" />
-            <span className="hidden sm:inline">Personal</span>
+          <TabsTrigger value="personal" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Heart className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Personal</span>
           </TabsTrigger>
-          <TabsTrigger value="health" className="flex items-center gap-1 text-xs">
-            <Stethoscope className="w-3 h-3" />
-            <span className="hidden sm:inline">Health</span>
+          <TabsTrigger value="health" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Stethoscope className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Health</span>
           </TabsTrigger>
-          <TabsTrigger value="ai-consent" className="flex items-center gap-1 text-xs">
-            <Shield className="w-3 h-3" />
-            <span className="hidden sm:inline">Privacy</span>
+          <TabsTrigger value="ai-consent" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Shield className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Privacy</span>
           </TabsTrigger>
         </TabsList>
 
