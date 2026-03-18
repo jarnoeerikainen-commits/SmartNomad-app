@@ -66,11 +66,18 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Hero Section */}
-      <DashboardHeroSection 
-        userName={userName}
-        countries={countries}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="order-1">
+          <ThreatDashboard />
+        </div>
+
+        <div className="order-2">
+          <DashboardHeroSection 
+            userName={userName}
+            countries={countries}
+          />
+        </div>
+      </div>
 
       {/* Quick Stats Bar */}
       <DashboardQuickStats countries={countries} />
@@ -79,7 +86,6 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column */}
         <div className="space-y-6">
-          <ThreatDashboard />
           <DashboardGamification countries={countries} />
           <DashboardRecentActivity countries={countries} />
         </div>

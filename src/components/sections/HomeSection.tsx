@@ -21,22 +21,30 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
-      <div className="text-center space-y-4 mb-10 pt-2">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="order-1">
+          <ThreatDashboard />
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight font-display">
-          <span className="text-foreground">Welcome to </span>
-          <span className="text-foreground">Super</span>
-          <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
-        </h1>
-        <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          {t('home.subtitle')}
-        </p>
+
+        <div className="order-2 space-y-6">
+          <div className="text-center space-y-4 mb-10 pt-2">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight font-display">
+              <span className="text-foreground">Welcome to </span>
+              <span className="text-foreground">Super</span>
+              <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
+            </h1>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              {t('home.subtitle')}
+            </p>
+          </div>
+
+          <DashboardHeroCards onNavigate={onNavigate} />
+        </div>
       </div>
-      
-      <DashboardHeroCards onNavigate={onNavigate} />
 
       {/* Quick Stats */}
       <DashboardQuickStats countries={countries} />
@@ -44,7 +52,6 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       {/* Two Column Layout for Dashboard Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <ThreatDashboard />
           <DashboardGamification countries={countries} />
           <DashboardRecentActivity countries={countries} />
         </div>
