@@ -438,7 +438,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
               <Bot className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
-            <CardTitle className="text-xs sm:text-sm font-semibold truncate">Concierge</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
             <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
           </div>
           <div className="flex gap-0.5">
