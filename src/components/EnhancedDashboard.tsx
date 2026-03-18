@@ -6,6 +6,7 @@ import { DashboardSmartActions } from './dashboard/DashboardSmartActions';
 import { DashboardRecentActivity } from './dashboard/DashboardRecentActivity';
 import { DashboardFeatureDiscovery } from './dashboard/DashboardFeatureDiscovery';
 import DashboardQuickStats from './DashboardQuickStats';
+import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedDashboardProps {
