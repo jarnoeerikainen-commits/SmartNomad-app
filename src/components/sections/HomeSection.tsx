@@ -41,12 +41,10 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       {/* Quick Stats */}
       <DashboardQuickStats countries={countries} />
 
-      {/* Threat Intelligence - Priority Section */}
-      <ThreatDashboard />
-
       {/* Two Column Layout for Dashboard Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-6">
+          <ThreatDashboard />
           <DashboardGamification countries={countries} />
           <DashboardRecentActivity countries={countries} />
         </div>
