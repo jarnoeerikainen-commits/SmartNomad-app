@@ -38,7 +38,7 @@ export const WellnessProviderCard: React.FC<WellnessProviderCardProps> = ({ prov
           </div>
           <div className="flex flex-col items-end shrink-0">
             <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <Star className="w-4 h-4 fill-current text-primary" />
               <span className="font-bold text-sm text-foreground">{provider.rating}</span>
             </div>
             <span className="text-[10px] text-muted-foreground">{provider.reviewCount.toLocaleString()} reviews</span>
