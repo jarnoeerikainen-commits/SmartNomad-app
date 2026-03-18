@@ -127,8 +127,15 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     const langPrefix = locale.split('-')[0];
 
     const voices = window.speechSynthesis.getVoices();
+    const gender = voiceGenderRef.current;
+    
+    // Gender-aware voice keywords
+    const femaleHints = ['Google', 'Natural', 'Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Female', 'Woman'];
+    const maleHints = ['David', 'James', 'Daniel', 'Mark', 'Google UK English Male', 'Male', 'Man', 'Fred'];
+    const hints = gender === 'man' ? maleHints : femaleHints;
+    
     const preferred = voices.find(v =>
-      v.lang.startsWith(langPrefix) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha'))
+      v.lang.startsWith(langPrefix) && hints.some(h => v.name.includes(h))
     ) || voices.find(v => v.lang.startsWith(langPrefix));
     if (preferred) {
       utterance.voice = preferred;
