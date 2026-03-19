@@ -365,6 +365,18 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               <HelpCircle className="h-5 w-5" />
               <span>{t('nav.help')}</span>
             </Button>
+
+            <Button
+              variant={activeSection === 'project-info' ? 'secondary' : 'ghost'}
+              className="w-full justify-start gap-3 hover:bg-accent/50"
+              onClick={() => {
+                onSectionChange('project-info');
+                onClose?.();
+              }}
+            >
+              <BarChart3 className="h-5 w-5" />
+              <span>Project Info</span>
+            </Button>
           </div>
           </nav>
 

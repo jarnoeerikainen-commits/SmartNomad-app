@@ -524,6 +524,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'help':
         return <HelpSupportCenter />;
       
+      case 'project-info':
+        return <ProjectInfoDashboard />;
+      
       case 'wellness':
         return <WellnessDashboard />;
       
