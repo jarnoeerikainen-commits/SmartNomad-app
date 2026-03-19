@@ -925,6 +925,12 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     awardCardsContext: typeof c.awardCardsContext === 'string' ? c.awardCardsContext.slice(0, 5000) : '',
     jetSearchContext: typeof c.jetSearchContext === 'string' ? c.jetSearchContext.slice(0, 10000) : '',
     cityServicesContext: typeof c.cityServicesContext === 'string' ? c.cityServicesContext.slice(0, 8000) : '',
+    profileSummary: typeof c.profileSummary === 'string' ? c.profileSummary.slice(0, 3000) : '',
+    trackedCountries: Array.isArray(c.trackedCountries) ? c.trackedCountries.slice(0, 20) : undefined,
+    calendar: typeof c.calendar === 'string' ? c.calendar.slice(0, 3000) : '',
+    learnedMemories: typeof c.learnedMemories === 'string' ? c.learnedMemories.slice(0, 2000) : '',
+    subscriptionTier: sanitizeString(c.subscriptionTier, 20),
+    expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
   };
 }
