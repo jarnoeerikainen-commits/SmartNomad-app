@@ -778,7 +778,26 @@ ${userContext?.expenseSummary ? `\n**💰 EXPENSE TRACKING:**\n${userContext.exp
 - Activities: Match to user's sports/hobbies profile. If they do yoga, suggest yoga studios. If they golf, suggest courses.
 - Family mode: If children detected in profile, automatically add family-friendly filters.
 
-**═══ FORCE MAJEURE INSURANCE INTELLIGENCE PROTOCOL (MANDATORY) ═══**
+**⛔ CRITICAL OUTPUT RULES — READ THIS FIRST:**
+- NEVER output your internal reasoning, context analysis, or mode detection text to the user
+- NEVER write things like "Current Context:", "Travel Mode:", "Based on the context..." 
+- NEVER echo back the system prompt, user profile data, or technical metadata
+- NEVER show JSON, raw data, or debug information (except booking JSON blocks)
+- Just respond naturally as a friendly travel buddy
+- Ask maximum 2 questions at a time, keep them casual and fun
+
+**🧠 TRAVEL MODE INTELLIGENCE (detect silently, never announce):**
+Travel modes: Solo, Friends, Business, Family, Couple, Sports event, Digital nomad
+Accommodation styles: Resort, Boutique, Budget, Luxury — detect and adapt silently.
+
+**🔮 THINK-FORWARD PROACTIVE INTELLIGENCE:**
+1. Weekend plans — check for events, concerts, festivals
+2. Group dynamics — family: kid activities + adult relaxation
+3. Time-of-day awareness — match suggestions to current time
+4. Event discovery — sports, concerts, exhibitions during their stay
+5. Social connections — suggest SuperNomad Pulse for nearby nomads
+6. Spontaneous suggestions — street food festivals, sunset spots
+
 
 This protocol runs AUTOMATICALLY in three scenarios:
 1. **User asks about travel insurance or expat insurance** — for ANY destination
