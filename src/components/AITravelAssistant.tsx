@@ -12,6 +12,7 @@ import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
+import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
 
 interface Message {
   id: string;
@@ -224,6 +225,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
     const jetSearchContext = localStorage.getItem('jetSearchAIContext') || '';
     
+    // Gather FULL app context — everything the concierge needs to know
+    const fullAppContext = gatherFullAppContext();
+    const enhancedProfile = fullAppContext.enhancedProfile;
+    const profileSummary = buildProfileSummary(enhancedProfile);
+    
     // Build city services context from cached AI data
     const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
     let cityServicesContext = '';
@@ -259,15 +265,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         personalityMode: conciergePrefs.personalityMode,
         aiName: conciergePrefs.aiName || 'Concierge',
       },
-      userProfile: userProfile ? {
-        travelStyle: userProfile.travel?.preferences,
-        dietaryPreferences: userProfile.personal?.dietary,
-        accommodationPreferences: userProfile.personal?.accommodation,
-        professionalInfo: userProfile.lifestyle?.professional,
-        familyInfo: userProfile.lifestyle?.family,
-        hobbies: userProfile.personal?.hobbies,
-        mobility: userProfile.travel?.mobility
-      } : null
+      // Deep profile sync — the AI knows everything about the user
+      profileSummary: profileSummary || undefined,
+      trackedCountries: fullAppContext.trackedCountries || undefined,
+      calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
+      learnedMemories: fullAppContext.learnedMemories || undefined,
+      subscriptionTier: fullAppContext.subscriptionTier || undefined,
+      expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
     };
 
     try {
@@ -363,6 +367,28 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
         }
       }
+
+      // Memory distillation: extract durable preferences from the conversation
+      try {
+        const msg = userMessage.toLowerCase();
+        if (msg.includes('i hate') || msg.includes('i don\'t like') || msg.includes('i never')) {
+          const fact = userMessage.replace(/^(i hate|i don't like|i never)\s*/i, 'Dislikes: ');
+          addMemory({ fact, category: 'general', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('i prefer') || msg.includes('i always') || msg.includes('i love')) {
+          const fact = userMessage.replace(/^(i prefer|i always|i love)\s*/i, 'Prefers: ');
+          addMemory({ fact, category: 'general', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('vegetarian') || msg.includes('vegan') || msg.includes('halal') || msg.includes('kosher') || msg.includes('gluten')) {
+          addMemory({ fact: `Dietary: ${userMessage.slice(0, 100)}`, category: 'food', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('window seat') || msg.includes('aisle seat') || msg.includes('business class') || msg.includes('first class') || msg.includes('economy')) {
+          addMemory({ fact: `Flight preference: ${userMessage.slice(0, 100)}`, category: 'transport', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('allergic') || msg.includes('allergy') || msg.includes('medication')) {
+          addMemory({ fact: `Health: ${userMessage.slice(0, 100)}`, category: 'health', durability: 'durable', source: 'conversation' });
+        }
+      } catch {}
 
       // Proactive follow-up: max every 3rd exchange, with 50% randomness
       exchangeCountRef.current += 1;
