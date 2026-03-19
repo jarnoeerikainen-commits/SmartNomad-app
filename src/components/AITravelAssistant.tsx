@@ -12,6 +12,7 @@ import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
+import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
 
 interface Message {
   id: string;
