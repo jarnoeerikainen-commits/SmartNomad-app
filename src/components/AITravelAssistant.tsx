@@ -225,6 +225,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
     const jetSearchContext = localStorage.getItem('jetSearchAIContext') || '';
     
+    // Gather FULL app context — everything the concierge needs to know
+    const fullAppContext = gatherFullAppContext();
+    const enhancedProfile = fullAppContext.enhancedProfile;
+    const profileSummary = buildProfileSummary(enhancedProfile);
+    
     // Build city services context from cached AI data
     const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
     let cityServicesContext = '';
@@ -260,15 +265,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         personalityMode: conciergePrefs.personalityMode,
         aiName: conciergePrefs.aiName || 'Concierge',
       },
-      userProfile: userProfile ? {
-        travelStyle: userProfile.travel?.preferences,
-        dietaryPreferences: userProfile.personal?.dietary,
-        accommodationPreferences: userProfile.personal?.accommodation,
-        professionalInfo: userProfile.lifestyle?.professional,
-        familyInfo: userProfile.lifestyle?.family,
-        hobbies: userProfile.personal?.hobbies,
-        mobility: userProfile.travel?.mobility
-      } : null
+      // Deep profile sync — the AI knows everything about the user
+      profileSummary: profileSummary || undefined,
+      trackedCountries: fullAppContext.trackedCountries || undefined,
+      calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
+      learnedMemories: fullAppContext.learnedMemories || undefined,
+      subscriptionTier: fullAppContext.subscriptionTier || undefined,
+      expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
     };
 
     try {
