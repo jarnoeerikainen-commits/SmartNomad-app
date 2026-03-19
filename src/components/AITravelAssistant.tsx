@@ -368,6 +368,28 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       }
 
+      // Memory distillation: extract durable preferences from the conversation
+      try {
+        const msg = userMessage.toLowerCase();
+        if (msg.includes('i hate') || msg.includes('i don\'t like') || msg.includes('i never')) {
+          const fact = userMessage.replace(/^(i hate|i don't like|i never)\s*/i, 'Dislikes: ');
+          addMemory({ fact, category: 'general', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('i prefer') || msg.includes('i always') || msg.includes('i love')) {
+          const fact = userMessage.replace(/^(i prefer|i always|i love)\s*/i, 'Prefers: ');
+          addMemory({ fact, category: 'general', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('vegetarian') || msg.includes('vegan') || msg.includes('halal') || msg.includes('kosher') || msg.includes('gluten')) {
+          addMemory({ fact: `Dietary: ${userMessage.slice(0, 100)}`, category: 'food', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('window seat') || msg.includes('aisle seat') || msg.includes('business class') || msg.includes('first class') || msg.includes('economy')) {
+          addMemory({ fact: `Flight preference: ${userMessage.slice(0, 100)}`, category: 'transport', durability: 'durable', source: 'conversation' });
+        }
+        if (msg.includes('allergic') || msg.includes('allergy') || msg.includes('medication')) {
+          addMemory({ fact: `Health: ${userMessage.slice(0, 100)}`, category: 'health', durability: 'durable', source: 'conversation' });
+        }
+      } catch {}
+
       // Proactive follow-up: max every 3rd exchange, with 50% randomness
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
