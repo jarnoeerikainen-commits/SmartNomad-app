@@ -442,28 +442,30 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }
   };
 
-  // On mobile when embedded in AISection, render inline instead of fixed overlay
-  if (isMobile) {
-    if (!isOpen) {
-      return (
-        <div className="flex items-center justify-center py-8">
-          <Button
-            onClick={() => setIsOpen(true)}
-            className="h-14 w-14 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
-            size="lg"
-          >
-            <div className="relative">
-              <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-              <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
-            </div>
-          </Button>
-        </div>
-      );
-    }
-
+  if (!isOpen) {
     return (
-      <div className="flex flex-col h-[calc(100dvh-8rem)]">
-        <Card className="flex flex-col flex-1 glass-morphism shadow-large rounded-lg overflow-hidden">
+      <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group`}
+          size="lg"
+        >
+          <div className="relative">
+            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
+          </div>
+        </Button>
+      </div>
+    );
+  }
+
+  // Mobile: fixed overlay that fits between status area and bottom nav
+  if (isMobile) {
+    return (
+      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <Card className={`flex flex-col flex-1 glass-morphism shadow-large rounded-none overflow-hidden ${
+          isMinimized ? 'flex-initial' : ''
+        }`}>
           <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
             <div className="flex items-center gap-1.5 min-w-0">
               <div className="h-7 w-7 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
@@ -495,6 +497,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 className="h-8 w-8 p-0"
               >
                 {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsOpen(false)}
+                className="h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>
@@ -546,7 +556,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 </div>
               </ScrollArea>
 
-              <div className="border-t p-3 flex-shrink-0">
+              <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
                 <div className="flex gap-2">
                   {sttSupported && (
                     <Button
