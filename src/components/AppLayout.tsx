@@ -84,6 +84,7 @@ import AwardCardsDashboard from './AwardCards/AwardCardsDashboard';
 import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
 import { SocialDashboard } from './SocialChat/SocialDashboard';
 import HelpSupportCenter from './HelpSupportCenter';
+import ProjectInfoDashboard from './ProjectInfoDashboard';
 import WellnessDashboard from './Wellness/WellnessDashboard';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
 import SocialMatchNotifications from './SocialMatchNotifications';
@@ -523,6 +524,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'help':
         return <HelpSupportCenter />;
+      
+      case 'project-info':
+        return <ProjectInfoDashboard />;
       
       case 'wellness':
         return <WellnessDashboard />;
