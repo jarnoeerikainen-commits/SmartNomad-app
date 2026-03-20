@@ -87,7 +87,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
   }, [sttSupported]);
 
-  const ttsSupported = true;
 
   const stopWordAnimation = useCallback(() => {
     if (wordFrameRef.current) {
