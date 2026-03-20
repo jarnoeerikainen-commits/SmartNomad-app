@@ -260,8 +260,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
 
     // Pitch/rate differentiation
-    utterance.rate = gender === 'man' ? 0.92 : 1.0;
-    utterance.pitch = gender === 'man' ? 0.65 : 1.15;
+    utterance.rate = gender === 'man' ? 0.85 : 1.0;
+    utterance.pitch = gender === 'man' ? 0.45 : 1.15;
 
     const speechRate = utterance.rate;
 
