@@ -524,13 +524,22 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
           {!isMinimized && (
             <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
-              {isSpeaking && conciergePrefs.avatarVisible && (
-                <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
+              {isSpeaking && conciergePrefs.avatarVisible && !avatarHidden && (
+                <div className="relative flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                   style={{
                     background: 'linear-gradient(180deg, hsl(var(--muted) / 0.8) 0%, hsl(var(--background) / 0.4) 100%)',
                     borderBottom: '1px solid hsl(var(--border) / 0.3)',
                   }}
                 >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setAvatarHidden(true)}
+                    className="absolute top-1 right-1 h-7 w-7 p-0 rounded-full bg-background/60 hover:bg-background/90 z-10"
+                    title="Hide avatar"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </Button>
                   <ConciergeAvatar
                     face={conciergePrefs.avatarFace}
                     isSpeaking={true}
