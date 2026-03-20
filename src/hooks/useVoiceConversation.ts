@@ -7,10 +7,43 @@ const LANG_TO_LOCALE: Record<string, string> = {
   hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
 };
 
+// Phoneme-to-mouth-openness mapping for natural lip sync
+// Maps characters to mouth openness values (0 = closed, 1 = wide open)
+const VISEME_MAP: Record<string, number> = {
+  // Wide open vowels
+  a: 0.9, á: 0.9, à: 0.9, ä: 0.85,
+  o: 0.8, ó: 0.8, ò: 0.8, ö: 0.75,
+  // Medium open
+  e: 0.6, é: 0.6, è: 0.6, ë: 0.6,
+  i: 0.4, í: 0.4, ì: 0.4, ï: 0.4,
+  u: 0.5, ú: 0.5, ù: 0.5, ü: 0.5,
+  y: 0.35,
+  // Consonants with lip movement
+  m: 0.05, b: 0.1, p: 0.1,
+  f: 0.2, v: 0.2,
+  w: 0.45,
+  // Consonants with some opening
+  s: 0.15, z: 0.15, c: 0.15,
+  t: 0.2, d: 0.2, n: 0.2,
+  l: 0.3, r: 0.25,
+  k: 0.2, g: 0.2, q: 0.2,
+  j: 0.35, h: 0.3,
+  x: 0.15,
+  // Closed
+  ' ': 0.0, '.': 0.0, ',': 0.0, '!': 0.0, '?': 0.0,
+};
+
+function getVisemeValue(char: string): number {
+  return VISEME_MAP[char.toLowerCase()] ?? 0.15;
+}
+
 interface UseVoiceConversationReturn {
   isListening: boolean;
   isSpeaking: boolean;
   voiceEnabled: boolean;
+  currentWord: string;
+  mouthOpenness: number;
+  spokenText: string;
   startListening: (onResult: (text: string) => void) => void;
   stopListening: () => void;
   speak: (text: string, onComplete?: () => void) => void;
@@ -26,10 +59,16 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [currentWord, setCurrentWord] = useState('');
+  const [mouthOpenness, setMouthOpenness] = useState(0);
+  const [spokenText, setSpokenText] = useState('');
   const recognitionRef = useRef<any>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const langRef = useRef(initialLang);
   const voiceGenderRef = useRef<'woman' | 'man'>('woman');
+  const visemeAnimRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const charIndexRef = useRef(0);
+  const cleanTextRef = useRef('');
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
@@ -44,10 +83,53 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     voiceGenderRef.current = gender;
   }, []);
 
+  // Animate mouth through characters at approximate speech rate
+  const startVisemeAnimation = useCallback((text: string, rate: number) => {
+    cleanTextRef.current = text;
+    charIndexRef.current = 0;
+
+    // ~13 chars/second at rate 1.0 is average English speech
+    const msPerChar = (1000 / 13) / rate;
+
+    if (visemeAnimRef.current) clearInterval(visemeAnimRef.current);
+    visemeAnimRef.current = setInterval(() => {
+      const idx = charIndexRef.current;
+      if (idx >= cleanTextRef.current.length) {
+        // Loop back slowly — speech may still be going
+        charIndexRef.current = 0;
+        return;
+      }
+      const char = cleanTextRef.current[idx];
+      const nextChar = cleanTextRef.current[idx + 1] || '';
+      
+      // Blend current and next character for smoother transitions
+      const current = getVisemeValue(char);
+      const next = getVisemeValue(nextChar);
+      const blended = current * 0.7 + next * 0.3;
+      
+      setMouthOpenness(blended);
+
+      // Extract current word for display
+      const before = cleanTextRef.current.slice(0, idx + 1);
+      const wordMatch = before.match(/\S+$/);
+      if (wordMatch) setCurrentWord(wordMatch[0]);
+
+      charIndexRef.current++;
+    }, msPerChar);
+  }, []);
+
+  const stopVisemeAnimation = useCallback(() => {
+    if (visemeAnimRef.current) {
+      clearInterval(visemeAnimRef.current);
+      visemeAnimRef.current = null;
+    }
+    setMouthOpenness(0);
+    setCurrentWord('');
+  }, []);
+
   const startListening = useCallback((onResult: (text: string) => void) => {
     if (!sttSupported) return;
 
-    // Stop any ongoing speech first
     if (ttsSupported) window.speechSynthesis.cancel();
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -70,7 +152,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
         }
       }
 
-      // Reset silence timer on every result – gives user 2s of silence before auto-stop
       if (silenceTimer) clearTimeout(silenceTimer);
       silenceTimer = setTimeout(() => {
         const result = finalTranscript.trim() || interim.trim();
@@ -99,6 +180,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
 
     window.speechSynthesis.cancel();
+    stopVisemeAnimation();
 
     // Smart filtering: strip booking blocks, URLs, domains, markdown for natural speech
     const clean = text
@@ -118,6 +200,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       .trim();
 
     if (!clean) { onComplete?.(); return; }
+
+    setSpokenText(clean);
 
     const utterance = new SpeechSynthesisUtterance(clean);
 
@@ -147,20 +231,13 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     const antiNames = gender === 'man' ? femaleNames : maleNames;
     const antiKeywords = gender === 'man' ? femaleKeywords : maleKeywords;
 
-    // Filter voices matching the language
     const langVoices = voices.filter(v => v.lang.startsWith(langPrefix));
 
     let preferred: SpeechSynthesisVoice | undefined;
-
-    // Priority 1: exact name match + right language
     preferred = langVoices.find(v => nameHints.some(n => v.name.includes(n)));
-
-    // Priority 2: keyword match (e.g., "Google UK English Male")
     if (!preferred) {
       preferred = langVoices.find(v => keywordHints.some(k => v.name.includes(k)));
     }
-
-    // Priority 3: exclude wrong-gender voices by both name and keyword
     if (!preferred && langVoices.length > 1) {
       const filtered = langVoices.filter(v =>
         !antiKeywords.some(k => v.name.includes(k)) &&
@@ -168,13 +245,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       );
       preferred = filtered[0] || langVoices[0];
     }
-
-    // Priority 4: any voice in the language
-    if (!preferred) {
-      preferred = langVoices[0];
-    }
-
-    // Priority 5: fallback to ANY voice with gender hint
+    if (!preferred) preferred = langVoices[0];
     if (!preferred) {
       preferred = voices.find(v => nameHints.some(n => v.name.includes(n))) ||
                   voices.find(v => keywordHints.some(k => v.name.includes(k))) ||
@@ -188,36 +259,69 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       utterance.lang = locale;
     }
 
-    // Pitch/rate differentiation — man: deep, rich, charming baritone; woman: bright, warm
+    // Pitch/rate differentiation
     utterance.rate = gender === 'man' ? 0.92 : 1.0;
     utterance.pitch = gender === 'man' ? 0.65 : 1.15;
 
+    const speechRate = utterance.rate;
+
     console.log(`[Voice] Gender: ${gender}, Selected: "${preferred?.name || 'default'}" (${preferred?.lang || locale}), Pitch: ${utterance.pitch}`);
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => { setIsSpeaking(false); onComplete?.(); };
-    utterance.onerror = () => { setIsSpeaking(false); onComplete?.(); };
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      startVisemeAnimation(clean, speechRate);
+    };
+
+    // Use boundary events for more accurate word tracking when available
+    utterance.onboundary = (event) => {
+      if (event.name === 'word') {
+        charIndexRef.current = event.charIndex;
+        const word = clean.slice(event.charIndex).match(/^\S+/)?.[0] || '';
+        setCurrentWord(word);
+      }
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      stopVisemeAnimation();
+      setSpokenText('');
+      onComplete?.();
+    };
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      stopVisemeAnimation();
+      setSpokenText('');
+      onComplete?.();
+    };
 
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [ttsSupported, voiceEnabled]);
+  }, [ttsSupported, voiceEnabled, startVisemeAnimation, stopVisemeAnimation]);
 
   const stopSpeaking = useCallback(() => {
     if (ttsSupported) window.speechSynthesis.cancel();
+    stopVisemeAnimation();
     setIsSpeaking(false);
-  }, [ttsSupported]);
+    setSpokenText('');
+  }, [ttsSupported, stopVisemeAnimation]);
 
   const toggleVoice = useCallback(() => {
     setVoiceEnabled(prev => {
-      if (prev && ttsSupported) window.speechSynthesis.cancel();
+      if (prev && ttsSupported) {
+        window.speechSynthesis.cancel();
+        stopVisemeAnimation();
+      }
       return !prev;
     });
-  }, [ttsSupported]);
+  }, [ttsSupported, stopVisemeAnimation]);
 
   return {
     isListening,
     isSpeaking,
     voiceEnabled,
+    currentWord,
+    mouthOpenness,
+    spokenText,
     startListening,
     stopListening,
     speak,
