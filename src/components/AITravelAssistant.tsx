@@ -521,18 +521,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
           {!isMinimized && (
             <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
-              {/* Expanded speaking avatar overlay */}
+              {/* Expanded speaking avatar */}
               {isSpeaking && conciergePrefs.avatarVisible && (
-                <div className="flex flex-col items-center py-4 px-3 bg-gradient-to-b from-primary/5 to-transparent flex-shrink-0 animate-fade-in">
+                <div className="flex items-center justify-center py-4 flex-shrink-0 animate-fade-in">
                   <ConciergeAvatar
                     face={conciergePrefs.avatarFace}
                     isSpeaking={true}
                     mouthOpenness={mouthOpenness}
-                    currentWord={currentWord}
                     size="xl"
                     expandOnSpeak
                   />
-                  <p className="text-xs text-muted-foreground mt-3 font-medium">{conciergePrefs.aiName || 'Concierge'} is speaking…</p>
                 </div>
               )}
               <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
