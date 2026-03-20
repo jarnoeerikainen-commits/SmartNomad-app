@@ -98,6 +98,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   } = useVoiceConversation(currentLanguage);
   const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
 
+  // Auto-show avatar again when speech stops
+  useEffect(() => {
+    if (!isSpeaking) setAvatarHidden(false);
+  }, [isSpeaking]);
+
   useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);
