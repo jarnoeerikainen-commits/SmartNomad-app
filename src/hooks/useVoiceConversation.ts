@@ -431,6 +431,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     toggleVoice,
     sttSupported,
     ttsSupported,
+    micPermission,
     setLanguage,
     setVoiceGender,
   };
