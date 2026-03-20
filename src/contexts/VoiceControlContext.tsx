@@ -25,10 +25,24 @@ interface VoiceControlContextType {
 
 const VoiceControlContext = createContext<VoiceControlContextType | null>(null);
 
+const VOICE_CONTROL_DEFAULTS: VoiceControlContextType = {
+  isListening: false,
+  isSpeaking: false,
+  voiceEnabled: false,
+  lastCommand: '',
+  lastFeedback: '',
+  startGlobalListening: () => {},
+  stopGlobalListening: () => {},
+  speak: () => {},
+  stopSpeaking: () => {},
+  toggleVoice: () => {},
+  sttSupported: false,
+  ttsSupported: false,
+};
+
 export const useVoiceControl = () => {
   const ctx = useContext(VoiceControlContext);
-  if (!ctx) throw new Error('useVoiceControl must be used within VoiceControlProvider');
-  return ctx;
+  return ctx ?? VOICE_CONTROL_DEFAULTS;
 };
 
 // Build the full voice command map — every section in the app
