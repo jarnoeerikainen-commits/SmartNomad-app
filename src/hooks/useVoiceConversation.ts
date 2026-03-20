@@ -325,7 +325,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       audioUrlRef.current = audioUrl;
       audio.preload = 'auto';
       audio.crossOrigin = 'anonymous';
-      audio.playsInline = true;
+      
 
       const beginPlayback = async () => {
         if (hasStarted) return;
