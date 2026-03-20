@@ -463,14 +463,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         streamChat(text);
       }
     });
-    // Check if permission was just denied during the request
-    if (micPermission === 'denied') {
-      toast({
-        title: 'Microphone Access Denied',
-        description: 'Please allow microphone access in your browser settings to use voice input.',
-        variant: 'destructive',
-      });
-    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
