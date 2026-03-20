@@ -774,7 +774,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                       <div className="flex items-center gap-2">
-                        {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
+                        <Bot className="h-4 w-4" />
                         <div className="flex gap-1">
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
