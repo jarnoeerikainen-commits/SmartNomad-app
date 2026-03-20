@@ -38,6 +38,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [avatarHidden, setAvatarHidden] = useState(false);
   const exchangeCountRef = useRef(0);
 
   const getWelcomeMessage = (): string => {
