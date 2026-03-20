@@ -441,6 +441,38 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     await streamChat(inputMessage);
   };
 
+  const handleMicClick = async () => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+    if (micPermission === 'denied') {
+      toast({
+        title: 'Microphone Access Denied',
+        description: 'Please allow microphone access in your browser settings to use voice input.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    await startListening((text) => {
+      if (text.trim()) {
+        setInputMessage('');
+        const userMsg: Message = { id: Date.now().toString(), content: text, isUser: true, timestamp: new Date() };
+        setMessages(prev => [...prev, userMsg]);
+        setIsTyping(true);
+        streamChat(text);
+      }
+    });
+    // Check if permission was just denied during the request
+    if (micPermission === 'denied') {
+      toast({
+        title: 'Microphone Access Denied',
+        description: 'Please allow microphone access in your browser settings to use voice input.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
