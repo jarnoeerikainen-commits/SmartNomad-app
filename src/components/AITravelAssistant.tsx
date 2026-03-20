@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
 import { useToast } from '@/hooks/use-toast';
@@ -38,6 +38,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [avatarHidden, setAvatarHidden] = useState(false);
   const exchangeCountRef = useRef(0);
 
   const getWelcomeMessage = (): string => {
@@ -96,6 +97,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     toggleVoice, sttSupported, ttsSupported, setVoiceGender, setLanguage
   } = useVoiceConversation(currentLanguage);
   const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
+
+  // Auto-show avatar again when speech stops
+  useEffect(() => {
+    if (!isSpeaking) setAvatarHidden(false);
+  }, [isSpeaking]);
 
   useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
@@ -518,13 +524,22 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
           {!isMinimized && (
             <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
-              {isSpeaking && conciergePrefs.avatarVisible && (
-                <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
+              {isSpeaking && conciergePrefs.avatarVisible && !avatarHidden && (
+                <div className="relative flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                   style={{
                     background: 'linear-gradient(180deg, hsl(var(--muted) / 0.8) 0%, hsl(var(--background) / 0.4) 100%)',
                     borderBottom: '1px solid hsl(var(--border) / 0.3)',
                   }}
                 >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setAvatarHidden(true)}
+                    className="absolute top-1 right-1 h-7 w-7 p-0 rounded-full bg-background/60 hover:bg-background/90 z-10"
+                    title="Hide avatar"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </Button>
                   <ConciergeAvatar
                     face={conciergePrefs.avatarFace}
                     isSpeaking={true}
@@ -709,13 +724,22 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
         {!isMinimized && (
           <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
-            {isSpeaking && conciergePrefs.avatarVisible && (
-              <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
+            {isSpeaking && conciergePrefs.avatarVisible && !avatarHidden && (
+              <div className="relative flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                 style={{
                   background: 'linear-gradient(180deg, hsl(var(--muted) / 0.6) 0%, hsl(var(--background) / 0.3) 100%)',
                   borderBottom: '1px solid hsl(var(--border) / 0.3)',
                 }}
               >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setAvatarHidden(true)}
+                  className="absolute top-1 right-1 h-7 w-7 p-0 rounded-full bg-background/60 hover:bg-background/90 z-10"
+                  title="Hide avatar"
+                >
+                  <ChevronUp className="h-4 w-4" />
+                </Button>
                 <ConciergeAvatar
                   face={conciergePrefs.avatarFace}
                   isSpeaking={true}
