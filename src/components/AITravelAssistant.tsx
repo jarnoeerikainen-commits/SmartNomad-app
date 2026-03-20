@@ -527,7 +527,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           <div className="flex items-start gap-2">
-                            {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                            {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
                             <div className="flex-1 min-w-0">
                               {parts.map((part, i) => {
                                 if (i % 2 === 1) {
