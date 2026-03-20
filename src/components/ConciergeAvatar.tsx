@@ -18,16 +18,31 @@ interface ConciergeAvatarProps {
 
 const SIZES = { sm: 40, md: 64, lg: 96, xl: 160, hero: 240 };
 
-function lerp(a: number, b: number, t: number) {
-  return a + (b - a) * Math.min(Math.max(t, 0), 1);
+function clamp(value: number, min = 0, max = 1) {
+  return Math.min(Math.max(value, min), max);
 }
 
-// Perlin-like noise for organic movement
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * clamp(t, 0, 1);
+}
+
 function smoothNoise(t: number, seed: number): number {
   const x = Math.sin(t * 1.1 + seed * 7.3) * 0.5 +
             Math.sin(t * 2.3 + seed * 3.1) * 0.25 +
             Math.sin(t * 4.7 + seed * 1.7) * 0.125;
-  return x / 0.875; // normalize to -1..1
+  return x / 0.875;
+}
+
+function getWordVisemeHint(word: string) {
+  const sample = word.toLowerCase();
+  if (!sample) return 0;
+
+  const vowels = (sample.match(/[aeiouyäöüáéíóú]/g) || []).length;
+  const openVowels = (sample.match(/[aáàäåoóòö]/g) || []).length;
+  const plosives = (sample.match(/[bmp]/g) || []).length;
+  const fricatives = (sample.match(/[fvszxhj]/g) || []).length;
+
+  return clamp(0.08 + vowels * 0.05 + openVowels * 0.08 + fricatives * 0.03 - plosives * 0.14, 0, 0.42);
 }
 
 const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
@@ -44,7 +59,6 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
   const baseDim = SIZES[size];
   const src = face === 'female' ? avatarFemale : avatarMale;
 
-  // ---- Animation state (mutable, 60fps rAF) ----
   const s = useRef({
     mouth: 0,
     targetMouth: 0,
@@ -60,30 +74,25 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     gazeY: 0,
     cheekTension: 0,
     nostrilFlare: 0,
-    // Micro-expression states
     microSmile: 0,
     lipPurse: 0,
     chinTension: 0,
-    // Skin flush (blood flow simulation)
     skinFlush: 0,
   });
   const [, tick] = useState(0);
   const rafRef = useRef(0);
   const startTimeRef = useRef(Date.now());
 
-  // Blink state
   const nextBlink = useRef(Date.now() + 2000 + Math.random() * 2500);
   const blinkActive = useRef(false);
   const blinkStart = useRef(0);
   const isDoubleBlink = useRef(false);
   const doubleBlink2 = useRef(false);
 
-  // Internal mouth when no phoneme data
   const intMouth = useRef(0);
   const intMouthTarget = useRef(0);
   const nextMouthChange = useRef(Date.now());
 
-  // Expansion
   const [expanded, setExpanded] = useState(false);
   useEffect(() => {
     if (expandOnSpeak && isSpeaking) setExpanded(true);
@@ -98,79 +107,70 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     return expanded ? Math.min(baseDim * 2.5, 280) : baseDim;
   }, [expandOnSpeak, expanded, baseDim]);
 
-  // External mouth target
   useEffect(() => {
     if (externalMouth !== undefined) s.current.targetMouth = externalMouth;
   }, [externalMouth]);
 
-  // ---- Main 60fps animation loop ----
   const animate = useCallback(() => {
     const now = Date.now();
     const elapsed = (now - startTimeRef.current) / 1000;
     const a = s.current;
+    const visemeHint = isSpeaking ? getWordVisemeHint(currentWord) : 0;
     const cadenceBase = currentWord
-      ? 0.05 + Math.min(currentWord.length, 10) * 0.004
-      : 0.028;
+      ? 0.06 + Math.min(currentWord.length, 10) * 0.006
+      : 0.032;
     const liveCadence = isSpeaking
-      ? cadenceBase * (0.9 + Math.max(0, smoothNoise(elapsed * 7.5, 8)) * 0.55)
+      ? cadenceBase * (0.92 + Math.max(0, smoothNoise(elapsed * 7.5, 8)) * 0.58)
       : 0;
 
-    // --- MOUTH ---
     if (isSpeaking) {
       if (externalMouth !== undefined) {
-        // Keep motion alive between analyser dips so the avatar never freezes mid-sentence.
-        const targetMouth = Math.max(a.targetMouth, liveCadence);
-        const speed = targetMouth > a.mouth ? 22 : 12;
+        const analyzerDriven = clamp(a.targetMouth * 1.24, 0, 1);
+        const targetMouth = Math.max(analyzerDriven, liveCadence, visemeHint);
+        const speed = targetMouth > a.mouth ? 24 : 14;
         a.mouth = lerp(a.mouth, targetMouth, 1 - Math.exp(-speed * 0.016));
       } else {
-        // Internal: simulate natural speech rhythm with variable cadence
         if (now > nextMouthChange.current) {
           const syllableType = Math.random();
           if (syllableType > 0.15) {
-            // Voiced syllable - wide variety of openness
-            intMouthTarget.current = 0.1 + Math.random() * 0.8;
-            nextMouthChange.current = now + 50 + Math.random() * 120;
+            intMouthTarget.current = 0.14 + Math.random() * 0.82;
+            nextMouthChange.current = now + 45 + Math.random() * 100;
           } else {
-            // Brief closure (consonant cluster / pause)
-            intMouthTarget.current = Math.random() * 0.06;
-            nextMouthChange.current = now + 30 + Math.random() * 60;
+            intMouthTarget.current = Math.random() * 0.08;
+            nextMouthChange.current = now + 28 + Math.random() * 50;
           }
         }
-        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-25 * 0.016));
-        a.mouth = Math.max(intMouth.current, liveCadence);
+        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-27 * 0.016));
+        a.mouth = Math.max(intMouth.current, liveCadence, visemeHint);
       }
     } else {
       a.mouth = lerp(a.mouth, 0, 1 - Math.exp(-10 * 0.016));
     }
 
-    const speechPresence = Math.max(a.mouth, liveCadence);
+    const speechPresence = Math.max(a.mouth, liveCadence, visemeHint * 0.95);
 
-    // Jaw displacement — scaled to avatar size
-    const maxJaw = dim > 120 ? 5 : dim > 80 ? 3.5 : 2;
+    const maxJaw = dim > 120 ? 7 : dim > 80 ? 4.8 : 2.8;
     a.jawY = speechPresence * maxJaw;
 
-    // Cheek tension when mouth wide
-    a.cheekTension = lerp(a.cheekTension, speechPresence > 0.3 ? speechPresence * 0.6 : 0, 0.12);
+    a.cheekTension = lerp(a.cheekTension, speechPresence > 0.26 ? speechPresence * 0.72 : 0, 0.14);
+    a.nostrilFlare = lerp(a.nostrilFlare, speechPresence > 0.3 ? (speechPresence - 0.3) * 0.52 : 0, 0.12);
 
-    // Nostril flare
-    a.nostrilFlare = lerp(a.nostrilFlare, speechPresence > 0.35 ? (speechPresence - 0.35) * 0.45 : 0, 0.1);
+    const browTarget = isSpeaking && speechPresence > 0.42 ? (speechPresence - 0.42) * 0.95 : 0;
+    a.browRaise = lerp(a.browRaise, browTarget, 0.1);
 
-    // Brow raise on emphasis
-    const browTarget = isSpeaking && speechPresence > 0.55 ? (speechPresence - 0.55) * 0.8 : 0;
-    a.browRaise = lerp(a.browRaise, browTarget, 0.08);
+    a.chinTension = lerp(a.chinTension, speechPresence > 0.36 ? speechPresence * 0.36 : 0, 0.12);
 
-    // Chin tension
-    a.chinTension = lerp(a.chinTension, speechPresence > 0.45 ? speechPresence * 0.3 : 0, 0.1);
+    const plosivePurse = /[bmp]/i.test(currentWord);
+    a.lipPurse = lerp(
+      a.lipPurse,
+      isSpeaking && (plosivePurse || (speechPresence < 0.14 && speechPresence > 0.02)) ? 0.72 : 0,
+      0.18,
+    );
 
-    // Lip purse for 'm', 'b', 'p' sounds (low mouth openness while speaking)
-    a.lipPurse = lerp(a.lipPurse, isSpeaking && speechPresence < 0.15 && speechPresence > 0.02 ? 0.6 : 0, 0.15);
-
-    // Micro-smile when idle
     const smileTarget = !isSpeaking ? 0.1 + smoothNoise(elapsed * 0.3, 5) * 0.05 : 0;
     a.microSmile = lerp(a.microSmile, smileTarget, 0.03);
 
-    // Skin flush — subtle warmth when speaking intensely
-    a.skinFlush = lerp(a.skinFlush, isSpeaking && speechPresence > 0.48 ? 0.15 : 0, 0.02);
+    a.skinFlush = lerp(a.skinFlush, isSpeaking && speechPresence > 0.42 ? 0.18 : 0, 0.024);
 
     // --- BLINK ---
     if (!blinkActive.current && now > nextBlink.current) {
