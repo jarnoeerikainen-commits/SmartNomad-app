@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Settings2, User, Bot, Volume2, Sparkles } from 'lucide-react';
+import { Settings2, User, Bot, Volume2, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { useToast } from '@/hooks/use-toast';
+import { AvatarFace } from './ConciergeAvatar';
+import avatarFemale from '@/assets/avatar-female.png';
+import avatarMale from '@/assets/avatar-male.png';
 
 export type PersonalityMode = 'normal' | 'strict' | 'humor' | 'dark_humor';
 export type VoiceGender = 'woman' | 'man';
@@ -17,6 +21,8 @@ export interface ConciergePreferences {
   personalityMode: PersonalityMode;
   voiceGender: VoiceGender;
   aiName: string;
+  avatarFace: AvatarFace;
+  avatarVisible: boolean;
 }
 
 const DEFAULT_PREFS: ConciergePreferences = {
@@ -24,6 +30,8 @@ const DEFAULT_PREFS: ConciergePreferences = {
   personalityMode: 'normal',
   voiceGender: 'woman',
   aiName: 'Concierge',
+  avatarFace: 'female',
+  avatarVisible: true,
 };
 
 const PERSONALITY_OPTIONS: { value: PersonalityMode; label: string; desc: string }[] = [
@@ -49,7 +57,6 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
   const [prefs, setPrefs] = useState<ConciergePreferences>(getConciergePrefs);
   const [open, setOpen] = useState(false);
 
-  // Auto-fill user name from demo persona
   useEffect(() => {
     if (activePersona) {
       setPrefs(prev => {
@@ -95,6 +102,80 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
         </SheetHeader>
 
         <div className="space-y-6 mt-6">
+          {/* Avatar Selection */}
+          <div className="space-y-3">
+            <Label className="flex items-center gap-2 text-sm font-medium">
+              <Eye className="h-4 w-4 text-muted-foreground" />
+              Concierge Avatar
+            </Label>
+
+            {/* Visibility Toggle */}
+            <div className="flex items-center justify-between p-3 rounded-lg border border-border">
+              <div className="flex items-center gap-2">
+                {prefs.avatarVisible ? <Eye className="h-4 w-4 text-primary" /> : <EyeOff className="h-4 w-4 text-muted-foreground" />}
+                <span className="text-sm">{prefs.avatarVisible ? 'Avatar visible' : 'Avatar hidden'}</span>
+              </div>
+              <Switch
+                checked={prefs.avatarVisible}
+                onCheckedChange={(v) => updatePref('avatarVisible', v)}
+              />
+            </div>
+
+            {/* Face Selection */}
+            {prefs.avatarVisible && (
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => updatePref('avatarFace', 'female')}
+                  className={`relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                    prefs.avatarFace === 'female'
+                      ? 'border-primary ring-2 ring-primary/20 shadow-lg'
+                      : 'border-border hover:border-muted-foreground/40'
+                  }`}
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img src={avatarFemale} alt="Female avatar" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                    <span className="text-xs font-semibold text-white">👩 Sofia</span>
+                  </div>
+                  {prefs.avatarFace === 'female' && (
+                    <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-[10px] text-primary-foreground font-bold">✓</span>
+                    </div>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => updatePref('avatarFace', 'male')}
+                  className={`relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                    prefs.avatarFace === 'male'
+                      ? 'border-primary ring-2 ring-primary/20 shadow-lg'
+                      : 'border-border hover:border-muted-foreground/40'
+                  }`}
+                >
+                  <div className="aspect-square overflow-hidden">
+                    <img src={avatarMale} alt="Male avatar" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                    <span className="text-xs font-semibold text-white">👨 Marcus</span>
+                  </div>
+                  {prefs.avatarFace === 'male' && (
+                    <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-[10px] text-primary-foreground font-bold">✓</span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Choose your concierge's face. The avatar animates when speaking.
+            </p>
+          </div>
+
+          <Separator />
+
           {/* User Name */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-sm font-medium">
@@ -107,14 +188,11 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
               placeholder="Enter your preferred name"
               className="text-sm"
             />
-            <p className="text-xs text-muted-foreground">
-              The AI will address you by this name during conversation.
-            </p>
           </div>
 
           <Separator />
 
-          {/* AI Name / Wake Word */}
+          {/* AI Name */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2 text-sm font-medium">
               <Sparkles className="h-4 w-4 text-muted-foreground" />
@@ -126,9 +204,6 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
               placeholder="e.g. Atlas, Nova, Jarvis..."
               className="text-sm"
             />
-            <p className="text-xs text-muted-foreground">
-              Say this name to wake up the concierge for voice commands.
-            </p>
           </div>
 
           <Separator />
@@ -206,7 +281,6 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
 
           <Separator />
 
-          {/* Save Button */}
           <Button onClick={handleSave} className="w-full">
             Save Preferences
           </Button>

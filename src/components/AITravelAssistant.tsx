@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
+import ConciergeAvatar from './ConciergeAvatar';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
@@ -445,16 +446,20 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   if (!isOpen) {
     return (
       <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group`}
-          size="lg"
-        >
-          <div className="relative">
-            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
-          </div>
-        </Button>
+          <Button
+            onClick={() => setIsOpen(true)}
+            className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group overflow-hidden`}
+            size="lg"
+          >
+            {conciergePrefs.avatarVisible ? (
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} size="sm" />
+            ) : (
+              <div className="relative">
+                <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+                <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
+              </div>
+            )}
+          </Button>
       </div>
     );
   }
@@ -468,9 +473,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }`}>
           <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
             <div className="flex items-center gap-1.5 min-w-0">
-              <div className="h-7 w-7 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
-                <Bot className="h-4 w-4 text-white" />
-              </div>
+              {conciergePrefs.avatarVisible ? (
+                <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} size="sm" />
+              ) : (
+                <div className="h-7 w-7 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
+                  <Bot className="h-4 w-4 text-white" />
+                </div>
+              )}
               <CardTitle className="text-xs font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
@@ -522,7 +531,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           <div className="flex items-start gap-2">
-                            {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                            {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
                             <div className="flex-1 min-w-0">
                               {parts.map((part, i) => {
                                 if (i % 2 === 1) {
@@ -542,7 +551,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     <div className="flex justify-start">
                       <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                         <div className="flex items-center gap-2">
-                          <Bot className="h-4 w-4" />
+                          {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} size="sm" /> : <Bot className="h-4 w-4" />}
                           <div className="flex gap-1">
                             <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
                             <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
@@ -632,9 +641,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
-              <Bot className="h-5 w-5 text-white" />
-            </div>
+            {conciergePrefs.avatarVisible ? (
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} size="sm" />
+            ) : (
+              <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+            )}
             <CardTitle className="text-sm font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
             <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
           </div>
@@ -695,7 +708,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                         }`}
                       >
                         <div className="flex items-start gap-2">
-                          {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                          {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
                           <div className="flex-1 min-w-0">
                             {parts.map((part, i) => {
                               if (i % 2 === 1) {
@@ -716,7 +729,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                         <div className="flex items-center gap-2">
-                        <Bot className="h-4 w-4" />
+                        {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} size="sm" /> : <Bot className="h-4 w-4" />}
                         <div className="flex gap-1">
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
