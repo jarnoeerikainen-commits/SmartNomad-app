@@ -5,6 +5,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+const sanitizeText = (value: unknown) => {
+  if (typeof value !== 'string') return '';
+
+  const normalized = value
+    .normalize('NFKC')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  let result = '';
+  for (let i = 0; i < normalized.length; i++) {
+    const code = normalized.charCodeAt(i);
+
+    if (code >= 0xd800 && code <= 0xdbff) {
+      const next = normalized.charCodeAt(i + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        result += normalized[i] + normalized[i + 1];
+        i++;
+      }
+      continue;
+    }
+
+    if (code >= 0xdc00 && code <= 0xdfff) {
+      continue;
+    }
+
+    result += normalized[i];
+  }
+
+  return Array.from(result).slice(0, 5000).join('');
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -17,16 +49,14 @@ serve(async (req) => {
     }
 
     const { text, voiceId, gender } = await req.json();
+    const cleanText = sanitizeText(text);
 
-    if (!text || text.trim().length === 0) {
+    if (!cleanText) {
       return new Response(JSON.stringify({ error: "Text is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    // Truncate to 5000 chars
-    const cleanText = text.slice(0, 5000);
 
     // Voice selection: deep charming male vs warm female
     // George = deep authoritative male, Laura = warm natural female
@@ -34,8 +64,8 @@ serve(async (req) => {
 
     // Voice settings tuned per gender
     const voiceSettings = gender === 'man'
-      ? { stability: 0.55, similarity_boost: 0.8, style: 0.45, use_speaker_boost: true, speed: 0.9 }
-      : { stability: 0.5, similarity_boost: 0.75, style: 0.5, use_speaker_boost: true, speed: 1.0 };
+      ? { stability: 0.6, similarity_boost: 0.82, style: 0.38, use_speaker_boost: true, speed: 0.88 }
+      : { stability: 0.52, similarity_boost: 0.78, style: 0.5, use_speaker_boost: true, speed: 0.98 };
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}/stream?output_format=mp3_44100_128`,
@@ -59,12 +89,12 @@ serve(async (req) => {
       throw new Error(`ElevenLabs API error: ${response.status}`);
     }
 
-    // Stream the audio back
     return new Response(response.body, {
       headers: {
         ...corsHeaders,
         "Content-Type": "audio/mpeg",
         "Transfer-Encoding": "chunked",
+        "Cache-Control": "no-store",
       },
     });
   } catch (error) {

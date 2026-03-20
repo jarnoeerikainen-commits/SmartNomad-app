@@ -35,6 +35,7 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
   isSpeaking,
   isTyping = false,
   mouthOpenness: externalMouth,
+  currentWord = '',
   size = 'md',
   expandOnSpeak = false,
   showLiveBadge = false,
@@ -107,13 +108,20 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     const now = Date.now();
     const elapsed = (now - startTimeRef.current) / 1000;
     const a = s.current;
+    const cadenceBase = currentWord
+      ? 0.05 + Math.min(currentWord.length, 10) * 0.004
+      : 0.028;
+    const liveCadence = isSpeaking
+      ? cadenceBase * (0.9 + Math.max(0, smoothNoise(elapsed * 7.5, 8)) * 0.55)
+      : 0;
 
     // --- MOUTH ---
     if (isSpeaking) {
       if (externalMouth !== undefined) {
-        // Fast attack, natural release with slight overshoot
-        const speed = a.targetMouth > a.mouth ? 22 : 12;
-        a.mouth = lerp(a.mouth, a.targetMouth, 1 - Math.exp(-speed * 0.016));
+        // Keep motion alive between analyser dips so the avatar never freezes mid-sentence.
+        const targetMouth = Math.max(a.targetMouth, liveCadence);
+        const speed = targetMouth > a.mouth ? 22 : 12;
+        a.mouth = lerp(a.mouth, targetMouth, 1 - Math.exp(-speed * 0.016));
       } else {
         // Internal: simulate natural speech rhythm with variable cadence
         if (now > nextMouthChange.current) {
@@ -129,38 +137,40 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
           }
         }
         intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-25 * 0.016));
-        a.mouth = intMouth.current;
+        a.mouth = Math.max(intMouth.current, liveCadence);
       }
     } else {
       a.mouth = lerp(a.mouth, 0, 1 - Math.exp(-10 * 0.016));
     }
 
+    const speechPresence = Math.max(a.mouth, liveCadence);
+
     // Jaw displacement — scaled to avatar size
     const maxJaw = dim > 120 ? 5 : dim > 80 ? 3.5 : 2;
-    a.jawY = a.mouth * maxJaw;
+    a.jawY = speechPresence * maxJaw;
 
     // Cheek tension when mouth wide
-    a.cheekTension = lerp(a.cheekTension, a.mouth > 0.35 ? a.mouth * 0.6 : 0, 0.12);
+    a.cheekTension = lerp(a.cheekTension, speechPresence > 0.3 ? speechPresence * 0.6 : 0, 0.12);
 
     // Nostril flare
-    a.nostrilFlare = lerp(a.nostrilFlare, a.mouth > 0.4 ? (a.mouth - 0.4) * 0.4 : 0, 0.1);
+    a.nostrilFlare = lerp(a.nostrilFlare, speechPresence > 0.35 ? (speechPresence - 0.35) * 0.45 : 0, 0.1);
 
     // Brow raise on emphasis
-    const browTarget = isSpeaking && a.mouth > 0.6 ? (a.mouth - 0.6) * 0.7 : 0;
+    const browTarget = isSpeaking && speechPresence > 0.55 ? (speechPresence - 0.55) * 0.8 : 0;
     a.browRaise = lerp(a.browRaise, browTarget, 0.08);
 
-    // Chin tension 
-    a.chinTension = lerp(a.chinTension, a.mouth > 0.5 ? a.mouth * 0.3 : 0, 0.1);
+    // Chin tension
+    a.chinTension = lerp(a.chinTension, speechPresence > 0.45 ? speechPresence * 0.3 : 0, 0.1);
 
     // Lip purse for 'm', 'b', 'p' sounds (low mouth openness while speaking)
-    a.lipPurse = lerp(a.lipPurse, isSpeaking && a.mouth < 0.15 && a.mouth > 0.02 ? 0.6 : 0, 0.15);
+    a.lipPurse = lerp(a.lipPurse, isSpeaking && speechPresence < 0.15 && speechPresence > 0.02 ? 0.6 : 0, 0.15);
 
     // Micro-smile when idle
     const smileTarget = !isSpeaking ? 0.1 + smoothNoise(elapsed * 0.3, 5) * 0.05 : 0;
     a.microSmile = lerp(a.microSmile, smileTarget, 0.03);
 
     // Skin flush — subtle warmth when speaking intensely
-    a.skinFlush = lerp(a.skinFlush, isSpeaking && a.mouth > 0.5 ? 0.15 : 0, 0.02);
+    a.skinFlush = lerp(a.skinFlush, isSpeaking && speechPresence > 0.48 ? 0.15 : 0, 0.02);
 
     // --- BLINK ---
     if (!blinkActive.current && now > nextBlink.current) {
@@ -199,7 +209,7 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     const headIntensity = isSpeaking ? 1.8 : 0.7;
     const targetTiltX = smoothNoise(elapsed * 0.4, 1) * 1.2 * headIntensity;
     const targetTiltY = smoothNoise(elapsed * 0.35, 2) * 0.8 * headIntensity +
-      (isSpeaking && a.mouth > 0.5 ? 0.6 : 0); // nod on emphasis
+      (isSpeaking && speechPresence > 0.45 ? 0.6 : 0); // nod on emphasis
     const targetShiftX = smoothNoise(elapsed * 0.25, 3) * 0.5 * headIntensity;
     const targetShiftY = smoothNoise(elapsed * 0.3, 4) * 0.4 * headIntensity + breathY;
 
@@ -216,7 +226,7 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
 
     tick(t => t + 1);
     rafRef.current = requestAnimationFrame(animate);
-  }, [isSpeaking, externalMouth, dim]);
+  }, [currentWord, isSpeaking, externalMouth, dim]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(animate);
