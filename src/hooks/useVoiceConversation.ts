@@ -53,6 +53,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const [currentWord, setCurrentWord] = useState('');
   const [mouthOpenness, setMouthOpenness] = useState(0);
   const [spokenText, setSpokenText] = useState('');
+  const [micPermission, setMicPermission] = useState<'granted' | 'denied' | 'prompt' | 'unsupported'>('prompt');
 
   const recognitionRef = useRef<any>(null);
   const langRef = useRef(initialLang);
@@ -67,6 +68,24 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+
+  const ttsSupported = true;
+
+  // Check mic permission on mount
+  useEffect(() => {
+    if (!sttSupported) {
+      setMicPermission('unsupported');
+      return;
+    }
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: 'microphone' as PermissionName }).then((status) => {
+        setMicPermission(status.state as 'granted' | 'denied' | 'prompt');
+        status.onchange = () => setMicPermission(status.state as 'granted' | 'denied' | 'prompt');
+      }).catch(() => {
+        // permissions API not available for mic (e.g. Safari) — keep as 'prompt'
+      });
+    }
+  }, [sttSupported]);
 
   const ttsSupported = true;
 
