@@ -643,7 +643,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2 min-w-0">
             {conciergePrefs.avatarVisible ? (
-              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} size="sm" />
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} mouthOpenness={mouthOpenness} currentWord={currentWord} size="sm" />
             ) : (
               <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
                 <Bot className="h-5 w-5 text-white" />
