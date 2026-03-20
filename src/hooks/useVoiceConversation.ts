@@ -7,36 +7,6 @@ const LANG_TO_LOCALE: Record<string, string> = {
   hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
 };
 
-// Phoneme-to-mouth-openness mapping for natural lip sync
-// Maps characters to mouth openness values (0 = closed, 1 = wide open)
-const VISEME_MAP: Record<string, number> = {
-  // Wide open vowels
-  a: 0.9, á: 0.9, à: 0.9, ä: 0.85,
-  o: 0.8, ó: 0.8, ò: 0.8, ö: 0.75,
-  // Medium open
-  e: 0.6, é: 0.6, è: 0.6, ë: 0.6,
-  i: 0.4, í: 0.4, ì: 0.4, ï: 0.4,
-  u: 0.5, ú: 0.5, ù: 0.5, ü: 0.5,
-  y: 0.35,
-  // Consonants with lip movement
-  m: 0.05, b: 0.1, p: 0.1,
-  f: 0.2, v: 0.2,
-  w: 0.45,
-  // Consonants with some opening
-  s: 0.15, z: 0.15, c: 0.15,
-  t: 0.2, d: 0.2, n: 0.2,
-  l: 0.3, r: 0.25,
-  k: 0.2, g: 0.2, q: 0.2,
-  j: 0.35, h: 0.3,
-  x: 0.15,
-  // Closed
-  ' ': 0.0, '.': 0.0, ',': 0.0, '!': 0.0, '?': 0.0,
-};
-
-function getVisemeValue(char: string): number {
-  return VISEME_MAP[char.toLowerCase()] ?? 0.15;
-}
-
 interface UseVoiceConversationReturn {
   isListening: boolean;
   isSpeaking: boolean;
@@ -63,17 +33,18 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const [mouthOpenness, setMouthOpenness] = useState(0);
   const [spokenText, setSpokenText] = useState('');
   const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const langRef = useRef(initialLang);
   const voiceGenderRef = useRef<'woman' | 'man'>('woman');
-  const visemeAnimRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const charIndexRef = useRef(0);
-  const cleanTextRef = useRef('');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animFrameRef = useRef<number>(0);
+  const wordAnimRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
-  const ttsSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+  const ttsSupported = true; // ElevenLabs is always available
 
   const setLanguage = useCallback((lang: string) => {
     langRef.current = lang;
@@ -83,54 +54,97 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     voiceGenderRef.current = gender;
   }, []);
 
-  // Animate mouth through characters at approximate speech rate
-  const startVisemeAnimation = useCallback((text: string, rate: number) => {
-    cleanTextRef.current = text;
-    charIndexRef.current = 0;
+  // Analyze audio for mouth openness using Web Audio API
+  const startAudioAnalysis = useCallback((audio: HTMLAudioElement) => {
+    try {
+      const ctx = new AudioContext();
+      const source = ctx.createMediaElementSource(audio);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.4;
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
 
-    // ~13 chars/second at rate 1.0 is average English speech
-    const msPerChar = (1000 / 13) / rate;
+      audioContextRef.current = ctx;
+      analyserRef.current = analyser;
 
-    if (visemeAnimRef.current) clearInterval(visemeAnimRef.current);
-    visemeAnimRef.current = setInterval(() => {
-      const idx = charIndexRef.current;
-      if (idx >= cleanTextRef.current.length) {
-        // Loop back slowly — speech may still be going
-        charIndexRef.current = 0;
-        return;
-      }
-      const char = cleanTextRef.current[idx];
-      const nextChar = cleanTextRef.current[idx + 1] || '';
-      
-      // Blend current and next character for smoother transitions
-      const current = getVisemeValue(char);
-      const next = getVisemeValue(nextChar);
-      const blended = current * 0.7 + next * 0.3;
-      
-      setMouthOpenness(blended);
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-      // Extract current word for display
-      const before = cleanTextRef.current.slice(0, idx + 1);
-      const wordMatch = before.match(/\S+$/);
-      if (wordMatch) setCurrentWord(wordMatch[0]);
+      const analyze = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getByteFrequencyData(dataArray);
 
-      charIndexRef.current++;
-    }, msPerChar);
+        // Focus on speech frequencies (300Hz-3000Hz) for mouth mapping
+        // With 44100Hz sample rate and 256 FFT, each bin = ~172Hz
+        // Speech range bins: ~2 to ~17
+        let speechEnergy = 0;
+        let count = 0;
+        for (let i = 2; i < 18; i++) {
+          speechEnergy += dataArray[i];
+          count++;
+        }
+        const avgEnergy = speechEnergy / count / 255;
+
+        // Map energy to mouth openness with natural curve
+        // Apply a power curve for more natural feel
+        const openness = Math.pow(Math.min(avgEnergy * 2.5, 1), 0.7);
+        setMouthOpenness(openness);
+
+        animFrameRef.current = requestAnimationFrame(analyze);
+      };
+
+      analyze();
+    } catch (e) {
+      console.warn('[Voice] Audio analysis failed, using fallback animation', e);
+    }
   }, []);
 
-  const stopVisemeAnimation = useCallback(() => {
-    if (visemeAnimRef.current) {
-      clearInterval(visemeAnimRef.current);
-      visemeAnimRef.current = null;
+  const stopAudioAnalysis = useCallback(() => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = 0;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+      analyserRef.current = null;
     }
     setMouthOpenness(0);
+  }, []);
+
+  // Simulate word progression for visual display
+  const startWordAnimation = useCallback((text: string) => {
+    const words = text.split(/\s+/);
+    let idx = 0;
+    // Approximate ~150 words per minute for ElevenLabs
+    const msPerWord = 400;
+
+    if (wordAnimRef.current) clearInterval(wordAnimRef.current);
+    wordAnimRef.current = setInterval(() => {
+      if (idx >= words.length) {
+        idx = 0; // loop if speech is still going
+      }
+      setCurrentWord(words[idx] || '');
+      idx++;
+    }, msPerWord);
+  }, []);
+
+  const stopWordAnimation = useCallback(() => {
+    if (wordAnimRef.current) {
+      clearInterval(wordAnimRef.current);
+      wordAnimRef.current = null;
+    }
     setCurrentWord('');
   }, []);
 
   const startListening = useCallback((onResult: (text: string) => void) => {
     if (!sttSupported) return;
 
-    if (ttsSupported) window.speechSynthesis.cancel();
+    // Stop any current speech
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -166,7 +180,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     recognitionRef.current = recognition;
     recognition.start();
     setIsListening(true);
-  }, [sttSupported, ttsSupported]);
+  }, [sttSupported]);
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop();
@@ -174,13 +188,18 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   }, []);
 
   const speak = useCallback(async (text: string, onComplete?: () => void) => {
-    if (!ttsSupported || !voiceEnabled) {
+    if (!voiceEnabled) {
       onComplete?.();
       return;
     }
 
-    window.speechSynthesis.cancel();
-    stopVisemeAnimation();
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    stopAudioAnalysis();
+    stopWordAnimation();
 
     // Smart filtering: strip booking blocks, URLs, domains, markdown for natural speech
     const clean = text
@@ -202,118 +221,138 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     if (!clean) { onComplete?.(); return; }
 
     setSpokenText(clean);
+    setIsSpeaking(true);
+    startWordAnimation(clean);
 
-    const utterance = new SpeechSynthesisUtterance(clean);
+    try {
+      const gender = voiceGenderRef.current;
+      const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`;
 
-    const locale = LANG_TO_LOCALE[langRef.current] || 'en-US';
-    const langPrefix = locale.split('-')[0];
-    const gender = voiceGenderRef.current;
-
-    // Wait for voices to load if empty (Chrome loads async)
-    let voices = window.speechSynthesis.getVoices();
-    if (voices.length === 0) {
-      await new Promise<void>(resolve => {
-        const onVoices = () => { resolve(); window.speechSynthesis.removeEventListener('voiceschanged', onVoices); };
-        window.speechSynthesis.addEventListener('voiceschanged', onVoices);
-        setTimeout(resolve, 500);
+      const response = await fetch(TTS_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ text: clean, gender }),
       });
-      voices = window.speechSynthesis.getVoices();
+
+      if (!response.ok) {
+        throw new Error(`TTS request failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.crossOrigin = 'anonymous';
+      audioRef.current = audio;
+
+      audio.oncanplay = () => {
+        startAudioAnalysis(audio);
+        audio.play().catch(console.error);
+      };
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        stopAudioAnalysis();
+        stopWordAnimation();
+        setSpokenText('');
+        URL.revokeObjectURL(audioUrl);
+        audioRef.current = null;
+        onComplete?.();
+      };
+
+      audio.onerror = () => {
+        console.error('[Voice] Audio playback error, falling back to browser TTS');
+        stopAudioAnalysis();
+        stopWordAnimation();
+        audioRef.current = null;
+        // Fallback to browser TTS
+        fallbackBrowserTTS(clean, onComplete);
+      };
+    } catch (error) {
+      console.error('[Voice] ElevenLabs TTS failed, falling back to browser TTS:', error);
+      // Fallback to browser TTS
+      fallbackBrowserTTS(clean, onComplete);
+    }
+  }, [voiceEnabled, startAudioAnalysis, stopAudioAnalysis, startWordAnimation, stopWordAnimation]);
+
+  // Fallback browser TTS if ElevenLabs fails
+  const fallbackBrowserTTS = useCallback((text: string, onComplete?: () => void) => {
+    if (!('speechSynthesis' in window)) {
+      setIsSpeaking(false);
+      setSpokenText('');
+      onComplete?.();
+      return;
     }
 
-    // Gender-aware voice matching
-    const femaleNames = ['Samantha', 'Karen', 'Moira', 'Victoria', 'Zira', 'Tessa', 'Fiona', 'Allison', 'Ava', 'Susan', 'Catherine', 'Paulina', 'Monica', 'Luciana', 'Amelie', 'Anna', 'Milena', 'Yuna', 'Kyoko', 'Lekha', 'Meijia', 'Tingting', 'Joana', 'Nora', 'Sara', 'Ellen', 'Helena', 'Martha'];
-    const maleNames = ['David', 'James', 'Daniel', 'Mark', 'Fred', 'Alex', 'Tom', 'Oliver', 'Aaron', 'Gordon', 'Jorge', 'Thomas', 'Jacques', 'Luca', 'Yuri', 'Ichiro', 'Rishi', 'Albert', 'Arthur', 'Bruce', 'Charles', 'Ralph', 'Richard', 'Robert', 'Henry', 'Martin'];
-    const femaleKeywords = ['Female', 'Woman', 'female', 'woman'];
-    const maleKeywords = ['Male', 'Man', 'male', 'man'];
-
-    const nameHints = gender === 'man' ? maleNames : femaleNames;
-    const keywordHints = gender === 'man' ? maleKeywords : femaleKeywords;
-    const antiNames = gender === 'man' ? femaleNames : maleNames;
-    const antiKeywords = gender === 'man' ? femaleKeywords : maleKeywords;
-
-    const langVoices = voices.filter(v => v.lang.startsWith(langPrefix));
-
-    let preferred: SpeechSynthesisVoice | undefined;
-    preferred = langVoices.find(v => nameHints.some(n => v.name.includes(n)));
-    if (!preferred) {
-      preferred = langVoices.find(v => keywordHints.some(k => v.name.includes(k)));
-    }
-    if (!preferred && langVoices.length > 1) {
-      const filtered = langVoices.filter(v =>
-        !antiKeywords.some(k => v.name.includes(k)) &&
-        !antiNames.some(n => v.name.includes(n))
-      );
-      preferred = filtered[0] || langVoices[0];
-    }
-    if (!preferred) preferred = langVoices[0];
-    if (!preferred) {
-      preferred = voices.find(v => nameHints.some(n => v.name.includes(n))) ||
-                  voices.find(v => keywordHints.some(k => v.name.includes(k))) ||
-                  voices[0];
-    }
-
-    if (preferred) {
-      utterance.voice = preferred;
-      utterance.lang = preferred.lang;
-    } else {
-      utterance.lang = locale;
-    }
-
-    // Pitch/rate differentiation
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const gender = voiceGenderRef.current;
     utterance.rate = gender === 'man' ? 0.85 : 1.0;
     utterance.pitch = gender === 'man' ? 0.45 : 1.15;
 
-    const speechRate = utterance.rate;
-
-    console.log(`[Voice] Gender: ${gender}, Selected: "${preferred?.name || 'default'}" (${preferred?.lang || locale}), Pitch: ${utterance.pitch}`);
+    // Simple internal mouth animation for fallback
+    let animInterval: ReturnType<typeof setInterval> | null = null;
 
     utterance.onstart = () => {
-      setIsSpeaking(true);
-      startVisemeAnimation(clean, speechRate);
-    };
-
-    // Use boundary events for more accurate word tracking when available
-    utterance.onboundary = (event) => {
-      if (event.name === 'word') {
-        charIndexRef.current = event.charIndex;
-        const word = clean.slice(event.charIndex).match(/^\S+/)?.[0] || '';
-        setCurrentWord(word);
-      }
+      animInterval = setInterval(() => {
+        setMouthOpenness(0.1 + Math.random() * 0.7);
+      }, 80);
     };
 
     utterance.onend = () => {
+      if (animInterval) clearInterval(animInterval);
       setIsSpeaking(false);
-      stopVisemeAnimation();
-      setSpokenText('');
-      onComplete?.();
-    };
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-      stopVisemeAnimation();
+      stopWordAnimation();
+      setMouthOpenness(0);
       setSpokenText('');
       onComplete?.();
     };
 
-    utteranceRef.current = utterance;
+    utterance.onerror = () => {
+      if (animInterval) clearInterval(animInterval);
+      setIsSpeaking(false);
+      stopWordAnimation();
+      setMouthOpenness(0);
+      setSpokenText('');
+      onComplete?.();
+    };
+
     window.speechSynthesis.speak(utterance);
-  }, [ttsSupported, voiceEnabled, startVisemeAnimation, stopVisemeAnimation]);
+  }, [stopWordAnimation]);
 
   const stopSpeaking = useCallback(() => {
-    if (ttsSupported) window.speechSynthesis.cancel();
-    stopVisemeAnimation();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    stopAudioAnalysis();
+    stopWordAnimation();
     setIsSpeaking(false);
     setSpokenText('');
-  }, [ttsSupported, stopVisemeAnimation]);
+  }, [stopAudioAnalysis, stopWordAnimation]);
 
   const toggleVoice = useCallback(() => {
     setVoiceEnabled(prev => {
-      if (prev && ttsSupported) {
-        window.speechSynthesis.cancel();
-        stopVisemeAnimation();
+      if (prev) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current = null;
+        }
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+        stopAudioAnalysis();
+        stopWordAnimation();
       }
       return !prev;
     });
-  }, [ttsSupported, stopVisemeAnimation]);
+  }, [stopAudioAnalysis, stopWordAnimation]);
 
   return {
     isListening,
