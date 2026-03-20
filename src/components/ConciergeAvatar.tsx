@@ -646,7 +646,10 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
             boxShadow: '0 2px 8px hsl(var(--primary) / 0.4)',
           }}
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+          <div
+            className="w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ background: 'hsl(var(--destructive))' }}
+          />
           LIVE
         </div>
       )}
