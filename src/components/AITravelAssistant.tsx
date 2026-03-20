@@ -92,7 +92,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const { toast } = useToast();
   const {
     isListening, isSpeaking, voiceEnabled,
-    currentWord, mouthOpenness,
+    currentWord, mouthOpenness, micPermission,
     startListening, stopListening, speak, stopSpeaking,
     toggleVoice, sttSupported, ttsSupported, setVoiceGender, setLanguage
   } = useVoiceConversation(currentLanguage);
@@ -441,6 +441,30 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     await streamChat(inputMessage);
   };
 
+  const handleMicClick = async () => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+    if (micPermission === 'denied') {
+      toast({
+        title: 'Microphone Access Denied',
+        description: 'Please allow microphone access in your browser settings to use voice input.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    await startListening((text) => {
+      if (text.trim()) {
+        setInputMessage('');
+        const userMsg: Message = { id: Date.now().toString(), content: text, isUser: true, timestamp: new Date() };
+        setMessages(prev => [...prev, userMsg]);
+        setIsTyping(true);
+        streamChat(text);
+      }
+    });
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -606,26 +630,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 <div className="flex gap-2">
                   {sttSupported && (
                     <Button
-                      onClick={() => {
-                        if (isListening) {
-                          stopListening();
-                        } else {
-                          startListening((text) => {
-                            if (text.trim()) {
-                              setInputMessage('');
-                              const userMsg: Message = { id: Date.now().toString(), content: text, isUser: true, timestamp: new Date() };
-                              setMessages(prev => [...prev, userMsg]);
-                              setIsTyping(true);
-                              streamChat(text);
-                            }
-                          });
-                        }
-                      }}
+                      onClick={handleMicClick}
                       variant={isListening ? 'default' : 'outline'}
                       size="sm"
-                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
                       disabled={isTyping}
-                      title={isListening ? 'Stop listening' : 'Voice input'}
+                      title={micPermission === 'denied' ? 'Microphone access denied — check browser settings' : isListening ? 'Stop listening' : 'Voice input'}
                     >
                       {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                     </Button>
@@ -816,31 +826,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <div className="flex gap-2">
                 {sttSupported && (
                   <Button
-                    onClick={() => {
-                      if (isListening) {
-                        stopListening();
-                      } else {
-                        startListening((text) => {
-                          if (text.trim()) {
-                            setInputMessage('');
-                            const userMsg: Message = {
-                              id: Date.now().toString(),
-                              content: text,
-                              isUser: true,
-                              timestamp: new Date()
-                            };
-                            setMessages(prev => [...prev, userMsg]);
-                            setIsTyping(true);
-                            streamChat(text);
-                          }
-                        });
-                      }
-                    }}
+                    onClick={handleMicClick}
                     variant={isListening ? 'default' : 'outline'}
                     size="sm"
-                    className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                    className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
                     disabled={isTyping}
-                    title={isListening ? 'Stop listening' : 'Voice input'}
+                    title={micPermission === 'denied' ? 'Microphone access denied — check browser settings' : isListening ? 'Stop listening' : 'Voice input'}
                   >
                     {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
