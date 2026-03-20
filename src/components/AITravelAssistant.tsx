@@ -835,7 +835,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   >
                     {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
-                  </Button>
                 )}
                 <Input
                   value={inputMessage}
