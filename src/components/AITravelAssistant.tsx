@@ -92,7 +92,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const { toast } = useToast();
   const {
     isListening, isSpeaking, voiceEnabled,
-    currentWord, mouthOpenness,
+    currentWord, mouthOpenness, micPermission,
     startListening, stopListening, speak, stopSpeaking,
     toggleVoice, sttSupported, ttsSupported, setVoiceGender, setLanguage
   } = useVoiceConversation(currentLanguage);
