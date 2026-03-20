@@ -553,7 +553,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           <div className="flex items-start gap-2">
-                            {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} mouthOpenness={message.id === messages[messages.length - 1]?.id ? mouthOpenness : 0} currentWord={message.id === messages[messages.length - 1]?.id ? currentWord : ''} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
+                            {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                             <div className="flex-1 min-w-0">
                               {parts.map((part, i) => {
                                 if (i % 2 === 1) {
@@ -573,7 +573,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     <div className="flex justify-start">
                       <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                         <div className="flex items-center gap-2">
-                          {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
+                          <Bot className="h-4 w-4" />
                           <div className="flex gap-1">
                             <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
                             <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
@@ -657,8 +657,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <Card className={`w-96 glass-morphism shadow-large transition-all duration-300 rounded-lg ${
-        isMinimized ? 'h-16' : 'h-[500px]'
+      <Card className={`w-[28rem] glass-morphism shadow-large transition-all duration-300 rounded-lg ${
+        isMinimized ? 'h-16' : 'h-[600px] max-h-[80vh]'
       }`}>
         <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
           <div className="flex items-center gap-2 min-w-0">
@@ -746,14 +746,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                       className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                        className={`max-w-[90%] rounded-lg px-3 py-2 text-sm ${
                           message.isUser
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         <div className="flex items-start gap-2">
-                          {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} mouthOpenness={message.id === messages[messages.length - 1]?.id ? mouthOpenness : 0} currentWord={message.id === messages[messages.length - 1]?.id ? currentWord : ''} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
+                          {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           <div className="flex-1 min-w-0">
                             {parts.map((part, i) => {
                               if (i % 2 === 1) {
@@ -774,7 +774,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                       <div className="flex items-center gap-2">
-                        {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
+                        <Bot className="h-4 w-4" />
                         <div className="flex gap-1">
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
