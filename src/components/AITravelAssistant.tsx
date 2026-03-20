@@ -453,7 +453,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             size="lg"
           >
             {conciergePrefs.avatarVisible ? (
-              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} size="sm" />
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} mouthOpenness={0} size="sm" />
             ) : (
               <div className="relative">
                 <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
