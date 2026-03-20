@@ -533,6 +533,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     face={conciergePrefs.avatarFace}
                     isSpeaking={true}
                     mouthOpenness={mouthOpenness}
+                    currentWord={currentWord}
                     size="hero"
                     expandOnSpeak
                     showLiveBadge
@@ -545,174 +546,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </div>
                 </div>
               )}
-              <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
-                <div className="space-y-4 pb-4">
-                  {messages.map((message) => {
-                    const { text, bookings } = !message.isUser 
-                      ? parseBookingBlocks(message.content) 
-                      : { text: message.content, bookings: [] };
-                    const parts = text.split(/\{\{BOOKING_CARD_(\d+)\}\}/);
-                    return (
-                      <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
-                          <div className="flex items-start gap-2">
-                            {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} mouthOpenness={message.id === messages[messages.length - 1]?.id ? mouthOpenness : 0} currentWord={message.id === messages[messages.length - 1]?.id ? currentWord : ''} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
-                            <div className="flex-1 min-w-0">
-                              {parts.map((part, i) => {
-                                if (i % 2 === 1) {
-                                  const idx = parseInt(part);
-                                  return bookings[idx] ? <BookingCards key={`b-${i}`} items={bookings[idx]} /> : null;
-                                }
-                                return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
-                              })}
-                            </div>
-                            {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {isTyping && (
-                    <div className="flex justify-start">
-                      <div className="bg-muted rounded-lg px-3 py-2 text-sm">
-                        <div className="flex items-center gap-2">
-                          {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
-                          <div className="flex gap-1">
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
-
-              <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
-                <div className="flex gap-2">
-                  {sttSupported && (
-                    <Button
-                      onClick={() => {
-                        if (isListening) {
-                          stopListening();
-                        } else {
-                          startListening((text) => {
-                            if (text.trim()) {
-                              setInputMessage('');
-                              const userMsg: Message = { id: Date.now().toString(), content: text, isUser: true, timestamp: new Date() };
-                              setMessages(prev => [...prev, userMsg]);
-                              setIsTyping(true);
-                              streamChat(text);
-                            }
-                          });
-                        }
-                      }}
-                      variant={isListening ? 'default' : 'outline'}
-                      size="sm"
-                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
-                      disabled={isTyping}
-                      title={isListening ? 'Stop listening' : 'Voice input'}
-                    >
-                      {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                    </Button>
-                  )}
-                  <Input
-                    value={inputMessage}
-                    onChange={(e) => setInputMessage(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
-                    className="flex-1"
-                    disabled={isTyping}
-                  />
-                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="px-3">
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  {t('ai.concierge_label')} • {voiceEnabled ? t('ai.voice_on') : t('ai.always_thinking')}
-                </p>
-              </div>
-            </CardContent>
-          )}
-        </Card>
-      </div>
-    );
-  }
-
-  // Desktop: keep existing fixed overlay behavior
-  if (!isOpen) {
-    return (
-      <div className="fixed bottom-6 right-6 z-40">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-16 w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
-          size="lg"
-        >
-          <div className="relative">
-            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
-          </div>
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <Card className={`w-96 glass-morphism shadow-large transition-all duration-300 rounded-lg ${
-        isMinimized ? 'h-16' : 'h-[500px]'
-      }`}>
-        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
-          <div className="flex items-center gap-2 min-w-0">
-            {conciergePrefs.avatarVisible ? (
-              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} mouthOpenness={mouthOpenness} currentWord={currentWord} size="sm" />
-            ) : (
-              <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
-                <Bot className="h-5 w-5 text-white" />
-              </div>
-            )}
-            <CardTitle className="text-sm font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
-            <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
-          </div>
-          <div className="flex gap-0.5">
-            <ConciergeSettings onPrefsChange={setConciergePrefs} />
-            {ttsSupported && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  if (voiceEnabled && isSpeaking) stopSpeaking();
-                  toggleVoice();
-                }}
-                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
-                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
-              >
-                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="h-8 w-8 p-0"
-            >
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
-
-        {!isMinimized && (
-          <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
+...
             {/* Speaking avatar overlay — cinematic mode */}
             {isSpeaking && conciergePrefs.avatarVisible && (
               <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
@@ -725,6 +559,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   face={conciergePrefs.avatarFace}
                   isSpeaking={true}
                   mouthOpenness={mouthOpenness}
+                  currentWord={currentWord}
                   size="xl"
                   expandOnSpeak
                   showLiveBadge

@@ -58,28 +58,36 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (activePersona) {
-      setPrefs(prev => {
-        const updated = { ...prev, userName: activePersona.profile.firstName };
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-        onPrefsChange?.(updated);
-        return updated;
-      });
-    }
-  }, [activePersona?.id]);
+    if (!activePersona?.id) return;
+
+    const personaDrivenPrefs: Partial<ConciergePreferences> = activePersona.id === 'john'
+      ? {
+          userName: activePersona.profile.firstName,
+          voiceGender: 'man',
+          avatarFace: 'male',
+        }
+      : {
+          userName: activePersona.profile.firstName,
+          voiceGender: 'woman',
+          avatarFace: 'female',
+        };
+
+    setPrefs(prev => {
+      const next = { ...prev, ...personaDrivenPrefs };
+      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+    });
+  }, [activePersona?.id, activePersona?.profile.firstName]);
+
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    onPrefsChange?.(prefs);
+  }, [prefs, onPrefsChange]);
 
   const updatePref = <K extends keyof ConciergePreferences>(key: K, value: ConciergePreferences[K]) => {
-    setPrefs(prev => {
-      const updated = { ...prev, [key]: value };
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      onPrefsChange?.(updated);
-      return updated;
-    });
+    setPrefs(prev => ({ ...prev, [key]: value }));
   };
 
   const handleSave = () => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-    onPrefsChange?.(prefs);
     setOpen(false);
     toast({ title: 'Settings saved', description: `Your concierge preferences are set for this session.` });
   };
