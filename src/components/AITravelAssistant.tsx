@@ -28,7 +28,7 @@ interface AITravelAssistantProps {
   userProfile?: any;
 }
 
-const AITravelAssistant: React.FC<AITravelAssistantProps> = ({ 
+const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   currentLocation,
   citizenship,
   userProfile
@@ -39,6 +39,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const exchangeCountRef = useRef(0);
+
   const getWelcomeMessage = (): string => {
     const city = currentLocation?.city || '';
     const prefs = getConciergePrefs();
@@ -96,7 +97,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   } = useVoiceConversation(currentLanguage);
   const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
 
-  // Sync voice gender and language preferences
   useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);
@@ -105,7 +105,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     setLanguage(currentLanguage);
   }, [currentLanguage, setLanguage]);
 
-  // Reset chat when persona, language, or concierge prefs change — so new personality/names take effect immediately
   useEffect(() => {
     setMessages([{
       id: '1',
@@ -113,7 +112,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       isUser: false,
       timestamp: new Date()
     }]);
-    // Auto-enable voice for demo personas so speak-back works out of the box
     if (activePersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
@@ -126,11 +124,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   };
 
   useEffect(() => {
-    // Only auto-scroll to bottom when there are user messages (not just the welcome)
     if (messages.length > 1) {
       scrollToBottom();
     } else {
-      // For welcome message, scroll to top so user sees the greeting
       const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
       if (viewport) viewport.scrollTop = 0;
     }
@@ -143,10 +139,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       const followUpPrompt = `The user just asked: "${lastUserMessage.slice(0, 200)}" and you answered. Now send ONE short, natural follow-up (max 2 sentences). Either: (a) ask if they need something related (like insurance, eSIM, VPN, transport, etc. from your knowledge base), or (b) share a quick related tip they might not have thought of. Be casual — like a friend still thinking about their question. Don't repeat what you already said. Don't say "by the way" every time — vary your opener.`;
 
       const resp = await fetch(CHAT_URL, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
           messages: [
@@ -173,15 +169,18 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }),
       });
 
-      if (!resp.ok || !resp.body) { setIsTyping(false); return; }
+      if (!resp.ok || !resp.body) {
+        setIsTyping(false);
+        return;
+      }
 
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
-      let textBuffer = "";
-      let followUpContent = "";
+      let textBuffer = '';
+      let followUpContent = '';
       const followUpId = (Date.now() + 10).toString();
 
-      setMessages(prev => [...prev, { id: followUpId, content: "", isUser: false, timestamp: new Date() }]);
+      setMessages(prev => [...prev, { id: followUpId, content: '', isUser: false, timestamp: new Date() }]);
 
       let streamDone = false;
       while (!streamDone) {
@@ -189,14 +188,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         if (done) break;
         textBuffer += decoder.decode(value, { stream: true });
         let newlineIndex: number;
-        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
           const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") { streamDone = true; break; }
+          if (jsonStr === '[DONE]') {
+            streamDone = true;
+            break;
+          }
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -204,7 +206,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               followUpContent += content;
               setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
             }
-          } catch { textBuffer = line + "\n" + textBuffer; break; }
+          } catch {
+            textBuffer = line + '\n' + textBuffer;
+            break;
+          }
         }
       }
 
@@ -217,7 +222,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
-    
+
     const activeThreats = dummyThreats
       .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
       .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description} (Distance: ${t.distanceFromUser}km)`)
@@ -226,13 +231,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const demoAiContext = localStorage.getItem('demoAiContext') || '';
     const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
     const jetSearchContext = localStorage.getItem('jetSearchAIContext') || '';
-    
-    // Gather FULL app context — everything the concierge needs to know
+
     const fullAppContext = gatherFullAppContext();
     const enhancedProfile = fullAppContext.enhancedProfile;
     const profileSummary = buildProfileSummary(enhancedProfile);
-    
-    // Build city services context from cached AI data
+
     const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
     let cityServicesContext = '';
     if (userCity) {
@@ -244,14 +247,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           const data = parsed.data;
           if (data?.categories) {
             cityServicesContext = `Verified providers in ${data.city}, ${data.country} (researched ${data.lastResearched}):\n` +
-              data.categories.map((cat: any) => 
+              data.categories.map((cat: any) =>
                 `${cat.name}: ${cat.providers.map((p: any) => `${p.name} (★${p.rating}, ${p.website}, ${p.phone})`).join('; ')}`
               ).join('\n');
           }
         }
       } catch {}
     }
-    
+
     const userContext = {
       currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
       currentCity: userCity,
@@ -267,7 +270,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         personalityMode: conciergePrefs.personalityMode,
         aiName: conciergePrefs.aiName || 'Concierge',
       },
-      // Deep profile sync — the AI knows everything about the user
       profileSummary: profileSummary || undefined,
       trackedCountries: fullAppContext.trackedCountries || undefined,
       calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
@@ -278,10 +280,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
     try {
       const resp = await fetch(CHAT_URL, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
           messages: messages
@@ -298,36 +300,35 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       if (!resp.ok) {
         if (resp.status === 429) {
           toast({
-            title: "Rate limit exceeded",
-            description: "Please try again in a moment.",
-            variant: "destructive"
+            title: 'Rate limit exceeded',
+            description: 'Please try again in a moment.',
+            variant: 'destructive'
           });
           return;
         }
         if (resp.status === 402) {
           toast({
-            title: "Payment required",
-            description: "Please add funds to continue using AI features.",
-            variant: "destructive"
+            title: 'Payment required',
+            description: 'Please add funds to continue using AI features.',
+            variant: 'destructive'
           });
           return;
         }
-        throw new Error("Failed to start stream");
+        throw new Error('Failed to start stream');
       }
 
-      if (!resp.body) throw new Error("No response body");
+      if (!resp.body) throw new Error('No response body');
 
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
-      let textBuffer = "";
+      let textBuffer = '';
       let streamDone = false;
-      let assistantContent = "";
+      let assistantContent = '';
 
-      // Add initial assistant message
       const assistantId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
         id: assistantId,
-        content: "",
+        content: '',
         isUser: false,
         timestamp: new Date()
       }]);
@@ -338,16 +339,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         textBuffer += decoder.decode(value, { stream: true });
 
         let newlineIndex: number;
-        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
 
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
 
           const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") {
+          if (jsonStr === '[DONE]') {
             streamDone = true;
             break;
           }
@@ -357,23 +358,22 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantContent += content;
-              setMessages(prev => prev.map(m => 
-                m.id === assistantId 
+              setMessages(prev => prev.map(m =>
+                m.id === assistantId
                   ? { ...m, content: assistantContent }
                   : m
               ));
             }
           } catch {
-            textBuffer = line + "\n" + textBuffer;
+            textBuffer = line + '\n' + textBuffer;
             break;
           }
         }
       }
 
-      // Memory distillation: extract durable preferences from the conversation
       try {
         const msg = userMessage.toLowerCase();
-        if (msg.includes('i hate') || msg.includes('i don\'t like') || msg.includes('i never')) {
+        if (msg.includes('i hate') || msg.includes("i don't like") || msg.includes('i never')) {
           const fact = userMessage.replace(/^(i hate|i don't like|i never)\s*/i, 'Dislikes: ');
           addMemory({ fact, category: 'general', durability: 'durable', source: 'conversation' });
         }
@@ -392,11 +392,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       } catch {}
 
-      // Proactive follow-up: max every 3rd exchange, with 50% randomness
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
-      // Auto-speak the final response; chain follow-up after speech ends
       if (assistantContent && voiceEnabled) {
         speak(assistantContent, () => {
           if (shouldFollowUp) {
@@ -410,11 +408,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
       setIsTyping(false);
     } catch (error) {
-      console.error("Chat error:", error);
+      console.error('Chat error:', error);
       toast({
-        title: "Error",
-        description: "Failed to get response. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to get response. Please try again.',
+        variant: 'destructive'
       });
       setIsTyping(false);
     }
@@ -447,25 +445,24 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   if (!isOpen) {
     return (
       <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
-          <Button
-            onClick={() => setIsOpen(true)}
-            className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group overflow-hidden`}
-            size="lg"
-          >
-            {conciergePrefs.avatarVisible ? (
-              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} mouthOpenness={0} size="sm" />
-            ) : (
-              <div className="relative">
-                <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
-              </div>
-            )}
-          </Button>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group overflow-hidden`}
+          size="lg"
+        >
+          {conciergePrefs.avatarVisible ? (
+            <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} mouthOpenness={0} size="sm" />
+          ) : (
+            <div className="relative">
+              <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+              <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
+            </div>
+          )}
+        </Button>
       </div>
     );
   }
 
-  // Mobile: fixed overlay that fits between status area and bottom nav
   if (isMobile) {
     return (
       <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
@@ -521,7 +518,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
           {!isMinimized && (
             <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
-              {/* Speaking avatar overlay — cinematic mode */}
               {isSpeaking && conciergePrefs.avatarVisible && (
                 <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                   style={{
@@ -546,8 +542,173 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </div>
                 </div>
               )}
-...
-            {/* Speaking avatar overlay — cinematic mode */}
+              <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
+                <div className="space-y-4 pb-4">
+                  {messages.map((message) => {
+                    const { text, bookings } = !message.isUser
+                      ? parseBookingBlocks(message.content)
+                      : { text: message.content, bookings: [] };
+                    const parts = text.split(/\{\{BOOKING_CARD_(\d+)\}\}/);
+                    return (
+                      <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                          <div className="flex items-start gap-2">
+                            {!message.isUser && (conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking && message.id === messages[messages.length - 1]?.id} mouthOpenness={message.id === messages[messages.length - 1]?.id ? mouthOpenness : 0} currentWord={message.id === messages[messages.length - 1]?.id ? currentWord : ''} size="sm" className="mt-0.5" /> : <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />)}
+                            <div className="flex-1 min-w-0">
+                              {parts.map((part, i) => {
+                                if (i % 2 === 1) {
+                                  const idx = parseInt(part);
+                                  return bookings[idx] ? <BookingCards key={`b-${i}`} items={bookings[idx]} /> : null;
+                                }
+                                return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
+                              })}
+                            </div>
+                            {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-muted rounded-lg px-3 py-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+              </ScrollArea>
+
+              <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
+                <div className="flex gap-2">
+                  {sttSupported && (
+                    <Button
+                      onClick={() => {
+                        if (isListening) {
+                          stopListening();
+                        } else {
+                          startListening((text) => {
+                            if (text.trim()) {
+                              setInputMessage('');
+                              const userMsg: Message = { id: Date.now().toString(), content: text, isUser: true, timestamp: new Date() };
+                              setMessages(prev => [...prev, userMsg]);
+                              setIsTyping(true);
+                              streamChat(text);
+                            }
+                          });
+                        }
+                      }}
+                      variant={isListening ? 'default' : 'outline'}
+                      size="sm"
+                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
+                      disabled={isTyping}
+                      title={isListening ? 'Stop listening' : 'Voice input'}
+                    >
+                      {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    </Button>
+                  )}
+                  <Input
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
+                    className="flex-1"
+                    disabled={isTyping}
+                  />
+                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="px-3">
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  {t('ai.concierge_label')} • {voiceEnabled ? t('ai.voice_on') : t('ai.always_thinking')}
+                </p>
+              </div>
+            </CardContent>
+          )}
+        </Card>
+      </div>
+    );
+  }
+
+  if (!isOpen) {
+    return (
+      <div className="fixed bottom-6 right-6 z-40">
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="h-16 w-16 rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group"
+          size="lg"
+        >
+          <div className="relative">
+            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
+          </div>
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
+      <Card className={`w-96 glass-morphism shadow-large transition-all duration-300 rounded-lg ${
+        isMinimized ? 'h-16' : 'h-[500px]'
+      }`}>
+        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 gradient-mesh">
+          <div className="flex items-center gap-2 min-w-0">
+            {conciergePrefs.avatarVisible ? (
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} mouthOpenness={mouthOpenness} currentWord={currentWord} size="sm" />
+            ) : (
+              <div className="h-8 w-8 rounded-lg gradient-premium flex items-center justify-center flex-shrink-0">
+                <Bot className="h-5 w-5 text-white" />
+              </div>
+            )}
+            <CardTitle className="text-sm font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
+            <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
+          </div>
+          <div className="flex gap-0.5">
+            <ConciergeSettings onPrefsChange={setConciergePrefs} />
+            {ttsSupported && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (voiceEnabled && isSpeaking) stopSpeaking();
+                  toggleVoice();
+                }}
+                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
+              >
+                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMinimized(!isMinimized)}
+              className="h-8 w-8 p-0"
+            >
+              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+
+        {!isMinimized && (
+          <CardContent className="p-0 flex flex-col h-[calc(100%-4rem)]">
             {isSpeaking && conciergePrefs.avatarVisible && (
               <div className="flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                 style={{
@@ -575,8 +736,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
               <div className="space-y-4 pb-4">
                 {messages.map((message) => {
-                  const { text, bookings } = !message.isUser 
-                    ? parseBookingBlocks(message.content) 
+                  const { text, bookings } = !message.isUser
+                    ? parseBookingBlocks(message.content)
                     : { text: message.content, bookings: [] };
                   const parts = text.split(/\{\{BOOKING_CARD_(\d+)\}\}/);
                   return (
@@ -608,11 +769,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     </div>
                   );
                 })}
-                
+
                 {isTyping && (
                   <div className="flex justify-start">
                     <div className="bg-muted rounded-lg px-3 py-2 text-sm">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                         {conciergePrefs.avatarVisible ? <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} isTyping={true} mouthOpenness={0} size="sm" /> : <Bot className="h-4 w-4" />}
                         <div className="flex gap-1">
                           <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
@@ -628,14 +789,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             </ScrollArea>
 
             <div className="border-t p-4">
-            <div className="flex gap-2">
+              <div className="flex gap-2">
                 {sttSupported && (
                   <Button
                     onClick={() => {
                       if (isListening) {
                         stopListening();
                       } else {
-                    startListening((text) => {
+                        startListening((text) => {
                           if (text.trim()) {
                             setInputMessage('');
                             const userMsg: Message = {
