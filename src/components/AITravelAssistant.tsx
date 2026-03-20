@@ -446,16 +446,20 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   if (!isOpen) {
     return (
       <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group`}
-          size="lg"
-        >
-          <div className="relative">
-            <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
-            <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
-          </div>
-        </Button>
+          <Button
+            onClick={() => setIsOpen(true)}
+            className={`${isMobile ? 'h-14 w-14' : 'h-16 w-16'} rounded-full gradient-premium shadow-large hover:shadow-glow transition-all duration-300 group overflow-hidden`}
+            size="lg"
+          >
+            {conciergePrefs.avatarVisible ? (
+              <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={false} size="sm" />
+            ) : (
+              <div className="relative">
+                <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform" />
+                <div className="absolute -top-1 -right-1 h-3 w-3 bg-success rounded-full border-2 border-background animate-pulse" />
+              </div>
+            )}
+          </Button>
       </div>
     );
   }
