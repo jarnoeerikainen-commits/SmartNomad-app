@@ -181,8 +181,29 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     wordFrameRef.current = requestAnimationFrame(update);
   }, [stopWordAnimation]);
 
-  const startListening = useCallback((onResult: (text: string) => void) => {
+  const requestMicPermission = useCallback(async (): Promise<boolean> => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Permission granted — stop the stream immediately (we only needed the permission)
+      stream.getTracks().forEach(t => t.stop());
+      setMicPermission('granted');
+      return true;
+    } catch (err: any) {
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setMicPermission('denied');
+      }
+      return false;
+    }
+  }, []);
+
+  const startListening = useCallback(async (onResult: (text: string) => void) => {
     if (!sttSupported) return;
+
+    // Request microphone permission first
+    if (micPermission !== 'granted') {
+      const allowed = await requestMicPermission();
+      if (!allowed) return; // permission denied — caller should show toast
+    }
 
     clearSpeechState();
 
@@ -214,9 +235,12 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       }, 1800);
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (event: any) => {
       if (silenceTimer) clearTimeout(silenceTimer);
       setIsListening(false);
+      if (event.error === 'not-allowed') {
+        setMicPermission('denied');
+      }
     };
 
     recognition.onend = () => {
@@ -225,9 +249,14 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     };
 
     recognitionRef.current = recognition;
-    recognition.start();
-    setIsListening(true);
-  }, [clearSpeechState, sttSupported]);
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch (e) {
+      console.error('[Voice] Failed to start recognition:', e);
+      setIsListening(false);
+    }
+  }, [clearSpeechState, sttSupported, micPermission, requestMicPermission]);
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop();
