@@ -20,6 +20,7 @@ interface UseVoiceConversationReturn {
   currentWord: string;
   mouthOpenness: number;
   spokenText: string;
+  micPermission: 'granted' | 'denied' | 'prompt' | 'unsupported';
   startListening: (onResult: (text: string) => void) => void;
   stopListening: () => void;
   speak: (text: string, onComplete?: () => void) => void;
