@@ -779,29 +779,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 >
                   <ChevronUp className="h-4 w-4" />
                 </Button>
-                {activeLipsyncClip ? (
-                  <ConciergeVideoPlayer
-                    clip={activeLipsyncClip}
-                    face={conciergePrefs.avatarFace}
-                    size="xl"
-                    onEnded={() => setActiveLipsyncClip(null)}
-                    onError={() => setActiveLipsyncClip(null)}
-                  />
-                ) : (
-                  <ConciergeAvatar
-                    face={conciergePrefs.avatarFace}
-                    isSpeaking={true}
-                    mouthOpenness={mouthOpenness}
-                    currentWord={currentWord}
-                    size="xl"
-                    expandOnSpeak
-                    showLiveBadge
-                  />
-                )}
+                <ConciergeAvatar
+                  face={conciergePrefs.avatarFace}
+                  isSpeaking={true}
+                  mouthOpenness={mouthOpenness}
+                  currentWord={currentWord}
+                  size="xl"
+                  expandOnSpeak
+                  showLiveBadge
+                />
                 <div className="flex items-center gap-1.5 mt-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                   <span className="text-[10px] font-medium text-muted-foreground tracking-wide uppercase">
-                    {activeLipsyncClip ? 'Video Sync' : 'Live Sync'}
+                    Live Sync
                   </span>
                 </div>
               </div>
