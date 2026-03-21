@@ -415,6 +415,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
+      // Check for matching pre-generated lip-sync video
+      if (assistantContent && conciergePrefs.avatarVisible) {
+        const clip = findBestClip(assistantContent, conciergePrefs.avatarFace, currentLanguage);
+        setActiveLipsyncClip(clip);
+      }
+
       // Speak remaining text if first sentence was already spoken early
       if (assistantContent && voiceEnabled) {
         if (firstSentenceSpoken) {
