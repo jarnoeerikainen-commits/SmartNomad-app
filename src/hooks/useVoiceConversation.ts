@@ -102,32 +102,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
   }, []);
 
-  const stopAudioAnalysis = useCallback(() => {
-    analyzerRef.current?.stop();
-    analyzerRef.current = null;
-    setMouthOpenness(0);
-  }, []);
-
-  const cleanupAudioElement = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.onplaying = null;
-      audio.onended = null;
-      audio.onerror = null;
-      audio.onpause = null;
-      audio.pause();
-      audio.removeAttribute('src');
-      audio.load();
-    }
-
-    audioRef.current = null;
-
-    if (audioUrlRef.current) {
-      URL.revokeObjectURL(audioUrlRef.current);
-      audioUrlRef.current = null;
-    }
-  }, []);
-
   const clearSpeechState = useCallback((onComplete?: () => void) => {
     stopAudioAnalysis();
     stopWordAnimation();
