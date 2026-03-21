@@ -518,6 +518,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         </Suspense>
       )}
     </div>
+    </VoiceControlProvider>
   );
 };
 
