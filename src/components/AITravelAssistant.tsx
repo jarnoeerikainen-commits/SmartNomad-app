@@ -330,6 +330,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       let textBuffer = '';
       let streamDone = false;
       let assistantContent = '';
+      let firstSentenceSpoken = false;
 
       const assistantId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
@@ -369,6 +370,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   ? { ...m, content: assistantContent }
                   : m
               ));
+
+              // Early TTS: speak first sentence as soon as it's complete
+              if (voiceEnabled && !firstSentenceSpoken) {
+                const sentenceEnd = assistantContent.search(/[.!?]\s/);
+                if (sentenceEnd > 20) {
+                  firstSentenceSpoken = true;
+                  const firstSentence = assistantContent.slice(0, sentenceEnd + 1);
+                  speak(firstSentence);
+                }
+              }
             }
           } catch {
             textBuffer = line + '\n' + textBuffer;
@@ -401,14 +412,26 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
+      // Speak remaining text if first sentence was already spoken early
       if (assistantContent && voiceEnabled) {
-        speak(assistantContent, () => {
-          if (shouldFollowUp) {
+        if (firstSentenceSpoken) {
+          const sentenceEnd = assistantContent.search(/[.!?]\s/);
+          const remainder = sentenceEnd > 0 ? assistantContent.slice(sentenceEnd + 2) : '';
+          if (remainder.trim()) {
+            // Queue remaining text after first sentence finishes
+            speak(remainder, () => {
+              if (shouldFollowUp) setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
+            });
+          } else if (shouldFollowUp) {
             setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
           }
-        });
+        } else {
+          speak(assistantContent, () => {
+            if (shouldFollowUp) setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
+          });
+        }
       } else if (shouldFollowUp) {
-        const followUpDelay = 3000 + Math.random() * 2000;
+        const followUpDelay = 2000 + Math.random() * 1500;
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
 

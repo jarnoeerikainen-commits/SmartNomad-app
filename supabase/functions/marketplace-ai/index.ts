@@ -67,7 +67,7 @@ Consider: condition depreciation, local market demand, category popularity, and 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert marketplace pricing AI. Always respond with valid JSON only.` },
             { role: 'user', content: pricingPrompt }
@@ -141,7 +141,7 @@ Provide JSON:
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert copywriter for marketplace listings. Always respond with valid JSON only.` },
             { role: 'user', content: descriptionPrompt }
