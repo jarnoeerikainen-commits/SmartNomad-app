@@ -56,9 +56,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const recognitionRef = useRef<any>(null);
   const langRef = useRef(initialLang);
   const voiceGenderRef = useRef<'woman' | 'man'>('woman');
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioUrlRef = useRef<string | null>(null);
-  const analyzerRef = useRef<SpeechAnalyzerController | null>(null);
   const speechSessionRef = useRef(0);
   const wordFrameRef = useRef<number>(0);
   const wordIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
