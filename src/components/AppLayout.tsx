@@ -1,96 +1,105 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
 import HomeSection from './sections/HomeSection';
-import TrackingSection from './sections/TrackingSection';
-import EmergencySection from './sections/EmergencySection';
-import AISection from './sections/AISection';
-import ProfileSection from './sections/ProfileSection';
 import QuickActions from './QuickActions';
 import UpgradeBanner from './UpgradeBanner';
 import UpgradeModal from './UpgradeModal';
-import CountryTracker from './CountryTracker';
-import EnhancedNewsSection from './EnhancedNewsSection';
-import TaxResidencyTracker from './TaxResidencyTracker';
-import TaxResidencyHub from './TaxResidencyHub';
-import VisaTrackingManager from './VisaTrackingManager';
-import { DocumentTracker } from './DocumentTracker';
-import VaccinationTracker from './VaccinationTracker';
-import { SmartAlerts } from './SmartAlerts';
-import TravelServices from './TravelServices';
-import RemoteOffices from './RemoteWorkOffices/OfficeFinder';
-import { BusinessCentersPage } from './BusinessCenters/BusinessCentersPage';
-import AirportLoungeAccess from './AirportLoungeAccess';
-import GlobalCityServices from './GlobalCityServices';
-import Settings from './Settings';
-import EnhancedProfileForm from './EnhancedProfileForm';
-import { SecureDocumentVault } from './SecureDocumentVault';
-import { CookieConsent } from './GDPRCompliance';
-import AITravelAssistant from './AITravelAssistant';
-import { AITravelDoctor } from './AITravelDoctor';
-import { AITravelLawyer } from './AITravelLawyer';
-import AITravelPlanner from './AITravelPlanner';
-import AirCharterService from './AirCharterService';
-import { TaxAdvisors } from './TaxAdvisors';
 import FloatingActionButton from './FloatingActionButton';
-import DashboardQuickStats from './DashboardQuickStats';
-import { EnhancedDashboard } from './EnhancedDashboard';
-import { ESimServices } from './ESimServices';
-import { EnhancedCurrencyConverter } from './EnhancedCurrencyConverter';
-import EmbassyDirectory from './EmbassyDirectory';
-import EmergencyCardNumbers from './EmergencyCardNumbers';
-import EmergencyContacts from './EmergencyContacts';
-import SOSServices from './SOSServices';
-import SecurityDirectory from './SecurityServices/SecurityDirectory';
-import DigitalBanks from './DigitalBanks';
-import MoneyTransfers from './MoneyTransfers';
-import DigitalMoney from './DigitalMoney';
-import SimpleCurrencyConverter from './SimpleCurrencyConverter';
-import RoadsideAssistance from './RoadsideAssistance';
-import PetServices from './PetServices';
-import TaxWealthyHelp from './TaxWealthyHelp';
-import VPNEmailServices from './VPNEmailServices';
-import TravelInsurance from './TravelInsurance';
-import PublicTransport from './PublicTransport';
-import TaxiServices from './TaxiServices';
-import CarRentLease from './CarRentLease';
-import Students from './Students';
-import LocalNomads from './LocalNomads';
-import ExploreLocalLife from './ExploreLocalLife';
-import SuperOffers from './SuperOffers';
-import LocationTrackingServices from './LocationTrackingServices';
-import MedicalServices from './MedicalServices';
-import TravelLegalServices from './TravelLegalServices';
-import { VisaAssistanceServices } from './VisaAssistanceServices';
-import MyAwards from './MyAwards';
 import ErrorBoundary from './ErrorBoundary';
-import WiFiHotspotFinder from './WiFiHotspotFinder';
-import TravelWeatherDashboard from './TravelWeatherDashboard';
-import LanguageLearning from './LanguageLearning';
-import DeliveryServices from './DeliveryServices';
-import LocalServices from './LocalServices';
-import LocalNews from './LocalNews';
-import { GovernmentApps } from './GovernmentApps';
-import CyberHelplineDashboard from './CyberHelpline/CyberHelplineDashboard';
-import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
-import { SuperNomadGuardian } from './SuperNomadGuardian';
-import { ClubsDirectory } from './EliteClubs/ClubsDirectory';
-import { NannyDirectory } from './FamilyServices/NannyDirectory';
-import { NomadChatDashboard } from './CommunityChat/NomadChatDashboard';
-import MarketplaceDashboard from './Marketplace/MarketplaceDashboard';
-import PaymentOptionsDashboard from './PaymentOptions/PaymentOptionsDashboard';
-import AwardCardsDashboard from './AwardCards/AwardCardsDashboard';
-import { MovingServicesDashboard } from './MovingServices/MovingServicesDashboard';
-import { SocialDashboard } from './SocialChat/SocialDashboard';
-import HelpSupportCenter from './HelpSupportCenter';
-import ProjectInfoDashboard from './ProjectInfoDashboard';
-import WellnessDashboard from './Wellness/WellnessDashboard';
+import { CookieConsent } from './GDPRCompliance';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
 import SocialMatchNotifications from './SocialMatchNotifications';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
-import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
+import { Skeleton } from './ui/skeleton';
+
+// Lazy-loaded section components — only downloaded when the user navigates to them
+const TrackingSection = lazy(() => import('./sections/TrackingSection'));
+const EmergencySection = lazy(() => import('./sections/EmergencySection'));
+const AISection = lazy(() => import('./sections/AISection'));
+const ProfileSection = lazy(() => import('./sections/ProfileSection'));
+const SuperNomadGuardian = lazy(() => import('./SuperNomadGuardian').then(m => ({ default: m.SuperNomadGuardian })));
+const ThreatDashboard = lazy(() => import('./ThreatIntelligence/ThreatDashboard'));
+const CountryTracker = lazy(() => import('./CountryTracker'));
+const EnhancedNewsSection = lazy(() => import('./EnhancedNewsSection'));
+const TaxResidencyTracker = lazy(() => import('./TaxResidencyTracker'));
+const TaxResidencyHub = lazy(() => import('./TaxResidencyHub'));
+const VisaTrackingManager = lazy(() => import('./VisaTrackingManager'));
+const DocumentTracker = lazy(() => import('./DocumentTracker').then(m => ({ default: m.DocumentTracker })));
+const VaccinationTracker = lazy(() => import('./VaccinationTracker'));
+const SmartAlerts = lazy(() => import('./SmartAlerts').then(m => ({ default: m.SmartAlerts })));
+const TravelServices = lazy(() => import('./TravelServices'));
+const RemoteOffices = lazy(() => import('./RemoteWorkOffices/OfficeFinder'));
+const BusinessCentersPage = lazy(() => import('./BusinessCenters/BusinessCentersPage').then(m => ({ default: m.BusinessCentersPage })));
+const AirportLoungeAccess = lazy(() => import('./AirportLoungeAccess'));
+const GlobalCityServices = lazy(() => import('./GlobalCityServices'));
+const Settings = lazy(() => import('./Settings'));
+const EnhancedProfileForm = lazy(() => import('./EnhancedProfileForm'));
+const SecureDocumentVault = lazy(() => import('./SecureDocumentVault').then(m => ({ default: m.SecureDocumentVault })));
+const AITravelAssistant = lazy(() => import('./AITravelAssistant'));
+const AITravelDoctor = lazy(() => import('./AITravelDoctor').then(m => ({ default: m.AITravelDoctor })));
+const AITravelLawyer = lazy(() => import('./AITravelLawyer').then(m => ({ default: m.AITravelLawyer })));
+const AITravelPlanner = lazy(() => import('./AITravelPlanner'));
+const AirCharterService = lazy(() => import('./AirCharterService'));
+const TaxAdvisors = lazy(() => import('./TaxAdvisors').then(m => ({ default: m.TaxAdvisors })));
+const ESimServices = lazy(() => import('./ESimServices').then(m => ({ default: m.ESimServices })));
+const EnhancedCurrencyConverter = lazy(() => import('./EnhancedCurrencyConverter').then(m => ({ default: m.EnhancedCurrencyConverter })));
+const EmbassyDirectory = lazy(() => import('./EmbassyDirectory'));
+const EmergencyCardNumbers = lazy(() => import('./EmergencyCardNumbers'));
+const EmergencyContacts = lazy(() => import('./EmergencyContacts'));
+const SOSServices = lazy(() => import('./SOSServices'));
+const SecurityDirectory = lazy(() => import('./SecurityServices/SecurityDirectory'));
+const DigitalBanks = lazy(() => import('./DigitalBanks'));
+const MoneyTransfers = lazy(() => import('./MoneyTransfers'));
+const DigitalMoney = lazy(() => import('./DigitalMoney'));
+const SimpleCurrencyConverter = lazy(() => import('./SimpleCurrencyConverter'));
+const RoadsideAssistance = lazy(() => import('./RoadsideAssistance'));
+const PetServices = lazy(() => import('./PetServices'));
+const TaxWealthyHelp = lazy(() => import('./TaxWealthyHelp'));
+const VPNEmailServices = lazy(() => import('./VPNEmailServices'));
+const TravelInsurance = lazy(() => import('./TravelInsurance'));
+const PublicTransport = lazy(() => import('./PublicTransport'));
+const TaxiServices = lazy(() => import('./TaxiServices'));
+const CarRentLease = lazy(() => import('./CarRentLease'));
+const Students = lazy(() => import('./Students'));
+const LocalNomads = lazy(() => import('./LocalNomads'));
+const ExploreLocalLife = lazy(() => import('./ExploreLocalLife'));
+const SuperOffers = lazy(() => import('./SuperOffers'));
+const LocationTrackingServices = lazy(() => import('./LocationTrackingServices'));
+const MedicalServices = lazy(() => import('./MedicalServices'));
+const TravelLegalServices = lazy(() => import('./TravelLegalServices'));
+const VisaAssistanceServices = lazy(() => import('./VisaAssistanceServices').then(m => ({ default: m.VisaAssistanceServices })));
+const MyAwards = lazy(() => import('./MyAwards'));
+const WiFiHotspotFinder = lazy(() => import('./WiFiHotspotFinder'));
+const TravelWeatherDashboard = lazy(() => import('./TravelWeatherDashboard'));
+const LanguageLearning = lazy(() => import('./LanguageLearning'));
+const DeliveryServices = lazy(() => import('./DeliveryServices'));
+const LocalServices = lazy(() => import('./LocalServices'));
+const LocalNews = lazy(() => import('./LocalNews'));
+const GovernmentApps = lazy(() => import('./GovernmentApps').then(m => ({ default: m.GovernmentApps })));
+const CyberHelplineDashboard = lazy(() => import('./CyberHelpline/CyberHelplineDashboard'));
+const ClubsDirectory = lazy(() => import('./EliteClubs/ClubsDirectory').then(m => ({ default: m.ClubsDirectory })));
+const NannyDirectory = lazy(() => import('./FamilyServices/NannyDirectory').then(m => ({ default: m.NannyDirectory })));
+const NomadChatDashboard = lazy(() => import('./CommunityChat/NomadChatDashboard').then(m => ({ default: m.NomadChatDashboard })));
+const MarketplaceDashboard = lazy(() => import('./Marketplace/MarketplaceDashboard'));
+const PaymentOptionsDashboard = lazy(() => import('./PaymentOptions/PaymentOptionsDashboard'));
+const AwardCardsDashboard = lazy(() => import('./AwardCards/AwardCardsDashboard'));
+const MovingServicesDashboard = lazy(() => import('./MovingServices/MovingServicesDashboard').then(m => ({ default: m.MovingServicesDashboard })));
+const SocialDashboard = lazy(() => import('./SocialChat/SocialDashboard').then(m => ({ default: m.SocialDashboard })));
+const HelpSupportCenter = lazy(() => import('./HelpSupportCenter'));
+const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
+const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
+
+// Loading fallback for lazy sections
+const SectionLoader = () => (
+  <div className="space-y-4 p-4">
+    <Skeleton className="h-8 w-48" />
+    <Skeleton className="h-32 w-full" />
+    <Skeleton className="h-32 w-full" />
+  </div>
+);
 
 interface AppLayoutProps {
   countries: Country[];
@@ -135,22 +144,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
 
-  // Voice control navigation callbacks
-  const handleVoiceNavigate = useCallback((section: string) => {
-    setActiveSection(section);
-    setBottomNavTab('home');
-    setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  const handleVoiceTabChange = useCallback((tab: string) => {
-    setBottomNavTab(tab);
-    setActiveSection('dashboard');
-    setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  // Return to dashboard when home event is triggered (e.g., clicking logo)
+  // Return to dashboard when home event is triggered
   useEffect(() => {
     const goHome = () => {
       setBottomNavTab('home');
@@ -161,10 +155,25 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     return () => window.removeEventListener('supernomad:home', goHome);
   }, []);
 
-  const handleDismissBanner = () => {
+  const handleDismissBanner = useCallback(() => {
     setUpgradeBannerDismissed(true);
     localStorage.setItem('upgradeBannerDismissed', 'true');
-  };
+  }, []);
+
+  const openUpgradeModal = useCallback(() => setShowUpgradeModal(true), []);
+  const openProfileForm = useCallback(() => setShowProfileForm(true), []);
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+
+  const handleSectionChange = useCallback((section: string) => {
+    setActiveSection(section);
+    setBottomNavTab('home');
+  }, []);
+
+  const handleBottomNavChange = useCallback((tab: string) => {
+    setBottomNavTab(tab);
+    setActiveSection('dashboard');
+    setSidebarOpen(false);
+  }, []);
 
   const renderBottomNavContent = () => {
     switch (bottomNavTab) {
@@ -179,8 +188,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             {!upgradeBannerDismissed && (
               <UpgradeBanner 
                 subscription={subscription}
-                onUpgradeClick={() => setShowUpgradeModal(true)}
-                onProfileFormClick={() => setShowProfileForm(true)}
+                onUpgradeClick={openUpgradeModal}
+                onProfileFormClick={openProfileForm}
                 onDismiss={handleDismissBanner}
               />
             )}
@@ -189,36 +198,46 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       case 'tracking':
         return (
-          <TrackingSection
-            countries={countries}
-            onAddCountry={onAddCountry}
-            onRemoveCountry={onRemoveCountry}
-            onUpdateCountrySettings={onUpdateCountrySettings}
-            onUpdateCountryLimit={onUpdateCountryLimit}
-            onResetCountry={onResetCountry}
-            onToggleCountDays={onToggleCountDays}
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
+          <Suspense fallback={<SectionLoader />}>
+            <TrackingSection
+              countries={countries}
+              onAddCountry={onAddCountry}
+              onRemoveCountry={onRemoveCountry}
+              onUpdateCountrySettings={onUpdateCountrySettings}
+              onUpdateCountryLimit={onUpdateCountryLimit}
+              onResetCountry={onResetCountry}
+              onToggleCountDays={onToggleCountDays}
+              subscription={subscription}
+              onUpgradeClick={openUpgradeModal}
+            />
+          </Suspense>
         );
       
       case 'emergency':
-        return <EmergencySection />;
+        return (
+          <Suspense fallback={<SectionLoader />}>
+            <EmergencySection />
+          </Suspense>
+        );
       
       case 'ai':
         return (
-          <AISection 
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
+          <Suspense fallback={<SectionLoader />}>
+            <AISection 
+              subscription={subscription}
+              onUpgradeClick={openUpgradeModal}
+            />
+          </Suspense>
         );
       
       case 'profile':
         return (
-          <ProfileSection
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
+          <Suspense fallback={<SectionLoader />}>
+            <ProfileSection
+              subscription={subscription}
+              onUpgradeClick={openUpgradeModal}
+            />
+          </Suspense>
         );
       
       default:
@@ -232,174 +251,45 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       return renderBottomNavContent();
     }
 
-    // For desktop sidebar navigation
+    // All sidebar sections are wrapped in Suspense
+    return (
+      <Suspense fallback={<SectionLoader />}>
+        {renderSidebarSection()}
+      </Suspense>
+    );
+  };
+
+  const renderSidebarSection = () => {
     switch (activeSection) {
-      case 'guardian':
-        return <SuperNomadGuardian />;
-      case 'threats':
-        return <ThreatDashboard />;
-      case 'dashboard':
-        return renderBottomNavContent();
-      
+      case 'guardian': return <SuperNomadGuardian />;
+      case 'threats': return <ThreatDashboard />;
+      case 'dashboard': return renderBottomNavContent();
       case 'tax':
         return (
           <TaxResidencyTracker 
-            countries={countries}
-            onAddCountry={onAddCountry}
-            onRemoveCountry={onRemoveCountry}
-            onUpdateCountrySettings={onUpdateCountrySettings}
-            onUpdateCountryLimit={onUpdateCountryLimit}
-            onResetCountry={onResetCountry}
-            onToggleCountDays={onToggleCountDays}
-            currentLocation={detectedLocation}
+            countries={countries} onAddCountry={onAddCountry} onRemoveCountry={onRemoveCountry}
+            onUpdateCountrySettings={onUpdateCountrySettings} onUpdateCountryLimit={onUpdateCountryLimit}
+            onResetCountry={onResetCountry} onToggleCountDays={onToggleCountDays} currentLocation={detectedLocation}
           />
         );
-      
       case 'tax-residency':
         return (
           <TaxResidencyHub 
-            countries={countries}
-            onAddCountry={onAddCountry}
-            onRemoveCountry={onRemoveCountry}
-            onUpdateCountrySettings={onUpdateCountrySettings}
-            onUpdateCountryLimit={onUpdateCountryLimit}
-            onResetCountry={onResetCountry}
-            onToggleCountDays={onToggleCountDays}
-            currentLocation={detectedLocation}
+            countries={countries} onAddCountry={onAddCountry} onRemoveCountry={onRemoveCountry}
+            onUpdateCountrySettings={onUpdateCountrySettings} onUpdateCountryLimit={onUpdateCountryLimit}
+            onResetCountry={onResetCountry} onToggleCountDays={onToggleCountDays} currentLocation={detectedLocation}
           />
         );
-      
-      case 'gov-apps':
-        return <GovernmentApps />;
-      
-      case 'tax-wealthy':
-        return <TaxWealthyHelp currentLocation={detectedLocation} />;
-      
-      case 'visas':
-        return <VisaTrackingManager subscription={subscription} countries={countries} />;
-      
-      case 'payment-options':
-        return <PaymentOptionsDashboard />;
-      
-      case 'award-cards':
-        return <AwardCardsDashboard />;
-      
-      case 'public-transport':
-        return <PublicTransport currentLocation={detectedLocation} />;
-      
-      case 'taxis':
-        return <TaxiServices currentLocation={detectedLocation} />;
-      
-      case 'car-rent-lease':
-        return <CarRentLease />;
-      
-      case 'delivery-services':
-        return <DeliveryServices currentLocation={detectedLocation} />;
-      
+      case 'gov-apps': return <GovernmentApps />;
+      case 'tax-wealthy': return <TaxWealthyHelp currentLocation={detectedLocation} />;
+      case 'visas': return <VisaTrackingManager subscription={subscription} countries={countries} />;
+      case 'payment-options': return <PaymentOptionsDashboard />;
+      case 'award-cards': return <AwardCardsDashboard />;
+      case 'public-transport': return <PublicTransport currentLocation={detectedLocation} />;
+      case 'taxis': return <TaxiServices currentLocation={detectedLocation} />;
+      case 'car-rent-lease': return <CarRentLease />;
+      case 'delivery-services': return <DeliveryServices currentLocation={detectedLocation} />;
       case 'documents':
-        return (
-          <div className="space-y-6">
-            <DocumentTracker />
-            <SecureDocumentVault />
-          </div>
-        );
-      
-      case 'vpn-email':
-        return <VPNEmailServices />;
-      
-      case 'travel-insurance':
-        return <TravelInsurance />;
-      
-      case 'health':
-        return (
-          <VaccinationTracker 
-            currentLocation={detectedLocation} 
-            trackedCountries={countries}
-          />
-        );
-      
-      case 'pet-services':
-        return <PetServices currentLocation={detectedLocation} />;
-      
-      case 'marketplace':
-        return <MarketplaceDashboard />;
-      
-      case 'explore-local-life':
-        return <ExploreLocalLife currentLocation={detectedLocation} />;
-      
-      case 'moving-services':
-        return <MovingServicesDashboard />;
-      
-      case 'social-chat':
-        return <SocialDashboard />;
-      
-      case 'nomad-chat':
-        return <NomadChatDashboard />;
-      
-      case 'news':
-        return <EnhancedNewsSection />;
-      
-      case 'alerts':
-        return <SmartAlerts />;
-      
-      case 'super-offers':
-        return (
-          <SuperOffers 
-            currentLocation={detectedLocation}
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-            onProfileFormClick={() => setShowProfileForm(true)}
-          />
-        );
-      
-      case 'location-tracking':
-        return <LocationTrackingServices />;
-      
-      case 'services':
-        return <TravelServices currentLocation={detectedLocation} />;
-      
-      case 'remote-offices':
-        return <RemoteOffices />;
-      
-      case 'business-centers':
-        return <BusinessCentersPage />;
-      
-      case 'airport-lounges':
-        return <AirportLoungeAccess currentLocation={detectedLocation} />;
-      
-      case 'private-clubs':
-        return <ClubsDirectory />;
-      
-      case 'family-services':
-        return <NannyDirectory />;
-      
-      case 'global-city-services':
-        return <GlobalCityServices />;
-      
-      case 'my-travel-awards':
-        return <MyAwards />;
-      
-      case 'esim':
-        return <ESimServices />;
-      
-      case 'embassy':
-        return <EmbassyDirectory />;
-      
-      case 'currency':
-        return <EnhancedCurrencyConverter />;
-      
-      case 'emergency-cards':
-        return <EmergencyCardNumbers />;
-      
-      case 'sos-services':
-        return <SOSServices />;
-      
-      case 'private-protection':
-        return <SecurityDirectory />;
-      
-      case 'cyber-helpline':
-        return <CyberHelplineDashboard />;
-      
       case 'vault':
         return (
           <div className="space-y-6">
@@ -407,127 +297,91 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <SecureDocumentVault />
           </div>
         );
-      
-      case 'emergency':
-        return <EmergencyContacts />;
-      
-      case 'digital-banks':
-        return <DigitalBanks />;
-      
-      case 'money-transfers':
-        return <MoneyTransfers currentLocation={detectedLocation} />;
-      
-      case 'crypto-cash':
-        return <DigitalMoney currentLocation={detectedLocation} />;
-      
-      case 'currency-converter':
-        return <SimpleCurrencyConverter />;
-      
-      case 'roadside':
-        return <RoadsideAssistance currentLocation={detectedLocation} />;
-      
-      case 'students':
-        return <Students currentLocation={detectedLocation} />;
-      
-      case 'local-nomads':
-        return <LocalNomads currentLocation={detectedLocation} />;
-      
+      case 'vpn-email': return <VPNEmailServices />;
+      case 'travel-insurance': return <TravelInsurance />;
+      case 'health':
+        return <VaccinationTracker currentLocation={detectedLocation} trackedCountries={countries} />;
+      case 'pet-services': return <PetServices currentLocation={detectedLocation} />;
+      case 'marketplace': return <MarketplaceDashboard />;
+      case 'explore-local-life':
       case 'explore-local':
         return (
           <ErrorBoundary>
             <ExploreLocalLife currentLocation={detectedLocation} />
           </ErrorBoundary>
         );
-      
-      case 'ai-doctor':
-        return <AITravelDoctor currentLocation={detectedLocation} />;
-      
+      case 'moving-services': return <MovingServicesDashboard />;
+      case 'social-chat': return <SocialDashboard />;
+      case 'nomad-chat': return <NomadChatDashboard />;
+      case 'news': return <EnhancedNewsSection />;
+      case 'alerts': return <SmartAlerts />;
+      case 'super-offers':
+        return (
+          <SuperOffers currentLocation={detectedLocation} subscription={subscription}
+            onUpgradeClick={openUpgradeModal} onProfileFormClick={openProfileForm}
+          />
+        );
+      case 'location-tracking': return <LocationTrackingServices />;
+      case 'services': return <TravelServices currentLocation={detectedLocation} />;
+      case 'remote-offices': return <RemoteOffices />;
+      case 'business-centers': return <BusinessCentersPage />;
+      case 'airport-lounges': return <AirportLoungeAccess currentLocation={detectedLocation} />;
+      case 'private-clubs': return <ClubsDirectory />;
+      case 'family-services': return <NannyDirectory />;
+      case 'global-city-services': return <GlobalCityServices />;
+      case 'my-travel-awards': return <MyAwards />;
+      case 'esim': return <ESimServices />;
+      case 'embassy': return <EmbassyDirectory />;
+      case 'currency': return <EnhancedCurrencyConverter />;
+      case 'emergency-cards': return <EmergencyCardNumbers />;
+      case 'sos-services': return <SOSServices />;
+      case 'private-protection': return <SecurityDirectory />;
+      case 'cyber-helpline': return <CyberHelplineDashboard />;
+      case 'emergency': return <EmergencyContacts />;
+      case 'digital-banks': return <DigitalBanks />;
+      case 'money-transfers': return <MoneyTransfers currentLocation={detectedLocation} />;
+      case 'crypto-cash': return <DigitalMoney currentLocation={detectedLocation} />;
+      case 'currency-converter': return <SimpleCurrencyConverter />;
+      case 'roadside': return <RoadsideAssistance currentLocation={detectedLocation} />;
+      case 'students': return <Students currentLocation={detectedLocation} />;
+      case 'local-nomads': return <LocalNomads currentLocation={detectedLocation} />;
+      case 'ai-doctor': return <AITravelDoctor currentLocation={detectedLocation} />;
       case 'ai-lawyer':
-        return <AITravelLawyer currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={() => setShowUpgradeModal(true)} />;
-      
-      case 'ai-planner':
-        return <AITravelPlanner />;
-      
-      case 'air-charter':
-        return <AirCharterService />;
-      
+        return <AITravelLawyer currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={openUpgradeModal} />;
+      case 'ai-planner': return <AITravelPlanner />;
+      case 'air-charter': return <AirCharterService />;
       case 'medical-services':
-        return (
-          <MedicalServices
-            currentLocation={detectedLocation}
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
-        );
-      
+        return <MedicalServices currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={openUpgradeModal} />;
       case 'travel-lawyers':
-        return (
-          <TravelLegalServices 
-            currentLocation={detectedLocation}
-            subscription={subscription}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
-        );
-      
-      case 'tax-advisors':
-        return <TaxAdvisors />;
-      
+        return <TravelLegalServices currentLocation={detectedLocation} subscription={subscription} onUpgradeClick={openUpgradeModal} />;
+      case 'tax-advisors': return <TaxAdvisors />;
       case 'visa-assistance':
-        return (
-          <VisaAssistanceServices 
-            currentLocation={detectedLocation}
-            subscription={subscription}
-          />
-        );
-      
+        return <VisaAssistanceServices currentLocation={detectedLocation} subscription={subscription} />;
       case 'wifi-finder':
-        return (
-          <WiFiHotspotFinder
-            subscription={subscription}
-            currentLocation={detectedLocation}
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-          />
-        );
-      
-      case 'weather':
-        return <TravelWeatherDashboard />;
-      
+        return <WiFiHotspotFinder subscription={subscription} currentLocation={detectedLocation} onUpgradeClick={openUpgradeModal} />;
+      case 'weather': return <TravelWeatherDashboard />;
       case 'language-learning':
         return (
           <ErrorBoundary>
             <LanguageLearning currentLocation={detectedLocation} />
           </ErrorBoundary>
         );
-      
       case 'local-services':
         return (
           <ErrorBoundary>
             <LocalServices />
           </ErrorBoundary>
         );
-      
       case 'local-news':
         return (
           <ErrorBoundary>
             <LocalNews />
           </ErrorBoundary>
         );
-      
       case 'settings':
-        return (
-          <Settings 
-            subscription={subscription} 
-            onUpgradeClick={() => setShowUpgradeModal(true)}
-            onProfileComplete={onProfileComplete}
-          />
-        );
-      
-      case 'help':
-        return <HelpSupportCenter />;
-      
-      case 'wellness':
-        return <WellnessDashboard />;
-      
+        return <Settings subscription={subscription} onUpgradeClick={openUpgradeModal} onProfileComplete={onProfileComplete} />;
+      case 'help': return <HelpSupportCenter />;
+      case 'wellness': return <WellnessDashboard />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
@@ -538,36 +392,32 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   };
 
   return (
-    <VoiceControlProvider onNavigate={handleVoiceNavigate} onTabChange={handleVoiceTabChange}>
     <div className="min-h-screen bg-background">
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
         subscription={subscription}
-        onUpgradeClick={() => setShowUpgradeModal(true)}
+        onUpgradeClick={openUpgradeModal}
         countries={countries}
         onNavigateToSettings={() => {
           setActiveSection('settings');
-          setSidebarOpen(false);
+          closeSidebar();
         }}
         onNavigateToTax={() => {
           setActiveSection('tax-residency');
           setBottomNavTab('tracking');
-          setSidebarOpen(false);
+          closeSidebar();
         }}
       />
       
       <div className="flex">
         <AppSidebar 
           activeSection={activeSection}
-          onSectionChange={(section) => {
-            setActiveSection(section);
-            setBottomNavTab('home');
-          }}
+          onSectionChange={handleSectionChange}
           isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
+          onClose={closeSidebar}
           subscription={subscription}
-          onUpgradeClick={() => setShowUpgradeModal(true)}
+          onUpgradeClick={openUpgradeModal}
         />
         
           <main className="flex-1 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
@@ -599,11 +449,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       {/* Bottom Navigation - Mobile Only */}
       <BottomNavigation 
         activeTab={bottomNavTab}
-        onTabChange={(tab) => {
-          setBottomNavTab(tab);
-          setActiveSection('dashboard');
-          setSidebarOpen(false);
-        }}
+        onTabChange={handleBottomNavChange}
       />
       
       {/* Floating Action Button */}
@@ -622,13 +468,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       />
       
       {/* AI Travel Assistant */}
-      <AITravelAssistant 
-        currentLocation={detectedLocation ? { 
-          country: detectedLocation.country, 
-          city: detectedLocation.city 
-        } : undefined}
-        citizenship={userProfile?.citizenship}
-      />
+      <Suspense fallback={null}>
+        <AITravelAssistant 
+          currentLocation={detectedLocation ? { 
+            country: detectedLocation.country, 
+            city: detectedLocation.city 
+          } : undefined}
+          citizenship={userProfile?.citizenship}
+        />
+      </Suspense>
 
       {/* Upgrade Modal */}
       {onUpgrade && (
@@ -642,16 +490,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
       {/* Enhanced Profile Form */}
       {showProfileForm && onProfileComplete && (
-        <EnhancedProfileForm 
-          onComplete={(data) => {
-            onProfileComplete(data);
-            setShowProfileForm(false);
-          }}
-          onSkip={() => setShowProfileForm(false)}
-        />
+        <Suspense fallback={<SectionLoader />}>
+          <EnhancedProfileForm 
+            onComplete={(data) => {
+              onProfileComplete(data);
+              setShowProfileForm(false);
+            }}
+            onSkip={() => setShowProfileForm(false)}
+          />
+        </Suspense>
       )}
     </div>
-    </VoiceControlProvider>
   );
 };
 
