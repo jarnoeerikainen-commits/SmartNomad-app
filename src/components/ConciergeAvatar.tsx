@@ -245,10 +245,10 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
   const jawClipTop = 72;
 
   // Mouth geometry
-  const mouthW = 22 + mo * 16;
-  const mouthH = Math.max(0.5, mo * 18);
-  const teethH = mo > 0.22 ? Math.min(mouthH * 0.42, 7) : 0;
-  const tongueVisible = mo > 0.38;
+  const mouthW = 24 + mo * 18;
+  const mouthH = Math.max(0.8, mo * 22);
+  const teethH = mo > 0.18 ? Math.min(mouthH * 0.45, 9) : 0;
+  const tongueVisible = mo > 0.32;
   const lipPurseScale = 1 - a.lipPurse * 0.15;
 
   // Skin tone for overlays
