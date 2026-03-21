@@ -125,24 +125,26 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
 
     if (isSpeaking) {
       if (externalMouth !== undefined) {
-        const analyzerDriven = clamp(a.targetMouth * 1.24, 0, 1);
-        const targetMouth = Math.max(analyzerDriven, liveCadence, visemeHint);
-        const speed = targetMouth > a.mouth ? 24 : 14;
+        const analyzerDriven = clamp(a.targetMouth * 1.6, 0, 1);
+        const targetMouth = Math.max(analyzerDriven, liveCadence * 1.3, visemeHint * 1.2);
+        const speed = targetMouth > a.mouth ? 32 : 18;
         a.mouth = lerp(a.mouth, targetMouth, 1 - Math.exp(-speed * 0.016));
       } else {
         if (now > nextMouthChange.current) {
           const syllableType = Math.random();
-          if (syllableType > 0.15) {
-            intMouthTarget.current = 0.14 + Math.random() * 0.82;
-            nextMouthChange.current = now + 45 + Math.random() * 100;
+          if (syllableType > 0.12) {
+            intMouthTarget.current = 0.2 + Math.random() * 0.78;
+            nextMouthChange.current = now + 40 + Math.random() * 90;
           } else {
-            intMouthTarget.current = Math.random() * 0.08;
-            nextMouthChange.current = now + 28 + Math.random() * 50;
+            intMouthTarget.current = Math.random() * 0.1;
+            nextMouthChange.current = now + 25 + Math.random() * 45;
           }
         }
-        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-27 * 0.016));
-        a.mouth = Math.max(intMouth.current, liveCadence, visemeHint);
+        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-30 * 0.016));
+        a.mouth = Math.max(intMouth.current, liveCadence * 1.3, visemeHint * 1.2);
       }
+      // Ensure mouth never stays completely flat while speaking
+      if (a.mouth < 0.06) a.mouth = 0.06 + Math.random() * 0.08;
     } else {
       a.mouth = lerp(a.mouth, 0, 1 - Math.exp(-10 * 0.016));
     }
