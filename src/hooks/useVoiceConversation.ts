@@ -103,15 +103,13 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   }, []);
 
   const clearSpeechState = useCallback((onComplete?: () => void) => {
-    stopAudioAnalysis();
     stopWordAnimation();
     stopFallbackMouthAnimation();
-    cleanupAudioElement();
     setIsSpeaking(false);
     setSpokenText('');
     setMouthOpenness(0);
     onComplete?.();
-  }, [cleanupAudioElement, stopAudioAnalysis, stopFallbackMouthAnimation, stopWordAnimation]);
+  }, [stopFallbackMouthAnimation, stopWordAnimation]);
 
   const setLanguage = useCallback((lang: string) => {
     langRef.current = lang;
