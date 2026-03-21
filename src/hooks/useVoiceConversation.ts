@@ -368,22 +368,48 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       const audio = new Audio(audioUrl);
       const estimatedDuration = estimateSpeechDurationMs(clean);
       let hasStarted = false;
+      let analyzerWorking = false;
 
       audioRef.current = audio;
       audioUrlRef.current = audioUrl;
       audio.preload = 'auto';
-      audio.crossOrigin = 'anonymous';
-      
+      // DO NOT set crossOrigin on blob URLs — it causes MediaElementSource to produce silence
 
       const beginPlayback = async () => {
         if (hasStarted) return;
         hasStarted = true;
         setIsSpeaking(true);
 
-        analyzerRef.current = createSpeechAnalyzer(audio, (level) => {
-          setMouthOpenness((prev) => (level > prev ? level : prev * 0.78));
-        });
-        await analyzerRef.current.resume();
+        try {
+          analyzerRef.current = createSpeechAnalyzer(audio, (level) => {
+            if (level > 0.01) analyzerWorking = true;
+            setMouthOpenness((prev) => {
+              const next = level > prev ? level : prev * 0.65;
+              return next < 0.015 ? 0 : next;
+            });
+          });
+          await analyzerRef.current.resume();
+        } catch (e) {
+          console.warn('[Voice] Audio analyzer failed, using fallback mouth animation');
+        }
+
+        // Start a fallback mouth animation that kicks in if analyzer produces no data
+        setTimeout(() => {
+          if (!analyzerWorking && audioRef.current) {
+            console.log('[Voice] Analyzer not producing data, activating fallback mouth');
+            stopFallbackMouthAnimation();
+            mouthFallbackIntervalRef.current = setInterval(() => {
+              if (!audioRef.current) return;
+              const word = currentWord;
+              const shape = word ? getWordShapeLevel(word) : 0.25 + Math.random() * 0.45;
+              const pulse = shape * (0.6 + Math.random() * 0.4);
+              setMouthOpenness((prev) => {
+                if (pulse > prev) return pulse;
+                return prev * 0.55 + pulse * 0.45;
+              });
+            }, 50);
+          }
+        }, 300);
 
         startTimedWordAnimation(clean, () => {
           const durationMs = Number.isFinite(audio.duration) && audio.duration > 0
@@ -398,11 +424,13 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       };
 
       audio.onended = () => {
+        stopFallbackMouthAnimation();
         clearSpeechState(onComplete);
       };
 
       audio.onerror = () => {
         console.error('[Voice] Audio playback error, falling back to browser TTS');
+        stopFallbackMouthAnimation();
         clearSpeechState();
         fallbackBrowserTTS(clean, onComplete);
       };

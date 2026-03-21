@@ -125,31 +125,33 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
 
     if (isSpeaking) {
       if (externalMouth !== undefined) {
-        const analyzerDriven = clamp(a.targetMouth * 1.24, 0, 1);
-        const targetMouth = Math.max(analyzerDriven, liveCadence, visemeHint);
-        const speed = targetMouth > a.mouth ? 24 : 14;
+        const analyzerDriven = clamp(a.targetMouth * 1.6, 0, 1);
+        const targetMouth = Math.max(analyzerDriven, liveCadence * 1.3, visemeHint * 1.2);
+        const speed = targetMouth > a.mouth ? 32 : 18;
         a.mouth = lerp(a.mouth, targetMouth, 1 - Math.exp(-speed * 0.016));
       } else {
         if (now > nextMouthChange.current) {
           const syllableType = Math.random();
-          if (syllableType > 0.15) {
-            intMouthTarget.current = 0.14 + Math.random() * 0.82;
-            nextMouthChange.current = now + 45 + Math.random() * 100;
+          if (syllableType > 0.12) {
+            intMouthTarget.current = 0.2 + Math.random() * 0.78;
+            nextMouthChange.current = now + 40 + Math.random() * 90;
           } else {
-            intMouthTarget.current = Math.random() * 0.08;
-            nextMouthChange.current = now + 28 + Math.random() * 50;
+            intMouthTarget.current = Math.random() * 0.1;
+            nextMouthChange.current = now + 25 + Math.random() * 45;
           }
         }
-        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-27 * 0.016));
-        a.mouth = Math.max(intMouth.current, liveCadence, visemeHint);
+        intMouth.current = lerp(intMouth.current, intMouthTarget.current, 1 - Math.exp(-30 * 0.016));
+        a.mouth = Math.max(intMouth.current, liveCadence * 1.3, visemeHint * 1.2);
       }
+      // Ensure mouth never stays completely flat while speaking
+      if (a.mouth < 0.06) a.mouth = 0.06 + Math.random() * 0.08;
     } else {
       a.mouth = lerp(a.mouth, 0, 1 - Math.exp(-10 * 0.016));
     }
 
     const speechPresence = Math.max(a.mouth, liveCadence, visemeHint * 0.95);
 
-    const maxJaw = dim > 120 ? 7 : dim > 80 ? 4.8 : 2.8;
+    const maxJaw = dim > 120 ? 10 : dim > 80 ? 7 : 4;
     a.jawY = speechPresence * maxJaw;
 
     a.cheekTension = lerp(a.cheekTension, speechPresence > 0.26 ? speechPresence * 0.72 : 0, 0.14);
@@ -206,17 +208,17 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     const breathY = Math.sin(a.breathPhase) * 0.6;
 
     // --- HEAD MOVEMENT (organic noise-based) ---
-    const headIntensity = isSpeaking ? 1.8 : 0.7;
-    const targetTiltX = smoothNoise(elapsed * 0.4, 1) * 1.2 * headIntensity;
-    const targetTiltY = smoothNoise(elapsed * 0.35, 2) * 0.8 * headIntensity +
-      (isSpeaking && speechPresence > 0.45 ? 0.6 : 0); // nod on emphasis
-    const targetShiftX = smoothNoise(elapsed * 0.25, 3) * 0.5 * headIntensity;
-    const targetShiftY = smoothNoise(elapsed * 0.3, 4) * 0.4 * headIntensity + breathY;
+    const headIntensity = isSpeaking ? 2.5 : 0.7;
+    const targetTiltX = smoothNoise(elapsed * 0.5, 1) * 1.6 * headIntensity;
+    const targetTiltY = smoothNoise(elapsed * 0.4, 2) * 1.1 * headIntensity +
+      (isSpeaking && speechPresence > 0.35 ? 1.0 : 0); // stronger nod on emphasis
+    const targetShiftX = smoothNoise(elapsed * 0.3, 3) * 0.7 * headIntensity;
+    const targetShiftY = smoothNoise(elapsed * 0.35, 4) * 0.6 * headIntensity + breathY;
 
-    a.headTiltX = lerp(a.headTiltX, targetTiltX, 0.04);
-    a.headTiltY = lerp(a.headTiltY, targetTiltY, 0.04);
-    a.headShiftX = lerp(a.headShiftX, targetShiftX, 0.04);
-    a.headShiftY = lerp(a.headShiftY, targetShiftY, 0.04);
+    a.headTiltX = lerp(a.headTiltX, targetTiltX, 0.06);
+    a.headTiltY = lerp(a.headTiltY, targetTiltY, 0.06);
+    a.headShiftX = lerp(a.headShiftX, targetShiftX, 0.06);
+    a.headShiftY = lerp(a.headShiftY, targetShiftY, 0.06);
 
     // --- GAZE ---
     const gazeTargetX = smoothNoise(elapsed * 0.2, 6) * 1.0;
@@ -243,10 +245,10 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
   const jawClipTop = 72;
 
   // Mouth geometry
-  const mouthW = 22 + mo * 16;
-  const mouthH = Math.max(0.5, mo * 18);
-  const teethH = mo > 0.22 ? Math.min(mouthH * 0.42, 7) : 0;
-  const tongueVisible = mo > 0.38;
+  const mouthW = 24 + mo * 18;
+  const mouthH = Math.max(0.8, mo * 22);
+  const teethH = mo > 0.18 ? Math.min(mouthH * 0.45, 9) : 0;
+  const tongueVisible = mo > 0.32;
   const lipPurseScale = 1 - a.lipPurse * 0.15;
 
   // Skin tone for overlays
