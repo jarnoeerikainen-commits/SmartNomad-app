@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, TrendingUp, Clock, DollarSign, MapPin } from 'lucide-react';
+import { Plus, Search, Filter, TrendingUp, Clock, Euro, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -79,7 +79,7 @@ const MarketplaceDashboard = () => {
                 <p className="text-sm text-muted-foreground">Avg Price</p>
                 <p className="text-2xl font-bold">€{stats.avgPrice}</p>
               </div>
-              <DollarSign className="h-8 w-8 text-primary opacity-50" />
+              <Euro className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
