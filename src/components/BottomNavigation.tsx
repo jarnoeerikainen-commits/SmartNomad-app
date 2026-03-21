@@ -59,6 +59,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTa
       </div>
     </nav>
   );
-};
+});
+
+BottomNavigation.displayName = 'BottomNavigation';
 
 export default BottomNavigation;
