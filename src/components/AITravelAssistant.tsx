@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
+import ConciergeVideoPlayer from './ConciergeVideoPlayer';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
@@ -14,6 +15,7 @@ import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
+import { findBestClip, type LipsyncClip } from '@/data/lipsyncLibrary';
 
 interface Message {
   id: string;
