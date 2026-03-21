@@ -208,12 +208,12 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     const breathY = Math.sin(a.breathPhase) * 0.6;
 
     // --- HEAD MOVEMENT (organic noise-based) ---
-    const headIntensity = isSpeaking ? 1.8 : 0.7;
-    const targetTiltX = smoothNoise(elapsed * 0.4, 1) * 1.2 * headIntensity;
-    const targetTiltY = smoothNoise(elapsed * 0.35, 2) * 0.8 * headIntensity +
-      (isSpeaking && speechPresence > 0.45 ? 0.6 : 0); // nod on emphasis
-    const targetShiftX = smoothNoise(elapsed * 0.25, 3) * 0.5 * headIntensity;
-    const targetShiftY = smoothNoise(elapsed * 0.3, 4) * 0.4 * headIntensity + breathY;
+    const headIntensity = isSpeaking ? 2.5 : 0.7;
+    const targetTiltX = smoothNoise(elapsed * 0.5, 1) * 1.6 * headIntensity;
+    const targetTiltY = smoothNoise(elapsed * 0.4, 2) * 1.1 * headIntensity +
+      (isSpeaking && speechPresence > 0.35 ? 1.0 : 0); // stronger nod on emphasis
+    const targetShiftX = smoothNoise(elapsed * 0.3, 3) * 0.7 * headIntensity;
+    const targetShiftY = smoothNoise(elapsed * 0.35, 4) * 0.6 * headIntensity + breathY;
 
     a.headTiltX = lerp(a.headTiltX, targetTiltX, 0.04);
     a.headTiltY = lerp(a.headTiltY, targetTiltY, 0.04);
