@@ -330,6 +330,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       let textBuffer = '';
       let streamDone = false;
       let assistantContent = '';
+      let firstSentenceSpoken = false;
 
       const assistantId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
@@ -369,6 +370,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   ? { ...m, content: assistantContent }
                   : m
               ));
+
+              // Early TTS: speak first sentence as soon as it's complete
+              if (voiceEnabled && !firstSentenceSpoken) {
+                const sentenceEnd = assistantContent.search(/[.!?]\s/);
+                if (sentenceEnd > 20) {
+                  firstSentenceSpoken = true;
+                  const firstSentence = assistantContent.slice(0, sentenceEnd + 1);
+                  speak(firstSentence);
+                }
+              }
             }
           } catch {
             textBuffer = line + '\n' + textBuffer;
