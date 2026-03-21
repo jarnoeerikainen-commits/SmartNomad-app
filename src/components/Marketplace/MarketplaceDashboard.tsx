@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, TrendingUp, Clock, Euro, MapPin } from 'lucide-react';
+import { Plus, Search, Filter, TrendingUp, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -59,7 +59,7 @@ const MarketplaceDashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="gradient-card-subtle">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -68,18 +68,6 @@ const MarketplaceDashboard = () => {
                 <p className="text-2xl font-bold">{stats.totalItems}</p>
               </div>
               <TrendingUp className="h-8 w-8 text-primary opacity-50" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="gradient-card-subtle">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Avg Price</p>
-                <p className="text-2xl font-bold">€{stats.avgPrice}</p>
-              </div>
-              <Euro className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
