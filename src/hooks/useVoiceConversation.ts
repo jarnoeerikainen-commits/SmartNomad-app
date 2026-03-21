@@ -327,7 +327,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     window.speechSynthesis.speak(utterance);
   }, [clearSpeechState, currentWord, stopFallbackMouthAnimation, stopWordAnimation]);
 
-  const speak = useCallback(async (text: string, onComplete?: () => void) => {
+  const speak = useCallback((text: string, onComplete?: () => void) => {
     if (!voiceEnabled) {
       onComplete?.();
       return;
@@ -343,106 +343,9 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     clearSpeechState();
     setSpokenText(clean);
 
-    try {
-      const gender = voiceGenderRef.current;
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ text: clean, gender }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`TTS request failed: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      if (!audioBlob.size) {
-        throw new Error('TTS returned empty audio');
-      }
-
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      const estimatedDuration = estimateSpeechDurationMs(clean);
-      let hasStarted = false;
-      let analyzerWorking = false;
-
-      audioRef.current = audio;
-      audioUrlRef.current = audioUrl;
-      audio.preload = 'auto';
-      // DO NOT set crossOrigin on blob URLs — it causes MediaElementSource to produce silence
-
-      const beginPlayback = async () => {
-        if (hasStarted) return;
-        hasStarted = true;
-        setIsSpeaking(true);
-
-        try {
-          analyzerRef.current = createSpeechAnalyzer(audio, (level) => {
-            if (level > 0.01) analyzerWorking = true;
-            setMouthOpenness((prev) => {
-              const next = level > prev ? level : prev * 0.65;
-              return next < 0.015 ? 0 : next;
-            });
-          });
-          await analyzerRef.current.resume();
-        } catch (e) {
-          console.warn('[Voice] Audio analyzer failed, using fallback mouth animation');
-        }
-
-        // Start a fallback mouth animation that kicks in if analyzer produces no data
-        setTimeout(() => {
-          if (!analyzerWorking && audioRef.current) {
-            console.log('[Voice] Analyzer not producing data, activating fallback mouth');
-            stopFallbackMouthAnimation();
-            mouthFallbackIntervalRef.current = setInterval(() => {
-              if (!audioRef.current) return;
-              const word = currentWord;
-              const shape = word ? getWordShapeLevel(word) : 0.25 + Math.random() * 0.45;
-              const pulse = shape * (0.6 + Math.random() * 0.4);
-              setMouthOpenness((prev) => {
-                if (pulse > prev) return pulse;
-                return prev * 0.55 + pulse * 0.45;
-              });
-            }, 50);
-          }
-        }, 300);
-
-        startTimedWordAnimation(clean, () => {
-          const durationMs = Number.isFinite(audio.duration) && audio.duration > 0
-            ? audio.duration * 1000
-            : estimatedDuration;
-          return durationMs > 0 ? (audio.currentTime * 1000) / durationMs : 0;
-        });
-      };
-
-      audio.onplaying = () => {
-        void beginPlayback();
-      };
-
-      audio.onended = () => {
-        stopFallbackMouthAnimation();
-        clearSpeechState(onComplete);
-      };
-
-      audio.onerror = () => {
-        console.error('[Voice] Audio playback error, falling back to browser TTS');
-        stopFallbackMouthAnimation();
-        clearSpeechState();
-        fallbackBrowserTTS(clean, onComplete);
-      };
-
-      await audio.play();
-      await beginPlayback();
-    } catch (error) {
-      console.error('[Voice] ElevenLabs TTS failed, falling back to browser TTS:', error);
-      clearSpeechState();
-      fallbackBrowserTTS(clean, onComplete);
-    }
-  }, [clearSpeechState, fallbackBrowserTTS, startTimedWordAnimation, voiceEnabled]);
+    // Use browser-native TTS with full avatar animation
+    fallbackBrowserTTS(clean, onComplete);
+  }, [clearSpeechState, fallbackBrowserTTS, voiceEnabled]);
 
   const stopSpeaking = useCallback(() => {
     speechSessionRef.current += 1;
