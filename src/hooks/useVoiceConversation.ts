@@ -1,8 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { createSpeechAnalyzer, type SpeechAnalyzerController } from './voice/audioAnalysis';
 import {
   buildSpeechWordCues,
-  estimateSpeechDurationMs,
   getWordAtCharIndex,
   sanitizeSpeechText,
 } from './voice/speechText';
