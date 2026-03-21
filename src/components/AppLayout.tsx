@@ -145,6 +145,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
 
+  // Voice control navigation callbacks
+  const handleVoiceNavigate = useCallback((section: string) => {
+    setActiveSection(section);
+    setBottomNavTab('home');
+    setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleVoiceTabChange = useCallback((tab: string) => {
+    setBottomNavTab(tab);
+    setActiveSection('dashboard');
+    setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   // Return to dashboard when home event is triggered
   useEffect(() => {
     const goHome = () => {
