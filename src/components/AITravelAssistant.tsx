@@ -15,7 +15,7 @@ import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
-import { findBestClip, type LipsyncClip } from '@/data/lipsyncLibrary';
+
 
 interface Message {
   id: string;
