@@ -430,7 +430,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             if (shouldFollowUp) setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
           });
         }
-        });
       } else if (shouldFollowUp) {
         const followUpDelay = 2000 + Math.random() * 1500;
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
