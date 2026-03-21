@@ -1,8 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { createSpeechAnalyzer, type SpeechAnalyzerController } from './voice/audioAnalysis';
 import {
   buildSpeechWordCues,
-  estimateSpeechDurationMs,
   getWordAtCharIndex,
   sanitizeSpeechText,
 } from './voice/speechText';
@@ -58,9 +56,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const recognitionRef = useRef<any>(null);
   const langRef = useRef(initialLang);
   const voiceGenderRef = useRef<'woman' | 'man'>('woman');
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioUrlRef = useRef<string | null>(null);
-  const analyzerRef = useRef<SpeechAnalyzerController | null>(null);
   const speechSessionRef = useRef(0);
   const wordFrameRef = useRef<number>(0);
   const wordIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -107,42 +102,14 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
   }, []);
 
-  const stopAudioAnalysis = useCallback(() => {
-    analyzerRef.current?.stop();
-    analyzerRef.current = null;
-    setMouthOpenness(0);
-  }, []);
-
-  const cleanupAudioElement = useCallback(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.onplaying = null;
-      audio.onended = null;
-      audio.onerror = null;
-      audio.onpause = null;
-      audio.pause();
-      audio.removeAttribute('src');
-      audio.load();
-    }
-
-    audioRef.current = null;
-
-    if (audioUrlRef.current) {
-      URL.revokeObjectURL(audioUrlRef.current);
-      audioUrlRef.current = null;
-    }
-  }, []);
-
   const clearSpeechState = useCallback((onComplete?: () => void) => {
-    stopAudioAnalysis();
     stopWordAnimation();
     stopFallbackMouthAnimation();
-    cleanupAudioElement();
     setIsSpeaking(false);
     setSpokenText('');
     setMouthOpenness(0);
     onComplete?.();
-  }, [cleanupAudioElement, stopAudioAnalysis, stopFallbackMouthAnimation, stopWordAnimation]);
+  }, [stopFallbackMouthAnimation, stopWordAnimation]);
 
   const setLanguage = useCallback((lang: string) => {
     langRef.current = lang;
@@ -152,34 +119,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     voiceGenderRef.current = gender;
   }, []);
 
-  const startTimedWordAnimation = useCallback((text: string, getProgress: () => number) => {
-    stopWordAnimation();
-
-    const cues = buildSpeechWordCues(text);
-    if (!cues.length) return;
-
-    const totalWeight = cues.reduce((sum, cue) => sum + cue.weight, 0);
-
-    const update = () => {
-      const progress = clamp(getProgress());
-      const targetWeight = progress * totalWeight;
-      let accumulated = 0;
-      let nextWord = cues[cues.length - 1].word;
-
-      for (const cue of cues) {
-        accumulated += cue.weight;
-        if (targetWeight <= accumulated) {
-          nextWord = cue.word;
-          break;
-        }
-      }
-
-      setCurrentWord(nextWord);
-      wordFrameRef.current = requestAnimationFrame(update);
-    };
-
-    wordFrameRef.current = requestAnimationFrame(update);
-  }, [stopWordAnimation]);
 
   const requestMicPermission = useCallback(async (): Promise<boolean> => {
     try {
@@ -327,7 +266,7 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     window.speechSynthesis.speak(utterance);
   }, [clearSpeechState, currentWord, stopFallbackMouthAnimation, stopWordAnimation]);
 
-  const speak = useCallback(async (text: string, onComplete?: () => void) => {
+  const speak = useCallback((text: string, onComplete?: () => void) => {
     if (!voiceEnabled) {
       onComplete?.();
       return;
@@ -343,106 +282,9 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     clearSpeechState();
     setSpokenText(clean);
 
-    try {
-      const gender = voiceGenderRef.current;
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ text: clean, gender }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`TTS request failed: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      if (!audioBlob.size) {
-        throw new Error('TTS returned empty audio');
-      }
-
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      const estimatedDuration = estimateSpeechDurationMs(clean);
-      let hasStarted = false;
-      let analyzerWorking = false;
-
-      audioRef.current = audio;
-      audioUrlRef.current = audioUrl;
-      audio.preload = 'auto';
-      // DO NOT set crossOrigin on blob URLs — it causes MediaElementSource to produce silence
-
-      const beginPlayback = async () => {
-        if (hasStarted) return;
-        hasStarted = true;
-        setIsSpeaking(true);
-
-        try {
-          analyzerRef.current = createSpeechAnalyzer(audio, (level) => {
-            if (level > 0.01) analyzerWorking = true;
-            setMouthOpenness((prev) => {
-              const next = level > prev ? level : prev * 0.65;
-              return next < 0.015 ? 0 : next;
-            });
-          });
-          await analyzerRef.current.resume();
-        } catch (e) {
-          console.warn('[Voice] Audio analyzer failed, using fallback mouth animation');
-        }
-
-        // Start a fallback mouth animation that kicks in if analyzer produces no data
-        setTimeout(() => {
-          if (!analyzerWorking && audioRef.current) {
-            console.log('[Voice] Analyzer not producing data, activating fallback mouth');
-            stopFallbackMouthAnimation();
-            mouthFallbackIntervalRef.current = setInterval(() => {
-              if (!audioRef.current) return;
-              const word = currentWord;
-              const shape = word ? getWordShapeLevel(word) : 0.25 + Math.random() * 0.45;
-              const pulse = shape * (0.6 + Math.random() * 0.4);
-              setMouthOpenness((prev) => {
-                if (pulse > prev) return pulse;
-                return prev * 0.55 + pulse * 0.45;
-              });
-            }, 50);
-          }
-        }, 300);
-
-        startTimedWordAnimation(clean, () => {
-          const durationMs = Number.isFinite(audio.duration) && audio.duration > 0
-            ? audio.duration * 1000
-            : estimatedDuration;
-          return durationMs > 0 ? (audio.currentTime * 1000) / durationMs : 0;
-        });
-      };
-
-      audio.onplaying = () => {
-        void beginPlayback();
-      };
-
-      audio.onended = () => {
-        stopFallbackMouthAnimation();
-        clearSpeechState(onComplete);
-      };
-
-      audio.onerror = () => {
-        console.error('[Voice] Audio playback error, falling back to browser TTS');
-        stopFallbackMouthAnimation();
-        clearSpeechState();
-        fallbackBrowserTTS(clean, onComplete);
-      };
-
-      await audio.play();
-      await beginPlayback();
-    } catch (error) {
-      console.error('[Voice] ElevenLabs TTS failed, falling back to browser TTS:', error);
-      clearSpeechState();
-      fallbackBrowserTTS(clean, onComplete);
-    }
-  }, [clearSpeechState, fallbackBrowserTTS, startTimedWordAnimation, voiceEnabled]);
+    // Use browser-native TTS with full avatar animation
+    fallbackBrowserTTS(clean, onComplete);
+  }, [clearSpeechState, fallbackBrowserTTS, voiceEnabled]);
 
   const stopSpeaking = useCallback(() => {
     speechSessionRef.current += 1;
