@@ -79,7 +79,7 @@ const MarketplaceDashboard = () => {
                 <p className="text-sm text-muted-foreground">Avg Price</p>
                 <p className="text-2xl font-bold">€{stats.avgPrice}</p>
               </div>
-              <DollarSign className="h-8 w-8 text-primary opacity-50" />
+              <Euro className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
