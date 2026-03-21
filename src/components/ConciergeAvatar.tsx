@@ -151,7 +151,7 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
 
     const speechPresence = Math.max(a.mouth, liveCadence, visemeHint * 0.95);
 
-    const maxJaw = dim > 120 ? 7 : dim > 80 ? 4.8 : 2.8;
+    const maxJaw = dim > 120 ? 10 : dim > 80 ? 7 : 4;
     a.jawY = speechPresence * maxJaw;
 
     a.cheekTension = lerp(a.cheekTension, speechPresence > 0.26 ? speechPresence * 0.72 : 0, 0.14);
