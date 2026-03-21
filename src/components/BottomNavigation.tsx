@@ -9,7 +9,7 @@ interface BottomNavigationProps {
   onTabChange: (tab: string) => void;
 }
 
-const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabChange }) => {
+const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTab, onTabChange }) => {
   const { t } = useLanguage();
   
   const tabs = [
