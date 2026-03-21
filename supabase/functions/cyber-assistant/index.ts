@@ -88,7 +88,7 @@ Always provide specific, actionable advice tailored to the traveler's situation.
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: systemPrompt },
           ...messages
