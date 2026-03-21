@@ -41,6 +41,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [avatarHidden, setAvatarHidden] = useState(false);
+  const [activeLipsyncClip, setActiveLipsyncClip] = useState<LipsyncClip | null>(null);
   const exchangeCountRef = useRef(0);
 
   const getWelcomeMessage = (): string => {
