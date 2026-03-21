@@ -401,6 +401,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
+      // Start TTS immediately — don't wait
       if (assistantContent && voiceEnabled) {
         speak(assistantContent, () => {
           if (shouldFollowUp) {
@@ -408,7 +409,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
         });
       } else if (shouldFollowUp) {
-        const followUpDelay = 3000 + Math.random() * 2000;
+        const followUpDelay = 2000 + Math.random() * 1500;
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
 
