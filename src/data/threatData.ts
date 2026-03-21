@@ -5,6 +5,8 @@ import { ThreatIncident, WatchlistLocation, ThreatStatistics, ThreatCategory, Th
 // Sources: CNN, BBC, Reuters, AP, Al Jazeera, OSINT, US State Dept,
 // UK FCDO, EU Advisory, NATO, UN OCHA, WorldMonitor.app,
 // SOS International, Intelligence Fusion, ACLED, Global Terrorism DB,
+// Stratfor, Jane's, Control Risks, Crisis24, Riskline, Max Security,
+// Flashpoint, Recorded Future
 // WHO, CDC, GDACS, NOAA, Interpol, Europol
 // ═══════════════════════════════════════════════════════════════
 
