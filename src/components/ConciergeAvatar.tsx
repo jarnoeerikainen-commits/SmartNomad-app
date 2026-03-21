@@ -215,10 +215,10 @@ const ConciergeAvatar: React.FC<ConciergeAvatarProps> = ({
     const targetShiftX = smoothNoise(elapsed * 0.3, 3) * 0.7 * headIntensity;
     const targetShiftY = smoothNoise(elapsed * 0.35, 4) * 0.6 * headIntensity + breathY;
 
-    a.headTiltX = lerp(a.headTiltX, targetTiltX, 0.04);
-    a.headTiltY = lerp(a.headTiltY, targetTiltY, 0.04);
-    a.headShiftX = lerp(a.headShiftX, targetShiftX, 0.04);
-    a.headShiftY = lerp(a.headShiftY, targetShiftY, 0.04);
+    a.headTiltX = lerp(a.headTiltX, targetTiltX, 0.06);
+    a.headTiltY = lerp(a.headTiltY, targetTiltY, 0.06);
+    a.headShiftX = lerp(a.headShiftX, targetShiftX, 0.06);
+    a.headShiftY = lerp(a.headShiftY, targetShiftY, 0.06);
 
     // --- GAZE ---
     const gazeTargetX = smoothNoise(elapsed * 0.2, 6) * 1.0;
