@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
+import ConciergeVideoPlayer from './ConciergeVideoPlayer';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
@@ -14,6 +15,7 @@ import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
+import { findBestClip, type LipsyncClip } from '@/data/lipsyncLibrary';
 
 interface Message {
   id: string;
@@ -39,6 +41,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [avatarHidden, setAvatarHidden] = useState(false);
+  const [activeLipsyncClip, setActiveLipsyncClip] = useState<LipsyncClip | null>(null);
   const exchangeCountRef = useRef(0);
 
   const getWelcomeMessage = (): string => {
@@ -98,9 +101,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   } = useVoiceConversation(currentLanguage);
   const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
 
-  // Auto-show avatar again when speech stops
+  // Auto-show avatar again and clear lipsync clip when speech stops
   useEffect(() => {
-    if (!isSpeaking) setAvatarHidden(false);
+    if (!isSpeaking) {
+      setAvatarHidden(false);
+      setActiveLipsyncClip(null);
+    }
   }, [isSpeaking]);
 
   useEffect(() => {
@@ -412,6 +418,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       exchangeCountRef.current += 1;
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
+      // Check for matching pre-generated lip-sync video
+      if (assistantContent && conciergePrefs.avatarVisible) {
+        const clip = findBestClip(assistantContent, conciergePrefs.avatarFace, currentLanguage);
+        setActiveLipsyncClip(clip);
+      }
+
       // Speak remaining text if first sentence was already spoken early
       if (assistantContent && voiceEnabled) {
         if (firstSentenceSpoken) {
@@ -587,19 +599,29 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   >
                     <ChevronUp className="h-4 w-4" />
                   </Button>
-                  <ConciergeAvatar
-                    face={conciergePrefs.avatarFace}
-                    isSpeaking={true}
-                    mouthOpenness={mouthOpenness}
-                    currentWord={currentWord}
-                    size="hero"
-                    expandOnSpeak
-                    showLiveBadge
-                  />
+                  {activeLipsyncClip ? (
+                    <ConciergeVideoPlayer
+                      clip={activeLipsyncClip}
+                      face={conciergePrefs.avatarFace}
+                      size="hero"
+                      onEnded={() => setActiveLipsyncClip(null)}
+                      onError={() => setActiveLipsyncClip(null)}
+                    />
+                  ) : (
+                    <ConciergeAvatar
+                      face={conciergePrefs.avatarFace}
+                      isSpeaking={true}
+                      mouthOpenness={mouthOpenness}
+                      currentWord={currentWord}
+                      size="hero"
+                      expandOnSpeak
+                      showLiveBadge
+                    />
+                  )}
                   <div className="flex items-center gap-1.5 mt-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                     <span className="text-[10px] font-medium text-muted-foreground tracking-wide uppercase">
-                      {conciergePrefs.aiName || 'Concierge'} is speaking
+                      {activeLipsyncClip ? 'Video Sync' : `${conciergePrefs.aiName || 'Concierge'} is speaking`}
                     </span>
                   </div>
                 </div>
@@ -773,19 +795,29 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 >
                   <ChevronUp className="h-4 w-4" />
                 </Button>
-                <ConciergeAvatar
-                  face={conciergePrefs.avatarFace}
-                  isSpeaking={true}
-                  mouthOpenness={mouthOpenness}
-                  currentWord={currentWord}
-                  size="xl"
-                  expandOnSpeak
-                  showLiveBadge
-                />
+                {activeLipsyncClip ? (
+                  <ConciergeVideoPlayer
+                    clip={activeLipsyncClip}
+                    face={conciergePrefs.avatarFace}
+                    size="xl"
+                    onEnded={() => setActiveLipsyncClip(null)}
+                    onError={() => setActiveLipsyncClip(null)}
+                  />
+                ) : (
+                  <ConciergeAvatar
+                    face={conciergePrefs.avatarFace}
+                    isSpeaking={true}
+                    mouthOpenness={mouthOpenness}
+                    currentWord={currentWord}
+                    size="xl"
+                    expandOnSpeak
+                    showLiveBadge
+                  />
+                )}
                 <div className="flex items-center gap-1.5 mt-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                   <span className="text-[10px] font-medium text-muted-foreground tracking-wide uppercase">
-                    Live Sync
+                    {activeLipsyncClip ? 'Video Sync' : 'Live Sync'}
                   </span>
                 </div>
               </div>
