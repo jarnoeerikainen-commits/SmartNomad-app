@@ -86,6 +86,11 @@ serve(async (req) => {
     if (!response.ok) {
       const errBody = await response.text();
       console.error(`ElevenLabs API error [${response.status}]: ${errBody}`);
+      
+      // Surface helpful message for auth/billing issues
+      if (response.status === 401) {
+        throw new Error('ElevenLabs API key is invalid or account requires a paid plan. Please update your ELEVENLABS_API_KEY secret with a valid paid-plan key.');
+      }
       throw new Error(`ElevenLabs API error: ${response.status}`);
     }
 
