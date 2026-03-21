@@ -119,34 +119,6 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     voiceGenderRef.current = gender;
   }, []);
 
-  const startTimedWordAnimation = useCallback((text: string, getProgress: () => number) => {
-    stopWordAnimation();
-
-    const cues = buildSpeechWordCues(text);
-    if (!cues.length) return;
-
-    const totalWeight = cues.reduce((sum, cue) => sum + cue.weight, 0);
-
-    const update = () => {
-      const progress = clamp(getProgress());
-      const targetWeight = progress * totalWeight;
-      let accumulated = 0;
-      let nextWord = cues[cues.length - 1].word;
-
-      for (const cue of cues) {
-        accumulated += cue.weight;
-        if (targetWeight <= accumulated) {
-          nextWord = cue.word;
-          break;
-        }
-      }
-
-      setCurrentWord(nextWord);
-      wordFrameRef.current = requestAnimationFrame(update);
-    };
-
-    wordFrameRef.current = requestAnimationFrame(update);
-  }, [stopWordAnimation]);
 
   const requestMicPermission = useCallback(async (): Promise<boolean> => {
     try {
