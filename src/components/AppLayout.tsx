@@ -92,6 +92,7 @@ const SocialDashboard = lazy(() => import('./SocialChat/SocialDashboard').then(m
 const HelpSupportCenter = lazy(() => import('./HelpSupportCenter'));
 const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
+const ETIASCenter = lazy(() => import('./ETIASCenter'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
