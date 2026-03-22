@@ -399,6 +399,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <Settings subscription={subscription} onUpgradeClick={openUpgradeModal} onProfileComplete={onProfileComplete} />;
       case 'help': return <HelpSupportCenter />;
       case 'wellness': return <WellnessDashboard />;
+      case 'etias': return <ETIASCenter />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
