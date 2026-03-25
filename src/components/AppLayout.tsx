@@ -93,6 +93,7 @@ const HelpSupportCenter = lazy(() => import('./HelpSupportCenter'));
 const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
 const ETIASCenter = lazy(() => import('./ETIASCenter'));
+const VisaImmigrationHub = lazy(() => import('./VisaImmigrationHub'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 
@@ -402,6 +403,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'help': return <HelpSupportCenter />;
       case 'wellness': return <WellnessDashboard />;
       case 'etias': return <ETIASCenter />;
+      case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
       case 'customize': return <FeatureCustomizer />;
       default:
