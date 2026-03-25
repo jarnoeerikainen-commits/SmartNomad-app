@@ -138,7 +138,27 @@ const generateMockWeather = (lat: number): WeatherData => {
     },
     forecast,
     alerts,
-  };
+};
+
+// Country name to emoji helper
+const COUNTRY_EMOJIS: Record<string, string> = {
+  'Finland': '🇫🇮', 'USA': '🇺🇸', 'United States': '🇺🇸', 'United Kingdom': '🇬🇧',
+  'Germany': '🇩🇪', 'France': '🇫🇷', 'Spain': '🇪🇸', 'Italy': '🇮🇹', 'Japan': '🇯🇵',
+  'China': '🇨🇳', 'India': '🇮🇳', 'Brazil': '🇧🇷', 'Canada': '🇨🇦', 'Australia': '🇦🇺',
+  'Mexico': '🇲🇽', 'South Korea': '🇰🇷', 'Netherlands': '🇳🇱', 'Sweden': '🇸🇪',
+  'Norway': '🇳🇴', 'Denmark': '🇩🇰', 'Portugal': '🇵🇹', 'Switzerland': '🇨🇭',
+  'Austria': '🇦🇹', 'Belgium': '🇧🇪', 'Ireland': '🇮🇪', 'Poland': '🇵🇱',
+  'Czech Republic': '🇨🇿', 'Greece': '🇬🇷', 'Turkey': '🇹🇷', 'Thailand': '🇹🇭',
+  'Indonesia': '🇮🇩', 'Malaysia': '🇲🇾', 'Singapore': '🇸🇬', 'UAE': '🇦🇪',
+  'Russia': '🇷🇺', 'Ukraine': '🇺🇦', 'Romania': '🇷🇴', 'Hungary': '🇭🇺',
+  'Iceland': '🇮🇸', 'Estonia': '🇪🇪', 'Latvia': '🇱🇻', 'Lithuania': '🇱🇹',
+  'Croatia': '🇭🇷', 'Serbia': '🇷🇸', 'Bulgaria': '🇧🇬', 'Argentina': '🇦🇷',
+  'Colombia': '🇨🇴', 'Chile': '🇨🇱', 'Peru': '🇵🇪', 'Egypt': '🇪🇬',
+  'South Africa': '🇿🇦', 'Kenya': '🇰🇪', 'Nigeria': '🇳🇬', 'Morocco': '🇲🇦',
+  'New Zealand': '🇳🇿', 'Taiwan': '🇹🇼', 'Hong Kong': '🇭🇰', 'Israel': '🇮🇱',
+  'Qatar': '🇶🇦', 'Saudi Arabia': '🇸🇦', 'Vietnam': '🇻🇳', 'Philippines': '🇵🇭',
+};
+const getCountryEmoji = (country: string): string => COUNTRY_EMOJIS[country] || '🌍';
 };
 
 const WeatherServiceDashboard: React.FC = () => {
