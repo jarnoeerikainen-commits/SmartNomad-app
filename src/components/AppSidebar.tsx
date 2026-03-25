@@ -142,6 +142,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
         { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
         { id: 'visa-immigration', label: 'Visa / Immigration', icon: Globe, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'vaccination-hub', label: 'Vaccinations & Medicine', icon: Heart, badge: 'WHO', variant: 'secondary' as const },
         { id: 'etias', label: 'ETIAS 2026', icon: Shield, badge: 'EU', variant: 'secondary' as const },
         { id: 'payment-options', label: t('sidebar.payment_options'), icon: CreditCard, badge: 'NEW', variant: 'secondary' as const },
         { id: 'award-cards', label: t('sidebar.award_cards'), icon: Award, badge: 'NEW', variant: 'secondary' as const },

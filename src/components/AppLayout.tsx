@@ -94,6 +94,7 @@ const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
 const ETIASCenter = lazy(() => import('./ETIASCenter'));
 const VisaImmigrationHub = lazy(() => import('./VisaImmigrationHub'));
+const VaccinationMedicineHub = lazy(() => import('./VaccinationMedicineHub'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 
@@ -320,7 +321,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'vpn-email': return <VPNEmailServices />;
       case 'travel-insurance': return <TravelInsurance />;
       case 'health':
-        return <VaccinationTracker currentLocation={detectedLocation} trackedCountries={countries} />;
+        return <VaccinationMedicineHub currentLocation={detectedLocation} trackedCountries={countries} />;
+      case 'vaccination-hub':
+        return <VaccinationMedicineHub currentLocation={detectedLocation} trackedCountries={countries} />;
       case 'pet-services': return <PetServices currentLocation={detectedLocation} />;
       case 'marketplace': return <MarketplaceDashboard />;
       case 'explore-local-life':
