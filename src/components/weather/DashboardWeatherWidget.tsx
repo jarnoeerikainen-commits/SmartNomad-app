@@ -11,7 +11,7 @@ interface DashboardWeatherWidgetProps {
 }
 
 const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavigate }) => {
-  const { locationData } = useLocation();
+  const { location: locationData } = useLocation();
   const [weather, setWeather] = useState<{
     temp: number; condition: string; icon: string; humidity: number; windSpeed: number;
     high: number; low: number; alerts: number;
@@ -53,10 +53,10 @@ const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavig
 
   const getIcon = () => {
     switch (weather.icon) {
-      case 'sun': return <Sun className="h-8 w-8 text-amber-500" />;
+      case 'sun': return <Sun className="h-8 w-8 text-warning" />;
       case 'cloud-sun': return <CloudSun className="h-8 w-8 text-primary" />;
       case 'cloud-rain': return <CloudRain className="h-8 w-8 text-primary" />;
-      case 'cloud-snow': return <CloudSnow className="h-8 w-8 text-sky-400" />;
+      case 'cloud-snow': return <CloudSnow className="h-8 w-8 text-secondary" />;
       default: return <Cloud className="h-8 w-8 text-muted-foreground" />;
     }
   };

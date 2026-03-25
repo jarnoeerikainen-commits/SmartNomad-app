@@ -152,9 +152,9 @@ const TravelWeatherReport: React.FC<TravelWeatherReportProps> = ({ userSports = 
   };
 
   const conditionIcon = (condition: string) => {
-    if (condition.includes('Sun') || condition.includes('Clear')) return <Sun className="h-4 w-4 text-amber-500" />;
+    if (condition.includes('Sun') || condition.includes('Clear')) return <Sun className="h-4 w-4 text-warning" />;
     if (condition.includes('Rain') || condition.includes('Drizzle')) return <CloudRain className="h-4 w-4 text-primary" />;
-    if (condition.includes('Snow')) return <CloudSnow className="h-4 w-4 text-sky-400" />;
+    if (condition.includes('Snow')) return <CloudSnow className="h-4 w-4 text-secondary" />;
     if (condition.includes('Wind')) return <Wind className="h-4 w-4 text-muted-foreground" />;
     return <Sun className="h-4 w-4 text-amber-400" />;
   };

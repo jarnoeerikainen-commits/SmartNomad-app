@@ -143,7 +143,7 @@ const generateMockWeather = (lat: number): WeatherData => {
 
 const WeatherServiceDashboard: React.FC = () => {
   const { toast } = useToast();
-  const { locationData } = useLocation();
+  const { location: locationData } = useLocation();
   const [locations, setLocations] = useState<WeatherLocation[]>([]);
   const [weatherMap, setWeatherMap] = useState<Record<string, WeatherData>>({});
   const [isLoading, setIsLoading] = useState(false);
