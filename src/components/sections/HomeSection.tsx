@@ -8,6 +8,7 @@ import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActi
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
+import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface HomeSectionProps {
@@ -46,8 +47,13 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <DashboardQuickStats countries={countries} />
+      {/* Weather Widget + Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2">
+          <DashboardQuickStats countries={countries} />
+        </div>
+        <DashboardWeatherWidget onNavigate={onNavigate} />
+      </div>
 
       {/* Two Column Layout for Dashboard Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
