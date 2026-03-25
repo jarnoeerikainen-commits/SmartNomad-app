@@ -412,7 +412,7 @@ const VaccinationMedicineHub: React.FC<VaccinationMedicineHubProps> = ({
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Syringe className="w-6 h-6 text-primary" />
-          Vaccination & Medicine Hub
+          Vaccinations & Medicines Hub
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
           Global vaccination requirements, certified clinics & your personal health records
