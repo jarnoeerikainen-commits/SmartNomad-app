@@ -138,6 +138,7 @@ const generateMockWeather = (lat: number): WeatherData => {
     },
     forecast,
     alerts,
+  };
 };
 
 // Country name to emoji helper
@@ -159,7 +160,6 @@ const COUNTRY_EMOJIS: Record<string, string> = {
   'Qatar': '🇶🇦', 'Saudi Arabia': '🇸🇦', 'Vietnam': '🇻🇳', 'Philippines': '🇵🇭',
 };
 const getCountryEmoji = (country: string): string => COUNTRY_EMOJIS[country] || '🌍';
-};
 
 const WeatherServiceDashboard: React.FC = () => {
   const { toast } = useToast();
