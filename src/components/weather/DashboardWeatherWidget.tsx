@@ -17,7 +17,8 @@ const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavig
     high: number; low: number; alerts: number;
   } | null>(null);
 
-  const currentCity = locationData?.city || 'Lisbon';
+  const currentCity = locationData?.city || 'Unknown';
+  const currentLat = locationData?.latitude;
 
   useEffect(() => {
     // Mock weather for current location
