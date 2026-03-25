@@ -23,7 +23,7 @@ const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavig
   useEffect(() => {
     // Mock weather for current location
     const match = TOP_WEATHER_CITIES.find(c => c.city.toLowerCase() === currentCity.toLowerCase());
-    const lat = match?.lat || 38;
+    const lat = currentLat ?? match?.lat ?? 45;
     const isEquatorial = Math.abs(lat) < 23;
     const month = new Date().getMonth();
     const isSummer = lat > 0 ? (month >= 4 && month <= 9) : (month <= 2 || month >= 10);
