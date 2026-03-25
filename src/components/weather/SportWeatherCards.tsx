@@ -16,10 +16,10 @@ interface SportWeatherCardsProps {
 }
 
 const ratingColors: Record<string, string> = {
-  perfect: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30',
-  good: 'bg-primary/10 text-primary border-primary/30',
-  fair: 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30',
-  poor: 'bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/30',
+  perfect: 'bg-primary/10 text-primary border-primary/30',
+  good: 'bg-secondary/10 text-secondary-foreground border-secondary/30',
+  fair: 'bg-accent/20 text-accent-foreground border-accent/30',
+  poor: 'bg-destructive/10 text-destructive border-destructive/20',
   unsafe: 'bg-destructive/15 text-destructive border-destructive/30',
 };
 
