@@ -94,6 +94,7 @@ const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
 const ETIASCenter = lazy(() => import('./ETIASCenter'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
+const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -402,6 +403,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'wellness': return <WellnessDashboard />;
       case 'etias': return <ETIASCenter />;
       case 'weather-service': return <WeatherServiceDashboard />;
+      case 'customize': return <FeatureCustomizer />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
