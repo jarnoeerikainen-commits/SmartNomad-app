@@ -365,7 +365,7 @@ const WeatherServiceDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2 p-3 rounded-lg bg-background/60">
-                <Sun className="h-4 w-4 text-amber-500" />
+                <Sun className="h-4 w-4 text-warning" />
                 <div>
                   <p className="text-xs text-muted-foreground">UV Index</p>
                   <p className="text-sm font-semibold">{currentWeather.current.uvIndex}</p>
