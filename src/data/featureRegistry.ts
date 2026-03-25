@@ -28,6 +28,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false },
   { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false },
   { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false },
+  { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false },
   { id: 'etias', label: 'ETIAS 2026', icon: Shield, category: 'tax', badge: 'EU', badgeVariant: 'secondary', description: 'EU travel authorization system', defaultVisible: true, defaultPinned: false },
   { id: 'payment-options', label: 'Payment Options', icon: CreditCard, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Manage payment methods', defaultVisible: true, defaultPinned: false },
   { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false },
