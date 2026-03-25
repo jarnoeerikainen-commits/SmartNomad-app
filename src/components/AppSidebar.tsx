@@ -57,6 +57,8 @@ import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Subscription } from '@/types/subscription';
+import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
+import { SYSTEM_FEATURES } from '@/data/featureRegistry';
 
 interface SidebarItem {
   id: string;
@@ -97,6 +99,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
+  const { isVisible } = useFeaturePreferences();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['premium', 'travel', 'local']);
   
   // Check for danger zone (imported from ThreatIntelligenceService)
@@ -122,7 +125,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     );
   };
 
-  const menuGroups = [
+  const menuGroupsRaw = [
     {
       id: 'main',
       label: t('sidebar.quick_actions'),
@@ -137,8 +140,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'tax', label: t('sidebar.tax_dashboard'), icon: Calculator },
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
-      { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
-      { id: 'etias', label: 'ETIAS 2026', icon: Shield, badge: 'EU', variant: 'secondary' as const },
+        { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
+        { id: 'etias', label: 'ETIAS 2026', icon: Shield, badge: 'EU', variant: 'secondary' as const },
         { id: 'payment-options', label: t('sidebar.payment_options'), icon: CreditCard, badge: 'NEW', variant: 'secondary' as const },
         { id: 'award-cards', label: t('sidebar.award_cards'), icon: Award, badge: 'NEW', variant: 'secondary' as const },
         { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
@@ -194,6 +197,15 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       ]
     },
   ];
+
+  // Filter out hidden features from sidebar groups
+  const menuGroups = menuGroupsRaw.map(group => {
+    if (group.id === 'main') return group; // System group, always show
+    return {
+      ...group,
+      items: group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id))
+    };
+  }).filter(group => group.id === 'main' || group.items.length > 0);
   
   return (
     <>
@@ -343,8 +355,20 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
               </>
             )}
 
-          {/* Settings & Help */}
+          {/* Settings, Customize & Help */}
           <div className="space-y-1">
+            <Button
+              variant={activeSection === 'customize' ? 'secondary' : 'ghost'}
+              className="w-full justify-start gap-3 hover:bg-accent/50"
+              onClick={() => {
+                onSectionChange('customize');
+                onClose?.();
+              }}
+            >
+              <BarChart3 className="h-5 w-5" />
+              <span>Customize App</span>
+            </Button>
+
             <Button
               variant={activeSection === 'settings' ? 'secondary' : 'ghost'}
               className="w-full justify-start gap-3 hover:bg-accent/50"

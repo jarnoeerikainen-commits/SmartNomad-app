@@ -10,6 +10,11 @@ import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Pin, LayoutGrid } from 'lucide-react';
 
 interface HomeSectionProps {
   countries: Country[];
@@ -19,6 +24,8 @@ interface HomeSectionProps {
 
 const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNavigate }) => {
   const { t } = useLanguage();
+  const { getPinnedFeatures } = useFeaturePreferences();
+  const pinnedFeatures = getPinnedFeatures();
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
@@ -46,6 +53,49 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
           <DashboardHeroCards onNavigate={onNavigate} />
         </div>
       </div>
+
+      {/* Pinned Features Quick Access */}
+      {pinnedFeatures.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Pin className="h-4 w-4 text-primary fill-primary" />
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">My Pinned Features</h3>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {pinnedFeatures.map(feature => {
+              const Icon = feature.icon;
+              return (
+                <Card
+                  key={feature.id}
+                  className="cursor-pointer hover:shadow-md hover:border-primary/30 transition-all duration-200 hover:scale-[1.02]"
+                  onClick={() => onNavigate(feature.id)}
+                >
+                  <CardContent className="p-3 flex flex-col items-center text-center gap-2">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <span className="text-xs font-medium leading-tight">{feature.label}</span>
+                    {feature.badge && (
+                      <Badge variant={feature.badgeVariant || 'secondary'} className="text-[9px] px-1 py-0">
+                        {feature.badge}
+                      </Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+            <Card
+              className="cursor-pointer hover:shadow-md border-dashed hover:border-primary/30 transition-all duration-200"
+              onClick={() => onNavigate('customize')}
+            >
+              <CardContent className="p-3 flex flex-col items-center text-center gap-2 justify-center h-full">
+                <LayoutGrid className="h-5 w-5 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Customize</span>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* Weather Widget + Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
