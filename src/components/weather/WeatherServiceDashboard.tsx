@@ -141,6 +141,26 @@ const generateMockWeather = (lat: number): WeatherData => {
   };
 };
 
+// Country name to emoji helper
+const COUNTRY_EMOJIS: Record<string, string> = {
+  'Finland': '🇫🇮', 'USA': '🇺🇸', 'United States': '🇺🇸', 'United Kingdom': '🇬🇧',
+  'Germany': '🇩🇪', 'France': '🇫🇷', 'Spain': '🇪🇸', 'Italy': '🇮🇹', 'Japan': '🇯🇵',
+  'China': '🇨🇳', 'India': '🇮🇳', 'Brazil': '🇧🇷', 'Canada': '🇨🇦', 'Australia': '🇦🇺',
+  'Mexico': '🇲🇽', 'South Korea': '🇰🇷', 'Netherlands': '🇳🇱', 'Sweden': '🇸🇪',
+  'Norway': '🇳🇴', 'Denmark': '🇩🇰', 'Portugal': '🇵🇹', 'Switzerland': '🇨🇭',
+  'Austria': '🇦🇹', 'Belgium': '🇧🇪', 'Ireland': '🇮🇪', 'Poland': '🇵🇱',
+  'Czech Republic': '🇨🇿', 'Greece': '🇬🇷', 'Turkey': '🇹🇷', 'Thailand': '🇹🇭',
+  'Indonesia': '🇮🇩', 'Malaysia': '🇲🇾', 'Singapore': '🇸🇬', 'UAE': '🇦🇪',
+  'Russia': '🇷🇺', 'Ukraine': '🇺🇦', 'Romania': '🇷🇴', 'Hungary': '🇭🇺',
+  'Iceland': '🇮🇸', 'Estonia': '🇪🇪', 'Latvia': '🇱🇻', 'Lithuania': '🇱🇹',
+  'Croatia': '🇭🇷', 'Serbia': '🇷🇸', 'Bulgaria': '🇧🇬', 'Argentina': '🇦🇷',
+  'Colombia': '🇨🇴', 'Chile': '🇨🇱', 'Peru': '🇵🇪', 'Egypt': '🇪🇬',
+  'South Africa': '🇿🇦', 'Kenya': '🇰🇪', 'Nigeria': '🇳🇬', 'Morocco': '🇲🇦',
+  'New Zealand': '🇳🇿', 'Taiwan': '🇹🇼', 'Hong Kong': '🇭🇰', 'Israel': '🇮🇱',
+  'Qatar': '🇶🇦', 'Saudi Arabia': '🇸🇦', 'Vietnam': '🇻🇳', 'Philippines': '🇵🇭',
+};
+const getCountryEmoji = (country: string): string => COUNTRY_EMOJIS[country] || '🌍';
+
 const WeatherServiceDashboard: React.FC = () => {
   const { toast } = useToast();
   const { location: locationData } = useLocation();
@@ -168,22 +188,26 @@ const WeatherServiceDashboard: React.FC = () => {
     return ['running', 'cycling', 'hiking', 'swimming']; // defaults for demo
   }, []);
 
-  // Initialize with current location
+  // Initialize with current location — always use real detected location
   useEffect(() => {
     setIsLoading(true);
-    const currentCity = locationData?.city || 'Lisbon';
-    const currentCountry = locationData?.country || 'Portugal';
+    const currentCity = locationData?.city || 'Unknown';
+    const currentCountry = locationData?.country || 'Unknown';
+    const currentLat = locationData?.latitude;
+    const currentLon = locationData?.longitude;
+
+    // Try to match from static list first for emoji, otherwise use detected coords
     const match = TOP_WEATHER_CITIES.find(
       c => c.city.toLowerCase() === currentCity.toLowerCase()
-    ) || TOP_WEATHER_CITIES.find(c => c.city === 'Lisbon')!;
+    );
 
     const autoLoc: WeatherLocation = {
       id: 'current',
-      city: match.city,
-      country: match.country,
-      emoji: match.emoji,
-      lat: match.lat,
-      lon: match.lon,
+      city: match?.city || currentCity,
+      country: match?.country || currentCountry,
+      emoji: match?.emoji || getCountryEmoji(currentCountry),
+      lat: currentLat ?? match?.lat ?? 0,
+      lon: currentLon ?? match?.lon ?? 0,
       isAutoDetected: true,
       lastUpdated: new Date(),
     };
