@@ -3,14 +3,16 @@ import {
   Newspaper, AlertTriangle, Bus, Wifi, Award, Building2, CloudRain,
   Dumbbell, BookOpen, Users, Calendar, Baby, Cat, Truck, Store,
   MessageSquare, ShieldCheck, Siren, ShieldAlert, Stethoscope, Scale,
-  Crown, Flag, Globe2, Building, Sparkles, BarChart3, Home
+  Crown, Flag, Globe2, Building, Sparkles, BarChart3, Home, Car,
+  Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
+  Locate, Tag, Phone
 } from 'lucide-react';
 
 export interface FeatureItem {
   id: string;
   label: string;
   icon: any;
-  category: 'tax' | 'travel' | 'local' | 'premium' | 'safety';
+  category: 'tax' | 'travel' | 'local' | 'premium' | 'safety' | 'finance';
   badge?: string;
   badgeVariant?: 'default' | 'destructive' | 'outline' | 'secondary';
   description: string;
@@ -29,17 +31,32 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false },
   { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false },
   { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false },
+  { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe, category: 'tax', description: 'Visa application assistance services', defaultVisible: true, defaultPinned: false },
   { id: 'etias', label: 'ETIAS 2026', icon: Shield, category: 'tax', badge: 'EU', badgeVariant: 'secondary', description: 'EU travel authorization system', defaultVisible: true, defaultPinned: false },
-  { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'tax', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods, Agentic Commerce (x402, Stripe Issuing, Visa TAP, Mastercard Cloud)', defaultVisible: true, defaultPinned: false },
-  { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false },
   { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, category: 'tax', badge: 'WHO', badgeVariant: 'secondary', description: 'Global vaccination requirements, clinics & health records', defaultVisible: true, defaultPinned: false },
   { id: 'vault', label: 'Document Vault', icon: Shield, category: 'tax', description: 'Secure document storage', defaultVisible: true, defaultPinned: false },
+  { id: 'gov-apps', label: 'Government Apps', icon: Building, category: 'tax', description: 'Official government applications', defaultVisible: true, defaultPinned: false },
+  { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign, category: 'tax', description: 'Wealth management & tax optimization', defaultVisible: true, defaultPinned: false },
+
+  // FINANCE
+  { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'finance', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods & Agentic Commerce', defaultVisible: true, defaultPinned: false },
+  { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'finance', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false },
+  { id: 'digital-banks', label: 'Digital Banks', icon: Building2, category: 'finance', description: 'Online banking services', defaultVisible: true, defaultPinned: false },
+  { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign, category: 'finance', description: 'Send money worldwide', defaultVisible: true, defaultPinned: false },
+  { id: 'crypto-cash', label: 'Crypto & Digital Money', icon: Coins, category: 'finance', description: 'Cryptocurrency services', defaultVisible: true, defaultPinned: false },
+  { id: 'currency-converter', label: 'Currency Converter', icon: Globe2, category: 'finance', description: 'Real-time exchange rates', defaultVisible: true, defaultPinned: false },
+  { id: 'emergency-cards', label: 'Emergency Cards', icon: CreditCard, category: 'finance', badge: 'SOS', badgeVariant: 'destructive', description: 'Emergency card numbers & replacement', defaultVisible: true, defaultPinned: false },
 
   // TRAVEL ESSENTIALS
   { id: 'public-transport', label: 'Transportation', icon: Bus, category: 'travel', description: 'Public transport info', defaultVisible: true, defaultPinned: false },
+  { id: 'taxis', label: 'Taxi & Rideshare', icon: Car, category: 'travel', description: 'Taxi & ride-hailing services', defaultVisible: true, defaultPinned: false },
+  { id: 'car-rent-lease', label: 'Car Rental', icon: Car, category: 'travel', description: 'Car rental & leasing', defaultVisible: true, defaultPinned: false },
   { id: 'air-charter', label: 'Air Charter Service', icon: Plane, category: 'travel', badge: 'AI', badgeVariant: 'secondary', description: 'Private jet charter', defaultVisible: true, defaultPinned: false },
   { id: 'esim', label: 'eSIM & VPN', icon: Wifi, category: 'travel', description: 'Mobile data & privacy', defaultVisible: true, defaultPinned: false },
+  { id: 'vpn-email', label: 'VPN & Email', icon: Mail, category: 'travel', description: 'VPN & secure email services', defaultVisible: true, defaultPinned: false },
   { id: 'travel-insurance', label: 'Travel Insurance', icon: Shield, category: 'travel', description: 'Insurance comparison', defaultVisible: true, defaultPinned: false },
+  { id: 'roadside', label: 'Roadside Assistance', icon: Wrench, category: 'travel', description: 'Emergency roadside help', defaultVisible: true, defaultPinned: false },
+  { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi, category: 'travel', description: 'Find WiFi hotspots', defaultVisible: true, defaultPinned: false },
 
   // LOCAL LIVING
   { id: 'global-city-services', label: 'City Services', icon: Building2, category: 'local', description: 'Services by city', defaultVisible: true, defaultPinned: false },
@@ -51,10 +68,16 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'family-services', label: 'Family Services', icon: Baby, category: 'local', badge: 'TRUSTED', badgeVariant: 'secondary', description: 'Nanny & childcare', defaultVisible: true, defaultPinned: false },
   { id: 'pet-services', label: 'Pet Services', icon: Cat, category: 'local', description: 'Pet care abroad', defaultVisible: true, defaultPinned: false },
   { id: 'moving-services', label: 'Moving Services', icon: Truck, category: 'local', badge: 'AI', badgeVariant: 'secondary', description: 'International moving', defaultVisible: true, defaultPinned: false },
+  { id: 'delivery-services', label: 'Delivery Services', icon: Truck, category: 'local', description: 'Local delivery services', defaultVisible: true, defaultPinned: false },
   { id: 'marketplace', label: 'Marketplace', icon: Store, category: 'local', badge: 'AI', badgeVariant: 'secondary', description: 'Buy & sell with nomads', defaultVisible: true, defaultPinned: false },
   { id: 'social-chat', label: 'Social Vibe', icon: Users, category: 'local', badge: 'AI', badgeVariant: 'secondary', description: 'Social networking', defaultVisible: true, defaultPinned: false },
   { id: 'nomad-chat', label: 'Nomad Pulse', icon: MessageSquare, category: 'local', badge: 'AI', badgeVariant: 'secondary', description: 'Community chat', defaultVisible: true, defaultPinned: false },
   { id: 'news', label: 'News & Updates', icon: Newspaper, category: 'local', description: 'Travel news', defaultVisible: true, defaultPinned: false },
+  { id: 'local-services', label: 'Local Services', icon: MapPin, category: 'local', description: 'Find local service providers', defaultVisible: true, defaultPinned: false },
+  { id: 'local-news', label: 'Local News', icon: Newspaper, category: 'local', description: 'News from your location', defaultVisible: true, defaultPinned: false },
+  { id: 'students', label: 'Student Services', icon: GraduationCap, category: 'local', description: 'Student resources abroad', defaultVisible: true, defaultPinned: false },
+  { id: 'super-offers', label: 'Super Offers', icon: Tag, category: 'local', badge: 'HOT', badgeVariant: 'secondary', description: 'Exclusive deals & offers', defaultVisible: true, defaultPinned: false },
+  { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award, category: 'local', description: 'Travel achievements', defaultVisible: true, defaultPinned: false },
 
   // PREMIUM / SAFETY
   { id: 'threats', label: 'Threat Intelligence', icon: Shield, category: 'safety', description: 'Security threat monitoring', defaultVisible: true, defaultPinned: false },
@@ -68,20 +91,25 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'ai-lawyer', label: 'AI Lawyer', icon: Scale, category: 'premium', badge: 'AI', description: 'Legal advice AI', defaultVisible: true, defaultPinned: false },
   { id: 'ai-planner', label: 'AI Travel Planner', icon: Plane, category: 'premium', badge: 'AI', description: 'Plan trips with AI', defaultVisible: true, defaultPinned: false },
   { id: 'tax-advisors', label: 'Tax Advisors', icon: Calculator, category: 'premium', badge: 'VIP', badgeVariant: 'secondary', description: 'Expert tax consultation', defaultVisible: true, defaultPinned: false },
+  { id: 'medical-services', label: 'Medical Services', icon: Stethoscope, category: 'premium', description: 'Find doctors & clinics', defaultVisible: true, defaultPinned: false },
+  { id: 'travel-lawyers', label: 'Travel Legal Services', icon: Scale, category: 'premium', description: 'Legal services for travelers', defaultVisible: true, defaultPinned: false },
   { id: 'business-centers', label: 'Business Centers', icon: Building2, category: 'premium', badge: 'NEW', badgeVariant: 'secondary', description: 'Coworking & offices', defaultVisible: true, defaultPinned: false },
+  { id: 'remote-offices', label: 'Remote Work Offices', icon: Building, category: 'premium', description: 'Remote work spaces', defaultVisible: true, defaultPinned: false },
   { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, category: 'premium', badge: 'VIP', badgeVariant: 'secondary', description: 'Lounge access worldwide', defaultVisible: true, defaultPinned: false },
   { id: 'private-clubs', label: 'Elite Clubs', icon: Crown, category: 'premium', badge: 'ELITE', badgeVariant: 'secondary', description: 'Private members clubs', defaultVisible: true, defaultPinned: false },
+  { id: 'location-tracking', label: 'Location Tracking', icon: Locate, category: 'premium', description: 'GPS & location services', defaultVisible: true, defaultPinned: false },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
   tax: 'Tax & Compliance',
+  finance: 'Finance & Payments',
   travel: 'Travel Essentials',
   local: 'Local Living',
   premium: 'Premium Services',
   safety: 'Safety & Emergency',
 };
 
-export const CATEGORY_ORDER = ['safety', 'tax', 'travel', 'local', 'premium'];
+export const CATEGORY_ORDER = ['safety', 'tax', 'finance', 'travel', 'local', 'premium'];
 
 export function getFeatureById(id: string): FeatureItem | undefined {
   return FEATURE_REGISTRY.find(f => f.id === id);
