@@ -4,6 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
@@ -543,18 +544,26 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="flex gap-0.5">
               <ConciergeSettings onPrefsChange={setConciergePrefs} />
               {ttsSupported && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (voiceEnabled && isSpeaking) stopSpeaking();
-                    toggleVoice();
-                  }}
-                  className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
-                  title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
-                >
-                  {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (voiceEnabled && isSpeaking) stopSpeaking();
+                          toggleVoice();
+                        }}
+                        className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                      >
+                        {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-[180px]">
+                      <p className="text-[10px]">{isSpeaking ? '🔊 Speaking… click to stop' : voiceEnabled ? '🔊 Voice ON — I speak all responses' : '🔇 Click to hear me speak responses'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
               <Button
                 variant="ghost"
@@ -658,16 +667,24 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
                 <div className="flex gap-2">
                   {sttSupported && (
-                    <Button
-                      onClick={handleMicClick}
-                      variant={isListening ? 'default' : 'outline'}
-                      size="sm"
-                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
-                      disabled={isTyping}
-                      title={micPermission === 'denied' ? 'Microphone access denied — check browser settings' : isListening ? 'Stop listening' : 'Voice input'}
-                    >
-                      {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            onClick={handleMicClick}
+                            variant={isListening ? 'default' : 'outline'}
+                            size="sm"
+                            className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
+                            disabled={isTyping}
+                          >
+                            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-[200px]">
+                          <p className="text-[10px]">{micPermission === 'denied' ? '⚠️ Mic blocked — check browser settings' : isListening ? '🎙️ Listening… speak now' : '🎤 Click to talk to me — ask anything!'}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   )}
                   <Input
                     value={inputMessage}
@@ -729,18 +746,26 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           <div className="flex gap-0.5">
             <ConciergeSettings onPrefsChange={setConciergePrefs} />
             {ttsSupported && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  if (voiceEnabled && isSpeaking) stopSpeaking();
-                  toggleVoice();
-                }}
-                className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
-                title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
-              >
-                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        if (voiceEnabled && isSpeaking) stopSpeaking();
+                        toggleVoice();
+                      }}
+                      className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                    >
+                      {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-[180px]">
+                    <p className="text-[10px]">{isSpeaking ? '🔊 Speaking… click to stop' : voiceEnabled ? '🔊 Voice ON — I speak all responses' : '🔇 Click to hear me speak responses'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
             <Button
               variant="ghost"
