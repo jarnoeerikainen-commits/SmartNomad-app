@@ -110,7 +110,15 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }
   }, [isSpeaking]);
 
+  // Show mic speech bubble once for new users
   useEffect(() => {
+    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
+    if (!seen && sttSupported) {
+      const timer = setTimeout(() => setShowMicBubble(true), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [sttSupported]);
+
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);
 
