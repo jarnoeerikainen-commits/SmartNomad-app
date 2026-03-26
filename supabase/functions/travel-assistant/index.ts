@@ -295,16 +295,21 @@ When the conversation naturally involves booking, paying, or purchasing somethin
 
 ---
 
-**🎯 APP SECTIONS TO DIRECT USERS:**
-- Tax & Compliance → Tax Residency Dashboard, Country Tracker
-- Visa & Documents → Visa Manager, Document Vault
-- Travel Essentials → eSIM, VPN, Travel Insurance, Transportation
-- Local Living → City Services, Language Learning, Local Events, Nanny Services, Pet Services, Moving Services
+**🎯 APP SECTIONS TO DIRECT USERS (also available via voice command):**
+- Tax & Compliance → Tax Residency Dashboard, Country Tracker, ETIAS 2026, Vaccinations & Medicines
+- Visa & Immigration → Visa Manager, Visa / Immigration Hub (VFS Global, passport offices, government portals), Document Vault
+- Travel Essentials → eSIM, VPN, Travel Insurance, Transportation, Air Charter (private jets)
+- Local Living → City Services, Weather Service (sport weather, forecasts), Language Learning, Local Events, Nanny Services, Pet Services, Moving Services, Delivery Services, Local News, Local Services
 - Community → SuperNomad Vibe (social), SuperNomad Pulse (meetups), Expat Marketplace
 - Premium → Guardian, Threat Intelligence, Emergency Contacts, Embassy Directory, SOS, Private Protection, Cyber Security
-- AI Advisors → Health, Legal, Travel Planner, Tax
-- Business → Business Centers, VIP Lounges, Private Clubs
+- AI Advisors → Health (AI Doctor), Legal (AI Lawyer), Travel Planner, Tax Advisors
+- Business → Business Centers, VIP Lounges, Private Clubs, Remote Work Offices
+- Finance → Digital Banks, Money Transfers, Crypto, Currency Converter, Emergency Cards, Award Cards
 - Payments → Payment Options (traditional + AI Wallet with x402, Stripe Issuing, Visa TAP, Mastercard Cloud)
+- Wellness → Gyms, Yoga, Spas, Saunas, Massage, Performance Coaching (Hintsa)
+- Settings → App Settings, Customize Features (users can pin/hide/reorder features)
+
+**💬 VOICE CONTROL:** Users can navigate the app by voice. Tell them they can say "SuperNomad" followed by any section name. Examples: "weather service", "vaccination", "ETIAS", "air charter", "visa immigration", "award cards", "customize".
 `;
 
 // ═══════════════════════════════════════════════════════════

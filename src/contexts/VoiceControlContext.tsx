@@ -112,14 +112,30 @@ const VOICE_COMMANDS: VoiceCommand[] = [
   { patterns: [/\baward\s*card(s)?\b/i, /\bloyalty\s*(card|program)s?\b/i, /\b(tarjetas?\s*de\s*premios?|cartes?\s*de\s*fidélité|prämienkarten|アワードカード|리워드|лояльност|مكافآت|पुरस्कार|ödül\s*kart)\b/i], action: 'section:award-cards', description: 'Award cards' },
   { patterns: [/\bhelp\b/i, /\bsupport\b/i, /\b(ayuda|aide|hilfe|ヘルプ|도움|помощь|مساعدة|सहायता|yardım)\b/i], action: 'section:help', description: 'Help & Support' },
 
+  // New features — must be BEFORE generic patterns to match first
+  { patterns: [/\bvisa\s*(\/|\s+and\s+|\s+)immigrat(ion|e)\b/i, /\bimmigrat(ion|e)\b/i, /\bvfs\s*global\b/i, /\bpassport\s*office\b/i], action: 'section:visa-immigration', description: 'Visa & Immigration Hub' },
+  { patterns: [/\betias\b/i, /\beu\s*travel\s*authori(z|s)ation\b/i], action: 'section:etias', description: 'ETIAS 2026' },
+  { patterns: [/\bair\s*charter\b/i, /\bprivate\s*(jet|plane|flight)\b/i, /\bcharter\s*(flight|jet)\b/i], action: 'section:air-charter', description: 'Air Charter Service' },
+  { patterns: [/\baward\s*card(s)?\b/i, /\bloyalty\s*(card|program)s?\b/i, /\breward\s*(card|program)s?\b/i], action: 'section:award-cards', description: 'Award Cards' },
+  { patterns: [/\bcustomiz(e|ation)\b/i, /\bpersonaliz(e|ation)\b/i, /\bfeature\s*customiz\b/i], action: 'section:customize', description: 'Customize Features' },
+  { patterns: [/\bweather\s*service\b/i, /\bsport\s*weather\b/i, /\bweather\s*forecast\b/i, /\bweather\s*report\b/i], action: 'section:weather-service', description: 'Weather Service' },
+  { patterns: [/\bremote\s*(work|office)s?\b/i], action: 'section:remote-offices', description: 'Remote Work Offices' },
+  { patterns: [/\blocal\s*service(s)?\b/i], action: 'section:local-services', description: 'Local Services' },
+  { patterns: [/\blocal\s*news\b/i], action: 'section:local-news', description: 'Local News' },
+  { patterns: [/\bmedical\s*service(s)?\b/i, /\bhospital\b/i, /\bclinic\b/i], action: 'section:medical-services', description: 'Medical Services' },
+  { patterns: [/\btravel\s*lawyer(s)?\b/i, /\blegal\s*service(s)?\b/i], action: 'section:travel-lawyers', description: 'Travel Legal Services' },
+  { patterns: [/\bvisa\s*assist(ance)?\b/i], action: 'section:visa-assistance', description: 'Visa Assistance' },
+  { patterns: [/\blocation\s*track(ing|er)?\b/i], action: 'section:location-tracking', description: 'Location Tracking' },
+  { patterns: [/\bai\s*wallet\b/i, /\bagentic\s*(commerce|wallet)\b/i, /\bx402\b/i], action: 'section:payment-options', description: 'AI Wallet & Payments' },
+
   // Misc
-  { patterns: [/\bweather\b/i, /\bforecast\b/i, /\b(clima|météo|wetter|天気|날씨|погода|طقس|मौसम|hava)\b/i], action: 'section:weather', description: 'Weather' },
+  { patterns: [/\bweather\b/i, /\bforecast\b/i, /\b(clima|météo|wetter|天気|날씨|погода|طقس|मौसम|hava)\b/i], action: 'section:weather-service', description: 'Weather Service' },
   { patterns: [/\bwi-?fi\b/i, /\bhotspot\b/i, /\binternet\b/i], action: 'section:wifi-finder', description: 'WiFi finder' },
   { patterns: [/\bstudent(s)?\b/i], action: 'section:students', description: 'Students' },
   { patterns: [/\broadside\b/i, /\btow(ing)?\b/i], action: 'section:roadside', description: 'Roadside assistance' },
-  { patterns: [/\bsetting(s)?\b/i, /\bpreference(s)?\b/i, /\b(configuración|paramètres|einstellungen|設定|설정|настройки|إعدادات|सेटिंग्स|ayarlar)\b/i], action: 'section:settings', description: 'Settings' },
+  { patterns: [/\bsetting(s)?\b/i, /\bpreference(s)?\b/i, /\b(configuración|paramètres|einstellungen|設定|설定|настройки|إعدادات|सेटिंग्स|ayarlar)\b/i], action: 'section:settings', description: 'Settings' },
   { patterns: [/\baward(s)?\b/i, /\bachievement(s)?\b/i], action: 'section:my-travel-awards', description: 'Awards' },
-  { patterns: [/\bvaccinat(ion|e|ions)\b/i, /\bhealth\s*(record|tracker)\b/i], action: 'section:health', description: 'Vaccinations' },
+  { patterns: [/\bvaccinat(ion|e|ions)\b/i, /\bmedicin(e|es)\b/i, /\bhealth\s*(record|tracker)\b/i], action: 'section:vaccination-hub', description: 'Vaccinations & Medicines' },
   { patterns: [/\boffer(s)?\b/i, /\bdeal(s)?\b/i], action: 'section:super-offers', description: 'Super offers' },
 
   // Voice control meta (multilingual)
@@ -217,7 +233,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
               return;
             }
             if (value === 'help') {
-              const helpText = `${fb.helpIntro} Home, Tracking, Emergency, AI, Profile, Tax, Visa, Documents, Doctor, Lawyer, Weather, Settings.`;
+              const helpText = `${fb.helpIntro} Home, Tracking, Emergency, AI, Profile, Tax, Visa, Immigration, ETIAS, Documents, Doctor, Lawyer, Weather, Vaccinations, Air Charter, Award Cards, Customize, Settings, and more.`;
               setLastFeedback(helpText);
               voice.speak(helpText);
               return;
