@@ -49,7 +49,15 @@ import {
   Flag,
   Store,
   Dumbbell,
-  BarChart3
+  BarChart3,
+  Car,
+  DollarSign,
+  Coins,
+  Mail,
+  Wrench,
+  Locate,
+  Tag,
+  GraduationCap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -77,18 +85,7 @@ interface AppSidebarProps {
   onUpgradeClick?: () => void;
 }
 
-const sidebarItems: SidebarItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: Home },
-  { id: 'emergency', label: 'Emergency Numbers', icon: AlertTriangle, badge: 'SOS', variant: 'destructive' },
-  { id: 'tax', label: 'Tax & Compliance', icon: Calculator },
-  { id: 'visas', label: 'Visa Manager', icon: Plane },
-  { id: 'documents', label: 'Documents', icon: FileText },
-  { id: 'health', label: 'Health & Vaccines', icon: Heart },
-  { id: 'emergency-cards', label: 'Credit Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' },
-  { id: 'news', label: 'Travel News', icon: Newspaper, badge: 'NEW' },
-  { id: 'alerts', label: 'Smart Alerts', icon: AlertTriangle, badge: '3', variant: 'destructive' },
-  { id: 'services', label: 'Travel Services', icon: Shield },
-];
+// All sidebar navigation is defined in menuGroupsRaw below
 
 const AppSidebar: React.FC<AppSidebarProps> = ({ 
   activeSection, 
