@@ -119,6 +119,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }
   }, [sttSupported]);
 
+  useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);
 
