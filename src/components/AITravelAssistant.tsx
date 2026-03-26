@@ -92,6 +92,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showMicBubble, setShowMicBubble] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const {
@@ -108,6 +109,15 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       setAvatarHidden(false);
     }
   }, [isSpeaking]);
+
+  // Show mic speech bubble once for new users
+  useEffect(() => {
+    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
+    if (!seen && sttSupported) {
+      const timer = setTimeout(() => setShowMicBubble(true), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [sttSupported]);
 
   useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
@@ -665,13 +675,29 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               </ScrollArea>
 
               <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
+                {/* Mic onboarding speech bubble */}
+                {showMicBubble && sttSupported && (
+                  <div className="relative mb-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="bg-primary text-primary-foreground rounded-xl px-3 py-2.5 shadow-lg text-[11px] leading-relaxed">
+                      <button
+                        onClick={() => { setShowMicBubble(false); localStorage.setItem('supernomad_concierge_mic_tip', 'true'); }}
+                        className="absolute top-1 right-1.5 opacity-70 hover:opacity-100"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                      <p className="font-semibold mb-1">🎤 Talk to me!</p>
+                      <p className="opacity-90">Tap the <strong>mic button</strong> and speak — I understand questions, commands, and conversations in any language. Try: <em>"Find me flights to Lisbon"</em></p>
+                    </div>
+                    <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-primary rotate-45 rounded-sm" />
+                  </div>
+                )}
                 <div className="flex gap-2">
                   {sttSupported && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
-                            onClick={handleMicClick}
+                            onClick={() => { handleMicClick(); if (showMicBubble) { setShowMicBubble(false); localStorage.setItem('supernomad_concierge_mic_tip', 'true'); } }}
                             variant={isListening ? 'default' : 'outline'}
                             size="sm"
                             className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
