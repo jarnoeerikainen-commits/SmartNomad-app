@@ -544,18 +544,26 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             <div className="flex gap-0.5">
               <ConciergeSettings onPrefsChange={setConciergePrefs} />
               {ttsSupported && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (voiceEnabled && isSpeaking) stopSpeaking();
-                    toggleVoice();
-                  }}
-                  className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
-                  title={voiceEnabled ? 'Disable voice' : 'Enable voice'}
-                >
-                  {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (voiceEnabled && isSpeaking) stopSpeaking();
+                          toggleVoice();
+                        }}
+                        className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                      >
+                        {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-[180px]">
+                      <p className="text-[10px]">{isSpeaking ? '🔊 Speaking… click to stop' : voiceEnabled ? '🔊 Voice ON — I speak all responses' : '🔇 Click to hear me speak responses'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
               <Button
                 variant="ghost"
