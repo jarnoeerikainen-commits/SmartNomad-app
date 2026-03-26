@@ -81,6 +81,19 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       ]
     },
     {
+      id: 'safety',
+      label: 'Safety & Emergency',
+      items: [
+        { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
+        { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'emergency', label: t('sidebar.emergency'), icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
+        { id: 'embassy', label: t('sidebar.embassy'), icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
+        { id: 'sos-services', label: t('sidebar.sos'), icon: Siren, badge: '24/7', variant: 'destructive' as const },
+        { id: 'private-protection', label: t('sidebar.protection'), icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
+        { id: 'cyber-helpline', label: t('sidebar.cyber'), icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
+      ]
+    },
+    {
       id: 'tax',
       label: t('sidebar.tax_compliance'),
       items: [
@@ -88,11 +101,25 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
         { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
         { id: 'visa-immigration', label: 'Visa / Immigration', icon: Globe, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe2 },
         { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, badge: 'WHO', variant: 'secondary' as const },
         { id: 'etias', label: 'ETIAS 2026', icon: Shield, badge: 'EU', variant: 'secondary' as const },
+        { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
+        { id: 'gov-apps', label: 'Government Apps', icon: Building },
+        { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign },
+      ]
+    },
+    {
+      id: 'finance',
+      label: 'Finance & Payments',
+      items: [
         { id: 'payment-options', label: t('sidebar.payment_options'), icon: CreditCard, badge: 'AI', variant: 'secondary' as const },
         { id: 'award-cards', label: t('sidebar.award_cards'), icon: Award, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
+        { id: 'digital-banks', label: 'Digital Banks', icon: Building2 },
+        { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign },
+        { id: 'crypto-cash', label: 'Crypto & Digital Money', icon: Coins },
+        { id: 'currency-converter', label: 'Currency Converter', icon: Globe2 },
+        { id: 'emergency-cards', label: 'Emergency Cards', icon: CreditCard, badge: 'SOS', variant: 'destructive' as const },
       ]
     },
     {
@@ -100,9 +127,14 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.travel_essentials'),
       items: [
         { id: 'public-transport', label: t('sidebar.transportation'), icon: Bus },
+        { id: 'taxis', label: 'Taxi & Rideshare', icon: Car },
+        { id: 'car-rent-lease', label: 'Car Rental', icon: Car },
         { id: 'air-charter', label: 'Air Charter Service', icon: Plane, badge: 'AI', variant: 'secondary' as const },
         { id: 'esim', label: t('sidebar.esim_vpn'), icon: Wifi },
+        { id: 'vpn-email', label: 'VPN & Email', icon: Mail },
         { id: 'travel-insurance', label: t('sidebar.travel_insurance'), icon: Shield },
+        { id: 'roadside', label: 'Roadside Assistance', icon: Wrench },
+        { id: 'wifi-finder', label: 'WiFi Finder', icon: Wifi },
       ]
     },
     {
@@ -118,30 +150,33 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'family-services', label: t('sidebar.family_services'), icon: Baby, badge: 'TRUSTED', variant: 'secondary' as const },
         { id: 'pet-services', label: t('sidebar.pet_services'), icon: Cat },
         { id: 'moving-services', label: t('sidebar.moving_services'), icon: Truck, badge: 'AI', variant: 'secondary' as const },
+        { id: 'delivery-services', label: 'Delivery Services', icon: Truck },
         { id: 'marketplace', label: t('sidebar.marketplace'), icon: Store, badge: 'AI', variant: 'secondary' as const },
         { id: 'social-chat', label: t('sidebar.social_vibe'), icon: Users, badge: 'AI', variant: 'secondary' as const },
         { id: 'nomad-chat', label: t('sidebar.nomad_pulse'), icon: MessageSquare, badge: 'AI', variant: 'secondary' as const },
         { id: 'news', label: t('sidebar.news_updates'), icon: Newspaper },
+        { id: 'local-services', label: 'Local Services', icon: MapPin },
+        { id: 'local-news', label: 'Local News', icon: Newspaper },
+        { id: 'students', label: 'Student Services', icon: GraduationCap },
+        { id: 'super-offers', label: 'Super Offers', icon: Tag, badge: 'HOT', variant: 'secondary' as const },
+        { id: 'my-travel-awards', label: 'My Travel Awards', icon: Award },
       ]
     },
     {
       id: 'premium',
       label: t('sidebar.premium_services'),
       items: [
-        { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
-        { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'emergency', label: t('sidebar.emergency'), icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
-        { id: 'embassy', label: t('sidebar.embassy'), icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },
-        { id: 'sos-services', label: t('sidebar.sos'), icon: Siren, badge: '24/7', variant: 'destructive' as const },
-        { id: 'private-protection', label: t('sidebar.protection'), icon: Shield, badge: 'ELITE', variant: 'secondary' as const },
-        { id: 'cyber-helpline', label: t('sidebar.cyber'), icon: ShieldAlert, badge: 'NEW', variant: 'destructive' as const },
         { id: 'ai-doctor', label: t('sidebar.ai_doctor'), icon: Stethoscope, badge: 'AI' },
         { id: 'ai-lawyer', label: t('sidebar.ai_lawyer'), icon: Scale, badge: 'AI' },
         { id: 'ai-planner', label: t('sidebar.ai_planner'), icon: Plane, badge: 'AI' },
         { id: 'tax-advisors', label: t('sidebar.tax_advisors'), icon: Calculator, badge: 'VIP', variant: 'secondary' as const },
+        { id: 'medical-services', label: 'Medical Services', icon: Stethoscope },
+        { id: 'travel-lawyers', label: 'Travel Legal Services', icon: Scale },
         { id: 'business-centers', label: t('sidebar.business_centers'), icon: Building2, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'remote-offices', label: 'Remote Work Offices', icon: Building },
         { id: 'airport-lounges', label: t('sidebar.lounges'), icon: Crown, badge: 'VIP', variant: 'secondary' as const },
         { id: 'private-clubs', label: t('sidebar.clubs'), icon: Crown, badge: 'ELITE', variant: 'secondary' as const },
+        { id: 'location-tracking', label: 'Location Tracking', icon: Locate },
       ]
     },
   ];
