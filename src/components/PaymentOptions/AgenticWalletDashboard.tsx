@@ -200,27 +200,7 @@ const AgenticWalletDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* Flow Example */}
-                <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/5 via-violet-500/5 to-amber-500/5 border p-4">
-                  <p className="text-sm font-semibold mb-3">🧠 Example: "The Mind-Reading Payout"</p>
-                  <div className="space-y-2">
-                    {[
-                      { step: '1', icon: '📍', text: 'AI senses you\'re hungry in Tokyo (GPS + Time)' },
-                      { step: '2', icon: '⚡', text: 'AI checks SevenRooms via x402 — pays $0.05 for VIP data' },
-                      { step: '3', icon: '💬', text: '"Table at Sukiyabashi Jiro found. $300. Book?"' },
-                      { step: '4', icon: '✅', text: 'You tap "Yes"' },
-                      { step: '5', icon: '💳', text: 'AI generates virtual Visa via Stripe, Visa TAP verifies → settled instantly' },
-                    ].map(s => (
-                      <div key={s.step} className="flex items-center gap-3 text-sm">
-                        <span className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">
-                          {s.step}
-                        </span>
-                        <span>{s.icon}</span>
-                        <span className="text-muted-foreground">{s.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <AgenticScenarioCard />
 
                 {/* Protocol Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
