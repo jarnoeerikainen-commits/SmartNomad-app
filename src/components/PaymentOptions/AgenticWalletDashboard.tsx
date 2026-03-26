@@ -28,6 +28,95 @@ const STORAGE_KEYS = {
   transactions: 'sn_agentic_txns',
 };
 
+const SCENARIOS = [
+  {
+    title: '🍽️ "The Dinner Detective"',
+    steps: [
+      { step: '1', icon: '📍', text: 'AI detects you\'re in Barcelona at 8 PM — dinner time' },
+      { step: '2', icon: '⚡', text: 'x402 micro-pay: $0.04 to check Michelin availability via API' },
+      { step: '3', icon: '💬', text: '"2-star table at Disfrutar available tonight. €180. Reserve?"' },
+      { step: '4', icon: '✅', text: 'You tap "Yes"' },
+      { step: '5', icon: '💳', text: 'Stripe issues single-use Visa, Mastercard Cloud confirms dining category → booked' },
+    ],
+  },
+  {
+    title: '✈️ "The Flash Deal Catcher"',
+    steps: [
+      { step: '1', icon: '🔍', text: 'AI monitors flight prices for your saved route (LIS → BKK)' },
+      { step: '2', icon: '⚡', text: 'x402: $0.03 for real-time fare scan across 12 airlines' },
+      { step: '3', icon: '📉', text: '"Price dropped 40%! Business class €890 vs usual €1,500. Book?"' },
+      { step: '4', icon: '✅', text: 'You tap "Lock it in"' },
+      { step: '5', icon: '🛡️', text: 'Visa TAP verifies agent identity → airline accepts, ticket confirmed' },
+    ],
+  },
+  {
+    title: '🏨 "The Last-Minute Lifesaver"',
+    steps: [
+      { step: '1', icon: '⚠️', text: 'Your flight to Dubai is delayed — arriving 11 PM instead of 6 PM' },
+      { step: '2', icon: '⚡', text: 'AI auto-checks hotel late check-in via x402 ($0.02)' },
+      { step: '3', icon: '💬', text: '"Your hotel won\'t hold past 10 PM. Rebooked at JW Marriott — $220. OK?"' },
+      { step: '4', icon: '✅', text: 'You approve from the plane' },
+      { step: '5', icon: '💳', text: 'Stripe virtual Mastercard issued, merchant-locked to JW Marriott → confirmed' },
+    ],
+  },
+  {
+    title: '🚗 "The Arrival Concierge"',
+    steps: [
+      { step: '1', icon: '✈️', text: 'AI knows you land in Singapore at 2:15 PM tomorrow' },
+      { step: '2', icon: '⚡', text: 'x402: $0.05 checks Blacklane, Grab, and hotel shuttle availability' },
+      { step: '3', icon: '💬', text: '"Private transfer to Marina Bay Sands: $65. eSIM activated. Weather: 31°C"' },
+      { step: '4', icon: '✅', text: 'You approve the transfer' },
+      { step: '5', icon: '🛡️', text: 'Mastercard Cloud auto-approves transport category → driver confirmed' },
+    ],
+  },
+  {
+    title: '💻 "The Coworking Scout"',
+    steps: [
+      { step: '1', icon: '📍', text: 'You arrive in Lisbon — AI detects it\'s Monday 9 AM' },
+      { step: '2', icon: '⚡', text: 'x402: $0.06 scans 8 coworking spaces for availability & reviews' },
+      { step: '3', icon: '💬', text: '"Second Home LX has a hot desk for €25/day. Great reviews. Book a week?"' },
+      { step: '4', icon: '✅', text: 'Auto-approved (under $150 subscription guardrail)' },
+      { step: '5', icon: '💳', text: 'Stripe recurring virtual card issued, locked to Second Home → 5-day pass' },
+    ],
+  },
+];
+
+const AgenticScenarioCard: React.FC = () => {
+  const [scenarioIndex, setScenarioIndex] = useState(() =>
+    Math.floor(Math.random() * SCENARIOS.length)
+  );
+  const scenario = SCENARIOS[scenarioIndex];
+
+  const nextScenario = () => {
+    setScenarioIndex(prev => (prev + 1) % SCENARIOS.length);
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/5 via-violet-500/5 to-amber-500/5 border p-4">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-semibold">{scenario.title}</p>
+        <Button variant="ghost" size="sm" onClick={nextScenario} className="text-xs h-7 gap-1 text-muted-foreground">
+          <ArrowRightLeft className="h-3 w-3" /> Next example
+        </Button>
+      </div>
+      <div className="space-y-2">
+        {scenario.steps.map(s => (
+          <div key={s.step} className="flex items-center gap-3 text-sm">
+            <span className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+              {s.step}
+            </span>
+            <span>{s.icon}</span>
+            <span className="text-muted-foreground">{s.text}</span>
+          </div>
+        ))}
+      </div>
+      <p className="text-[10px] text-muted-foreground mt-3 text-right">
+        Scenario {scenarioIndex + 1} of {SCENARIOS.length} — tap "Next example" for more
+      </p>
+    </div>
+  );
+};
+
 const AgenticWalletDashboard: React.FC = () => {
   const { toast } = useToast();
   const [config, setConfig] = useState<AgenticWalletConfig>(DEMO_WALLET_CONFIG);
@@ -200,27 +289,7 @@ const AgenticWalletDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* Flow Example */}
-                <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/5 via-violet-500/5 to-amber-500/5 border p-4">
-                  <p className="text-sm font-semibold mb-3">🧠 Example: "The Mind-Reading Payout"</p>
-                  <div className="space-y-2">
-                    {[
-                      { step: '1', icon: '📍', text: 'AI senses you\'re hungry in Tokyo (GPS + Time)' },
-                      { step: '2', icon: '⚡', text: 'AI checks SevenRooms via x402 — pays $0.05 for VIP data' },
-                      { step: '3', icon: '💬', text: '"Table at Sukiyabashi Jiro found. $300. Book?"' },
-                      { step: '4', icon: '✅', text: 'You tap "Yes"' },
-                      { step: '5', icon: '💳', text: 'AI generates virtual Visa via Stripe, Visa TAP verifies → settled instantly' },
-                    ].map(s => (
-                      <div key={s.step} className="flex items-center gap-3 text-sm">
-                        <span className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">
-                          {s.step}
-                        </span>
-                        <span>{s.icon}</span>
-                        <span className="text-muted-foreground">{s.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <AgenticScenarioCard />
 
                 {/* Protocol Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
