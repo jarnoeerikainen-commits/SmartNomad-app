@@ -667,16 +667,24 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
                 <div className="flex gap-2">
                   {sttSupported && (
-                    <Button
-                      onClick={handleMicClick}
-                      variant={isListening ? 'default' : 'outline'}
-                      size="sm"
-                      className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
-                      disabled={isTyping}
-                      title={micPermission === 'denied' ? 'Microphone access denied — check browser settings' : isListening ? 'Stop listening' : 'Voice input'}
-                    >
-                      {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            onClick={handleMicClick}
+                            variant={isListening ? 'default' : 'outline'}
+                            size="sm"
+                            className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
+                            disabled={isTyping}
+                          >
+                            {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-[200px]">
+                          <p className="text-[10px]">{micPermission === 'denied' ? '⚠️ Mic blocked — check browser settings' : isListening ? '🎙️ Listening… speak now' : '🎤 Click to talk to me — ask anything!'}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   )}
                   <Input
                     value={inputMessage}
