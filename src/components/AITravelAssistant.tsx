@@ -92,6 +92,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showMicBubble, setShowMicBubble] = useState(false);
+
+  // Show mic speech bubble once for new users
+  useEffect(() => {
+    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
+    if (!seen && sttSupported) {
+      const timer = setTimeout(() => setShowMicBubble(true), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [sttSupported]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const {
