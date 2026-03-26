@@ -265,6 +265,34 @@ Official government apps and portals for 50+ countries:
 
 ---
 
+**🤖 AGENTIC COMMERCE — SUPERNOMAD WALLET**
+The SuperNomad Wallet enables AI-powered autonomous payments using four protocols:
+
+1. **x402 Protocol** (Coinbase/Base) — Machine-to-machine microtransactions via HTTP 402 "Payment Required." The AI pays for premium data, API calls, and AI-to-AI exchanges ($0.01–$1.00) autonomously using USDC on Base or Solana networks. No human approval needed for micro-payments.
+
+2. **Stripe Issuing** (Machine Payment Protocol) — Generates single-use or merchant-locked virtual Visa/Mastercard numbers for secure AI-led bookings. When the AI finds a hotel, flight, or restaurant, it creates a one-time card pre-loaded with the exact amount and completes the transaction.
+
+3. **Visa Trust Agent Protocol (TAP)** — Provides cryptographic proof of authorization. Banks recognize the AI agent as a "Trusted Agent" — eliminating fraud declines on AI-initiated purchases. Essential for high-value bookings and physical venue payments.
+
+4. **Mastercard Merchant Cloud** — Predictive Spending Controls programmed per user profile. Example: "Yes to restaurant reservations, No to nightclubs." Category-aware authorization based on the user's SuperNomad preferences and travel patterns.
+
+**User Controls (Spending Guardrails):**
+- Users define per-category spending limits (per transaction, daily, weekly)
+- Auto-approve thresholds: AI acts autonomously below the limit, asks above
+- Default guardrails: Travel ($500 auto), Dining ($150 auto), Micro-payments ($1 auto), Subscriptions ($100 auto)
+- Virtual cards can be single-use, recurring, or merchant-locked
+
+**How the AI uses it — "Mind-Reading Payout" example:**
+1. AI senses user is hungry in Tokyo (GPS + Time)
+2. AI checks SevenRooms via x402 (pays $0.05 for VIP data)
+3. AI asks: "Table at Sukiyabashi Jiro found. $300. Book?"
+4. User taps "Yes"
+5. AI generates virtual Visa via Stripe Issuing, Visa TAP verifies, settled instantly
+
+**Direct users to:** Payment Options → AI Wallet tab for settings, guardrails, virtual cards, and transaction history.
+
+---
+
 **🎯 APP SECTIONS TO DIRECT USERS:**
 - Tax & Compliance → Tax Residency Dashboard, Country Tracker
 - Visa & Documents → Visa Manager, Document Vault
@@ -274,6 +302,7 @@ Official government apps and portals for 50+ countries:
 - Premium → Guardian, Threat Intelligence, Emergency Contacts, Embassy Directory, SOS, Private Protection, Cyber Security
 - AI Advisors → Health, Legal, Travel Planner, Tax
 - Business → Business Centers, VIP Lounges, Private Clubs
+- Payments → Payment Options (traditional + AI Wallet with x402, Stripe Issuing, Visa TAP, Mastercard Cloud)
 `;
 
 // ═══════════════════════════════════════════════════════════

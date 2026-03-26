@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   CreditCard, Plus, Shield, Lock, Wallet, Settings2, 
-  ArrowRightLeft, AlertTriangle, CheckCircle2 
+  ArrowRightLeft, AlertTriangle, CheckCircle2, Bot 
 } from 'lucide-react';
 import { PaymentMethod, PaymentPreference, PAYMENT_METHOD_CONFIG } from './types';
 import { PaymentMethodCard } from './PaymentMethodCard';
@@ -13,6 +13,9 @@ import { AddPaymentMethodModal } from './AddPaymentMethodModal';
 import { PaymentPreferences } from './PaymentPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const AgenticWalletDashboard = lazy(() => import('./AgenticWalletDashboard'));
 
 // Simple encrypt/decrypt for demo (in production use Web Crypto API)
 const encryptData = (data: any): string => {
@@ -334,16 +337,20 @@ const PaymentOptionsDashboard: React.FC = () => {
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="methods" className="gap-2">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="methods" className="gap-1 text-xs sm:text-sm sm:gap-2">
             <CreditCard className="h-4 w-4" />
             <span className="hidden sm:inline">{t('payment.methods_tab')}</span>
           </TabsTrigger>
-          <TabsTrigger value="rules" className="gap-2">
+          <TabsTrigger value="agentic" className="gap-1 text-xs sm:text-sm sm:gap-2">
+            <Bot className="h-4 w-4" />
+            <span className="hidden sm:inline">AI Wallet</span>
+          </TabsTrigger>
+          <TabsTrigger value="rules" className="gap-1 text-xs sm:text-sm sm:gap-2">
             <Settings2 className="h-4 w-4" />
             <span className="hidden sm:inline">{t('payment.rules_tab')}</span>
           </TabsTrigger>
-          <TabsTrigger value="activity" className="gap-2">
+          <TabsTrigger value="activity" className="gap-1 text-xs sm:text-sm sm:gap-2">
             <ArrowRightLeft className="h-4 w-4" />
             <span className="hidden sm:inline">{t('payment.activity_tab')}</span>
           </TabsTrigger>
@@ -420,6 +427,12 @@ const PaymentOptionsDashboard: React.FC = () => {
               </Button>
             </Card>
           )}
+        </TabsContent>
+
+        <TabsContent value="agentic" className="mt-4">
+          <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+            <AgenticWalletDashboard />
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="rules" className="mt-4">
