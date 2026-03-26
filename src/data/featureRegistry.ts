@@ -30,7 +30,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false },
   { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false },
   { id: 'etias', label: 'ETIAS 2026', icon: Shield, category: 'tax', badge: 'EU', badgeVariant: 'secondary', description: 'EU travel authorization system', defaultVisible: true, defaultPinned: false },
-  { id: 'payment-options', label: 'Payment Options', icon: CreditCard, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Manage payment methods', defaultVisible: true, defaultPinned: false },
+  { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'tax', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods, Agentic Commerce (x402, Stripe Issuing, Visa TAP, Mastercard Cloud)', defaultVisible: true, defaultPinned: false },
   { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false },
   { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, category: 'tax', badge: 'WHO', badgeVariant: 'secondary', description: 'Global vaccination requirements, clinics & health records', defaultVisible: true, defaultPinned: false },
   { id: 'vault', label: 'Document Vault', icon: Shield, category: 'tax', description: 'Secure document storage', defaultVisible: true, defaultPinned: false },
