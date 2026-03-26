@@ -233,7 +233,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
               return;
             }
             if (value === 'help') {
-              const helpText = `${fb.helpIntro} Home, Tracking, Emergency, AI, Profile, Tax, Visa, Documents, Doctor, Lawyer, Weather, Settings.`;
+              const helpText = `${fb.helpIntro} Home, Tracking, Emergency, AI, Profile, Tax, Visa, Immigration, ETIAS, Documents, Doctor, Lawyer, Weather, Vaccinations, Air Charter, Award Cards, Customize, Settings, and more.`;
               setLastFeedback(helpText);
               voice.speak(helpText);
               return;
