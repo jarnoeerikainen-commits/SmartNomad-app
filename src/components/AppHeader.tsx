@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import superNomadLogo from '@/assets/supernomad-logo-v2.png';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
