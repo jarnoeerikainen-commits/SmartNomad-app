@@ -24,35 +24,51 @@ interface HomeSectionProps {
 
 const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNavigate }) => {
   const { t } = useLanguage();
-  const { getPinnedFeatures } = useFeaturePreferences();
+  const { getPinnedFeatures, isVisible } = useFeaturePreferences();
   const pinnedFeatures = getPinnedFeatures();
+
+  const showThreat = isVisible('dash-threat');
+  const showWelcome = isVisible('dash-welcome');
+  const showStats = isVisible('dash-stats');
+  const showWeather = isVisible('dash-weather');
+  const showGamification = isVisible('dash-gamification');
+  const showActivity = isVisible('dash-activity');
+  const showActions = isVisible('dash-actions');
+  const showDiscovery = isVisible('dash-discovery');
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div className="order-1">
-          <ThreatDashboard />
-        </div>
-
-        <div className="order-2 space-y-6">
-          <div className="text-center space-y-4 mb-10 pt-2">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
+      {/* Top row: Threat + Welcome */}
+      {(showThreat || showWelcome) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          {showThreat && (
+            <div className="order-1">
+              <ThreatDashboard />
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight font-display">
-              <span className="text-foreground">Welcome to </span>
-              <span className="text-foreground">Super</span>
-              <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
-            </h1>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              {t('home.subtitle')}
-            </p>
-          </div>
+          )}
 
-          <DashboardHeroCards onNavigate={onNavigate} />
+          {showWelcome && (
+            <div className={`${showThreat ? 'order-2' : 'order-1 md:col-span-2'} space-y-6`}>
+              <div className="text-center space-y-4 mb-10 pt-2">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-xs font-semibold tracking-widest uppercase text-primary">AI-Powered Community</span>
+                </div>
+                <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight font-display">
+                  <span className="text-foreground">Welcome to </span>
+                  <span className="text-foreground">Super</span>
+                  <span style={{ background: 'linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold-light)), hsl(var(--gold-dark)))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} className="drop-shadow-sm">Nomad</span>
+                </h1>
+                <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                  {t('home.subtitle')}
+                </p>
+              </div>
+
+              <DashboardHeroCards onNavigate={onNavigate} />
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Pinned Features Quick Access */}
       {pinnedFeatures.length > 0 && (
@@ -98,24 +114,38 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       )}
 
       {/* Weather Widget + Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          <DashboardQuickStats countries={countries} />
+      {(showStats || showWeather) && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {showStats && (
+            <div className={showWeather ? 'md:col-span-2' : 'md:col-span-3'}>
+              <DashboardQuickStats countries={countries} />
+            </div>
+          )}
+          {showWeather && (
+            <div className={showStats ? '' : 'md:col-span-3'}>
+              <DashboardWeatherWidget onNavigate={onNavigate} />
+            </div>
+          )}
         </div>
-        <DashboardWeatherWidget onNavigate={onNavigate} />
-      </div>
+      )}
 
       {/* Two Column Layout for Dashboard Widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <DashboardGamification countries={countries} />
-          <DashboardRecentActivity countries={countries} />
+      {(showGamification || showActivity || showActions || showDiscovery) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {(showGamification || showActivity) && (
+            <div className="space-y-6">
+              {showGamification && <DashboardGamification countries={countries} />}
+              {showActivity && <DashboardRecentActivity countries={countries} />}
+            </div>
+          )}
+          {(showActions || showDiscovery) && (
+            <div className="space-y-6">
+              {showActions && <DashboardSmartActions countries={countries} onActionClick={(action) => onNavigate(action)} />}
+              {showDiscovery && <DashboardFeatureDiscovery onFeatureClick={(feature) => onNavigate(feature)} />}
+            </div>
+          )}
         </div>
-        <div className="space-y-6">
-          <DashboardSmartActions countries={countries} onActionClick={(action) => onNavigate(action)} />
-          <DashboardFeatureDiscovery onFeatureClick={(feature) => onNavigate(feature)} />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
