@@ -26,6 +26,16 @@ export interface FeatureItem {
 export const SYSTEM_FEATURES = ['dashboard', 'settings', 'help', 'upgrade'];
 
 export const FEATURE_REGISTRY: FeatureItem[] = [
+  // DASHBOARD WIDGETS (front page sections)
+  { id: 'dash-threat', label: 'Threat Intelligence Widget', icon: Shield, category: 'dashboard', description: 'Security alerts on home screen', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-welcome', label: 'Welcome & Hero Cards', icon: Home, category: 'dashboard', description: 'Welcome header with quick navigation', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-stats', label: 'Quick Stats Bar', icon: BarChart3, category: 'dashboard', description: 'Country & day tracking stats', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-weather', label: 'Weather Widget', icon: CloudRain, category: 'dashboard', description: 'Weather overview on home screen', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-gamification', label: 'Gamification & Achievements', icon: Award, category: 'dashboard', description: 'XP, levels & milestones', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-activity', label: 'Recent Activity Feed', icon: Calendar, category: 'dashboard', description: 'Latest tracking activity', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-actions', label: 'Smart Actions', icon: Sparkles, category: 'dashboard', description: 'AI-suggested quick actions', defaultVisible: true, defaultPinned: false },
+  { id: 'dash-discovery', label: 'Feature Discovery', icon: Gift, category: 'dashboard', description: 'Discover new features & tips', defaultVisible: true, defaultPinned: false },
+
   // TAX & COMPLIANCE
   { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false },
   { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false },
@@ -101,6 +111,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
+  dashboard: 'Home Screen Widgets',
   tax: 'Tax & Compliance',
   finance: 'Finance & Payments',
   travel: 'Travel Essentials',
@@ -109,7 +120,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   safety: 'Safety & Emergency',
 };
 
-export const CATEGORY_ORDER = ['safety', 'tax', 'finance', 'travel', 'local', 'premium'];
+export const CATEGORY_ORDER = ['dashboard', 'safety', 'tax', 'finance', 'travel', 'local', 'premium'];
 
 export function getFeatureById(id: string): FeatureItem | undefined {
   return FEATURE_REGISTRY.find(f => f.id === id);
