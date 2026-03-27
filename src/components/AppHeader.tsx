@@ -72,7 +72,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           <Link to="/" className="flex items-center gap-3 cursor-pointer group transition-all hover:opacity-80" title="Back to Dashboard" onClick={handleHomeClick} onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') handleHomeClick();
         }} role="link" tabIndex={0}>
-            <img alt={`${t('app.title')} Logo`} className="h-10 w-10 rounded-xl shadow-medium transition-transform group-hover:scale-105" src="/lovable-uploads/5283b382-e775-4a15-adef-263a22fdddc5.png" />
+            <img alt={`${t('app.title')} Logo`} className="h-10 w-10 rounded-xl shadow-medium transition-transform group-hover:scale-105" src="/lovable-uploads/4fff2397-adb4-41b7-badf-c9586b3adf7f.jpg" />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold font-display tracking-tight">
                 <span className="text-foreground">Super</span>
