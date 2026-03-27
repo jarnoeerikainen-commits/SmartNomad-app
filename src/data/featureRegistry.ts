@@ -12,7 +12,7 @@ export interface FeatureItem {
   id: string;
   label: string;
   icon: any;
-  category: 'tax' | 'travel' | 'local' | 'premium' | 'safety' | 'finance';
+  category: 'tax' | 'travel' | 'local' | 'premium' | 'safety' | 'finance' | 'dashboard';
   badge?: string;
   badgeVariant?: 'default' | 'destructive' | 'outline' | 'secondary';
   description: string;
