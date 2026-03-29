@@ -74,9 +74,9 @@ export const VoiceControlButton: React.FC = () => {
               <p className="text-xs font-semibold mb-1.5">🎙️ Voice Control</p>
               <ul className="text-[10px] space-y-1 leading-relaxed opacity-90">
                 <li>🔊 <strong>Speaker</strong> — Toggle app voice responses</li>
-                <li>🎤 <strong>Mic</strong> — Speak commands hands-free</li>
+                <li>🎤 <strong>Mic</strong> — Tap once & speak, auto-stops!</li>
                 <li>💬 Say <strong>"SuperNomad"</strong> for all commands</li>
-                <li>🗣️ Try: <em>"weather service"</em>, <em>"visa"</em>, <em>"doctor"</em></li>
+                <li>🗣️ Try: <em>"weather"</em>, <em>"visa"</em>, <em>"doctor"</em></li>
               </ul>
             </div>
           </div>
