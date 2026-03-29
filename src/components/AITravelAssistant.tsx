@@ -686,7 +686,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                         <X className="h-3 w-3" />
                       </button>
                       <p className="font-semibold mb-1">🎤 Talk to me!</p>
-                      <p className="opacity-90">Tap the <strong>mic button</strong> and speak — I understand questions, commands, and conversations in any language. Try: <em>"Find me flights to Lisbon"</em></p>
+                      <p className="opacity-90">Just <strong>tap once</strong> and speak — it stops automatically when you finish. No need to press again! Try: <em>"Find me flights to Lisbon"</em></p>
                     </div>
                     <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-primary rotate-45 rounded-sm" />
                   </div>
@@ -707,7 +707,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent side="top" className="max-w-[200px]">
-                          <p className="text-[10px]">{micPermission === 'denied' ? '⚠️ Mic blocked — check browser settings' : isListening ? '🎙️ Listening… speak now' : '🎤 Click to talk to me — ask anything!'}</p>
+                          <p className="text-[10px]">{micPermission === 'denied' ? '⚠️ Mic blocked — check browser settings' : isListening ? '🎙️ Listening… stops automatically when done' : '🎤 Tap once & speak — auto-stops!'}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
