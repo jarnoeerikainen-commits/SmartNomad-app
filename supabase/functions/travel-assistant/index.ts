@@ -1026,6 +1026,27 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
   };
 }
 
+// Detect if query needs deep reasoning
+function needsReasoning(messages: { role: string; content: string }[]): string {
+  const lastUser = messages.filter(m => m.role === 'user').pop()?.content?.toLowerCase() || '';
+  const complexPatterns = [
+    /tax\s*(residency|obligation|implication|strategy|planning)/i,
+    /visa\s*(strategy|options|compare|which)/i,
+    /schengen\s*(calculat|day|rule|limit)/i,
+    /substantial\s*presence/i,
+    /double\s*taxation/i,
+    /flag\s*theory/i,
+    /compare.*countries/i,
+    /best\s*(country|place|city)\s*(for|to)/i,
+    /should\s*i\s*(move|relocate|incorporate)/i,
+    /optimize.*tax/i,
+    /legal\s*(structure|entity|setup)/i,
+  ];
+  if (complexPatterns.some(p => p.test(lastUser))) return 'medium';
+  if (lastUser.length > 500) return 'low'; // Long detailed queries benefit from some reasoning
+  return 'none';
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -1050,7 +1071,23 @@ serve(async (req) => {
 
     const systemPrompt = buildSystemPrompt(currentDateTime, userContext);
 
-    console.log("Calling Lovable AI for travel assistant");
+    // Determine reasoning effort based on query complexity
+    const reasoningEffort = needsReasoning(messages);
+    console.log(`Calling Lovable AI (reasoning: ${reasoningEffort})`);
+
+    const requestBody: any = {
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages,
+      ],
+      stream: true,
+    };
+
+    // Add reasoning for complex queries
+    if (reasoningEffort !== 'none') {
+      requestBody.reasoning = { effort: reasoningEffort };
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -1058,14 +1095,7 @@ serve(async (req) => {
         "Authorization": `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        stream: true,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
