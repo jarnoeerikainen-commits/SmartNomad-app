@@ -154,7 +154,7 @@ const SnomadIdVault: React.FC = () => {
           <StatCard icon={<Network className="w-5 h-5" />} label="Graph Edges" value={stats.graphEdges} />
           <div className="bg-card/50 rounded-lg p-3 border border-border/50">
             <div className="flex items-center gap-2 mb-1">
-              <Lock className="w-5 h-5 text-emerald-400" />
+              <Lock className="w-5 h-5 text-primary" />
               <span className="text-xs text-muted-foreground">Vault Score</span>
             </div>
             <div className="text-xl font-bold text-foreground">{Math.round(stats.completenessScore * 100)}%</div>
@@ -227,9 +227,9 @@ const SnomadIdVault: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <Lock className="w-5 h-5 text-emerald-400" />
+                <Lock className="w-5 h-5 text-primary" />
                 Encrypted Identity Vault
-                <Badge variant="outline" className="ml-2 text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                <Badge variant="outline" className="ml-2 text-[10px] bg-primary/10 text-primary border-primary/30">
                   AES-256-GCM
                 </Badge>
               </CardTitle>
