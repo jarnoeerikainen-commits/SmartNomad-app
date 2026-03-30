@@ -14,13 +14,168 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_memories: {
+        Row: {
+          category: string
+          confidence: number
+          created_at: string
+          device_id: string
+          durability: string
+          fact: string
+          id: string
+          search_vector: unknown
+          source_conversation_id: string | null
+        }
+        Insert: {
+          category?: string
+          confidence?: number
+          created_at?: string
+          device_id: string
+          durability?: string
+          fact: string
+          id?: string
+          search_vector?: unknown
+          source_conversation_id?: string | null
+        }
+        Update: {
+          category?: string
+          confidence?: number
+          created_at?: string
+          device_id?: string
+          durability?: string
+          fact?: string
+          id?: string
+          search_vector?: unknown
+          source_conversation_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_memories_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "device_sessions"
+            referencedColumns: ["device_id"]
+          },
+          {
+            foreignKeyName: "ai_memories_source_conversation_id_fkey"
+            columns: ["source_conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          message_count: number
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          message_count?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          message_count?: number
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "device_sessions"
+            referencedColumns: ["device_id"]
+          },
+        ]
+      }
+      device_sessions: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          last_seen_at: string
+          metadata: Json | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          last_seen_at?: string
+          metadata?: Json | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          last_seen_at?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      search_memories: {
+        Args: {
+          p_category?: string
+          p_device_id: string
+          p_limit?: number
+          p_query?: string
+        }
+        Returns: {
+          category: string
+          confidence: number
+          fact: string
+          id: string
+          rank: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
