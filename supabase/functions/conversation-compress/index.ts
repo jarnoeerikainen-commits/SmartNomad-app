@@ -13,7 +13,7 @@ serve(async (req) => {
   try {
     const { conversationId, messages, deviceId } = await req.json();
 
-    if (!conversationId || !messages || messages.length < 6) {
+    if (!messages || messages.length < 6) {
       return new Response(
         JSON.stringify({ summary: null, reason: 'Not enough messages to compress' }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
