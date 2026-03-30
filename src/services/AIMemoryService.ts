@@ -2,12 +2,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { getDeviceId } from '@/utils/deviceId';
 
 // ═══════════════════════════════════════════════════════════
-// AI Memory Service — Production-Scale Persistence Layer
-// Handles: conversations, messages, memories, cache, compression, analytics
+// AI Memory Service — pgvector Hybrid Search Layer
+// Combines: vector similarity + tsvector keywords + confidence + importance + recency
 // ═══════════════════════════════════════════════════════════
 
-const TOKEN_BUDGET = 6000; // Max tokens for memory context injection
-const COMPRESSION_THRESHOLD = 12; // Messages before triggering compression
+const TOKEN_BUDGET = 6000;
+const COMPRESSION_THRESHOLD = 12;
 
 class AIMemoryService {
   private deviceId: string;
@@ -89,7 +89,42 @@ class AIMemoryService {
     }
   }
 
-  // ─── Weighted Memory Search ────────────────────────────
+  // ─── Generate Query Embedding (via edge function) ──────
+  private async generateQueryEmbedding(query: string): Promise<number[] | null> {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-embedding', {
+        body: { text: query },
+      });
+      if (error || !data?.embedding) return null;
+      return data.embedding;
+    } catch {
+      return null;
+    }
+  }
+
+  // ─── Hybrid Search (pgvector + tsvector) ───────────────
+  async searchMemoriesHybrid(query: string, category?: string, limit = 20): Promise<any[]> {
+    try {
+      // Generate embedding for semantic search
+      const embedding = query ? await this.generateQueryEmbedding(query) : null;
+
+      const { data, error } = await supabase
+        .rpc('search_memories_hybrid', {
+          p_device_id: this.deviceId,
+          p_embedding: embedding ? `[${embedding.join(',')}]` : null,
+          p_query: query || '',
+          p_category: category || null,
+          p_limit: limit,
+        } as any);
+      if (error) throw error;
+      return (data as any[]) || [];
+    } catch (e) {
+      console.warn('Hybrid search failed, falling back:', e);
+      return this.searchMemoriesWeighted(query, category, limit);
+    }
+  }
+
+  // ─── Legacy Weighted Search (fallback) ─────────────────
   async searchMemoriesWeighted(query: string, category?: string, limit = 20): Promise<any[]> {
     try {
       const { data, error } = await supabase
@@ -102,7 +137,6 @@ class AIMemoryService {
       if (error) throw error;
       return (data as any[]) || [];
     } catch {
-      // Fallback to basic search
       return this.searchMemories(query, category, limit);
     }
   }
@@ -149,10 +183,10 @@ class AIMemoryService {
     let conversationSummary = '';
     let tokenEstimate = 0;
 
-    // 1. Get relevant memories via weighted hybrid search
+    // 1. Use hybrid search (pgvector + tsvector) for best results
     try {
       const memories = userQuery
-        ? await this.searchMemoriesWeighted(userQuery, undefined, 15)
+        ? await this.searchMemoriesHybrid(userQuery, undefined, 15)
         : await this.getAllMemories();
 
       if (memories.length > 0) {
@@ -164,16 +198,13 @@ class AIMemoryService {
 
         persistentMemories = '**🧠 PERSISTENT USER MEMORIES (from database):**\n';
         for (const [cat, facts] of Object.entries(grouped)) {
-          const factsText = facts.join('; ');
-          persistentMemories += `- **${cat}:** ${factsText}\n`;
+          persistentMemories += `- **${cat}:** ${facts.join('; ')}\n`;
         }
-
-        // Estimate tokens (~4 chars per token)
         tokenEstimate += Math.ceil(persistentMemories.length / 4);
       }
     } catch {}
 
-    // 2. Get latest conversation summary if available
+    // 2. Get latest conversation summary
     try {
       const convs = await this.getRecentConversations(1);
       if (convs.length > 0) {
@@ -217,16 +248,9 @@ class AIMemoryService {
   ): Promise<string | null> {
     try {
       const { data, error } = await supabase.functions.invoke('conversation-compress', {
-        body: {
-          conversationId,
-          messages,
-          deviceId: this.deviceId,
-        }
+        body: { conversationId, messages, deviceId: this.deviceId }
       });
-      if (error) {
-        console.warn('Compression failed:', error);
-        return null;
-      }
+      if (error) { console.warn('Compression failed:', error); return null; }
       return data?.summary || null;
     } catch (e) {
       console.warn('Compression error:', e);
@@ -241,18 +265,11 @@ class AIMemoryService {
   ): Promise<void> {
     try {
       const { data, error } = await supabase.functions.invoke('memory-distill', {
-        body: {
-          messages,
-          deviceId: this.deviceId,
-          conversationId: conversationId || null,
-        }
+        body: { messages, deviceId: this.deviceId, conversationId: conversationId || null }
       });
-      if (error) {
-        console.warn('Distillation failed:', error);
-        return;
-      }
+      if (error) { console.warn('Distillation failed:', error); return; }
       if (data?.stored > 0) {
-        console.log(`🧠 Distilled ${data.stored} new memories`);
+        console.log(`🧠 Distilled ${data.stored} memories with vector embeddings`);
       }
     } catch (e) {
       console.warn('Distillation error:', e);
@@ -269,13 +286,10 @@ class AIMemoryService {
         .gt('expires_at', new Date().toISOString())
         .single();
       if (error || !data) return null;
-
-      // Increment hit count
       await supabase
         .from('ai_cache' as any)
         .update({ hit_count: ((data as any).hit_count || 0) + 1 } as any)
         .eq('id', (data as any).id);
-
       return (data as any).response_text;
     } catch {
       return null;
@@ -301,14 +315,9 @@ class AIMemoryService {
 
   // ─── Usage Analytics ───────────────────────────────────
   async logUsage(params: {
-    functionName: string;
-    model?: string;
-    inputTokens?: number;
-    outputTokens?: number;
-    latencyMs?: number;
-    cacheHit?: boolean;
-    reasoning?: string;
-    error?: string;
+    functionName: string; model?: string; inputTokens?: number;
+    outputTokens?: number; latencyMs?: number; cacheHit?: boolean;
+    reasoning?: string; error?: string;
   }): Promise<void> {
     try {
       await supabase.rpc('log_ai_usage', {
@@ -325,15 +334,14 @@ class AIMemoryService {
     } catch {}
   }
 
-  // ─── Query Hash (for cache dedup) ──────────────────────
+  // ─── Query Hash ────────────────────────────────────────
   generateQueryHash(query: string, context?: string): string {
-    // Simple hash for cache key — strips whitespace, lowercases, takes first 200 chars
     const normalized = (query + (context || '')).toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 200);
     let hash = 0;
     for (let i = 0; i < normalized.length; i++) {
       const char = normalized.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
+      hash = hash & hash;
     }
     return `q_${Math.abs(hash).toString(36)}`;
   }
@@ -343,5 +351,4 @@ class AIMemoryService {
   }
 }
 
-// Singleton
 export const aiMemoryService = new AIMemoryService();

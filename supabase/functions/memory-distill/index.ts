@@ -5,6 +5,34 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+async function generateEmbedding(text: string, apiKey: string): Promise<number[] | null> {
+  try {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/embeddings", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "text-embedding-3-small",
+        input: text.slice(0, 500),
+        dimensions: 384,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Embedding API error:", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    return data?.data?.[0]?.embedding || null;
+  } catch (e) {
+    console.error("Embedding generation failed:", e);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -15,7 +43,7 @@ serve(async (req) => {
 
     if (!messages || !Array.isArray(messages) || messages.length < 2) {
       return new Response(
-        JSON.stringify({ facts: [] }),
+        JSON.stringify({ facts: [], stored: 0 }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -23,7 +51,6 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    // Only analyze user messages for preference extraction
     const userMessages = messages
       .filter((m: any) => m.role === 'user')
       .map((m: any) => m.content)
@@ -31,7 +58,7 @@ serve(async (req) => {
 
     if (userMessages.length < 20) {
       return new Response(
-        JSON.stringify({ facts: [] }),
+        JSON.stringify({ facts: [], stored: 0 }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -96,7 +123,7 @@ Respond using the extract_memories tool.`;
       const errText = await response.text();
       console.error("AI gateway error:", response.status, errText);
       return new Response(
-        JSON.stringify({ facts: [] }),
+        JSON.stringify({ facts: [], stored: 0 }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -114,7 +141,7 @@ Respond using the extract_memories tool.`;
       console.error("Failed to parse tool call:", e);
     }
 
-    // Store facts in Supabase if deviceId provided
+    // Store facts with vector embeddings in Supabase
     if (facts.length > 0 && deviceId) {
       const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
       const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -124,31 +151,35 @@ Respond using the extract_memories tool.`;
           'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
           'apikey': SUPABASE_SERVICE_ROLE_KEY,
           'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates',
         };
 
-        // Ensure device session exists first
+        // Ensure device session exists
         await fetch(`${SUPABASE_URL}/rest/v1/device_sessions`, {
           method: 'POST',
           headers: { ...headers, 'Prefer': 'resolution=merge-duplicates' },
           body: JSON.stringify({ device_id: deviceId, last_seen_at: new Date().toISOString() }),
         });
 
-        const insertPayload = facts.map((f: any) => ({
+        // Generate embeddings for each fact in parallel
+        const embeddingPromises = facts.map((f: any) =>
+          generateEmbedding(`${f.category}: ${f.fact}`, LOVABLE_API_KEY)
+        );
+        const embeddings = await Promise.all(embeddingPromises);
+
+        const insertPayload = facts.map((f: any, i: number) => ({
           device_id: deviceId,
           fact: f.fact,
           category: f.category,
           confidence: Math.min(1, Math.max(0.5, f.confidence || 0.8)),
           durability: 'durable',
           source_conversation_id: conversationId || null,
+          embedding: embeddings[i] ? `[${embeddings[i]!.join(',')}]` : null,
         }));
 
         const insertResp = await fetch(`${SUPABASE_URL}/rest/v1/ai_memories`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-            'apikey': SUPABASE_SERVICE_ROLE_KEY,
-            'Content-Type': 'application/json',
+            ...headers,
             'Prefer': 'resolution=ignore-duplicates',
           },
           body: JSON.stringify(insertPayload),
@@ -157,7 +188,7 @@ Respond using the extract_memories tool.`;
         if (!insertResp.ok) {
           console.error("Failed to store memories:", await insertResp.text());
         } else {
-          console.log(`Stored ${facts.length} memories for device ${deviceId}`);
+          console.log(`Stored ${facts.length} memories with embeddings for device ${deviceId}`);
         }
       }
     }
@@ -169,7 +200,7 @@ Respond using the extract_memories tool.`;
   } catch (error) {
     console.error("Memory distill error:", error);
     return new Response(
-      JSON.stringify({ error: error.message, facts: [] }),
+      JSON.stringify({ error: error.message, facts: [], stored: 0 }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
