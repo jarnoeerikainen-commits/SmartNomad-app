@@ -207,7 +207,7 @@ class AIMemoryService {
   }
 
   // ─── Conversation Compression ──────────────────────────
-  async shouldCompress(messageCount: number): boolean {
+  async shouldCompress(messageCount: number): Promise<boolean> {
     return messageCount >= COMPRESSION_THRESHOLD;
   }
 
