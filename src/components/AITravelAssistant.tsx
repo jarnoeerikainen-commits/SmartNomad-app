@@ -320,6 +320,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
       learnedMemories: fullAppContext.learnedMemories || undefined,
       persistentMemories: persistentMemories || undefined,
+      conversationSummary: conversationSummary || undefined,
       subscriptionTier: fullAppContext.subscriptionTier || undefined,
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
     };
