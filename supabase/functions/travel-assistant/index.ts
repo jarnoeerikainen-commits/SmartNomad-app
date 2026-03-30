@@ -1020,6 +1020,7 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     trackedCountries: Array.isArray(c.trackedCountries) ? c.trackedCountries.slice(0, 20) : undefined,
     calendar: typeof c.calendar === 'string' ? c.calendar.slice(0, 3000) : '',
     learnedMemories: typeof c.learnedMemories === 'string' ? c.learnedMemories.slice(0, 2000) : '',
+    persistentMemories: typeof c.persistentMemories === 'string' ? c.persistentMemories.slice(0, 3000) : '',
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
