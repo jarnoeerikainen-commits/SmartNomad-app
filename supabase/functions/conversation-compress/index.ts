@@ -21,7 +21,7 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Service configuration error");
 
     const startTime = Date.now();
 
@@ -124,7 +124,7 @@ Rules:
   } catch (error) {
     console.error("Compression error:", error);
     return new Response(
-      JSON.stringify({ error: error.message, summary: null }),
+      JSON.stringify({ error: "Service unavailable", summary: null }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

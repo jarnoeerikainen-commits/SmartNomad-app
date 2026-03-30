@@ -428,6 +428,7 @@ export type Database = {
     }
     Functions: {
       cleanup_expired_cache: { Args: never; Returns: number }
+      get_request_device_id: { Args: never; Returns: string }
       log_ai_usage: {
         Args: {
           p_cache_hit?: boolean

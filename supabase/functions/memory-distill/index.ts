@@ -49,7 +49,7 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Service configuration error");
 
     const userMessages = messages
       .filter((m: any) => m.role === 'user')
@@ -200,7 +200,7 @@ Respond using the extract_memories tool.`;
   } catch (error) {
     console.error("Memory distill error:", error);
     return new Response(
-      JSON.stringify({ error: error.message, facts: [], stored: 0 }),
+      JSON.stringify({ error: "Service unavailable", facts: [], stored: 0 }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
