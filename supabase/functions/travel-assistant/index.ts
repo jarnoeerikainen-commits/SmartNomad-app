@@ -839,6 +839,8 @@ ${userContext?.calendar ? `\n**📅 USER'S CALENDAR (upcoming events/trips):**\n
 
 ${userContext?.learnedMemories ? `\n${userContext.learnedMemories}` : ''}
 
+${userContext?.persistentMemories ? `\n**🧠 PERSISTENT USER MEMORIES (from database — high confidence):**\n${userContext.persistentMemories}\nThese are verified durable preferences extracted from past conversations. Use them to personalize recommendations WITHOUT asking the user again.` : ''}
+
 ${userContext?.expenseSummary ? `\n**💰 EXPENSE TRACKING:**\n${userContext.expenseSummary}\nReference spending patterns when making budget-aware recommendations.` : ''}
 
 **REMEMBER EVERYTHING:** Travel mode, family composition, preferences, past recommendations, budget signals.
@@ -1020,10 +1022,32 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     trackedCountries: Array.isArray(c.trackedCountries) ? c.trackedCountries.slice(0, 20) : undefined,
     calendar: typeof c.calendar === 'string' ? c.calendar.slice(0, 3000) : '',
     learnedMemories: typeof c.learnedMemories === 'string' ? c.learnedMemories.slice(0, 2000) : '',
+    persistentMemories: typeof c.persistentMemories === 'string' ? c.persistentMemories.slice(0, 3000) : '',
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
   };
+}
+
+// Detect if query needs deep reasoning
+function needsReasoning(messages: { role: string; content: string }[]): string {
+  const lastUser = messages.filter(m => m.role === 'user').pop()?.content?.toLowerCase() || '';
+  const complexPatterns = [
+    /tax\s*(residency|obligation|implication|strategy|planning)/i,
+    /visa\s*(strategy|options|compare|which)/i,
+    /schengen\s*(calculat|day|rule|limit)/i,
+    /substantial\s*presence/i,
+    /double\s*taxation/i,
+    /flag\s*theory/i,
+    /compare.*countries/i,
+    /best\s*(country|place|city)\s*(for|to)/i,
+    /should\s*i\s*(move|relocate|incorporate)/i,
+    /optimize.*tax/i,
+    /legal\s*(structure|entity|setup)/i,
+  ];
+  if (complexPatterns.some(p => p.test(lastUser))) return 'medium';
+  if (lastUser.length > 500) return 'low'; // Long detailed queries benefit from some reasoning
+  return 'none';
 }
 
 serve(async (req) => {
@@ -1050,7 +1074,23 @@ serve(async (req) => {
 
     const systemPrompt = buildSystemPrompt(currentDateTime, userContext);
 
-    console.log("Calling Lovable AI for travel assistant");
+    // Determine reasoning effort based on query complexity
+    const reasoningEffort = needsReasoning(messages);
+    console.log(`Calling Lovable AI (reasoning: ${reasoningEffort})`);
+
+    const requestBody: any = {
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages,
+      ],
+      stream: true,
+    };
+
+    // Add reasoning for complex queries
+    if (reasoningEffort !== 'none') {
+      requestBody.reasoning = { effort: reasoningEffort };
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -1058,14 +1098,7 @@ serve(async (req) => {
         "Authorization": `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        stream: true,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
