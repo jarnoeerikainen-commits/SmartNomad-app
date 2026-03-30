@@ -2,8 +2,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { getDeviceId } from '@/utils/deviceId';
 
 // ═══════════════════════════════════════════════════════════
-// AI Memory Service — Persistent conversation & memory layer
+// AI Memory Service — Production-Scale Persistence Layer
+// Handles: conversations, messages, memories, cache, compression, analytics
 // ═══════════════════════════════════════════════════════════
+
+const TOKEN_BUDGET = 6000; // Max tokens for memory context injection
+const COMPRESSION_THRESHOLD = 12; // Messages before triggering compression
 
 class AIMemoryService {
   private deviceId: string;
@@ -13,7 +17,7 @@ class AIMemoryService {
     this.deviceId = getDeviceId();
   }
 
-  // Ensure device session exists in DB
+  // ─── Session Management ────────────────────────────────
   async ensureSession(): Promise<void> {
     if (this.sessionRegistered) return;
     try {
@@ -25,11 +29,11 @@ class AIMemoryService {
         );
       if (!error) this.sessionRegistered = true;
     } catch (e) {
-      console.warn('Failed to register device session:', e);
+      console.warn('Session registration failed:', e);
     }
   }
 
-  // Create a new conversation
+  // ─── Conversation CRUD ─────────────────────────────────
   async createConversation(title?: string): Promise<string | null> {
     await this.ensureSession();
     try {
@@ -41,23 +45,21 @@ class AIMemoryService {
       if (error) throw error;
       return (data as any)?.id || null;
     } catch (e) {
-      console.warn('Failed to create conversation:', e);
+      console.warn('Create conversation failed:', e);
       return null;
     }
   }
 
-  // Save a message to a conversation
   async saveMessage(conversationId: string, role: 'user' | 'assistant', content: string): Promise<void> {
     try {
       await supabase
         .from('chat_messages' as any)
         .insert({ conversation_id: conversationId, role, content } as any);
     } catch (e) {
-      console.warn('Failed to save message:', e);
+      console.warn('Save message failed:', e);
     }
   }
 
-  // Load recent conversations
   async getRecentConversations(limit = 10): Promise<any[]> {
     try {
       const { data, error } = await supabase
@@ -68,13 +70,11 @@ class AIMemoryService {
         .limit(limit);
       if (error) throw error;
       return (data as any[]) || [];
-    } catch (e) {
-      console.warn('Failed to load conversations:', e);
+    } catch {
       return [];
     }
   }
 
-  // Load messages for a conversation
   async getConversationMessages(conversationId: string): Promise<any[]> {
     try {
       const { data, error } = await supabase
@@ -84,13 +84,29 @@ class AIMemoryService {
         .order('created_at', { ascending: true });
       if (error) throw error;
       return (data as any[]) || [];
-    } catch (e) {
-      console.warn('Failed to load messages:', e);
+    } catch {
       return [];
     }
   }
 
-  // Search memories using hybrid search (full-text + category)
+  // ─── Weighted Memory Search ────────────────────────────
+  async searchMemoriesWeighted(query: string, category?: string, limit = 20): Promise<any[]> {
+    try {
+      const { data, error } = await supabase
+        .rpc('search_memories_weighted', {
+          p_device_id: this.deviceId,
+          p_query: query || '',
+          p_category: category || null,
+          p_limit: limit,
+        } as any);
+      if (error) throw error;
+      return (data as any[]) || [];
+    } catch {
+      // Fallback to basic search
+      return this.searchMemories(query, category, limit);
+    }
+  }
+
   async searchMemories(query: string, category?: string, limit = 20): Promise<any[]> {
     try {
       const { data, error } = await supabase
@@ -102,54 +118,127 @@ class AIMemoryService {
         } as any);
       if (error) throw error;
       return (data as any[]) || [];
-    } catch (e) {
-      console.warn('Failed to search memories:', e);
+    } catch {
       return [];
     }
   }
 
-  // Get all memories for context injection
   async getAllMemories(): Promise<any[]> {
     try {
       const { data, error } = await supabase
         .from('ai_memories' as any)
-        .select('fact, category, confidence')
+        .select('fact, category, confidence, importance, semantic_tags')
         .eq('device_id', this.deviceId)
         .eq('durability', 'durable')
         .order('confidence', { ascending: false })
         .limit(50);
       if (error) throw error;
       return (data as any[]) || [];
-    } catch (e) {
-      console.warn('Failed to load memories:', e);
+    } catch {
       return [];
     }
   }
 
-  // Build memory context string for AI prompt injection
-  async buildMemoryContext(query?: string): Promise<string> {
-    // Get relevant memories via hybrid search if query provided, else get all
-    const memories = query 
-      ? await this.searchMemories(query, undefined, 15)
-      : await this.getAllMemories();
+  // ─── Smart Context Builder (Token-Budget Aware) ────────
+  async buildSmartContext(userQuery: string): Promise<{
+    persistentMemories: string;
+    conversationSummary: string;
+    tokenEstimate: number;
+  }> {
+    let persistentMemories = '';
+    let conversationSummary = '';
+    let tokenEstimate = 0;
 
-    if (memories.length === 0) return '';
+    // 1. Get relevant memories via weighted hybrid search
+    try {
+      const memories = userQuery
+        ? await this.searchMemoriesWeighted(userQuery, undefined, 15)
+        : await this.getAllMemories();
 
-    const grouped: Record<string, string[]> = {};
-    for (const m of memories) {
-      if (!grouped[m.category]) grouped[m.category] = [];
-      grouped[m.category].push(m.fact);
+      if (memories.length > 0) {
+        const grouped: Record<string, string[]> = {};
+        for (const m of memories) {
+          if (!grouped[m.category]) grouped[m.category] = [];
+          grouped[m.category].push(m.fact);
+        }
+
+        persistentMemories = '**🧠 PERSISTENT USER MEMORIES (from database):**\n';
+        for (const [cat, facts] of Object.entries(grouped)) {
+          const factsText = facts.join('; ');
+          persistentMemories += `- **${cat}:** ${factsText}\n`;
+        }
+
+        // Estimate tokens (~4 chars per token)
+        tokenEstimate += Math.ceil(persistentMemories.length / 4);
+      }
+    } catch {}
+
+    // 2. Get latest conversation summary if available
+    try {
+      const convs = await this.getRecentConversations(1);
+      if (convs.length > 0) {
+        const { data } = await supabase
+          .from('conversation_summaries' as any)
+          .select('summary')
+          .eq('conversation_id', convs[0].id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+        if (data) {
+          conversationSummary = `**📋 PREVIOUS CONVERSATION SUMMARY:**\n${(data as any).summary}\n`;
+          tokenEstimate += Math.ceil(conversationSummary.length / 4);
+        }
+      }
+    } catch {}
+
+    // 3. Trim if over budget
+    if (tokenEstimate > TOKEN_BUDGET) {
+      const ratio = TOKEN_BUDGET / tokenEstimate;
+      if (persistentMemories.length > 500) {
+        persistentMemories = persistentMemories.slice(0, Math.floor(persistentMemories.length * ratio));
+      }
+      if (conversationSummary.length > 500) {
+        conversationSummary = conversationSummary.slice(0, Math.floor(conversationSummary.length * ratio));
+      }
+      tokenEstimate = TOKEN_BUDGET;
     }
 
-    let context = '**🧠 PERSISTENT USER PREFERENCES (from database):**\n';
-    for (const [cat, facts] of Object.entries(grouped)) {
-      context += `- **${cat}:** ${facts.join('; ')}\n`;
-    }
-    return context;
+    return { persistentMemories, conversationSummary, tokenEstimate };
   }
 
-  // Trigger memory distillation after conversation
-  async distillMemories(messages: { role: string; content: string }[], conversationId?: string): Promise<void> {
+  // ─── Conversation Compression ──────────────────────────
+  async shouldCompress(messageCount: number): boolean {
+    return messageCount >= COMPRESSION_THRESHOLD;
+  }
+
+  async compressConversation(
+    conversationId: string,
+    messages: { role: string; content: string }[]
+  ): Promise<string | null> {
+    try {
+      const { data, error } = await supabase.functions.invoke('conversation-compress', {
+        body: {
+          conversationId,
+          messages,
+          deviceId: this.deviceId,
+        }
+      });
+      if (error) {
+        console.warn('Compression failed:', error);
+        return null;
+      }
+      return data?.summary || null;
+    } catch (e) {
+      console.warn('Compression error:', e);
+      return null;
+    }
+  }
+
+  // ─── Memory Distillation ──────────────────────────────
+  async distillMemories(
+    messages: { role: string; content: string }[],
+    conversationId?: string
+  ): Promise<void> {
     try {
       const { data, error } = await supabase.functions.invoke('memory-distill', {
         body: {
@@ -159,15 +248,94 @@ class AIMemoryService {
         }
       });
       if (error) {
-        console.warn('Memory distillation failed:', error);
+        console.warn('Distillation failed:', error);
         return;
       }
       if (data?.stored > 0) {
         console.log(`🧠 Distilled ${data.stored} new memories`);
       }
     } catch (e) {
-      console.warn('Memory distillation error:', e);
+      console.warn('Distillation error:', e);
     }
+  }
+
+  // ─── AI Cache ──────────────────────────────────────────
+  async checkCache(queryHash: string): Promise<string | null> {
+    try {
+      const { data, error } = await supabase
+        .from('ai_cache' as any)
+        .select('response_text, id, hit_count')
+        .eq('cache_key', queryHash)
+        .gt('expires_at', new Date().toISOString())
+        .single();
+      if (error || !data) return null;
+
+      // Increment hit count
+      await supabase
+        .from('ai_cache' as any)
+        .update({ hit_count: ((data as any).hit_count || 0) + 1 } as any)
+        .eq('id', (data as any).id);
+
+      return (data as any).response_text;
+    } catch {
+      return null;
+    }
+  }
+
+  async storeCache(queryHash: string, queryText: string, responseText: string, ttlHours = 24): Promise<void> {
+    try {
+      const expiresAt = new Date(Date.now() + ttlHours * 3600000).toISOString();
+      await supabase
+        .from('ai_cache' as any)
+        .upsert({
+          cache_key: queryHash,
+          query_text: queryText.slice(0, 500),
+          response_text: responseText,
+          token_count: Math.ceil(responseText.length / 4),
+          expires_at: expiresAt,
+        } as any, { onConflict: 'cache_key' });
+    } catch (e) {
+      console.warn('Cache store failed:', e);
+    }
+  }
+
+  // ─── Usage Analytics ───────────────────────────────────
+  async logUsage(params: {
+    functionName: string;
+    model?: string;
+    inputTokens?: number;
+    outputTokens?: number;
+    latencyMs?: number;
+    cacheHit?: boolean;
+    reasoning?: string;
+    error?: string;
+  }): Promise<void> {
+    try {
+      await supabase.rpc('log_ai_usage', {
+        p_device_id: this.deviceId,
+        p_function_name: params.functionName,
+        p_model: params.model || 'gemini-3-flash',
+        p_input_tokens: params.inputTokens || 0,
+        p_output_tokens: params.outputTokens || 0,
+        p_latency_ms: params.latencyMs || 0,
+        p_cache_hit: params.cacheHit || false,
+        p_reasoning: params.reasoning || null,
+        p_error: params.error || null,
+      } as any);
+    } catch {}
+  }
+
+  // ─── Query Hash (for cache dedup) ──────────────────────
+  generateQueryHash(query: string, context?: string): string {
+    // Simple hash for cache key — strips whitespace, lowercases, takes first 200 chars
+    const normalized = (query + (context || '')).toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 200);
+    let hash = 0;
+    for (let i = 0; i < normalized.length; i++) {
+      const char = normalized.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return `q_${Math.abs(hash).toString(36)}`;
   }
 
   getDeviceId(): string {

@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.memory-distill]
 verify_jwt = false
+
+[functions.conversation-compress]
+verify_jwt = false
