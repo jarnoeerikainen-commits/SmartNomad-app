@@ -408,6 +408,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'etias': return <ETIASCenter />;
       case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
+      case 'snomad-id': return <SnomadIdVault />;
       case 'customize': return <FeatureCustomizer />;
       default:
         return (
