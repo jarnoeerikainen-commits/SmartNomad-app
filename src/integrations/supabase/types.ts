@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          expires_at: string
+          hit_count: number
+          id: string
+          metadata: Json | null
+          model: string
+          query_text: string
+          response_text: string
+          token_count: number
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          expires_at?: string
+          hit_count?: number
+          id?: string
+          metadata?: Json | null
+          model?: string
+          query_text: string
+          response_text: string
+          token_count?: number
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          expires_at?: string
+          hit_count?: number
+          id?: string
+          metadata?: Json | null
+          model?: string
+          query_text?: string
+          response_text?: string
+          token_count?: number
+        }
+        Relationships: []
+      }
       ai_memories: {
         Row: {
           category: string
@@ -23,7 +62,9 @@ export type Database = {
           durability: string
           fact: string
           id: string
+          importance: number
           search_vector: unknown
+          semantic_tags: string[] | null
           source_conversation_id: string | null
         }
         Insert: {
@@ -34,7 +75,9 @@ export type Database = {
           durability?: string
           fact: string
           id?: string
+          importance?: number
           search_vector?: unknown
+          semantic_tags?: string[] | null
           source_conversation_id?: string | null
         }
         Update: {
@@ -45,7 +88,9 @@ export type Database = {
           durability?: string
           fact?: string
           id?: string
+          importance?: number
           search_vector?: unknown
+          semantic_tags?: string[] | null
           source_conversation_id?: string | null
         }
         Relationships: [
@@ -64,6 +109,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_usage_logs: {
+        Row: {
+          cache_hit: boolean
+          created_at: string
+          device_id: string
+          error: string | null
+          function_name: string
+          id: string
+          input_tokens: number
+          latency_ms: number
+          model: string
+          output_tokens: number
+          reasoning_used: string | null
+        }
+        Insert: {
+          cache_hit?: boolean
+          created_at?: string
+          device_id: string
+          error?: string | null
+          function_name: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string
+          output_tokens?: number
+          reasoning_used?: string | null
+        }
+        Update: {
+          cache_hit?: boolean
+          created_at?: string
+          device_id?: string
+          error?: string | null
+          function_name?: string
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string
+          output_tokens?: number
+          reasoning_used?: string | null
+        }
+        Relationships: []
       }
       chat_messages: {
         Row: {
@@ -90,6 +177,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversation_summaries: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          id: string
+          messages_summarized: number
+          summary: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          id?: string
+          messages_summarized?: number
+          summary: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          messages_summarized?: number
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_summaries_conversation_id_fkey"
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
@@ -161,6 +280,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_cache: { Args: never; Returns: number }
+      log_ai_usage: {
+        Args: {
+          p_cache_hit?: boolean
+          p_device_id: string
+          p_error?: string
+          p_function_name: string
+          p_input_tokens?: number
+          p_latency_ms?: number
+          p_model?: string
+          p_output_tokens?: number
+          p_reasoning?: string
+        }
+        Returns: undefined
+      }
       search_memories: {
         Args: {
           p_category?: string
@@ -174,6 +308,23 @@ export type Database = {
           fact: string
           id: string
           rank: number
+        }[]
+      }
+      search_memories_weighted: {
+        Args: {
+          p_category?: string
+          p_device_id: string
+          p_limit?: number
+          p_query?: string
+        }
+        Returns: {
+          category: string
+          confidence: number
+          fact: string
+          id: string
+          importance: number
+          semantic_tags: string[]
+          weighted_score: number
         }[]
       }
     }
