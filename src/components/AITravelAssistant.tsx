@@ -259,10 +259,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       aiMemoryService.saveMessage(conversationIdRef.current, 'user', userMessage);
     }
 
-    // Fetch persistent memories via hybrid search
+    // Fetch persistent memories + conversation summary via smart context builder
     let persistentMemories = '';
+    let conversationSummary = '';
     try {
-      persistentMemories = await aiMemoryService.buildMemoryContext(userMessage);
+      const smartCtx = await aiMemoryService.buildSmartContext(userMessage);
+      persistentMemories = smartCtx.persistentMemories;
+      conversationSummary = smartCtx.conversationSummary;
     } catch {}
 
     const activeThreats = dummyThreats
