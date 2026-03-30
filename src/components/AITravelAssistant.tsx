@@ -340,7 +340,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               content: m.content
             }))
             .concat([{ role: 'user', content: userMessage }]),
-          userContext
+          userContext,
+          deviceId: aiMemoryService.getDeviceId(),
         }),
       });
 
