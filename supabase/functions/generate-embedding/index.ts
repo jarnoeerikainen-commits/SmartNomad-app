@@ -20,7 +20,7 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    if (!LOVABLE_API_KEY) throw new Error("Service configuration error");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/embeddings", {
       method: "POST",
@@ -53,7 +53,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Embedding error:", error);
     return new Response(
-      JSON.stringify({ error: error.message, embedding: null }),
+      JSON.stringify({ error: "Service unavailable", embedding: null }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
