@@ -259,10 +259,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       aiMemoryService.saveMessage(conversationIdRef.current, 'user', userMessage);
     }
 
-    // Fetch persistent memories via hybrid search
+    // Fetch persistent memories + conversation summary via smart context builder
     let persistentMemories = '';
+    let conversationSummary = '';
     try {
-      persistentMemories = await aiMemoryService.buildMemoryContext(userMessage);
+      const smartCtx = await aiMemoryService.buildSmartContext(userMessage);
+      persistentMemories = smartCtx.persistentMemories;
+      conversationSummary = smartCtx.conversationSummary;
     } catch {}
 
     const activeThreats = dummyThreats
@@ -317,6 +320,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
       learnedMemories: fullAppContext.learnedMemories || undefined,
       persistentMemories: persistentMemories || undefined,
+      conversationSummary: conversationSummary || undefined,
       subscriptionTier: fullAppContext.subscriptionTier || undefined,
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
     };
@@ -336,7 +340,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               content: m.content
             }))
             .concat([{ role: 'user', content: userMessage }]),
-          userContext
+          userContext,
+          deviceId: aiMemoryService.getDeviceId(),
         }),
       });
 
@@ -463,6 +468,23 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
         }, 5000);
       }
+
+      // Trigger conversation compression when messages get long
+      const currentMsgCount = messages.filter(m => m.id !== '1').length;
+      if (currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
+        const chatMessages = messages
+          .filter(m => m.id !== '1')
+          .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
+        aiMemoryService.compressConversation(conversationIdRef.current, chatMessages);
+      }
+
+      // Log usage analytics
+      const latencyMs = Date.now() - (messages[messages.length - 1]?.timestamp?.getTime() || Date.now());
+      aiMemoryService.logUsage({
+        functionName: 'travel-assistant',
+        latencyMs: Math.max(0, latencyMs),
+        outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
+      });
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
 

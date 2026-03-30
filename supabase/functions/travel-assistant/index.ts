@@ -841,6 +841,8 @@ ${userContext?.learnedMemories ? `\n${userContext.learnedMemories}` : ''}
 
 ${userContext?.persistentMemories ? `\n**🧠 PERSISTENT USER MEMORIES (from database — high confidence):**\n${userContext.persistentMemories}\nThese are verified durable preferences extracted from past conversations. Use them to personalize recommendations WITHOUT asking the user again.` : ''}
 
+${userContext?.conversationSummary ? `\n**📋 PREVIOUS CONVERSATION CONTEXT:**\n${userContext.conversationSummary}\nThis is a compressed summary of earlier messages in this conversation. Use it for continuity — the user expects you to remember what was discussed.` : ''}
+
 ${userContext?.expenseSummary ? `\n**💰 EXPENSE TRACKING:**\n${userContext.expenseSummary}\nReference spending patterns when making budget-aware recommendations.` : ''}
 
 **REMEMBER EVERYTHING:** Travel mode, family composition, preferences, past recommendations, budget signals.
@@ -1023,6 +1025,7 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     calendar: typeof c.calendar === 'string' ? c.calendar.slice(0, 3000) : '',
     learnedMemories: typeof c.learnedMemories === 'string' ? c.learnedMemories.slice(0, 2000) : '',
     persistentMemories: typeof c.persistentMemories === 'string' ? c.persistentMemories.slice(0, 3000) : '',
+    conversationSummary: typeof c.conversationSummary === 'string' ? c.conversationSummary.slice(0, 2000) : '',
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
@@ -1062,7 +1065,8 @@ serve(async (req) => {
     }
     const messages = validateMessages(body.messages);
     const userContext = sanitizeContext(body.userContext);
-    console.log("Travel assistant request received");
+    const startTime = Date.now();
+    console.log("Travel assistant request received", { reasoning: 'pending', messageCount: messages.length });
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -1120,6 +1124,31 @@ serve(async (req) => {
         JSON.stringify({ error: "AI gateway error" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    const latencyMs = Date.now() - startTime;
+    console.log(`Travel assistant responded (${latencyMs}ms, reasoning: ${reasoningEffort})`);
+
+    // Log usage asynchronously (non-blocking)
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY && userContext) {
+      fetch(`${SUPABASE_URL}/rest/v1/rpc/log_ai_usage`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'apikey': SUPABASE_SERVICE_ROLE_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          p_device_id: body.deviceId || 'unknown',
+          p_function_name: 'travel-assistant',
+          p_model: 'gemini-3-flash',
+          p_input_tokens: Math.ceil(JSON.stringify(messages).length / 4),
+          p_latency_ms: latencyMs,
+          p_reasoning: reasoningEffort !== 'none' ? reasoningEffort : null,
+        }),
+      }).catch(() => {}); // Fire and forget
     }
 
     return new Response(response.body, {
