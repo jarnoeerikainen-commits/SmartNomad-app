@@ -185,12 +185,12 @@ serve(async (req) => {
   try {
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {
-      throw new Error('ELEVENLABS_API_KEY is not configured');
+      throw new Error('Service configuration error');
     }
 
     const FAL_KEY = Deno.env.get('FAL_KEY');
     if (!FAL_KEY) {
-      throw new Error('FAL_KEY is not configured. Add your fal.ai API key to generate lip-sync videos.');
+      throw new Error('Service configuration error');
     }
 
     const { text, face = 'female', gender = 'woman' } = await req.json();
@@ -237,8 +237,7 @@ serve(async (req) => {
     );
   } catch (error) {
     console.error('[LipSync] Error:', error);
-    const msg = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: msg }), {
+    return new Response(JSON.stringify({ error: 'Service unavailable' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
