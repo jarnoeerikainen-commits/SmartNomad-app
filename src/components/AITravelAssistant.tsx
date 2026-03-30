@@ -425,6 +425,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       }
 
+      // Save assistant response to Supabase
+      if (conversationIdRef.current && assistantContent) {
+        aiMemoryService.saveMessage(conversationIdRef.current, 'assistant', assistantContent);
+      }
+
+      // Legacy localStorage memory extraction (kept for backward compat)
       try {
         const msg = userMessage.toLowerCase();
         if (msg.includes('i hate') || msg.includes("i don't like") || msg.includes('i never')) {
@@ -446,7 +452,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       } catch {}
 
+      // Trigger AI memory distillation every 4 exchanges (debounced)
       exchangeCountRef.current += 1;
+      if (exchangeCountRef.current % 4 === 0) {
+        if (distillTimerRef.current) clearTimeout(distillTimerRef.current);
+        distillTimerRef.current = setTimeout(() => {
+          const chatMessages = messages
+            .filter(m => m.id !== '1')
+            .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
+          aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
+        }, 5000);
+      }
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
 
