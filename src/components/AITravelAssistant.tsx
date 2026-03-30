@@ -248,6 +248,23 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
 
+    // Create conversation in Supabase if not yet created
+    if (!conversationIdRef.current) {
+      const convId = await aiMemoryService.createConversation(userMessage.slice(0, 60));
+      conversationIdRef.current = convId;
+    }
+
+    // Save user message to Supabase
+    if (conversationIdRef.current) {
+      aiMemoryService.saveMessage(conversationIdRef.current, 'user', userMessage);
+    }
+
+    // Fetch persistent memories via hybrid search
+    let persistentMemories = '';
+    try {
+      persistentMemories = await aiMemoryService.buildMemoryContext(userMessage);
+    } catch {}
+
     const activeThreats = dummyThreats
       .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
       .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description} (Distance: ${t.distanceFromUser}km)`)
@@ -299,6 +316,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       trackedCountries: fullAppContext.trackedCountries || undefined,
       calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
       learnedMemories: fullAppContext.learnedMemories || undefined,
+      persistentMemories: persistentMemories || undefined,
       subscriptionTier: fullAppContext.subscriptionTier || undefined,
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
     };
