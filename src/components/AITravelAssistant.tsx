@@ -467,6 +467,23 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
         }, 5000);
       }
+
+      // Trigger conversation compression when messages get long
+      const currentMsgCount = messages.filter(m => m.id !== '1').length;
+      if (currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
+        const chatMessages = messages
+          .filter(m => m.id !== '1')
+          .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
+        aiMemoryService.compressConversation(conversationIdRef.current, chatMessages);
+      }
+
+      // Log usage analytics
+      const latencyMs = Date.now() - (messages[messages.length - 1]?.timestamp?.getTime() || Date.now());
+      aiMemoryService.logUsage({
+        functionName: 'travel-assistant',
+        latencyMs: Math.max(0, latencyMs),
+        outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
+      });
       const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
 

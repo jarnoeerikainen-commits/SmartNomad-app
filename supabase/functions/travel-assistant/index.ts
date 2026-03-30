@@ -841,6 +841,8 @@ ${userContext?.learnedMemories ? `\n${userContext.learnedMemories}` : ''}
 
 ${userContext?.persistentMemories ? `\n**🧠 PERSISTENT USER MEMORIES (from database — high confidence):**\n${userContext.persistentMemories}\nThese are verified durable preferences extracted from past conversations. Use them to personalize recommendations WITHOUT asking the user again.` : ''}
 
+${userContext?.conversationSummary ? `\n**📋 PREVIOUS CONVERSATION CONTEXT:**\n${userContext.conversationSummary}\nThis is a compressed summary of earlier messages in this conversation. Use it for continuity — the user expects you to remember what was discussed.` : ''}
+
 ${userContext?.expenseSummary ? `\n**💰 EXPENSE TRACKING:**\n${userContext.expenseSummary}\nReference spending patterns when making budget-aware recommendations.` : ''}
 
 **REMEMBER EVERYTHING:** Travel mode, family composition, preferences, past recommendations, budget signals.
