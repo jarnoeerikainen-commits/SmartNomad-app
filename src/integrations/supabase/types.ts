@@ -60,6 +60,7 @@ export type Database = {
           created_at: string
           device_id: string
           durability: string
+          embedding: string | null
           fact: string
           id: string
           importance: number
@@ -73,6 +74,7 @@ export type Database = {
           created_at?: string
           device_id: string
           durability?: string
+          embedding?: string | null
           fact: string
           id?: string
           importance?: number
@@ -86,6 +88,7 @@ export type Database = {
           created_at?: string
           device_id?: string
           durability?: string
+          embedding?: string | null
           fact?: string
           id?: string
           importance?: number
@@ -452,6 +455,24 @@ export type Database = {
           fact: string
           id: string
           rank: number
+        }[]
+      }
+      search_memories_hybrid: {
+        Args: {
+          p_category?: string
+          p_device_id: string
+          p_embedding?: string
+          p_limit?: number
+          p_query?: string
+        }
+        Returns: {
+          category: string
+          confidence: number
+          fact: string
+          id: string
+          importance: number
+          semantic_tags: string[]
+          weighted_score: number
         }[]
       }
       search_memories_weighted: {
