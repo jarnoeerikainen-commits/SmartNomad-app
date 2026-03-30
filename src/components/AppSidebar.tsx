@@ -6,7 +6,7 @@ import {
   GraduationCap, Users, Tag, Stethoscope, Scale, Award, Wifi,
   CloudRain, BookOpen, Truck, Building2, Crown, Globe2, Building,
   Siren, ShieldCheck, ShieldAlert, Baby, Calendar, Cat, MessageSquare,
-  Flag, Store, Dumbbell, BarChart3, Wrench, Locate
+  Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -78,6 +78,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
+        { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
       ]
     },
     {

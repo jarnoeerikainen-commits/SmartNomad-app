@@ -275,6 +275,150 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_graph_edges: {
+        Row: {
+          created_at: string
+          device_id: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          relationship: string
+          source_id: string
+          source_type: string
+          target_id: string
+          target_type: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          relationship: string
+          source_id: string
+          source_type: string
+          target_id: string
+          target_type: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          relationship?: string
+          source_id?: string
+          source_type?: string
+          target_id?: string
+          target_type?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      snomad_profiles: {
+        Row: {
+          completeness_score: number | null
+          created_at: string
+          device_id: string
+          encrypted_documents: Json | null
+          encrypted_identity: Json | null
+          id: string
+          last_synced_at: string | null
+          preference_count: number | null
+          preferences: Json | null
+          profile_embedding: string | null
+          spending_patterns: Json | null
+          updated_at: string
+        }
+        Insert: {
+          completeness_score?: number | null
+          created_at?: string
+          device_id: string
+          encrypted_documents?: Json | null
+          encrypted_identity?: Json | null
+          id?: string
+          last_synced_at?: string | null
+          preference_count?: number | null
+          preferences?: Json | null
+          profile_embedding?: string | null
+          spending_patterns?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          completeness_score?: number | null
+          created_at?: string
+          device_id?: string
+          encrypted_documents?: Json | null
+          encrypted_identity?: Json | null
+          id?: string
+          last_synced_at?: string | null
+          preference_count?: number | null
+          preferences?: Json | null
+          profile_embedding?: string | null
+          spending_patterns?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      travel_history: {
+        Row: {
+          ai_tags: string[] | null
+          city: string | null
+          country_code: string
+          country_name: string
+          created_at: string
+          device_id: string
+          entry_coordinates: Json | null
+          entry_date: string
+          exit_coordinates: Json | null
+          exit_date: string | null
+          id: string
+          notes: string | null
+          purpose: string | null
+          source: string | null
+          visa_type: string | null
+        }
+        Insert: {
+          ai_tags?: string[] | null
+          city?: string | null
+          country_code: string
+          country_name: string
+          created_at?: string
+          device_id: string
+          entry_coordinates?: Json | null
+          entry_date: string
+          exit_coordinates?: Json | null
+          exit_date?: string | null
+          id?: string
+          notes?: string | null
+          purpose?: string | null
+          source?: string | null
+          visa_type?: string | null
+        }
+        Update: {
+          ai_tags?: string[] | null
+          city?: string | null
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          device_id?: string
+          entry_coordinates?: Json | null
+          entry_date?: string
+          exit_coordinates?: Json | null
+          exit_date?: string | null
+          id?: string
+          notes?: string | null
+          purpose?: string | null
+          source?: string | null
+          visa_type?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -325,6 +469,25 @@ export type Database = {
           importance: number
           semantic_tags: string[]
           weighted_score: number
+        }[]
+      }
+      traverse_knowledge_graph: {
+        Args: {
+          p_device_id: string
+          p_max_depth?: number
+          p_source_id: string
+          p_source_type: string
+        }
+        Returns: {
+          depth: number
+          edge_id: string
+          metadata: Json
+          relationship: string
+          source_id: string
+          source_type: string
+          target_id: string
+          target_type: string
+          weight: number
         }[]
       }
     }
