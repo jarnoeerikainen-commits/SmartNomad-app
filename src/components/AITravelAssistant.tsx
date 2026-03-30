@@ -44,6 +44,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [isMinimized, setIsMinimized] = useState(false);
   const [avatarHidden, setAvatarHidden] = useState(false);
   
+  const conversationIdRef = useRef<string | null>(null);
+  const distillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exchangeCountRef = useRef(0);
 
   const getWelcomeMessage = (): string => {
