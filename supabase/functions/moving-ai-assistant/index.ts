@@ -31,7 +31,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+      throw new Error('Service configuration error');
     }
 
     const now = new Date();
@@ -133,7 +133,7 @@ Respond in JSON format.`;
   } catch (error) {
     console.error('Moving AI assistant error:', error);
     return new Response(JSON.stringify({ 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+      error: 'Service unavailable' 
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

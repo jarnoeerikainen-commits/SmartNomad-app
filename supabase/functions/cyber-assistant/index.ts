@@ -32,7 +32,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+      throw new Error('Service configuration error');
     }
 
     const now = new Date();
@@ -140,7 +140,7 @@ Always provide specific, actionable advice tailored to the traveler's situation.
     console.error('Error in cyber-assistant function:', error);
     return new Response(
       JSON.stringify({ 
-        error: error.message,
+        error: 'Service unavailable',
         response: 'I\'m experiencing technical difficulties. For immediate emergencies:\n\n🚨 Device Stolen: Contact local police and your device manufacturer\n💳 Financial: Call your bank\'s international emergency line\n🔒 Data Breach: Change passwords and enable 2FA\n📞 Embassy: Contact your country\'s local embassy for assistance'
       }),
       { 
