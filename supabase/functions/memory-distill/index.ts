@@ -120,6 +120,20 @@ Respond using the extract_memories tool.`;
       const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
       if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+        const headers = {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'apikey': SUPABASE_SERVICE_ROLE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates',
+        };
+
+        // Ensure device session exists first
+        await fetch(`${SUPABASE_URL}/rest/v1/device_sessions`, {
+          method: 'POST',
+          headers: { ...headers, 'Prefer': 'resolution=merge-duplicates' },
+          body: JSON.stringify({ device_id: deviceId, last_seen_at: new Date().toISOString() }),
+        });
+
         const insertPayload = facts.map((f: any) => ({
           device_id: deviceId,
           fact: f.fact,
