@@ -58,25 +58,35 @@ const ConciergeSettings: React.FC<{ onPrefsChange?: (prefs: ConciergePreferences
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!activePersona?.id) return;
+    if (activePersona?.id) {
+      const personaDrivenPrefs: Partial<ConciergePreferences> = activePersona.id === 'john'
+        ? {
+            userName: activePersona.profile.firstName,
+            voiceGender: 'man',
+            avatarFace: 'male',
+          }
+        : {
+            userName: activePersona.profile.firstName,
+            voiceGender: 'woman',
+            avatarFace: 'female',
+          };
 
-    const personaDrivenPrefs: Partial<ConciergePreferences> = activePersona.id === 'john'
-      ? {
-          userName: activePersona.profile.firstName,
-          voiceGender: 'man',
-          avatarFace: 'male',
-        }
-      : {
-          userName: activePersona.profile.firstName,
-          voiceGender: 'woman',
-          avatarFace: 'female',
+      setPrefs(prev => {
+        const next = { ...prev, ...personaDrivenPrefs };
+        return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+      });
+    } else {
+      // Reset to neutral defaults when no persona is active
+      setPrefs(prev => {
+        const neutral: ConciergePreferences = {
+          ...DEFAULT_PREFS,
+          personalityMode: prev.personalityMode, // keep user's chosen personality
+          avatarVisible: prev.avatarVisible, // keep visibility preference
         };
-
-    setPrefs(prev => {
-      const next = { ...prev, ...personaDrivenPrefs };
-      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
-    });
-  }, [activePersona?.id, activePersona?.profile.firstName]);
+        return JSON.stringify(prev) === JSON.stringify(neutral) ? prev : neutral;
+      });
+    }
+  }, [activePersona?.id, activePersona?.profile?.firstName]);
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
