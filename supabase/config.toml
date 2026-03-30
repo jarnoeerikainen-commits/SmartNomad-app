@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.lipsync-generator]
 verify_jwt = false
+
+[functions.memory-distill]
+verify_jwt = false
