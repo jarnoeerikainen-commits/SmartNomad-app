@@ -97,6 +97,7 @@ const VisaImmigrationHub = lazy(() => import('./VisaImmigrationHub'));
 const VaccinationMedicineHub = lazy(() => import('./VaccinationMedicineHub'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
+const SnomadIdVault = lazy(() => import('./SnomadIdVault'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
