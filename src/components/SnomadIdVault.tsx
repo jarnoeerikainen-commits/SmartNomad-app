@@ -94,10 +94,10 @@ const SnomadIdVault: React.FC = () => {
 
   const getRelationshipColor = (rel: string) => {
     switch (rel) {
-      case 'triggers': return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
-      case 'requires': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'conflicts-with': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'enhances': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+      case 'triggers': return 'bg-accent/20 text-accent-foreground border-accent/30';
+      case 'requires': return 'bg-primary/20 text-primary border-primary/30';
+      case 'conflicts-with': return 'bg-destructive/20 text-destructive border-destructive/30';
+      case 'enhances': return 'bg-secondary text-secondary-foreground border-secondary';
       default: return 'bg-muted text-muted-foreground';
     }
   };

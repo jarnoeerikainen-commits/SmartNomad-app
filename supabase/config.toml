@@ -47,3 +47,6 @@ verify_jwt = false
 
 [functions.conversation-compress]
 verify_jwt = false
+
+[functions.snomad-orchestrator]
+verify_jwt = false
