@@ -41,7 +41,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const { activePersona } = useDemoPersona();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(() => isMobile ?? false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [avatarHidden, setAvatarHidden] = useState(false);
   
   const conversationIdRef = useRef<string | null>(null);
