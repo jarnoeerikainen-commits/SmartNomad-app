@@ -70,6 +70,10 @@ const EmergencySection: React.FC = () => {
           </TabsTrigger>
         </TabsList>
 
+        <TabsContent value="blackbox" className="mt-6 animate-fade-in">
+          <BlackBoxGuardian />
+        </TabsContent>
+
         <TabsContent value="contacts" className="mt-6 animate-fade-in">
           <EmergencyContacts />
         </TabsContent>
