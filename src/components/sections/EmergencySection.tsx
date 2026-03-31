@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck, Globe } from 'lucide-react';
+import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck, Globe, Radio } from 'lucide-react';
 import EmergencyContacts from '../EmergencyContacts';
 import SOSServices from '../SOSServices';
 import EmergencyCardNumbers from '../EmergencyCardNumbers';
 import CyberHelplineDashboard from '../CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from '../ThreatIntelligence/ThreatDashboard';
 import EmbassyDirectory from '../EmbassyDirectory';
+import BlackBoxGuardian from '../BlackBoxGuardian';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
