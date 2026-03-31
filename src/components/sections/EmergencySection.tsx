@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck, Globe } from 'lucide-react';
+import { AlertTriangle, Phone, CreditCard, Shield, Siren, Bug, ShieldCheck, Globe, Radio } from 'lucide-react';
 import EmergencyContacts from '../EmergencyContacts';
 import SOSServices from '../SOSServices';
 import EmergencyCardNumbers from '../EmergencyCardNumbers';
 import CyberHelplineDashboard from '../CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from '../ThreatIntelligence/ThreatDashboard';
 import EmbassyDirectory from '../EmbassyDirectory';
+import BlackBoxGuardian from '../BlackBoxGuardian';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const EmergencySection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('contacts');
+  const [activeTab, setActiveTab] = useState('blackbox');
 
   return (
     <div className="space-y-4 pb-20 md:pb-6">
@@ -38,7 +39,11 @@ const EmergencySection: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto gap-1">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 h-auto gap-1">
+          <TabsTrigger value="blackbox" className="flex items-center gap-2">
+            <Radio className="h-4 w-4" />
+            <span className="hidden sm:inline">Black Box</span>
+          </TabsTrigger>
           <TabsTrigger value="contacts" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
             <span className="hidden sm:inline">Contacts</span>
@@ -64,6 +69,10 @@ const EmergencySection: React.FC = () => {
             <span className="hidden sm:inline">Threats</span>
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="blackbox" className="mt-6 animate-fade-in">
+          <BlackBoxGuardian />
+        </TabsContent>
 
         <TabsContent value="contacts" className="mt-6 animate-fade-in">
           <EmergencyContacts />

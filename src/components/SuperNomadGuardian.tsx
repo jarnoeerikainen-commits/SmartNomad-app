@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, Users, Phone, Building2, Cross, Lock, Radar, Plane, AlertTriangle, Search, Briefcase, Heart, Baby, Activity } from 'lucide-react';
+import { Shield, Users, Phone, Building2, Cross, Lock, Radar, Plane, AlertTriangle, Search, Briefcase, Heart, Baby, Activity, Radio } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,9 +11,10 @@ import EmbassyDirectory from '@/components/EmbassyDirectory';
 import SecurityDirectory from '@/components/SecurityServices/SecurityDirectory';
 import CyberHelplineDashboard from '@/components/CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
+import BlackBoxGuardian from '@/components/BlackBoxGuardian';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 
-type ModuleType = 'contacts' | 'sos' | 'embassy' | 'sos-services' | 'protection' | 'cyber' | 'threats' | 'alerts' | null;
+type ModuleType = 'contacts' | 'sos' | 'embassy' | 'sos-services' | 'protection' | 'cyber' | 'threats' | 'alerts' | 'blackbox' | null;
 
 const SITUATION_PRESETS = [
   { id: 'business', label: 'Business Travel', icon: Briefcase, modules: ['threats', 'protection', 'embassy'] as ModuleType[], desc: 'Security briefing for your destination' },
@@ -30,6 +31,7 @@ export const SuperNomadGuardian = () => {
   const stats = ThreatIntelligenceService.getStatistics();
 
   const professionalModules = [
+    { id: 'blackbox' as ModuleType, title: 'Black Box Guardian', icon: Radio, tag: 'NEW', tagColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30', gradient: 'from-amber-500/10 via-transparent to-transparent', desc: 'Un-erasable witness' },
     { id: 'contacts' as ModuleType, title: 'Emergency Contacts', icon: Users, tag: 'SOS', tagColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30', gradient: 'from-blue-500/10 via-transparent to-transparent', desc: '80+ countries' },
     { id: 'sos' as ModuleType, title: 'SOS Services', icon: Cross, tag: '24/7', tagColor: 'bg-red-500/20 text-red-400 border-red-500/30', gradient: 'from-red-500/10 via-transparent to-transparent', desc: 'Global response center' },
     { id: 'embassy' as ModuleType, title: 'Embassy Directory', icon: Building2, tag: 'OFFICIAL', tagColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30', gradient: 'from-blue-500/10 via-transparent to-transparent', desc: '50+ countries' },
@@ -44,6 +46,7 @@ export const SuperNomadGuardian = () => {
 
   const renderModuleContent = () => {
     switch (activeModule) {
+      case 'blackbox': return <BlackBoxGuardian />;
       case 'contacts': return <EmergencyContacts />;
       case 'sos': case 'sos-services': return <SOSServices />;
       case 'embassy': return <EmbassyDirectory />;
