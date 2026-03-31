@@ -489,8 +489,8 @@ export const BlackBoxGuardian = () => {
                 <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">5.</span> Professional security bridge (G4S) can dispatch responders</li>
               </ul>
             </div>
-            <div className="p-3 bg-amber-500/5 border border-amber-500/20 rounded-lg text-xs">
-              <p className="font-semibold text-amber-600 dark:text-amber-400">⚠️ This is a demo</p>
+            <div className="p-3 bg-orange-500/5 border border-orange-500/20 rounded-lg text-xs">
+              <p className="font-semibold text-orange-600 dark:text-orange-400">⚠️ This is a demo</p>
               <p className="mt-1">No real recordings, alerts, or emergency calls are made. This demonstrates the system architecture and user experience.</p>
             </div>
           </div>
