@@ -261,7 +261,7 @@ export const BlackBoxGuardian = () => {
               {/* Activation Button */}
               <Button
                 onClick={handleActivate}
-                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 hover:scale-[1.01]"
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-orange-500/30 hover:scale-[1.01]"
               >
                 <Shield className="h-5 w-5 mr-2" />
                 Activate Guardian Protocol
