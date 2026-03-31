@@ -483,10 +483,10 @@ export const BlackBoxGuardian = () => {
               <p className="font-semibold text-foreground text-xs uppercase tracking-wider">How it works:</p>
               <ul className="space-y-1.5 text-xs">
                 <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">1.</span> Activation via voice command or button press — silent, no alarms</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">2.</span> Dual camera + audio encrypted at source, streamed to WORM vault</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">3.</span> If phone is destroyed 5 seconds later, evidence is already in the cloud</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">4.</span> Trusted peers receive live GPS + watch link instantly</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">5.</span> Professional security bridge (G4S) can dispatch responders</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">2.</span> Dual camera + audio encrypted at source, streamed to WORM vault</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">3.</span> If phone is destroyed 5 seconds later, evidence is already in the cloud</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">4.</span> Trusted peers receive live GPS + watch link instantly</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">5.</span> Professional security bridge (G4S) can dispatch responders</li>
               </ul>
             </div>
             <div className="p-3 bg-amber-500/5 border border-amber-500/20 rounded-lg text-xs">
