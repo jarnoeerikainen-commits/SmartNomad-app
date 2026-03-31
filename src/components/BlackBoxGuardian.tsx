@@ -469,7 +469,7 @@ export const BlackBoxGuardian = () => {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-amber-500" />
+              <Shield className="h-5 w-5 text-orange-500" />
               About Black Box Guardian
             </DialogTitle>
           </DialogHeader>
