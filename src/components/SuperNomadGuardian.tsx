@@ -46,6 +46,7 @@ export const SuperNomadGuardian = () => {
 
   const renderModuleContent = () => {
     switch (activeModule) {
+      case 'blackbox': return <BlackBoxGuardian />;
       case 'contacts': return <EmergencyContacts />;
       case 'sos': case 'sos-services': return <SOSServices />;
       case 'embassy': return <EmbassyDirectory />;
