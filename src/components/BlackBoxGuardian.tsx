@@ -167,14 +167,14 @@ export const BlackBoxGuardian = () => {
   return (
     <div className="space-y-4">
       {/* Demo Banner */}
-      <Card className="border-amber-500/30 bg-amber-500/5">
+      <Card className="border-orange-500/30 bg-orange-500/5">
         <CardContent className="p-3">
           <div className="flex items-center gap-2 text-xs">
-            <Badge variant="outline" className="border-amber-500/50 text-amber-600 dark:text-amber-400 text-[10px]">DEMO MODE</Badge>
+            <Badge variant="outline" className="border-orange-500/50 text-orange-600 dark:text-orange-400 text-[10px]">DEMO MODE</Badge>
             <span className="text-muted-foreground">
               Silent Sentinel — No real alerts, sirens, or emergency calls will be triggered.
             </span>
-            <Button variant="ghost" size="sm" className="ml-auto h-6 text-[10px]" onClick={() => setShowInfoDialog(true)}>
+            <Button variant="ghost" size="sm" className="ml-auto h-6 text-[10px] text-orange-600 dark:text-orange-400 hover:text-orange-700" onClick={() => setShowInfoDialog(true)}>
               Learn More
             </Button>
           </div>
