@@ -399,7 +399,7 @@ export const BlackBoxGuardian = () => {
                             <Eye className="h-2.5 w-2.5 mr-0.5" /> Watching
                           </Badge>
                         ) : peer.notified ? (
-                          <Badge variant="outline" className="text-[9px] text-amber-500 border-amber-500/30">Notified</Badge>
+                          <Badge variant="outline" className="text-[9px] text-orange-500 border-orange-500/30">Notified</Badge>
                         ) : null}
                       </CardContent>
                     </Card>
