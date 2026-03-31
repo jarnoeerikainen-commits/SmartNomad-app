@@ -158,7 +158,7 @@ export const BlackBoxGuardian = () => {
 
   const getStatusColor = (status: EvidencePacket['status']) => {
     switch (status) {
-      case 'encrypting': return 'text-amber-400 bg-amber-500/20';
+      case 'encrypting': return 'text-orange-400 bg-orange-500/20';
       case 'streaming': return 'text-blue-400 bg-blue-500/20';
       case 'locked': return 'text-emerald-400 bg-emerald-500/20';
     }
