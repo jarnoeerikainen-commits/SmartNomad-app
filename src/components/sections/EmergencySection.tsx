@@ -39,7 +39,11 @@ const EmergencySection: React.FC = () => {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto gap-1">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 h-auto gap-1">
+          <TabsTrigger value="blackbox" className="flex items-center gap-2">
+            <Radio className="h-4 w-4" />
+            <span className="hidden sm:inline">Black Box</span>
+          </TabsTrigger>
           <TabsTrigger value="contacts" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
             <span className="hidden sm:inline">Contacts</span>
