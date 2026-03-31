@@ -350,7 +350,7 @@ export const BlackBoxGuardian = () => {
                   <div className="p-2 space-y-1">
                     {packets.map(packet => (
                       <div key={packet.id} className={`flex items-center justify-between p-2 rounded-lg text-[11px] transition-all ${
-                        packet.status === 'encrypting' ? 'bg-amber-500/5' : 
+                        packet.status === 'encrypting' ? 'bg-orange-500/5' : 
                         packet.status === 'streaming' ? 'bg-blue-500/5' : 'bg-muted/30'
                       }`}>
                         <div className="flex items-center gap-2">
