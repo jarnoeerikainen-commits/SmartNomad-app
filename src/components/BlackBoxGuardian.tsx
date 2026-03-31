@@ -158,7 +158,7 @@ export const BlackBoxGuardian = () => {
 
   const getStatusColor = (status: EvidencePacket['status']) => {
     switch (status) {
-      case 'encrypting': return 'text-amber-400 bg-amber-500/20';
+      case 'encrypting': return 'text-orange-400 bg-orange-500/20';
       case 'streaming': return 'text-blue-400 bg-blue-500/20';
       case 'locked': return 'text-emerald-400 bg-emerald-500/20';
     }
@@ -167,14 +167,14 @@ export const BlackBoxGuardian = () => {
   return (
     <div className="space-y-4">
       {/* Demo Banner */}
-      <Card className="border-amber-500/30 bg-amber-500/5">
+      <Card className="border-orange-500/30 bg-orange-500/5">
         <CardContent className="p-3">
           <div className="flex items-center gap-2 text-xs">
-            <Badge variant="outline" className="border-amber-500/50 text-amber-600 dark:text-amber-400 text-[10px]">DEMO MODE</Badge>
+            <Badge variant="outline" className="border-orange-500/50 text-orange-600 dark:text-orange-400 text-[10px]">DEMO MODE</Badge>
             <span className="text-muted-foreground">
               Silent Sentinel — No real alerts, sirens, or emergency calls will be triggered.
             </span>
-            <Button variant="ghost" size="sm" className="ml-auto h-6 text-[10px]" onClick={() => setShowInfoDialog(true)}>
+            <Button variant="ghost" size="sm" className="ml-auto h-6 text-[10px] text-orange-600 dark:text-orange-400 hover:text-orange-700" onClick={() => setShowInfoDialog(true)}>
               Learn More
             </Button>
           </div>
@@ -184,14 +184,14 @@ export const BlackBoxGuardian = () => {
       {/* Main Guardian Card */}
       <Card className={`relative overflow-hidden transition-all duration-700 ${
         state === 'recording' 
-          ? 'border-amber-500/60 shadow-[0_0_30px_rgba(245,158,11,0.15)]' 
+          ? 'border-orange-500/60 shadow-[0_0_30px_rgba(249,115,22,0.15)]' 
           : state === 'activating' 
             ? 'border-blue-500/40' 
             : 'border-border'
       }`}>
         {/* Pulse overlay when recording */}
         {state === 'recording' && (
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-red-500/5 animate-pulse" style={{ animationDuration: '3s' }} />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-red-500/5 animate-pulse" style={{ animationDuration: '3s' }} />
         )}
 
         <CardHeader className="relative z-10">
@@ -199,11 +199,11 @@ export const BlackBoxGuardian = () => {
             <div className="flex items-center gap-3">
               <div className={`p-3 rounded-2xl transition-all duration-500 ${
                 state === 'recording'
-                  ? 'bg-gradient-to-br from-amber-500/20 to-red-500/20 ring-2 ring-amber-500/30'
+                  ? 'bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-2 ring-orange-500/30'
                   : 'bg-muted'
               }`}>
                 <Shield className={`h-7 w-7 ${
-                  state === 'recording' ? 'text-amber-500 animate-pulse' : 'text-muted-foreground'
+                  state === 'recording' ? 'text-orange-500 animate-pulse' : 'text-muted-foreground'
                 }`} style={state === 'recording' ? { animationDuration: '2s' } : {}} />
               </div>
               <div>
@@ -221,7 +221,7 @@ export const BlackBoxGuardian = () => {
               )}
               <Badge variant="outline" className={`text-[10px] ${
                 state === 'standby' ? 'border-muted-foreground/30 text-muted-foreground' :
-                state === 'recording' ? 'border-amber-500/50 text-amber-500' :
+                state === 'recording' ? 'border-orange-500/50 text-orange-500' :
                 'border-blue-500/50 text-blue-500'
               }`}>
                 {state === 'standby' ? 'STANDBY' : state === 'activating' ? 'ARMING' : 'WORM ACTIVE'}
@@ -261,7 +261,7 @@ export const BlackBoxGuardian = () => {
               {/* Activation Button */}
               <Button
                 onClick={handleActivate}
-                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white shadow-lg shadow-amber-500/20 transition-all hover:shadow-amber-500/30 hover:scale-[1.01]"
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-orange-500/30 hover:scale-[1.01]"
               >
                 <Shield className="h-5 w-5 mr-2" />
                 Activate Guardian Protocol
@@ -350,7 +350,7 @@ export const BlackBoxGuardian = () => {
                   <div className="p-2 space-y-1">
                     {packets.map(packet => (
                       <div key={packet.id} className={`flex items-center justify-between p-2 rounded-lg text-[11px] transition-all ${
-                        packet.status === 'encrypting' ? 'bg-amber-500/5' : 
+                        packet.status === 'encrypting' ? 'bg-orange-500/5' : 
                         packet.status === 'streaming' ? 'bg-blue-500/5' : 'bg-muted/30'
                       }`}>
                         <div className="flex items-center gap-2">
@@ -399,7 +399,7 @@ export const BlackBoxGuardian = () => {
                             <Eye className="h-2.5 w-2.5 mr-0.5" /> Watching
                           </Badge>
                         ) : peer.notified ? (
-                          <Badge variant="outline" className="text-[9px] text-amber-500 border-amber-500/30">Notified</Badge>
+                          <Badge variant="outline" className="text-[9px] text-orange-500 border-orange-500/30">Notified</Badge>
                         ) : null}
                       </CardContent>
                     </Card>
@@ -469,7 +469,7 @@ export const BlackBoxGuardian = () => {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-amber-500" />
+              <Shield className="h-5 w-5 text-orange-500" />
               About Black Box Guardian
             </DialogTitle>
           </DialogHeader>
@@ -482,15 +482,15 @@ export const BlackBoxGuardian = () => {
             <div className="space-y-2">
               <p className="font-semibold text-foreground text-xs uppercase tracking-wider">How it works:</p>
               <ul className="space-y-1.5 text-xs">
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">1.</span> Activation via voice command or button press — silent, no alarms</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">2.</span> Dual camera + audio encrypted at source, streamed to WORM vault</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">3.</span> If phone is destroyed 5 seconds later, evidence is already in the cloud</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">4.</span> Trusted peers receive live GPS + watch link instantly</li>
-                <li className="flex items-start gap-2"><span className="text-amber-500 font-bold">5.</span> Professional security bridge (G4S) can dispatch responders</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">1.</span> Activation via voice command or button press — silent, no alarms</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">2.</span> Dual camera + audio encrypted at source, streamed to WORM vault</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">3.</span> If phone is destroyed 5 seconds later, evidence is already in the cloud</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">4.</span> Trusted peers receive live GPS + watch link instantly</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 font-bold">5.</span> Professional security bridge (G4S) can dispatch responders</li>
               </ul>
             </div>
-            <div className="p-3 bg-amber-500/5 border border-amber-500/20 rounded-lg text-xs">
-              <p className="font-semibold text-amber-600 dark:text-amber-400">⚠️ This is a demo</p>
+            <div className="p-3 bg-orange-500/5 border border-orange-500/20 rounded-lg text-xs">
+              <p className="font-semibold text-orange-600 dark:text-orange-400">⚠️ This is a demo</p>
               <p className="mt-1">No real recordings, alerts, or emergency calls are made. This demonstrates the system architecture and user experience.</p>
             </div>
           </div>
