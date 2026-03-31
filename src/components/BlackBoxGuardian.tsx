@@ -184,14 +184,14 @@ export const BlackBoxGuardian = () => {
       {/* Main Guardian Card */}
       <Card className={`relative overflow-hidden transition-all duration-700 ${
         state === 'recording' 
-          ? 'border-amber-500/60 shadow-[0_0_30px_rgba(245,158,11,0.15)]' 
+          ? 'border-orange-500/60 shadow-[0_0_30px_rgba(249,115,22,0.15)]' 
           : state === 'activating' 
             ? 'border-blue-500/40' 
             : 'border-border'
       }`}>
         {/* Pulse overlay when recording */}
         {state === 'recording' && (
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-red-500/5 animate-pulse" style={{ animationDuration: '3s' }} />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-red-500/5 animate-pulse" style={{ animationDuration: '3s' }} />
         )}
 
         <CardHeader className="relative z-10">
@@ -199,11 +199,11 @@ export const BlackBoxGuardian = () => {
             <div className="flex items-center gap-3">
               <div className={`p-3 rounded-2xl transition-all duration-500 ${
                 state === 'recording'
-                  ? 'bg-gradient-to-br from-amber-500/20 to-red-500/20 ring-2 ring-amber-500/30'
+                  ? 'bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-2 ring-orange-500/30'
                   : 'bg-muted'
               }`}>
                 <Shield className={`h-7 w-7 ${
-                  state === 'recording' ? 'text-amber-500 animate-pulse' : 'text-muted-foreground'
+                  state === 'recording' ? 'text-orange-500 animate-pulse' : 'text-muted-foreground'
                 }`} style={state === 'recording' ? { animationDuration: '2s' } : {}} />
               </div>
               <div>
@@ -221,7 +221,7 @@ export const BlackBoxGuardian = () => {
               )}
               <Badge variant="outline" className={`text-[10px] ${
                 state === 'standby' ? 'border-muted-foreground/30 text-muted-foreground' :
-                state === 'recording' ? 'border-amber-500/50 text-amber-500' :
+                state === 'recording' ? 'border-orange-500/50 text-orange-500' :
                 'border-blue-500/50 text-blue-500'
               }`}>
                 {state === 'standby' ? 'STANDBY' : state === 'activating' ? 'ARMING' : 'WORM ACTIVE'}
