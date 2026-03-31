@@ -77,6 +77,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.quick_actions'),
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
+        { id: 'customize', label: 'Customize App', icon: BarChart3 },
         { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
         { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
       ]
