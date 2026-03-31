@@ -11,9 +11,10 @@ import EmbassyDirectory from '@/components/EmbassyDirectory';
 import SecurityDirectory from '@/components/SecurityServices/SecurityDirectory';
 import CyberHelplineDashboard from '@/components/CyberHelpline/CyberHelplineDashboard';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
+import BlackBoxGuardian from '@/components/BlackBoxGuardian';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 
-type ModuleType = 'contacts' | 'sos' | 'embassy' | 'sos-services' | 'protection' | 'cyber' | 'threats' | 'alerts' | null;
+type ModuleType = 'contacts' | 'sos' | 'embassy' | 'sos-services' | 'protection' | 'cyber' | 'threats' | 'alerts' | 'blackbox' | null;
 
 const SITUATION_PRESETS = [
   { id: 'business', label: 'Business Travel', icon: Briefcase, modules: ['threats', 'protection', 'embassy'] as ModuleType[], desc: 'Security briefing for your destination' },
