@@ -41,8 +41,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const { activePersona } = useDemoPersona();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mobileInitDone, setMobileInitDone] = useState(false);
   const [avatarHidden, setAvatarHidden] = useState(false);
+
+  // On mobile, start minimized so concierge top bar is visible on starting screen
+  useEffect(() => {
+    if (isMobile && !mobileInitDone) {
+      setIsMinimized(true);
+      setMobileInitDone(true);
+    }
+  }, [isMobile, mobileInitDone]);
   
   const conversationIdRef = useRef<string | null>(null);
   const distillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
