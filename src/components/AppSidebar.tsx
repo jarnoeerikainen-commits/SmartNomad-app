@@ -343,18 +343,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Settings, Customize & Help */}
           <div className="space-y-1">
             <Button
-              variant={activeSection === 'customize' ? 'secondary' : 'ghost'}
-              className="w-full justify-start gap-3 hover:bg-accent/50"
-              onClick={() => {
-                onSectionChange('customize');
-                onClose?.();
-              }}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Customize App</span>
-            </Button>
-
-            <Button
               variant={activeSection === 'settings' ? 'secondary' : 'ghost'}
               className="w-full justify-start gap-3 hover:bg-accent/50"
               onClick={() => {
