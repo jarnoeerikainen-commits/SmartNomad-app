@@ -101,8 +101,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
               <span className="capitalize text-xs">{subscription.tier.replace('-', ' ')}</span>
             </Badge>}
           
-          {/* Voice Control */}
-          <VoiceControlButton />
+          {/* Voice Control - hidden on small mobile */}
+          <div className="hidden sm:block">
+            <VoiceControlButton />
+          </div>
           
           {/* Language Selector */}
           <LanguageSelector />
