@@ -31,6 +31,7 @@ export const SuperNomadGuardian = () => {
   const stats = ThreatIntelligenceService.getStatistics();
 
   const professionalModules = [
+    { id: 'blackbox' as ModuleType, title: 'Black Box Guardian', icon: Radio, tag: 'NEW', tagColor: 'bg-amber-500/20 text-amber-400 border-amber-500/30', gradient: 'from-amber-500/10 via-transparent to-transparent', desc: 'Un-erasable witness' },
     { id: 'contacts' as ModuleType, title: 'Emergency Contacts', icon: Users, tag: 'SOS', tagColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30', gradient: 'from-blue-500/10 via-transparent to-transparent', desc: '80+ countries' },
     { id: 'sos' as ModuleType, title: 'SOS Services', icon: Cross, tag: '24/7', tagColor: 'bg-red-500/20 text-red-400 border-red-500/30', gradient: 'from-red-500/10 via-transparent to-transparent', desc: 'Global response center' },
     { id: 'embassy' as ModuleType, title: 'Embassy Directory', icon: Building2, tag: 'OFFICIAL', tagColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30', gradient: 'from-blue-500/10 via-transparent to-transparent', desc: '50+ countries' },
