@@ -77,6 +77,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.quick_actions'),
       items: [
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
+        { id: 'customize', label: 'Customize App', icon: BarChart3 },
         { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
         { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
       ]
@@ -341,18 +342,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 
           {/* Settings, Customize & Help */}
           <div className="space-y-1">
-            <Button
-              variant={activeSection === 'customize' ? 'secondary' : 'ghost'}
-              className="w-full justify-start gap-3 hover:bg-accent/50"
-              onClick={() => {
-                onSectionChange('customize');
-                onClose?.();
-              }}
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span>Customize App</span>
-            </Button>
-
             <Button
               variant={activeSection === 'settings' ? 'secondary' : 'ghost'}
               className="w-full justify-start gap-3 hover:bg-accent/50"
