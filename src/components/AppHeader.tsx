@@ -85,8 +85,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         </div>
 
         {/* Center - AQI + Demo Personas */}
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 overflow-x-auto scrollbar-hide">
-          <AirQualityIndicator />
+        <div className="flex items-center gap-1 sm:gap-3 min-w-0 overflow-x-auto scrollbar-hide">
+          <div className="hidden sm:block shrink-0">
+            <AirQualityIndicator />
+          </div>
           <div className="h-5 w-px bg-border hidden sm:block shrink-0" />
           <DemoPersonaSelector />
         </div>
