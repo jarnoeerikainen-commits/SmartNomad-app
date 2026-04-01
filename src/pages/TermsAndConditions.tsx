@@ -227,16 +227,28 @@ const TermsAndConditions: React.FC = () => {
             <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
               <li>Your access to or use of, or inability to access or use, the Service</li>
               <li>Any conduct or content of any third party on the Service</li>
-              <li>Any content obtained from the Service, including AI-generated content</li>
+              <li>Any content obtained from the Service, including AI-generated content, AI Doctor/Lawyer/Planner outputs</li>
               <li>Unauthorised access, use, or alteration of your transmissions or content</li>
-              <li>Tax, visa, or immigration decisions made based on Service information</li>
-              <li>Inaccuracies in travel day calculations, tax residency tracking, or visa monitoring</li>
+              <li>Tax, visa, immigration, or financial decisions made based on Service information</li>
+              <li>Inaccuracies in travel day calculations, tax residency tracking, visa monitoring, or Schengen calculations</li>
+              <li>Actions taken or not taken based on Black Box Guardian, SOS Services, or Cyber Helpline outputs</li>
+              <li>Medical, legal, or security decisions influenced by AI-generated responses</li>
+              <li>Data loss from the Identity Vault, browser localStorage clearing, or device changes</li>
+              <li>Disruptions to third-party services (AI providers, payment processors, mapping services)</li>
+              <li>Currency conversion inaccuracies or exchange rate fluctuations</li>
+              <li>Community content posted by other users in Social Vibe, Nomad Pulse, or Marketplace</li>
             </ul>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              9.2. Our total aggregate liability to you for all claims arising out of or relating to the Service shall not exceed the amount you paid to us in the twelve (12) months preceding the claim.
+              9.2. Our total aggregate liability to you for all claims arising out of or relating to the Service shall not exceed the greater of (a) the amount you paid to us in the twelve (12) months preceding the claim, or (b) one hundred euros (€100) / one hundred US dollars ($100).
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              9.3. Nothing in these Terms excludes or limits liability for (a) death or personal injury caused by negligence, (b) fraud or fraudulent misrepresentation, or (c) any liability that cannot be excluded or limited under applicable law, including mandatory consumer protection rights under EU law.
+              9.3. THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. SUPERNOMAD EXPRESSLY DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              9.4. Nothing in these Terms excludes or limits liability for (a) death or personal injury caused by negligence, (b) fraud or fraudulent misrepresentation, or (c) any liability that cannot be excluded or limited under applicable law, including mandatory consumer protection rights under EU law.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              9.5. <strong>Force Majeure:</strong> SuperNomad shall not be liable for any failure or delay in performance resulting from circumstances beyond our reasonable control, including but not limited to natural disasters, acts of government, pandemic, war, terrorism, cyber attacks, power outages, or disruptions to third-party services including AI model providers, cloud infrastructure, and telecommunications networks.
             </p>
           </section>
 
