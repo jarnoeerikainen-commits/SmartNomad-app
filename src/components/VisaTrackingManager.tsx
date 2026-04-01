@@ -380,8 +380,8 @@ const VisaTrackingManager: React.FC<VisaTrackingManagerProps> = ({
     isActive: true, 
     expiryDate: null,
     features: ['✈️ Basic travel tracking', '📊 Simple day counting', '📍 Manual location entry', '⚠️ Basic alerts'],
-    aiRequestsRemaining: 0,
-    aiRequestsLimit: 0
+    aiRequestsRemaining: 1000,
+    aiRequestsLimit: 1000
   }, 
   countries = [] 
 }) => {
