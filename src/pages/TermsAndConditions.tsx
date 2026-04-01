@@ -42,8 +42,10 @@ const TermsAndConditions: React.FC = () => {
             <div className="flex flex-wrap gap-2">
               <Badge>GDPR Compliant</Badge>
               <Badge>CCPA / CPRA Compliant</Badge>
+              <Badge>EU AI Act 2024/1689</Badge>
               <Badge>ePrivacy Directive</Badge>
               <Badge>UK GDPR</Badge>
+              <Badge>25+ jurisdictions</Badge>
             </div>
           </div>
 
