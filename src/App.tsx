@@ -9,14 +9,17 @@ import NotFound from "./pages/NotFound";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { LocationProvider } from "./contexts/LocationContext";
 import { DemoPersonaProvider } from "./contexts/DemoPersonaContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-// Lazy load rarely-visited pages
+// Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TranslationManager = lazy(() => import("./components/TranslationManager").then(m => ({ default: m.TranslationManager })));
 const BusinessCentersPage = lazy(() => import("./components/BusinessCenters/BusinessCentersPage").then(m => ({ default: m.BusinessCentersPage })));
+const Auth = lazy(() => import("./pages/Auth"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient({
@@ -34,13 +37,16 @@ const App = () => {
       <LanguageProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
+          <BrowserRouter>
+          <AuthProvider>
           <LocationProvider>
           <DemoPersonaProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter>
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
                 <Routes>
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/" element={<Index />} />
                   <Route path="/wifi-finder" element={<WiFiFinder />} />
                   <Route path="/business-centers" element={<BusinessCentersPage />} />
@@ -50,9 +56,10 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
-            </BrowserRouter>
           </DemoPersonaProvider>
           </LocationProvider>
+          </AuthProvider>
+          </BrowserRouter>
           </TooltipProvider>
         </QueryClientProvider>
       </LanguageProvider>

@@ -67,6 +67,7 @@ export type Database = {
           search_vector: unknown
           semantic_tags: string[] | null
           source_conversation_id: string | null
+          user_id: string | null
         }
         Insert: {
           category?: string
@@ -81,6 +82,7 @@ export type Database = {
           search_vector?: unknown
           semantic_tags?: string[] | null
           source_conversation_id?: string | null
+          user_id?: string | null
         }
         Update: {
           category?: string
@@ -95,6 +97,7 @@ export type Database = {
           search_vector?: unknown
           semantic_tags?: string[] | null
           source_conversation_id?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -126,6 +129,7 @@ export type Database = {
           model: string
           output_tokens: number
           reasoning_used: string | null
+          user_id: string | null
         }
         Insert: {
           cache_hit?: boolean
@@ -139,6 +143,7 @@ export type Database = {
           model?: string
           output_tokens?: number
           reasoning_used?: string | null
+          user_id?: string | null
         }
         Update: {
           cache_hit?: boolean
@@ -152,6 +157,7 @@ export type Database = {
           model?: string
           output_tokens?: number
           reasoning_used?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -402,6 +408,7 @@ export type Database = {
           message_count: number
           title: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -410,6 +417,7 @@ export type Database = {
           message_count?: number
           title?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -418,6 +426,7 @@ export type Database = {
           message_count?: number
           title?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -436,6 +445,7 @@ export type Database = {
           id: string
           last_seen_at: string
           metadata: Json | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -443,6 +453,7 @@ export type Database = {
           id?: string
           last_seen_at?: string
           metadata?: Json | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -450,6 +461,7 @@ export type Database = {
           id?: string
           last_seen_at?: string
           metadata?: Json | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -466,6 +478,7 @@ export type Database = {
           source_type: string
           target_id: string
           target_type: string
+          user_id: string | null
           weight: number | null
         }
         Insert: {
@@ -480,6 +493,7 @@ export type Database = {
           source_type: string
           target_id: string
           target_type: string
+          user_id?: string | null
           weight?: number | null
         }
         Update: {
@@ -494,7 +508,41 @@ export type Database = {
           source_type?: string
           target_id?: string
           target_type?: string
+          user_id?: string | null
           weight?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          device_id: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          device_id?: string | null
+          email?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          device_id?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -512,6 +560,7 @@ export type Database = {
           profile_embedding: string | null
           spending_patterns: Json | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           completeness_score?: number | null
@@ -526,6 +575,7 @@ export type Database = {
           profile_embedding?: string | null
           spending_patterns?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           completeness_score?: number | null
@@ -540,6 +590,7 @@ export type Database = {
           profile_embedding?: string | null
           spending_patterns?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -559,6 +610,7 @@ export type Database = {
           notes: string | null
           purpose: string | null
           source: string | null
+          user_id: string | null
           visa_type: string | null
         }
         Insert: {
@@ -576,6 +628,7 @@ export type Database = {
           notes?: string | null
           purpose?: string | null
           source?: string | null
+          user_id?: string | null
           visa_type?: string | null
         }
         Update: {
@@ -593,6 +646,7 @@ export type Database = {
           notes?: string | null
           purpose?: string | null
           source?: string | null
+          user_id?: string | null
           visa_type?: string | null
         }
         Relationships: []
@@ -602,6 +656,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_data_access: {
+        Args: { row_device_id: string; row_user_id: string }
+        Returns: boolean
+      }
       cleanup_expired_cache: { Args: never; Returns: number }
       get_request_device_id: { Args: never; Returns: string }
       log_ai_usage: {
@@ -617,6 +675,10 @@ export type Database = {
           p_reasoning?: string
         }
         Returns: undefined
+      }
+      migrate_device_to_user: {
+        Args: { p_device_id: string; p_user_id: string }
+        Returns: Json
       }
       search_memories: {
         Args: {

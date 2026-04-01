@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown } from 'lucide-react';
+import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown, LogIn, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -38,6 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isAuthenticated, signOut } = useAuth();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
   const handleHomeClick = (e?: React.MouseEvent) => {
@@ -128,10 +130,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                <span className="hidden sm:inline">{t('common.profile')}</span>
+                <span className="hidden sm:inline">
+                  {isAuthenticated ? (user?.email?.split('@')[0] || t('common.profile')) : t('common.profile')}
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-[80]">
+              {isAuthenticated && (
+                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">
+                  {user?.email}
+                </div>
+              )}
               <DropdownMenuItem onClick={onNavigateToSettings} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
                 <span>{t('header.profile_settings')}</span>
@@ -152,9 +161,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 <span>{t('header.privacy_data')}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
-                {t('header.sign_out')}
-              </DropdownMenuItem>
+              {isAuthenticated ? (
+                <DropdownMenuItem className="text-destructive cursor-pointer" onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  {t('header.sign_out')}
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/auth')}>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Sign In
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
