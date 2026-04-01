@@ -206,13 +206,16 @@ const PrivacyPolicy: React.FC = () => {
               4. Data Storage & Security
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.1. <strong>Client-Side Storage:</strong> SuperNomad primarily uses a client-only architecture. Your personal data (profile, travel tracking, calendar, preferences) is stored in your browser's localStorage on your device. This data is not transmitted to our servers unless you use features that require server communication.
+              4.1. <strong>Client-Side Storage (Local-First):</strong> SuperNomad uses a privacy-first, local-first architecture. Your personal data (profile, travel tracking, preferences, Identity Vault documents) is stored in your browser's localStorage on your device. Sensitive data in the Identity Vault, Payment Options, and Award Cards is encrypted with AES-256-GCM using the Web Crypto API (zero-knowledge architecture — we cannot access your encrypted data). Data is not transmitted to our servers unless you use features requiring server communication.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.2. <strong>Server-Side Processing:</strong> When you use AI-powered features (AI Doctor, AI Lawyer, AI Planner, community chat), your queries are transmitted to our Supabase Edge Functions, which forward sanitised inputs to third-party AI providers. We implement input validation, 5,000-character limits, and HTML stripping to protect against injection attacks.
+              4.2. <strong>Server-Side Processing:</strong> When you use AI-powered features (AI Doctor, AI Lawyer, AI Planner, Concierge, Cyber Helpline, Support AI, City Services AI, Marketplace AI, Social Chat AI, Moving AI), your queries are transmitted to our Supabase Edge Functions, which forward sanitised inputs to third-party AI providers. We implement: input validation with Zod schemas, 5,000-character limits, HTML stripping, and prompt injection protection. AI conversation history and distilled memories are stored in our Supabase database with device-level Row-Level Security (RLS) isolation.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.3. <strong>Security Measures:</strong> We implement appropriate technical and organisational measures including HTTPS encryption in transit, input sanitisation, and access controls. However, no method of transmission over the Internet or electronic storage is 100% secure.
+              4.3. <strong>Vector Embeddings & AI Memory:</strong> To provide personalised AI responses, we generate semantic embeddings (vector representations) of your conversation context using pgvector. These embeddings are mathematical representations that cannot be reverse-engineered into original text. They are stored in our database and isolated by your device ID.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              4.4. <strong>Security Measures:</strong> We implement appropriate technical and organisational measures including: HTTPS/TLS encryption in transit, AES-256-GCM encryption at rest for sensitive data, input sanitisation and HTML stripping, Row-Level Security (RLS) for database isolation, device fingerprinting for pre-authentication session security, and access controls. However, no method of transmission over the Internet or electronic storage is 100% secure.
             </p>
           </section>
 
