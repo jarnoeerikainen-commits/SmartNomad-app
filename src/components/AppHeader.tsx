@@ -39,6 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isAuthenticated, signOut } = useAuth();
   const [showSmartAlerts, setShowSmartAlerts] = useState(false);
   const [showDataManagement, setShowDataManagement] = useState(false);
   const handleHomeClick = (e?: React.MouseEvent) => {
