@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown } from 'lucide-react';
+import { Globe, Menu, Settings, User, Bell, Zap, CreditCard, Crown, LogIn, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
