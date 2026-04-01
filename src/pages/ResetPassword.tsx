@@ -54,7 +54,7 @@ const ResetPassword: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-8 pb-8 space-y-4">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
+            <CheckCircle className="h-16 w-16 text-success mx-auto" />
             <h2 className="text-2xl font-bold">Password Updated!</h2>
             <p className="text-muted-foreground">Redirecting to dashboard...</p>
           </CardContent>
