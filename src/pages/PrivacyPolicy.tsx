@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const PrivacyPolicy: React.FC = () => {
   const navigate = useNavigate();
   const effectiveDate = 'February 25, 2026';
-  const lastUpdated = 'February 25, 2026';
+  const lastUpdated = 'April 1, 2026';
 
   return (
     <div className="min-h-screen bg-background">
