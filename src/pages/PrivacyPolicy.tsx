@@ -440,6 +440,27 @@ const PrivacyPolicy: React.FC = () => {
 
           <Separator />
 
+          {/* 11b. EU AI Act Compliance */}
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              11b. EU AI Act Compliance (Regulation 2024/1689)
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              SuperNomad deploys AI systems classified as "limited risk" under the EU AI Act. In compliance with Article 50 (transparency obligations for certain AI systems):
+            </p>
+            <ul className="text-sm text-muted-foreground space-y-2 ml-6 list-disc">
+              <li><strong>Transparency:</strong> All AI-generated content is clearly labelled. Users are informed when interacting with an AI system (AI Doctor, AI Lawyer, AI Planner, Concierge, Cyber Helpline, Support AI).</li>
+              <li><strong>Human Oversight:</strong> AI features provide informational guidance only. No AI system in SuperNomad makes autonomous decisions with legal or similarly significant effects. All outputs require human judgment before action.</li>
+              <li><strong>Data Governance:</strong> Training data for our AI systems is sourced from legitimate, publicly available sources. User queries are processed in real-time and are not used to train or fine-tune foundation models.</li>
+              <li><strong>Risk Management:</strong> We maintain a risk assessment for each AI feature, regularly evaluating accuracy, bias, and potential harm. Our AI systems are monitored for hallucinations and inaccurate outputs.</li>
+              <li><strong>Record-Keeping:</strong> AI usage logs (model used, token count, latency, cache status) are maintained per Article 12 requirements and are available for regulatory audit upon request.</li>
+              <li><strong>Safety Features Disclaimer:</strong> The Black Box Guardian, SOS Services, and emergency features operate in DEMO MODE. No real emergency alerts, police calls, or distress signals are transmitted. These are not classified as "high-risk AI systems" as they do not make autonomous emergency decisions.</li>
+            </ul>
+          </section>
+
+          <Separator />
+
           {/* 12. Do Not Track */}
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">12. Do Not Track & Global Privacy Control</h2>
