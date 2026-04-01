@@ -114,6 +114,9 @@ const PrivacyPolicy: React.FC = () => {
                   <li>We do not collect biometric data, genetic data, or health data</li>
                   <li>We do not process payment card details directly (handled by third-party processors)</li>
                   <li>We do not collect data from children under 18</li>
+                  <li>We do NOT sell, rent, or trade your personal data to any third party (CCPA §1798.120)</li>
+                  <li>We do NOT share personal information for cross-context behavioural advertising</li>
+                  <li>We do NOT use your data for automated decision-making that produces legal effects without human oversight (GDPR Art. 22, EU AI Act)</li>
                 </ul>
               </div>
             </div>
