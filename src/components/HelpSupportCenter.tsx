@@ -91,6 +91,44 @@ const AISupportChat = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/support-ai`;
 
+  // Gather user context for personalized AI support
+  const getUserContext = useCallback(() => {
+    const context: Record<string, any> = {};
+    try {
+      const profile = localStorage.getItem('enhancedProfile');
+      if (profile) {
+        const p = JSON.parse(profile);
+        context.userName = p?.core?.personal?.firstName || '';
+        context.travelStyle = p?.travel?.preferences?.travelStyle?.purpose || [];
+      }
+    } catch {}
+    try {
+      const countries = localStorage.getItem('trackedCountries');
+      if (countries) {
+        const c = JSON.parse(countries);
+        context.trackedCountries = c.length;
+        context.countryNames = c.slice(0, 10).map((x: any) => x.name);
+      }
+    } catch {}
+    try {
+      const prefs = localStorage.getItem('featurePreferences');
+      if (prefs) {
+        const p = JSON.parse(prefs);
+        context.hiddenFeatures = p.hidden || [];
+        context.pinnedFeatures = p.pinned || [];
+      }
+    } catch {}
+    try {
+      const sub = localStorage.getItem('subscription');
+      if (sub) context.subscription = JSON.parse(sub).tier;
+    } catch {}
+    try {
+      const persona = localStorage.getItem('demoPersona');
+      if (persona) context.activePersona = JSON.parse(persona).name;
+    } catch {}
+    return context;
+  }, []);
+
   const {
     isListening, isSpeaking, voiceEnabled,
     startListening, stopListening, speak, stopSpeaking,
