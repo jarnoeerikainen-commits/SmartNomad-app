@@ -74,14 +74,19 @@ const TermsAndConditions: React.FC = () => {
               SuperNomad is a digital platform designed for digital nomads, expatriates, and frequent travellers. The Service provides tools for:
             </p>
             <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
-              <li>Travel day tracking and country stay-limit monitoring</li>
-              <li>Tax residency tracking and compliance guidance</li>
-              <li>Visa management and document tracking</li>
-              <li>AI-powered travel assistance (doctor, lawyer, planner)</li>
-              <li>Currency conversion and financial tools</li>
-              <li>Emergency services and safety information</li>
-              <li>Community features and social matching</li>
-              <li>Local services discovery and recommendations</li>
+              <li>Travel day tracking and country stay-limit monitoring (130+ countries, 50 US states)</li>
+              <li>Tax residency tracking and compliance guidance (Schengen, Substantial Presence Test)</li>
+              <li>Visa management, ETIAS 2026, and immigration document tracking (37 visa types)</li>
+              <li>AI-powered travel assistance (AI Doctor, AI Lawyer, AI Planner, Concierge)</li>
+              <li>Identity Vault (Snomad ID) with AES-256-GCM encrypted document storage</li>
+              <li>Currency conversion, digital banking, payment management, and financial tools</li>
+              <li>Emergency services, SOS, embassy directory, and safety information</li>
+              <li>Black Box Guardian personal safety system (DEMO MODE)</li>
+              <li>Cyber Helpline & Threat Intelligence monitoring</li>
+              <li>Community features: Social Vibe, Nomad Pulse, Marketplace</li>
+              <li>Local services discovery, weather, wellness, and recommendations</li>
+              <li>Vaccination & medicine tracking (WHO-sourced data)</li>
+              <li>Help & Support AI with auto-updated feature knowledge</li>
             </ul>
             <div className="bg-muted/50 p-4 rounded-lg border border-border">
               <div className="flex items-start gap-2">
