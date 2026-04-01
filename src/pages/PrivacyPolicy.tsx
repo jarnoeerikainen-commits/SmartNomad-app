@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const PrivacyPolicy: React.FC = () => {
   const navigate = useNavigate();
   const effectiveDate = 'February 25, 2026';
-  const lastUpdated = 'February 25, 2026';
+  const lastUpdated = 'April 1, 2026';
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,9 +43,13 @@ const PrivacyPolicy: React.FC = () => {
               <Badge>GDPR (EU) 2016/679</Badge>
               <Badge>UK GDPR</Badge>
               <Badge>CCPA / CPRA (California)</Badge>
+              <Badge>EU AI Act 2024/1689</Badge>
+              <Badge>EU Digital Services Act</Badge>
               <Badge>ePrivacy Directive 2002/58/EC</Badge>
+              <Badge>Brazil LGPD</Badge>
               <Badge>CAN-SPAM Act</Badge>
               <Badge>COPPA (US)</Badge>
+              <Badge>25+ jurisdictions</Badge>
             </div>
           </div>
 
@@ -83,20 +87,23 @@ const PrivacyPolicy: React.FC = () => {
                 <h3 className="font-medium mb-2">2.1 Data You Provide Directly</h3>
                 <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
                   <li><strong>Identity Data:</strong> Name, nationality, date of birth</li>
-                  <li><strong>Contact Data:</strong> Email address</li>
-                  <li><strong>Travel Data:</strong> Passport expiry dates, travel history, country entries/exits, visa information</li>
-                  <li><strong>Financial Preferences:</strong> Currency preferences, tax residency selections</li>
-                  <li><strong>Profile Data:</strong> Occupation, travel preferences, language preferences</li>
-                  <li><strong>Communication Data:</strong> Messages submitted to AI assistants and community chat features</li>
+                  <li><strong>Contact Data:</strong> Email address, phone number</li>
+                  <li><strong>Travel Data:</strong> Passport expiry dates, travel history, country entries/exits, visa information, vaccination records</li>
+                  <li><strong>Financial Preferences:</strong> Currency preferences, tax residency selections, payment method metadata (encrypted), award card references (encrypted)</li>
+                  <li><strong>Profile Data:</strong> Occupation, travel preferences, language preferences, demo persona selections</li>
+                  <li><strong>Communication Data:</strong> Messages submitted to AI assistants (AI Doctor, AI Lawyer, AI Planner, Concierge), community chat messages (Nomad Pulse, Social Vibe), marketplace listings, support tickets</li>
+                  <li><strong>Safety Data:</strong> Emergency contacts, Guardian activation logs (demo mode only), cyber incident reports, trusted peer designations</li>
+                  <li><strong>Document Data:</strong> Encrypted document metadata stored in the Identity Vault (Snomad ID) — encrypted with AES-256-GCM, zero-knowledge architecture</li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-medium mb-2">2.2 Data Collected Automatically</h3>
                 <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
-                  <li><strong>Device Data:</strong> Device type, operating system, browser type and version</li>
-                  <li><strong>Usage Data:</strong> Features used, interaction patterns, session duration</li>
-                  <li><strong>Location Data:</strong> GPS coordinates (only with your explicit consent for travel tracking)</li>
+                  <li><strong>Device Data:</strong> Device type, operating system, browser type and version, device fingerprint (for session isolation)</li>
+                  <li><strong>Usage Data:</strong> Features used, interaction patterns, session duration, feature customisation preferences</li>
+                  <li><strong>Location Data:</strong> GPS coordinates (only with your explicit consent for travel tracking and city services)</li>
+                  <li><strong>AI Interaction Data:</strong> Conversation transcripts with AI features, AI-generated responses, memory distillations, knowledge graph relationships</li>
                   <li><strong>Cookie Data:</strong> As described in our Cookie Policy (Section 10)</li>
                 </ul>
               </div>
@@ -107,6 +114,9 @@ const PrivacyPolicy: React.FC = () => {
                   <li>We do not collect biometric data, genetic data, or health data</li>
                   <li>We do not process payment card details directly (handled by third-party processors)</li>
                   <li>We do not collect data from children under 18</li>
+                  <li>We do NOT sell, rent, or trade your personal data to any third party (CCPA §1798.120)</li>
+                  <li>We do NOT share personal information for cross-context behavioural advertising</li>
+                  <li>We do NOT use your data for automated decision-making that produces legal effects without human oversight (GDPR Art. 22, EU AI Act)</li>
                 </ul>
               </div>
             </div>
@@ -138,8 +148,23 @@ const PrivacyPolicy: React.FC = () => {
                     <td className="p-3">Business purpose</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">AI assistant responses</td>
+                    <td className="p-3">AI assistant responses (Doctor, Lawyer, Planner, Concierge)</td>
                     <td className="p-3">Contract performance (Art. 6(1)(b))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Safety & emergency features (Guardian, SOS, Cyber Helpline)</td>
+                    <td className="p-3">Vital interests (Art. 6(1)(d)) / Consent (Art. 6(1)(a))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Community features (Social Vibe, Nomad Pulse, Marketplace)</td>
+                    <td className="p-3">Contract performance (Art. 6(1)(b))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">AI memory & knowledge graph (personalisation)</td>
+                    <td className="p-3">Consent (Art. 6(1)(a)) / Legitimate interest (Art. 6(1)(f))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
                   <tr className="border-b border-border">
@@ -153,12 +178,17 @@ const PrivacyPolicy: React.FC = () => {
                     <td className="p-3">Commercial purpose</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">Tax and visa compliance tools</td>
+                    <td className="p-3">Tax, visa & immigration compliance tools</td>
                     <td className="p-3">Legitimate interest (Art. 6(1)(f))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Identity Vault (encrypted document storage)</td>
+                    <td className="p-3">Consent (Art. 6(1)(a))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
                   <tr>
-                    <td className="p-3">Legal obligations (fraud prevention)</td>
+                    <td className="p-3">Legal obligations (fraud prevention, regulatory compliance)</td>
                     <td className="p-3">Legal obligation (Art. 6(1)(c))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
@@ -176,13 +206,16 @@ const PrivacyPolicy: React.FC = () => {
               4. Data Storage & Security
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.1. <strong>Client-Side Storage:</strong> SuperNomad primarily uses a client-only architecture. Your personal data (profile, travel tracking, calendar, preferences) is stored in your browser's localStorage on your device. This data is not transmitted to our servers unless you use features that require server communication.
+              4.1. <strong>Client-Side Storage (Local-First):</strong> SuperNomad uses a privacy-first, local-first architecture. Your personal data (profile, travel tracking, preferences, Identity Vault documents) is stored in your browser's localStorage on your device. Sensitive data in the Identity Vault, Payment Options, and Award Cards is encrypted with AES-256-GCM using the Web Crypto API (zero-knowledge architecture — we cannot access your encrypted data). Data is not transmitted to our servers unless you use features requiring server communication.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.2. <strong>Server-Side Processing:</strong> When you use AI-powered features (AI Doctor, AI Lawyer, AI Planner, community chat), your queries are transmitted to our Supabase Edge Functions, which forward sanitised inputs to third-party AI providers. We implement input validation, 5,000-character limits, and HTML stripping to protect against injection attacks.
+              4.2. <strong>Server-Side Processing:</strong> When you use AI-powered features (AI Doctor, AI Lawyer, AI Planner, Concierge, Cyber Helpline, Support AI, City Services AI, Marketplace AI, Social Chat AI, Moving AI), your queries are transmitted to our Supabase Edge Functions, which forward sanitised inputs to third-party AI providers. We implement: input validation with Zod schemas, 5,000-character limits, HTML stripping, and prompt injection protection. AI conversation history and distilled memories are stored in our Supabase database with device-level Row-Level Security (RLS) isolation.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              4.3. <strong>Security Measures:</strong> We implement appropriate technical and organisational measures including HTTPS encryption in transit, input sanitisation, and access controls. However, no method of transmission over the Internet or electronic storage is 100% secure.
+              4.3. <strong>Vector Embeddings & AI Memory:</strong> To provide personalised AI responses, we generate semantic embeddings (vector representations) of your conversation context using pgvector. These embeddings are mathematical representations that cannot be reverse-engineered into original text. They are stored in our database and isolated by your device ID.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              4.4. <strong>Security Measures:</strong> We implement appropriate technical and organisational measures including: HTTPS/TLS encryption in transit, AES-256-GCM encryption at rest for sensitive data, input sanitisation and HTML stripping, Row-Level Security (RLS) for database isolation, device fingerprinting for pre-authentication session security, and access controls. However, no method of transmission over the Internet or electronic storage is 100% secure.
             </p>
           </section>
 
@@ -321,23 +354,28 @@ const PrivacyPolicy: React.FC = () => {
                 <tbody className="text-muted-foreground">
                   <tr className="border-b border-border">
                     <td className="p-3">Cloud Infrastructure (Supabase)</td>
-                    <td className="p-3">Edge function hosting, database</td>
-                    <td className="p-3">AI queries, community messages</td>
+                    <td className="p-3">Edge function hosting, database, pgvector embeddings</td>
+                    <td className="p-3">AI queries, conversation logs, community messages, device sessions</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">AI Model Providers</td>
-                    <td className="p-3">AI-powered features</td>
-                    <td className="p-3">Sanitised user queries (no PII)</td>
+                    <td className="p-3">AI Model Providers (Google Gemini, OpenAI)</td>
+                    <td className="p-3">AI Doctor, Lawyer, Planner, Concierge, Cyber Helpline, Support AI, City Services</td>
+                    <td className="p-3">Sanitised user queries (PII stripped), conversation context</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Voice Services (ElevenLabs)</td>
+                    <td className="p-3">Text-to-speech for Concierge AI</td>
+                    <td className="p-3">Text content for voice synthesis (no PII)</td>
                   </tr>
                   <tr className="border-b border-border">
                     <td className="p-3">Analytics Providers</td>
-                    <td className="p-3">Usage analytics</td>
-                    <td className="p-3">Anonymised usage data</td>
+                    <td className="p-3">Usage analytics, performance monitoring</td>
+                    <td className="p-3">Anonymised usage data, feature interaction patterns</td>
                   </tr>
                   <tr>
                     <td className="p-3">Payment Processors</td>
                     <td className="p-3">Subscription billing</td>
-                    <td className="p-3">Payment details (not stored by us)</td>
+                    <td className="p-3">Payment details (not stored by SuperNomad)</td>
                   </tr>
                 </tbody>
               </table>
@@ -398,6 +436,27 @@ const PrivacyPolicy: React.FC = () => {
             <p className="text-sm text-muted-foreground leading-relaxed">
               The Service is not directed to individuals under the age of 18 (or 16 in certain EU Member States). We do not knowingly collect personal data from children. If we become aware that we have collected personal data from a child without parental consent, we will take steps to delete that data promptly. If you believe we have collected data from a child, please contact us at privacy@supernomad.app.
             </p>
+          </section>
+
+          <Separator />
+
+          {/* 11b. EU AI Act Compliance */}
+          <section className="space-y-3">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              11b. EU AI Act Compliance (Regulation 2024/1689)
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              SuperNomad deploys AI systems classified as "limited risk" under the EU AI Act. In compliance with Article 50 (transparency obligations for certain AI systems):
+            </p>
+            <ul className="text-sm text-muted-foreground space-y-2 ml-6 list-disc">
+              <li><strong>Transparency:</strong> All AI-generated content is clearly labelled. Users are informed when interacting with an AI system (AI Doctor, AI Lawyer, AI Planner, Concierge, Cyber Helpline, Support AI).</li>
+              <li><strong>Human Oversight:</strong> AI features provide informational guidance only. No AI system in SuperNomad makes autonomous decisions with legal or similarly significant effects. All outputs require human judgment before action.</li>
+              <li><strong>Data Governance:</strong> Training data for our AI systems is sourced from legitimate, publicly available sources. User queries are processed in real-time and are not used to train or fine-tune foundation models.</li>
+              <li><strong>Risk Management:</strong> We maintain a risk assessment for each AI feature, regularly evaluating accuracy, bias, and potential harm. Our AI systems are monitored for hallucinations and inaccurate outputs.</li>
+              <li><strong>Record-Keeping:</strong> AI usage logs (model used, token count, latency, cache status) are maintained per Article 12 requirements and are available for regulatory audit upon request.</li>
+              <li><strong>Safety Features Disclaimer:</strong> The Black Box Guardian, SOS Services, and emergency features operate in DEMO MODE. No real emergency alerts, police calls, or distress signals are transmitted. These are not classified as "high-risk AI systems" as they do not make autonomous emergency decisions.</li>
+            </ul>
           </section>
 
           <Separator />
