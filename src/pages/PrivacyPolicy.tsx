@@ -148,8 +148,23 @@ const PrivacyPolicy: React.FC = () => {
                     <td className="p-3">Business purpose</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">AI assistant responses</td>
+                    <td className="p-3">AI assistant responses (Doctor, Lawyer, Planner, Concierge)</td>
                     <td className="p-3">Contract performance (Art. 6(1)(b))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Safety & emergency features (Guardian, SOS, Cyber Helpline)</td>
+                    <td className="p-3">Vital interests (Art. 6(1)(d)) / Consent (Art. 6(1)(a))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Community features (Social Vibe, Nomad Pulse, Marketplace)</td>
+                    <td className="p-3">Contract performance (Art. 6(1)(b))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">AI memory & knowledge graph (personalisation)</td>
+                    <td className="p-3">Consent (Art. 6(1)(a)) / Legitimate interest (Art. 6(1)(f))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
                   <tr className="border-b border-border">
@@ -163,12 +178,17 @@ const PrivacyPolicy: React.FC = () => {
                     <td className="p-3">Commercial purpose</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">Tax and visa compliance tools</td>
+                    <td className="p-3">Tax, visa & immigration compliance tools</td>
                     <td className="p-3">Legitimate interest (Art. 6(1)(f))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Identity Vault (encrypted document storage)</td>
+                    <td className="p-3">Consent (Art. 6(1)(a))</td>
+                    <td className="p-3">Business purpose</td>
+                  </tr>
                   <tr>
-                    <td className="p-3">Legal obligations (fraud prevention)</td>
+                    <td className="p-3">Legal obligations (fraud prevention, regulatory compliance)</td>
                     <td className="p-3">Legal obligation (Art. 6(1)(c))</td>
                     <td className="p-3">Business purpose</td>
                   </tr>
