@@ -17,6 +17,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { FEATURE_REGISTRY, CATEGORY_LABELS } from '@/data/featureRegistry';
 
 interface ChatMessage {
   id: string;
@@ -126,6 +127,19 @@ const AISupportChat = () => {
       const persona = localStorage.getItem('demoPersona');
       if (persona) context.activePersona = JSON.parse(persona).name;
     } catch {}
+
+    // Auto-generate feature catalog from registry (always up-to-date)
+    const featureCatalog = Object.entries(
+      FEATURE_REGISTRY.reduce((acc, f) => {
+        const cat = CATEGORY_LABELS[f.category] || f.category;
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(`${f.label}: ${f.description}${f.badge ? ` [${f.badge}]` : ''}`);
+        return acc;
+      }, {} as Record<string, string[]>)
+    ).map(([cat, items]) => `**${cat}:** ${items.join(' | ')}`).join('\n');
+    context.featureCatalog = featureCatalog;
+    context.totalFeatures = FEATURE_REGISTRY.length;
+
     return context;
   }, []);
 
