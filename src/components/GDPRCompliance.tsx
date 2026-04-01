@@ -185,7 +185,7 @@ export const DataManagement: React.FC = () => {
             Data & Privacy Management
           </CardTitle>
           <CardDescription>
-            Exercise your GDPR & CCPA rights and manage your personal data
+            Exercise your GDPR, CCPA & global privacy rights. Manage your personal data with full transparency.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -208,8 +208,13 @@ export const DataManagement: React.FC = () => {
               className="flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
-              Download My Data
+              Download My Data (DSAR)
             </Button>
+          </div>
+          <Separator />
+          <div className="text-xs text-muted-foreground p-3 bg-muted/30 rounded-lg space-y-1">
+            <p className="font-medium">Compliance Framework:</p>
+            <p>GDPR (EU) 2016/679 · UK GDPR · CCPA/CPRA · EU AI Act 2024/1689 · ePrivacy Directive · Brazil LGPD · 25+ jurisdictions. All policies sourced from official government and EU publications. Auto-updated with latest regulatory changes.</p>
           </div>
           <Separator />
           <div>
@@ -220,10 +225,10 @@ export const DataManagement: React.FC = () => {
               className="flex items-center gap-2"
             >
               <Trash2 className="w-4 h-4" />
-              Delete All My Data
+              Delete All My Data (Art. 17)
             </Button>
             <p className="text-xs text-muted-foreground mt-2">
-              This will permanently delete your account and all associated data. This action cannot be undone.
+              This exercises your Right to Erasure (GDPR Art. 17 / CCPA §1798.105). This will permanently delete your account and all associated data. This action cannot be undone.
             </p>
           </div>
         </CardContent>
