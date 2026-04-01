@@ -260,7 +260,7 @@ const AISupportChat = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, isLoading, currentLanguage, voiceEnabled, speak, chatUrl]);
+  }, [messages, isLoading, currentLanguage, voiceEnabled, speak, chatUrl, getUserContext]);
 
   const handleQuickTopic = (question: string) => {
     sendMessage(question);
