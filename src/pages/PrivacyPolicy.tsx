@@ -43,9 +43,13 @@ const PrivacyPolicy: React.FC = () => {
               <Badge>GDPR (EU) 2016/679</Badge>
               <Badge>UK GDPR</Badge>
               <Badge>CCPA / CPRA (California)</Badge>
+              <Badge>EU AI Act 2024/1689</Badge>
+              <Badge>EU Digital Services Act</Badge>
               <Badge>ePrivacy Directive 2002/58/EC</Badge>
+              <Badge>Brazil LGPD</Badge>
               <Badge>CAN-SPAM Act</Badge>
               <Badge>COPPA (US)</Badge>
+              <Badge>25+ jurisdictions</Badge>
             </div>
           </div>
 
