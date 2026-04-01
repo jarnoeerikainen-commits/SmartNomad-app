@@ -17,6 +17,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { FEATURE_REGISTRY, CATEGORY_LABELS } from '@/data/featureRegistry';
 
 interface ChatMessage {
   id: string;
