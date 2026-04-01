@@ -181,16 +181,22 @@ const TermsAndConditions: React.FC = () => {
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">7. AI-Powered Features Disclaimer</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              7.1. SuperNomad integrates artificial intelligence features including but not limited to AI Travel Assistant, AI Travel Doctor, AI Travel Lawyer, and AI Travel Planner. These features are powered by third-party large language models (LLMs).
+              7.1. SuperNomad integrates artificial intelligence features including but not limited to: AI Travel Assistant (Concierge), AI Travel Doctor, AI Travel Lawyer, AI Travel Planner, Cyber Helpline, Support AI, City Services AI, Marketplace AI, Social Chat AI, Moving AI Assistant, and Subject Chat Moderator. These features are powered by third-party large language models (LLMs) including Google Gemini and OpenAI models.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              7.2. <strong>No Professional Advice:</strong> AI-generated responses do not constitute professional medical, legal, financial, or tax advice. The AI features provide general informational guidance only and should not be relied upon as a substitute for professional consultation.
+              7.2. <strong>No Professional Advice:</strong> AI-generated responses do not constitute professional medical, legal, financial, tax, immigration, or security advice. The AI features provide general informational guidance only and should not be relied upon as a substitute for professional consultation. You accept full responsibility for any decisions made based on AI-generated content.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              7.3. <strong>Accuracy:</strong> While we strive for accuracy, AI-generated content may contain errors, inaccuracies, or outdated information. We do not guarantee the completeness, reliability, or suitability of AI-generated content.
+              7.3. <strong>Accuracy & Hallucinations:</strong> While we strive for accuracy, AI-generated content may contain errors, inaccuracies, hallucinations, or outdated information. We do not guarantee the completeness, reliability, or suitability of AI-generated content. SuperNomad expressly disclaims all liability for losses arising from reliance on AI outputs.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              7.4. <strong>Data Processing:</strong> Queries submitted to AI features may be processed by third-party AI service providers. We implement input sanitisation and character limits to protect against prompt injection and data leakage. Please do not submit sensitive personal data to AI chat features.
+              7.4. <strong>Data Processing & EU AI Act:</strong> Queries submitted to AI features are processed by third-party AI service providers. We implement input sanitisation, character limits, and prompt injection protection. Please do not submit sensitive personal data to AI chat features. Pursuant to the EU AI Act (Regulation 2024/1689), all AI-generated content is transparently labelled and no autonomous decisions with legal effects are made by our AI systems.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              7.5. <strong>AI Memory & Personalisation:</strong> SuperNomad may store distilled facts and semantic embeddings from your AI conversations to improve future interactions. You may delete this data at any time through the Data Management settings. AI memories are isolated by device and cannot be accessed by other users.
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              7.6. <strong>Safety Features — DEMO MODE:</strong> The Black Box Guardian, SOS Services, and emergency AI features operate exclusively in DEMO MODE in the current version. NO real emergency calls, police alerts, GPS tracking signals, or distress notifications are transmitted to any emergency service, law enforcement agency, or third party. SuperNomad is not a licensed security service, emergency response provider, or law enforcement agency. In any genuine emergency, you must contact local emergency services directly (112 EU, 911 US, 999 UK, 000 AU).
             </p>
           </section>
 
