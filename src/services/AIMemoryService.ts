@@ -214,7 +214,7 @@ class AIMemoryService {
           .eq('conversation_id', convs[0].id)
           .order('created_at', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
         if (data) {
           conversationSummary = `**📋 PREVIOUS CONVERSATION SUMMARY:**\n${(data as any).summary}\n`;
           tokenEstimate += Math.ceil(conversationSummary.length / 4);
