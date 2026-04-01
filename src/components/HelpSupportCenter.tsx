@@ -29,14 +29,14 @@ interface ChatMessage {
 // QUICK HELP TOPICS
 // ═══════════════════════════════════════
 const QUICK_TOPICS = [
+  { icon: Sparkles, label: 'Maximize My App', question: 'What features should I be using based on my profile? Help me get the full potential from this app.' },
   { icon: Globe, label: 'Country Tracking', question: 'How do I track my time in different countries?' },
   { icon: Shield, label: 'Tax Residency', question: 'How does the tax residency tracker work?' },
   { icon: Bot, label: 'AI Concierge', question: 'How do I use the AI travel concierge?' },
   { icon: Mic, label: 'Voice Control', question: 'How do I use voice commands in the app?' },
   { icon: FileText, label: 'Documents', question: 'How do I store my documents securely?' },
   { icon: Zap, label: 'eSIM Setup', question: 'How do I set up an eSIM for travel?' },
-  { icon: Heart, label: 'Health AI', question: 'How does the AI Health Advisor work?' },
-  { icon: Globe, label: 'City Services', question: 'How do I find services in a new city?' },
+  { icon: Heart, label: 'All Features', question: 'Give me a complete overview of every feature in this app and how to access them.' },
 ];
 
 const FAQ_CATEGORIES = [
