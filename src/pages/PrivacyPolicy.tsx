@@ -354,23 +354,28 @@ const PrivacyPolicy: React.FC = () => {
                 <tbody className="text-muted-foreground">
                   <tr className="border-b border-border">
                     <td className="p-3">Cloud Infrastructure (Supabase)</td>
-                    <td className="p-3">Edge function hosting, database</td>
-                    <td className="p-3">AI queries, community messages</td>
+                    <td className="p-3">Edge function hosting, database, pgvector embeddings</td>
+                    <td className="p-3">AI queries, conversation logs, community messages, device sessions</td>
                   </tr>
                   <tr className="border-b border-border">
-                    <td className="p-3">AI Model Providers</td>
-                    <td className="p-3">AI-powered features</td>
-                    <td className="p-3">Sanitised user queries (no PII)</td>
+                    <td className="p-3">AI Model Providers (Google Gemini, OpenAI)</td>
+                    <td className="p-3">AI Doctor, Lawyer, Planner, Concierge, Cyber Helpline, Support AI, City Services</td>
+                    <td className="p-3">Sanitised user queries (PII stripped), conversation context</td>
+                  </tr>
+                  <tr className="border-b border-border">
+                    <td className="p-3">Voice Services (ElevenLabs)</td>
+                    <td className="p-3">Text-to-speech for Concierge AI</td>
+                    <td className="p-3">Text content for voice synthesis (no PII)</td>
                   </tr>
                   <tr className="border-b border-border">
                     <td className="p-3">Analytics Providers</td>
-                    <td className="p-3">Usage analytics</td>
-                    <td className="p-3">Anonymised usage data</td>
+                    <td className="p-3">Usage analytics, performance monitoring</td>
+                    <td className="p-3">Anonymised usage data, feature interaction patterns</td>
                   </tr>
                   <tr>
                     <td className="p-3">Payment Processors</td>
                     <td className="p-3">Subscription billing</td>
-                    <td className="p-3">Payment details (not stored by us)</td>
+                    <td className="p-3">Payment details (not stored by SuperNomad)</td>
                   </tr>
                 </tbody>
               </table>
