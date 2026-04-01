@@ -305,7 +305,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, language } = await req.json();
+    const { messages, language, userContext } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(
@@ -332,12 +332,44 @@ serve(async (req) => {
       ? `IMPORTANT: The user's app language is "${language}". You MUST respond ENTIRELY in this language. All help text, instructions, and troubleshooting steps must be in the user's language.`
       : 'Respond in English.';
 
-    const systemPrompt = `${SUPERNOMAD_KNOWLEDGE}
+    // Build personalized user context section
+    let userContextSection = '';
+    if (userContext && typeof userContext === 'object') {
+      const parts: string[] = [];
+      if (userContext.userName) parts.push(`User's name: ${String(userContext.userName).slice(0, 50)}`);
+      if (userContext.subscription) parts.push(`Subscription: ${String(userContext.subscription).slice(0, 20)}`);
+      if (userContext.activePersona) parts.push(`Active demo persona: ${String(userContext.activePersona).slice(0, 50)}`);
+      if (typeof userContext.trackedCountries === 'number') parts.push(`Countries tracked: ${userContext.trackedCountries}`);
+      if (Array.isArray(userContext.countryNames) && userContext.countryNames.length > 0) {
+        parts.push(`Countries: ${userContext.countryNames.slice(0, 10).map((n: unknown) => String(n).slice(0, 30)).join(', ')}`);
+      }
+      if (Array.isArray(userContext.pinnedFeatures) && userContext.pinnedFeatures.length > 0) {
+        parts.push(`Pinned/favorite features: ${userContext.pinnedFeatures.slice(0, 15).join(', ')}`);
+      }
+      if (Array.isArray(userContext.hiddenFeatures) && userContext.hiddenFeatures.length > 0) {
+        parts.push(`Hidden features (user hasn't explored): ${userContext.hiddenFeatures.slice(0, 15).join(', ')}`);
+      }
+      if (Array.isArray(userContext.travelStyle) && userContext.travelStyle.length > 0) {
+        parts.push(`Travel style: ${userContext.travelStyle.slice(0, 5).join(', ')}`);
+      }
+      if (parts.length > 0) {
+        userContextSection = `\n\n═══════════════════════════════════════\n👤 CURRENT USER CONTEXT (use to personalize your help)\n═══════════════════════════════════════\n${parts.join('\n')}\n\nUSE THIS CONTEXT TO:\n- Address the user by name if available\n- Recommend features they haven't explored yet (hidden features)\n- Give advice relevant to their tracked countries and travel style\n- Suggest upgrades if they're on free tier and asking about premium features\n- Proactively suggest features that complement what they already use`;
+      }
+    }
+
+    const systemPrompt = `${SUPERNOMAD_KNOWLEDGE}${userContextSection}
 
 ═══════════════════════════════════════
 YOUR ROLE & PERSONALITY
 ═══════════════════════════════════════
-You are **SuperNomad Support AI** — the most helpful, knowledgeable, and friendly support agent.
+You are **SuperNomad Support AI** — the most helpful, knowledgeable, and friendly support agent. You automatically know ALL app features and stay updated. You read the user's profile, usage patterns, and preferences to give personalized guidance.
+
+**PROACTIVE FEATURE DISCOVERY:**
+- When a user asks about one feature, suggest related features they might not know about
+- If a user tracks countries, recommend Tax Residency Hub, Schengen Calculator, and Tax Advisors
+- If a user uses AI Concierge, mention AI Doctor, AI Lawyer, AI Planner
+- If a user has hidden features, occasionally mention what they're missing
+- Always explain HOW to navigate to the feature (sidebar path)
 
 **RULES:**
 1. You know EVERYTHING about the SuperNomad app. Use the knowledge base above to give precise, accurate answers.
@@ -350,6 +382,9 @@ You are **SuperNomad Support AI** — the most helpful, knowledgeable, and frien
 8. For billing/payment issues, ALWAYS recommend contacting a human agent.
 9. Reference specific sections, buttons, and navigation paths (e.g., "Go to Tracking → Country Tracker → Add Country").
 10. ${langInstruction}
+11. When a user asks "what can I do" or "help me get started", analyze their context and give a personalized action plan based on their profile and usage.
+12. If the user has 0 countries tracked, guide them to add their first country.
+13. Proactively suggest the most impactful features for the user's specific situation.
 
 Current date/time: ${currentDateTime}
 
