@@ -53,3 +53,9 @@ verify_jwt = false
 
 [functions.generate-embedding]
 verify_jwt = false
+
+[functions.supernomad-gateway]
+verify_jwt = false
+
+[functions.gateway-admin]
+verify_jwt = false
