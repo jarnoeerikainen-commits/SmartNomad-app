@@ -352,8 +352,11 @@ serve(async (req) => {
       if (Array.isArray(userContext.travelStyle) && userContext.travelStyle.length > 0) {
         parts.push(`Travel style: ${userContext.travelStyle.slice(0, 5).join(', ')}`);
       }
+      if (typeof userContext.featureCatalog === 'string' && userContext.featureCatalog.length > 0) {
+        parts.push(`\n📋 LIVE FEATURE CATALOG (auto-generated from app code, ${userContext.totalFeatures || '?'} features):\n${userContext.featureCatalog.slice(0, 5000)}`);
+      }
       if (parts.length > 0) {
-        userContextSection = `\n\n═══════════════════════════════════════\n👤 CURRENT USER CONTEXT (use to personalize your help)\n═══════════════════════════════════════\n${parts.join('\n')}\n\nUSE THIS CONTEXT TO:\n- Address the user by name if available\n- Recommend features they haven't explored yet (hidden features)\n- Give advice relevant to their tracked countries and travel style\n- Suggest upgrades if they're on free tier and asking about premium features\n- Proactively suggest features that complement what they already use`;
+        userContextSection = `\n\n═══════════════════════════════════════\n👤 CURRENT USER CONTEXT & LIVE FEATURE CATALOG\n═══════════════════════════════════════\n${parts.join('\n')}\n\nUSE THIS CONTEXT TO:\n- Address the user by name if available\n- Use the LIVE FEATURE CATALOG as the authoritative, always-updated list of all app features\n- Recommend features they haven't explored yet (hidden features)\n- Give advice relevant to their tracked countries and travel style\n- Suggest upgrades if they're on free tier and asking about premium features\n- Proactively suggest features that complement what they already use`;
       }
     }
 
