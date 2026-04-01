@@ -155,6 +155,181 @@ export type Database = {
         }
         Relationships: []
       }
+      api_access_policies: {
+        Row: {
+          anonymize_pii: boolean
+          created_at: string
+          enabled: boolean
+          field_restrictions: string[] | null
+          filter_conditions: Json | null
+          id: string
+          max_records_per_request: number | null
+          partner_id: string
+          permission: string
+          resource_category: string | null
+          resource_type: string
+          updated_at: string
+        }
+        Insert: {
+          anonymize_pii?: boolean
+          created_at?: string
+          enabled?: boolean
+          field_restrictions?: string[] | null
+          filter_conditions?: Json | null
+          id?: string
+          max_records_per_request?: number | null
+          partner_id: string
+          permission?: string
+          resource_category?: string | null
+          resource_type: string
+          updated_at?: string
+        }
+        Update: {
+          anonymize_pii?: boolean
+          created_at?: string
+          enabled?: boolean
+          field_restrictions?: string[] | null
+          filter_conditions?: Json | null
+          id?: string
+          max_records_per_request?: number | null
+          partner_id?: string
+          permission?: string
+          resource_category?: string | null
+          resource_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_access_policies_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "api_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_audit_logs: {
+        Row: {
+          created_at: string
+          endpoint: string
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          latency_ms: number | null
+          method: string
+          partner_id: string
+          records_returned: number | null
+          request_params: Json | null
+          request_path: string | null
+          response_size_bytes: number | null
+          response_status: number
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          latency_ms?: number | null
+          method: string
+          partner_id: string
+          records_returned?: number | null
+          request_params?: Json | null
+          request_path?: string | null
+          response_size_bytes?: number | null
+          response_status: number
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          latency_ms?: number | null
+          method?: string
+          partner_id?: string
+          records_returned?: number | null
+          request_params?: Json | null
+          request_path?: string | null
+          response_size_bytes?: number | null
+          response_status?: number
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_audit_logs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "api_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_partners: {
+        Row: {
+          allowed_ips: string[] | null
+          api_key_hash: string
+          api_key_prefix: string
+          company_url: string | null
+          contact_email: string
+          contact_name: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_request_at: string | null
+          metadata: Json | null
+          partner_name: string
+          partner_slug: string
+          rate_limit_per_day: number
+          rate_limit_per_minute: number
+          status: string
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_ips?: string[] | null
+          api_key_hash: string
+          api_key_prefix: string
+          company_url?: string | null
+          contact_email: string
+          contact_name?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_request_at?: string | null
+          metadata?: Json | null
+          partner_name: string
+          partner_slug: string
+          rate_limit_per_day?: number
+          rate_limit_per_minute?: number
+          status?: string
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_ips?: string[] | null
+          api_key_hash?: string
+          api_key_prefix?: string
+          company_url?: string | null
+          contact_email?: string
+          contact_name?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_request_at?: string | null
+          metadata?: Json | null
+          partner_name?: string
+          partner_slug?: string
+          rate_limit_per_day?: number
+          rate_limit_per_minute?: number
+          status?: string
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
