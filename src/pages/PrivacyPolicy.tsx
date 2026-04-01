@@ -87,20 +87,23 @@ const PrivacyPolicy: React.FC = () => {
                 <h3 className="font-medium mb-2">2.1 Data You Provide Directly</h3>
                 <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
                   <li><strong>Identity Data:</strong> Name, nationality, date of birth</li>
-                  <li><strong>Contact Data:</strong> Email address</li>
-                  <li><strong>Travel Data:</strong> Passport expiry dates, travel history, country entries/exits, visa information</li>
-                  <li><strong>Financial Preferences:</strong> Currency preferences, tax residency selections</li>
-                  <li><strong>Profile Data:</strong> Occupation, travel preferences, language preferences</li>
-                  <li><strong>Communication Data:</strong> Messages submitted to AI assistants and community chat features</li>
+                  <li><strong>Contact Data:</strong> Email address, phone number</li>
+                  <li><strong>Travel Data:</strong> Passport expiry dates, travel history, country entries/exits, visa information, vaccination records</li>
+                  <li><strong>Financial Preferences:</strong> Currency preferences, tax residency selections, payment method metadata (encrypted), award card references (encrypted)</li>
+                  <li><strong>Profile Data:</strong> Occupation, travel preferences, language preferences, demo persona selections</li>
+                  <li><strong>Communication Data:</strong> Messages submitted to AI assistants (AI Doctor, AI Lawyer, AI Planner, Concierge), community chat messages (Nomad Pulse, Social Vibe), marketplace listings, support tickets</li>
+                  <li><strong>Safety Data:</strong> Emergency contacts, Guardian activation logs (demo mode only), cyber incident reports, trusted peer designations</li>
+                  <li><strong>Document Data:</strong> Encrypted document metadata stored in the Identity Vault (Snomad ID) — encrypted with AES-256-GCM, zero-knowledge architecture</li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="font-medium mb-2">2.2 Data Collected Automatically</h3>
                 <ul className="text-sm text-muted-foreground space-y-1 ml-6 list-disc">
-                  <li><strong>Device Data:</strong> Device type, operating system, browser type and version</li>
-                  <li><strong>Usage Data:</strong> Features used, interaction patterns, session duration</li>
-                  <li><strong>Location Data:</strong> GPS coordinates (only with your explicit consent for travel tracking)</li>
+                  <li><strong>Device Data:</strong> Device type, operating system, browser type and version, device fingerprint (for session isolation)</li>
+                  <li><strong>Usage Data:</strong> Features used, interaction patterns, session duration, feature customisation preferences</li>
+                  <li><strong>Location Data:</strong> GPS coordinates (only with your explicit consent for travel tracking and city services)</li>
+                  <li><strong>AI Interaction Data:</strong> Conversation transcripts with AI features, AI-generated responses, memory distillations, knowledge graph relationships</li>
                   <li><strong>Cookie Data:</strong> As described in our Cookie Policy (Section 10)</li>
                 </ul>
               </div>
