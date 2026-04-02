@@ -170,7 +170,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
     try {
       setIsTyping(true);
-      const followUpPrompt = `The user just asked: "${lastUserMessage.slice(0, 200)}" and you answered. Now send ONE short, natural follow-up (max 2 sentences). Either: (a) ask if they need something related (like insurance, eSIM, VPN, transport, etc. from your knowledge base), or (b) share a quick related tip they might not have thought of. Be casual — like a friend still thinking about their question. Don't repeat what you already said. Don't say "by the way" every time — vary your opener.`;
+      const followUpPrompt = `The user just asked: "${lastUserMessage.slice(0, 200)}" and you answered. Now send ONE short, natural follow-up (max 2 sentences, NO ~~~ delimiters — this is a single message). Either: (a) ask if they need something related (like insurance, eSIM, VPN, transport, etc. from your knowledge base), or (b) share a quick related tip they might not have thought of. Be casual — like a friend still thinking about their question. Don't repeat what you already said. Don't say "by the way" every time — vary your opener.`;
 
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
@@ -416,18 +416,20 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantContent += content;
+              // Show streamed content in the first message bubble (before chunking)
+              const displayContent = assistantContent.split('~~~')[0].trim();
               setMessages(prev => prev.map(m =>
                 m.id === assistantId
-                  ? { ...m, content: assistantContent }
+                  ? { ...m, content: displayContent }
                   : m
               ));
 
               // Early TTS: speak first sentence as soon as it's complete
               if (voiceEnabled && !firstSentenceSpoken) {
-                const sentenceEnd = assistantContent.search(/[.!?]\s/);
+                const sentenceEnd = displayContent.search(/[.!?]\s/);
                 if (sentenceEnd > 20) {
                   firstSentenceSpoken = true;
-                  const firstSentence = assistantContent.slice(0, sentenceEnd + 1);
+                  const firstSentence = displayContent.slice(0, sentenceEnd + 1);
                   speak(firstSentence);
                 }
               }
@@ -439,9 +441,63 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       }
 
-      // Save assistant response to Supabase
+      // Save assistant response to Supabase (full content)
       if (conversationIdRef.current && assistantContent) {
         aiMemoryService.saveMessage(conversationIdRef.current, 'assistant', assistantContent);
+      }
+
+      // === CHUNKED MESSAGE DELIVERY ===
+      // Split by ~~~ delimiter and deliver chunks as separate message bubbles
+      const chunks = assistantContent
+        .split(/\n?~~~\n?/)
+        .map(c => c.trim())
+        .filter(c => c.length > 0);
+
+      if (chunks.length > 1) {
+        // Update first message with just the first chunk
+        setMessages(prev => prev.map(m =>
+          m.id === assistantId ? { ...m, content: chunks[0] } : m
+        ));
+
+        // Speak first chunk remainder if not already spoken
+        if (voiceEnabled && !firstSentenceSpoken) {
+          speak(chunks[0]);
+        }
+
+        // Deliver remaining chunks with staggered delays
+        for (let i = 1; i < chunks.length; i++) {
+          const chunk = chunks[i];
+          const delay = 600 + Math.min(chunk.length * 8, 1200); // 600ms-1800ms based on length
+
+          // Show typing indicator
+          setIsTyping(true);
+          await new Promise(r => setTimeout(r, delay));
+
+          const chunkId = `${assistantId}-chunk-${i}`;
+          setMessages(prev => [...prev, {
+            id: chunkId,
+            content: chunk,
+            isUser: false,
+            timestamp: new Date()
+          }]);
+          setIsTyping(false);
+
+          // Speak this chunk
+          if (voiceEnabled) {
+            await new Promise<void>(resolve => {
+              speak(chunk, resolve);
+            });
+          }
+        }
+      } else {
+        // Single chunk — speak normally
+        if (assistantContent && voiceEnabled && !firstSentenceSpoken) {
+          speak(assistantContent);
+        } else if (assistantContent && voiceEnabled && firstSentenceSpoken) {
+          const sentenceEnd = assistantContent.search(/[.!?]\s/);
+          const remainder = sentenceEnd > 0 ? assistantContent.slice(sentenceEnd + 2) : '';
+          if (remainder.trim()) speak(remainder);
+        }
       }
 
       // Legacy localStorage memory extraction (kept for backward compat)
@@ -494,28 +550,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         latencyMs: Math.max(0, latencyMs),
         outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
       });
-      const shouldFollowUp = exchangeCountRef.current % 3 === 0 && Math.random() > 0.5 && assistantContent;
 
-
-      // Speak remaining text if first sentence was already spoken early
-      if (assistantContent && voiceEnabled) {
-        if (firstSentenceSpoken) {
-          const sentenceEnd = assistantContent.search(/[.!?]\s/);
-          const remainder = sentenceEnd > 0 ? assistantContent.slice(sentenceEnd + 2) : '';
-          if (remainder.trim()) {
-            // Queue remaining text after first sentence finishes
-            speak(remainder, () => {
-              if (shouldFollowUp) setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
-            });
-          } else if (shouldFollowUp) {
-            setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
-          }
-        } else {
-          speak(assistantContent, () => {
-            if (shouldFollowUp) setTimeout(() => triggerFollowUp(assistantContent, userMessage), 1500);
-          });
-        }
-      } else if (shouldFollowUp) {
+      // Follow-up logic (less frequent with chunked messages since last chunk already asks a question)
+      const shouldFollowUp = chunks.length <= 1 && exchangeCountRef.current % 4 === 0 && Math.random() > 0.6 && assistantContent;
+      if (shouldFollowUp) {
         const followUpDelay = 2000 + Math.random() * 1500;
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
