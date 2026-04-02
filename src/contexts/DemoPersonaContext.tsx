@@ -120,6 +120,9 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.setItem('demoCalendar', JSON.stringify(p.calendar));
       // Store AI context
       localStorage.setItem('demoAiContext', p.aiContext);
+      // Demo personas are always adults — bypass age gate
+      localStorage.setItem('ageGroup', 'adult');
+      localStorage.setItem('hasSeenOnboarding', 'true');
       // Store award cards AI context for concierge
       const awardCards = id === 'meghan' ? MEGHAN_AWARD_CARDS : JOHN_AWARD_CARDS;
       localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));
