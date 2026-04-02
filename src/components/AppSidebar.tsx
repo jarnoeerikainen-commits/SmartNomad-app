@@ -185,13 +185,16 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     },
   ];
 
-  // Filter out hidden features from sidebar groups
+  // Hide finance & social groups for teens (16-17)
+  const teenHiddenGroups = ['finance'];
+  const teenHiddenItems = ['social-chat', 'nomad-chat', 'marketplace'];
+
   const menuGroups = menuGroupsRaw.map(group => {
     if (group.id === 'main') return group; // System group, always show
-    return {
-      ...group,
-      items: group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id))
-    };
+    if (isTeenRestricted && teenHiddenGroups.includes(group.id)) return { ...group, items: [] };
+    let items = group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id));
+    if (isTeenRestricted) items = items.filter(item => !teenHiddenItems.includes(item.id));
+    return { ...group, items };
   }).filter(group => group.id === 'main' || group.items.length > 0);
   
   return (
