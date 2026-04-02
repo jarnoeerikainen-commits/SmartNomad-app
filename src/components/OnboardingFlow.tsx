@@ -100,7 +100,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
           <Card className="w-full max-w-md mx-4 shadow-large animate-scale-in">
             <CardContent className="p-8">
               <div className="flex justify-center mb-6">
-                <div className="h-16 w-16 rounded-2xl bg-amber-500 flex items-center justify-center shadow-medium">
+                <div className="h-16 w-16 rounded-2xl bg-destructive/80 flex items-center justify-center shadow-medium">
                   <Lock className="h-8 w-8 text-white" />
                 </div>
               </div>
