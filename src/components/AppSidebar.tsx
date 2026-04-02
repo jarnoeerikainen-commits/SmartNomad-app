@@ -47,6 +47,8 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const { t } = useLanguage();
   const { isVisible } = useFeaturePreferences();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['premium', 'travel', 'local']);
+  const ageGroup = typeof window !== 'undefined' ? localStorage.getItem('ageGroup') || 'adult' : 'adult';
+  const isTeenRestricted = ageGroup === 'teen';
   
   // Check for danger zone (imported from ThreatIntelligenceService)
   const [isInDangerZone, setIsInDangerZone] = React.useState(false);
