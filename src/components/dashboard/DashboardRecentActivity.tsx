@@ -78,7 +78,7 @@ export const DashboardRecentActivity: React.FC<DashboardRecentActivityProps> = (
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     if (days < 7) return `${days}d ago`;
-    return format(new Date(timestamp), 'MMM d');
+    return formatSmart(new Date(timestamp));
   };
 
   return (

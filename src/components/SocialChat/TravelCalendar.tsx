@@ -98,10 +98,10 @@ export const TravelCalendar = ({ profiles }: TravelCalendarProps) => {
                 >
                   <div className="text-center min-w-[60px]">
                     <div className="text-2xl font-bold">
-                      {format(trip.date, 'd')}
+                      {formatDayNumber(trip.date)}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {format(trip.date, 'MMM')}
+                      {formatShortMonth(trip.date)}
                     </div>
                   </div>
 

@@ -227,9 +227,9 @@ export const SchengenCalculator: React.FC = () => {
                   <div className="flex-1">
                     <p className="font-medium">{entry.country}</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(entry.entryDate, 'MMM dd, yyyy')} 
+                      {formatDate(entry.entryDate)} 
                       {' → '}
-                      {entry.exitDate ? format(entry.exitDate, 'MMM dd, yyyy') : 'Present'}
+                      {entry.exitDate ? formatDate(entry.exitDate) : 'Present'}
                       <Badge variant="outline" className="ml-2">{days} days</Badge>
                     </p>
                   </div>

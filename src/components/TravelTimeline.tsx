@@ -133,7 +133,7 @@ export const TravelTimeline: React.FC<TravelTimelineProps> = ({ countries, entri
                     dayEntries.length > 0 ? "bg-muted/50" : "bg-background"
                   )}
                 >
-                  <div className="text-sm font-medium">{format(day, 'd')}</div>
+                  <div className="text-sm font-medium">{formatDayNumber(day)}</div>
                   
                   {/* Country indicators */}
                   {dayEntries.length > 0 && (

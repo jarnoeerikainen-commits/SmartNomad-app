@@ -236,7 +236,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
                         <p className="text-sm">{msg.content}</p>
                       </div>
                       <span className="text-xs text-muted-foreground mt-1">
-                        {format(new Date(msg.timestamp), 'HH:mm')}
+                        {formatTime(new Date(msg.timestamp))}
                       </span>
                     </div>
                   </div>
