@@ -536,9 +536,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
   const formatEventDate = (start: string, end?: string): string => {
     if (!start) return 'Date TBA';
     try {
-      const s = format(parseISO(start), 'MMM dd, yyyy');
-      if (end) { try { return `${s} - ${format(parseISO(end), 'MMM dd, yyyy')}`; } catch { return s; } }
-      return s;
+      return formatDateRange(parseISO(start), end ? parseISO(end) : null);
     } catch { return start; }
   };
 

@@ -284,7 +284,7 @@ export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countrie
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `travel-report-${format(new Date(), 'yyyy-MM-dd')}.html`;
+    a.download = `travel-report-${formatISO(new Date())}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
