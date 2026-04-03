@@ -331,7 +331,7 @@ const generateMockEvents = (): LocalEvent[] => {
         city: cityData.name,
         country: countryName,
         location: `${cityData.name} Center`,
-        startDate: format(addDays(baseDate, t.dayOffset), 'yyyy-MM-dd'),
+        startDate: formatISODate(addDays(baseDate, t.dayOffset)),
         time: t.time,
         description: t.descGen(cityData.name),
         isFree: t.isFree,
