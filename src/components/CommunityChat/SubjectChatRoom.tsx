@@ -27,7 +27,7 @@ export const SubjectChatRoom = ({ chatRoom, onSendMessage, onBack, isLoading }: 
   };
 
   const timeRemaining = chatRoom.activity.expires 
-    ? formatDistanceToNow(chatRoom.activity.expires, { addSuffix: true })
+    ? formatRelative(chatRoom.activity.expires)
     : 'Continuous';
 
   return (
