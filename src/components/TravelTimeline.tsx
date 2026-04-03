@@ -75,7 +75,7 @@ export const TravelTimeline: React.FC<TravelTimelineProps> = ({ countries, entri
             ← Previous
           </button>
           <h3 className="text-xl font-semibold">
-            {format(selectedMonth, 'MMMM yyyy')}
+            {formatFullMonthYear(selectedMonth)}
           </h3>
           <button
             onClick={() => setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1))}
