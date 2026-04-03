@@ -152,7 +152,7 @@ export const SubjectChatRoom = ({ chatRoom, onSendMessage, onBack, isLoading }: 
                     <p className="text-sm">{message.content}</p>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {formatDistanceToNow(message.timestamp, { addSuffix: true })}
+                    {formatRelative(message.timestamp)}
                   </p>
                 </div>
               </div>
