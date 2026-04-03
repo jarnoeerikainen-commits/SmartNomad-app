@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, MapPin, FileCheck, TrendingUp, Calendar } from 'lucide-react';
 import { Country } from '@/types/country';
-import { format } from 'date-fns';
+import { formatSmart } from '@/utils/dateFormat';
 
 interface DashboardRecentActivityProps {
   countries: Country[];
@@ -78,7 +78,7 @@ export const DashboardRecentActivity: React.FC<DashboardRecentActivityProps> = (
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     if (days < 7) return `${days}d ago`;
-    return format(new Date(timestamp), 'MMM d');
+    return formatSmart(new Date(timestamp));
   };
 
   return (

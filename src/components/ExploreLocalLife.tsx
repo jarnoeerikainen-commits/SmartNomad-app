@@ -56,7 +56,8 @@ import {
   Star,
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
-import { format, addDays, startOfDay, parseISO, isAfter } from 'date-fns';
+import { addDays, startOfDay, parseISO, isAfter } from 'date-fns';
+import { formatDate, formatDateRange, formatISO as formatISODate } from '@/utils/dateFormat';
 import {
   Dialog,
   DialogContent,
@@ -330,7 +331,7 @@ const generateMockEvents = (): LocalEvent[] => {
         city: cityData.name,
         country: countryName,
         location: `${cityData.name} Center`,
-        startDate: format(addDays(baseDate, t.dayOffset), 'yyyy-MM-dd'),
+        startDate: formatISODate(addDays(baseDate, t.dayOffset)),
         time: t.time,
         description: t.descGen(cityData.name),
         isFree: t.isFree,
@@ -535,9 +536,7 @@ const ExploreLocalLife: React.FC<ExploreLocalLifeProps> = ({ currentLocation }) 
   const formatEventDate = (start: string, end?: string): string => {
     if (!start) return 'Date TBA';
     try {
-      const s = format(parseISO(start), 'MMM dd, yyyy');
-      if (end) { try { return `${s} - ${format(parseISO(end), 'MMM dd, yyyy')}`; } catch { return s; } }
-      return s;
+      return formatDateRange(parseISO(start), end ? parseISO(end) : null);
     } catch { return start; }
   };
 

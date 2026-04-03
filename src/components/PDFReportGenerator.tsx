@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Download } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate, formatMonthYear, formatISO, formatLongDate } from '@/utils/dateFormat';
 import { Country } from '@/types/country';
 
 interface Trip {
@@ -23,9 +23,9 @@ interface PDFReportGeneratorProps {
 export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countries, trips = [] }) => {
   
   const generatePDFContent = () => {
-    const currentDate = format(new Date(), 'MMMM dd, yyyy');
+    const currentDate = formatLongDate(new Date());
     const reportPeriod = trips.length > 0 
-      ? `${format(new Date(trips[0].entryDate), 'MMM yyyy')} - ${format(new Date(), 'MMM yyyy')}`
+      ? `${formatMonthYear(new Date(trips[0].entryDate))} - ${formatMonthYear(new Date())}`
       : 'Current Period';
 
     let content = `
@@ -243,11 +243,11 @@ export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countrie
     <div class="timeline">
       ${trips.sort((a, b) => new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime()).map(trip => `
         <div class="timeline-item">
-          <div class="timeline-date">${format(new Date(trip.entryDate), 'MMMM dd, yyyy')}</div>
+          <div class="timeline-date">${formatLongDate(new Date(trip.entryDate))}</div>
           <div class="timeline-country">${trip.flag} ${trip.country}</div>
           <div class="timeline-details">
             Duration: ${trip.days} days | 
-            ${trip.exitDate ? `Departed: ${format(new Date(trip.exitDate), 'MMM dd, yyyy')}` : 'Ongoing'} | 
+            ${trip.exitDate ? `Departed: ${formatDate(new Date(trip.exitDate))}` : 'Ongoing'} | 
             Purpose: ${trip.purpose}
           </div>
         </div>
@@ -284,7 +284,7 @@ export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countrie
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `travel-report-${format(new Date(), 'yyyy-MM-dd')}.html`;
+    a.download = `travel-report-${formatISO(new Date())}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

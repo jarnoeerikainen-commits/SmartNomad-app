@@ -12,7 +12,7 @@ import {
   ScanFace,
   ShieldCheck
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate } from '@/utils/dateFormat';
 
 interface ProfileCardProps {
   profile: SocialProfile;
@@ -104,7 +104,7 @@ export const ProfileCard = ({ profile, onStartChat }: ProfileCardProps) => {
             <Calendar className="h-4 w-4" />
             <span>
               Next: {profile.mobility.nextDestinations[0].city} on{' '}
-              {format(new Date(profile.mobility.nextDestinations[0].arrivalDate), 'MMM d')}
+              {formatDate(new Date(profile.mobility.nextDestinations[0].arrivalDate))}
             </span>
           </div>
         )}

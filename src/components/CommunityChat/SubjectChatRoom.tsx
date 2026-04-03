@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ChatRoom } from '@/types/subjectChat';
 import { Send, Users, Clock, TrendingUp, ArrowLeft } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatRelative } from '@/utils/dateFormat';
 
 interface SubjectChatRoomProps {
   chatRoom: ChatRoom;
@@ -27,7 +27,7 @@ export const SubjectChatRoom = ({ chatRoom, onSendMessage, onBack, isLoading }: 
   };
 
   const timeRemaining = chatRoom.activity.expires 
-    ? formatDistanceToNow(chatRoom.activity.expires, { addSuffix: true })
+    ? formatRelative(chatRoom.activity.expires)
     : 'Continuous';
 
   return (
@@ -152,7 +152,7 @@ export const SubjectChatRoom = ({ chatRoom, onSendMessage, onBack, isLoading }: 
                     <p className="text-sm">{message.content}</p>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {formatDistanceToNow(message.timestamp, { addSuffix: true })}
+                    {formatRelative(message.timestamp)}
                   </p>
                 </div>
               </div>

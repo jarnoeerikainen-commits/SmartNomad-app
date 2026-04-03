@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar as CalendarIcon, MapPin } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth } from 'date-fns';
+import { startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isSameMonth } from 'date-fns';
+import { formatFullMonthYear, formatDayNumber } from '@/utils/dateFormat';
 import { cn } from '@/lib/utils';
 import { Country } from '@/types/country';
 
@@ -74,7 +75,7 @@ export const TravelTimeline: React.FC<TravelTimelineProps> = ({ countries, entri
             ← Previous
           </button>
           <h3 className="text-xl font-semibold">
-            {format(selectedMonth, 'MMMM yyyy')}
+            {formatFullMonthYear(selectedMonth)}
           </h3>
           <button
             onClick={() => setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1))}
@@ -132,7 +133,7 @@ export const TravelTimeline: React.FC<TravelTimelineProps> = ({ countries, entri
                     dayEntries.length > 0 ? "bg-muted/50" : "bg-background"
                   )}
                 >
-                  <div className="text-sm font-medium">{format(day, 'd')}</div>
+                  <div className="text-sm font-medium">{formatDayNumber(day)}</div>
                   
                   {/* Country indicators */}
                   {dayEntries.length > 0 && (

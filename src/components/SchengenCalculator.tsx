@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { CalendarIcon, Plus, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
-import { format, differenceInDays, subDays, addDays } from 'date-fns';
+import { differenceInDays, subDays, addDays } from 'date-fns';
+import { formatDate, formatLongDate } from '@/utils/dateFormat';
 import { cn } from '@/lib/utils';
 
 interface SchengenEntry {
@@ -129,7 +130,7 @@ export const SchengenCalculator: React.FC = () => {
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
                 You're approaching the 90-day limit! 
-                {earliestExit && ` You must leave by ${format(earliestExit, 'PPP')}`}
+                {earliestExit && ` You must leave by ${formatLongDate(earliestExit)}`}
               </AlertDescription>
             </Alert>
           )}
@@ -168,7 +169,7 @@ export const SchengenCalculator: React.FC = () => {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {newEntry.entryDate ? format(newEntry.entryDate, 'PPP') : 'Pick date'}
+                    {newEntry.entryDate ? formatDate(newEntry.entryDate) : 'Pick date'}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -189,7 +190,7 @@ export const SchengenCalculator: React.FC = () => {
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left font-normal">
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {newEntry.exitDate ? format(newEntry.exitDate, 'PPP') : 'Still there'}
+                    {newEntry.exitDate ? formatDate(newEntry.exitDate) : 'Still there'}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -226,9 +227,9 @@ export const SchengenCalculator: React.FC = () => {
                   <div className="flex-1">
                     <p className="font-medium">{entry.country}</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(entry.entryDate, 'MMM dd, yyyy')} 
+                      {formatDate(entry.entryDate)} 
                       {' → '}
-                      {entry.exitDate ? format(entry.exitDate, 'MMM dd, yyyy') : 'Present'}
+                      {entry.exitDate ? formatDate(entry.exitDate) : 'Present'}
                       <Badge variant="outline" className="ml-2">{days} days</Badge>
                     </p>
                   </div>

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Send, Sparkles, Mic, MicOff, Volume2, VolumeX, FileText, Search, X } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatTime } from '@/utils/dateFormat';
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
@@ -236,7 +236,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
                         <p className="text-sm">{msg.content}</p>
                       </div>
                       <span className="text-xs text-muted-foreground mt-1">
-                        {format(new Date(msg.timestamp), 'HH:mm')}
+                        {formatTime(new Date(msg.timestamp))}
                       </span>
                     </div>
                   </div>

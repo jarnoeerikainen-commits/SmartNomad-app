@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChatRoom, ChatCategory, SkillLevel, ChatDuration } from '@/types/subjectChat';
 import { Users, Clock, TrendingUp, Search, Filter } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatRelative } from '@/utils/dateFormat';
 
 interface SubjectChatListProps {
   chatRooms: ChatRoom[];
@@ -119,7 +119,7 @@ export const SubjectChatList = ({ chatRooms, onSelectChat, onCreateNew }: Subjec
           filteredChats.map((chat) => {
             const hasSpace = chat.participants.length < chat.settings.capacity;
             const timeRemaining = chat.activity.expires 
-              ? formatDistanceToNow(chat.activity.expires, { addSuffix: true })
+              ? formatRelative(chat.activity.expires)
               : 'Continuous';
 
             return (
