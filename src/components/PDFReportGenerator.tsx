@@ -23,9 +23,9 @@ interface PDFReportGeneratorProps {
 export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countries, trips = [] }) => {
   
   const generatePDFContent = () => {
-    const currentDate = format(new Date(), 'MMMM dd, yyyy');
+    const currentDate = formatLongDate(new Date());
     const reportPeriod = trips.length > 0 
-      ? `${format(new Date(trips[0].entryDate), 'MMM yyyy')} - ${format(new Date(), 'MMM yyyy')}`
+      ? `${formatMonthYear(new Date(trips[0].entryDate))} - ${formatMonthYear(new Date())}`
       : 'Current Period';
 
     let content = `
