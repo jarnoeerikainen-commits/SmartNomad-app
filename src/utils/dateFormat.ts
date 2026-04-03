@@ -4,7 +4,8 @@ import {
   type FormatDistanceToNowOptions,
 } from 'date-fns';
 import {
-  enUS, es, pt, zhCN, fr, de, ar, ja, it, ko, hi, ru, tr
+  enUS, es, pt, zhCN, fr, de, ar, ja, it, ko, hi, ru, tr,
+  type Locale,
 } from 'date-fns/locale';
 
 // Map app language codes to date-fns locales
