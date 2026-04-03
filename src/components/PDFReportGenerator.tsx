@@ -243,11 +243,11 @@ export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countrie
     <div class="timeline">
       ${trips.sort((a, b) => new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime()).map(trip => `
         <div class="timeline-item">
-          <div class="timeline-date">${format(new Date(trip.entryDate), 'MMMM dd, yyyy')}</div>
+          <div class="timeline-date">${formatLongDate(new Date(trip.entryDate))}</div>
           <div class="timeline-country">${trip.flag} ${trip.country}</div>
           <div class="timeline-details">
             Duration: ${trip.days} days | 
-            ${trip.exitDate ? `Departed: ${format(new Date(trip.exitDate), 'MMM dd, yyyy')}` : 'Ongoing'} | 
+            ${trip.exitDate ? `Departed: ${formatDate(new Date(trip.exitDate))}` : 'Ongoing'} | 
             Purpose: ${trip.purpose}
           </div>
         </div>
