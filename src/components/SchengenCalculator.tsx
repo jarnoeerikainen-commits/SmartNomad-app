@@ -130,7 +130,7 @@ export const SchengenCalculator: React.FC = () => {
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
                 You're approaching the 90-day limit! 
-                {earliestExit && ` You must leave by ${format(earliestExit, 'PPP')}`}
+                {earliestExit && ` You must leave by ${formatLongDate(earliestExit)}`}
               </AlertDescription>
             </Alert>
           )}
