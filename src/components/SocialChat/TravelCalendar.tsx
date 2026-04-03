@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin, Users } from 'lucide-react';
 import { SocialProfile } from '@/types/socialChat';
-import { format, isSameDay, isAfter } from 'date-fns';
+import { isSameDay, isAfter } from 'date-fns';
+import { formatDayNumber, formatShortMonth } from '@/utils/dateFormat';
 
 interface TravelCalendarProps {
   profiles: SocialProfile[];

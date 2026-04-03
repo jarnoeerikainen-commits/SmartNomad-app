@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ChatRoom } from '@/types/subjectChat';
 import { Send, Users, Clock, TrendingUp, ArrowLeft } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatRelative } from '@/utils/dateFormat';
 
 interface SubjectChatRoomProps {
   chatRoom: ChatRoom;

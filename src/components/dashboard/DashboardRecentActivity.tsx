@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, MapPin, FileCheck, TrendingUp, Calendar } from 'lucide-react';
 import { Country } from '@/types/country';
-import { format } from 'date-fns';
+import { formatSmart } from '@/utils/dateFormat';
 
 interface DashboardRecentActivityProps {
   countries: Country[];

@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
 import { CalendarIcon, Plus, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
-import { format, differenceInDays, subDays, addDays } from 'date-fns';
+import { differenceInDays, subDays, addDays } from 'date-fns';
+import { formatDate, formatLongDate } from '@/utils/dateFormat';
 import { cn } from '@/lib/utils';
 
 interface SchengenEntry {

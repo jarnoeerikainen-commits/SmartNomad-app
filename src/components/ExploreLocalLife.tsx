@@ -56,7 +56,8 @@ import {
   Star,
 } from 'lucide-react';
 import { LocationData } from '@/types/country';
-import { format, addDays, startOfDay, parseISO, isAfter } from 'date-fns';
+import { addDays, startOfDay, parseISO, isAfter } from 'date-fns';
+import { formatDate, formatDateRange, formatISO as formatISODate } from '@/utils/dateFormat';
 import {
   Dialog,
   DialogContent,

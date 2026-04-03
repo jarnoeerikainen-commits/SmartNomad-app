@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Send, Sparkles, Mic, MicOff, Volume2, VolumeX, FileText, Search, X } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatTime } from '@/utils/dateFormat';
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';

@@ -12,7 +12,7 @@ import {
   ScanFace,
   ShieldCheck
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate } from '@/utils/dateFormat';
 
 interface ProfileCardProps {
   profile: SocialProfile;

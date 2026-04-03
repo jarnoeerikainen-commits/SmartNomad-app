@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Download } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate, formatMonthYear, formatISO, formatLongDate } from '@/utils/dateFormat';
 import { Country } from '@/types/country';
 
 interface Trip {
