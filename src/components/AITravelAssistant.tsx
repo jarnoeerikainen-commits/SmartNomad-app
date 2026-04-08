@@ -464,6 +464,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       }
 
+      // Complete thinking log
+      clearThinking();
+
+      // Clean [STEP: ...] markers from final content
+      const { cleanContent: cleanedFinal } = parseThinkingSteps(assistantContent);
+      assistantContent = cleanedFinal;
+
+      // Infer confidence level for the response
+      const confidence = inferConfidence(assistantContent);
+
       // Save assistant response to Supabase (full content)
       if (conversationIdRef.current && assistantContent) {
         aiMemoryService.saveMessage(conversationIdRef.current, 'assistant', assistantContent);
