@@ -8,6 +8,8 @@ import {
   Locate, Tag, Phone
 } from 'lucide-react';
 
+export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
+
 export interface FeatureItem {
   id: string;
   label: string;
@@ -20,6 +22,8 @@ export interface FeatureItem {
   defaultPinned: boolean;
   /** System features can never be hidden (dashboard, settings, help) */
   system?: boolean;
+  /** Trust level determines confirmation and undo behavior for AI actions */
+  trustLevel?: TrustLevel;
 }
 
 // System items that are ALWAYS visible and cannot be customized
