@@ -41,16 +41,16 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'dash-discovery', label: 'Feature Discovery', icon: Gift, category: 'dashboard', description: 'Discover new features & tips', defaultVisible: true, defaultPinned: false },
 
   // TAX & COMPLIANCE
-  { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false },
-  { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false },
-  { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false },
-  { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false },
-  { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe, category: 'tax', description: 'Visa application assistance services', defaultVisible: true, defaultPinned: false },
-  { id: 'etias', label: 'ETIAS 2026', icon: Shield, category: 'tax', badge: 'EU', badgeVariant: 'secondary', description: 'EU travel authorization system', defaultVisible: true, defaultPinned: false },
-  { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, category: 'tax', badge: 'WHO', badgeVariant: 'secondary', description: 'Global vaccination requirements, clinics & health records', defaultVisible: true, defaultPinned: false },
-  { id: 'vault', label: 'Document Vault', icon: Shield, category: 'tax', description: 'Secure document storage', defaultVisible: true, defaultPinned: false },
-  { id: 'gov-apps', label: 'Government Apps', icon: Building, category: 'tax', description: 'Official government applications', defaultVisible: true, defaultPinned: false },
-  { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign, category: 'tax', description: 'Wealth management & tax optimization', defaultVisible: true, defaultPinned: false },
+  { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe, category: 'tax', description: 'Visa application assistance services', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'etias', label: 'ETIAS 2026', icon: Shield, category: 'tax', badge: 'EU', badgeVariant: 'secondary', description: 'EU travel authorization system', defaultVisible: true, defaultPinned: false, trustLevel: 'info' },
+  { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, category: 'tax', badge: 'WHO', badgeVariant: 'secondary', description: 'Global vaccination requirements, clinics & health records', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'vault', label: 'Document Vault', icon: Shield, category: 'tax', description: 'Secure document storage', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'gov-apps', label: 'Government Apps', icon: Building, category: 'tax', description: 'Official government applications', defaultVisible: true, defaultPinned: false, trustLevel: 'info' },
+  { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign, category: 'tax', description: 'Wealth management & tax optimization', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
 
   // FINANCE
   { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'finance', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods & Agentic Commerce', defaultVisible: true, defaultPinned: false },
