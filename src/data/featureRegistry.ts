@@ -129,3 +129,12 @@ export const CATEGORY_ORDER = ['dashboard', 'safety', 'tax', 'finance', 'travel'
 export function getFeatureById(id: string): FeatureItem | undefined {
   return FEATURE_REGISTRY.find(f => f.id === id);
 }
+
+/**
+ * Get the trust level for a feature. Defaults to 'info' if not specified.
+ * Future features automatically get 'info' unless explicitly tagged.
+ */
+export function getFeatureTrustLevel(id: string): TrustLevel {
+  const feature = getFeatureById(id);
+  return feature?.trustLevel || 'info';
+}
