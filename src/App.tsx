@@ -11,6 +11,8 @@ import { LocationProvider } from "./contexts/LocationContext";
 import { DemoPersonaProvider } from "./contexts/DemoPersonaContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { TrustProvider } from "./contexts/TrustContext";
+import SovereignConfirmation from "./components/trust/SovereignConfirmation";
 
 // Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
@@ -41,8 +43,10 @@ const App = () => {
           <AuthProvider>
           <LocationProvider>
           <DemoPersonaProvider>
+          <TrustProvider>
             <Toaster />
             <Sonner />
+            <SovereignConfirmation />
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
                 <Routes>
                   <Route path="/auth" element={<Auth />} />
@@ -56,6 +60,7 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
+          </TrustProvider>
           </DemoPersonaProvider>
           </LocationProvider>
           </AuthProvider>
