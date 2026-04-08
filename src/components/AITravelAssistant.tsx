@@ -389,6 +389,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       let streamDone = false;
       let assistantContent = '';
       let firstSentenceSpoken = false;
+      const seenSteps = new Set<string>();
+
+      // Start thinking log
+      clearThinking();
+      const thinkId = addThinkingStep('Processing your request...');
 
       const assistantId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
