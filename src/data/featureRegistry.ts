@@ -53,13 +53,13 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign, category: 'tax', description: 'Wealth management & tax optimization', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
 
   // FINANCE
-  { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'finance', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods & Agentic Commerce', defaultVisible: true, defaultPinned: false },
-  { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'finance', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false },
-  { id: 'digital-banks', label: 'Digital Banks', icon: Building2, category: 'finance', description: 'Online banking services', defaultVisible: true, defaultPinned: false },
-  { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign, category: 'finance', description: 'Send money worldwide', defaultVisible: true, defaultPinned: false },
-  { id: 'crypto-cash', label: 'Crypto & Digital Money', icon: Coins, category: 'finance', description: 'Cryptocurrency services', defaultVisible: true, defaultPinned: false },
-  { id: 'currency-converter', label: 'Currency Converter', icon: Globe2, category: 'finance', description: 'Real-time exchange rates', defaultVisible: true, defaultPinned: false },
-  { id: 'emergency-cards', label: 'Emergency Cards', icon: CreditCard, category: 'finance', badge: 'SOS', badgeVariant: 'destructive', description: 'Emergency card numbers & replacement', defaultVisible: true, defaultPinned: false },
+  { id: 'payment-options', label: 'Payment & AI Wallet', icon: CreditCard, category: 'finance', badge: 'AI', badgeVariant: 'secondary', description: 'Payment methods & Agentic Commerce', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
+  { id: 'award-cards', label: 'Award Cards', icon: Award, category: 'finance', badge: 'NEW', badgeVariant: 'secondary', description: 'Travel reward programs', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'digital-banks', label: 'Digital Banks', icon: Building2, category: 'finance', description: 'Online banking services', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'money-transfers', label: 'Money Transfers', icon: DollarSign, category: 'finance', description: 'Send money worldwide', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
+  { id: 'crypto-cash', label: 'Crypto & Digital Money', icon: Coins, category: 'finance', description: 'Cryptocurrency services', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
+  { id: 'currency-converter', label: 'Currency Converter', icon: Globe2, category: 'finance', description: 'Real-time exchange rates', defaultVisible: true, defaultPinned: false, trustLevel: 'info' },
+  { id: 'emergency-cards', label: 'Emergency Cards', icon: CreditCard, category: 'finance', badge: 'SOS', badgeVariant: 'destructive', description: 'Emergency card numbers & replacement', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
 
   // TRAVEL ESSENTIALS
   { id: 'public-transport', label: 'Transportation', icon: Bus, category: 'travel', description: 'Public transport info', defaultVisible: true, defaultPinned: false },
