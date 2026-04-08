@@ -511,7 +511,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             id: chunkId,
             content: chunk,
             isUser: false,
-            timestamp: new Date()
+            timestamp: new Date(),
+            confidence
           }]);
           setIsTyping(false);
 
