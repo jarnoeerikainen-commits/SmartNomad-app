@@ -790,6 +790,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                                 return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
                               })}
                             </div>
+                            {!message.isUser && message.confidence && (
+                              <ConfidenceDot level={message.confidence} />
+                            )}
                             {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           </div>
                         </div>
@@ -797,7 +800,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     );
                   })}
                   {isTyping && (
-                    <div className="flex justify-start">
+                    <div className="flex flex-col gap-2 items-start">
+                      <ThinkingLog />
                       <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                         <div className="flex items-center gap-2">
                           <Bot className="h-4 w-4" />
