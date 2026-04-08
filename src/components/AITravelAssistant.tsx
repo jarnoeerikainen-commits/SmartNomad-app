@@ -45,6 +45,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 }) => {
   const { t, currentLanguage } = useLanguage();
   const { activePersona } = useDemoPersona();
+  const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
