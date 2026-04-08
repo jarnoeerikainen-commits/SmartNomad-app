@@ -17,6 +17,11 @@ import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
 import { aiMemoryService } from '@/services/AIMemoryService';
+import { useTrust } from '@/contexts/TrustContext';
+import ThinkingLog from '@/components/trust/ThinkingLog';
+import ConfidenceDot from '@/components/trust/ConfidenceDot';
+import { inferConfidence, parseThinkingSteps } from '@/utils/trustInference';
+import { ConfidenceLevel } from '@/contexts/TrustContext';
 
 
 interface Message {
@@ -24,6 +29,7 @@ interface Message {
   content: string;
   isUser: boolean;
   timestamp: Date;
+  confidence?: ConfidenceLevel;
 }
 
 interface AITravelAssistantProps {
@@ -39,6 +45,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 }) => {
   const { t, currentLanguage } = useLanguage();
   const { activePersona } = useDemoPersona();
+  const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -382,6 +389,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       let streamDone = false;
       let assistantContent = '';
       let firstSentenceSpoken = false;
+      const seenSteps = new Set<string>();
+
+      // Start thinking log
+      clearThinking();
+      const thinkId = addThinkingStep('Processing your request...');
 
       const assistantId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, {
@@ -416,8 +428,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantContent += content;
+
+              // Parse out [STEP: ...] markers for the thinking log
+              const { cleanContent, steps } = parseThinkingSteps(assistantContent);
+              for (const step of steps) {
+                if (!seenSteps.has(step)) {
+                  seenSteps.add(step);
+                  completeThinkingStep(thinkId);
+                  addThinkingStep(step);
+                }
+              }
+
               // Show streamed content in the first message bubble (before chunking)
-              const displayContent = assistantContent.split('~~~')[0].trim();
+              const displayContent = cleanContent.split('~~~')[0].trim();
               setMessages(prev => prev.map(m =>
                 m.id === assistantId
                   ? { ...m, content: displayContent }
@@ -441,6 +464,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         }
       }
 
+      // Complete thinking log
+      clearThinking();
+
+      // Clean [STEP: ...] markers from final content
+      const { cleanContent: cleanedFinal } = parseThinkingSteps(assistantContent);
+      assistantContent = cleanedFinal;
+
+      // Infer confidence level for the response
+      const confidence = inferConfidence(assistantContent);
+
       // Save assistant response to Supabase (full content)
       if (conversationIdRef.current && assistantContent) {
         aiMemoryService.saveMessage(conversationIdRef.current, 'assistant', assistantContent);
@@ -456,7 +489,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       if (chunks.length > 1) {
         // Update first message with just the first chunk
         setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, content: chunks[0] } : m
+          m.id === assistantId ? { ...m, content: chunks[0], confidence } : m
         ));
 
         // Speak first chunk remainder if not already spoken
@@ -478,7 +511,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             id: chunkId,
             content: chunk,
             isUser: false,
-            timestamp: new Date()
+            timestamp: new Date(),
+            confidence
           }]);
           setIsTyping(false);
 
@@ -756,6 +790,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                                 return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
                               })}
                             </div>
+                            {!message.isUser && message.confidence && (
+                              <ConfidenceDot level={message.confidence} />
+                            )}
                             {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           </div>
                         </div>
@@ -763,7 +800,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     );
                   })}
                   {isTyping && (
-                    <div className="flex justify-start">
+                    <div className="flex flex-col gap-2 items-start">
+                      <ThinkingLog />
                       <div className="bg-muted rounded-lg px-3 py-2 text-sm">
                         <div className="flex items-center gap-2">
                           <Bot className="h-4 w-4" />
