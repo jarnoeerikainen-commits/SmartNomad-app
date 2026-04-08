@@ -489,7 +489,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       if (chunks.length > 1) {
         // Update first message with just the first chunk
         setMessages(prev => prev.map(m =>
-          m.id === assistantId ? { ...m, content: chunks[0] } : m
+          m.id === assistantId ? { ...m, content: chunks[0], confidence } : m
         ));
 
         // Speak first chunk remainder if not already spoken
