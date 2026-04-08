@@ -17,6 +17,11 @@ import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
 import { aiMemoryService } from '@/services/AIMemoryService';
+import { useTrust } from '@/contexts/TrustContext';
+import ThinkingLog from '@/components/trust/ThinkingLog';
+import ConfidenceDot from '@/components/trust/ConfidenceDot';
+import { inferConfidence, parseThinkingSteps } from '@/utils/trustInference';
+import { ConfidenceLevel } from '@/contexts/TrustContext';
 
 
 interface Message {
@@ -24,6 +29,7 @@ interface Message {
   content: string;
   isUser: boolean;
   timestamp: Date;
+  confidence?: ConfidenceLevel;
 }
 
 interface AITravelAssistantProps {
