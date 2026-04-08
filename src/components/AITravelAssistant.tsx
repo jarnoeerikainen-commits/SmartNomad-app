@@ -428,8 +428,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantContent += content;
+
+              // Parse out [STEP: ...] markers for the thinking log
+              const { cleanContent, steps } = parseThinkingSteps(assistantContent);
+              for (const step of steps) {
+                if (!seenSteps.has(step)) {
+                  seenSteps.add(step);
+                  completeThinkingStep(thinkId);
+                  addThinkingStep(step);
+                }
+              }
+
               // Show streamed content in the first message bubble (before chunking)
-              const displayContent = assistantContent.split('~~~')[0].trim();
+              const displayContent = cleanContent.split('~~~')[0].trim();
               setMessages(prev => prev.map(m =>
                 m.id === assistantId
                   ? { ...m, content: displayContent }
