@@ -363,7 +363,7 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
             <p className="text-xs text-muted-foreground">
               Helps separate business vs personal days for tax deductions
             </p>
-
+          </div>
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
             <Button 
