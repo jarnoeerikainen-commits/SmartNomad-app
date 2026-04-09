@@ -484,6 +484,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       // Infer confidence level for the response
       const confidence = inferConfidence(assistantContent);
 
+      // Parse navigation suggestions and clean them from display
+      const navSuggestions = parseNavigationSuggestions(assistantContent);
+      assistantContent = assistantContent.replace(/\[NAVIGATE:\w[\w-]*\]/g, '').trim();
+
       // Save assistant response to Supabase (full content)
       if (conversationIdRef.current && assistantContent) {
         aiMemoryService.saveMessage(conversationIdRef.current, 'assistant', assistantContent);
