@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
+import AccidentalExpatDetector from './AccidentalExpatDetector';
+import VisaAutoMatcher from './VisaAutoMatcher';
 import TaxResidencyReports from './TaxResidencyReports';
 import CountryTracker from './CountryTracker';
 import USTaxTracker from './USTaxTracker';
