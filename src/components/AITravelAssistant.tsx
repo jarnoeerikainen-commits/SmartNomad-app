@@ -341,6 +341,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       conversationSummary: conversationSummary || undefined,
       subscriptionTier: fullAppContext.subscriptionTier || undefined,
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
+      integrationContext: getIntegrationContextForAI(),
+      toolRoutingHint: (() => {
+        const discovered = discoverFeaturesByIntent(userMessage, 3);
+        if (discovered.length > 0) {
+          return `Relevant features for this query: ${discovered.map(d => `${d.feature.label} [NAVIGATE:${d.feature.id}] (${Math.round(d.score * 100)}% match)`).join(', ')}. Include [NAVIGATE:featureId] in your response if the user should visit that section.`;
+        }
+        return undefined;
+      })(),
     };
 
     try {
