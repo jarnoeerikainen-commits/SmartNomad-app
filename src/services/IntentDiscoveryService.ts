@@ -40,6 +40,13 @@ const INTENT_MAPPINGS: IntentMapping[] = [
     contextTriggers: ['travel to europe', 'etias application', 'schengen days'],
   },
   {
+    featureId: 'visa-matcher',
+    category: 'tax',
+    keywords: ['nomad visa', 'digital nomad', 'work visa', 'remote work visa', 'visa recommendation'],
+    synonyms: ['best visa', 'which visa', 'visa options', 'visa match'],
+    contextTriggers: ['which visa should I get', 'best country for nomads', 'digital nomad visa options', 'recommend a visa'],
+  },
+  {
     featureId: 'vaccination-hub',
     category: 'tax',
     keywords: ['vaccine', 'vaccination', 'medicine', 'health', 'immunization', 'yellow fever'],
