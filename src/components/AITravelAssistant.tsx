@@ -22,6 +22,8 @@ import ThinkingLog from '@/components/trust/ThinkingLog';
 import ConfidenceDot from '@/components/trust/ConfidenceDot';
 import { inferConfidence, parseThinkingSteps } from '@/utils/trustInference';
 import { ConfidenceLevel } from '@/contexts/TrustContext';
+import { discoverFeaturesByIntent, parseNavigationSuggestions, getToolRoutingPrompt } from '@/services/IntentDiscoveryService';
+import { getIntegrationContextForAI } from '@/services/ConnectorIntegrationService';
 
 
 interface Message {
