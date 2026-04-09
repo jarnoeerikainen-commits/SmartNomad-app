@@ -352,45 +352,62 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     };
 
     try {
-      const resp = await fetch(CHAT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({
-          messages: messages
-            .filter(m => m.id !== '1')
-            .map(m => ({
-              role: m.isUser ? 'user' : 'assistant',
-              content: m.content
-            }))
-            .concat([{ role: 'user', content: userMessage }]),
-          userContext,
-          deviceId: aiMemoryService.getDeviceId(),
-        }),
-      });
+      const requestBody = {
+        messages: messages
+          .filter(m => m.id !== '1')
+          .map(m => ({
+            role: m.isUser ? 'user' : 'assistant',
+            content: m.content
+          }))
+          .concat([{ role: 'user', content: userMessage }]),
+        userContext,
+        deviceId: aiMemoryService.getDeviceId(),
+      };
 
-      if (!resp.ok) {
-        if (resp.status === 429) {
-          toast({
-            title: 'Rate limit exceeded',
-            description: 'Please try again in a moment.',
-            variant: 'destructive'
+      // Self-healing fetch with retry
+      let resp: Response | null = null;
+      let retryCount = 0;
+      const maxRetries = 2;
+
+      while (retryCount <= maxRetries) {
+        try {
+          resp = await fetch(CHAT_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify(requestBody),
           });
-          return;
+
+          if (resp.ok) break;
+
+          if (resp.status === 429) {
+            toast({ title: 'Rate limit exceeded', description: 'Please try again in a moment.', variant: 'destructive' });
+            return;
+          }
+          if (resp.status === 402) {
+            toast({ title: 'Payment required', description: 'Please add funds to continue using AI features.', variant: 'destructive' });
+            return;
+          }
+
+          // Auto-fix: trim messages if payload too large (413/500)
+          if ((resp.status === 413 || resp.status >= 500) && requestBody.messages.length > 4) {
+            requestBody.messages = [requestBody.messages[0], ...requestBody.messages.slice(-4)];
+            retryCount++;
+            await new Promise(r => setTimeout(r, 1000 * retryCount));
+            continue;
+          }
+
+          throw new Error(`HTTP ${resp.status}`);
+        } catch (fetchErr) {
+          if (retryCount >= maxRetries) throw fetchErr;
+          retryCount++;
+          await new Promise(r => setTimeout(r, 1500 * retryCount));
         }
-        if (resp.status === 402) {
-          toast({
-            title: 'Payment required',
-            description: 'Please add funds to continue using AI features.',
-            variant: 'destructive'
-          });
-          return;
-        }
-        throw new Error('Failed to start stream');
       }
 
+      if (!resp || !resp.ok) throw new Error('Failed to start stream');
       if (!resp.body) throw new Error('No response body');
 
       const reader = resp.body.getReader();
