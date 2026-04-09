@@ -99,6 +99,7 @@ const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashb
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 const SnomadIdVault = lazy(() => import('./SnomadIdVault'));
 const ConnectorsDashboard = lazy(() => import('./ConnectorsDashboard'));
+const VisaAutoMatcher = lazy(() => import('./VisaAutoMatcher'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -413,6 +414,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'snomad-id': return <SnomadIdVault />;
       case 'customize': return <FeatureCustomizer />;
       case 'integrations': return <ConnectorsDashboard />;
+      case 'visa-matcher': return <VisaAutoMatcher countries={countries} />;
       default:
         return (
           <div className="flex items-center justify-center h-64">

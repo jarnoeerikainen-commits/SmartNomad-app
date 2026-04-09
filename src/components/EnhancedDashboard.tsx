@@ -7,6 +7,7 @@ import { DashboardRecentActivity } from './dashboard/DashboardRecentActivity';
 import { DashboardFeatureDiscovery } from './dashboard/DashboardFeatureDiscovery';
 import DashboardQuickStats from './DashboardQuickStats';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
+import AccidentalExpatDetector from './AccidentalExpatDetector';
 import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedDashboardProps {
@@ -79,7 +80,8 @@ export const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         </div>
       </div>
 
-      {/* Quick Stats Bar */}
+      {/* Expat Detector + Quick Stats */}
+      <AccidentalExpatDetector countries={countries} onNavigate={onSectionChange} />
       <DashboardQuickStats countries={countries} />
 
       {/* Two Column Layout */}

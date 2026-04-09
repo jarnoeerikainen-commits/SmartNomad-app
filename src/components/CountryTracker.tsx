@@ -49,8 +49,16 @@ const TrackedCountryCard: React.FC<{
             <span className="text-3xl">{country.flag}</span>
             <div>
               <h4 className="font-semibold text-foreground">{country.name}</h4>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                 <Badge variant="outline" className="text-xs">{country.reason}</Badge>
+                {country.dayPurpose && (
+                  <Badge 
+                    variant={country.dayPurpose === 'business' ? 'default' : country.dayPurpose === 'mixed' ? 'secondary' : 'outline'}
+                    className="text-xs"
+                  >
+                    {country.dayPurpose === 'business' ? '💼 Business' : country.dayPurpose === 'mixed' ? `📊 Mixed ${country.businessPercentage || 50}%` : '🏖️ Personal'}
+                  </Badge>
+                )}
                 {country.followEmbassyNews && (
                   <Badge variant="secondary" className="text-xs gap-0.5">
                     <Building2 className="w-2.5 h-2.5" />

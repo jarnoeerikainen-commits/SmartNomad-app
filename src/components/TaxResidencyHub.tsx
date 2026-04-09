@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import TaxResidencyVisualDashboard from './TaxResidencyVisualDashboard';
+import AccidentalExpatDetector from './AccidentalExpatDetector';
+import VisaAutoMatcher from './VisaAutoMatcher';
 import TaxResidencyReports from './TaxResidencyReports';
 import CountryTracker from './CountryTracker';
 import USTaxTracker from './USTaxTracker';
@@ -331,9 +333,11 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
           {countries.length > 0 && (
             <>
+              <AccidentalExpatDetector countries={countries} />
               <TaxResidencyVisualDashboard 
                 countries={countries.filter(c => c.countTravelDays)} 
               />
+              <VisaAutoMatcher countries={countries} />
             </>
           )}
           

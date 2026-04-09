@@ -44,6 +44,8 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [showCountryInfo, setShowCountryInfo] = useState(false);
   const [followEmbassyNews, setFollowEmbassyNews] = useState(false);
+  const [dayPurpose, setDayPurpose] = useState<'business' | 'personal' | 'mixed'>('personal');
+  const [businessPercentage, setBusinessPercentage] = useState('50');
 
   const availableCountries = useMemo(() => {
     return CountryInfoService.getAllCountries().filter(
@@ -95,7 +97,9 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
       flag: country.flag,
       dayLimit: parseInt(dayLimit) || 90,
       reason: finalReason || 'General tracking',
-      followEmbassyNews: followEmbassyNews
+      followEmbassyNews: followEmbassyNews,
+      dayPurpose,
+      businessPercentage: dayPurpose === 'mixed' ? parseInt(businessPercentage) || 50 : undefined
     });
 
     // Reset form
@@ -321,6 +325,45 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
             </p>
           </div>
 
+          {/* Day Purpose */}
+          <div className="space-y-2">
+            <Label className="text-base font-medium">Purpose of Stay</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['personal', 'business', 'mixed'] as const).map(purpose => (
+                <button
+                  key={purpose}
+                  type="button"
+                  onClick={() => setDayPurpose(purpose)}
+                  className={`p-2.5 rounded-lg border text-sm font-medium transition-all ${
+                    dayPurpose === purpose 
+                      ? 'border-primary bg-primary/10 text-primary' 
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  {purpose === 'personal' ? '🏖️ Personal' : purpose === 'business' ? '💼 Business' : '📊 Mixed'}
+                </button>
+              ))}
+            </div>
+            {dayPurpose === 'mixed' && (
+              <div className="flex items-center gap-3 mt-2">
+                <Label className="text-sm shrink-0">Business %</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="99"
+                  value={businessPercentage}
+                  onChange={(e) => setBusinessPercentage(e.target.value)}
+                  className="w-20"
+                />
+                <span className="text-xs text-muted-foreground">
+                  ({100 - (parseInt(businessPercentage) || 50)}% personal)
+                </span>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Helps separate business vs personal days for tax deductions
+            </p>
+          </div>
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
             <Button 
