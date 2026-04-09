@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -331,9 +331,11 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
           {countries.length > 0 && (
             <>
+              <AccidentalExpatDetector countries={countries} />
               <TaxResidencyVisualDashboard 
                 countries={countries.filter(c => c.countTravelDays)} 
               />
+              <VisaAutoMatcher countries={countries} />
             </>
           )}
           
