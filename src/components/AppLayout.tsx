@@ -98,6 +98,7 @@ const VaccinationMedicineHub = lazy(() => import('./VaccinationMedicineHub'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 const SnomadIdVault = lazy(() => import('./SnomadIdVault'));
+const ConnectorsDashboard = lazy(() => import('./ConnectorsDashboard'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -411,6 +412,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'weather-service': return <WeatherServiceDashboard />;
       case 'snomad-id': return <SnomadIdVault />;
       case 'customize': return <FeatureCustomizer />;
+      case 'integrations': return <ConnectorsDashboard />;
       default:
         return (
           <div className="flex items-center justify-center h-64">

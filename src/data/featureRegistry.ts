@@ -112,6 +112,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'airport-lounges', label: 'Airport Lounges', icon: Crown, category: 'premium', badge: 'VIP', badgeVariant: 'secondary', description: 'Lounge access worldwide', defaultVisible: true, defaultPinned: false },
   { id: 'private-clubs', label: 'Elite Clubs', icon: Crown, category: 'premium', badge: 'ELITE', badgeVariant: 'secondary', description: 'Private members clubs', defaultVisible: true, defaultPinned: false },
   { id: 'location-tracking', label: 'Location Tracking', icon: Locate, category: 'premium', description: 'GPS & location services', defaultVisible: true, defaultPinned: false },
+  { id: 'integrations', label: 'Integrations Hub', icon: Globe2, category: 'premium', description: 'Manage third-party service connections', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
