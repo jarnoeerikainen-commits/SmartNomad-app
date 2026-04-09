@@ -17,6 +17,8 @@ export interface Country {
   partialDayRule?: 'full' | 'half' | 'exclude'; // How to handle partial days
   countDepartureDay?: boolean; // Whether to count departure day
   countArrivalDay?: boolean; // Whether to count arrival day
+  dayPurpose?: 'business' | 'personal' | 'mixed'; // Purpose of stay
+  businessPercentage?: number; // For mixed: 0-100 business allocation
 }
 
 
