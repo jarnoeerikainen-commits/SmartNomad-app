@@ -44,6 +44,8 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [showCountryInfo, setShowCountryInfo] = useState(false);
   const [followEmbassyNews, setFollowEmbassyNews] = useState(false);
+  const [dayPurpose, setDayPurpose] = useState<'business' | 'personal' | 'mixed'>('personal');
+  const [businessPercentage, setBusinessPercentage] = useState('50');
 
   const availableCountries = useMemo(() => {
     return CountryInfoService.getAllCountries().filter(
@@ -95,7 +97,9 @@ const EnhancedAddCountryModal: React.FC<EnhancedAddCountryModalProps> = ({
       flag: country.flag,
       dayLimit: parseInt(dayLimit) || 90,
       reason: finalReason || 'General tracking',
-      followEmbassyNews: followEmbassyNews
+      followEmbassyNews: followEmbassyNews,
+      dayPurpose,
+      businessPercentage: dayPurpose === 'mixed' ? parseInt(businessPercentage) || 50 : undefined
     });
 
     // Reset form
