@@ -937,6 +937,10 @@ ${userContext?.conversationSummary ? `\n**📋 PREVIOUS CONVERSATION CONTEXT:**\
 
 ${userContext?.expenseSummary ? `\n**💰 EXPENSE TRACKING:**\n${userContext.expenseSummary}\nReference spending patterns when making budget-aware recommendations.` : ''}
 
+${userContext?.integrationContext ? `\n**🔗 ACTIVE INTEGRATIONS:**\n${userContext.integrationContext}` : ''}
+
+${userContext?.toolRoutingHint ? `\n**🧭 TOOL ROUTING (include [NAVIGATE:featureId] when suggesting the user visit a specific app section):**\n${userContext.toolRoutingHint}` : ''}
+
 **REMEMBER EVERYTHING:** Travel mode, family composition, preferences, past recommendations, budget signals.
 
 **PERSONALIZATION DEFAULTS (when profile data is available):**
