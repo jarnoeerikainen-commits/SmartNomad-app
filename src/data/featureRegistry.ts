@@ -5,7 +5,7 @@ import {
   MessageSquare, ShieldCheck, Siren, ShieldAlert, Stethoscope, Scale,
   Crown, Flag, Globe2, Building, Sparkles, BarChart3, Home, Car,
   Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
-  Locate, Tag, Phone
+  Locate, Tag, Phone, Moon, TrendingUp
 } from 'lucide-react';
 
 export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
@@ -114,6 +114,8 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'private-clubs', label: 'Elite Clubs', icon: Crown, category: 'premium', badge: 'ELITE', badgeVariant: 'secondary', description: 'Private members clubs', defaultVisible: true, defaultPinned: false },
   { id: 'location-tracking', label: 'Location Tracking', icon: Locate, category: 'premium', description: 'GPS & location services', defaultVisible: true, defaultPinned: false },
   { id: 'integrations', label: 'Integrations Hub', icon: Globe2, category: 'premium', description: 'Manage third-party service connections', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'jet-lag', label: 'Jet Lag Protocol', icon: Moon, category: 'travel', badge: 'BIO', badgeVariant: 'secondary', description: 'Circadian recovery protocol for timezone shifts', defaultVisible: true, defaultPinned: false, trustLevel: 'info' },
+  { id: 'venture-invest', label: 'Venture Travelist', icon: TrendingUp, category: 'premium', badge: 'NEW', badgeVariant: 'secondary', description: 'Investment intelligence for global nomads', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
