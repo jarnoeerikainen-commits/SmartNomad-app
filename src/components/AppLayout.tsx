@@ -100,6 +100,8 @@ const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 const SnomadIdVault = lazy(() => import('./SnomadIdVault'));
 const ConnectorsDashboard = lazy(() => import('./ConnectorsDashboard'));
 const VisaAutoMatcher = lazy(() => import('./VisaAutoMatcher'));
+const JetLagProtocol = lazy(() => import('./JetLagProtocol'));
+const VentureTravelist = lazy(() => import('./VentureTravelist'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -415,6 +417,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'customize': return <FeatureCustomizer />;
       case 'integrations': return <ConnectorsDashboard />;
       case 'visa-matcher': return <VisaAutoMatcher countries={countries} />;
+      case 'jet-lag': return <JetLagProtocol />;
+      case 'venture-invest': return <VentureTravelist />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
