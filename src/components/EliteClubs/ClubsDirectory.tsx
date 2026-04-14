@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useClubsSearch } from '@/hooks/useClubsSearch';
 import { EliteClub } from '@/types/eliteClub';
 import { ClubCard } from './ClubCard';
@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Search, Filter, Crown, TrendingUp, Sparkles } from 'lucide-react';
+import { Search, Filter, Crown, TrendingUp, Sparkles, KeyRound, Unlock } from 'lucide-react';
+import { DEMO_MEMBERSHIPS, getAccessibleClubs } from '@/data/clubReciprocityData';
 
 export const ClubsDirectory: React.FC = () => {
   const {
@@ -30,6 +31,11 @@ export const ClubsDirectory: React.FC = () => {
 
   const featuredClubs = filteredClubs.filter((club) => club.featured);
   const regularClubs = filteredClubs.filter((club) => !club.featured);
+
+  // Reciprocity — demo persona memberships
+  const demoPersona = localStorage.getItem('activePersona') || 'john';
+  const userMemberships = DEMO_MEMBERSHIPS[demoPersona] || DEMO_MEMBERSHIPS.john;
+  const accessibleClubs = useMemo(() => getAccessibleClubs(userMemberships), [userMemberships]);
 
   const clubsByCity = filteredClubs.reduce((acc, club) => {
     if (!acc[club.city]) {
@@ -81,6 +87,29 @@ export const ClubsDirectory: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Reciprocity Banner */}
+      {accessibleClubs.length > 0 && (
+        <Card className="mb-6 border-primary/20 bg-primary/5">
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <KeyRound className="h-5 w-5 text-primary" />
+              <h3 className="font-semibold">Your Memberships Unlock {accessibleClubs.length} Clubs</h3>
+              <Badge variant="secondary" className="ml-auto">
+                <Unlock className="h-3 w-3 mr-1" /> Instant Access
+              </Badge>
+            </div>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {userMemberships.map(m => (
+                <Badge key={m} variant="outline" className="text-xs border-primary/30 text-primary">{m}</Badge>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Through reciprocal networks (IAC, Soho House Global, Leading Clubs), your memberships grant access to {accessibleClubs.length} additional clubs worldwide.
+            </p>
+          </div>
+        </Card>
+      )}
 
       {/* Search and Filter Bar */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
