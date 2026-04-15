@@ -102,6 +102,7 @@ const ConnectorsDashboard = lazy(() => import('./ConnectorsDashboard'));
 const VisaAutoMatcher = lazy(() => import('./VisaAutoMatcher'));
 const JetLagProtocol = lazy(() => import('./JetLagProtocol'));
 const VentureTravelist = lazy(() => import('./VentureTravelist'));
+const TaxLawVerifier = lazy(() => import('./TaxLawVerifier'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -419,6 +420,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'visa-matcher': return <VisaAutoMatcher countries={countries} />;
       case 'jet-lag': return <JetLagProtocol />;
       case 'venture-invest': return <VentureTravelist />;
+      case 'tax-law-verifier': return <TaxLawVerifier />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
