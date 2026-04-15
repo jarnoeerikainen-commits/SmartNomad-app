@@ -1,7 +1,7 @@
 export type PaymentMethodType = 
   | 'visa' | 'mastercard' | 'amex' 
   | 'paypal' | 'google-pay' | 'apple-pay' 
-  | 'stripe' | 'crypto' | 'bank-transfer' | 'wise';
+  | 'stripe' | 'crypto' | 'bank-transfer' | 'wise' | 'upi';
 
 export type CryptoType = 'bitcoin' | 'ethereum' | 'usdt' | 'usdc' | 'solana' | 'bnb';
 
@@ -54,6 +54,7 @@ export const PAYMENT_METHOD_CONFIG: Record<PaymentMethodType, {
   'crypto': { label: 'Crypto Wallet', icon: '🪙', color: '#F7931A', bgClass: 'bg-amber-50 dark:bg-amber-950/30' },
   'bank-transfer': { label: 'Bank Transfer', icon: '🏦', color: '#2E7D32', bgClass: 'bg-emerald-50 dark:bg-emerald-950/30' },
   'wise': { label: 'Wise', icon: '🌍', color: '#9FE870', bgClass: 'bg-lime-50 dark:bg-lime-950/30' },
+  'upi': { label: 'UPI One World', icon: '🇮🇳', color: '#5F259F', bgClass: 'bg-purple-50 dark:bg-purple-950/30' },
 };
 
 export const CRYPTO_CONFIG: Record<CryptoType, { label: string; symbol: string; icon: string }> = {

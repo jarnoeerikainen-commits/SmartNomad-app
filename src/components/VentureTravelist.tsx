@@ -109,6 +109,20 @@ const INVESTMENT_DATA: CityInvestment[] = [
     highlights: ['Spring climate year-round', 'Growing nomad scene', 'Low cost'],
     propertyPricePerSqm: 1200, nomadVisaAvailable: true, trend: 'rising', riskLevel: 'high',
   },
+  {
+    city: 'Mumbai', country: 'India', flag: '🇮🇳',
+    realEstateYield: 4.2, goldenVisaThreshold: null, goldenVisaCurrency: '₹',
+    startupHubRating: 9, taxBenefit: '120-day NRI safe harbor (Income Tax Bill 2025)',
+    highlights: ['240K+ millionaire households', 'Navi Mumbai Int\'l Airport (2025)', 'UPI One World payments', 'GIFT City IFSC hub'],
+    propertyPricePerSqm: 7500, nomadVisaAvailable: false, trend: 'rising', riskLevel: 'medium',
+  },
+  {
+    city: 'Bengaluru', country: 'India', flag: '🇮🇳',
+    realEstateYield: 5.1, goldenVisaThreshold: null, goldenVisaCurrency: '₹',
+    startupHubRating: 10, taxBenefit: 'Startup India: 3-year tax holiday for DPIIT startups',
+    highlights: ['Asia\'s Silicon Valley', '#3 global startup hub', 'Premium co-living boom', 'Whitefield tech corridor'],
+    propertyPricePerSqm: 3200, nomadVisaAvailable: false, trend: 'rising', riskLevel: 'low',
+  },
 ];
 
 const TREND_ICONS = {

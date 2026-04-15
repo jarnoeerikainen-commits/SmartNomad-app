@@ -143,8 +143,15 @@ function analyzeTaxImpact(countryCode: string, eventType: string): {
     AU: { threshold: 183, note: 'Australian residency test' },
     CA: { threshold: 183, note: 'Canadian deemed resident rules' },
     JP: { threshold: 183, note: 'Japanese tax residency' },
-    TH: { threshold: 180, note: 'Thai tax residency threshold' },
+    TH: { threshold: 180, note: 'Thai tax residency — foreign income now taxed if remitted (2024)' },
     AE: { threshold: 183, note: 'UAE tax residency (no income tax)' },
+    IN: { threshold: 120, note: 'Income Tax Bill 2025: 120-day threshold for NRIs with ₹15L+ Indian income' },
+    SG: { threshold: 183, note: 'Singapore Income Tax Act §2' },
+    CH: { threshold: 90, note: 'Swiss DBG Art. 3 — 90 days with gainful employment' },
+    NL: { threshold: 183, note: 'Netherlands — 30% ruling reformed 2024' },
+    KR: { threshold: 183, note: 'South Korea Income Tax Act' },
+    BR: { threshold: 183, note: 'Brazil IN SRF 208/2002' },
+    ZA: { threshold: 91, note: 'South Africa Physical Presence Test (current year)' },
   };
 
   const countryInfo = highTaxCountries[countryCode];
