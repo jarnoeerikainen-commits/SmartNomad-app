@@ -37,7 +37,7 @@ const TAX_RESIDENCY_RULES: Record<string, { days: number; period: string; rule: 
   ID: { days: 183, period: '12-month period', rule: 'Income Tax Law Article 2' },
   MX: { days: 183, period: 'calendar year', rule: 'ISR Article 9' },
   BR: { days: 183, period: '12-month period', rule: 'IN SRF 208/2002' },
-  IN: { days: 182, period: 'financial year (1 Apr–31 Mar)', rule: 'Income Tax Act Section 6' },
+  IN: { days: 120, period: 'financial year (1 Apr–31 Mar)', rule: 'Income Tax Bill 2025 — NRIs with ₹15L+ Indian income: 120-day threshold' },
   PL: { days: 183, period: 'calendar year', rule: 'PIT Act Article 3' },
   CZ: { days: 183, period: 'calendar year', rule: 'Income Tax Act Section 2' },
   HR: { days: 183, period: 'calendar year', rule: 'Income Tax Act' },
