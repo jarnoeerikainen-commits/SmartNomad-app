@@ -117,6 +117,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'jet-lag', label: 'Jet Lag Protocol', icon: Moon, category: 'travel', badge: 'BIO', badgeVariant: 'secondary', description: 'Circadian recovery protocol for timezone shifts', defaultVisible: true, defaultPinned: false, trustLevel: 'info' },
   { id: 'venture-invest', label: 'Venture Travelist', icon: TrendingUp, category: 'premium', badge: 'NEW', badgeVariant: 'secondary', description: 'Investment intelligence for global nomads', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'tax-law-verifier', label: 'Tax Law Verifier', icon: Shield, category: 'tax', badge: 'AUTO', badgeVariant: 'default', description: 'Daily automated verification of tax residency laws from government sources', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
+  { id: 'document-auto-fill', label: 'Document Auto-Fill', icon: FileText, category: 'tax', badge: 'AI', badgeVariant: 'secondary', description: 'Auto-fill visa, tax, and travel forms from your profile', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
