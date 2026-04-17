@@ -13,7 +13,10 @@
 // Standards: W3C Verifiable Credentials 2.0, SD-JWT-VC, OID4VC, OID4VP, eIDAS 2.0
 // Reference: https://docs.walt.id/community-stack/issuer
 
-import { corsHeaders } from '@supabase/supabase-js/cors';
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 interface IssueRequest {
   action: 'issue' | 'verify';
