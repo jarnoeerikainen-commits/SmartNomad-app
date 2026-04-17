@@ -149,6 +149,17 @@ export const NomadChatDashboard = () => {
             </Badge>
           </div>
         </div>
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-card border">
+          <ShieldCheck className="w-4 h-4 text-primary" />
+          <div className="flex-1">
+            <p className="text-sm font-medium">Verified Nomads only</p>
+            <p className="text-xs text-muted-foreground">
+              {isDemo ? 'Demo: filters by simulated Trust Pass tiers (Nomad+).' : 'Show only profiles with walt.id verified credentials.'}
+            </p>
+          </div>
+          <Switch checked={verifiedOnly} onCheckedChange={setVerifiedOnly} />
+          <TrustBadge tier={myTier} size="sm" showLabel />
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
