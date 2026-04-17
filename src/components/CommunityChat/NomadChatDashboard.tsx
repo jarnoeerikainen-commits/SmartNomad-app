@@ -324,29 +324,37 @@ export const NomadChatDashboard = () => {
               AI-powered connections based on your interests, location, and professional background
             </p>
             <div className="grid gap-4">
-              {matchProfiles.map((user) => (
-                <div key={user.id} className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors ${profileTransition}`}>
-                  <div className="flex items-start gap-4">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold">{user.name}</h3>
-                        {user.isOnline && <div className="w-2 h-2 rounded-full bg-success" />}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2">{user.profession} · {user.location}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {user.interests.map((interest) => (
-                          <Badge key={interest} variant="secondary">{interest}</Badge>
-                        ))}
+              {matchProfiles
+                .filter(u => !verifiedOnly || ['nomad', 'sovereign'].includes(getDemoTierForId(u.id)))
+                .map((user) => {
+                  const tier = getDemoTierForId(user.id);
+                  const vibe = getDemoVibeScore(myId, user.id);
+                  return (
+                    <div key={user.id} className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors ${profileTransition}`}>
+                      <div className="flex items-start gap-4">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={user.avatar} alt={user.name} />
+                          <AvatarFallback>{user.name.substring(0, 2)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <h3 className="font-semibold">{user.name}</h3>
+                            <TrustBadge tier={tier} size="xs" />
+                            {user.isOnline && <div className="w-2 h-2 rounded-full bg-success" />}
+                            <Badge variant="outline" className="text-xs ml-auto">{vibe}% Vibe Match</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{user.profession} · {user.location}</p>
+                          <div className="flex flex-wrap gap-2">
+                            {user.interests.map((interest) => (
+                              <Badge key={interest} variant="secondary">{interest}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <Button size="sm">Connect</Button>
                       </div>
                     </div>
-                    <Button size="sm">Connect</Button>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
             </div>
           </Card>
         </TabsContent>
@@ -360,22 +368,32 @@ export const NomadChatDashboard = () => {
             </div>
             <p className="text-muted-foreground mb-6">6 258 490 people online in your area</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {nearbyProfiles.map((user) => (
-                <div key={user.id} className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors text-center cursor-pointer ${profileTransition}`}>
-                  <Avatar className="w-16 h-16 mx-auto mb-2">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="text-lg">{user.name.substring(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  <h3 className="font-semibold text-sm mb-1">{user.name}</h3>
-                  <p className="text-xs text-muted-foreground mb-1">{user.profession}</p>
-                  <div className="flex flex-wrap gap-1 justify-center mb-2">
-                    {user.interests.slice(0, 2).map((i) => (
-                      <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0">{i}</Badge>
-                    ))}
-                  </div>
-                  {user.isOnline && <Badge variant="secondary" className="text-xs">Online</Badge>}
-                </div>
-              ))}
+              {nearbyProfiles
+                .filter(u => !verifiedOnly || ['nomad', 'sovereign'].includes(getDemoTierForId(u.id)))
+                .map((user) => {
+                  const tier = getDemoTierForId(user.id);
+                  return (
+                    <div key={user.id} className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors text-center cursor-pointer ${profileTransition}`}>
+                      <div className="relative w-16 h-16 mx-auto mb-2">
+                        <Avatar className="w-16 h-16">
+                          <AvatarImage src={user.avatar} alt={user.name} />
+                          <AvatarFallback className="text-lg">{user.name.substring(0, 2)}</AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1">
+                          <TrustBadge tier={tier} size="xs" />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-sm mb-1">{user.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-1">{user.profession}</p>
+                      <div className="flex flex-wrap gap-1 justify-center mb-2">
+                        {user.interests.slice(0, 2).map((i) => (
+                          <Badge key={i} variant="secondary" className="text-[10px] px-1.5 py-0">{i}</Badge>
+                        ))}
+                      </div>
+                      {user.isOnline && <Badge variant="secondary" className="text-xs">Online</Badge>}
+                    </div>
+                  );
+                })}
             </div>
           </Card>
         </TabsContent>
