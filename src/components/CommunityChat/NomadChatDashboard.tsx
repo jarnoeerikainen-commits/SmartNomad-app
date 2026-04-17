@@ -43,6 +43,15 @@ export const NomadChatDashboard = () => {
   const [messageInput, setMessageInput] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
   const [triggerCreateGroup, setTriggerCreateGroup] = useState(false);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [myTier, setMyTier] = useState<'unverified' | 'human' | 'nomad' | 'sovereign'>('unverified');
+  const isDemo = trustPassService.isDemoMode();
+  const myId = 'current-user';
+
+  useEffect(() => {
+    trustPassService.getTier().then(setMyTier);
+  }, []);
+
   const {
     isListening, isSpeaking, voiceEnabled,
     startListening, stopListening, speak,
