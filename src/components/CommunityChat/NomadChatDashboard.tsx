@@ -8,10 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCommunityChat } from '@/hooks/useCommunityChat';
 import { DEMO_USERS, DEMO_GROUPS, AI_SUGGESTIONS, PULSE_PROFILES } from '@/data/communityChatData';
-import { Send, Users, Sparkles, MapPin, TrendingUp, Plus, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Send, Users, Sparkles, MapPin, TrendingUp, Plus, Mic, MicOff, Volume2, VolumeX, ShieldCheck } from 'lucide-react';
 import { SubjectChatView } from './SubjectChatView';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { NomadUser } from '@/types/communityChat';
+import TrustBadge from '@/components/trust/TrustBadge';
+import { Switch } from '@/components/ui/switch';
+import { getDemoTierForId, getDemoVibeScore } from '@/utils/demoTrust';
+import { trustPassService } from '@/services/TrustPassService';
 
 const ROTATE_INTERVAL = 8000; // 8 seconds — smooth and not too fast
 const VISIBLE_MATCHES = 6;
