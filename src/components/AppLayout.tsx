@@ -104,6 +104,7 @@ const JetLagProtocol = lazy(() => import('./JetLagProtocol'));
 const VentureTravelist = lazy(() => import('./VentureTravelist'));
 const TaxLawVerifier = lazy(() => import('./TaxLawVerifier'));
 const DocumentAutoFill = lazy(() => import('./DocumentAutoFill'));
+const TrustPassDashboard = lazy(() => import('./TrustPassDashboard'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -423,6 +424,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'venture-invest': return <VentureTravelist />;
       case 'tax-law-verifier': return <TaxLawVerifier />;
       case 'document-auto-fill': return <DocumentAutoFill />;
+      case 'trust-pass': return <TrustPassDashboard />;
       default:
         return (
           <div className="flex items-center justify-center h-64">
