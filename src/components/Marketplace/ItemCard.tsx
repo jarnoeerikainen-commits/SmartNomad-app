@@ -1,10 +1,12 @@
 import React from 'react';
-import { MapPin, Clock, Eye, Heart, Sparkles, TrendingUp, Tag } from 'lucide-react';
+import { MapPin, Clock, Eye, Heart, Sparkles, TrendingUp, Tag, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { MarketplaceItem } from '@/types/marketplace';
 import { CATEGORY_INFO, CONDITION_INFO } from '@/types/marketplace';
+import TrustBadge from '@/components/trust/TrustBadge';
+import { getDemoTierForId } from '@/utils/demoTrust';
 
 interface ItemCardProps {
   item: MarketplaceItem;
@@ -123,24 +125,28 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 border-t">
+      <CardFooter className="p-4 pt-0 border-t flex-col items-stretch gap-2">
         <div className="flex items-center gap-2 w-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src={item.seller.photo} />
             <AvatarFallback>{item.seller.name[0]}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{item.seller.name}</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm font-medium truncate">{item.seller.name}</p>
+              <TrustBadge tier={getDemoTierForId(item.seller.id)} size="xs" />
+            </div>
             <p className="text-xs text-muted-foreground">
               ⭐ {item.seller.rating} • {item.seller.totalSales} sales
             </p>
           </div>
-          {item.seller.verified && (
-            <Badge variant="secondary" className="text-xs">
-              ✓
-            </Badge>
-          )}
         </div>
+        {getDemoTierForId(item.seller.id) === 'unverified' && (
+          <div className="flex items-start gap-1.5 text-[11px] text-amber-700 dark:text-amber-400 bg-amber-500/10 rounded p-1.5">
+            <AlertTriangle className="w-3 h-3 shrink-0 mt-0.5" />
+            <span>Sovereign Hold: seller not verified — Concierge will require manual confirmation before payment.</span>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );
