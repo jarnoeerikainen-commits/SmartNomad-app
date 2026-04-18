@@ -169,7 +169,8 @@ class TrustPassServiceImpl {
   private async persistCredentialToDb(cred: VerifiableCredential, tier: TrustTier): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
     const deviceId = getDeviceId();
-    await (supabase.from('trust_pass_credentials' as never) as never).upsert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase as any).from('trust_pass_credentials').upsert({
       device_id: deviceId,
       user_id: user?.id ?? null,
       did: this.cached?.did ?? this.generateDid(),
@@ -191,7 +192,8 @@ class TrustPassServiceImpl {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       const deviceId = getDeviceId();
-      await (supabase.from('audit_log' as never) as never).insert({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from('audit_log').insert({
         device_id: deviceId,
         user_id: user?.id ?? null,
         action,
