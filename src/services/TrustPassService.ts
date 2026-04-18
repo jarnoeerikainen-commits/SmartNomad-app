@@ -247,6 +247,14 @@ class TrustPassServiceImpl {
   async resetDemo(): Promise<void> {
     localStorage.removeItem(STORAGE_KEY);
     this.cached = null;
+    // Best-effort DB cleanup of credentials issued in this device's session
+    try {
+      const deviceId = getDeviceId();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase as any).from('trust_pass_credentials').delete().eq('device_id', deviceId);
+    } catch {
+      /* ignore */
+    }
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
