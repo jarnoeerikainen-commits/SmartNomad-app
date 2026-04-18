@@ -4,10 +4,11 @@ import ComprehensiveUserProfile from './ComprehensiveUserProfile';
 import DataManagementSettings from './DataManagementSettings';
 import ProfileDataViewer from './ProfileDataViewer';
 import EnhancedProfileForm from './EnhancedProfileForm';
+import SecuritySettings from './auth/SecuritySettings';
 import { Subscription } from '@/types/subscription';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { User, Shield, FileText, Languages, UserCircle } from 'lucide-react';
+import { User, Shield, FileText, Languages, UserCircle, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -61,22 +62,26 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
         </Alert>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full max-w-3xl grid-cols-4">
+          <TabsList className="grid w-full max-w-4xl grid-cols-5">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <UserCircle className="h-4 w-4" />
-              User Profile
+              <span className="hidden sm:inline">User Profile</span>
             </TabsTrigger>
             <TabsTrigger value="legacy" className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              {t('common.profile')}
+              <span className="hidden sm:inline">{t('common.profile')}</span>
             </TabsTrigger>
             <TabsTrigger value="mydata" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              {t('common.my_data')}
+              <span className="hidden sm:inline">{t('common.my_data')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4" />
+              <span className="hidden sm:inline">Security</span>
             </TabsTrigger>
             <TabsTrigger value="privacy" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              {t('common.privacy')}
+              <span className="hidden sm:inline">{t('common.privacy')}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -90,6 +95,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
 
           <TabsContent value="mydata" className="mt-6">
             <ProfileDataViewer onEdit={handleProfileEdit} />
+          </TabsContent>
+
+          <TabsContent value="security" className="mt-6">
+            <SecuritySettings />
           </TabsContent>
 
           <TabsContent value="privacy" className="mt-6">

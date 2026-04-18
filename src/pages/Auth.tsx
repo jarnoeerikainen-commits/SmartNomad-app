@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useMFA } from '@/hooks/useMFA';
+import MFAChallenge from '@/components/auth/MFAChallenge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +14,7 @@ import { Link } from 'react-router-dom';
 
 const Auth: React.FC = () => {
   const { isAuthenticated, isLoading, signIn, signUp, resetPassword } = useAuth();
+  const { mfaChallengeRequired, hasVerifiedFactor } = useMFA();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<string>('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -37,6 +40,11 @@ const Auth: React.FC = () => {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
+  }
+
+  // If signed in but MFA challenge is pending (aal1 → aal2), block until verified.
+  if (isAuthenticated && mfaChallengeRequired && hasVerifiedFactor) {
+    return <MFAChallenge onSuccess={() => window.location.replace('/')} />;
   }
 
   if (isAuthenticated) {

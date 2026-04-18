@@ -336,6 +336,69 @@ export type Database = {
         }
         Relationships: []
       }
+      app_settings: {
+        Row: {
+          demo_mode_enabled: boolean
+          id: number
+          require_auth: boolean
+          require_mfa_for_payments: boolean
+          require_mfa_for_sensitive: boolean
+          updated_at: string
+        }
+        Insert: {
+          demo_mode_enabled?: boolean
+          id?: number
+          require_auth?: boolean
+          require_mfa_for_payments?: boolean
+          require_mfa_for_sensitive?: boolean
+          updated_at?: string
+        }
+        Update: {
+          demo_mode_enabled?: boolean
+          id?: number
+          require_auth?: boolean
+          require_mfa_for_payments?: boolean
+          require_mfa_for_sensitive?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          device_id: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+          resource: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          device_id: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          resource?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          device_id?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          resource?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
@@ -651,6 +714,81 @@ export type Database = {
         }
         Relationships: []
       }
+      trust_pass_credentials: {
+        Row: {
+          created_at: string
+          credential_id: string
+          credential_type: string
+          device_id: string
+          did: string
+          disclosed: string[]
+          expires_at: string
+          id: string
+          issued_at: string
+          issuer: string
+          jwt: string
+          status: string
+          subject: Json
+          tier: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          credential_id: string
+          credential_type: string
+          device_id: string
+          did: string
+          disclosed?: string[]
+          expires_at: string
+          id?: string
+          issued_at?: string
+          issuer: string
+          jwt: string
+          status?: string
+          subject?: Json
+          tier: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          credential_id?: string
+          credential_type?: string
+          device_id?: string
+          did?: string
+          disclosed?: string[]
+          expires_at?: string
+          id?: string
+          issued_at?: string
+          issuer?: string
+          jwt?: string
+          status?: string
+          subject?: Json
+          tier?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -662,6 +800,15 @@ export type Database = {
       }
       cleanup_expired_cache: { Args: never; Returns: number }
       get_request_device_id: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      has_verified_mfa: { Args: never; Returns: boolean }
+      is_demo_mode: { Args: never; Returns: boolean }
       log_ai_usage: {
         Args: {
           p_cache_hit?: boolean
@@ -751,7 +898,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "premium" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -878,6 +1025,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "premium", "user"],
+    },
   },
 } as const
