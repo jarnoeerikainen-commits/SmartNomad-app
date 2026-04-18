@@ -143,7 +143,6 @@ class TrustPassServiceImpl {
       await SIM_DELAY();
       const cred = this.buildDemoCredential(type, claims);
       const pass = await this.getTrustPass();
-      // De-dupe by type
       const filtered = pass.credentials.filter(c => c.type !== type);
       pass.credentials = [...filtered, cred];
       pass.tier = this.computeTier(pass.credentials);
@@ -151,15 +150,58 @@ class TrustPassServiceImpl {
         pass.livenessLastCheckedAt = new Date().toISOString();
       }
       this.persist(pass);
+
+      // Best-effort DB persistence (works for guests via device_id and auth users via user_id).
+      // Failures are non-fatal — localStorage stays the source of truth in demo mode.
+      void this.persistCredentialToDb(cred, pass.tier).catch(() => undefined);
+      void this.logAudit('trust_pass.credential_issued', cred.id, { type, tier: pass.tier });
       return cred;
     }
 
-    // ── PRODUCTION: real walt.id flow ──
     const { data, error } = await supabase.functions.invoke('walt-id-verifier', {
       body: { action: 'issue', type, claims, did: (await this.getTrustPass()).did },
     });
     if (error) throw new Error(`Issuance failed: ${error.message}`);
     return data.credential as VerifiableCredential;
+  }
+
+  /** Persist a credential row. Dual-mode: device_id for guests, user_id for auth users. */
+  private async persistCredentialToDb(cred: VerifiableCredential, tier: TrustTier): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser();
+    const deviceId = getDeviceId();
+    await (supabase.from('trust_pass_credentials' as never) as never).upsert({
+      device_id: deviceId,
+      user_id: user?.id ?? null,
+      did: this.cached?.did ?? this.generateDid(),
+      credential_id: cred.id,
+      credential_type: cred.type,
+      tier,
+      issuer: cred.issuer,
+      jwt: cred.proof.jwt,
+      subject: cred.subject,
+      disclosed: cred.disclosed,
+      status: 'active',
+      issued_at: cred.issuedAt,
+      expires_at: cred.expiresAt,
+    }, { onConflict: 'device_id,credential_type' });
+  }
+
+  /** Append-only audit entry. Best-effort. */
+  private async logAudit(action: string, resource: string | null, metadata: Record<string, unknown> = {}): Promise<void> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const deviceId = getDeviceId();
+      await (supabase.from('audit_log' as never) as never).insert({
+        device_id: deviceId,
+        user_id: user?.id ?? null,
+        action,
+        resource,
+        metadata,
+        user_agent: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 500) : null,
+      });
+    } catch {
+      /* ignore */
+    }
   }
 
   /** Pay the $20 one-time Trust Pass onboarding fee (demo: instant). */
