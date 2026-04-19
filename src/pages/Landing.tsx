@@ -523,10 +523,18 @@ const Landing: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_12%)] p-8">
               <div className="font-display text-2xl font-bold mb-1">Free</div>
-              <div className="text-sm text-[hsl(30_12%_75%)] mb-5">Perfect to explore</div>
+              <div className="text-sm text-[hsl(30_12%_75%)] mb-5">Everything you need to live borderless</div>
               <div className="font-display text-5xl font-bold mb-6">$0<span className="text-base font-normal text-[hsl(30_12%_70%)]">/month</span></div>
               <ul className="space-y-3 text-sm mb-7">
-                {['Full demo access (Meghan & John personas)', 'Tax tracking · 195+ countries', 'Visa & ETIAS hub', '1,000 AI requests / month', 'Community, weather, and threat intel'].map(b => (
+                {[
+                  '1,000,000 AI requests / month',
+                  'AI Concierge — chat mode',
+                  'All 195+ countries · Visa & ETIAS hub',
+                  'Snomad ID encrypted vault',
+                  'Black Box Guardian + Trust Pass',
+                  'Agentic Wallet (autonomous booking)',
+                  'Community, weather, and threat intel',
+                ].map(b => (
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
               </ul>
@@ -537,10 +545,18 @@ const Landing: React.FC = () => {
             <div className="rounded-2xl border-2 border-[hsl(var(--gold))] bg-gradient-to-br from-[hsl(220_22%_14%)] to-[hsl(220_22%_10%)] p-8 relative shadow-[var(--shadow-glow-gold)]">
               <Badge className="absolute -top-3 right-6 bg-gradient-to-r from-[hsl(var(--gold-dark))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold">Most Popular</Badge>
               <div className="font-display text-2xl font-bold mb-1">Premium</div>
-              <div className="text-sm text-[hsl(30_12%_75%)] mb-5">Sovereign mode</div>
+              <div className="text-sm text-[hsl(30_12%_75%)] mb-5">Sovereign mode — full power</div>
               <div className="font-display text-5xl font-bold mb-6">$4.99<span className="text-base font-normal text-[hsl(30_12%_70%)]">/month</span></div>
               <ul className="space-y-3 text-sm mb-7">
-                {['Everything in Free', '10,000 AI requests / month', 'AI Concierge with voice + memory', 'Snomad ID encrypted vault', 'Black Box Guardian + Trust Pass', 'Agentic Wallet (autonomous booking)', 'Priority support'].map(b => (
+                {[
+                  'Everything in Free',
+                  '10,000,000 AI requests / month',
+                  'AI Concierge — voice + chat with memory',
+                  'Tax Day Calculator (183-day, SPT, residency)',
+                  'Travel Reports (PDF + Excel exports)',
+                  'Multi-year tax planning & scenarios',
+                  'Priority 24/7 support',
+                ].map(b => (
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
               </ul>

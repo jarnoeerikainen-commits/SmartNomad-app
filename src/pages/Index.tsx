@@ -18,9 +18,9 @@ const Index = () => {
     tier: 'free',
     isActive: true,
     expiryDate: null,
-    features: ['1,000 AI requests/month', 'Country tracking', 'Dashboard & analytics', 'Emergency contacts'],
-    aiRequestsRemaining: 1000,
-    aiRequestsLimit: 1000
+    features: ['1,000,000 AI requests / month', 'AI Concierge — chat mode', 'All 195+ countries', 'Snomad ID vault'],
+    aiRequestsRemaining: 1000000,
+    aiRequestsLimit: 1000000
   });
   const { toast } = useToast();
 
@@ -138,20 +138,20 @@ const Index = () => {
 
   const handleUpgrade = (tier: string) => {
     const tierFeatures: Record<string, string[]> = {
-      free: ['1,000 AI requests/month', 'Country tracking', 'Dashboard & analytics', 'Emergency contacts'],
+      free: ['1,000,000 AI requests / month', 'AI Concierge — chat mode', 'All 195+ countries', 'Snomad ID vault'],
       premium: [
-        '10,000 AI requests/month',
-        'Advanced tax reports & exports',
-        'PDF report generation',
-        'Unlimited document storage',
-        'Smart alerts & notifications',
+        '10,000,000 AI requests / month',
+        'AI Concierge — voice + chat with memory',
+        'Tax Day Calculator',
+        'Travel Reports (PDF + Excel)',
+        'Multi-year tax planning',
         'Priority 24/7 support'
       ]
     };
 
     const aiLimits: Record<string, number> = {
-      free: 1000,
-      premium: 10000
+      free: 1000000,
+      premium: 10000000
     };
 
     const newSubscription: Subscription = {
@@ -159,8 +159,8 @@ const Index = () => {
       isActive: true,
       expiryDate: null,
       features: tierFeatures[tier] || tierFeatures.free,
-      aiRequestsRemaining: aiLimits[tier] || 1000,
-      aiRequestsLimit: aiLimits[tier] || 1000
+      aiRequestsRemaining: aiLimits[tier] || 1000000,
+      aiRequestsLimit: aiLimits[tier] || 1000000
     };
 
     setSubscription(newSubscription);
