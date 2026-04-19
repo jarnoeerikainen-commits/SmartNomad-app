@@ -144,7 +144,6 @@ const Index = () => {
         'AI Concierge — voice + chat with memory',
         'Tax Day Calculator',
         'Travel Reports (PDF + Excel)',
-        'Multi-year tax planning',
         'Priority 24/7 support'
       ]
     };
