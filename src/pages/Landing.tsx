@@ -125,7 +125,10 @@ const Landing: React.FC = () => {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-2xl mx-auto">
-              Proactive AI for <strong className="text-white">tax residency, visas, identity, safety and community</strong> — voice-controlled, encrypted, sovereign. Built for the 281 million people living between borders.
+              SuperNomad is the world's first Sovereign Operating System. We've replaced the chaos of fragmented travel apps, lost tax days, and endless KYC forms with a single, proactive AI intelligence.
+            </p>
+            <p className="text-base md:text-lg text-[hsl(30_12%_75%)] leading-relaxed max-w-2xl mx-auto">
+              Built for the <strong className="text-white">850 million global citizens</strong> who call the world home, SuperNomad doesn't just track your journey—it <strong className="text-white">secures your status</strong>.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2 justify-center">
