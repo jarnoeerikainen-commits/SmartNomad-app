@@ -103,57 +103,57 @@ const Landing: React.FC = () => {
       </header>
 
       {/* ============= HERO ============= */}
-      <section id="top" className="relative min-h-[100vh] flex items-center pt-20">
+      <section id="top" className="relative min-h-[100svh] flex items-center pt-16 sm:pt-20">
         <div className="absolute inset-0">
           <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 flex flex-col items-center text-center w-full">
-          <div className="space-y-7 animate-fade-in max-w-4xl">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-10 flex flex-col items-center text-center w-full">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5 animate-fade-in max-w-4xl">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
             <h1 className="font-display font-bold leading-[0.95] tracking-tight">
-              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl break-words">
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl break-words">
                 <span className="text-white">Super</span>
                 <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
-              <span className="block mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white/90 font-semibold">
+              <span className="block mt-2 sm:mt-3 text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-semibold">
                 Your borderless life, finally one app.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-[hsl(30_12%_80%)] leading-snug max-w-2xl mx-auto">
               SuperNomad is the world's first Sovereign Operating System. We've replaced the chaos of fragmented travel apps, lost tax days, and endless KYC forms with a single, proactive AI intelligence.
             </p>
-            <p className="text-base md:text-lg text-[hsl(30_12%_75%)] leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_75%)] leading-snug max-w-2xl mx-auto">
               Built for the <strong className="text-white">850 million global citizens</strong> who call the world home, SuperNomad doesn't just track your journey—it <strong className="text-white">secures your status</strong>.
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2 justify-center">
+            <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
               <Link to="/app">
-                <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-base px-7 py-6 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
-                  <Rocket className="mr-2 h-5 w-5" /> Launch SuperNomad
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
+                  <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
               <a href="#ecosystem">
-                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white text-base px-7 py-6">
+                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
                   See what's inside
                 </Button>
               </a>
             </div>
 
-            <p className="text-xs text-[hsl(30_12%_70%)] pt-1">
-              <Check className="inline h-3.5 w-3.5 text-[hsl(var(--gold))]" /> No signup required for demo · Try as Meghan or John · Full demo access
+            <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
+              <Check className="inline h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> No signup required for demo · Try as Meghan or John · Full demo access
             </p>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-[hsl(30_12%_75%)] justify-center">
+            <div className="flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 pt-1 text-[11px] sm:text-xs text-[hsl(30_12%_75%)] justify-center">
               {trustBadges.map(({ icon: Icon, label }) => (
-                <span key={label} className="flex items-center gap-1.5"><Icon className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> {label}</span>
+                <span key={label} className="flex items-center gap-1.5"><Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> {label}</span>
               ))}
-              <span className="flex items-center gap-1.5"><Star className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> 6.2M+ nomads online</span>
+              <span className="flex items-center gap-1.5"><Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> 6.2M+ nomads online</span>
             </div>
           </div>
         </div>
