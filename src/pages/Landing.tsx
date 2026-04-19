@@ -121,11 +121,11 @@ const Landing: React.FC = () => {
                 Your borderless life, finally one app.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-xl">
+            <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-2xl mx-auto">
               Proactive AI for <strong className="text-white">tax residency, visas, identity, safety and community</strong> — voice-controlled, encrypted, sovereign. Built for the 281 million people living between borders.
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-2 justify-center">
               <Link to="/app">
                 <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-base px-7 py-6 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
                   <Rocket className="mr-2 h-5 w-5" /> Launch SuperNomad
@@ -143,19 +143,11 @@ const Landing: React.FC = () => {
               <Check className="inline h-3.5 w-3.5 text-[hsl(var(--gold))]" /> No signup required for demo · Try as Meghan or John · Full demo access
             </p>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-[hsl(30_12%_75%)]">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-[hsl(30_12%_75%)] justify-center">
               {trustBadges.map(({ icon: Icon, label }) => (
                 <span key={label} className="flex items-center gap-1.5"><Icon className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> {label}</span>
               ))}
               <span className="flex items-center gap-1.5"><Star className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> 6.2M+ nomads online</span>
-            </div>
-          </div>
-
-          {/* Logo card */}
-          <div className="hidden md:flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute -inset-10 bg-[hsl(43_96%_56%/0.18)] blur-3xl rounded-full animate-pulse" />
-              <img src={logo} alt="SuperNomad emblem" className="relative w-72 h-72 lg:w-96 lg:h-96 object-cover rounded-2xl shadow-[0_30px_80px_-20px_hsl(43_96%_56%/0.4)] ring-1 ring-[hsl(43_96%_56%/0.3)]" width={384} height={384} />
             </div>
           </div>
         </div>
