@@ -8,17 +8,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
+import {
   Award, Plane, Hotel, CreditCard, Globe, ExternalLink, Plus, TrendingUp,
   Gift, Star, Wallet, Camera, Search, Trash2, Edit2, Shield, Eye, EyeOff,
   Car, Ship, Train, ShoppingBag, AlertTriangle, ChevronDown, ChevronUp, X,
-  Sparkles, DollarSign, Clock, CheckCircle
+  Sparkles, DollarSign, Clock, CheckCircle, Loader2, Wand2, FilePlus
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { AwardCategory, UserAwardCard, CardStatus } from '@/types/awardCards';
 import { AWARD_PROGRAMS, MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, calculateAwardValue, getAwardCardsAIContext } from '@/data/awardProgramsData';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const STORAGE_KEY = 'sn_award_cards_enc';
 
