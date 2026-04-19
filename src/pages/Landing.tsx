@@ -114,10 +114,11 @@ const Landing: React.FC = () => {
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
             <h1 className="font-display font-bold leading-[0.95] tracking-tight">
-              <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">
-                SuperNomad
+              <span className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl break-words">
+                <span className="text-white">Super</span>
+                <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
-              <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
+              <span className="block mt-4 text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white/90 font-semibold">
                 Your borderless life, finally one app.
               </span>
             </h1>
