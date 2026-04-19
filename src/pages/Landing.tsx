@@ -6,7 +6,8 @@ import {
   Shield, Sparkles, Globe2, Lock, Plane, Calculator, FileCheck,
   Users, Bell, MessageCircle, Brain, MapPin, Award, Wallet,
   ArrowRight, Check, Rocket, Star, Mic, Eye, Zap, AlertTriangle,
-  Apple, Smartphone
+  Apple, Smartphone, Hotel, UtensilsCrossed, Music2, Trophy,
+  Radar, Siren, ShieldAlert, Activity, Headphones, Heart
 } from 'lucide-react';
 import logo from '@/assets/supernomad-logo.jpg';
 import heroImg from '@/assets/landing-hero.jpg';
@@ -87,8 +88,9 @@ const Landing: React.FC = () => {
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
+            <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
+            <a href="#guardian" className="hover:text-[hsl(var(--gold))] transition-colors">Guardian</a>
             <a href="#ecosystem" className="hover:text-[hsl(var(--gold))] transition-colors">Ecosystem</a>
-            <a href="#how" className="hover:text-[hsl(var(--gold))] transition-colors">How it works</a>
             <a href="#pricing" className="hover:text-[hsl(var(--gold))] transition-colors">Pricing</a>
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
@@ -208,6 +210,181 @@ const Landing: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============= CONCIERGE AI SPOTLIGHT ============= */}
+      <section id="concierge" className="relative py-20 md:py-28 border-y border-[hsl(43_96%_56%/0.1)] overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(at_30%_30%,hsl(43_96%_56%/0.10)_0px,transparent_55%)]" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* LEFT — Pitch */}
+            <div className="lg:col-span-5 space-y-6">
+              <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]">
+                <Brain className="mr-1.5 h-3 w-3" /> Concierge AI · Sofia & Marcus
+              </Badge>
+              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
+                A concierge that <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent">actually knows you.</span>
+              </h2>
+              <p className="text-lg text-[hsl(30_12%_82%)] leading-relaxed">
+                Not a chatbot. A persistent personal assistant that learns your travel style, seat preference, dietary rules, loyalty programs, sport tribe and risk tolerance — then quietly handles your life.
+              </p>
+              <ul className="space-y-3 text-[hsl(30_12%_88%)]">
+                {[
+                  'Books flights, hotels and car rentals — with your loyalty cards already attached',
+                  'Reserves restaurant tables in 100+ cities, matched to your cuisine and budget',
+                  'Surfaces concerts, padel matches, golf tee-times and local events worth your time',
+                  'Optimizes airport lounges, points redemption and upgrade timing automatically',
+                  'Remembers every preference across cities — no re-explaining who you are',
+                ].map((b) => (
+                  <li key={b} className="flex items-start gap-2.5">
+                    <Check className="h-5 w-5 text-[hsl(var(--gold))] mt-0.5 shrink-0" />
+                    <span className="leading-relaxed">{b}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link to="/app">
+                  <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-95 shadow-[var(--shadow-glow-gold)]">
+                    <Mic className="mr-2 h-4 w-4" /> Meet your Concierge
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* RIGHT — Capability mosaic */}
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {[
+                  { icon: Plane, title: 'Flights', desc: 'Premium cabins, best schedules, points-aware' },
+                  { icon: Hotel, title: 'Hotels', desc: 'Suites that match your chains & tier' },
+                  { icon: UtensilsCrossed, title: 'Restaurants', desc: 'Tables with your dietary fit & vibe' },
+                  { icon: Trophy, title: 'Sports & Tee-times', desc: 'Padel, golf, cycling crews near you' },
+                  { icon: Music2, title: 'Concerts & Events', desc: 'Curated to your taste, not algorithms' },
+                  { icon: Award, title: 'Loyalty Optimizer', desc: 'Auto-applies the right card every time' },
+                  { icon: Headphones, title: 'Airport Lounges', desc: 'Best lounge per terminal, on the fly' },
+                  { icon: Wallet, title: 'Agentic Wallet', desc: 'Autonomous booking with your rules' },
+                  { icon: Heart, title: 'Personal Memory', desc: 'Knows your style across every city' },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <div
+                    key={title}
+                    className="group rounded-xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_12%/0.7)] backdrop-blur-sm p-4 hover:border-[hsl(43_96%_56%/0.45)] hover:bg-[hsl(220_22%_14%)] transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[hsl(var(--gold-dark))] to-[hsl(var(--gold-light))] flex items-center justify-center text-[hsl(220_22%_10%)] mb-3 group-hover:scale-105 transition-transform">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="font-semibold text-sm text-white mb-1">{title}</div>
+                    <div className="text-xs text-[hsl(30_12%_75%)] leading-snug">{desc}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Conversation snippet */}
+              <div className="mt-5 rounded-2xl border border-[hsl(43_96%_56%/0.2)] bg-[hsl(220_22%_10%/0.85)] p-5 shadow-[0_20px_60px_-20px_hsl(0_0%_0%/0.6)]">
+                <div className="flex items-center gap-2 mb-3 text-xs text-[hsl(var(--gold))]">
+                  <span className="inline-flex h-2 w-2 rounded-full bg-[hsl(var(--gold))]" />
+                  Live · Sofia is online
+                </div>
+                <div className="space-y-2.5 text-sm">
+                  <div className="text-[hsl(30_12%_70%)]"><span className="text-white">You:</span> "Book me Lisbon → Madrid Friday morning."</div>
+                  <div className="text-[hsl(30_12%_88%)]">
+                    <span className="text-[hsl(var(--gold))]">Sofia:</span> TAP 8:05 → window seat, vegetarian meal, points on your Star Alliance Gold. Suite at Rosewood with late check-in. Padel court booked Saturday 10am with Carlos. Confirm?
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============= THREAT INTELLIGENCE / GUARDIAN SPOTLIGHT ============= */}
+      <section id="guardian" className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={securityImg} alt="" className="w-full h-full object-cover opacity-25" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%)] via-[hsl(220_22%_8%/0.92)] to-[hsl(220_22%_8%)]" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* LEFT — Live threat panel */}
+            <div className="lg:col-span-7 order-2 lg:order-1">
+              <div className="rounded-2xl border border-[hsl(0_80%_58%/0.25)] bg-[hsl(220_22%_10%/0.9)] backdrop-blur-sm p-6 shadow-[0_30px_80px_-20px_hsl(0_0%_0%/0.7)]">
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-2">
+                    <Radar className="h-5 w-5 text-[hsl(0_80%_68%)]" />
+                    <span className="font-display font-bold text-white">Threat Intelligence · Live</span>
+                  </div>
+                  <Badge className="bg-[hsl(0_80%_58%/0.18)] text-[hsl(0_80%_72%)] border-[hsl(0_80%_58%/0.35)] text-[10px]">
+                    500+ incidents · 200+ cities
+                  </Badge>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { city: 'Paris', lvl: 'Caution', color: 'hsl(43_96%_56%)', msg: 'Transport strike — metro line 1 disrupted until 18:00' },
+                    { city: 'Bangkok', lvl: 'Advisory', color: 'hsl(43_96%_56%)', msg: 'Air quality unhealthy (AQI 168) — limit outdoor activity' },
+                    { city: 'Mexico City', lvl: 'Alert', color: 'hsl(0_80%_62%)', msg: 'Civil demonstration near Reforma 14:00 — avoid corridor' },
+                    { city: 'Dubai', lvl: 'Safe', color: 'hsl(160_60%_50%)', msg: 'No active incidents · Guardian standing by' },
+                  ].map((t) => (
+                    <div key={t.city} className="flex items-start gap-3 rounded-lg border border-[hsl(43_96%_56%/0.12)] bg-[hsl(220_22%_12%)] p-3">
+                      <span
+                        className="mt-1.5 inline-flex h-2.5 w-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: t.color, boxShadow: `0 0 12px ${t.color}` }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-semibold text-white text-sm">{t.city}</span>
+                          <span className="text-[10px] uppercase tracking-wider" style={{ color: t.color }}>{t.lvl}</span>
+                        </div>
+                        <div className="text-xs text-[hsl(30_12%_78%)] leading-snug">{t.msg}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 pt-4 border-t border-[hsl(43_96%_56%/0.12)] grid grid-cols-3 gap-3 text-center">
+                  <div>
+                    <div className="font-display text-2xl font-bold text-white">24/7</div>
+                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Monitoring</div>
+                  </div>
+                  <div>
+                    <div className="font-display text-2xl font-bold text-[hsl(var(--gold))]">&lt; 60s</div>
+                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Alert latency</div>
+                  </div>
+                  <div>
+                    <div className="font-display text-2xl font-bold text-white">8</div>
+                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Threat types</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — Pitch */}
+            <div className="lg:col-span-5 space-y-6 order-1 lg:order-2">
+              <Badge className="bg-[hsl(0_80%_58%/0.15)] text-[hsl(0_80%_70%)] border-[hsl(0_80%_58%/0.3)]">
+                <ShieldAlert className="mr-1.5 h-3 w-3" /> Threat Intelligence + Guardian
+              </Badge>
+              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
+                Because peace of mind is <span className="text-[hsl(0_80%_70%)]">non-negotiable.</span>
+              </h2>
+              <p className="text-lg text-[hsl(30_12%_82%)] leading-relaxed">
+                SuperNomad continuously fuses 500+ live incidents across 200+ cities — terrorism, civil unrest, severe weather, cyber, transport, health — and warns you before you walk into trouble. The Concierge re-routes flights, cancels bookings and notifies your family automatically.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  { icon: Radar, t: 'Real-time fusion', d: 'Government feeds, news wires, crowd-sourced reports' },
+                  { icon: Activity, t: 'Personal safety score', d: 'Per neighborhood, per hour, for your itinerary' },
+                  { icon: Eye, t: 'Black Box Guardian', d: 'WORM evidence recorder — un-erasable, encrypted' },
+                  { icon: Siren, t: 'SOS + Cyber Helpline', d: '24/7 human + AI response, embassy hot-line' },
+                ].map(({ icon: Icon, t, d }) => (
+                  <li key={t} className="flex items-start gap-3 rounded-lg border border-[hsl(0_80%_58%/0.18)] bg-[hsl(220_22%_12%/0.6)] p-3">
+                    <Icon className="h-5 w-5 text-[hsl(0_80%_70%)] mt-0.5 shrink-0" />
+                    <div>
+                      <div className="font-semibold text-white text-sm">{t}</div>
+                      <div className="text-xs text-[hsl(30_12%_78%)] leading-snug">{d}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
