@@ -55,6 +55,10 @@ export const NomadChatDashboard = () => {
     trustPassService.getTier().then(setMyTier);
   }, []);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, typing]);
+
   const {
     isListening, isSpeaking, voiceEnabled,
     startListening, stopListening, speak,
