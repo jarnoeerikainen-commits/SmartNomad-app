@@ -41,8 +41,8 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) =
         <CardContent>
           <p className="text-sm text-muted-foreground">
             {isPremium 
-              ? 'Access all AI-powered advisors for comprehensive travel support.'
-              : `${subscription.aiRequestsRemaining ?? 1000} AI requests remaining this month. Upgrade for unlimited access.`
+              ? 'Voice + chat with memory. 10,000,000 AI requests / month.'
+              : `${(subscription.aiRequestsRemaining ?? 1000000).toLocaleString()} AI requests remaining this month (chat mode). Upgrade to Premium for voice + tax tools.`
             }
           </p>
         </CardContent>
