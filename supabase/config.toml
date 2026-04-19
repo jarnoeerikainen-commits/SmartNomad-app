@@ -62,3 +62,6 @@ verify_jwt = false
 
 [functions.award-card-scan]
 verify_jwt = false
+
+[functions.community-orchestrator]
+verify_jwt = false

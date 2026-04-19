@@ -12,6 +12,8 @@ import { Send, Users, Sparkles, MapPin, TrendingUp, Plus, Mic, MicOff, Volume2, 
 import { SubjectChatView } from './SubjectChatView';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { NomadUser } from '@/types/communityChat';
+import { TypingIndicator } from '@/components/SocialChat/TypingIndicator';
+import { QuickReplies } from '@/components/SocialChat/QuickReplies';
 import TrustBadge from '@/components/trust/TrustBadge';
 import { Switch } from '@/components/ui/switch';
 import { getDemoTierForId, getDemoVibeScore } from '@/utils/demoTrust';
@@ -39,7 +41,8 @@ function pickNextBatch(
 }
 
 export const NomadChatDashboard = () => {
-  const { messages, sendMessage, isLoading } = useCommunityChat();
+  const { messages, sendMessage, isLoading, typing, quickReplies, quickLoading, pickQuickReply } = useCommunityChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messageInput, setMessageInput] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
   const [triggerCreateGroup, setTriggerCreateGroup] = useState(false);
@@ -51,6 +54,10 @@ export const NomadChatDashboard = () => {
   useEffect(() => {
     trustPassService.getTier().then(setMyTier);
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, typing]);
 
   const {
     isListening, isSpeaking, voiceEnabled,
@@ -264,6 +271,9 @@ export const NomadChatDashboard = () => {
                     </div>
                   </div>
                 ))}
+                {typing.map(t => (
+                  <TypingIndicator key={`typing-${t.id}`} name={t.name} avatar={t.avatar} />
+                ))}
                 {isLoading && (
                   <div className="flex gap-3">
                     <Avatar className="w-10 h-10"><AvatarFallback className="bg-primary/10 text-primary">🤖</AvatarFallback></Avatar>
@@ -276,10 +286,13 @@ export const NomadChatDashboard = () => {
                     </div>
                   </div>
                 )}
+                <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
 
-            <div className="flex gap-2">
+            <QuickReplies suggestions={quickReplies} onPick={pickQuickReply} isLoading={quickLoading} />
+
+            <div className="flex gap-2 mt-3">
               {sttSupported && (
                 <Button
                   onClick={() => { isListening ? stopListening() : startListening((text) => { if (text.trim()) handleSend(text); }); }}

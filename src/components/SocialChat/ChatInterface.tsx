@@ -10,6 +10,8 @@ import { formatTime } from '@/utils/dateFormat';
 import { useSocialChat } from '@/hooks/useSocialChat';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
+import { TypingIndicator } from './TypingIndicator';
+import { QuickReplies } from './QuickReplies';
 
 interface ChatInterfaceProps {
   chatRoom: ChatRoom;
@@ -24,7 +26,10 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const { sendMessage } = useSocialChat();
+  const { sendMessage, typingByRoom, quickRepliesByRoom, quickLoadingByRoom, pickQuickReply } = useSocialChat();
+  const typing = typingByRoom[chatRoom.id] || [];
+  const quickReplies = quickRepliesByRoom[chatRoom.id] || [];
+  const quickLoading = !!quickLoadingByRoom[chatRoom.id];
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     isListening, isSpeaking, voiceEnabled,
@@ -38,7 +43,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatRoom.messages]);
+  }, [chatRoom.messages, typing.length]);
 
   const handleSend = async (text?: string) => {
     const content = text || message;
@@ -243,9 +248,18 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
                 );
               })
             )}
+            {typing.map(t => (
+              <TypingIndicator key={`typing-${t.id}`} name={t.name} avatar={t.avatar} />
+            ))}
             <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
+
+        <QuickReplies
+          suggestions={quickReplies}
+          onPick={(text) => pickQuickReply(chatRoom.id, text)}
+          isLoading={quickLoading}
+        />
 
         <div className="border-t p-3">
           <div className="flex gap-2">
