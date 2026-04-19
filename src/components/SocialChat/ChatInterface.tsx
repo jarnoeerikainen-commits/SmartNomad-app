@@ -43,7 +43,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatRoom.messages]);
+  }, [chatRoom.messages, typing.length]);
 
   const handleSend = async (text?: string) => {
     const content = text || message;
