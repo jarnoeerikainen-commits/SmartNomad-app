@@ -554,7 +554,6 @@ const Landing: React.FC = () => {
                   'AI Concierge — voice + chat with memory',
                   'Tax Day Calculator (183-day, SPT, residency)',
                   'Travel Reports (PDF + Excel exports)',
-                  'Multi-year tax planning & scenarios',
                   'Priority 24/7 support',
                 ].map(b => (
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>

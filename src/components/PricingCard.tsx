@@ -47,7 +47,6 @@ export const PRICING_TIERS: PricingTier[] = [
       'AI Concierge — voice + chat with memory',
       'Tax Day Calculator (183-day, SPT, residency)',
       'Travel Reports (PDF + Excel exports)',
-      'Multi-year tax planning & scenarios',
       'Priority 24/7 support'
     ]
   }
