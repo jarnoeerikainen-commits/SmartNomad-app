@@ -108,15 +108,17 @@ const Landing: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 grid md:grid-cols-2 gap-12 items-center w-full">
-          <div className="space-y-7 animate-fade-in">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 flex flex-col items-center text-center w-full">
+          <div className="space-y-7 animate-fade-in max-w-4xl">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-              Your borderless life,{' '}
-              <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] bg-clip-text text-transparent">
-                finally one app.
+            <h1 className="font-display font-bold leading-[0.95] tracking-tight">
+              <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">
+                SuperNomad
+              </span>
+              <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
+                Your borderless life, finally one app.
               </span>
             </h1>
             <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-xl">
