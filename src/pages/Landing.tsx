@@ -88,8 +88,9 @@ const Landing: React.FC = () => {
           </a>
           <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
+            <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
+            <a href="#guardian" className="hover:text-[hsl(var(--gold))] transition-colors">Guardian</a>
             <a href="#ecosystem" className="hover:text-[hsl(var(--gold))] transition-colors">Ecosystem</a>
-            <a href="#how" className="hover:text-[hsl(var(--gold))] transition-colors">How it works</a>
             <a href="#pricing" className="hover:text-[hsl(var(--gold))] transition-colors">Pricing</a>
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
