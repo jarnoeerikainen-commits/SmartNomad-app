@@ -108,22 +108,24 @@ const Landing: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 grid md:grid-cols-2 gap-12 items-center w-full">
-          <div className="space-y-7 animate-fade-in">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 flex flex-col items-center text-center w-full">
+          <div className="space-y-7 animate-fade-in max-w-4xl">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-              Your borderless life,{' '}
-              <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] bg-clip-text text-transparent">
-                finally one app.
+            <h1 className="font-display font-bold leading-[0.95] tracking-tight">
+              <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">
+                SuperNomad
+              </span>
+              <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white font-semibold">
+                Your borderless life, finally one app.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-xl">
+            <p className="text-lg md:text-xl text-[hsl(30_12%_80%)] leading-relaxed max-w-2xl mx-auto">
               Proactive AI for <strong className="text-white">tax residency, visas, identity, safety and community</strong> — voice-controlled, encrypted, sovereign. Built for the 281 million people living between borders.
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-2 justify-center">
               <Link to="/app">
                 <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-base px-7 py-6 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
                   <Rocket className="mr-2 h-5 w-5" /> Launch SuperNomad
@@ -141,19 +143,11 @@ const Landing: React.FC = () => {
               <Check className="inline h-3.5 w-3.5 text-[hsl(var(--gold))]" /> No signup required for demo · Try as Meghan or John · Full demo access
             </p>
 
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-[hsl(30_12%_75%)]">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 text-xs text-[hsl(30_12%_75%)] justify-center">
               {trustBadges.map(({ icon: Icon, label }) => (
                 <span key={label} className="flex items-center gap-1.5"><Icon className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> {label}</span>
               ))}
               <span className="flex items-center gap-1.5"><Star className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> 6.2M+ nomads online</span>
-            </div>
-          </div>
-
-          {/* Logo card */}
-          <div className="hidden md:flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute -inset-10 bg-[hsl(43_96%_56%/0.18)] blur-3xl rounded-full animate-pulse" />
-              <img src={logo} alt="SuperNomad emblem" className="relative w-72 h-72 lg:w-96 lg:h-96 object-cover rounded-2xl shadow-[0_30px_80px_-20px_hsl(43_96%_56%/0.4)] ring-1 ring-[hsl(43_96%_56%/0.3)]" width={384} height={384} />
             </div>
           </div>
         </div>
