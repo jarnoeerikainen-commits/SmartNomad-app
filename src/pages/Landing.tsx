@@ -6,7 +6,8 @@ import {
   Shield, Sparkles, Globe2, Lock, Plane, Calculator, FileCheck,
   Users, Bell, MessageCircle, Brain, MapPin, Award, Wallet,
   ArrowRight, Check, Rocket, Star, Mic, Eye, Zap, AlertTriangle,
-  Apple, Smartphone
+  Apple, Smartphone, Hotel, UtensilsCrossed, Music2, Trophy,
+  Radar, Siren, ShieldAlert, Activity, Headphones, Heart
 } from 'lucide-react';
 import logo from '@/assets/supernomad-logo.jpg';
 import heroImg from '@/assets/landing-hero.jpg';
