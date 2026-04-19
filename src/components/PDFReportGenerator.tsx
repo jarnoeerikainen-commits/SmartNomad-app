@@ -292,14 +292,21 @@ export const PDFReportGenerator: React.FC<PDFReportGeneratorProps> = ({ countrie
   };
 
   const printPDF = () => {
+    // Use a sandboxed Blob URL + iframe instead of document.write to avoid
+    // any chance of XSS injection via interpolated user data.
     const htmlContent = generatePDFContent();
-    const printWindow = window.open('', '_blank');
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const printWindow = window.open(url, '_blank');
     if (printWindow) {
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-      }, 500);
+      printWindow.addEventListener('load', () => {
+        setTimeout(() => {
+          printWindow.print();
+          URL.revokeObjectURL(url);
+        }, 300);
+      });
+    } else {
+      URL.revokeObjectURL(url);
     }
   };
 

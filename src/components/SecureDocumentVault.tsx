@@ -155,19 +155,23 @@ export const SecureDocumentVault: React.FC = () => {
       
       const qrCodeUrl = await QRCode.toDataURL(JSON.stringify(documentData));
       
-      // Create a new window to display the QR code
+      // Create a new window to display the QR code (XSS-safe: no string interpolation into HTML)
       const newWindow = window.open('', '_blank');
       if (newWindow) {
-        newWindow.document.write(`
-          <html>
-            <head><title>QR Code - ${document.name}</title></head>
-            <body style="display: flex; flex-direction: column; align-items: center; padding: 20px; font-family: Arial, sans-serif;">
-              <h2>${document.name}</h2>
-              <img src="${qrCodeUrl}" alt="QR Code" style="border: 1px solid #ccc; padding: 10px;"/>
-              <p style="text-align: center; margin-top: 10px;">Scan this QR code to quickly access document information</p>
-            </body>
-          </html>
-        `);
+        const doc = newWindow.document;
+        doc.title = `QR Code - ${document.name}`;
+        const body = doc.body;
+        body.style.cssText = 'display:flex;flex-direction:column;align-items:center;padding:20px;font-family:Arial,sans-serif;';
+        const h2 = doc.createElement('h2');
+        h2.textContent = document.name; // textContent escapes
+        const img = doc.createElement('img');
+        img.src = qrCodeUrl; // data: URL produced by qrcode lib, safe
+        img.alt = 'QR Code';
+        img.style.cssText = 'border:1px solid #ccc;padding:10px;';
+        const p = doc.createElement('p');
+        p.style.cssText = 'text-align:center;margin-top:10px;';
+        p.textContent = 'Scan this QR code to quickly access document information';
+        body.append(h2, img, p);
       }
       
       toast({
