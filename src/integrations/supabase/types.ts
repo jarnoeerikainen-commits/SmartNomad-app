@@ -896,6 +896,7 @@ export type Database = {
           weight: number
         }[]
       }
+      user_owns_row: { Args: { row_user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "premium" | "user"
