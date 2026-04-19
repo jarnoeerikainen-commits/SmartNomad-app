@@ -8,17 +8,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
+import {
   Award, Plane, Hotel, CreditCard, Globe, ExternalLink, Plus, TrendingUp,
   Gift, Star, Wallet, Camera, Search, Trash2, Edit2, Shield, Eye, EyeOff,
   Car, Ship, Train, ShoppingBag, AlertTriangle, ChevronDown, ChevronUp, X,
-  Sparkles, DollarSign, Clock, CheckCircle
+  Sparkles, DollarSign, Clock, CheckCircle, Loader2, Wand2, FilePlus
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { AwardCategory, UserAwardCard, CardStatus } from '@/types/awardCards';
 import { AWARD_PROGRAMS, MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, calculateAwardValue, getAwardCardsAIContext } from '@/data/awardProgramsData';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const STORAGE_KEY = 'sn_award_cards_enc';
 
@@ -481,18 +482,26 @@ const AddAwardCard: React.FC<{
   existingCards: UserAwardCard[];
   onAdd: (card: UserAwardCard) => void;
 }> = ({ existingCards, onAdd }) => {
-  const [step, setStep] = useState<'select' | 'details' | 'photo'>('select');
+  const { toast } = useToast();
+  const [step, setStep] = useState<'select' | 'details' | 'custom'>('select');
   const [selectedProgram, setSelectedProgram] = useState<typeof AWARD_PROGRAMS[0] | null>(null);
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState<string>('all');
   const [memberNumber, setMemberNumber] = useState('');
   const [currentTier, setCurrentTier] = useState('');
   const [pointsBalance, setPointsBalance] = useState('');
+  const [pointsCurrency, setPointsCurrency] = useState('Points');
   const [expiryDate, setExpiryDate] = useState('');
   const [notes, setNotes] = useState('');
   const [cardImage, setCardImage] = useState<string | undefined>();
+  const [scanning, setScanning] = useState(false);
+  // Custom program fields
+  const [customName, setCustomName] = useState('');
+  const [customCategory, setCustomCategory] = useState<AwardCategory>('airline');
+  const [customUrl, setCustomUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const customScanRef = useRef<HTMLInputElement>(null);
 
   const filtered = AWARD_PROGRAMS.filter(p => {
     if (catFilter !== 'all' && p.category !== catFilter) return false;
@@ -503,14 +512,105 @@ const AddAwardCard: React.FC<{
     return true;
   });
 
-  const handlePhotoCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const resetForm = () => {
+    setStep('select');
+    setSelectedProgram(null);
+    setMemberNumber('');
+    setCurrentTier('');
+    setPointsBalance('');
+    setPointsCurrency('Points');
+    setExpiryDate('');
+    setNotes('');
+    setCardImage(undefined);
+    setCustomName('');
+    setCustomCategory('airline');
+    setCustomUrl('');
+  };
+
+  const readFileAsDataUrl = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  // Scan card → call OCR → auto-fill form
+  const handleScanAndFill = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCardImage(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    e.target.value = ''; // reset so same file can be re-selected
+    try {
+      setScanning(true);
+      const dataUrl = await readFileAsDataUrl(file);
+      setCardImage(dataUrl);
+
+      const { data, error } = await supabase.functions.invoke('award-card-scan', {
+        body: { imageBase64: dataUrl },
+      });
+      if (error) throw error;
+
+      if (!data || data.confidence === 0 || !data.programName) {
+        toast({
+          title: 'Could not read card',
+          description: 'Please add details manually or try a clearer photo.',
+          variant: 'destructive',
+        });
+        setStep('custom');
+        return;
+      }
+
+      // Try to match to an existing program in directory
+      const nameLower = String(data.programName).toLowerCase();
+      const match = AWARD_PROGRAMS.find(p =>
+        nameLower.includes(p.name.toLowerCase()) ||
+        p.name.toLowerCase().includes(nameLower)
+      );
+
+      if (match) {
+        setSelectedProgram(match);
+        setMemberNumber(data.memberNumber || '');
+        setCurrentTier(data.currentTier && match.tiers.includes(data.currentTier) ? data.currentTier : (match.tiers[0] || ''));
+        setPointsBalance(data.pointsBalance ? String(data.pointsBalance) : '');
+        setExpiryDate(data.expiryDate || '');
+        setStep('details');
+        toast({
+          title: '✨ Card scanned!',
+          description: `Detected ${match.name}. Review and confirm.`,
+        });
+      } else {
+        // Unknown program → custom flow
+        setCustomName(data.programName);
+        setCustomCategory(data.category || 'airline');
+        setMemberNumber(data.memberNumber || '');
+        setCurrentTier(data.currentTier || '');
+        setPointsBalance(data.pointsBalance ? String(data.pointsBalance) : '');
+        setPointsCurrency(data.pointsCurrency || 'Points');
+        setExpiryDate(data.expiryDate || '');
+        setStep('custom');
+        toast({
+          title: '✨ Card scanned!',
+          description: `New program: ${data.programName}. Review and save.`,
+        });
+      }
+    } catch (err: any) {
+      console.error('Scan failed:', err);
+      toast({
+        title: 'Scan failed',
+        description: err?.message || 'Please try again or enter manually.',
+        variant: 'destructive',
+      });
+    } finally {
+      setScanning(false);
+    }
+  };
+
+  const handlePhotoCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    const dataUrl = await readFileAsDataUrl(file);
+    setCardImage(dataUrl);
   };
 
   const handleSubmit = () => {
@@ -532,24 +632,93 @@ const AddAwardCard: React.FC<{
       cardImage,
     };
     onAdd(newCard);
-    // Reset
-    setStep('select');
-    setSelectedProgram(null);
-    setMemberNumber('');
-    setCurrentTier('');
-    setPointsBalance('');
-    setExpiryDate('');
-    setNotes('');
-    setCardImage(undefined);
+    resetForm();
   };
 
+  const handleSubmitCustom = () => {
+    if (!customName.trim()) {
+      toast({ title: 'Program name required', variant: 'destructive' });
+      return;
+    }
+    const customId = `custom-${customName.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}-${Date.now()}`;
+    const newCard: UserAwardCard = {
+      id: `card-${Date.now()}`,
+      programId: customId,
+      programName: customName.trim(),
+      category: customCategory,
+      memberNumber: memberNumber || undefined,
+      currentTier: currentTier || undefined,
+      pointsBalance: parseInt(pointsBalance) || 0,
+      pointsCurrency: pointsCurrency || 'Points',
+      expiryDate: expiryDate || undefined,
+      status: 'active',
+      addedAt: new Date().toISOString().split('T')[0],
+      lastUpdated: new Date().toISOString().split('T')[0],
+      notes: customUrl ? `${notes ? notes + ' • ' : ''}URL: ${customUrl}` : (notes || undefined),
+      cardImage,
+    };
+    onAdd(newCard);
+    resetForm();
+  };
+
+  // STEP: SELECT
   if (step === 'select') {
     return (
       <div className="space-y-4">
+        {/* Quick-action hero */}
+        <Card className="border-primary/40 bg-gradient-to-br from-primary/5 to-primary/10">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="p-2 rounded-lg bg-primary/20">
+                <Wand2 className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-sm">Three ways to add a card</h3>
+                <p className="text-xs text-muted-foreground">Scan with AI, pick from directory, or add any program in the world manually.</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => cameraInputRef.current?.click()}
+                disabled={scanning}
+                className="justify-start"
+              >
+                {scanning ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Camera className="w-4 h-4 mr-2" />}
+                {scanning ? 'Scanning…' : 'Scan Card'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={scanning}
+                className="justify-start"
+              >
+                <FilePlus className="w-4 h-4 mr-2" /> Upload Photo
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setStep('custom')}
+                className="justify-start"
+              >
+                <Plus className="w-4 h-4 mr-2" /> Add Custom
+              </Button>
+            </div>
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleScanAndFill} />
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleScanAndFill} />
+            <p className="text-[10px] text-muted-foreground mt-2">
+              🔒 Photos processed by AI for OCR only — never stored on our servers. Saved card data is AES-encrypted on your device.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Search directory */}
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input placeholder="Search 100+ programs..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+            <Input placeholder="Search 100+ programs in directory…" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
           </div>
           <Select value={catFilter} onValueChange={setCatFilter}>
             <SelectTrigger className="w-full sm:w-[160px]">
@@ -564,15 +733,7 @@ const AddAwardCard: React.FC<{
           </Select>
         </div>
 
-        {/* Quick actions */}
-        <div className="flex gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => { cameraInputRef.current?.click(); }}>
-            <Camera className="w-3 h-3 mr-1" /> Scan Card
-          </Button>
-          <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhotoCapture} />
-        </div>
-
-        <ScrollArea className="h-[450px]">
+        <ScrollArea className="h-[420px]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {filtered.map(prog => {
               const Icon = categoryIcons[prog.category];
@@ -603,12 +764,25 @@ const AddAwardCard: React.FC<{
                 </Card>
               );
             })}
+            {filtered.length === 0 && (
+              <Card className="col-span-full border-dashed">
+                <CardContent className="p-6 text-center">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    No matches in directory. Add it as a custom program — works with any loyalty program in the world.
+                  </p>
+                  <Button size="sm" onClick={() => { setCustomName(search); setStep('custom'); }}>
+                    <Plus className="w-4 h-4 mr-2" /> Add "{search || 'custom program'}"
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </ScrollArea>
       </div>
     );
   }
 
+  // STEP: DETAILS (known program)
   if (step === 'details' && selectedProgram) {
     const Icon = categoryIcons[selectedProgram.category];
     return (
@@ -619,9 +793,9 @@ const AddAwardCard: React.FC<{
             <div className={`p-2 rounded-lg ${categoryColors[selectedProgram.category]}`}>
               <Icon className="w-5 h-5" />
             </div>
-            <div>
-              <CardTitle className="text-base">{selectedProgram.name}</CardTitle>
-              <CardDescription className="text-xs">{selectedProgram.description}</CardDescription>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-base truncate">{selectedProgram.name}</CardTitle>
+              <CardDescription className="text-xs truncate">{selectedProgram.description}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -659,7 +833,7 @@ const AddAwardCard: React.FC<{
           {/* Photo section */}
           <div>
             <label className="text-xs font-medium mb-2 block">Card Photo (Optional)</label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button variant="outline" size="sm" onClick={() => cameraInputRef.current?.click()}>
                 <Camera className="w-3 h-3 mr-1" /> Take Photo
               </Button>
@@ -680,9 +854,101 @@ const AddAwardCard: React.FC<{
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button variant="outline" className="flex-1" onClick={() => setStep('select')}>Cancel</Button>
+            <Button variant="outline" className="flex-1" onClick={() => { setStep('select'); }}>Cancel</Button>
             <Button className="flex-1" onClick={handleSubmit}>
               <Plus className="w-4 h-4 mr-2" /> Add Card
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // STEP: CUSTOM (any program in the world)
+  if (step === 'custom') {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => setStep('select')}>← Back</Button>
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Wand2 className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-base">Add Custom Program</CardTitle>
+              <CardDescription className="text-xs">Any loyalty program in the world — fully synced to your AI Concierge.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Quick scan inside custom too */}
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="outline" size="sm" onClick={() => customScanRef.current?.click()} disabled={scanning}>
+              {scanning ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Camera className="w-3 h-3 mr-1" />}
+              {scanning ? 'Scanning…' : 'Scan to auto-fill'}
+            </Button>
+            <input ref={customScanRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleScanAndFill} />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="sm:col-span-2">
+              <label className="text-xs font-medium mb-1 block">Program Name *</label>
+              <Input placeholder="e.g., Etihad Guest, Garuda Miles, IndiGo BluChip" value={customName} onChange={e => setCustomName(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Category *</label>
+              <Select value={customCategory} onValueChange={(v) => setCustomCategory(v as AwardCategory)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {Object.entries(categoryLabels).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Points Currency</label>
+              <Input placeholder="Miles, Points, Avios…" value={pointsCurrency} onChange={e => setPointsCurrency(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Member Number</label>
+              <Input placeholder="Member ID" value={memberNumber} onChange={e => setMemberNumber(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Current Tier</label>
+              <Input placeholder="e.g., Gold" value={currentTier} onChange={e => setCurrentTier(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Points Balance</label>
+              <Input type="number" placeholder="0" value={pointsBalance} onChange={e => setPointsBalance(e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium mb-1 block">Expiry Date</label>
+              <Input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs font-medium mb-1 block">Program URL (Optional)</label>
+              <Input placeholder="https://…" value={customUrl} onChange={e => setCustomUrl(e.target.value)} />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-xs font-medium mb-1 block">Notes</label>
+              <Input placeholder="e.g., Family pooling enabled" value={notes} onChange={e => setNotes(e.target.value)} />
+            </div>
+          </div>
+
+          {cardImage && (
+            <div className="relative w-48 h-28 rounded-lg overflow-hidden border">
+              <img src={cardImage} alt="Card" className="w-full h-full object-cover" />
+              <Button variant="destructive" size="sm" className="absolute top-1 right-1 h-5 w-5 p-0" onClick={() => setCardImage(undefined)}>
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
+
+          <div className="flex gap-2 pt-2">
+            <Button variant="outline" className="flex-1" onClick={() => setStep('select')}>Cancel</Button>
+            <Button className="flex-1" onClick={handleSubmitCustom} disabled={!customName.trim()}>
+              <Plus className="w-4 h-4 mr-2" /> Save Custom Program
             </Button>
           </div>
         </CardContent>
