@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.trend-refresh]
 verify_jwt = false
+
+[functions.school-holidays-refresh]
+verify_jwt = false

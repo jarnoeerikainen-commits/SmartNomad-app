@@ -3,6 +3,7 @@ import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./country
 import { pickModelForMessages } from "../_shared/modelRouter.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
+import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt, renderGlobalAwarenessForPrompt } from "../_shared/schoolHolidays.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -1238,7 +1239,19 @@ serve(async (req) => {
     const baseSystemPrompt = buildSystemPrompt(currentDateTime, userContext);
     const trendPack = await getTrendPack();
     const trendSection = renderTrendPackForPrompt(trendPack, (body.language as string) || 'en');
-    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}`);
+
+    // School holiday awareness — silent unless user's plan is affected.
+    const holidayPack = await getSchoolHolidayPack();
+    const ctx: any = userContext || {};
+    const tripStart = typeof ctx.travelStart === 'string' ? ctx.travelStart : (typeof ctx.tripStart === 'string' ? ctx.tripStart : undefined);
+    const tripEnd = typeof ctx.travelEnd === 'string' ? ctx.travelEnd : (typeof ctx.tripEnd === 'string' ? ctx.tripEnd : undefined);
+    const destCC = typeof ctx.destinationCountryCode === 'string' ? ctx.destinationCountryCode : (typeof ctx.countryCode === 'string' ? ctx.countryCode : undefined);
+    const originCC = typeof ctx.originCountryCode === 'string' ? ctx.originCountryCode : (typeof ctx.userCountryCode === 'string' ? ctx.userCountryCode : undefined);
+    const holidaySection = (tripStart && tripEnd)
+      ? renderRelevantHolidaysForPrompt(holidayPack, { destinationCountryCode: destCC, originCountryCode: originCC, travelStart: tripStart, travelEnd: tripEnd })
+      : renderGlobalAwarenessForPrompt(holidayPack);
+
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);
