@@ -343,6 +343,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       subscriptionTier: fullAppContext.subscriptionTier || undefined,
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
       integrationContext: getIntegrationContextForAI(),
+      cultural: enhancedProfile?.cultural || undefined,
       toolRoutingHint: (() => {
         const discovered = discoverFeaturesByIntent(userMessage, 3);
         if (discovered.length > 0) {
