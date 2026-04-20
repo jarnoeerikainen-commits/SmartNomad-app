@@ -329,7 +329,7 @@ function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const regionalContext = getRegionalContext(userCountry);
   const seasonInfo = getSeasonInfo(month, 45);
   const userCountryBriefing = getCountryBriefing(userCountry);
-  const respectBlock = buildRespectProtocol(userContext?.cultural, { country: userCountry, city: userCity });
+  const respectBlock = buildRespectProtocol(userContext?.cultural, { country: userCountry, city: userCity }, userContext?.lifestyle);
 
   return `**CURRENT DATE & TIME:** ${currentDateTime} (UTC). Day: ${dayOfWeek}. Current month: ${month}. 
 **CURRENT SEASON (user's approximate):** ${seasonInfo}

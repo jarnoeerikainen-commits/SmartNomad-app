@@ -99,6 +99,7 @@ const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashb
 const FeatureCustomizer = lazy(() => import('./FeatureCustomizer'));
 const SnomadIdVault = lazy(() => import('./SnomadIdVault'));
 const ConnectorsDashboard = lazy(() => import('./ConnectorsDashboard'));
+const LifestyleHub = lazy(() => import('./Lifestyle/LifestyleHub'));
 const VisaAutoMatcher = lazy(() => import('./VisaAutoMatcher'));
 const JetLagProtocol = lazy(() => import('./JetLagProtocol'));
 const VentureTravelist = lazy(() => import('./VentureTravelist'));
@@ -419,6 +420,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'snomad-id': return <SnomadIdVault />;
       case 'customize': return <FeatureCustomizer />;
       case 'integrations': return <ConnectorsDashboard />;
+      case 'lifestyle-hub': return <LifestyleHub />;
       case 'visa-matcher': return <VisaAutoMatcher countries={countries} />;
       case 'jet-lag': return <JetLagProtocol />;
       case 'venture-invest': return <VentureTravelist />;

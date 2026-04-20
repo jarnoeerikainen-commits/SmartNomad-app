@@ -92,7 +92,7 @@ serve(async (req) => {
 
     const em = emergencyLegal[country] || { police: '112', embassy_tip: 'Contact your embassy immediately' };
 
-    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city });
+    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city }, userContext?.lifestyle);
 
     const systemPrompt = `Current date/time: ${currentDateTime} UTC.
 

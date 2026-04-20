@@ -33,7 +33,8 @@ const ALCOHOL_RESTRICTED = new Set([
 
 export function buildRespectProtocol(
   cultural: CulturalContext | undefined,
-  destination?: { country?: string; city?: string }
+  destination?: { country?: string; city?: string },
+  lifestyleContext?: string,
 ): string {
   const c = cultural || {};
   const lines: string[] = [];
@@ -93,6 +94,11 @@ export function buildRespectProtocol(
     if (ALCOHOL_RESTRICTED.has(dest)) {
       lines.push(`- **Destination alert (${dest}):** alcohol is restricted or banned in public. Only suggest hotel-licensed venues or private clubs if alcohol is truly required, and warn the user about local law.`);
     }
+  }
+
+  if (lifestyleContext && lifestyleContext.trim()) {
+    lines.push('');
+    lines.push(lifestyleContext.trim());
   }
 
   return lines.join('\n');
