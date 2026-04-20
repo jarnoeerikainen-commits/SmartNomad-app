@@ -575,6 +575,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
         }
       } else {
+        // Single chunk — attach escalation to the original message
+        if (escalation) {
+          setMessages(prev => prev.map(m =>
+            m.id === assistantId ? { ...m, escalation } : m
+          ));
+        }
         // Single chunk — speak normally
         if (assistantContent && voiceEnabled && !firstSentenceSpoken) {
           speak(assistantContent);
