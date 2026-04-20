@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -40,6 +41,7 @@ serve(async (req) => {
       currentCity: sanitize(body.userContext.currentCity),
       citizenship: sanitize(body.userContext.citizenship),
       language: sanitize(body.userContext.language, 50),
+      cultural: (body.userContext.cultural && typeof body.userContext.cultural === 'object') ? body.userContext.cultural : undefined,
     } : undefined;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
@@ -90,7 +92,11 @@ serve(async (req) => {
 
     const em = emergencyLegal[country] || { police: '112', embassy_tip: 'Contact your embassy immediately' };
 
+    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city });
+
     const systemPrompt = `Current date/time: ${currentDateTime} UTC.
+
+${respectBlock}
 
 You are an **elite international legal crisis team** — top-tier lawyers specialized in travel emergencies, immigration, business law, criminal defense, and consumer protection across all jurisdictions.
 

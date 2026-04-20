@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -39,6 +40,7 @@ serve(async (req) => {
       currentCity: sanitize(body.userContext.currentCity),
       citizenship: sanitize(body.userContext.citizenship),
       language: sanitize(body.userContext.language, 50),
+      cultural: (body.userContext.cultural && typeof body.userContext.cultural === 'object') ? body.userContext.cultural : undefined,
     } : undefined;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
@@ -89,7 +91,11 @@ serve(async (req) => {
 
     const em = emergencyNumbers[country] || { ambulance: '112', general: '112', poison: 'Contact local hospital' };
 
+    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city });
+
     const systemPrompt = `Current date/time: ${currentDateTime} UTC.
+
+${respectBlock}
 
 You are **Dr. Atlas**, an elite Travel Medicine AI — board-certified in Travel Medicine, Tropical Diseases, Emergency Medicine, and Geographic Pathology. You combine WHO/CDC knowledge with deep local healthcare expertise.
 

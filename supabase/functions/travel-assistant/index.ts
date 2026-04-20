@@ -316,6 +316,8 @@ When the conversation naturally involves booking, paying, or purchasing somethin
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════
 
+import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
+
 function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const now = new Date();
   const month = now.getUTCMonth() + 1;
@@ -327,10 +329,14 @@ function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const regionalContext = getRegionalContext(userCountry);
   const seasonInfo = getSeasonInfo(month, 45);
   const userCountryBriefing = getCountryBriefing(userCountry);
+  const respectBlock = buildRespectProtocol(userContext?.cultural, { country: userCountry, city: userCity });
 
   return `**CURRENT DATE & TIME:** ${currentDateTime} (UTC). Day: ${dayOfWeek}. Current month: ${month}. 
 **CURRENT SEASON (user's approximate):** ${seasonInfo}
 ${userCountryBriefing}
+
+${respectBlock}
+
 
 **📍 USER'S CURRENT LOCATION (KNOWN — DO NOT ASK):**
 ${userCity && userCountry ? `The user is currently in **${userCity}, ${userCountry}**. You ALREADY KNOW this from their device GPS/IP. NEVER ask "where are you?" or "what city are you in?" — you know it. Always reference their current city naturally in your answers when relevant (e.g., local recommendations, weather, nearby services, time-relevant info). If they ask about local things, assume they mean ${userCity} unless they specify otherwise.` : userCountry ? `The user is currently in **${userCountry}** (city unknown). You know their country — don't ask for it again.` : 'User location is unknown. You may ask where they are ONCE if relevant.'}
@@ -1178,6 +1184,7 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
+    cultural: (c.cultural && typeof c.cultural === 'object') ? c.cultural : undefined,
   };
 }
 

@@ -278,6 +278,27 @@ export interface SupportTicket {
   resolvedAt?: string;
 }
 
+// Cultural & Respect Profile — drives concierge tone, dietary/vice handling, destination customs
+export interface CulturalProfile {
+  countryOfBirth?: string;          // ISO country name
+  continentOfBirth?: 'Africa' | 'Asia' | 'Europe' | 'North America' | 'South America' | 'Oceania' | 'Antarctica';
+  ethnicBackground?: string;        // free text, optional
+  religion?: 'christianity' | 'islam' | 'judaism' | 'hinduism' | 'buddhism' | 'sikhism' | 'jainism' | 'bahai' | 'shinto' | 'taoism' | 'spiritual' | 'agnostic' | 'atheist' | 'other' | 'prefer-not-to-say';
+  religiousObservance?: 'strict' | 'moderate' | 'cultural-only' | 'non-practicing';
+  // Vice & lifestyle preferences — drives whether AI proactively mentions these topics
+  vice?: {
+    alcohol: 'love' | 'enjoy' | 'social-only' | 'rarely' | 'never' | 'forbidden';     // 'never'/'forbidden' → AI silent unless user asks
+    favoriteDrinks?: ('wine' | 'champagne' | 'whisky' | 'cocktails' | 'beer' | 'sake' | 'rum' | 'gin' | 'tequila' | 'mezcal' | 'cognac')[];
+    cigars: 'love' | 'enjoy' | 'occasional' | 'never';                                 // tobacco/cigarettes never mentioned regardless
+    favoriteCigarBrands?: string[];
+  };
+  respectMode?: {
+    autoAdaptToDestination: boolean;   // adjust dress, dining, prayer-time tips when in conservative regions
+    politeTone: boolean;               // always polite, helpful, respectful — default true
+    avoidTopics?: string[];            // free-form (e.g., 'politics', 'pork', 'gambling')
+  };
+}
+
 export interface ComprehensiveUserProfile {
   id: string;
   createdAt: Date;
@@ -290,6 +311,7 @@ export interface ComprehensiveUserProfile {
   personal?: PersonalPreferences;
   aiConsent?: AIConsentSettings;
   businessTravel?: BusinessTravelProfile;
+  cultural?: CulturalProfile;
   
   languages?: string[];
   followedEmbassies?: string[];

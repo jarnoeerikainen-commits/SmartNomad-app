@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,7 +38,11 @@ serve(async (req) => {
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
+    const respectBlock = buildRespectProtocol(userProfile?.cultural, destination ? { country: destination?.country, city: destination?.name } : undefined);
+
     const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
+
+${respectBlock}
 
 You are "Voyager Pro," an elite AI travel planner who creates COMPLETE, ACTIONABLE trip plans that save users hours of research. You think like a luxury concierge but adapt to any budget.
 

@@ -276,6 +276,10 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
             <Heart className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline truncate">Personal</span>
           </TabsTrigger>
+          <TabsTrigger value="cultural" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Globe className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Cultural</span>
+          </TabsTrigger>
           <TabsTrigger value="health" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
             <Stethoscope className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline truncate">Health</span>
@@ -1393,6 +1397,182 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
                     <VoiceButton onResult={t => updateNested('personal.health.emergencyContact.relation', t)} />
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* CULTURAL TAB — drives Concierge tone, dietary/vice handling, destination respect */}
+        <TabsContent value="cultural" className="space-y-4 mt-6">
+          <Alert className="bg-primary/5 border-primary/20">
+            <Globe className="h-4 w-4" />
+            <AlertTitle>Cultural & Respect Profile</AlertTitle>
+            <AlertDescription>
+              Helps the Concierge respect your background, faith, and lifestyle — silently.
+              Tobacco and cigarettes are never recommended. Cigars and alcohol only when you've opted in.
+            </AlertDescription>
+          </Alert>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Globe className="w-5 h-5" /> Background</CardTitle>
+              <CardDescription>Used silently for context. The AI will not bring it up unless you do.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Country of Birth</Label>
+                  <Input
+                    placeholder="e.g., India, Brazil, France"
+                    value={getNested('cultural.countryOfBirth')}
+                    onChange={e => updateNested('cultural.countryOfBirth', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Continent of Birth</Label>
+                  <Select
+                    value={getNested('cultural.continentOfBirth')}
+                    onValueChange={v => updateNested('cultural.continentOfBirth', v)}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectContent>
+                      {['Africa','Asia','Europe','North America','South America','Oceania','Antarctica'].map(c => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Religion / Faith</Label>
+                  <Select
+                    value={getNested('cultural.religion')}
+                    onValueChange={v => updateNested('cultural.religion', v)}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectContent>
+                      {['christianity','islam','judaism','hinduism','buddhism','sikhism','jainism','bahai','shinto','taoism','spiritual','agnostic','atheist','other','prefer-not-to-say'].map(r => (
+                        <SelectItem key={r} value={r} className="capitalize">{r.replace('-', ' ')}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Religious Observance</Label>
+                  <Select
+                    value={getNested('cultural.religiousObservance')}
+                    onValueChange={v => updateNested('cultural.religiousObservance', v)}
+                  >
+                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectContent>
+                      {['strict','moderate','cultural-only','non-practicing'].map(r => (
+                        <SelectItem key={r} value={r} className="capitalize">{r.replace('-', ' ')}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Heart className="w-5 h-5" /> Lifestyle Preferences</CardTitle>
+              <CardDescription>The Concierge follows your lead — silent if you decline, open if you opt in.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Alcohol</Label>
+                <Select
+                  value={getNested('cultural.vice.alcohol')}
+                  onValueChange={v => updateNested('cultural.vice.alcohol', v)}
+                >
+                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="love">Love it — recommend pairings, top bars, champagne</SelectItem>
+                    <SelectItem value="enjoy">Enjoy occasionally</SelectItem>
+                    <SelectItem value="social-only">Social only — mention only when relevant</SelectItem>
+                    <SelectItem value="rarely">Rarely</SelectItem>
+                    <SelectItem value="never">Never — don't mention</SelectItem>
+                    <SelectItem value="forbidden">Forbidden by faith / personal choice</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {(getNested('cultural.vice.alcohol') === 'love' || getNested('cultural.vice.alcohol') === 'enjoy') && (
+                <div className="space-y-2">
+                  <Label>Favorite Drinks</Label>
+                  <ChipSelector
+                    options={['wine','champagne','whisky','cocktails','beer','sake','rum','gin','tequila','mezcal','cognac']}
+                    selected={getNested('cultural.vice.favoriteDrinks') || []}
+                    onChange={v => updateNested('cultural.vice.favoriteDrinks', v)}
+                    columns={4}
+                  />
+                </div>
+              )}
+
+              <Separator />
+
+              <div className="space-y-2">
+                <Label>Cigars <span className="text-xs text-muted-foreground">(tobacco / cigarettes are never recommended)</span></Label>
+                <Select
+                  value={getNested('cultural.vice.cigars')}
+                  onValueChange={v => updateNested('cultural.vice.cigars', v)}
+                >
+                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="love">Love cigars — find lounges, cigar bars, top tobacconists</SelectItem>
+                    <SelectItem value="enjoy">Enjoy occasionally</SelectItem>
+                    <SelectItem value="occasional">Special occasions only</SelectItem>
+                    <SelectItem value="never">Never — don't mention</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {(getNested('cultural.vice.cigars') === 'love' || getNested('cultural.vice.cigars') === 'enjoy') && (
+                <div className="space-y-2">
+                  <Label>Favorite Cigar Brands (optional)</Label>
+                  <Input
+                    placeholder="e.g., Cohiba, Montecristo, Padrón"
+                    value={(getNested('cultural.vice.favoriteCigarBrands') || []).join(', ')}
+                    onChange={e => updateNested('cultural.vice.favoriteCigarBrands', e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))}
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><Shield className="w-5 h-5" /> Respect Mode</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Auto-adapt to destination</Label>
+                  <p className="text-xs text-muted-foreground">Quietly adjust dress, dining, and prayer-time tips in conservative regions.</p>
+                </div>
+                <Switch
+                  checked={getNested('cultural.respectMode.autoAdaptToDestination') !== false}
+                  onCheckedChange={v => updateNested('cultural.respectMode.autoAdaptToDestination', v)}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Always polite tone</Label>
+                  <p className="text-xs text-muted-foreground">Warm, helpful, respectful — applies to chat and voice.</p>
+                </div>
+                <Switch
+                  checked={getNested('cultural.respectMode.politeTone') !== false}
+                  onCheckedChange={v => updateNested('cultural.respectMode.politeTone', v)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Topics to avoid (comma-separated)</Label>
+                <Input
+                  placeholder="e.g., politics, gambling, pork"
+                  value={(getNested('cultural.respectMode.avoidTopics') || []).join(', ')}
+                  onChange={e => updateNested('cultural.respectMode.avoidTopics', e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))}
+                />
               </div>
             </CardContent>
           </Card>
