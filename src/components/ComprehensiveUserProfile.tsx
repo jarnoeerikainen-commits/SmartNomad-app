@@ -276,6 +276,10 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
             <Heart className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline truncate">Personal</span>
           </TabsTrigger>
+          <TabsTrigger value="cultural" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
+            <Globe className="w-3 h-3 shrink-0" />
+            <span className="hidden sm:inline truncate">Cultural</span>
+          </TabsTrigger>
           <TabsTrigger value="health" className="flex items-center gap-1 text-xs px-2 min-w-0 shrink-0">
             <Stethoscope className="w-3 h-3 shrink-0" />
             <span className="hidden sm:inline truncate">Health</span>
