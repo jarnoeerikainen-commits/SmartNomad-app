@@ -316,6 +316,8 @@ When the conversation naturally involves booking, paying, or purchasing somethin
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════
 
+import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
+
 function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const now = new Date();
   const month = now.getUTCMonth() + 1;
@@ -327,6 +329,7 @@ function buildSystemPrompt(currentDateTime: string, userContext: any): string {
   const regionalContext = getRegionalContext(userCountry);
   const seasonInfo = getSeasonInfo(month, 45);
   const userCountryBriefing = getCountryBriefing(userCountry);
+  const respectBlock = buildRespectProtocol(userContext?.cultural, { country: userCountry, city: userCity });
 
   return `**CURRENT DATE & TIME:** ${currentDateTime} (UTC). Day: ${dayOfWeek}. Current month: ${month}. 
 **CURRENT SEASON (user's approximate):** ${seasonInfo}
