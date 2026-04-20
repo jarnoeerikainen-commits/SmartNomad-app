@@ -181,8 +181,18 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       setActiveSection('dashboard');
       setSidebarOpen(false);
     };
+    const openSupport = () => {
+      setBottomNavTab('home');
+      setActiveSection('help');
+      setSidebarOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     window.addEventListener('supernomad:home', goHome);
-    return () => window.removeEventListener('supernomad:home', goHome);
+    window.addEventListener('supernomad:open-support', openSupport as EventListener);
+    return () => {
+      window.removeEventListener('supernomad:home', goHome);
+      window.removeEventListener('supernomad:open-support', openSupport as EventListener);
+    };
   }, []);
 
   const handleDismissBanner = useCallback(() => {

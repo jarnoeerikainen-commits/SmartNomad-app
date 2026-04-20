@@ -25,6 +25,8 @@ import { inferConfidence, parseThinkingSteps } from '@/utils/trustInference';
 import { ConfidenceLevel } from '@/contexts/TrustContext';
 import { discoverFeaturesByIntent, parseNavigationSuggestions, getToolRoutingPrompt } from '@/services/IntentDiscoveryService';
 import { getIntegrationContextForAI } from '@/services/ConnectorIntegrationService';
+import { parseEscalation } from '@/utils/conciergeEscalation';
+import HumanSupportEscalation from '@/components/concierge/HumanSupportEscalation';
 
 
 interface Message {
@@ -33,6 +35,7 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
   confidence?: ConfidenceLevel;
+  escalation?: { reason: string } | null;
 }
 
 interface AITravelAssistantProps {
@@ -509,6 +512,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       const { cleanContent: cleanedFinal } = parseThinkingSteps(assistantContent);
       assistantContent = cleanedFinal;
 
+      // Parse human-support escalation marker [ESCALATE: reason]
+      const { cleanContent: cleanedEsc, escalation } = parseEscalation(assistantContent);
+      assistantContent = cleanedEsc;
+
       // Infer confidence level for the response
       const confidence = inferConfidence(assistantContent);
 
@@ -543,6 +550,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         for (let i = 1; i < chunks.length; i++) {
           const chunk = chunks[i];
           const delay = 600 + Math.min(chunk.length * 8, 1200); // 600ms-1800ms based on length
+          const isLast = i === chunks.length - 1;
 
           // Show typing indicator
           setIsTyping(true);
@@ -554,7 +562,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             content: chunk,
             isUser: false,
             timestamp: new Date(),
-            confidence
+            confidence,
+            escalation: isLast ? escalation : null,
           }]);
           setIsTyping(false);
 
@@ -566,6 +575,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
         }
       } else {
+        // Single chunk — attach escalation to the original message
+        if (escalation) {
+          setMessages(prev => prev.map(m =>
+            m.id === assistantId ? { ...m, escalation } : m
+          ));
+        }
         // Single chunk — speak normally
         if (assistantContent && voiceEnabled && !firstSentenceSpoken) {
           speak(assistantContent);
@@ -850,6 +865,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                             )}
                             {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           </div>
+                          {!message.isUser && message.escalation && (
+                            <HumanSupportEscalation reason={message.escalation.reason} />
+                          )}
                         </div>
                       </div>
                     );

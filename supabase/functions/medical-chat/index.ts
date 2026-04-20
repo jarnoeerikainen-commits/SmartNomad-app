@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+import { getModel } from "../_shared/modelRouter.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -163,9 +165,9 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-3-pro-preview',
+        model: getModel('intelligence'),
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: withTruthProtocol(systemPrompt) },
           ...messages
         ],
         stream: true,
