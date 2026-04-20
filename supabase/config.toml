@@ -65,3 +65,6 @@ verify_jwt = false
 
 [functions.community-orchestrator]
 verify_jwt = false
+
+[functions.trend-refresh]
+verify_jwt = false
