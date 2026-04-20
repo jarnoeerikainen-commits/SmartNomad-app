@@ -25,6 +25,8 @@ import { inferConfidence, parseThinkingSteps } from '@/utils/trustInference';
 import { ConfidenceLevel } from '@/contexts/TrustContext';
 import { discoverFeaturesByIntent, parseNavigationSuggestions, getToolRoutingPrompt } from '@/services/IntentDiscoveryService';
 import { getIntegrationContextForAI } from '@/services/ConnectorIntegrationService';
+import { parseEscalation } from '@/utils/conciergeEscalation';
+import HumanSupportEscalation from '@/components/concierge/HumanSupportEscalation';
 
 
 interface Message {
@@ -33,6 +35,7 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
   confidence?: ConfidenceLevel;
+  escalation?: { reason: string } | null;
 }
 
 interface AITravelAssistantProps {
@@ -508,6 +511,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       // Clean [STEP: ...] markers from final content
       const { cleanContent: cleanedFinal } = parseThinkingSteps(assistantContent);
       assistantContent = cleanedFinal;
+
+      // Parse human-support escalation marker [ESCALATE: reason]
+      const { cleanContent: cleanedEsc, escalation } = parseEscalation(assistantContent);
+      assistantContent = cleanedEsc;
 
       // Infer confidence level for the response
       const confidence = inferConfidence(assistantContent);
