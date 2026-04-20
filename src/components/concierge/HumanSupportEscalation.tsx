@@ -20,16 +20,16 @@ const HumanSupportEscalation: React.FC<HumanSupportEscalationProps> = ({ reason,
   };
 
   return (
-    <div className="mt-2 rounded-lg border border-amber-500/40 bg-amber-500/5 px-3 py-2.5 text-xs">
+    <div className="mt-2 rounded-lg border border-warning/40 bg-warning/5 px-3 py-2.5 text-xs">
       <div className="flex items-start gap-2">
-        <LifeBuoy className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+        <LifeBuoy className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-foreground mb-0.5">Not 100% sure — let's get a human</p>
           <p className="text-muted-foreground leading-snug mb-2">{reason}</p>
           <Button
             size="sm"
             variant="outline"
-            className="h-7 text-[11px] border-amber-500/50 hover:bg-amber-500/10"
+            className="h-7 text-[11px] border-warning/50 hover:bg-warning/10"
             onClick={handleClick}
           >
             Contact SuperNomad Support
