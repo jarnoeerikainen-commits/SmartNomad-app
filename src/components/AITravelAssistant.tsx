@@ -550,6 +550,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         for (let i = 1; i < chunks.length; i++) {
           const chunk = chunks[i];
           const delay = 600 + Math.min(chunk.length * 8, 1200); // 600ms-1800ms based on length
+          const isLast = i === chunks.length - 1;
 
           // Show typing indicator
           setIsTyping(true);
@@ -561,7 +562,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             content: chunk,
             isUser: false,
             timestamp: new Date(),
-            confidence
+            confidence,
+            escalation: isLast ? escalation : null,
           }]);
           setIsTyping(false);
 
