@@ -344,6 +344,15 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
       integrationContext: getIntegrationContextForAI(),
       cultural: enhancedProfile?.cultural || undefined,
+      lifestyle: (() => {
+        try {
+          // Lazy require to avoid edge cases on cold mount
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const { getLifestyleContextForAI } = require('@/services/LifestyleConnectorsService');
+          const ctx = getLifestyleContextForAI();
+          return ctx || undefined;
+        } catch { return undefined; }
+      })(),
       toolRoutingHint: (() => {
         const discovered = discoverFeaturesByIntent(userMessage, 3);
         if (discovered.length > 0) {
