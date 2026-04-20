@@ -23,14 +23,28 @@ const TREND_TOOL = {
       type: "object",
       properties: {
         sportsVocab: {
-          type: "object",
-          description: "Sport name (lowercase, English) -> array of 5–8 currently-used technical/slang terms.",
-          additionalProperties: { type: "array", items: { type: "string" } },
+          type: "array",
+          description: "One entry per sport with 5–8 currently-used technical/slang terms.",
+          items: {
+            type: "object",
+            properties: {
+              sport: { type: "string", description: "Lowercase sport name in English." },
+              terms: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 10 },
+            },
+            required: ["sport", "terms"],
+          },
         },
         youthSlang: {
-          type: "object",
-          description: "Language code (ISO 639-1) -> array of 8–15 currently-trending youth slang terms.",
-          additionalProperties: { type: "array", items: { type: "string" } },
+          type: "array",
+          description: "One entry per language code with 8–15 currently-trending youth slang terms.",
+          items: {
+            type: "object",
+            properties: {
+              language: { type: "string", description: "ISO 639-1 code (en, es, fr, de, it, pt, ja, ko, zh, ar, hi, ru, tr)." },
+              terms: { type: "array", items: { type: "string" }, minItems: 5, maxItems: 20 },
+            },
+            required: ["language", "terms"],
+          },
         },
         globalTrends: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 10 },
         lifestyleHabits: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 8 },
@@ -38,7 +52,6 @@ const TREND_TOOL = {
         sources: { type: "array", items: { type: "string" }, minItems: 1, maxItems: 8 },
       },
       required: ["sportsVocab", "youthSlang", "globalTrends", "lifestyleHabits", "cautions", "sources"],
-      additionalProperties: false,
     },
   },
 };
