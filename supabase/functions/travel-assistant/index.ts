@@ -1178,6 +1178,7 @@ function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
+    cultural: (c.cultural && typeof c.cultural === 'object') ? c.cultural : undefined,
   };
 }
 
