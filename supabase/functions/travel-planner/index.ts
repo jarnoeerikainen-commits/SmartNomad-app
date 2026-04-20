@@ -38,7 +38,7 @@ serve(async (req) => {
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
-    const respectBlock = buildRespectProtocol(userProfile?.cultural, destination ? { country: destination?.country, city: destination?.name } : undefined);
+    const respectBlock = buildRespectProtocol(userProfile?.cultural, destination ? { country: destination?.country, city: destination?.name } : undefined, userProfile?.lifestyle);
 
     const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
 
