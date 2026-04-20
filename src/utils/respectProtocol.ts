@@ -96,6 +96,11 @@ export function buildRespectProtocol(
     }
   }
 
+  if (lifestyleContext && lifestyleContext.trim()) {
+    lines.push('');
+    lines.push(lifestyleContext.trim());
+  }
+
   return lines.join('\n');
 }
 

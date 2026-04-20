@@ -32,7 +32,8 @@ const ALCOHOL_RESTRICTED = new Set([
 
 export function buildRespectProtocol(
   cultural: CulturalContext | undefined,
-  destination?: { country?: string; city?: string }
+  destination?: { country?: string; city?: string },
+  lifestyleContext?: string,
 ): string {
   const c = cultural || {};
   const lines: string[] = [];
