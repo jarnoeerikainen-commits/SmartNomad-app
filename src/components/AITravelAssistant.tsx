@@ -865,6 +865,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                             )}
                             {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           </div>
+                          {!message.isUser && message.escalation && (
+                            <HumanSupportEscalation reason={message.escalation.reason} />
+                          )}
                         </div>
                       </div>
                     );
