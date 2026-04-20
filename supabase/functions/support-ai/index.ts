@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -360,7 +361,10 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = `${SUPERNOMAD_KNOWLEDGE}${userContextSection}
+    const trendPack = await getTrendPack();
+    const trendSection = renderTrendPackForPrompt(trendPack, language || 'en');
+
+    const systemPrompt = `${SUPERNOMAD_KNOWLEDGE}${userContextSection}\n\n${trendSection}
 
 ═══════════════════════════════════════
 YOUR ROLE & PERSONALITY

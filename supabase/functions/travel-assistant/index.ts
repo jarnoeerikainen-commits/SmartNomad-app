@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./countryKnowledge.ts";
 import { pickModelForMessages } from "../_shared/modelRouter.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -1235,7 +1236,9 @@ serve(async (req) => {
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
     const baseSystemPrompt = buildSystemPrompt(currentDateTime, userContext);
-    const systemPrompt = withTruthProtocol(baseSystemPrompt);
+    const trendPack = await getTrendPack();
+    const trendSection = renderTrendPackForPrompt(trendPack, (body.language as string) || 'en');
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);
