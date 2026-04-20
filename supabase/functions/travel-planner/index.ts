@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
+import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_shared/schoolHolidays.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -226,6 +227,26 @@ ${userProfile ? `Traveler Profile: ${JSON.stringify(userProfile)}` : ''}
 
 Generate the full plan now.`;
 
+    // School holiday overlap — silent unless dates given.
+    let holidaySection = '';
+    try {
+      if (month && destination?.country) {
+        const monthIdx = ['january','february','march','april','may','june','july','august','september','october','november','december'].indexOf(String(month).toLowerCase());
+        if (monthIdx >= 0) {
+          const yr = new Date().getUTCFullYear();
+          const start = new Date(Date.UTC(yr, monthIdx, 1)).toISOString().slice(0, 10);
+          const end = new Date(Date.UTC(yr, monthIdx + 1, 0)).toISOString().slice(0, 10);
+          const cc = (destination as any)?.countryCode || (destination as any)?.country_code;
+          const holidayPack = await getSchoolHolidayPack();
+          holidaySection = renderRelevantHolidaysForPrompt(holidayPack, {
+            destinationCountryCode: typeof cc === 'string' ? cc : undefined,
+            travelStart: start,
+            travelEnd: end,
+          });
+        }
+      }
+    } catch (e) { console.error('school-holiday lookup failed', e); }
+
     console.log("Calling Lovable AI for full travel plan (streaming)");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -237,7 +258,7 @@ Generate the full plan now.`;
       body: JSON.stringify({
         model: getModel('intelligence'),
         messages: [
-          { role: "system", content: withTruthProtocol(systemPrompt) },
+          { role: "system", content: withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
           { role: "user", content: userMessage },
         ],
         stream: true,
