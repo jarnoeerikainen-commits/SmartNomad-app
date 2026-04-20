@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./countryKnowledge.ts";
+import { pickModelForMessages } from "../_shared/modelRouter.ts";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -1232,14 +1234,16 @@ serve(async (req) => {
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
-    const systemPrompt = buildSystemPrompt(currentDateTime, userContext);
+    const baseSystemPrompt = buildSystemPrompt(currentDateTime, userContext);
+    const systemPrompt = withTruthProtocol(baseSystemPrompt);
 
-    // Determine reasoning effort based on query complexity
-    const reasoningEffort = needsReasoning(messages);
-    console.log(`Calling Lovable AI (reasoning: ${reasoningEffort})`);
+    // Smart model routing — auto-picks the smartest model for this query
+    const route = pickModelForMessages(messages);
+    const reasoningEffort = route.reasoningEffort;
+    console.log(`Calling Lovable AI (model: ${route.model}, tier: ${route.tier}, reasoning: ${reasoningEffort})`);
 
     const requestBody: any = {
-      model: "google/gemini-3-flash-preview",
+      model: route.model,
       messages: [
         { role: "system", content: systemPrompt },
         ...messages,
@@ -1247,7 +1251,6 @@ serve(async (req) => {
       stream: true,
     };
 
-    // Add reasoning for complex queries
     if (reasoningEffort !== 'none') {
       requestBody.reasoning = { effort: reasoningEffort };
     }
@@ -1299,7 +1302,7 @@ serve(async (req) => {
         body: JSON.stringify({
           p_device_id: body.deviceId || 'unknown',
           p_function_name: 'travel-assistant',
-          p_model: 'gemini-3-flash',
+          p_model: route.model,
           p_input_tokens: Math.ceil(JSON.stringify(messages).length / 4),
           p_latency_ms: latencyMs,
           p_reasoning: reasoningEffort !== 'none' ? reasoningEffort : null,
