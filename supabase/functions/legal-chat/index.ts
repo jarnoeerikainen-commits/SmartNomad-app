@@ -92,7 +92,11 @@ serve(async (req) => {
 
     const em = emergencyLegal[country] || { police: '112', embassy_tip: 'Contact your embassy immediately' };
 
+    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city });
+
     const systemPrompt = `Current date/time: ${currentDateTime} UTC.
+
+${respectBlock}
 
 You are an **elite international legal crisis team** — top-tier lawyers specialized in travel emergencies, immigration, business law, criminal defense, and consumer protection across all jurisdictions.
 

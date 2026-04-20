@@ -91,7 +91,11 @@ serve(async (req) => {
 
     const em = emergencyNumbers[country] || { ambulance: '112', general: '112', poison: 'Contact local hospital' };
 
+    const respectBlock = buildRespectProtocol(userContext?.cultural, { country, city });
+
     const systemPrompt = `Current date/time: ${currentDateTime} UTC.
+
+${respectBlock}
 
 You are **Dr. Atlas**, an elite Travel Medicine AI — board-certified in Travel Medicine, Tropical Diseases, Emergency Medicine, and Geographic Pathology. You combine WHO/CDC knowledge with deep local healthcare expertise.
 
