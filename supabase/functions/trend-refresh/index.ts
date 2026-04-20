@@ -176,6 +176,16 @@ Rules:
       });
     }
 
+    // Convert array-of-pairs into the object shapes consumed by trendPack.ts
+    const sportsVocab: Record<string, string[]> = {};
+    for (const item of (payload.sportsVocab as Array<{ sport: string; terms: string[] }>) ?? []) {
+      if (item?.sport && Array.isArray(item.terms)) sportsVocab[item.sport.toLowerCase()] = item.terms.slice(0, 10);
+    }
+    const youthSlang: Record<string, string[]> = {};
+    for (const item of (payload.youthSlang as Array<{ language: string; terms: string[] }>) ?? []) {
+      if (item?.language && Array.isArray(item.terms)) youthSlang[item.language.toLowerCase()] = item.terms.slice(0, 20);
+    }
+
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 7 * 24 * 3600 * 1000);
     const pack = {
@@ -183,8 +193,8 @@ Rules:
       expiresAt: expiresAt.toISOString(),
       sourceModel: "google/gemini-2.5-pro",
       sources: payload.sources ?? [],
-      sportsVocab: payload.sportsVocab ?? {},
-      youthSlang: payload.youthSlang ?? {},
+      sportsVocab,
+      youthSlang,
       globalTrends: payload.globalTrends ?? [],
       lifestyleHabits: payload.lifestyleHabits ?? [],
       cautions: payload.cautions ?? [],
@@ -202,7 +212,7 @@ Rules:
       response_text: JSON.stringify(pack),
       model: "google/gemini-2.5-pro",
       expires_at: expiresAt.toISOString(),
-      metadata: { kind: "trend_pack", sports_count: Object.keys(pack.sportsVocab).length },
+      metadata: { kind: "trend_pack", sports_count: Object.keys(sportsVocab).length, languages: Object.keys(youthSlang).length },
     });
 
     if (insertErr) {
