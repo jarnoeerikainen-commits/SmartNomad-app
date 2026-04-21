@@ -27,9 +27,11 @@ type: feature
 **Respect Protocol still applies:** no tobacco; alcohol only if user opts in; cultural/destination awareness intact.
 
 **Use cases unlocked:**
-- Skill-matched partners (tennis UTR ±0.5, golf hcp ±3)
-- Tournament/league recommendations at user level
+- Skill-matched partners (tennis UTR ±0.5, golf hcp ±3, chess elo ±100, HYROX age-group time ±5%)
+- Tournament/league recommendations at user level (incl. triathlon 70.3/Ironman, HYROX Singles/Doubles/Pro/Relay, CrossFit Open, FIDE-rated chess)
 - Gear & equipment deals appropriate to skill
 - Concert match by Spotify top artists in destination city
 - Recovery-aware scheduling (rest day → spa instead of hard workout)
 - New product launches matched to sports profile
+
+**Sports recognized end-to-end (vocab, weather profile, profile chips, AI knowledge, match suggestions):** running, cycling, swimming, tennis, padel, golf, surfing, skiing, hiking, climbing, sailing, diving, yoga, football, basketball, **triathlon**, **HYROX**, **CrossFit**, **chess**, plus 80+ more covered by the weekly trend-pack refresh. Indoor sports (HYROX, CrossFit, chess, gym, pilates, boxing, martial-arts, dance) are excluded from outdoor weather penalty logic.
