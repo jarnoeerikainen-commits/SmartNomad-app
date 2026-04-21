@@ -116,7 +116,8 @@ const TravelWeatherReport: React.FC<TravelWeatherReportProps> = ({ userSports = 
     if (dailyForecast.some(d => d.condition === 'Snow')) alerts.push('🌨️ Snowfall expected. Check road conditions.');
 
     // Sport-specific alerts
-    const outdoorSports = userSports.filter(s => s !== 'gym' && s !== 'crossfit');
+    const INDOOR_SPORTS = new Set(['gym', 'crossfit', 'hyrox', 'chess', 'pilates', 'boxing', 'martial-arts', 'dance']);
+    const outdoorSports = userSports.filter(s => !INDOOR_SPORTS.has(s));
     if (outdoorSports.length > 0 && totalPrecip / dailyForecast.length > 40) {
       alerts.push(`🏅 Rain may affect your ${outdoorSports.slice(0, 2).join(' & ')} plans. Consider indoor alternatives.`);
     }
