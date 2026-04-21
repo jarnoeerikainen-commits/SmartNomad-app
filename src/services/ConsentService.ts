@@ -51,7 +51,7 @@ export const ConsentService = {
 
       const ua = typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 500) : null;
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('consent_ledger')
         .insert({
           user_id: user.id,
@@ -80,7 +80,7 @@ export const ConsentService = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return {};
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('consent_ledger')
       .select('purpose, granted, created_at, partner_id, expires_at')
       .eq('user_id', user.id)
@@ -108,7 +108,7 @@ export const ConsentService = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('consent_ledger')
       .select('id, purpose, granted, partner_id, consent_text_version, created_at, expires_at')
       .eq('user_id', user.id)
@@ -120,7 +120,7 @@ export const ConsentService = {
 
   /** Get partner queries that touched the current user's pseudonymous data. */
   async getMyDataAccessLog(limit = 50) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('data_access_requests')
       .select('id, partner_id, resource_type, fields_returned, purpose, legal_basis, created_at')
       .order('created_at', { ascending: false })

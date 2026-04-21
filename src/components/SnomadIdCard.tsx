@@ -75,7 +75,7 @@ const SnomadIdCard: React.FC = () => {
           when contacting support — it lets us help you without exposing personal details.
         </p>
         {!isAuthBacked && (
-          <p className="text-xs text-amber-600">
+          <p className="text-xs text-muted-foreground italic">
             Sign in to lock this ID to your account permanently and unlock the consent center.
           </p>
         )}
