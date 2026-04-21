@@ -1152,6 +1152,78 @@ export type Database = {
           },
         ]
       }
+      curated_venues: {
+        Row: {
+          address: string | null
+          category: string
+          city: string
+          country: string
+          country_code: string | null
+          discovered_at: string
+          id: string
+          last_verified_at: string
+          metadata: Json
+          name: string
+          neighborhood: string | null
+          price_band: string | null
+          quality_score: number
+          review_count: number
+          review_score: number
+          signature_offering: string | null
+          source_urls: Json
+          star_rating: number | null
+          status: string
+          tags: string[] | null
+          why_recommended: string | null
+        }
+        Insert: {
+          address?: string | null
+          category: string
+          city: string
+          country: string
+          country_code?: string | null
+          discovered_at?: string
+          id?: string
+          last_verified_at?: string
+          metadata?: Json
+          name: string
+          neighborhood?: string | null
+          price_band?: string | null
+          quality_score?: number
+          review_count?: number
+          review_score: number
+          signature_offering?: string | null
+          source_urls?: Json
+          star_rating?: number | null
+          status?: string
+          tags?: string[] | null
+          why_recommended?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string
+          city?: string
+          country?: string
+          country_code?: string | null
+          discovered_at?: string
+          id?: string
+          last_verified_at?: string
+          metadata?: Json
+          name?: string
+          neighborhood?: string | null
+          price_band?: string | null
+          quality_score?: number
+          review_count?: number
+          review_score?: number
+          signature_offering?: string | null
+          source_urls?: Json
+          star_rating?: number | null
+          status?: string
+          tags?: string[] | null
+          why_recommended?: string | null
+        }
+        Relationships: []
+      }
       data_access_requests: {
         Row: {
           consent_id: string | null
@@ -1681,6 +1753,48 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      venue_discovery_runs: {
+        Row: {
+          candidates_evaluated: number
+          cities_processed: number
+          duration_ms: number | null
+          errors: Json
+          finished_at: string | null
+          id: string
+          started_at: string
+          status: string
+          trigger_source: string
+          venues_added: number
+          venues_updated: number
+        }
+        Insert: {
+          candidates_evaluated?: number
+          cities_processed?: number
+          duration_ms?: number | null
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          trigger_source?: string
+          venues_added?: number
+          venues_updated?: number
+        }
+        Update: {
+          candidates_evaluated?: number
+          cities_processed?: number
+          duration_ms?: number | null
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          started_at?: string
+          status?: string
+          trigger_source?: string
+          venues_added?: number
+          venues_updated?: number
         }
         Relationships: []
       }
