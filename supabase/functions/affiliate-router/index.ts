@@ -210,10 +210,29 @@ Deno.serve(async (req) => {
       }
 
       // ─── Clear matured earnings (cron / manual) ────────────────
+      // Auto-runs daily at 02:15 UTC via pg_cron job 'affiliate-clear-matured-daily'
       case 'clear-matured': {
         const { data, error } = await svc.rpc('clear_matured_earnings');
         if (error) return json({ error: error.message }, 500);
         return json({ cleared: data });
+      }
+
+      // ─── Reverse commission on chargeback/refund (service-only) ─
+      // Called by payment webhooks (Stripe charge.dispute.created, etc.)
+      // Only reverses earnings still in 'pending' status (within 30-day hold).
+      case 'reverse-commission': {
+        const provided = req.headers.get('x-service-secret');
+        if (provided !== SERVICE) return json({ error: 'forbidden' }, 403);
+        if (!body.source_type || !body.source_id) {
+          return json({ error: 'source_type and source_id required' }, 400);
+        }
+        const { data, error } = await svc.rpc('reverse_affiliate_earnings_for_source', {
+          p_source_type: body.source_type,
+          p_source_id: body.source_id,
+          p_reason: body.reason || 'chargeback',
+        });
+        if (error) return json({ error: error.message }, 500);
+        return json(data);
       }
 
       // ─── Public program settings ───────────────────────────────

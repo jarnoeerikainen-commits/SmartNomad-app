@@ -1791,6 +1791,10 @@ export type Database = {
         Returns: Json
       }
       resolve_snomad_id: { Args: { p_snomad_id: string }; Returns: string }
+      reverse_affiliate_earnings_for_source: {
+        Args: { p_reason?: string; p_source_id: string; p_source_type: string }
+        Returns: Json
+      }
       revoke_trust_credential: {
         Args: { p_credential_id: string; p_reason?: string }
         Returns: boolean
