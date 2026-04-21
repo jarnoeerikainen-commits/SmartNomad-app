@@ -292,10 +292,11 @@ export async function verifyTapSignature(
   if (!sigB64Match) return false;
 
   try {
+    const sigBytes = b64decode(sigB64Match[1]);
     return await crypto.subtle.verify(
       { name: 'HMAC' },
       signingKey,
-      b64decode(sigB64Match[1]),
+      new Uint8Array(sigBytes).buffer as ArrayBuffer,
       new TextEncoder().encode(base),
     );
   } catch {
