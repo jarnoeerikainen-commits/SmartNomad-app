@@ -1283,6 +1283,51 @@ export type Database = {
         }
         Relationships: []
       }
+      oauth_connections: {
+        Row: {
+          access_token_expires_at: string | null
+          created_at: string
+          id: string
+          last_synced_at: string | null
+          lookback_days: number
+          provider: string
+          provider_email: string | null
+          refresh_token: string | null
+          scope: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token_expires_at?: string | null
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          lookback_days?: number
+          provider: string
+          provider_email?: string | null
+          refresh_token?: string | null
+          scope?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token_expires_at?: string | null
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          lookback_days?: number
+          provider?: string
+          provider_email?: string | null
+          refresh_token?: string | null
+          scope?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
