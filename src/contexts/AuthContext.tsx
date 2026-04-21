@@ -57,6 +57,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.warn('Migration bridge failed (non-critical):', e);
           }
         }
+
+        // Affiliate attribution: bind any pending referral click to this user
+        try {
+          const stored = JSON.parse(localStorage.getItem('sn_ref') || 'null');
+          if (stored?.click_id) {
+            const { AffiliateService } = await import('@/services/AffiliateService');
+            await AffiliateService.attributeIfPending();
+          }
+        } catch (e) {
+          console.warn('Affiliate attribution skipped:', e);
+        }
       }
     });
 

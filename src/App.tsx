@@ -24,6 +24,8 @@ const TranslationManager = lazy(() => import("./components/TranslationManager").
 const BusinessCentersPage = lazy(() => import("./components/BusinessCenters/BusinessCentersPage").then(m => ({ default: m.BusinessCentersPage })));
 const Auth = lazy(() => import("./pages/Auth"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const AffiliateDashboard = lazy(() => import("./pages/AffiliateDashboard"));
+const ReferralRedirect = lazy(() => import("./pages/ReferralRedirect"));
 
 // Show "Back to Website" pill on all routes EXCEPT the marketing landing
 const ConditionalBackButton = () => {
@@ -68,6 +70,8 @@ const App = () => {
                   <Route path="/terms" element={<TermsAndConditions />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/translation-manager" element={<TranslationManager />} />
+                  <Route path="/affiliate" element={<AffiliateDashboard />} />
+                  <Route path="/r/:code" element={<ReferralRedirect />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
