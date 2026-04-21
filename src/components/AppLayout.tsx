@@ -108,6 +108,8 @@ const TaxLawVerifier = lazy(() => import('./TaxLawVerifier'));
 const DocumentAutoFill = lazy(() => import('./DocumentAutoFill'));
 const TrustPassDashboard = lazy(() => import('./TrustPassDashboard'));
 const GPSDayMonitor = lazy(() => import('./GPSDayMonitor'));
+const SovereignAccessCenter = lazy(() => import('./permissions/SovereignAccessCenter'));
+const TravelInboxImport = lazy(() => import('./permissions/TravelInboxImport'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -193,9 +195,20 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     };
     window.addEventListener('supernomad:home', goHome);
     window.addEventListener('supernomad:open-support', openSupport as EventListener);
+    const handleNavigate = (e: Event) => {
+      const detail = (e as CustomEvent<{ section?: string }>).detail;
+      if (detail?.section) {
+        setActiveSection(detail.section);
+        setBottomNavTab('home');
+        setSidebarOpen(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('supernomad:navigate', handleNavigate as EventListener);
     return () => {
       window.removeEventListener('supernomad:home', goHome);
       window.removeEventListener('supernomad:open-support', openSupport as EventListener);
+      window.removeEventListener('supernomad:navigate', handleNavigate as EventListener);
     };
   }, []);
 
@@ -442,6 +455,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'tax-law-verifier': return <TaxLawVerifier />;
       case 'document-auto-fill': return <DocumentAutoFill />;
       case 'trust-pass': return <TrustPassDashboard />;
+      case 'sovereign-access': return <SovereignAccessCenter />;
+      case 'travel-inbox': return <TravelInboxImport />;
       case 'gps-monitor':
         return (
           <GPSDayMonitor
