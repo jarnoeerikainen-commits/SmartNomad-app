@@ -14,6 +14,316 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_accounts: {
+        Row: {
+          cleared_balance: number
+          created_at: string
+          id: string
+          metadata: Json
+          paid_lifetime: number
+          parent_affiliate_id: string | null
+          parent_user_id: string | null
+          payout_address: string | null
+          payout_currency: string
+          payout_method: string
+          pending_balance: number
+          referral_code: string
+          reversed_lifetime: number
+          status: string
+          tax_form_submitted: boolean
+          tax_form_type: string | null
+          terms_accepted_at: string | null
+          terms_accepted_version: string | null
+          tier: string
+          total_clicks: number
+          total_paying_referrals: number
+          total_signups: number
+          updated_at: string
+          user_id: string
+          wallet_credit_balance: number
+        }
+        Insert: {
+          cleared_balance?: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          paid_lifetime?: number
+          parent_affiliate_id?: string | null
+          parent_user_id?: string | null
+          payout_address?: string | null
+          payout_currency?: string
+          payout_method?: string
+          pending_balance?: number
+          referral_code: string
+          reversed_lifetime?: number
+          status?: string
+          tax_form_submitted?: boolean
+          tax_form_type?: string | null
+          terms_accepted_at?: string | null
+          terms_accepted_version?: string | null
+          tier?: string
+          total_clicks?: number
+          total_paying_referrals?: number
+          total_signups?: number
+          updated_at?: string
+          user_id: string
+          wallet_credit_balance?: number
+        }
+        Update: {
+          cleared_balance?: number
+          created_at?: string
+          id?: string
+          metadata?: Json
+          paid_lifetime?: number
+          parent_affiliate_id?: string | null
+          parent_user_id?: string | null
+          payout_address?: string | null
+          payout_currency?: string
+          payout_method?: string
+          pending_balance?: number
+          referral_code?: string
+          reversed_lifetime?: number
+          status?: string
+          tax_form_submitted?: boolean
+          tax_form_type?: string | null
+          terms_accepted_at?: string | null
+          terms_accepted_version?: string | null
+          tier?: string
+          total_clicks?: number
+          total_paying_referrals?: number
+          total_signups?: number
+          updated_at?: string
+          user_id?: string
+          wallet_credit_balance?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_accounts_parent_affiliate_id_fkey"
+            columns: ["parent_affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_earnings: {
+        Row: {
+          affiliate_id: string
+          affiliate_user_id: string
+          base_amount: number
+          cleared_at: string | null
+          commission_amount: number
+          commission_rate: number
+          created_at: string
+          currency: string
+          description: string | null
+          hold_until: string
+          id: string
+          level: number
+          metadata: Json
+          paid_at: string | null
+          payout_id: string | null
+          referral_id: string | null
+          referred_user_id: string
+          reversal_reason: string | null
+          reversed_at: string | null
+          source_id: string | null
+          source_type: string
+          status: string
+          wallet_credit_amount: number
+          withdrawable_amount: number
+        }
+        Insert: {
+          affiliate_id: string
+          affiliate_user_id: string
+          base_amount: number
+          cleared_at?: string | null
+          commission_amount: number
+          commission_rate: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          hold_until?: string
+          id?: string
+          level: number
+          metadata?: Json
+          paid_at?: string | null
+          payout_id?: string | null
+          referral_id?: string | null
+          referred_user_id: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          source_id?: string | null
+          source_type: string
+          status?: string
+          wallet_credit_amount: number
+          withdrawable_amount: number
+        }
+        Update: {
+          affiliate_id?: string
+          affiliate_user_id?: string
+          base_amount?: number
+          cleared_at?: string | null
+          commission_amount?: number
+          commission_rate?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          hold_until?: string
+          id?: string
+          level?: number
+          metadata?: Json
+          paid_at?: string | null
+          payout_id?: string | null
+          referral_id?: string | null
+          referred_user_id?: string
+          reversal_reason?: string | null
+          reversed_at?: string | null
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          wallet_credit_amount?: number
+          withdrawable_amount?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_earnings_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_earnings_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_payouts: {
+        Row: {
+          affiliate_id: string
+          affiliate_user_id: string
+          amount: number
+          completed_at: string | null
+          currency: string
+          earnings_count: number
+          external_tx_hash: string | null
+          external_tx_id: string | null
+          failure_reason: string | null
+          fee_amount: number
+          id: string
+          metadata: Json
+          net_amount: number
+          payout_address: string | null
+          payout_method: string
+          processed_at: string | null
+          requested_at: string
+          status: string
+        }
+        Insert: {
+          affiliate_id: string
+          affiliate_user_id: string
+          amount: number
+          completed_at?: string | null
+          currency?: string
+          earnings_count?: number
+          external_tx_hash?: string | null
+          external_tx_id?: string | null
+          failure_reason?: string | null
+          fee_amount?: number
+          id?: string
+          metadata?: Json
+          net_amount: number
+          payout_address?: string | null
+          payout_method: string
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+        }
+        Update: {
+          affiliate_id?: string
+          affiliate_user_id?: string
+          amount?: number
+          completed_at?: string | null
+          currency?: string
+          earnings_count?: number
+          external_tx_hash?: string | null
+          external_tx_id?: string | null
+          failure_reason?: string | null
+          fee_amount?: number
+          id?: string
+          metadata?: Json
+          net_amount?: number
+          payout_address?: string | null
+          payout_method?: string
+          processed_at?: string | null
+          requested_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_payouts_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_program_settings: {
+        Row: {
+          cookie_window_days: number
+          hold_days: number
+          id: number
+          is_active: boolean
+          l1_commission_rate: number
+          l2_commission_rate: number
+          max_levels: number
+          min_payout_usd: number
+          recurring_months: number
+          terms_url: string | null
+          terms_version: string
+          updated_at: string
+          wallet_credit_split: number
+          withdrawable_split: number
+        }
+        Insert: {
+          cookie_window_days?: number
+          hold_days?: number
+          id?: number
+          is_active?: boolean
+          l1_commission_rate?: number
+          l2_commission_rate?: number
+          max_levels?: number
+          min_payout_usd?: number
+          recurring_months?: number
+          terms_url?: string | null
+          terms_version?: string
+          updated_at?: string
+          wallet_credit_split?: number
+          withdrawable_split?: number
+        }
+        Update: {
+          cookie_window_days?: number
+          hold_days?: number
+          id?: number
+          is_active?: boolean
+          l1_commission_rate?: number
+          l2_commission_rate?: number
+          max_levels?: number
+          min_payout_usd?: number
+          recurring_months?: number
+          terms_url?: string | null
+          terms_version?: string
+          updated_at?: string
+          wallet_credit_split?: number
+          withdrawable_split?: number
+        }
+        Relationships: []
+      }
       agentic_guardrails: {
         Row: {
           allowed_categories: string[]
@@ -1009,6 +1319,140 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_clicks: {
+        Row: {
+          affiliate_id: string
+          click_id: string
+          converted: boolean
+          converted_at: string | null
+          converted_user_id: string | null
+          country_code: string | null
+          created_at: string
+          expires_at: string
+          fingerprint: string | null
+          id: string
+          ip_address: string | null
+          landing_path: string | null
+          referer_url: string | null
+          referral_code: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          affiliate_id: string
+          click_id: string
+          converted?: boolean
+          converted_at?: string | null
+          converted_user_id?: string | null
+          country_code?: string | null
+          created_at?: string
+          expires_at?: string
+          fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          landing_path?: string | null
+          referer_url?: string | null
+          referral_code: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          affiliate_id?: string
+          click_id?: string
+          converted?: boolean
+          converted_at?: string | null
+          converted_user_id?: string | null
+          country_code?: string | null
+          created_at?: string
+          expires_at?: string
+          fingerprint?: string | null
+          id?: string
+          ip_address?: string | null
+          landing_path?: string | null
+          referer_url?: string | null
+          referral_code?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_clicks_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          affiliate_id: string
+          affiliate_user_id: string
+          click_id: string | null
+          created_at: string
+          expires_at: string
+          first_payment_at: string | null
+          id: string
+          level: number
+          metadata: Json
+          referred_user_id: string
+          signup_at: string
+          source_referral_id: string | null
+          status: string
+        }
+        Insert: {
+          affiliate_id: string
+          affiliate_user_id: string
+          click_id?: string | null
+          created_at?: string
+          expires_at?: string
+          first_payment_at?: string | null
+          id?: string
+          level: number
+          metadata?: Json
+          referred_user_id: string
+          signup_at?: string
+          source_referral_id?: string | null
+          status?: string
+        }
+        Update: {
+          affiliate_id?: string
+          affiliate_user_id?: string
+          click_id?: string | null
+          created_at?: string
+          expires_at?: string
+          first_payment_at?: string | null
+          id?: string
+          level?: number
+          metadata?: Json
+          referred_user_id?: string
+          signup_at?: string
+          source_referral_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_source_referral_id_fkey"
+            columns: ["source_referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       snomad_profiles: {
         Row: {
           completeness_score: number | null
@@ -1225,11 +1669,27 @@ export type Database = {
       }
     }
     Functions: {
+      attribute_referral: {
+        Args: { p_click_id: string; p_referred_user_id: string }
+        Returns: Json
+      }
       check_data_access: {
         Args: { row_device_id: string; row_user_id: string }
         Returns: boolean
       }
       cleanup_expired_cache: { Args: never; Returns: number }
+      clear_matured_earnings: { Args: never; Returns: number }
+      credit_commission: {
+        Args: {
+          p_base_amount: number
+          p_currency: string
+          p_description?: string
+          p_referred_user_id: string
+          p_source_id: string
+          p_source_type: string
+        }
+        Returns: Json
+      }
       evaluate_agentic_guardrail: {
         Args: {
           p_amount: number
@@ -1242,6 +1702,42 @@ export type Database = {
       }
       generate_snomad_id: { Args: never; Returns: string }
       get_my_snomad_id: { Args: never; Returns: string }
+      get_or_create_affiliate_account: {
+        Args: { p_user_id: string }
+        Returns: {
+          cleared_balance: number
+          created_at: string
+          id: string
+          metadata: Json
+          paid_lifetime: number
+          parent_affiliate_id: string | null
+          parent_user_id: string | null
+          payout_address: string | null
+          payout_currency: string
+          payout_method: string
+          pending_balance: number
+          referral_code: string
+          reversed_lifetime: number
+          status: string
+          tax_form_submitted: boolean
+          tax_form_type: string | null
+          terms_accepted_at: string | null
+          terms_accepted_version: string | null
+          tier: string
+          total_clicks: number
+          total_paying_referrals: number
+          total_signups: number
+          updated_at: string
+          user_id: string
+          wallet_credit_balance: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "affiliate_accounts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_request_device_id: { Args: never; Returns: string }
       has_active_consent: {
         Args: { p_partner_id?: string; p_purpose: string; p_user_id: string }
@@ -1272,6 +1768,26 @@ export type Database = {
       }
       migrate_device_to_user: {
         Args: { p_device_id: string; p_user_id: string }
+        Returns: Json
+      }
+      record_referral_click: {
+        Args: {
+          p_click_id: string
+          p_country?: string
+          p_fingerprint?: string
+          p_ip?: string
+          p_landing?: string
+          p_referer?: string
+          p_referral_code: string
+          p_user_agent?: string
+          p_utm_campaign?: string
+          p_utm_medium?: string
+          p_utm_source?: string
+        }
+        Returns: string
+      }
+      request_affiliate_payout: {
+        Args: { p_address?: string; p_amount: number; p_method: string }
         Returns: Json
       }
       resolve_snomad_id: { Args: { p_snomad_id: string }; Returns: string }
