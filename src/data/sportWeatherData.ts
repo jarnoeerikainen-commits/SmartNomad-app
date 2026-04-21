@@ -216,6 +216,58 @@ export const SPORT_WEATHER_PROFILES: SportWeatherProfile[] = [
     bestTimeOfDay: ['morning', 'afternoon', 'evening'],
     seasonalNotes: { summer: 'Courts may be hot', winter: 'Indoor gyms recommended' },
   },
+  {
+    sport: 'triathlon',
+    label: 'Triathlon',
+    emoji: '🏊‍♂️',
+    isOutdoor: true,
+    idealConditions: {
+      tempMin: 12, tempMax: 28, maxWindSpeed: 25, maxPrecipitation: 15,
+      minVisibility: 5, maxUVIndex: 8, idealHumidityRange: [40, 75],
+    },
+    dangerConditions: ['Thunderstorm', 'Snow', 'Fog'],
+    bestTimeOfDay: ['morning'],
+    seasonalNotes: { summer: 'Watch open-water temp & jellyfish reports', winter: 'Indoor brick sessions recommended' },
+  },
+  {
+    sport: 'hyrox',
+    label: 'HYROX',
+    emoji: '🔥',
+    isOutdoor: false,
+    idealConditions: {
+      tempMin: 14, tempMax: 26, maxWindSpeed: 100, maxPrecipitation: 100,
+      minVisibility: 0, maxUVIndex: 11, idealHumidityRange: [30, 65],
+    },
+    dangerConditions: [],
+    bestTimeOfDay: ['any'],
+    seasonalNotes: { summer: 'Race venue AC matters — hydrate hard', winter: 'Peak indoor race season' },
+  },
+  {
+    sport: 'crossfit',
+    label: 'CrossFit',
+    emoji: '🏋️',
+    isOutdoor: false,
+    idealConditions: {
+      tempMin: 14, tempMax: 28, maxWindSpeed: 100, maxPrecipitation: 100,
+      minVisibility: 0, maxUVIndex: 11, idealHumidityRange: [30, 65],
+    },
+    dangerConditions: [],
+    bestTimeOfDay: ['any'],
+    seasonalNotes: { summer: 'Outdoor WODs ok early/late', winter: 'Box-based all season' },
+  },
+  {
+    sport: 'chess',
+    label: 'Chess',
+    emoji: '♟️',
+    isOutdoor: false,
+    idealConditions: {
+      tempMin: 10, tempMax: 30, maxWindSpeed: 100, maxPrecipitation: 100,
+      minVisibility: 0, maxUVIndex: 11, idealHumidityRange: [20, 80],
+    },
+    dangerConditions: [],
+    bestTimeOfDay: ['any'],
+    seasonalNotes: { summer: 'Park play possible — bring clock & shade', winter: 'Club & online season peaks' },
+  },
 ];
 
 export type WeatherSeverity = 'extreme' | 'severe' | 'moderate' | 'advisory';
@@ -235,7 +287,7 @@ export const SEVERE_WEATHER_TYPES: Record<string, SevereWeatherEvent> = {
     severity: 'severe',
     headline: '🌧️ Heavy Rain Warning',
     description: 'Significant rainfall expected. Outdoor activities may be dangerous.',
-    affectedSports: ['running', 'cycling', 'tennis', 'padel', 'golf', 'hiking', 'climbing', 'yoga', 'basketball'],
+    affectedSports: ['running', 'cycling', 'tennis', 'padel', 'golf', 'hiking', 'climbing', 'yoga', 'basketball', 'triathlon'],
     safetyTips: ['Move activities indoors', 'Avoid flood-prone areas', 'Carry waterproof gear'],
   },
   'strong-wind': {
@@ -259,7 +311,7 @@ export const SEVERE_WEATHER_TYPES: Record<string, SevereWeatherEvent> = {
     severity: 'severe',
     headline: '🔥 Extreme Heat Warning',
     description: 'Dangerously high temperatures. Heat stroke risk for outdoor activity.',
-    affectedSports: ['running', 'cycling', 'tennis', 'golf', 'hiking', 'football', 'basketball', 'yoga'],
+    affectedSports: ['running', 'cycling', 'tennis', 'golf', 'hiking', 'football', 'basketball', 'yoga', 'triathlon'],
     safetyTips: ['Exercise only in early morning or late evening', 'Hydrate every 15 minutes', 'Wear light, breathable clothing'],
   },
   'thunderstorm': {
@@ -267,7 +319,7 @@ export const SEVERE_WEATHER_TYPES: Record<string, SevereWeatherEvent> = {
     severity: 'extreme',
     headline: '⛈️ Thunderstorm Warning',
     description: 'Lightning, heavy rain and potential hail. All outdoor activities unsafe.',
-    affectedSports: ['running', 'cycling', 'swimming', 'tennis', 'padel', 'golf', 'surfing', 'skiing', 'hiking', 'climbing', 'sailing', 'diving', 'yoga', 'football', 'basketball'],
+    affectedSports: ['running', 'cycling', 'swimming', 'tennis', 'padel', 'golf', 'surfing', 'skiing', 'hiking', 'climbing', 'sailing', 'diving', 'yoga', 'football', 'basketball', 'triathlon'],
     safetyTips: ['Seek shelter immediately', 'Avoid open fields and water', 'Wait 30 min after last thunder'],
   },
   'fog': {

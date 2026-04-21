@@ -1055,7 +1055,7 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
               <div className="space-y-3">
                 <Label className="font-semibold">Sports You Play</Label>
                 <ChipSelector
-                  options={['tennis', 'padel', 'golf', 'swimming', 'running', 'cycling', 'yoga', 'pilates', 'boxing', 'surfing', 'skiing', 'snowboarding', 'hiking', 'climbing', 'martial-arts', 'basketball', 'football', 'volleyball', 'sailing', 'diving', 'gym', 'crossfit', 'dance']}
+                  options={['tennis', 'padel', 'golf', 'swimming', 'running', 'cycling', 'triathlon', 'hyrox', 'crossfit', 'chess', 'yoga', 'pilates', 'boxing', 'surfing', 'skiing', 'snowboarding', 'hiking', 'climbing', 'martial-arts', 'basketball', 'football', 'volleyball', 'sailing', 'diving', 'gym', 'dance']}
                   selected={getNested('personal.sports.active', [])}
                   onChange={v => updateNested('personal.sports.active', v)}
                   columns={4}

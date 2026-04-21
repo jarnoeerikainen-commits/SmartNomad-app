@@ -58,7 +58,7 @@ const TREND_TOOL = {
 
 const SPORTS = [
   "football", "basketball", "tennis", "golf", "f1", "cycling", "running", "surfing",
-  "skiing", "snowboarding", "padel", "pickleball", "crossfit", "yoga", "pilates",
+  "skiing", "snowboarding", "padel", "pickleball", "crossfit", "hyrox", "yoga", "pilates",
   "esports", "boxing", "mma", "bjj", "chess", "sailing", "triathlon", "swimming",
   "climbing", "rugby", "cricket", "baseball", "ice hockey", "field hockey", "volleyball",
   "table tennis", "badminton", "squash", "rowing", "kayaking", "skateboarding", "bmx",
