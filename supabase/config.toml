@@ -74,3 +74,9 @@ verify_jwt = false
 
 [functions.partner-data-query]
 verify_jwt = false
+
+[functions.walt-id-verifier]
+verify_jwt = false
+
+[functions.trust-pass-verify]
+verify_jwt = false

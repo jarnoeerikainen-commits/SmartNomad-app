@@ -834,6 +834,8 @@ export type Database = {
           issued_at: string
           issuer: string
           jwt: string
+          revocation_reason: string | null
+          revoked_at: string | null
           status: string
           subject: Json
           tier: string
@@ -851,6 +853,8 @@ export type Database = {
           issued_at?: string
           issuer: string
           jwt: string
+          revocation_reason?: string | null
+          revoked_at?: string | null
           status?: string
           subject?: Json
           tier: string
@@ -868,6 +872,8 @@ export type Database = {
           issued_at?: string
           issuer?: string
           jwt?: string
+          revocation_reason?: string | null
+          revoked_at?: string | null
           status?: string
           subject?: Json
           tier?: string
@@ -898,6 +904,18 @@ export type Database = {
       }
     }
     Views: {
+      v_active_trust_credentials: {
+        Row: {
+          credential_type: string | null
+          expires_at: string | null
+          issued_at: string | null
+          issuer: string | null
+          snomad_id: string | null
+          status: string | null
+          tier: string | null
+        }
+        Relationships: []
+      }
       v_partner_profile_signals: {
         Row: {
           age_bracket: string | null
@@ -954,6 +972,10 @@ export type Database = {
         Returns: Json
       }
       resolve_snomad_id: { Args: { p_snomad_id: string }; Returns: string }
+      revoke_trust_credential: {
+        Args: { p_credential_id: string; p_reason?: string }
+        Returns: boolean
+      }
       search_memories: {
         Args: {
           p_category?: string
@@ -1024,6 +1046,14 @@ export type Database = {
         }[]
       }
       user_owns_row: { Args: { row_user_id: string }; Returns: boolean }
+      verify_trust_tier: {
+        Args: {
+          p_partner_id: string
+          p_required_tier: string
+          p_snomad_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "premium" | "user"
