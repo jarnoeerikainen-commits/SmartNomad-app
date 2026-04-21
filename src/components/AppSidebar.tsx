@@ -111,6 +111,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe2 },
         { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, badge: 'WHO', variant: 'secondary' as const },
         { id: 'etias', label: 'ETIAS 2026', icon: Shield, badge: 'EU', variant: 'secondary' as const },
+        { id: 'ees', label: 'EES Border Center', icon: Shield, badge: 'LIVE', variant: 'default' as const },
         { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
         { id: 'gov-apps', label: 'Government Apps', icon: Building },
         { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign },

@@ -8,6 +8,7 @@ import { DashboardFeatureDiscovery } from './dashboard/DashboardFeatureDiscovery
 import DashboardQuickStats from './DashboardQuickStats';
 import ThreatDashboard from './ThreatIntelligence/ThreatDashboard';
 import AccidentalExpatDetector from './AccidentalExpatDetector';
+import SchengenEESAlert from './dashboard/SchengenEESAlert';
 import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedDashboardProps {
