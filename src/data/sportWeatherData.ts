@@ -204,7 +204,19 @@ export const SPORT_WEATHER_PROFILES: SportWeatherProfile[] = [
     seasonalNotes: { summer: 'Hydrate well', winter: 'Warm up thoroughly' },
   },
   {
-    sport: 'triathlon',
+    sport: 'basketball',
+    label: 'Basketball (Outdoor)',
+    emoji: '🏀',
+    isOutdoor: true,
+    idealConditions: {
+      tempMin: 10, tempMax: 30, maxWindSpeed: 20, maxPrecipitation: 5,
+      minVisibility: 5, maxUVIndex: 8, idealHumidityRange: [30, 65],
+    },
+    dangerConditions: ['Rain', 'Thunderstorm', 'Snow'],
+    bestTimeOfDay: ['morning', 'afternoon', 'evening'],
+    seasonalNotes: { summer: 'Courts may be hot', winter: 'Indoor gyms recommended' },
+  },
+  {
     label: 'Triathlon',
     emoji: '🏊‍♂️',
     isOutdoor: true,
