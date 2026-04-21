@@ -8,8 +8,8 @@
 // + provider keys). All four protocols share one unified surface.
 // ═══════════════════════════════════════════════════════════
 
-import { encode as b64encode, decode as b64decode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
-import { encode as b64urlEncode } from "https://deno.land/std@0.224.0/encoding/base64url.ts";
+import { encodeBase64 as b64encode, decodeBase64 as b64decode } from "https://deno.land/std@0.224.0/encoding/base64.ts";
+import { encodeBase64Url as b64urlEncode } from "https://deno.land/std@0.224.0/encoding/base64url.ts";
 
 export type Protocol = 'x402' | 'mpp' | 'visa-tap' | 'stripe-issuing' | 'mastercard-cloud';
 export type Category =
@@ -50,7 +50,7 @@ export function selectProtocol(req: PaymentRequest): QuoteResult {
   }
 
   // Mid-range API/SaaS payments ($1–$50) → MPP (multi-rail, fiat or crypto)
-  if (req.amount <= 50 && (req.category === 'subscription' || req.category === 'api-call')) {
+  if (req.amount <= 50 && req.category === 'subscription') {
     return buildQuote('mpp', req);
   }
 
