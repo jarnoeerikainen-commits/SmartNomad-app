@@ -106,6 +106,7 @@ const VentureTravelist = lazy(() => import('./VentureTravelist'));
 const TaxLawVerifier = lazy(() => import('./TaxLawVerifier'));
 const DocumentAutoFill = lazy(() => import('./DocumentAutoFill'));
 const TrustPassDashboard = lazy(() => import('./TrustPassDashboard'));
+const GPSDayMonitor = lazy(() => import('./GPSDayMonitor'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -129,6 +130,7 @@ interface AppLayoutProps {
   onUpdateCountryLimit: (countryId: string, newLimit: number) => void;
   onResetCountry: (countryId: string) => void;
   onToggleCountDays: (countryId: string) => void;
+  onIncrementCountryDay?: (countryId: string) => void;
   subscription: Subscription;
   detectedLocation: LocationData | null;
   userProfile: any;
@@ -144,6 +146,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onUpdateCountryLimit,
   onResetCountry,
   onToggleCountDays,
+  onIncrementCountryDay,
   subscription,
   detectedLocation,
   userProfile,
@@ -437,6 +440,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'tax-law-verifier': return <TaxLawVerifier />;
       case 'document-auto-fill': return <DocumentAutoFill />;
       case 'trust-pass': return <TrustPassDashboard />;
+      case 'gps-monitor':
+        return (
+          <GPSDayMonitor
+            countries={countries}
+            onAddCountry={onAddCountry}
+            onUpdateCountryLimit={onUpdateCountryLimit}
+            onIncrementDay={onIncrementCountryDay}
+          />
+        );
       default:
         return (
           <div className="flex items-center justify-center h-64">

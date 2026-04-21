@@ -43,6 +43,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   // TAX & COMPLIANCE
   { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
+  { id: 'gps-monitor', label: 'GPS Day Monitor', icon: MapPin, category: 'tax', badge: 'GPS', badgeVariant: 'default', description: 'Auto-log days in each country via GPS with cap warnings', defaultVisible: true, defaultPinned: true, trustLevel: 'advisory' },
   { id: 'visas', label: 'Visa Manager', icon: Plane, category: 'tax', description: 'Manage visas & applications', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'visa-immigration', label: 'Visa / Immigration', icon: Plane, category: 'tax', badge: 'NEW', badgeVariant: 'secondary', description: 'Visa services, government portals & passport offices', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe, category: 'tax', description: 'Visa application assistance services', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
