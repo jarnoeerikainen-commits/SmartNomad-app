@@ -267,7 +267,7 @@ Deno.serve(async (req) => {
 
   // Allow `?cities=X&categories=Y` overrides for testing
   const url = new URL(req.url);
-  const limitParam = parseInt(url.searchParams.get("limit") || "10");
+  const limitParam = parseInt(url.searchParams.get("limit") || "1");
   const dryRun = url.searchParams.get("dry") === "1";
 
   // Default: 1 city + a few categories per invocation, so a single HTTP call
