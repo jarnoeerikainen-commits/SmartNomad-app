@@ -4,6 +4,7 @@ import { pickModelForMessages } from "../_shared/modelRouter.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt, renderGlobalAwarenessForPrompt } from "../_shared/schoolHolidays.ts";
+import { getCuratedVenuesForCity, renderVenuesForPrompt } from "../_shared/curatedVenues.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -1251,7 +1252,12 @@ serve(async (req) => {
       ? renderRelevantHolidaysForPrompt(holidayPack, { destinationCountryCode: destCC, originCountryCode: originCC, travelStart: tripStart, travelEnd: tripEnd })
       : renderGlobalAwarenessForPrompt(holidayPack);
 
-    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}`);
+    // Silent curated venue knowledge (concierge-only — never user-visible list)
+    const venueCity = ctx.currentCity || ctx.destinationCity || ctx.city;
+    const venueRows = await getCuratedVenuesForCity(typeof venueCity === 'string' ? venueCity : undefined);
+    const venueSection = renderVenuesForPrompt(venueRows, typeof venueCity === 'string' ? venueCity : undefined);
+
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);
