@@ -182,16 +182,18 @@ Deno.serve(async (req) => {
       }
 
       // ─── Credit commission (service-role, called by payments) ──
-      // base_amount = the COMPANY's net earnings on this transaction
-      // (subscription fee, fixed margin, or commission earned).
-      // L1 affiliate gets 25% of base_amount, L2 gets 5% of base_amount.
+      // base_amount = GROSS payment received from the user (e.g. $4.99 sub).
+      // The Sovereign Payout Engine deducts:
+      //   • Payment fees: 3% + $0.30 (Stripe/Visa avg)
+      //   • AI operational cost: $0.50 fixed
+      // L1 affiliate gets 10% of the resulting NET, L2 gets 5% of NET.
       case 'credit-commission': {
         const provided = req.headers.get('x-service-secret');
         if (provided !== SERVICE) return json({ error: 'forbidden' }, 403);
 
         const baseAmount = Number(body.base_amount);
         if (!Number.isFinite(baseAmount) || baseAmount <= 0) {
-          return json({ error: 'invalid base_amount (must be company net earnings > 0)' }, 400);
+          return json({ error: 'invalid base_amount (must be gross payment > 0)' }, 400);
         }
         if (!body.referred_user_id || !body.source_type) {
           return json({ error: 'referred_user_id and source_type required' }, 400);
