@@ -14,6 +14,299 @@ export type Database = {
   }
   public: {
     Tables: {
+      agentic_guardrails: {
+        Row: {
+          allowed_categories: string[]
+          allowed_protocols: string[]
+          approval_threshold: number
+          blocked_categories: string[]
+          created_at: string
+          currency: string
+          description: string | null
+          device_id: string
+          id: string
+          is_active: boolean
+          max_daily: number
+          max_per_transaction: number
+          max_weekly: number
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allowed_categories?: string[]
+          allowed_protocols?: string[]
+          approval_threshold?: number
+          blocked_categories?: string[]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          device_id: string
+          id?: string
+          is_active?: boolean
+          max_daily?: number
+          max_per_transaction?: number
+          max_weekly?: number
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allowed_categories?: string[]
+          allowed_protocols?: string[]
+          approval_threshold?: number
+          blocked_categories?: string[]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          device_id?: string
+          id?: string
+          is_active?: boolean
+          max_daily?: number
+          max_per_transaction?: number
+          max_weekly?: number
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      agentic_payment_intents: {
+        Row: {
+          ai_initiated: boolean
+          amount: number
+          authorized_at: string | null
+          category: string
+          completed_at: string | null
+          created_at: string
+          currency: string
+          description: string
+          device_id: string
+          expires_at: string
+          failure_reason: string | null
+          guardrail_id: string | null
+          id: string
+          intent_id: string
+          merchant: string | null
+          merchant_url: string | null
+          protocol: string
+          protocol_payload: Json
+          receipt: Json | null
+          status: string
+          trust_score: number | null
+          user_approved: boolean
+          user_id: string
+          virtual_card_id: string | null
+        }
+        Insert: {
+          ai_initiated?: boolean
+          amount: number
+          authorized_at?: string | null
+          category: string
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          description: string
+          device_id: string
+          expires_at?: string
+          failure_reason?: string | null
+          guardrail_id?: string | null
+          id?: string
+          intent_id: string
+          merchant?: string | null
+          merchant_url?: string | null
+          protocol: string
+          protocol_payload?: Json
+          receipt?: Json | null
+          status?: string
+          trust_score?: number | null
+          user_approved?: boolean
+          user_id: string
+          virtual_card_id?: string | null
+        }
+        Update: {
+          ai_initiated?: boolean
+          amount?: number
+          authorized_at?: string | null
+          category?: string
+          completed_at?: string | null
+          created_at?: string
+          currency?: string
+          description?: string
+          device_id?: string
+          expires_at?: string
+          failure_reason?: string | null
+          guardrail_id?: string | null
+          id?: string
+          intent_id?: string
+          merchant?: string | null
+          merchant_url?: string | null
+          protocol?: string
+          protocol_payload?: Json
+          receipt?: Json | null
+          status?: string
+          trust_score?: number | null
+          user_approved?: boolean
+          user_id?: string
+          virtual_card_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agentic_payment_intents_guardrail_id_fkey"
+            columns: ["guardrail_id"]
+            isOneToOne: false
+            referencedRelation: "agentic_guardrails"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agentic_payment_intents_virtual_card_id_fkey"
+            columns: ["virtual_card_id"]
+            isOneToOne: false
+            referencedRelation: "agentic_virtual_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agentic_transactions: {
+        Row: {
+          ai_initiated: boolean
+          amount: number
+          category: string
+          crypto_network: string | null
+          crypto_tx_hash: string | null
+          currency: string
+          description: string
+          device_id: string
+          id: string
+          intent_id: string | null
+          merchant: string | null
+          protocol: string
+          receipt: Json
+          settled_at: string
+          status: string
+          trust_score: number | null
+          user_approved: boolean
+          user_id: string
+          virtual_card_last4: string | null
+        }
+        Insert: {
+          ai_initiated?: boolean
+          amount: number
+          category: string
+          crypto_network?: string | null
+          crypto_tx_hash?: string | null
+          currency: string
+          description: string
+          device_id: string
+          id?: string
+          intent_id?: string | null
+          merchant?: string | null
+          protocol: string
+          receipt?: Json
+          settled_at?: string
+          status: string
+          trust_score?: number | null
+          user_approved?: boolean
+          user_id: string
+          virtual_card_last4?: string | null
+        }
+        Update: {
+          ai_initiated?: boolean
+          amount?: number
+          category?: string
+          crypto_network?: string | null
+          crypto_tx_hash?: string | null
+          currency?: string
+          description?: string
+          device_id?: string
+          id?: string
+          intent_id?: string | null
+          merchant?: string | null
+          protocol?: string
+          receipt?: Json
+          settled_at?: string
+          status?: string
+          trust_score?: number | null
+          user_approved?: boolean
+          user_id?: string
+          virtual_card_last4?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agentic_transactions_intent_id_fkey"
+            columns: ["intent_id"]
+            isOneToOne: false
+            referencedRelation: "agentic_payment_intents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agentic_virtual_cards: {
+        Row: {
+          amount_authorized: number
+          amount_spent: number
+          card_token: string
+          card_type: string
+          category_lock: string | null
+          created_at: string
+          currency: string
+          device_id: string
+          expires_at: string
+          id: string
+          last4: string
+          merchant_lock: string | null
+          metadata: Json
+          network: string
+          provider: string
+          provider_card_id: string | null
+          status: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_authorized: number
+          amount_spent?: number
+          card_token: string
+          card_type: string
+          category_lock?: string | null
+          created_at?: string
+          currency?: string
+          device_id: string
+          expires_at: string
+          id?: string
+          last4: string
+          merchant_lock?: string | null
+          metadata?: Json
+          network: string
+          provider?: string
+          provider_card_id?: string | null
+          status?: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_authorized?: number
+          amount_spent?: number
+          card_token?: string
+          card_type?: string
+          category_lock?: string | null
+          created_at?: string
+          currency?: string
+          device_id?: string
+          expires_at?: string
+          id?: string
+          last4?: string
+          merchant_lock?: string | null
+          metadata?: Json
+          network?: string
+          provider?: string
+          provider_card_id?: string | null
+          status?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_cache: {
         Row: {
           cache_key: string
@@ -937,6 +1230,16 @@ export type Database = {
         Returns: boolean
       }
       cleanup_expired_cache: { Args: never; Returns: number }
+      evaluate_agentic_guardrail: {
+        Args: {
+          p_amount: number
+          p_category: string
+          p_currency: string
+          p_protocol: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       generate_snomad_id: { Args: never; Returns: string }
       get_my_snomad_id: { Args: never; Returns: string }
       get_request_device_id: { Args: never; Returns: string }
