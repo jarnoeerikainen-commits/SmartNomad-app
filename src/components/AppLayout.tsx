@@ -195,9 +195,20 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     };
     window.addEventListener('supernomad:home', goHome);
     window.addEventListener('supernomad:open-support', openSupport as EventListener);
+    const handleNavigate = (e: Event) => {
+      const detail = (e as CustomEvent<{ section?: string }>).detail;
+      if (detail?.section) {
+        setActiveSection(detail.section);
+        setBottomNavTab('home');
+        setSidebarOpen(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('supernomad:navigate', handleNavigate as EventListener);
     return () => {
       window.removeEventListener('supernomad:home', goHome);
       window.removeEventListener('supernomad:open-support', openSupport as EventListener);
+      window.removeEventListener('supernomad:navigate', handleNavigate as EventListener);
     };
   }, []);
 
