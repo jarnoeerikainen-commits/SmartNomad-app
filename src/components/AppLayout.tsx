@@ -93,6 +93,7 @@ const HelpSupportCenter = lazy(() => import('./HelpSupportCenter'));
 const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
 const ETIASCenter = lazy(() => import('./ETIASCenter'));
+const EESCenter = lazy(() => import('./EESCenter'));
 const VisaImmigrationHub = lazy(() => import('./VisaImmigrationHub'));
 const VaccinationMedicineHub = lazy(() => import('./VaccinationMedicineHub'));
 const WeatherServiceDashboard = lazy(() => import('./weather/WeatherServiceDashboard'));
@@ -428,6 +429,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'help': return <HelpSupportCenter />;
       case 'wellness': return <WellnessDashboard />;
       case 'etias': return <ETIASCenter />;
+      case 'ees': return <EESCenter countries={countries} />;
       case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
       case 'snomad-id': return <SnomadIdVault />;
