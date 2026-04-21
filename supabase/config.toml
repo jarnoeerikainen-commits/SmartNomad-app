@@ -80,3 +80,6 @@ verify_jwt = false
 
 [functions.trust-pass-verify]
 verify_jwt = false
+
+[functions.agentic-payments-router]
+verify_jwt = false
