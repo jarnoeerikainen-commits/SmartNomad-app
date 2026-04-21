@@ -270,59 +270,75 @@ Deno.serve(async (req) => {
   const limitParam = parseInt(url.searchParams.get("limit") || "10");
   const dryRun = url.searchParams.get("dry") === "1";
 
-  const weekCities = pickWeekSlice(HUB_CITIES, Math.max(1, Math.min(limitParam, HUB_CITIES.length)));
+  // Default: 1 city + a few categories per invocation, so a single HTTP call
+  // stays well under the edge-function timeout. Cron triggers it many times
+  // per week (or we rotate via pickWeekSlice on subsequent runs).
+  const cityLimit = Math.max(1, Math.min(limitParam, HUB_CITIES.length));
+  const weekCities = pickWeekSlice(HUB_CITIES, cityLimit);
+  const catParam = url.searchParams.get("categories");
+  const activeCategories = catParam
+    ? catParam.split(",").map((s) => s.trim()).filter((c) => CATEGORIES.includes(c))
+    : CATEGORIES;
 
   for (const hub of weekCities) {
-    for (const category of CATEGORIES) {
-      try {
-        const candidates = await discoverVenuesFor(hub.city, hub.country, hub.cc, category);
-        evaluated += candidates.length;
+    // Run all categories for this city in parallel — independent AI calls
+    const results = await Promise.allSettled(
+      activeCategories.map((category) =>
+        discoverVenuesFor(hub.city, hub.country, hub.cc, category).then((candidates) => ({
+          category,
+          candidates,
+        }))
+      )
+    );
 
-        for (const c of candidates) {
-          if (!passesQualityBar(c)) continue;
-          if (dryRun) continue;
-
-          const quality_score = calcQualityScore(c);
-          const { error } = await supabase
-            .from("curated_venues")
-            .upsert(
-              {
-                category: c.category,
-                name: c.name,
-                city: hub.city,
-                country: hub.country,
-                country_code: hub.cc,
-                neighborhood: c.neighborhood,
-                address: c.address,
-                price_band: c.price_band,
-                star_rating: c.star_rating,
-                review_score: c.review_score,
-                review_count: c.review_count,
-                quality_score,
-                why_recommended: c.why_recommended,
-                signature_offering: c.signature_offering,
-                source_urls: c.source_urls,
-                tags: c.tags || [],
-                last_verified_at: new Date().toISOString(),
-                status: "active",
-              },
-              { onConflict: "name,city,category", ignoreDuplicates: false }
-            );
-
-          if (error) {
-            errors.push({ city: hub.city, category, error: error.message });
-          } else {
-            added += 1;
-          }
-        }
-        // Gentle pacing to avoid AI gateway rate limits
-        await new Promise((r) => setTimeout(r, 600));
-      } catch (e) {
+    for (const r of results) {
+      if (r.status === "rejected") {
         errors.push({
           city: hub.city,
-          category,
-          error: e instanceof Error ? e.message : String(e),
+          category: "?",
+          error: r.reason instanceof Error ? r.reason.message : String(r.reason),
         });
+        continue;
+      }
+      const { category, candidates } = r.value;
+      evaluated += candidates.length;
+
+      for (const c of candidates) {
+        if (!passesQualityBar(c)) continue;
+        if (dryRun) continue;
+
+        const quality_score = calcQualityScore(c);
+        const { error } = await supabase
+          .from("curated_venues")
+          .upsert(
+            {
+              category: c.category,
+              name: c.name,
+              city: hub.city,
+              country: hub.country,
+              country_code: hub.cc,
+              neighborhood: c.neighborhood,
+              address: c.address,
+              price_band: c.price_band,
+              star_rating: c.star_rating,
+              review_score: c.review_score,
+              review_count: c.review_count,
+              quality_score,
+              why_recommended: c.why_recommended,
+              signature_offering: c.signature_offering,
+              source_urls: c.source_urls,
+              tags: c.tags || [],
+              last_verified_at: new Date().toISOString(),
+              status: "active",
+            },
+            { onConflict: "name,city,category", ignoreDuplicates: false }
+          );
+
+        if (error) {
+          errors.push({ city: hub.city, category, error: error.message });
+        } else {
+          added += 1;
+        }
       }
     }
   }
