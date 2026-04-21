@@ -22,13 +22,12 @@ const SchengenEESAlert: React.FC<Props> = ({ countries, onNavigate }) => {
       .map(c => ({ entry: c.lastEntry as string, exit: null, countryCode: c.code }))
   , [countries]);
 
-  const hasSchengen = countries.some(c => isSchengenEES(c.code));
-  if (!hasSchengen) return null;
-
   const usage = useMemo(() => calcSchengenUsage(stays), [stays]);
+  const hasSchengen = countries.some(c => isSchengenEES(c.code));
   const pct = Math.min(100, Math.round((usage.daysUsed / EES_SCHENGEN_DAYS) * 100));
 
-  // Suppress when user is comfortably safe (under 50%) — avoid noise
+  // Hooks above any early return — gate on render
+  if (!hasSchengen) return null;
   if (usage.status === 'safe' && pct < 50) return null;
 
   const tone = usage.status === 'critical'
