@@ -182,13 +182,24 @@ Deno.serve(async (req) => {
       }
 
       // ─── Credit commission (service-role, called by payments) ──
+      // base_amount = the COMPANY's net earnings on this transaction
+      // (subscription fee, fixed margin, or commission earned).
+      // L1 affiliate gets 25% of base_amount, L2 gets 5% of base_amount.
       case 'credit-commission': {
         const provided = req.headers.get('x-service-secret');
         if (provided !== SERVICE) return json({ error: 'forbidden' }, 403);
 
+        const baseAmount = Number(body.base_amount);
+        if (!Number.isFinite(baseAmount) || baseAmount <= 0) {
+          return json({ error: 'invalid base_amount (must be company net earnings > 0)' }, 400);
+        }
+        if (!body.referred_user_id || !body.source_type) {
+          return json({ error: 'referred_user_id and source_type required' }, 400);
+        }
+
         const { data, error } = await svc.rpc('credit_commission', {
           p_referred_user_id: body.referred_user_id,
-          p_base_amount: body.base_amount,
+          p_base_amount: baseAmount,
           p_currency: body.currency || 'USD',
           p_source_type: body.source_type,
           p_source_id: body.source_id || null,
