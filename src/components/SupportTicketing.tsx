@@ -15,14 +15,17 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SupportTicket } from '@/types/userProfile';
+import { SnomadIdService } from '@/services/SnomadIdService';
 
-// Generate unique user ID
-function getUserId(): string {
-  let id = localStorage.getItem('supernomad_user_id');
-  if (!id) {
-    id = 'SN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-    localStorage.setItem('supernomad_user_id', id);
-  }
+// Returns the user's pseudonymous SuperNomad ID for support correspondence.
+// Falls back to a guest-issued ID for unauthenticated users.
+function useSnomadId(): string {
+  const [id, setId] = React.useState<string>(() =>
+    SnomadIdService.getCached() ?? SnomadIdService.getOrCreateGuest()
+  );
+  React.useEffect(() => {
+    SnomadIdService.getEffective().then(setId);
+  }, []);
   return id;
 }
 
@@ -56,7 +59,7 @@ const CATEGORIES = [
 
 const SupportTicketing: React.FC = () => {
   const { toast } = useToast();
-  const userId = getUserId();
+  const userId = useSnomadId();
   const [tickets, setTickets] = useState<SupportTicket[]>(getTickets());
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
