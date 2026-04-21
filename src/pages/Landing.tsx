@@ -27,6 +27,10 @@ const Landing: React.FC = () => {
         'Proactive AI for tax residency, visas, identity, community, and safety. Voice-controlled, encrypted, and sovereign — for digital nomads and global citizens.'
       );
     }
+    // Capture ?ref= for affiliate attribution
+    import('@/services/AffiliateService').then(({ AffiliateService }) => {
+      AffiliateService.captureRefFromUrl();
+    });
   }, []);
 
   const stats = [
