@@ -206,4 +206,24 @@ export const AffiliateService = {
   formatUSD(n: number): string {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
   },
+
+  /**
+   * Sovereign Payout Engine preview (mirrors server-side credit_commission).
+   * Deducts payment fees (3% + $0.30) and AI cost ($0.50) from gross,
+   * then computes 10% L1 / 5% L2 of the resulting net company yield.
+   */
+  previewPayout(gross: number) {
+    const paymentFee = +(gross * 0.03 + 0.30).toFixed(2);
+    const aiCost = 0.50;
+    const net = +(gross - paymentFee - aiCost).toFixed(2);
+    if (net <= 0) {
+      return { gross, paymentFee, aiCost, net, l1: 0, l2: 0, companyYield: net };
+    }
+    const l1 = +(net * 0.10).toFixed(2);
+    const l2 = +(net * 0.05).toFixed(2);
+    return {
+      gross, paymentFee, aiCost, net, l1, l2,
+      companyYield: +(net - l1 - l2).toFixed(2),
+    };
+  },
 };
