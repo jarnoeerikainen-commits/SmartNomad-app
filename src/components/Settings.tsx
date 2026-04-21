@@ -5,10 +5,12 @@ import DataManagementSettings from './DataManagementSettings';
 import ProfileDataViewer from './ProfileDataViewer';
 import EnhancedProfileForm from './EnhancedProfileForm';
 import SecuritySettings from './auth/SecuritySettings';
+import SnomadIdCard from './SnomadIdCard';
+import ConsentCenter from './consent/ConsentCenter';
 import { Subscription } from '@/types/subscription';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { User, Shield, FileText, Languages, UserCircle, ShieldCheck } from 'lucide-react';
+import { User, Shield, FileText, Languages, UserCircle, ShieldCheck, Fingerprint } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -61,8 +63,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
           </AlertDescription>
         </Alert>
 
+        <SnomadIdCard />
+
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full max-w-4xl grid-cols-5">
+          <TabsList className="grid w-full max-w-5xl grid-cols-6">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <UserCircle className="h-4 w-4" />
               <span className="hidden sm:inline">User Profile</span>
@@ -78,6 +82,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
             <TabsTrigger value="security" className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" />
               <span className="hidden sm:inline">Security</span>
+            </TabsTrigger>
+            <TabsTrigger value="consent" className="flex items-center gap-2">
+              <Fingerprint className="h-4 w-4" />
+              <span className="hidden sm:inline">Consent</span>
             </TabsTrigger>
             <TabsTrigger value="privacy" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
@@ -99,6 +107,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
 
           <TabsContent value="security" className="mt-6">
             <SecuritySettings />
+          </TabsContent>
+
+          <TabsContent value="consent" className="mt-6">
+            <ConsentCenter />
           </TabsContent>
 
           <TabsContent value="privacy" className="mt-6">

@@ -431,6 +431,54 @@ export type Database = {
           },
         ]
       }
+      consent_ledger: {
+        Row: {
+          consent_text_hash: string
+          consent_text_version: string
+          created_at: string
+          expires_at: string | null
+          granted: boolean
+          id: string
+          ip_address: string | null
+          metadata: Json
+          partner_id: string | null
+          purpose: string
+          snomad_id: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          consent_text_hash: string
+          consent_text_version: string
+          created_at?: string
+          expires_at?: string | null
+          granted: boolean
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          partner_id?: string | null
+          purpose: string
+          snomad_id: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          consent_text_hash?: string
+          consent_text_version?: string
+          created_at?: string
+          expires_at?: string | null
+          granted?: boolean
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          partner_id?: string | null
+          purpose?: string
+          snomad_id?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_summaries: {
         Row: {
           conversation_id: string
@@ -498,6 +546,62 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "device_sessions"
             referencedColumns: ["device_id"]
+          },
+        ]
+      }
+      data_access_requests: {
+        Row: {
+          consent_id: string | null
+          consent_verified: boolean
+          created_at: string
+          fields_requested: string[]
+          fields_returned: string[]
+          id: string
+          ip_address: string | null
+          legal_basis: string
+          partner_id: string
+          purpose: string
+          records_count: number
+          resource_type: string
+          snomad_id: string | null
+        }
+        Insert: {
+          consent_id?: string | null
+          consent_verified?: boolean
+          created_at?: string
+          fields_requested?: string[]
+          fields_returned?: string[]
+          id?: string
+          ip_address?: string | null
+          legal_basis: string
+          partner_id: string
+          purpose: string
+          records_count?: number
+          resource_type: string
+          snomad_id?: string | null
+        }
+        Update: {
+          consent_id?: string | null
+          consent_verified?: boolean
+          created_at?: string
+          fields_requested?: string[]
+          fields_returned?: string[]
+          id?: string
+          ip_address?: string | null
+          legal_basis?: string
+          partner_id?: string
+          purpose?: string
+          records_count?: number
+          resource_type?: string
+          snomad_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_access_requests_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "consent_ledger"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -585,6 +689,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          snomad_id: string | null
           updated_at: string
         }
         Insert: {
@@ -595,6 +700,7 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          snomad_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -605,6 +711,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          snomad_id?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -791,7 +898,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_partner_profile_signals: {
+        Row: {
+          age_bracket: string | null
+          budget_tier: string | null
+          completeness_score: number | null
+          income_bracket: string | null
+          industry: string | null
+          preference_count: number | null
+          snomad_id: string | null
+          travel_style: string | null
+          updated_at: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       check_data_access: {
@@ -799,7 +919,13 @@ export type Database = {
         Returns: boolean
       }
       cleanup_expired_cache: { Args: never; Returns: number }
+      generate_snomad_id: { Args: never; Returns: string }
+      get_my_snomad_id: { Args: never; Returns: string }
       get_request_device_id: { Args: never; Returns: string }
+      has_active_consent: {
+        Args: { p_partner_id?: string; p_purpose: string; p_user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -827,6 +953,7 @@ export type Database = {
         Args: { p_device_id: string; p_user_id: string }
         Returns: Json
       }
+      resolve_snomad_id: { Args: { p_snomad_id: string }; Returns: string }
       search_memories: {
         Args: {
           p_category?: string
