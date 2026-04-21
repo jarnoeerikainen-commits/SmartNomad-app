@@ -29,7 +29,7 @@ const PAYOUT_LABELS: Record<PayoutMethod, string> = {
 };
 
 export default function AffiliateDashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [stats, setStats] = useState<AffiliateStats | null>(null);
