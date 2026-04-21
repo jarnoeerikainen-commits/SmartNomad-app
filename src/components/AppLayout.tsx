@@ -108,6 +108,8 @@ const TaxLawVerifier = lazy(() => import('./TaxLawVerifier'));
 const DocumentAutoFill = lazy(() => import('./DocumentAutoFill'));
 const TrustPassDashboard = lazy(() => import('./TrustPassDashboard'));
 const GPSDayMonitor = lazy(() => import('./GPSDayMonitor'));
+const SovereignAccessCenter = lazy(() => import('./permissions/SovereignAccessCenter'));
+const TravelInboxImport = lazy(() => import('./permissions/TravelInboxImport'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -442,6 +444,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'tax-law-verifier': return <TaxLawVerifier />;
       case 'document-auto-fill': return <DocumentAutoFill />;
       case 'trust-pass': return <TrustPassDashboard />;
+      case 'sovereign-access': return <SovereignAccessCenter />;
+      case 'travel-inbox': return <TravelInboxImport />;
       case 'gps-monitor':
         return (
           <GPSDayMonitor

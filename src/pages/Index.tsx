@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
+import SovereignAccessTour from '@/components/permissions/SovereignAccessTour';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -13,6 +14,7 @@ const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSovereignTour, setShowSovereignTour] = useState(false);
   const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
@@ -57,8 +59,21 @@ const Index = () => {
     // Show onboarding for first-time users
     if (!hasSeenOnboarding) {
       setShowOnboarding(true);
+    } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
+      // First post-onboarding launch → show Sovereign Access tour
+      setShowSovereignTour(true);
     }
   }, []);
+
+  const handleCloseSovereignTour = () => {
+    localStorage.setItem('supernomad_sovereign_tour_seen', '1');
+    setShowSovereignTour(false);
+  };
+
+  const handleOpenAccessCenter = () => {
+    handleCloseSovereignTour();
+    window.dispatchEvent(new CustomEvent('supernomad:navigate', { detail: { section: 'sovereign-access' } }));
+  };
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -196,9 +211,20 @@ const Index = () => {
   return (
     <>
       {showOnboarding && (
-        <OnboardingFlow onComplete={() => setShowOnboarding(false)} />
+        <OnboardingFlow onComplete={() => {
+          setShowOnboarding(false);
+          if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
+            setShowSovereignTour(true);
+          }
+        }} />
       )}
-      
+
+      <SovereignAccessTour
+        open={showSovereignTour}
+        onClose={handleCloseSovereignTour}
+        onOpenAccessCenter={handleOpenAccessCenter}
+      />
+
       <AppLayout
         countries={countries}
         onAddCountry={addCountry}
