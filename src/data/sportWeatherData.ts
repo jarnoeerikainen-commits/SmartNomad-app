@@ -217,6 +217,7 @@ export const SPORT_WEATHER_PROFILES: SportWeatherProfile[] = [
     seasonalNotes: { summer: 'Courts may be hot', winter: 'Indoor gyms recommended' },
   },
   {
+    sport: 'triathlon',
     label: 'Triathlon',
     emoji: '🏊‍♂️',
     isOutdoor: true,
