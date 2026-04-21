@@ -84,7 +84,7 @@ export async function verifyCredentialJWT(jwt: string): Promise<VCPayload> {
   const ok = await crypto.subtle.verify(
     "HMAC",
     key,
-    b64urlDecode(sigB64),
+    b64urlDecode(sigB64) as BufferSource,
     enc.encode(`${headerB64}.${payloadB64}`),
   );
   if (!ok) throw new Error("invalid_signature");
