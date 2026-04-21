@@ -128,6 +128,22 @@ const Index = () => {
     });
   };
 
+  const incrementCountryDay = (countryId: string) => {
+    const today = new Date().toISOString().slice(0, 10);
+    setCountries(prev => prev.map(country =>
+      country.id === countryId
+        ? {
+            ...country,
+            daysSpent: country.daysSpent + 1,
+            yearlyDaysSpent: country.yearlyDaysSpent + 1,
+            lastEntry: today,
+            lastUpdate: today,
+            totalEntries: (country.lastEntry === today ? country.totalEntries : country.totalEntries + 1),
+          }
+        : country
+    ));
+  };
+
   const toggleCountDays = (countryId: string) => {
     setCountries(prev => prev.map(country => 
       country.id === countryId 
@@ -191,6 +207,7 @@ const Index = () => {
         onUpdateCountryLimit={updateCountryLimit}
         onResetCountry={resetCountry}
         onToggleCountDays={toggleCountDays}
+        onIncrementCountryDay={incrementCountryDay}
         subscription={subscription}
         detectedLocation={detectedLocation}
         userProfile={userProfile}

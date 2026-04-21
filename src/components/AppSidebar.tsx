@@ -104,6 +104,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.tax_compliance'),
       items: [
         { id: 'tax', label: t('sidebar.tax_dashboard'), icon: Calculator },
+        { id: 'gps-monitor', label: 'GPS Day Monitor', icon: Locate, badge: 'GPS', variant: 'default' as const },
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
         { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
         { id: 'visa-immigration', label: 'Visa / Immigration', icon: Globe, badge: 'NEW', variant: 'secondary' as const },
