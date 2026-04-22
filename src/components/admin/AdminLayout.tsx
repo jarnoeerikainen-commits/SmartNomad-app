@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, LifeBuoy, Brain, Database, Coins,
-  ShieldCheck, ArrowLeft, Eye, Crown
+  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles
 } from 'lucide-react';
 import { useStaffRole } from '@/hooks/useStaffRole';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/admin/users', icon: Users, label: 'Users' },
   { to: '/admin/tickets', icon: LifeBuoy, label: 'Support' },
   { to: '/admin/ai', icon: Brain, label: 'AI Analytics' },
+  { to: '/admin/brain', icon: Sparkles, label: 'AI Brain', badge: 'LIVE' },
   { to: '/admin/data', icon: Database, label: 'B2B Data' },
   { to: '/admin/affiliates', icon: Coins, label: 'Affiliates' },
   { to: '/admin/audit', icon: ShieldCheck, label: 'Audit Log' },
