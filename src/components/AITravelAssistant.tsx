@@ -31,6 +31,9 @@ import { discoverFeaturesByIntent, parseNavigationSuggestions, getToolRoutingPro
 import { getIntegrationContextForAI } from '@/services/ConnectorIntegrationService';
 import { parseEscalation } from '@/utils/conciergeEscalation';
 import HumanSupportEscalation from '@/components/concierge/HumanSupportEscalation';
+import { buildConciergeContextBundle, renderContextNarrative } from '@/utils/conciergeContextBuilder';
+import { evaluateAnswer } from '@/utils/conciergeQuality';
+import { recordOutcome } from '@/utils/conciergeFeedback';
 
 
 interface Message {
