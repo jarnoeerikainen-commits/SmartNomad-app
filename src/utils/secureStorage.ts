@@ -102,7 +102,10 @@ export async function decryptJson<T = unknown>(blob: string | null): Promise<T |
       const key = await getKey();
       const iv = b64ToBytes(parsed.iv);
       const ct = b64ToBytes(parsed.ct);
-      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+      // Slice into a fresh ArrayBuffer to satisfy strict BufferSource typing
+      const ctBuf = ct.buffer.slice(ct.byteOffset, ct.byteOffset + ct.byteLength) as ArrayBuffer;
+      const ivBuf = iv.buffer.slice(iv.byteOffset, iv.byteOffset + iv.byteLength) as ArrayBuffer;
+      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: ivBuf }, key, ctBuf);
       return JSON.parse(new TextDecoder().decode(pt)) as T;
     }
     return null;
