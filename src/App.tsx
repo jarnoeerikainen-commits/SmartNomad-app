@@ -27,6 +27,17 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AffiliateDashboard = lazy(() => import("./pages/AffiliateDashboard"));
 const ReferralRedirect = lazy(() => import("./pages/ReferralRedirect"));
 
+// Back Office (admin / staff)
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
+const AdminGuard = lazy(() => import("./components/admin/AdminGuard"));
+const AdminOverview = lazy(() => import("./pages/admin/AdminOverview"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminTickets = lazy(() => import("./pages/admin/AdminTickets"));
+const AdminAI = lazy(() => import("./pages/admin/AdminAI"));
+const AdminData = lazy(() => import("./pages/admin/AdminData"));
+const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
+const AdminAudit = lazy(() => import("./pages/admin/AdminAudit"));
+
 // Show "Back to Website" pill on all routes EXCEPT the marketing landing
 const ConditionalBackButton = () => {
   const location = useLocation();
@@ -72,6 +83,15 @@ const App = () => {
                   <Route path="/translation-manager" element={<TranslationManager />} />
                   <Route path="/affiliate" element={<AffiliateDashboard />} />
                   <Route path="/r/:code" element={<ReferralRedirect />} />
+                  <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
+                    <Route index element={<AdminOverview />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="tickets" element={<AdminTickets />} />
+                    <Route path="ai" element={<AdminAI />} />
+                    <Route path="data" element={<AdminData />} />
+                    <Route path="affiliates" element={<AdminAffiliates />} />
+                    <Route path="audit" element={<AdminAudit />} />
+                  </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
