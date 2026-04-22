@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════
-// Aurora Intro — Fixed script for first-launch demo
-// Times are in milliseconds, matched to baked voiceover (~34.9s)
-// V2: replace with generateAuroraScript(vaultContext) async fn
+// Aurora Intro — Live HeyGen lip-synced monologue
+// Each line is spoken by HeyGen (perfect lip-sync guaranteed).
+// UI beats fire as each line begins.
 // ═══════════════════════════════════════════════════════════
 
 export type AuroraBeat =
@@ -12,32 +12,27 @@ export type AuroraBeat =
   | 'tax-card'
   | 'social-card'
   | 'outfit-chip'
-  | 'outfit-swap'
   | 'tip-button'
   | 'tip-confirm'
   | 'farewell';
 
-export interface AuroraCue {
-  atMs: number;
-  caption: string;
+export interface AuroraLine {
+  /** Text Aurora speaks. {name} is replaced with the user's name. */
+  text: string;
+  /** UI beat to activate when this line starts */
   beat?: AuroraBeat;
+  /** Optional caption override (defaults to text) */
+  caption?: string;
 }
 
-export const AURORA_TOTAL_MS = 36_500; // ~35s VO + 1.5s outro
-
-export const auroraCues: AuroraCue[] = [
-  { atMs: 0,      caption: '',                                                              beat: 'idle' },
-  { atMs: 600,    caption: "Hi {name}.",                                                    beat: 'name-chip' },
-  { atMs: 1800,   caption: "I'm Aurora — your sovereign companion." },
-  { atMs: 4500,   caption: "I live inside your private vault.",                             beat: 'vault-pulse' },
-  { atMs: 6300,   caption: "Read-only. Edge-rendered. Yours alone." },
-  { atMs: 9800,   caption: "You just landed in Helsinki.",                                  beat: 'gps-drop' },
-  { atMs: 12200,  caption: "I've prepared your 90-day residence warning…",                  beat: 'tax-card' },
-  { atMs: 16400,  caption: "…and found a sauna social tonight at 7.",                       beat: 'social-card' },
-  { atMs: 20300,  caption: "It's cold here. Let me change.",                                beat: 'outfit-chip' },
-  { atMs: 22500,  caption: '',                                                              beat: 'outfit-swap' },
-  { atMs: 25800,  caption: "Tip me $5 if I helped.",                                        beat: 'tip-button' },
-  { atMs: 28800,  caption: "Paid via x402 — settled in 0.4 seconds.",                       beat: 'tip-confirm' },
-  { atMs: 32500,  caption: "Whenever you need me, I'm here.",                               beat: 'farewell' },
-  { atMs: 35500,  caption: '' },
+export const auroraLines: AuroraLine[] = [
+  { text: "Hi {name}. I'm Aurora — your sovereign companion.", beat: 'name-chip' },
+  { text: "I live inside your private vault. Read-only. Edge-rendered. Yours alone.", beat: 'vault-pulse' },
+  { text: "I see you just landed in Helsinki.", beat: 'gps-drop' },
+  { text: "I've prepared your 90-day Schengen residence warning. Twenty-two days remaining.", beat: 'tax-card' },
+  { text: "I also found a sauna social tonight at seven. Fourteen nomads going.", beat: 'social-card' },
+  { text: "It's cold here. I've picked out a Nordic coat from your wardrobe.", beat: 'outfit-chip' },
+  { text: "If I helped, you can tip me five dollars.", beat: 'tip-button' },
+  { text: "Paid via x402, settled in under half a second.", beat: 'tip-confirm' },
+  { text: "Whenever you need me, I'm here.", beat: 'farewell' },
 ];
