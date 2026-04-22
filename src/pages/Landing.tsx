@@ -139,7 +139,7 @@ const Landing: React.FC = () => {
               SuperNomad is the world's first Sovereign Operating System. We've replaced the chaos of fragmented travel apps, lost tax days, and endless KYC forms with a single, proactive AI intelligence.
             </p>
             <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_75%)] leading-snug max-w-2xl mx-auto">
-              Built for the <strong className="text-white">850 million global citizens</strong> who call the world home, SuperNomad doesn't just track your journey — it <strong className="text-white">secures your status</strong>.
+              Built for the <strong className="text-white">850 million global citizens</strong> who call the world home. SuperNomad doesn't just track your journey — it <strong className="text-white">secures your status</strong>.
             </p>
 
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
