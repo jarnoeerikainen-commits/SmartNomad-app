@@ -31,6 +31,12 @@ type: feature
 ### Backend rate limiting — deferred
 - Lovable's backend has no rate-limit primitives yet (per platform note). Skipped from this pass; revisit when infra ships.
 
+### Pass-2b additions (22 Apr 2026, later)
+- **`PasswordStrengthMeter`** (`src/components/auth/PasswordStrengthMeter.tsx`): zxcvbn-style 0-4 scoring with live rule checklist. Wired into the signup tab in `Auth.tsx`. Min length raised 6→8, min score 3 enforced before `signUp()` is called. Demo "Continue as Guest" path unchanged.
+- **`SecurityActivityFeed`** (`src/components/auth/SecurityActivityFeed.tsx`): renders the user's last 25 `audit_log` rows under Settings → Security. Highlights elevated-risk actions (failed logins, MFA unenroll, payment blocks, vault decrypt failures, credential revocations). Returns `null` for guests/demo.
+- **AgenticWallet MFA gate**: confirmed already covered — `AgenticWalletDashboard` is rendered as a tab inside `PaymentOptionsDashboard`, which is wrapped by `<MFAGate flag="require_mfa_for_payments">`.
+- **Frontend tests**: added Vitest + Testing Library setup (`vitest.config.ts`, `src/test/setup.ts`). 12 tests passing covering `secureStorage` round-trip, legacy format compat, IV uniqueness, and `evaluatePassword` scoring.
+
 ### Production rollout checklist
 1. Supabase Auth → enable **Leaked password protection** (HIBP) and **TOTP**.
 2. `UPDATE app_settings SET require_mfa_for_payments = true, require_mfa_for_sensitive = true WHERE id = 1;`
