@@ -55,6 +55,7 @@ export interface AgentDefinition {
   constraints: string[];   // hard limits (read-only, no spawn, etc.)
   live_endpoint: string;   // backend function slug for production mode
   cadence_minutes: number; // how often it autonomously produces output
+  tier: AgentTier;         // grouping for the council UI
 }
 
 export interface AgentProposal {
@@ -101,6 +102,7 @@ export interface AgentActivityEvent {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const AGENTS: Record<AgentId, AgentDefinition> = {
+  // ─── ORIGINAL 5 — Sovereign Back-Office Protocol ───
   legal: {
     id: 'legal',
     name: 'Themis',
@@ -115,6 +117,7 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     constraints: ['read-only', 'propose-only', 'no spawning workers', 'HITL permit for legal logic changes'],
     live_endpoint: 'agent-legal',
     cadence_minutes: 35,
+    tier: 'core',
   },
   security: {
     id: 'security',
@@ -130,6 +133,7 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     constraints: ['read-only', 'propose-only', 'no live patches without permit', 'budget locked'],
     live_endpoint: 'agent-security',
     cadence_minutes: 25,
+    tier: 'core',
   },
   growth: {
     id: 'growth',
@@ -145,6 +149,7 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     constraints: ['read-only on financials', 'no auto-outreach', 'permit required for sponsorship deals'],
     live_endpoint: 'agent-growth',
     cadence_minutes: 30,
+    tier: 'core',
   },
   product: {
     id: 'product',
@@ -160,6 +165,7 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     constraints: ['no live UI deploys', 'wireframes only', 'permit required to ship to production'],
     live_endpoint: 'agent-product',
     cadence_minutes: 40,
+    tier: 'core',
   },
   oracle: {
     id: 'oracle',
@@ -175,7 +181,191 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     constraints: ['read-only on warehouse', 'cannot trigger price changes', 'permit required for repricing'],
     live_endpoint: 'agent-oracle',
     cadence_minutes: 20,
+    tier: 'core',
   },
+
+  // ─── TIER 1 — Highest leverage ───
+  atlas: {
+    id: 'atlas',
+    name: 'Atlas',
+    role: 'Destination & Supply Intelligence Lead',
+    team_label: 'Cartography & Curation',
+    emoji: '🧭',
+    color_token: 'hsl(173 80% 40%)', // teal
+    mission: 'Continuously score 5,000+ cities on safety, cost, weather, visa, internet, vibe. Detect rising hubs 6 months early.',
+    daily_task: 'Refresh Explore Local Life directories, flag stale venues, propose new city launches.',
+    output_label: 'Destination Intelligence Report',
+    goal: 'Own travel curation. Never let a listing rot.',
+    constraints: ['read-only on directories', 'propose new listings only', 'permit required to launch new city'],
+    live_endpoint: 'agent-atlas',
+    cadence_minutes: 22,
+    tier: 'tier1',
+  },
+  midas: {
+    id: 'midas',
+    name: 'Midas',
+    role: 'Pricing & Yield Optimizer',
+    team_label: 'Marketplace Margin Engine',
+    emoji: '💰',
+    color_token: 'hsl(45 100% 51%)', // saffron gold
+    mission: 'Real-time price elasticity per route/hotel/city/persona. Watch Booking/Expedia/Hopper price gaps live.',
+    daily_task: 'A/B test commission, surge concierge premium, propose bundles. Detect when SuperNomad loses on price.',
+    output_label: 'Yield Optimisation Brief',
+    goal: 'Maximise marketplace margin while staying user-competitive.',
+    constraints: ['read-only on pricing engine', 'cannot trigger live price change', 'permit required for repricing'],
+    live_endpoint: 'agent-midas',
+    cadence_minutes: 18,
+    tier: 'tier1',
+  },
+  echo: {
+    id: 'echo',
+    name: 'Echo',
+    role: 'Sentiment & Retention Lead',
+    team_label: 'Customer Success AI',
+    emoji: '❤️',
+    color_token: 'hsl(330 75% 60%)', // rose
+    mission: 'Read every concierge convo, support ticket, app review, social mention. Predict churn 14d early.',
+    daily_task: 'Detect moments of delight + friction per user. Queue earned re-engagement nudges.',
+    output_label: 'Retention Save Queue',
+    goal: 'Insurance against silent churn. Lift NPS quarterly.',
+    constraints: ['read-only on conversations', 'no auto-messages', 'permit required for save-action campaigns'],
+    live_endpoint: 'agent-echo',
+    cadence_minutes: 28,
+    tier: 'tier1',
+  },
+
+  // ─── TIER 2 — Operating depth ───
+  sentinel: {
+    id: 'sentinel',
+    name: 'Sentinel',
+    role: 'Crisis & Disruption Response',
+    team_label: 'Global Disruption Watch',
+    emoji: '🌪️',
+    color_token: 'hsl(15 90% 55%)', // alert orange
+    mission: 'Monitor flight strikes, volcanoes, hurricanes, coups, FX shocks, airport closures 24/7.',
+    daily_task: 'Auto-draft re-routing options + concierge scripts before users notice the problem.',
+    output_label: 'Disruption Response Pack',
+    goal: 'The "we saved you in Bangkok during the floods" lifetime-loyalty story.',
+    constraints: ['read-only on travel inventory', 'no auto-rebooking', 'permit required to push user alerts'],
+    live_endpoint: 'agent-sentinel',
+    cadence_minutes: 15,
+    tier: 'tier2',
+  },
+  muse: {
+    id: 'muse',
+    name: 'Muse',
+    role: 'Content & SEO Engine',
+    team_label: 'Programmatic Acquisition',
+    emoji: '🎨',
+    color_token: 'hsl(260 75% 65%)', // lavender
+    mission: 'Generate city guides, neighborhood deep-dives, persona itineraries at scale. Own programmatic SEO.',
+    daily_task: 'Draft "best coworking in Lisbon for crypto founders"-style pages. Repurpose user wins as social proof.',
+    output_label: 'Content & SEO Briefs',
+    goal: 'Drive organic CAC to zero. Compound traffic monthly.',
+    constraints: ['drafts only', 'no auto-publish', 'permit required to publish to public site'],
+    live_endpoint: 'agent-muse',
+    cadence_minutes: 32,
+    tier: 'tier2',
+  },
+  praxis: {
+    id: 'praxis',
+    name: 'Praxis',
+    role: 'Partner & Inventory Operations',
+    team_label: 'Supplier Health Watch',
+    emoji: '🔗',
+    color_token: 'hsl(190 85% 50%)', // cyan
+    mission: 'Watch Amadeus/Sabre/Booking/Skyscanner/Duffel API health, latency, fill rates, commission shorts.',
+    daily_task: 'Negotiate + renegotiate rate contracts. Draft the email — Governor approves.',
+    output_label: 'Supplier Operations Report',
+    goal: 'Marketplace supply ops decides margin. Defend it daily.',
+    constraints: ['read-only on supplier APIs', 'drafts contract emails only', 'permit required for contract send'],
+    live_endpoint: 'agent-praxis',
+    cadence_minutes: 26,
+    tier: 'tier2',
+  },
+
+  // ─── TIER 3 — Optimization & long-term ───
+  forge: {
+    id: 'forge',
+    name: 'Forge',
+    role: 'Experimentation & Personalization Lead',
+    team_label: 'A/B/n Test Lab',
+    emoji: '⚗️',
+    color_token: 'hsl(140 70% 50%)', // lime
+    mission: 'Owns A/B/n testing engine across UI, copy, pricing, concierge prompts. 50+ persona segments auto-tuned.',
+    daily_task: 'Report weekly lift to Governor. Auto-stop losing variants, scale winners.',
+    output_label: 'Experimentation Lift Report',
+    goal: 'Compound conversion lift forever.',
+    constraints: ['read-only on production traffic', 'sandbox tests only', 'permit required to scale variant >25%'],
+    live_endpoint: 'agent-forge',
+    cadence_minutes: 36,
+    tier: 'tier3',
+  },
+  concord: {
+    id: 'concord',
+    name: 'Concord',
+    role: 'Community & Trust AI',
+    team_label: 'Pulse / Vibe Moderation',
+    emoji: '🤝',
+    color_token: 'hsl(220 80% 60%)', // royal blue
+    mission: 'Real-time moderation of Pulse / Vibe in 13 languages. Detect scams, fake listings, bad actors before users report.',
+    daily_task: 'Surface super-connectors who deserve VIP perks. Maintain reputation graph.',
+    output_label: 'Community Health Brief',
+    goal: 'Trust is the moat. Defend it 24/7.',
+    constraints: ['can flag, cannot ban without permit', 'read-only on reputation graph', 'permit required for user action'],
+    live_endpoint: 'agent-concord',
+    cadence_minutes: 21,
+    tier: 'tier3',
+  },
+  verdant: {
+    id: 'verdant',
+    name: 'Verdant',
+    role: 'Sustainability & ESG Lead',
+    team_label: 'Carbon & Compliance',
+    emoji: '🌱',
+    color_token: 'hsl(150 65% 45%)', // forest green
+    mission: 'Track carbon per booking, suggest offsets + lower-impact alternatives. Critical for EU CSRD + Gen-Z/HNW segment.',
+    daily_task: 'Report ESG metrics for investor decks. Surface carbon-aware booking options.',
+    output_label: 'ESG & Carbon Report',
+    goal: 'EU compliance + values-aligned acquisition.',
+    constraints: ['read-only on bookings', 'recommends only', 'permit required for offset auto-purchase'],
+    live_endpoint: 'agent-verdant',
+    cadence_minutes: 50,
+    tier: 'tier3',
+  },
+  atlas_ltv: {
+    id: 'atlas_ltv',
+    name: 'Atlas-LTV',
+    role: 'Lifetime Value & Wealth Lead',
+    team_label: 'HNW Whale Operations',
+    emoji: '💎',
+    color_token: 'hsl(310 70% 55%)', // magenta
+    mission: 'For HNW segment only — track each whale\'s lifetime spend, life events, family graph.',
+    daily_task: 'Suggest when to introduce new vertical (yacht, jet, real estate, school). Pair with Hermes for white-glove growth.',
+    output_label: 'Whale Pipeline Report',
+    goal: 'Compound HNW LTV. Anticipate the next vertical they\'ll want.',
+    constraints: ['read-only on personal graph', 'no auto-outreach', 'permit required for white-glove offer'],
+    live_endpoint: 'agent-atlas-ltv',
+    cadence_minutes: 45,
+    tier: 'tier3',
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TIER GROUPING (for UI organisation)
+// ─────────────────────────────────────────────────────────────────────────────
+export const TIER_LABELS: Record<AgentTier, { label: string; tagline: string }> = {
+  core:  { label: 'Core Council',           tagline: 'Sovereign Back-Office Protocol' },
+  tier1: { label: 'Tier 1 — Strategic',     tagline: 'Curation · Pricing · Retention' },
+  tier2: { label: 'Tier 2 — Operations',    tagline: 'Crisis · Content · Supply' },
+  tier3: { label: 'Tier 3 — Compounding',   tagline: 'Experiments · Trust · ESG · Whales' },
+};
+
+export const AGENTS_BY_TIER: Record<AgentTier, AgentId[]> = {
+  core:  ['legal', 'security', 'growth', 'product', 'oracle'],
+  tier1: ['atlas', 'midas', 'echo'],
+  tier2: ['sentinel', 'muse', 'praxis'],
+  tier3: ['forge', 'concord', 'verdant', 'atlas_ltv'],
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
