@@ -345,7 +345,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       trackedCountries: fullAppContext.trackedCountries || undefined,
       calendar: (() => {
         try {
-          const personaScope = activePersona ? (activePersona.profile.id || (activePersona as any).id) : null;
+          const personaScope = (activePersona as any)?.id || (activePersona ? 'meghan' : null);
           const brief = CalendarService.briefForAI(personaScope, 8);
           const prefs = getCalendarPrefs();
           const writeRule = prefs.aiAutoWrite
