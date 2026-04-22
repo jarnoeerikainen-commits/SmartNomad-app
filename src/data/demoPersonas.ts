@@ -127,9 +127,250 @@ export interface DemoPersona {
   aiContext: string;
 }
 
+// ───────────────────────────────────────────────────────────────
+// DYNAMIC CALENDAR GENERATORS
+// All events are generated relative to TODAY so the calendar
+// always looks fresh, busy and forward-looking, no matter when
+// the demo persona is loaded.
+// ───────────────────────────────────────────────────────────────
+
+const toISODate = (d: Date): string => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
+const addDays = (base: Date, n: number): Date => {
+  const d = new Date(base);
+  d.setDate(d.getDate() + n);
+  return d;
+};
+
+/** Shift a "Month-Day" anchor (e.g. birthday) to the next occurrence on/after today. */
+const nextOccurrence = (today: Date, month: number, day: number): Date => {
+  const candidate = new Date(today.getFullYear(), month - 1, day);
+  if (candidate < today) candidate.setFullYear(today.getFullYear() + 1);
+  return candidate;
+};
+
 const generateMeghanCalendar = (): DemoCalendarEvent[] => {
   const events: DemoCalendarEvent[] = [];
-  const base = new Date(2026, 1, 22); // Feb 22, 2026
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const weekdayMorning: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '06:30', title: 'Morning Yoga — Vinyasa Flow', type: 'sport', location: 'Equinox Kensington' },
+    { time: '07:45', title: 'Skincare & Espresso Routine', type: 'wellness', location: 'Home' },
+    { time: '08:00', title: 'Exec Team Standup', type: 'meeting', location: 'Zoom' },
+  ];
+  const weekdayCore: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '09:30', title: 'Q1 Campaign Review', type: 'meeting', location: 'Office — Soho' },
+    { time: '11:00', title: '1:1 with Head of Brand', type: 'meeting', location: 'Office' },
+    { time: '12:30', title: 'Lunch — Sushi Samba (Heron Tower)', type: 'dining', location: 'London' },
+    { time: '14:00', title: 'Client Presentation — APAC Strategy', type: 'meeting', location: 'Office' },
+    { time: '15:30', title: 'Creative Review — New TVC', type: 'meeting', location: 'Office' },
+    { time: '17:00', title: 'Strength Training — PT Session', type: 'sport', location: 'Equinox Kensington' },
+    { time: '19:30', title: 'Facial — Dr. Barbara Sturm Clinic', type: 'wellness', location: 'Mayfair' },
+    { time: '20:30', title: 'Dinner — Chiltern Firehouse (drinks with friends)', type: 'social', location: 'Marylebone' },
+  ];
+  const saturday: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '07:00', title: '10K Run — Hyde Park Loop', type: 'sport', location: 'London' },
+    { time: '09:30', title: 'Brunch — The Wolseley', type: 'dining', location: 'Piccadilly' },
+    { time: '11:00', title: 'Deep Tissue Massage', type: 'wellness', location: 'Bamford Haybarn Spa' },
+    { time: '13:30', title: 'Personal Shopping — New Bond St', type: 'personal', location: 'Mayfair' },
+    { time: '16:00', title: 'Art Gallery Visit — White Cube', type: 'social', location: 'Bermondsey' },
+    { time: '19:30', title: 'Dinner with Sarah — Sketch', type: 'dining', location: 'Mayfair' },
+  ];
+  const sunday: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '08:30', title: 'Pilates Reformer Class', type: 'sport', location: 'Heartcore Notting Hill' },
+    { time: '10:30', title: 'Sunday Roast — The Hawksmoor', type: 'dining', location: 'Knightsbridge' },
+    { time: '13:00', title: 'Spa Day — Bulgari Hotel London', type: 'wellness', location: 'Knightsbridge' },
+    { time: '17:00', title: 'Meal Prep / Self-care Reset', type: 'personal', location: 'Home' },
+  ];
+
+  for (let i = 0; i < 120; i++) {
+    const d = addDays(today, i);
+    const dow = d.getDay();
+    const dateStr = toISODate(d);
+    const list =
+      dow === 0 ? sunday :
+      dow === 6 ? saturday :
+      [...weekdayMorning, ...weekdayCore].slice(0, 7 + (i % 4));
+    list.forEach(ev => events.push({ ...ev, date: dateStr }));
+  }
+
+  const trips: Array<{ offset: number; time: string; title: string; type: DemoCalendarEvent['type']; location: string }> = [
+    { offset: 6,  time: '07:00', title: '✈️ BA15 Business Class to Singapore (Seat 14A)', type: 'travel',  location: 'LHR → SIN' },
+    { offset: 7,  time: '09:00', title: 'Client Workshop — Marina Bay Sands',              type: 'meeting', location: 'Singapore' },
+    { offset: 7,  time: '19:30', title: '🍽️ Dinner — Odette (3 Michelin ⭐)',               type: 'dining',  location: 'Singapore' },
+    { offset: 8,  time: '10:00', title: 'APAC Brand Steering Committee',                    type: 'meeting', location: 'Singapore' },
+    { offset: 9,  time: '14:00', title: '✈️ CX734 Business to Hong Kong (Seat 11K)',       type: 'travel',  location: 'SIN → HKG' },
+    { offset: 9,  time: '20:00', title: '🍽️ Dinner — Lung King Heen (3 Michelin ⭐)',       type: 'dining',  location: 'Four Seasons HK' },
+    { offset: 10, time: '09:00', title: 'HK Investor Roadshow',                             type: 'meeting', location: 'Hong Kong' },
+    { offset: 11, time: '12:00', title: '✈️ BA32 Business back to London',                  type: 'travel',  location: 'HKG → LHR' },
+    { offset: 18, time: '08:00', title: '✈️ BA117 Business to New York (1A — Club Suite)',  type: 'travel',  location: 'LHR → JFK' },
+    { offset: 18, time: '20:00', title: '🍽️ Dinner — Eleven Madison Park',                  type: 'dining',  location: 'New York' },
+    { offset: 19, time: '10:00', title: 'NY Office — Brand Summit',                          type: 'meeting', location: 'New York' },
+    { offset: 19, time: '19:00', title: '🎭 Global Advertising Awards — Black Tie Gala',     type: 'gala',    location: 'New York' },
+    { offset: 20, time: '19:00', title: '🍽️ Dinner — Le Bernardin (3 Michelin ⭐)',          type: 'dining',  location: 'New York' },
+    { offset: 21, time: '21:00', title: '✈️ BA178 Business back to London',                  type: 'travel',  location: 'JFK → LHR' },
+    { offset: 28, time: '06:00', title: '✈️ EK2 to Dubai (1A — Game Changer)',              type: 'travel',  location: 'LHR → DXB' },
+    { offset: 28, time: '20:30', title: '🍽️ Dinner — NOBU Dubai',                            type: 'dining',  location: 'Atlantis, The Royal' },
+    { offset: 29, time: '09:00', title: 'Dubai Media Partners Meeting',                      type: 'meeting', location: 'Dubai' },
+    { offset: 30, time: '15:00', title: 'Hammam & Spa — Talise Ottoman',                     type: 'wellness',location: 'Dubai' },
+    { offset: 31, time: '23:00', title: '✈️ EK1 First Class back to London',                 type: 'travel',  location: 'DXB → LHR' },
+    { offset: 42, time: '08:00', title: '✈️ BA2043 Business to Maldives (7 days)',           type: 'travel',  location: 'LHR → MLE — Soneva Fushi' },
+    { offset: 43, time: '10:00', title: '🏝️ Spa Day — Soneva Fushi Wellness Centre',         type: 'wellness',location: 'Maldives' },
+    { offset: 45, time: '08:00', title: '🧘 Sunrise Yoga on the Beach',                      type: 'sport',   location: 'Maldives' },
+    { offset: 47, time: '19:00', title: '🌅 Private Sunset Cruise',                          type: 'social',  location: 'Maldives' },
+    { offset: 49, time: '12:00', title: '✈️ Return from Maldives',                           type: 'travel',  location: 'MLE → LHR' },
+    { offset: 58, time: '07:00', title: '✈️ BA346 Business to Nice — Cannes Lions',          type: 'travel',  location: 'LHR → NCE' },
+    { offset: 58, time: '19:00', title: '🎭 Cannes Lions Festival — Opening Night Gala',     type: 'gala',    location: 'Cannes, France' },
+    { offset: 59, time: '11:00', title: 'Cannes Lions — Brand Keynote Panel',                type: 'meeting', location: 'Cannes' },
+    { offset: 60, time: '20:00', title: '🛥️ Yacht Party — Hôtel du Cap-Eden-Roc',            type: 'social',  location: 'Antibes' },
+    { offset: 61, time: '14:00', title: '✈️ Return to London',                               type: 'travel',  location: 'NCE → LHR' },
+    { offset: 68, time: '11:00', title: '🐎 Royal Ascot — VIP Royal Enclosure',              type: 'social',  location: 'Ascot, UK' },
+    { offset: 80, time: '14:00', title: '🎾 Wimbledon Finals — Centre Court Box',            type: 'social',  location: 'London' },
+    { offset: 90, time: '07:00', title: '✈️ BA65 Business to Nairobi — Private Safari',      type: 'travel',  location: 'LHR → NBO' },
+    { offset: 91, time: '06:00', title: '🦁 Masai Mara — Game Drive (private guide)',        type: 'personal',location: 'Kenya' },
+    { offset: 93, time: '06:30', title: '🎈 Hot Air Balloon Safari at Sunrise',              type: 'personal',location: 'Kenya' },
+    { offset: 96, time: '10:00', title: '✈️ Return from Nairobi',                            type: 'travel',  location: 'NBO → LHR' },
+    { offset: 105,time: '19:30', title: '🎭 Frieze Art Fair — VIP Preview & Dinner',         type: 'social',  location: 'Regent\'s Park' },
+    { offset: 115,time: '19:00', title: '🎭 Annual Company Awards Gala — The Dorchester',    type: 'gala',    location: 'London' },
+  ];
+
+  trips.forEach(t => {
+    const d = addDays(today, t.offset);
+    events.push({ date: toISODate(d), time: t.time, title: t.title, type: t.type, location: t.location });
+  });
+
+  const birthdays: Array<{ month: number; day: number; time: string; title: string; type: DemoCalendarEvent['type']; location: string }> = [
+    { month: 6,  day: 18, time: '19:00', title: '🎂 Meghan\'s Birthday — Private Dining at The Ritz', type: 'birthday', location: 'London' },
+    { month: 6,  day: 18, time: '14:00', title: '💐 Birthday Spa — Claridge\'s Spa',                  type: 'wellness', location: 'London' },
+    { month: 9,  day: 15, time: '19:30', title: '🎂 Mum\'s Birthday Dinner — The Wolseley',           type: 'birthday', location: 'London' },
+    { month: 11, day: 8,  time: '19:00', title: '🎂 Sarah\'s Birthday — Chiltern Firehouse',          type: 'birthday', location: 'London' },
+    { month: 12, day: 25, time: '10:00', title: '🎄 Christmas Day Brunch — Burj Al Arab',             type: 'holiday',  location: 'Dubai' },
+    { month: 12, day: 31, time: '20:00', title: '🎆 New Year\'s Eve Gala — Armani Hotel Dubai',       type: 'gala',     location: 'Dubai' },
+  ];
+  birthdays.forEach(b => {
+    const d = nextOccurrence(today, b.month, b.day);
+    events.push({ date: toISODate(d), time: b.time, title: b.title, type: b.type, location: b.location });
+  });
+
+  return events;
+};
+
+const generateJohnCalendar = (): DemoCalendarEvent[] => {
+  const events: DemoCalendarEvent[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const weekday: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '05:30', title: 'Swim Training — 3km',                 type: 'sport',   location: 'OCBC Aquatic Centre' },
+    { time: '07:00', title: 'Family Breakfast',                    type: 'family',  location: 'Home — Bukit Timah' },
+    { time: '07:45', title: 'School Drop-off — Emma',              type: 'family',  location: 'UWC Dover' },
+    { time: '08:30', title: 'Daycare Drop-off — Leo',              type: 'family',  location: 'Tanglin Trust' },
+    { time: '09:00', title: 'Executive Standup — APAC Team',       type: 'meeting', location: 'Office — CBD' },
+    { time: '10:00', title: 'Product Roadmap Review',              type: 'meeting', location: 'Office' },
+    { time: '12:30', title: 'Lunch — CUT by Wolfgang Puck',        type: 'dining',  location: 'Marina Bay Sands' },
+    { time: '14:00', title: 'Board Strategy Call — US HQ',         type: 'meeting', location: 'Zoom' },
+    { time: '16:00', title: 'Immigration Lawyer — EP / DP Status', type: 'legal',   location: 'Raffles Place' },
+    { time: '17:30', title: 'Run — 8km Marina Bay Loop',           type: 'sport',   location: 'Singapore' },
+    { time: '19:00', title: 'Family Dinner — Burnt Ends',          type: 'dining',  location: 'Singapore' },
+    { time: '20:30', title: 'Bedtime story with Leo',              type: 'family',  location: 'Home' },
+  ];
+  const saturday: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '06:00', title: 'Triathlon Brick Session (Bike + Run)', type: 'sport',  location: 'East Coast Park' },
+    { time: '09:30', title: 'Emma — Piano Lesson',                  type: 'family', location: 'Tanglin' },
+    { time: '10:30', title: 'Leo — Swim Class',                     type: 'family', location: 'Tanglin Club' },
+    { time: '12:00', title: 'Family Lunch — Haidilao Hot Pot',      type: 'dining', location: 'Singapore' },
+    { time: '15:00', title: 'Sports Massage',                       type: 'wellness',location: 'Spa Esprit' },
+    { time: '17:00', title: 'Wine tasting at home',                 type: 'social', location: 'Home' },
+    { time: '19:30', title: 'Date Night — Les Amis',                type: 'dining', location: 'Singapore' },
+  ];
+  const sunday: Omit<DemoCalendarEvent, 'date'>[] = [
+    { time: '06:30', title: 'Long Bike Ride — 80km',                type: 'sport',  location: 'Mandai Loop' },
+    { time: '10:00', title: 'Family Brunch — Dempsey Hill',         type: 'family', location: 'Singapore' },
+    { time: '13:00', title: 'Pool & Tanglin Club',                  type: 'family', location: 'Singapore' },
+    { time: '16:00', title: 'Leo Playdate — Park',                  type: 'family', location: 'Botanic Gardens' },
+    { time: '18:30', title: 'Family Dinner at Home',                type: 'family', location: 'Home' },
+  ];
+
+  for (let i = 0; i < 120; i++) {
+    const d = addDays(today, i);
+    const dow = d.getDay();
+    const dateStr = toISODate(d);
+    const list =
+      dow === 0 ? sunday :
+      dow === 6 ? saturday :
+      weekday.slice(0, 8 + (i % 4));
+    list.forEach(ev => events.push({ ...ev, date: dateStr }));
+  }
+
+  const trips: Array<{ offset: number; time: string; title: string; type: DemoCalendarEvent['type']; location: string }> = [
+    { offset: 4,  time: '08:00', title: '✈️ SQ32 Business to San Francisco (Seat 11A)',     type: 'travel',  location: 'SIN → SFO' },
+    { offset: 5,  time: '09:00', title: 'US Board Meeting — TechScale HQ',                  type: 'meeting', location: 'San Francisco' },
+    { offset: 5,  time: '20:00', title: '🍽️ Dinner — Benu (3 Michelin ⭐)',                  type: 'dining',  location: 'San Francisco' },
+    { offset: 6,  time: '10:00', title: 'Investor 1:1s — Sand Hill Road',                   type: 'meeting', location: 'Menlo Park' },
+    { offset: 7,  time: '07:00', title: '✈️ UA862 Business to São Paulo (6C — Polaris)',    type: 'travel',  location: 'SFO → GRU' },
+    { offset: 8,  time: '20:00', title: '🍽️ Dinner — D.O.M. (2 Michelin ⭐)',                type: 'dining',  location: 'São Paulo' },
+    { offset: 9,  time: '10:00', title: 'Brazil Partner Launch Event',                      type: 'meeting', location: 'São Paulo' },
+    { offset: 10, time: '22:00', title: '✈️ LH507 Business back via FRA → SIN',              type: 'travel',  location: 'GRU → SIN' },
+    { offset: 18, time: '08:00', title: '✈️ SQ322 Business to London (12A)',                type: 'travel',  location: 'SIN → LHR' },
+    { offset: 18, time: '20:00', title: '🍽️ Dinner — Hawksmoor Seven Dials',                type: 'dining',  location: 'London' },
+    { offset: 19, time: '09:00', title: 'UK Office — Quarterly Review',                     type: 'meeting', location: 'London' },
+    { offset: 20, time: '07:00', title: '✈️ LH2479 Business to Munich (2A)',                type: 'travel',  location: 'LHR → MUC' },
+    { offset: 20, time: '20:00', title: '🍽️ Dinner — Tantris (2 Michelin ⭐)',               type: 'dining',  location: 'Munich' },
+    { offset: 21, time: '09:00', title: 'Germany Partner Meeting',                          type: 'meeting', location: 'Munich' },
+    { offset: 22, time: '14:00', title: '🚄 First Class Train to Zürich',                   type: 'travel',  location: 'MUC → ZRH' },
+    { offset: 23, time: '09:00', title: 'Swiss Banking & Tax Meeting',                      type: 'meeting', location: 'Zürich' },
+    { offset: 23, time: '19:30', title: '🍽️ Dinner — The Restaurant (Dolder Grand, 2 ⭐)',   type: 'dining',  location: 'Zürich' },
+    { offset: 24, time: '22:00', title: '✈️ SQ345 Business back to Singapore',              type: 'travel',  location: 'ZRH → SIN' },
+    { offset: 33, time: '06:00', title: '🏊 Ironman 70.3 Bintan — Race Day',                type: 'sport',   location: 'Bintan, Indonesia' },
+    { offset: 34, time: '11:00', title: 'Family Beach Day at Lagoi Bay',                    type: 'family',  location: 'Bintan' },
+    { offset: 47, time: '07:00', title: '✈️ SQ346 to Geneva — Family Ski Trip',             type: 'travel',  location: 'SIN → GVA → Verbier' },
+    { offset: 48, time: '09:00', title: '⛷️ Ski Day — Verbier (W Hotel)',                   type: 'personal',location: 'Verbier, Switzerland' },
+    { offset: 50, time: '10:00', title: '⛷️ Family Ski Lessons — Emma & Leo',                type: 'family',  location: 'Verbier' },
+    { offset: 52, time: '14:00', title: '🍷 Fondue Lunch — Cabane Mont-Fort',                type: 'dining',  location: 'Verbier' },
+    { offset: 54, time: '12:00', title: '✈️ Return from Verbier',                            type: 'travel',  location: 'GVA → SIN' },
+    { offset: 65, time: '08:00', title: '✈️ SQ32 to SFO → Napa Valley wine trip',           type: 'travel',  location: 'SIN → SFO → NAP' },
+    { offset: 66, time: '20:00', title: '🍽️ Dinner — French Laundry (3 Michelin ⭐)',        type: 'dining',  location: 'Yountville, Napa' },
+    { offset: 67, time: '11:00', title: '🍷 Opus One + Screaming Eagle tasting',             type: 'social',  location: 'Napa' },
+    { offset: 78, time: '06:00', title: '🏊 Challenge Roth — Full Triathlon Race Day',      type: 'sport',   location: 'Roth, Germany' },
+    { offset: 95, time: '19:00', title: '🎭 Singapore GP — Paddock Party',                  type: 'social',  location: 'Marina Bay' },
+    { offset: 96, time: '14:00', title: '🏎️ Singapore GP — Race Day VIP',                   type: 'social',  location: 'Marina Bay' },
+    { offset: 38, time: '19:30', title: '🎭 American Chamber of Commerce Gala',             type: 'gala',    location: 'Shangri-La Singapore' },
+    { offset: 72, time: '19:30', title: '🎭 TechScale Global Annual Dinner — Black Tie',    type: 'gala',    location: 'San Francisco' },
+    { offset: 102,time: '18:00', title: '🎭 UWC International School Fundraiser',           type: 'gala',    location: 'Singapore' },
+    { offset: 110,time: '19:00', title: '🎭 Singapore Charity Ball — Ritz-Carlton',         type: 'gala',    location: 'Singapore' },
+  ];
+
+  trips.forEach(t => {
+    const d = addDays(today, t.offset);
+    events.push({ date: toISODate(d), time: t.time, title: t.title, type: t.type, location: t.location });
+  });
+
+  const birthdays: Array<{ month: number; day: number; time: string; title: string; type: DemoCalendarEvent['type']; location: string }> = [
+    { month: 4,  day: 12, time: '10:00', title: '🎂 Leo\'s Birthday Party — Tanglin Club',                type: 'birthday', location: 'Singapore' },
+    { month: 7,  day: 22, time: '11:00', title: '🎂 Emma\'s Birthday — Adventure Cove + Dinner',          type: 'birthday', location: 'Sentosa' },
+    { month: 8,  day: 28, time: '19:00', title: '🎂 Sarah\'s Birthday — Private dining at JAAN',          type: 'birthday', location: 'Singapore' },
+    { month: 10, day: 5,  time: '19:30', title: '🎂 John\'s Birthday — Dinner at Les Amis (2 ⭐)',         type: 'birthday', location: 'Singapore' },
+    { month: 10, day: 18, time: '19:00', title: '🥂 Wedding Anniversary — Dinner at Odette (3 ⭐)',        type: 'birthday', location: 'Singapore' },
+    { month: 5,  day: 10, time: '09:00', title: '💐 Mother\'s Day — Flowers to Mom in Boston',            type: 'personal', location: 'Remote' },
+    { month: 7,  day: 4,  time: '18:00', title: '🇺🇸 4th of July BBQ — American Club Singapore',          type: 'holiday',  location: 'Singapore' },
+    { month: 8,  day: 9,  time: '10:00', title: '🇸🇬 Singapore National Day — Marina Bay Fireworks',      type: 'holiday',  location: 'Singapore' },
+    { month: 11, day: 26, time: '12:00', title: '🦃 Thanksgiving Dinner — American Club',                 type: 'holiday',  location: 'Singapore' },
+    { month: 12, day: 25, time: '09:00', title: '🎄 Christmas Day — Family Breakfast at Zermatterhof',    type: 'holiday',  location: 'Zermatt' },
+    { month: 12, day: 31, time: '20:00', title: '🎆 New Year\'s Eve Gala — The Omnia Zermatt',            type: 'gala',     location: 'Zermatt' },
+  ];
+  birthdays.forEach(b => {
+    const d = nextOccurrence(today, b.month, b.day);
+    events.push({ date: toISODate(d), time: b.time, title: b.title, type: b.type, location: b.location });
+  });
+
+  return events;
+};
 
   const meghanEvents: Omit<DemoCalendarEvent, 'date'>[] = [
     { time: '06:30', title: 'Morning Yoga', type: 'sport', location: 'Equinox London' },
