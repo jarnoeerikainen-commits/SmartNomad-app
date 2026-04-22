@@ -20,13 +20,9 @@ import { AwardCategory, UserAwardCard, CardStatus } from '@/types/awardCards';
 import { AWARD_PROGRAMS, MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, calculateAwardValue, getAwardCardsAIContext } from '@/data/awardProgramsData';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { encryptJson, decryptJson } from '@/utils/secureStorage';
 
 const STORAGE_KEY = 'sn_award_cards_enc';
-
-const encryptData = (data: any): string => btoa(JSON.stringify(data));
-const decryptData = (encrypted: string): any => {
-  try { return JSON.parse(atob(encrypted)); } catch { return []; }
-};
 
 const categoryIcons: Record<AwardCategory, React.ElementType> = {
   airline: Plane,
@@ -77,25 +73,34 @@ const AwardCardsDashboard: React.FC = () => {
   const [showMasked, setShowMasked] = useState<Record<string, boolean>>({});
   const [showDirectoryDetails, setShowDirectoryDetails] = useState<string | null>(null);
 
-  // Load cards from encrypted localStorage or demo persona
+  // Load cards from encrypted localStorage (AES-256-GCM) or demo persona
   useEffect(() => {
-    if (activePersona?.id === 'meghan') {
-      setCards(MEGHAN_AWARD_CARDS);
-      localStorage.setItem(STORAGE_KEY, encryptData(MEGHAN_AWARD_CARDS));
-    } else if (activePersona?.id === 'john') {
-      setCards(JOHN_AWARD_CARDS);
-      localStorage.setItem(STORAGE_KEY, encryptData(JOHN_AWARD_CARDS));
-    } else {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setCards(decryptData(stored));
-    }
+    let cancelled = false;
+    (async () => {
+      if (activePersona?.id === 'meghan') {
+        setCards(MEGHAN_AWARD_CARDS);
+        const blob = await encryptJson(MEGHAN_AWARD_CARDS);
+        if (!cancelled) localStorage.setItem(STORAGE_KEY, blob);
+      } else if (activePersona?.id === 'john') {
+        setCards(JOHN_AWARD_CARDS);
+        const blob = await encryptJson(JOHN_AWARD_CARDS);
+        if (!cancelled) localStorage.setItem(STORAGE_KEY, blob);
+      } else {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const data = await decryptJson<UserAwardCard[]>(stored);
+          if (!cancelled && Array.isArray(data)) setCards(data);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
   }, [activePersona?.id]);
 
-  // Persist and sync to AI context
+  // Persist and sync to AI context (AES-256-GCM)
   const saveCards = useCallback((newCards: UserAwardCard[]) => {
     setCards(newCards);
-    localStorage.setItem(STORAGE_KEY, encryptData(newCards));
-    // Store AI context for the concierge
+    encryptJson(newCards).then(blob => localStorage.setItem(STORAGE_KEY, blob)).catch(() => {});
+    // Store AI context for the concierge (non-sensitive aggregate)
     localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(newCards));
   }, []);
 

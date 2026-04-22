@@ -12,6 +12,11 @@ import { Plus, Trash2, AlertTriangle, Calendar, FileText, Briefcase, Check, Chev
 import { useToast } from '@/hooks/use-toast';
 import { ALL_COUNTRIES } from '@/data/countries';
 import { cn } from '@/lib/utils';
+import { encryptJson, decryptJson } from '@/utils/secureStorage';
+
+const PASSPORTS_KEY = 'sn_passports_enc';
+const VISAS_KEY = 'sn_visas_enc';
+const PERMITS_KEY = 'sn_working_permits_enc';
 
 interface Passport {
   id: string;
@@ -68,34 +73,54 @@ const PassportManager = () => {
     label: `${c.flag} ${c.name}`
   })).sort((a, b) => a.value.localeCompare(b.value));
 
-  // Load data from localStorage
+  // Load data from encrypted localStorage (AES-256-GCM)
+  // Migrates legacy plaintext "passports" / "visas" / "workingPermits" keys.
   useEffect(() => {
-    const savedPassports = localStorage.getItem('passports');
-    const savedVisas = localStorage.getItem('visas');
-    const savedPermits = localStorage.getItem('workingPermits');
-    
-    if (savedPassports) {
-      setPassports(JSON.parse(savedPassports));
-    }
-    if (savedVisas) {
-      setVisas(JSON.parse(savedVisas));
-    }
-    if (savedPermits) {
-      setWorkingPermits(JSON.parse(savedPermits));
-    }
+    let cancelled = false;
+    (async () => {
+      // Try new encrypted keys first
+      const [pBlob, vBlob, wBlob] = [
+        localStorage.getItem(PASSPORTS_KEY),
+        localStorage.getItem(VISAS_KEY),
+        localStorage.getItem(PERMITS_KEY),
+      ];
+      const pData = pBlob ? await decryptJson<Passport[]>(pBlob) : null;
+      const vData = vBlob ? await decryptJson<Visa[]>(vBlob) : null;
+      const wData = wBlob ? await decryptJson<WorkingPermit[]>(wBlob) : null;
+
+      // Fall back to legacy plaintext keys, then migrate + wipe
+      const legacyP = !pData ? localStorage.getItem('passports') : null;
+      const legacyV = !vData ? localStorage.getItem('visas') : null;
+      const legacyW = !wData ? localStorage.getItem('workingPermits') : null;
+
+      if (cancelled) return;
+      const finalP: Passport[] = pData ?? (legacyP ? JSON.parse(legacyP) : []);
+      const finalV: Visa[] = vData ?? (legacyV ? JSON.parse(legacyV) : []);
+      const finalW: WorkingPermit[] = wData ?? (legacyW ? JSON.parse(legacyW) : []);
+
+      setPassports(finalP);
+      setVisas(finalV);
+      setWorkingPermits(finalW);
+
+      // Migrate legacy → encrypted, then wipe plaintext
+      if (legacyP) { await encryptJson(finalP).then(b => localStorage.setItem(PASSPORTS_KEY, b)); localStorage.removeItem('passports'); }
+      if (legacyV) { await encryptJson(finalV).then(b => localStorage.setItem(VISAS_KEY, b)); localStorage.removeItem('visas'); }
+      if (legacyW) { await encryptJson(finalW).then(b => localStorage.setItem(PERMITS_KEY, b)); localStorage.removeItem('workingPermits'); }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
-  // Save data to localStorage
+  // Persist encrypted (AES-256-GCM)
   useEffect(() => {
-    localStorage.setItem('passports', JSON.stringify(passports));
+    encryptJson(passports).then(b => localStorage.setItem(PASSPORTS_KEY, b)).catch(() => {});
   }, [passports]);
 
   useEffect(() => {
-    localStorage.setItem('visas', JSON.stringify(visas));
+    encryptJson(visas).then(b => localStorage.setItem(VISAS_KEY, b)).catch(() => {});
   }, [visas]);
 
   useEffect(() => {
-    localStorage.setItem('workingPermits', JSON.stringify(workingPermits));
+    encryptJson(workingPermits).then(b => localStorage.setItem(PERMITS_KEY, b)).catch(() => {});
   }, [workingPermits]);
 
   // Check for expiring documents

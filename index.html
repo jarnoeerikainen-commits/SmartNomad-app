@@ -8,6 +8,32 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#0e7490" />
     <link rel="icon" href="/favicon.png" type="image/png" />
+
+    <!-- ─── Security headers (defence-in-depth; server CSP recommended in prod) ─── -->
+    <!--
+      CSP allows: Lovable preview/HMR, Supabase REST + Realtime + Functions, Google Fonts,
+      Open-Meteo / Nominatim / WAQI for live data, ElevenLabs TTS audio, Lovable AI Gateway.
+      'unsafe-inline' is required for Tailwind-injected styles and Vite preview.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://lovable.dev https://*.lovable.dev https://*.lovableproject.com https://*.lovable.app;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' data: https://fonts.gstatic.com;
+      img-src 'self' data: blob: https:;
+      media-src 'self' blob: data: https://*.elevenlabs.io https://*.supabase.co;
+      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.lovable.dev wss://*.lovable.dev https://*.lovableproject.com wss://*.lovableproject.com https://*.lovable.app https://api.open-meteo.com https://nominatim.openstreetmap.org https://*.waqi.info https://api.elevenlabs.io https://ai.gateway.lovable.dev;
+      frame-src 'self' blob:;
+      worker-src 'self' blob:;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'self' https://*.lovable.dev https://*.lovableproject.com https://*.lovable.app;
+      upgrade-insecure-requests;
+    " />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), camera=(self), microphone=(self), payment=(self), accelerometer=(), gyroscope=(), magnetometer=(), interest-cohort=()" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     
     <!-- Premium Font Stack: Inter for UI, Playfair Display for trust -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

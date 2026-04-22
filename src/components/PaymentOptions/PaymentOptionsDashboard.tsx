@@ -14,21 +14,10 @@ import { PaymentPreferences } from './PaymentPreferences';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Skeleton } from '@/components/ui/skeleton';
+import { encryptJson, decryptJson } from '@/utils/secureStorage';
+import MFAGate from '@/components/auth/MFAGate';
 
 const AgenticWalletDashboard = lazy(() => import('./AgenticWalletDashboard'));
-
-// Simple encrypt/decrypt for demo (in production use Web Crypto API)
-const encryptData = (data: any): string => {
-  return btoa(JSON.stringify(data));
-};
-
-const decryptData = (encrypted: string): any => {
-  try {
-    return JSON.parse(atob(encrypted));
-  } catch {
-    return null;
-  }
-};
 
 const STORAGE_KEY = 'sn_payment_methods_enc';
 const PREFS_KEY = 'sn_payment_prefs_enc';
@@ -167,33 +156,46 @@ const PaymentOptionsDashboard: React.FC = () => {
   const [editMethod, setEditMethod] = useState<PaymentMethod | null>(null);
   const [activeTab, setActiveTab] = useState('methods');
 
-  // Load from encrypted localStorage
+  // Load from encrypted localStorage (AES-256-GCM)
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const storedPrefs = localStorage.getItem(PREFS_KEY);
-    if (stored) {
-      const data = decryptData(stored);
-      if (data) { setMethods(data); return; }
-    }
-    // Load demo data
-    setMethods(DEMO_METHODS);
-    if (storedPrefs) {
-      const data = decryptData(storedPrefs);
-      if (data) { setPreferences(data); return; }
-    }
-    setPreferences(DEMO_PREFS);
+    let cancelled = false;
+    (async () => {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const storedPrefs = localStorage.getItem(PREFS_KEY);
+      if (stored) {
+        const data = await decryptJson<PaymentMethod[]>(stored);
+        if (!cancelled && data && Array.isArray(data)) {
+          setMethods(data);
+        } else if (!cancelled) {
+          setMethods(DEMO_METHODS);
+        }
+      } else if (!cancelled) {
+        setMethods(DEMO_METHODS);
+      }
+      if (storedPrefs) {
+        const data = await decryptJson<PaymentPreference[]>(storedPrefs);
+        if (!cancelled && data && Array.isArray(data)) {
+          setPreferences(data);
+        } else if (!cancelled) {
+          setPreferences(DEMO_PREFS);
+        }
+      } else if (!cancelled) {
+        setPreferences(DEMO_PREFS);
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
-  // Persist encrypted
+  // Persist encrypted (AES-256-GCM, async)
   useEffect(() => {
     if (methods.length > 0) {
-      localStorage.setItem(STORAGE_KEY, encryptData(methods));
+      encryptJson(methods).then(blob => localStorage.setItem(STORAGE_KEY, blob)).catch(() => {});
     }
   }, [methods]);
 
   useEffect(() => {
     if (preferences.length > 0) {
-      localStorage.setItem(PREFS_KEY, encryptData(preferences));
+      encryptJson(preferences).then(blob => localStorage.setItem(PREFS_KEY, blob)).catch(() => {});
     }
   }, [preferences]);
 
@@ -246,6 +248,7 @@ const PaymentOptionsDashboard: React.FC = () => {
   }), [methods]);
 
   return (
+    <MFAGate flag="require_mfa_for_payments" area="your payment options">
     <div className="space-y-4 pb-20 md:pb-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -486,6 +489,7 @@ const PaymentOptionsDashboard: React.FC = () => {
         editMethod={editMethod}
       />
     </div>
+    </MFAGate>
   );
 };
 

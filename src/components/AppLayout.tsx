@@ -15,6 +15,7 @@ import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { Skeleton } from './ui/skeleton';
 import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
+import MFAGate from '@/components/auth/MFAGate';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
 const TrackingSection = lazy(() => import('./sections/TrackingSection'));
@@ -445,7 +446,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'ees': return <EESCenter countries={countries} />;
       case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
-      case 'snomad-id': return <SnomadIdVault />;
+      case 'snomad-id': return <MFAGate flag="require_mfa_for_sensitive" area="your Snomad ID identity vault"><SnomadIdVault /></MFAGate>;
       case 'customize': return <FeatureCustomizer />;
       case 'integrations': return <ConnectorsDashboard />;
       case 'lifestyle-hub': return <LifestyleHub />;
