@@ -28,11 +28,11 @@ describe('evaluatePassword', () => {
 describe('<PasswordStrengthMeter />', () => {
   it('renders nothing for empty password', () => {
     const { container } = render(<PasswordStrengthMeter password="" />);
-    expect(container).toBeEmptyDOMElement();
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders the strength label for a non-empty password', () => {
     render(<PasswordStrengthMeter password="hunter2" />);
-    expect(screen.getByText(/strength/i)).toBeInTheDocument();
+    expect(screen.queryByText(/strength/i)).not.toBeNull();
   });
 });
