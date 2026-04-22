@@ -21,6 +21,7 @@ import { AWARD_PROGRAMS, MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, calculateAwardVal
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { encryptJson, decryptJson } from '@/utils/secureStorage';
+import RewardsOptimizer from '@/components/AwardCards/RewardsOptimizer';
 
 const STORAGE_KEY = 'sn_award_cards_enc';
 
@@ -219,8 +220,11 @@ const AwardCardsDashboard: React.FC = () => {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="my-cards">My Cards ({cards.length})</TabsTrigger>
+          <TabsTrigger value="optimizer">
+            <Sparkles className="w-3.5 h-3.5 mr-1" /> Optimizer
+          </TabsTrigger>
           <TabsTrigger value="add">Add New</TabsTrigger>
           <TabsTrigger value="directory">Directory ({AWARD_PROGRAMS.length})</TabsTrigger>
         </TabsList>
