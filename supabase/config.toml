@@ -92,3 +92,6 @@ verify_jwt = false
 
 [functions.data-package-query]
 verify_jwt = false
+
+[functions.admin-concierge]
+verify_jwt = false
