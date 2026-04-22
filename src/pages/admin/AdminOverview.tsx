@@ -3,8 +3,9 @@ import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Activity, Zap, LifeBuoy, AlertTriangle, DollarSign,
-  Coins, Building2, Wallet, TrendingUp, Loader2
+  Coins, Building2, Wallet, TrendingUp, Loader2,
 } from 'lucide-react';
+import { platformRollup } from '@/utils/adminDemoData';
 
 interface Stats {
   total_users: number;
@@ -34,20 +35,9 @@ const AdminOverview: React.FC = () => {
       if (!error && data && data.length > 0) {
         setStats(data[0] as any);
       } else {
-        // Demo fallback (read-only investor preview)
-        setStats({
-          total_users: 18420,
-          dau_24h: 3142,
-          mau_30d: 12880,
-          ai_calls_24h: 28930,
-          ai_tokens_30d: 14_280_000,
-          open_tickets: 23,
-          urgent_tickets: 2,
-          b2b_revenue_30d: 84_320,
-          active_affiliates: 412,
-          active_partners: 7,
-          pending_affiliate_payouts: 6_240,
-        });
+        // Demo fallback — synthesised from the same dataset that powers
+        // Users / Tickets / Affiliates / B2B / Audit so all numbers reconcile.
+        setStats(platformRollup() as Stats);
       }
       setLoading(false);
     })();
