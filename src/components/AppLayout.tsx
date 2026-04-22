@@ -15,6 +15,7 @@ import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { Skeleton } from './ui/skeleton';
 import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
+import MFAGate from '@/components/auth/MFAGate';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
 const TrackingSection = lazy(() => import('./sections/TrackingSection'));
