@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { isReminderDue, formatReminderMessage } from '@/services/CalendarReminderEngine';
-import { CalendarEvent } from '@/types/calendarEvent';
+import { CalendarEvent, ReminderChannel } from '@/types/calendarEvent';
+
+const chatOnly: ReminderChannel[] = ['chat'];
+const toastOnly: ReminderChannel[] = ['toast'];
 
 function eventAt(minutesFromNow: number): CalendarEvent {
   const start = new Date(Date.now() + minutesFromNow * 60_000).toISOString();
@@ -17,46 +20,42 @@ function eventAt(minutesFromNow: number): CalendarEvent {
 
 describe('isReminderDue', () => {
   it('fires when current time has passed the trigger but event has not started', () => {
-    const evt = eventAt(10); // event in 10 min
-    const rule = { minutesBefore: 15, channels: ['chat'] as const };
-    expect(isReminderDue(evt, rule)).toBe(true);
+    const evt = eventAt(10);
+    expect(isReminderDue(evt, { minutesBefore: 15, channels: chatOnly })).toBe(true);
   });
 
   it('does not fire if rule already fired', () => {
     const evt = eventAt(10);
-    const rule = { minutesBefore: 15, channels: ['chat'] as const, fired: true };
-    expect(isReminderDue(evt, rule)).toBe(false);
+    expect(isReminderDue(evt, { minutesBefore: 15, channels: chatOnly, fired: true })).toBe(false);
   });
 
   it('does not fire if reminder time is in the future', () => {
-    const evt = eventAt(120); // event in 2h
-    const rule = { minutesBefore: 30, channels: ['chat'] as const };
-    expect(isReminderDue(evt, rule)).toBe(false);
+    const evt = eventAt(120);
+    expect(isReminderDue(evt, { minutesBefore: 30, channels: chatOnly })).toBe(false);
   });
 
   it('does not fire if event ended >1h ago', () => {
-    const evt = eventAt(-90); // event was 90 min ago
-    const rule = { minutesBefore: 15, channels: ['chat'] as const };
-    expect(isReminderDue(evt, rule)).toBe(false);
+    const evt = eventAt(-90);
+    expect(isReminderDue(evt, { minutesBefore: 15, channels: chatOnly })).toBe(false);
   });
 });
 
 describe('formatReminderMessage', () => {
   it('says "now" when event is imminent', () => {
     const evt = eventAt(0);
-    const msg = formatReminderMessage(evt, { minutesBefore: 0, channels: ['toast'] });
+    const msg = formatReminderMessage(evt, { minutesBefore: 0, channels: toastOnly });
     expect(msg.toLowerCase()).toContain('now');
   });
 
   it('formats minutes-away events in minutes', () => {
     const evt = eventAt(20);
-    const msg = formatReminderMessage(evt, { minutesBefore: 30, channels: ['chat'] });
+    const msg = formatReminderMessage(evt, { minutesBefore: 30, channels: chatOnly });
     expect(msg).toMatch(/in \d+ min/);
   });
 
   it('includes the event title and location', () => {
     const evt = { ...eventAt(15), title: 'Doctor', location: 'Mayo Clinic' };
-    const msg = formatReminderMessage(evt, { minutesBefore: 30, channels: ['chat'] });
+    const msg = formatReminderMessage(evt, { minutesBefore: 30, channels: chatOnly });
     expect(msg).toContain('Doctor');
     expect(msg).toContain('Mayo Clinic');
   });
