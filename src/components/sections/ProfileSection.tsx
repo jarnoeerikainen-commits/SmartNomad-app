@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Settings as SettingsIcon, Award, Crown, Headphones, FileText, Shield } from 'lucide-react';
+import { User, Settings as SettingsIcon, Award, Crown, Headphones, FileText, Shield, Users } from 'lucide-react';
 import ComprehensiveUserProfile from '../ComprehensiveUserProfile';
 import MyAwards from '../MyAwards';
 import SupportTicketing from '../SupportTicketing';
 import DataManagementSettings from '../DataManagementSettings';
 import ProfileDataViewer from '../ProfileDataViewer';
 import EnhancedProfileForm from '../EnhancedProfileForm';
+import FamilyVault from '../FamilyVault';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -74,10 +75,14 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="profile" className="flex items-center gap-1.5 text-xs px-2">
             <User className="h-4 w-4 shrink-0" />
             <span className="hidden sm:inline truncate">Profile</span>
+          </TabsTrigger>
+          <TabsTrigger value="family" className="flex items-center gap-1.5 text-xs px-2">
+            <Users className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline truncate">Family</span>
           </TabsTrigger>
           <TabsTrigger value="mydata" className="flex items-center gap-1.5 text-xs px-2">
             <FileText className="h-4 w-4 shrink-0" />
@@ -103,6 +108,10 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ subscription, onUpgrade
 
         <TabsContent value="profile" className="mt-6 animate-fade-in">
           <ComprehensiveUserProfile subscription={subscription} onUpgradeClick={onUpgradeClick} />
+        </TabsContent>
+
+        <TabsContent value="family" className="mt-6 animate-fade-in">
+          <FamilyVault />
         </TabsContent>
 
         <TabsContent value="mydata" className="mt-6 animate-fade-in">
