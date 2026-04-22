@@ -16,8 +16,12 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import {
-  Tabs, TabsList, TabsTrigger, TabsContent,
+  Tabs, TabsList, TabsTrigger,
 } from '@/components/ui/tabs';
+import {
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
+  SelectTrigger, SelectValue,
+} from '@/components/ui/select';
 import {
   Shield, Scale, Rocket, Palette, BarChart3, Crown, KeyRound, Activity,
   CheckCircle2, XCircle, AlertTriangle, Clock, Lock, FileCheck2, Sparkles,
@@ -264,65 +268,86 @@ const AdminAgents: React.FC = () => {
         </Card>
       </div>
 
-      {/* DEPARTMENT LEADS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-        {(Object.keys(AGENTS) as AgentId[]).map((id) => {
-          const a = AGENTS[id];
-          const Icon = AGENT_ICONS[id];
-          const open = proposals.filter(
-            (p) => p.agent_id === id && (p.status === 'drafted' || p.status === 'in_review' || p.status === 'needs_permit'),
-          ).length;
-          const urgent = proposals.filter(
-            (p) => p.agent_id === id && p.priority === 'urgent' && p.status !== 'approved' && p.status !== 'rejected',
-          ).length;
+      {/* DEPARTMENT LEADS — grouped by Tier */}
+      <div className="space-y-5">
+        {(Object.keys(TIER_LABELS) as AgentTier[]).map((tier) => {
+          const tierMeta = TIER_LABELS[tier];
+          const tierAgents = AGENTS_BY_TIER[tier];
           return (
-            <Card
-              key={id}
-              className="bg-[hsl(220_22%_6%)] border-[hsl(43_96%_56%/0.15)] p-4 hover:border-[hsl(43_96%_56%/0.4)] transition-colors cursor-pointer"
-              onClick={() => {
-                setFilter(id);
-                setStatusFilter('open');
-              }}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <div
-                    className="h-9 w-9 rounded-md flex items-center justify-center"
-                    style={{ backgroundColor: `${a.color_token.replace(')', ' / 0.15)')}`, color: a.color_token }}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">{a.name}</div>
-                    <div className="text-[10px] text-[hsl(30_12%_60%)]">{a.role}</div>
-                  </div>
+            <div key={tier}>
+              <div className="flex items-baseline justify-between mb-2 px-0.5">
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-sm font-semibold text-[hsl(var(--gold))] uppercase tracking-wider">
+                    {tierMeta.label}
+                  </h3>
+                  <span className="text-[11px] text-[hsl(30_12%_60%)]">{tierMeta.tagline}</span>
                 </div>
-                <span className="text-lg">{a.emoji}</span>
+                <span className="text-[10px] text-[hsl(30_12%_55%)] uppercase tracking-wider">
+                  {tierAgents.length} agent{tierAgents.length === 1 ? '' : 's'}
+                </span>
               </div>
-              <div className="text-[11px] text-[hsl(30_12%_65%)] mb-2 line-clamp-2">{a.team_label}</div>
-              <div className="flex items-center gap-1.5 mb-2">
-                <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 text-[10px] px-1.5">
-                  {open} open
-                </Badge>
-                {urgent > 0 && (
-                  <Badge className="bg-rose-500/15 text-rose-300 border-rose-500/30 text-[10px] px-1.5">
-                    {urgent} urgent
-                  </Badge>
-                )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                {tierAgents.map((id) => {
+                  const a = AGENTS[id];
+                  const Icon = AGENT_ICONS[id];
+                  const open = proposals.filter(
+                    (p) => p.agent_id === id && (p.status === 'drafted' || p.status === 'in_review' || p.status === 'needs_permit'),
+                  ).length;
+                  const urgent = proposals.filter(
+                    (p) => p.agent_id === id && p.priority === 'urgent' && p.status !== 'approved' && p.status !== 'rejected',
+                  ).length;
+                  return (
+                    <Card
+                      key={id}
+                      className="bg-[hsl(220_22%_6%)] border-[hsl(43_96%_56%/0.15)] p-4 hover:border-[hsl(43_96%_56%/0.4)] transition-colors cursor-pointer"
+                      onClick={() => {
+                        setFilter(id);
+                        setStatusFilter('open');
+                      }}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div
+                            className="h-9 w-9 rounded-md flex items-center justify-center shrink-0"
+                            style={{ backgroundColor: `${a.color_token.replace(')', ' / 0.15)')}`, color: a.color_token }}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-sm truncate">{a.name}</div>
+                            <div className="text-[10px] text-[hsl(30_12%_60%)] truncate">{a.role}</div>
+                          </div>
+                        </div>
+                        <span className="text-lg shrink-0">{a.emoji}</span>
+                      </div>
+                      <div className="text-[11px] text-[hsl(30_12%_65%)] mb-2 line-clamp-2">{a.team_label}</div>
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 text-[10px] px-1.5">
+                          {open} open
+                        </Badge>
+                        {urgent > 0 && (
+                          <Badge className="bg-rose-500/15 text-rose-300 border-rose-500/30 text-[10px] px-1.5">
+                            {urgent} urgent
+                          </Badge>
+                        )}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="w-full text-xs h-7"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          AgentOrchestratorService.triggerScan(id);
+                          toast.success(`${a.name} triggered a fresh scan.`);
+                        }}
+                      >
+                        <RefreshCw className="h-3 w-3 mr-1" /> Trigger scan
+                      </Button>
+                    </Card>
+                  );
+                })}
               </div>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="w-full text-xs h-7"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  AgentOrchestratorService.triggerScan(id);
-                  toast.success(`${a.name} triggered a fresh scan.`);
-                }}
-              >
-                <RefreshCw className="h-3 w-3 mr-1" /> Trigger scan
-              </Button>
-            </Card>
+            </div>
           );
         })}
       </div>
@@ -338,16 +363,26 @@ const AdminAgents: React.FC = () => {
             </Badge>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
-              <TabsList className="bg-[hsl(220_22%_4%)]">
-                <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-                {(Object.keys(AGENTS) as AgentId[]).map((id) => (
-                  <TabsTrigger key={id} value={id} className="text-xs">
-                    {AGENTS[id].emoji} {AGENTS[id].name}
-                  </TabsTrigger>
+            <Select value={filter} onValueChange={(v) => setFilter(v as AgentId | 'all')}>
+              <SelectTrigger className="h-9 w-[220px] bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.2)] text-xs">
+                <SelectValue placeholder="Filter by agent" />
+              </SelectTrigger>
+              <SelectContent className="bg-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.25)] text-[hsl(30_12%_92%)]">
+                <SelectItem value="all" className="text-xs">All agents (15)</SelectItem>
+                {(Object.keys(TIER_LABELS) as AgentTier[]).map((tier) => (
+                  <SelectGroup key={tier}>
+                    <SelectLabel className="text-[10px] uppercase tracking-wider text-[hsl(var(--gold))]">
+                      {TIER_LABELS[tier].label}
+                    </SelectLabel>
+                    {AGENTS_BY_TIER[tier].map((id) => (
+                      <SelectItem key={id} value={id} className="text-xs">
+                        {AGENTS[id].emoji} {AGENTS[id].name} · {AGENTS[id].team_label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 ))}
-              </TabsList>
-            </Tabs>
+              </SelectContent>
+            </Select>
             <Tabs value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
               <TabsList className="bg-[hsl(220_22%_4%)]">
                 <TabsTrigger value="open" className="text-xs">Open</TabsTrigger>
