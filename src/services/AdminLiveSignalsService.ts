@@ -324,7 +324,7 @@ export const AdminLiveSignalsService = {
       `Signals: ${a.total_signals} from ${a.active_users_window} unique users`,
       `Revenue: $${a.revenue_window_usd} | Open problems: ${a.open_problems} | Positive sentiment: ${a.positive_pct}%`,
       `By region: ${Object.entries(a.by_region).map(([k, v]) => `${k}=${v}`).join(' ')}`,
-      `By kind: ${Object.entries(a.by_kind).filter(([, v]) => v > 0).map(([k, v]) => `${k}=${v}`).join(' ')}`,
+      `By kind: ${(Object.entries(a.by_kind) as [string, number][]).filter(([, v]) => v > 0).map(([k, v]) => `${k}=${v}`).join(' ')}`,
       `Top cities: ${a.top_cities.map((c) => `${c.city}(${c.n})`).join(', ')}`,
       `Top wishes: ${a.top_wishes.map((w) => `• ${w.text} ×${w.n}`).join(' | ') || 'n/a'}`,
       ``,
