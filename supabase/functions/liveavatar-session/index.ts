@@ -92,7 +92,7 @@ async function createSessionToken(
     body: JSON.stringify({
       avatar_id: avatarId,
       mode: 'FULL',
-      is_sandbox: false,
+      is_sandbox: true,
       video_settings: { quality: 'high', encoding: 'H264' },
       max_session_duration: 180,
       interactivity_type: 'CONVERSATIONAL',
