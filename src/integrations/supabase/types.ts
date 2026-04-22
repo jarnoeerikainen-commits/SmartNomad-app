@@ -1992,6 +1992,206 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_role: string | null
+          after_state: Json | null
+          before_state: Json | null
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_role?: string | null
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_role?: string | null
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      staff_invites: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string | null
+          metadata: Json
+          role: Database["public"]["Enums"]["app_role"]
+          status: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          metadata?: Json
+          role: Database["public"]["Enums"]["app_role"]
+          status?: string
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string | null
+          metadata?: Json
+          role?: Database["public"]["Enums"]["app_role"]
+          status?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      support_ticket_messages: {
+        Row: {
+          attachments: Json
+          author_id: string | null
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          is_internal: boolean
+          ticket_id: string
+        }
+        Insert: {
+          attachments?: Json
+          author_id?: string | null
+          author_role?: string
+          body: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          ticket_id: string
+        }
+        Update: {
+          attachments?: Json
+          author_id?: string | null
+          author_role?: string
+          body?: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          closed_at: string | null
+          created_at: string
+          description: string
+          device_id: string | null
+          id: string
+          metadata: Json
+          priority: string
+          requester_email: string | null
+          requester_name: string | null
+          resolved_at: string | null
+          satisfaction_rating: number | null
+          source: string
+          status: string
+          subject: string
+          tags: string[]
+          ticket_number: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string
+          closed_at?: string | null
+          created_at?: string
+          description: string
+          device_id?: string | null
+          id?: string
+          metadata?: Json
+          priority?: string
+          requester_email?: string | null
+          requester_name?: string | null
+          resolved_at?: string | null
+          satisfaction_rating?: number | null
+          source?: string
+          status?: string
+          subject: string
+          tags?: string[]
+          ticket_number?: never
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          closed_at?: string | null
+          created_at?: string
+          description?: string
+          device_id?: string | null
+          id?: string
+          metadata?: Json
+          priority?: string
+          requester_email?: string | null
+          requester_name?: string | null
+          resolved_at?: string | null
+          satisfaction_rating?: number | null
+          source?: string
+          status?: string
+          subject?: string
+          tags?: string[]
+          ticket_number?: never
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       travel_history: {
         Row: {
           ai_tags: string[] | null
@@ -2331,11 +2531,29 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_platform_stats: {
+        Args: never
+        Returns: {
+          active_affiliates: number
+          active_partners: number
+          ai_calls_24h: number
+          ai_tokens_30d: number
+          b2b_revenue_30d: number
+          computed_at: string
+          dau_24h: number
+          mau_30d: number
+          open_tickets: number
+          pending_affiliate_payouts: number
+          total_users: number
+          urgent_tickets: number
+        }[]
+      }
       get_request_device_id: { Args: never; Returns: string }
       has_active_consent: {
         Args: { p_partner_id?: string; p_purpose: string; p_user_id: string }
         Returns: boolean
       }
+      has_admin_or_support: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2343,6 +2561,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_staff_role: { Args: { _user_id: string }; Returns: boolean }
       has_verified_mfa: { Args: never; Returns: boolean }
       is_demo_mode: { Args: never; Returns: boolean }
       log_ai_usage: {
@@ -2358,6 +2577,17 @@ export type Database = {
           p_reasoning?: string
         }
         Returns: undefined
+      }
+      log_staff_action: {
+        Args: {
+          p_action: string
+          p_after?: Json
+          p_before?: Json
+          p_metadata?: Json
+          p_target_id?: string
+          p_target_type?: string
+        }
+        Returns: string
       }
       migrate_device_to_user: {
         Args: { p_device_id: string; p_user_id: string }
