@@ -1800,6 +1800,62 @@ export type Database = {
       }
     }
     Views: {
+      affiliate_referral_clicks_safe: {
+        Row: {
+          affiliate_id: string | null
+          click_id: string | null
+          converted: boolean | null
+          converted_at: string | null
+          country_code: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          landing_path: string | null
+          referral_code: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          affiliate_id?: string | null
+          click_id?: string | null
+          converted?: boolean | null
+          converted_at?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          landing_path?: string | null
+          referral_code?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          affiliate_id?: string | null
+          click_id?: string | null
+          converted?: boolean | null
+          converted_at?: string | null
+          country_code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          landing_path?: string | null
+          referral_code?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_clicks_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_active_trust_credentials: {
         Row: {
           credential_type: string | null
