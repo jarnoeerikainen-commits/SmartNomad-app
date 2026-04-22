@@ -20,8 +20,8 @@ const API_BASE = 'https://api.liveavatar.com/v1';
 // the public avatar list and fall back to the first available one.
 const PREFERRED_NAMES = ['anna', 'sara', 'sofia', 'emma', 'maya'];
 
-async function pickAvatarId(apiKey: string): Promise<string> {
-  const res = await fetch(`${API_BASE}/avatars/public?limit=50`, {
+async function pickAvatar(apiKey: string): Promise<{ avatarId: string; voiceId?: string; name: string }> {
+  const res = await fetch(`${API_BASE}/avatars/public?page=1&page_size=50`, {
     headers: { 'X-API-KEY': apiKey },
   });
 
@@ -40,31 +40,49 @@ async function pickAvatarId(apiKey: string): Promise<string> {
   else if (Array.isArray(json?.results)) avatars = json.results;
 
   // Filter to ACTIVE, non-expired, has-id
-  avatars = avatars.filter(
-    (a) => a?.id && a?.status === 'ACTIVE' && !a?.is_expired,
-  );
+  avatars = avatars.filter((a) => a?.id && a?.status === 'ACTIVE' && !a?.is_expired);
 
   if (avatars.length === 0) {
     throw new Error('no active public avatars returned');
   }
 
   // Prefer a warm female-sounding name
+  let chosen: any = null;
   for (const wanted of PREFERRED_NAMES) {
     const match = avatars.find((a) => (a.name || '').toLowerCase().includes(wanted));
     if (match) {
-      const id = match.id || match.avatar_id;
-      if (id) return id;
+      chosen = match;
+      break;
     }
   }
+  if (!chosen) chosen = avatars[0];
 
-  // Fallback: first one with an id
-  const first = avatars.find((a) => a.id || a.avatar_id);
-  const id = first?.id || first?.avatar_id;
-  if (!id) throw new Error('no usable avatar id in list');
-  return id;
+  return {
+    avatarId: chosen.id,
+    voiceId: chosen.default_voice?.id,
+    name: chosen.name || 'Aurora',
+  };
 }
 
-async function createSessionToken(apiKey: string, avatarId: string): Promise<string> {
+async function createSessionToken(
+  apiKey: string,
+  avatarId: string,
+  voiceId?: string,
+): Promise<string> {
+  const persona: Record<string, unknown> = {
+    language: 'en',
+    voice_settings: {
+      provider: 'elevenLabs',
+      speed: 1.0,
+      stability: 0.6,
+      similarity_boost: 0.8,
+      style: 0.3,
+      use_speaker_boost: true,
+      model: 'eleven_flash_v2_5',
+    },
+  };
+  if (voiceId) persona.voice_id = voiceId;
+
   const res = await fetch(`${API_BASE}/sessions/token`, {
     method: 'POST',
     headers: {
@@ -76,20 +94,9 @@ async function createSessionToken(apiKey: string, avatarId: string): Promise<str
       mode: 'FULL',
       is_sandbox: false,
       video_settings: { quality: 'high', encoding: 'H264' },
-      max_session_duration: 180, // 3 minutes is plenty for a 35s monologue
+      max_session_duration: 180,
       interactivity_type: 'CONVERSATIONAL',
-      avatar_persona: {
-        language: 'en',
-        voice_settings: {
-          provider: 'elevenLabs',
-          speed: 1.0,
-          stability: 0.6,
-          similarity_boost: 0.8,
-          style: 0.3,
-          use_speaker_boost: true,
-          model: 'eleven_flash_v2_5',
-        },
-      },
+      avatar_persona: persona,
     }),
   });
 
