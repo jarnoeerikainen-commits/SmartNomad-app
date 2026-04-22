@@ -36,6 +36,7 @@ const AdminTickets = lazy(() => import("./pages/admin/AdminTickets"));
 const AdminAI = lazy(() => import("./pages/admin/AdminAI"));
 const AdminBrain = lazy(() => import("./pages/admin/AdminBrain"));
 const AdminConcierge = lazy(() => import("./pages/admin/AdminConcierge"));
+const AdminAgents = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminData = lazy(() => import("./pages/admin/AdminData"));
 const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
 const AdminAudit = lazy(() => import("./pages/admin/AdminAudit"));
@@ -92,6 +93,7 @@ const App = () => {
                     <Route path="ai" element={<AdminAI />} />
                     <Route path="brain" element={<AdminBrain />} />
                     <Route path="concierge" element={<AdminConcierge />} />
+                    <Route path="agents" element={<AdminAgents />} />
                     <Route path="data" element={<AdminData />} />
                     <Route path="affiliates" element={<AdminAffiliates />} />
                     <Route path="audit" element={<AdminAudit />} />
