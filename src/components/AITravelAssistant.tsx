@@ -329,59 +329,78 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       } catch {}
     }
 
-    const userContext = {
-      currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
+    // Build verified "everything I know" bundle
+    const lifestyleString = (() => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { getLifestyleContextForAI } = require('@/services/LifestyleConnectorsService');
+        return getLifestyleContextForAI() || undefined;
+      } catch { return undefined; }
+    })();
+    const calendarString = (() => {
+      try {
+        const personaScope = (activePersona as any)?.id || (activePersona ? 'meghan' : null);
+        const brief = CalendarService.briefForAI(personaScope, 8);
+        const prefs = getCalendarPrefs();
+        const writeRule = prefs.aiAutoWrite
+          ? 'The user has allowed you to add events directly. When you propose an event, output a fenced ```calendar JSON block — the app will write it.'
+          : 'You may PROPOSE events but NEVER write silently. Output a fenced ```calendar JSON block; the user will tap "Add to calendar" to confirm.';
+        return `${brief}\n\nCalendar policy: ${writeRule}`;
+      } catch {
+        return fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined;
+      }
+    })();
+    const toolRoutingHint = (() => {
+      const discovered = discoverFeaturesByIntent(userMessage, 3);
+      return discovered.length > 0
+        ? `Relevant features: ${discovered.map(d => `${d.feature.label} [NAVIGATE:${d.feature.id}] (${Math.round(d.score * 100)}%)`).join(', ')}. Include [NAVIGATE:featureId] if the user should visit that section.`
+        : undefined;
+    })();
+    const bundle = buildConciergeContextBundle({
       currentCity: userCity,
+      currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
+      persistentMemories,
+      conversationSummary,
       threatIntelligence: activeThreats || 'No active threats.',
-      demoPersonaContext: demoAiContext || undefined,
+      cityServicesContext: cityServicesContext || undefined,
       awardCardsContext: awardCardsContext || undefined,
       jetSearchContext: jetSearchContext || undefined,
-      cityServicesContext: cityServicesContext || undefined,
+      calendar: calendarString,
+      toolRoutingHint,
+      cultural: enhancedProfile?.cultural || undefined,
+      lifestyleString,
+      integrationsString: getIntegrationContextForAI(),
+    });
+    const contextNarrative = renderContextNarrative(bundle);
+    const userContext = {
+      currentCountry: bundle.location.country,
+      currentCity: bundle.location.city,
+      citizenship: bundle.identity.nationality,
+      language: currentLanguage,
+      threatIntelligence: bundle.threatIntelligence,
+      demoPersonaContext: demoAiContext || undefined,
+      awardCardsContext: bundle.awardCardsContext,
+      jetSearchContext: bundle.jetSearchContext,
+      cityServicesContext: bundle.cityServicesContext,
       conciergePreferences: {
         userName: conciergePrefs.userName || undefined,
         personalityMode: conciergePrefs.personalityMode,
         aiName: conciergePrefs.aiName || 'Concierge',
       },
-      profileSummary: profileSummary || undefined,
-      trackedCountries: fullAppContext.trackedCountries || undefined,
-      calendar: (() => {
-        try {
-          const personaScope = (activePersona as any)?.id || (activePersona ? 'meghan' : null);
-          const brief = CalendarService.briefForAI(personaScope, 8);
-          const prefs = getCalendarPrefs();
-          const writeRule = prefs.aiAutoWrite
-            ? 'The user has allowed you to add events directly. When you propose an event, output a fenced ```calendar JSON block — the app will write it.'
-            : 'You may PROPOSE events but NEVER write silently. Output a fenced ```calendar JSON block; the user will tap "Add to calendar" to confirm.';
-          return `${brief}\n\nCalendar policy: ${writeRule}\nProposal schema: { "title": string, "start": "YYYY-MM-DDTHH:mm", "end"?: same, "category": one of travel|accommodation|meeting|meal|sport|wellness|family|personal|social|birthday|legal|reservation|reminder, "location"?: string, "notes"?: string }`;
-        } catch {
-          return fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined;
-        }
-      })(),
-      learnedMemories: fullAppContext.learnedMemories || undefined,
-      persistentMemories: persistentMemories || undefined,
-      conversationSummary: conversationSummary || undefined,
-      subscriptionTier: fullAppContext.subscriptionTier || undefined,
-      expenseSummary: fullAppContext.expenseSummary ? JSON.stringify(fullAppContext.expenseSummary) : undefined,
-      integrationContext: getIntegrationContextForAI(),
-      cultural: enhancedProfile?.cultural || undefined,
-      lifestyle: (() => {
-        try {
-          // Lazy require to avoid edge cases on cold mount
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const { getLifestyleContextForAI } = require('@/services/LifestyleConnectorsService');
-          const ctx = getLifestyleContextForAI();
-          return ctx || undefined;
-        } catch { return undefined; }
-      })(),
-      toolRoutingHint: (() => {
-        const discovered = discoverFeaturesByIntent(userMessage, 3);
-        if (discovered.length > 0) {
-          return `Relevant features for this query: ${discovered.map(d => `${d.feature.label} [NAVIGATE:${d.feature.id}] (${Math.round(d.score * 100)}% match)`).join(', ')}. Include [NAVIGATE:featureId] in your response if the user should visit that section.`;
-        }
-        return undefined;
-      })(),
+      profileSummary: [contextNarrative, bundle.profileSummary].filter(Boolean).join('\n\n') || undefined,
+      trackedCountries: bundle.trackedCountries,
+      calendar: bundle.calendar,
+      learnedMemories: bundle.learnedMemories,
+      persistentMemories: bundle.persistentMemories,
+      conversationSummary: bundle.conversationSummary,
+      subscriptionTier: bundle.subscriptionTier,
+      expenseSummary: bundle.expenseSummary,
+      integrationContext: bundle.integrations,
+      cultural: bundle.cultural,
+      lifestyle: bundle.lifestyleConnectors,
+      toolRoutingHint: bundle.toolRoutingHint,
     };
 
     try {
