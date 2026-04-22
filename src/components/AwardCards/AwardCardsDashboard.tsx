@@ -305,6 +305,11 @@ const AwardCardsDashboard: React.FC = () => {
           )}
         </TabsContent>
 
+        {/* Smart Optimizer Tab */}
+        <TabsContent value="optimizer" className="mt-4">
+          <RewardsOptimizer cards={cards} />
+        </TabsContent>
+
         {/* Add New Card Tab */}
         <TabsContent value="add" className="mt-4">
           <AddAwardCard
