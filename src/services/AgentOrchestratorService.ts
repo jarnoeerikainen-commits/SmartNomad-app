@@ -600,12 +600,370 @@ const ORACLE_TEMPLATES: Template[] = [
   },
 ];
 
+// ═══════════════════════════════════════════════════════════════════════════
+// TIER 1 — Atlas, Midas, Echo
+// ═══════════════════════════════════════════════════════════════════════════
+
+const ATLAS_TEMPLATES: Template[] = [
+  {
+    title: 'Rising hub detected: Tirana climbed 38% in nomad-density signal',
+    summary: 'Albania\'s capital jumped from rank #87 → #54 in 21 days. Cost-of-living + 1yr visa-free + new fiber rollout driving inflows.',
+    rationale: 'Cross-source signal: 14% rise in coworking listings, 22% rise in mid-term rentals, +9 mentions in Nomadlist top-100 in last 14d.',
+    proposed_action: 'Promote Tirana to "Featured Hub" tier in Explore Local Life. Greenlight Atlas to draft 6 venue scouts.',
+    expected_impact: '~3,200 new sessions/mo on Tirana surfaces; first-mover SEO advantage vs Booking generic page.',
+    evidence: ['Nomadlist trend delta', 'Internal coworking scrape +14%', 'Long-term rental listings +22%'],
+    affected_segment: 'Explore Local Life — EU/Balkan-curious nomads',
+    est_users_impacted: 3200,
+    confidence: 0.84, priority: 'high', requires_permit: true,
+  },
+  {
+    title: '47 stale venues in Lisbon directory — auto-deactivation queue',
+    summary: 'Last verification > 90 days ago; 23 returned 404, 14 closed permanently, 10 changed name/owner.',
+    rationale: 'Curation rot is the #1 reason directory apps die. Atlas verified via 3-source crosscheck.',
+    proposed_action: 'Soft-archive 47 entries; surface 14 already-scouted replacements awaiting review.',
+    expected_impact: 'Restores Lisbon directory trust score from 78% → 96%. Zero user impact during transition.',
+    evidence: ['3-source verification log', '47 venues flagged stale', '14 verified replacements ready'],
+    confidence: 0.97, priority: 'medium', requires_permit: false,
+  },
+  {
+    title: 'New city launch proposal: Da Nang, Vietnam',
+    summary: 'Atlas scoring matrix puts Da Nang #11 globally for nomad fit. We have 0 directory coverage today.',
+    rationale: 'Internet 380Mbps median, $1,400/mo all-in, 90d visa-free for 25 nationalities, low crime, growing community.',
+    proposed_action: 'Launch full Da Nang module: 60 venues, 3 coworking, 8 wellness, weather + visa pages.',
+    expected_impact: 'Adds ~2.1k addressable MAU within 6mo. Differentiates vs Nomadlist (their Da Nang page = thin).',
+    evidence: ['Atlas score 8.7/10', 'Numbeo cost data', 'Vietnam Imigrasi visa list 2026'],
+    confidence: 0.81, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'Visa friction alert — Indonesia tightened 30d visa-on-arrival',
+    summary: 'Indonesia removed VOA for 14 nationalities effective May 1. Affects 1,840 Premium users with Bali plans.',
+    rationale: 'Imigrasi notice 2026-04-18; concierge has not updated routing yet.',
+    proposed_action: 'Push proactive concierge alert; recalculate Bali itinerary recommendations for affected nationalities.',
+    expected_impact: 'Prevents ~140 stranded-at-airport incidents this quarter.',
+    evidence: ['Imigrasi notice 2026-04-18', '1,840 affected Premium users'],
+    confidence: 0.93, priority: 'urgent', requires_permit: true,
+  },
+];
+
+const MIDAS_TEMPLATES: Template[] = [
+  {
+    title: 'Booking undercut on LIS-MAD by 4.2% — automated repricer recommendation',
+    summary: 'Booking running flash promo. We lost 23 carts on this route in 18h. Margin headroom available.',
+    rationale: 'Our take rate 2.5%; reducing to 1.8% for 48h fully reclaims competitiveness with negligible margin loss.',
+    proposed_action: 'Apply 0.7pt commission compression on LIS-MAD until Booking promo ends or 72h cap.',
+    expected_impact: 'Recover ~$8.4k in bookings; <$280 net margin loss.',
+    evidence: ['Shopper-journey scrape last 24h', '23 abandoned carts on this route', 'Booking promo banner observed'],
+    affected_segment: 'Iberia corridor users',
+    est_revenue_usd: 8400,
+    confidence: 0.88, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'Concierge premium surge opportunity — Friday 5-7pm UTC',
+    summary: 'Demand for concierge sessions spikes 3.4x Friday evening UTC. Capacity bottleneck = revenue left on table.',
+    rationale: 'Weekly elasticity test: users tolerate +18% surge in this window with 91% conversion retained.',
+    proposed_action: 'Enable +18% surge tier Fri 17:00-19:00 UTC; clear messaging "Peak Hour Concierge".',
+    expected_impact: 'Adds est. $3.1k/wk Premium revenue with no capacity addition.',
+    evidence: ['12-week elasticity test', 'Conversion retained at +18%: 91%', 'Capacity utilization 98% in window'],
+    est_revenue_usd: 12400,
+    confidence: 0.86, priority: 'medium', requires_permit: true,
+  },
+  {
+    title: 'Bundle test: Flight + eSIM + Lounge — 14% attach uplift',
+    summary: 'Users who buy a flight currently attach eSIM 11% of the time. Bundling at -8% list adds 14pp.',
+    rationale: 'Cross-elasticity model from 4-week test. Net margin per booking +$3.20.',
+    proposed_action: 'Promote bundle as default on checkout for flights >$300.',
+    expected_impact: 'Modeled +$48k GMV/mo; +$11k net margin.',
+    evidence: ['4-week bundle A/B', 'Attach rate uplift +14pp', 'Net margin/booking +$3.20'],
+    confidence: 0.82, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'Hopper price-prediction parity gap — closing window',
+    summary: 'Hopper now beats us on prediction accuracy by 2.1 days for transatlantic routes.',
+    rationale: 'Their 2026 model release. We can close gap by ingesting 90 more days of carrier inventory data.',
+    proposed_action: 'Authorize Pythia + Midas joint task: ingest extra inventory window, retrain price model.',
+    expected_impact: 'Restore parity in 14 days. Defends premium positioning on flight predictor.',
+    evidence: ['Hopper Q1 model notes', 'Internal prediction MAE comparison'],
+    confidence: 0.74, priority: 'medium', requires_permit: true,
+  },
+];
+
+const ECHO_TEMPLATES: Template[] = [
+  {
+    title: '47 Premium users in 14-day churn window — earned re-engagement queue',
+    summary: 'Echo predicts churn for 47 Premium accounts based on session decay + concierge sentiment drop.',
+    rationale: 'Hybrid signal: 73% drop in WAU + sentiment score -0.4 in last concierge convo. Historical save rate at this window: 38%.',
+    proposed_action: 'Approve earned re-engagement: personal note from Concierge + 1mo wallet credit + curated city pick.',
+    expected_impact: 'Estimated saves: 18 of 47 = $1,074 ARR retained + reputation halo.',
+    evidence: ['47 accounts in red zone', 'Sentiment timeseries', 'Historical 38% save rate this window'],
+    affected_segment: 'Premium — at-risk cohort',
+    est_users_impacted: 47, est_revenue_usd: 1074,
+    confidence: 0.83, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'Delight moment detected — 220 users mentioned "saved my trip" in concierge',
+    summary: 'Mining last 30d concierge logs surfaced 220 unprompted gratitude mentions. 18 are quote-worthy with consent.',
+    rationale: 'Social proof gold. Echo extracted with PII-safe redaction.',
+    proposed_action: 'Pass 18 quotes to Muse for testimonial wall + investor deck. Auto-thank these users via concierge.',
+    expected_impact: 'Free testimonial corpus; ~$8k saved on social-proof harvesting.',
+    evidence: ['220 mentions matched', 'Sentiment confirmed positive', 'PII-redaction passed'],
+    confidence: 0.91, priority: 'medium', requires_permit: false,
+  },
+  {
+    title: 'Friction hotspot — visa step in Onboarding losing 31% to drop-off',
+    summary: 'Mid-funnel sentiment turns negative when users hit visa-residency comparison wall.',
+    rationale: 'Heatmap + sentiment cross-ref. Same friction repeatedly mentioned in support tickets.',
+    proposed_action: 'Pass to Iris: simplify visa step to 3 questions max; defer advanced flow to post-signup.',
+    expected_impact: 'Modeled +12pp signup completion. Linked to product proposal.',
+    evidence: ['Heatmap weeks 14-17', '38 tickets quote same step', 'Sentiment delta -0.3'],
+    confidence: 0.87, priority: 'high', requires_permit: false,
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TIER 2 — Sentinel, Muse, Praxis
+// ═══════════════════════════════════════════════════════════════════════════
+
+const SENTINEL_TEMPLATES: Template[] = [
+  {
+    title: 'CDG ground-staff strike confirmed — 320 users affected in next 72h',
+    summary: 'Strike notice filed; 30% flight cancellation rate expected May 2-4. We have 320 users with CDG itineraries.',
+    rationale: 'Verified via airline ops feed + French CGT public notice + 3 corroborating sources.',
+    proposed_action: 'Push proactive concierge alerts with rebooking options pre-loaded. Coordinate with Praxis on backup inventory.',
+    expected_impact: 'Saves est. $44k in user disruption costs; "saved by SuperNomad" stories x320.',
+    evidence: ['CGT strike notice', 'Airline ops feed', '320 user itineraries identified'],
+    affected_segment: 'CDG corridor next 72h',
+    est_users_impacted: 320,
+    confidence: 0.95, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'Mt. Agung volcanic activity — Bali ash advisory active',
+    summary: 'Indonesian PVMBG raised alert level. Ngurah Rai possible closure within 48h.',
+    rationale: 'Live seismic feed + ash plume satellite data. 84 users currently in Bali, 110 inbound.',
+    proposed_action: 'Auto-draft 2 contingency itineraries (Lombok pivot + delay-and-stay). Hold until Governor approves push.',
+    expected_impact: 'Pre-positions support before mass disruption hits.',
+    evidence: ['PVMBG bulletin', 'Satellite ash imagery', '84 users in-region + 110 inbound'],
+    confidence: 0.79, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'TRY flash devaluation -7% in 4h — affects user balances',
+    summary: '11 users hold TRY-denominated agentic balances. Real-time hedge or convert recommendation queued.',
+    rationale: 'CB intervention failed; spread widening. Window to act: ~6h.',
+    proposed_action: 'Notify affected users; offer auto-convert to USDC at locked rate (subject to approval).',
+    expected_impact: 'Caps user FX exposure at ~2% loss vs ~9% projected.',
+    evidence: ['TRY/USD timeseries', '11 user balances flagged', 'CB intervention timeline'],
+    confidence: 0.84, priority: 'high', requires_permit: true,
+  },
+];
+
+const MUSE_TEMPLATES: Template[] = [
+  {
+    title: 'Programmatic SEO: "Best coworking in [city] for [persona]" — 240 page pack ready',
+    summary: 'Generated 240 SEO pages: 60 cities × 4 personas (crypto founders, designers, parents, nurses).',
+    rationale: 'Internal traffic model: 40-80 organic sessions/page/mo at 6mo. CAC equivalent $0.',
+    proposed_action: 'Stage 240 pages behind /guides/. Submit to Search Console after Governor sign-off.',
+    expected_impact: 'Modeled 12k-25k organic sessions/mo by month 6. CAC saved: ~$80k/mo.',
+    evidence: ['Keyword opportunity report', 'Competitor coverage gap analysis', 'Programmatic SEO playbook v2'],
+    affected_segment: 'Organic acquisition',
+    est_users_impacted: 18000,
+    confidence: 0.81, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'City guide refresh: Lisbon — 2.3x search volume since Q1',
+    summary: 'Lisbon "digital nomad" search +130% YoY. Our existing page is 11 months stale.',
+    rationale: 'Google Trends + Search Console. Refresh timing optimal pre-summer.',
+    proposed_action: 'Regenerate with current visa rules, refreshed venues from Atlas, 2026 cost data.',
+    expected_impact: 'Regain top-3 SERP position; +4k organic sessions/mo.',
+    evidence: ['Google Trends data', 'GSC impressions/clicks delta', 'Current page age 11mo'],
+    confidence: 0.88, priority: 'medium', requires_permit: false,
+  },
+  {
+    title: 'User-win social repurpose — 12 anonymized stories ready',
+    summary: 'Echo flagged 12 strong user wins. Muse drafted 12 short-form posts (LinkedIn + IG carousel format).',
+    rationale: 'All anonymized + consented. Publishing cadence 2/wk for 6 weeks.',
+    proposed_action: 'Approve content pack for marketing pipeline.',
+    expected_impact: 'Estimated 80-200k impressions; 600 site visits/post.',
+    evidence: ['12 source stories', 'Drafts for LinkedIn + IG', 'Consent log attached'],
+    confidence: 0.86, priority: 'medium', requires_permit: true,
+  },
+];
+
+const PRAXIS_TEMPLATES: Template[] = [
+  {
+    title: 'Amadeus latency p95 degraded to 1,840ms (target 600ms)',
+    summary: 'Amadeus search latency 3x baseline for 6h. Affects flight search abandonment.',
+    rationale: 'Pattern matches their Q1 outage signature. Our fallback to Sabre not auto-routing.',
+    proposed_action: 'Enable Sabre primary for 24h on affected routes; file ticket with Amadeus support.',
+    expected_impact: 'Restore search responsiveness; recover ~$6k in lost flight conversions.',
+    evidence: ['Latency timeseries', 'Abandonment rate +18%', 'Sabre headroom verified'],
+    confidence: 0.92, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'Booking commission short-paid Q1 — invoice $14,200',
+    summary: 'Reconciliation against Praxis ledger shows Booking under-paid commission on 240 stays.',
+    rationale: 'Affiliate cookie attribution gap on their side. We have full receipts.',
+    proposed_action: 'Send drafted reconciliation invoice + evidence pack. Governor approves send.',
+    expected_impact: 'Recovers $14.2k owed. Sets precedent for monthly automated reconciliation.',
+    evidence: ['240 stays reconciled', 'Booking commission report Q1', 'Cookie attribution log'],
+    est_revenue_usd: 14200,
+    confidence: 0.96, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'Duffel rate parity opportunity — direct vs aggregator',
+    summary: 'Duffel offers direct NDC for 8 carriers we currently route via Sabre. Margin uplift 1.4pp.',
+    rationale: 'Cuts intermediary; preserves user price. We retain extra margin.',
+    proposed_action: 'Negotiate Duffel direct integration; draft contract terms attached.',
+    expected_impact: '+1.4pp margin on ~$4M flight GMV/yr = $56k.',
+    evidence: ['Duffel NDC carrier list', 'Internal margin model', 'Sabre fee schedule'],
+    est_revenue_usd: 56000,
+    confidence: 0.78, priority: 'medium', requires_permit: true,
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TIER 3 — Forge, Concord, Verdant, Atlas-LTV
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FORGE_TEMPLATES: Template[] = [
+  {
+    title: 'Concierge greeting variant B winning by +11.4% conversion',
+    summary: 'A/B test: "Welcome back, [name]" vs "Where are we going next?" — variant B leads at 99% confidence.',
+    rationale: '14-day test, 12,400 sessions per arm. Statistical significance reached.',
+    proposed_action: 'Promote variant B to 100%. Auto-archive variant A.',
+    expected_impact: '+11.4% session-to-booking conversion = est. +$28k/mo GMV.',
+    evidence: ['12.4k sessions/arm', 'p-value < 0.001', 'No segment regressions'],
+    est_revenue_usd: 28000,
+    confidence: 0.94, priority: 'high', requires_permit: false,
+  },
+  {
+    title: 'Persona-tuned pricing copy lifts Premium signup +6pp',
+    summary: '50-segment test of Premium upsell copy. "Crypto founder" segment responds best to "Hedge your sovereignty" framing.',
+    rationale: 'Multi-armed bandit converged after 21 days. Lift sustained across 4 cohorts.',
+    proposed_action: 'Lock 50 segment-specific Premium copies. Echo + Forge to monitor decay.',
+    expected_impact: '+6pp signup = est. 240 additional Premium/mo.',
+    evidence: ['Bandit convergence log', '50 segments × 4 variants', 'Cohort hold-out'],
+    confidence: 0.83, priority: 'high', requires_permit: true,
+  },
+  {
+    title: 'Onboarding step ordering test — 3 variants, all winning',
+    summary: 'Three new orderings all beat control by 4-9pp completion. Recommend variant 2 for stability.',
+    rationale: 'Multivariate test concluded. Variant 2 strongest on retention day-7.',
+    proposed_action: 'Promote variant 2 to 100% rollout.',
+    expected_impact: '+7pp signup completion = est. 320 more activated users/mo.',
+    evidence: ['MVT results', 'Day-7 retention curve', 'Drop-off heatmap'],
+    confidence: 0.89, priority: 'medium', requires_permit: false,
+  },
+];
+
+const CONCORD_TEMPLATES: Template[] = [
+  {
+    title: '12 fake host listings detected in Vibe — auto-flag for review',
+    summary: 'Pattern: stock photos, generic "luxury villa" copy, payment off-platform. 12 listings flagged with 0.94 confidence.',
+    rationale: 'Vision + LLM detection cross-checked. None reported by users yet — Concord caught first.',
+    proposed_action: 'Soft-hide listings; notify hosts for verification within 48h or permanent removal.',
+    expected_impact: 'Prevents est. 30 user scam exposures. Trust score protected.',
+    evidence: ['Image-similarity match (stock libraries)', 'Off-platform payment offer', '12 listings flagged'],
+    confidence: 0.94, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'Super-connector cohort — 18 users with >40 verified Pulse intros',
+    summary: 'Top 1% community connectors identified. They drive 31% of cross-user verified introductions.',
+    rationale: 'Reputation-graph analysis. These users deserve recognition + retention investment.',
+    proposed_action: 'Approve Super-Connector tier: badge + free Premium + private channel access.',
+    expected_impact: 'Reinforces network effect. Modeled +12% Pulse activity uplift.',
+    evidence: ['Reputation graph snapshot', '18 candidates verified', 'Intro-attribution data'],
+    confidence: 0.86, priority: 'medium', requires_permit: true,
+  },
+  {
+    title: 'Multilingual moderation — Arabic Vibe channel needs human review',
+    summary: 'Concord low-confidence (<0.7) on 6 messages in Arabic technical discussion. Risk of misclassification.',
+    rationale: 'Edge case: technical jargon + dialect mix. Better to escalate than auto-act.',
+    proposed_action: 'Queue 6 messages for human moderator. Add to Concord training corpus post-decision.',
+    expected_impact: 'Maintains moderation accuracy. Improves model on next retrain.',
+    evidence: ['6 messages flagged', 'Confidence scores 0.61-0.69', 'Dialect identified: MSA + Levantine mix'],
+    confidence: 0.71, priority: 'low', requires_permit: false,
+  },
+];
+
+const VERDANT_TEMPLATES: Template[] = [
+  {
+    title: 'Q1 carbon report ready — 1,840 tCO2e across all bookings',
+    summary: 'Per-booking carbon transparency met. 11% YoY reduction driven by rail-over-flight nudges.',
+    rationale: 'Methodology: ICAO + DEFRA factors. Audit-ready for CSRD reporting.',
+    proposed_action: 'Approve report for investor deck + EU compliance file.',
+    expected_impact: 'CSRD compliance maintained. Differentiator for ESG-aware HNW segment.',
+    evidence: ['ICAO/DEFRA methodology', '11% YoY reduction validated', 'Audit trail attached'],
+    confidence: 0.95, priority: 'medium', requires_permit: false,
+  },
+  {
+    title: 'Rail-over-flight nudge — Paris/London corridor save 84% CO2',
+    summary: 'Eurostar bookings up 28% since nudge launch. Margin neutral. ESG narrative strong.',
+    rationale: 'A/B with control group confirms causality. Users appreciate option, don\'t feel pushed.',
+    proposed_action: 'Extend nudge to 6 more EU short-haul corridors (BCN-MAD, HAM-BER, etc.).',
+    expected_impact: '+~120 tCO2e/mo saved. PR + ESG narrative bonus.',
+    evidence: ['28% Eurostar uplift', 'A/B with control', '6-corridor candidate list'],
+    confidence: 0.87, priority: 'medium', requires_permit: true,
+  },
+  {
+    title: 'Carbon offset partner audit — 1 of 4 partners flagged for greenwashing risk',
+    summary: 'Partner X\'s reforestation claims unverified by independent registry. Risk of regulator scrutiny.',
+    rationale: 'CSRD audit trail requires verified-registry-only partners. Cross-checked Verra + Gold Standard.',
+    proposed_action: 'Pause Partner X integration; recommend 2 verified alternatives.',
+    expected_impact: 'Avoids regulator/PR risk. ~$12k/yr partner fees redirected.',
+    evidence: ['Verra registry cross-check', 'Gold Standard listing absence', 'Partner X claims doc'],
+    confidence: 0.89, priority: 'high', requires_permit: true,
+  },
+];
+
+const ATLAS_LTV_TEMPLATES: Template[] = [
+  {
+    title: 'HNW signal: User #SN-7K2H-4R8M crossed $480k LTV — yacht vertical opportunity',
+    summary: 'Whale account: 14 long-stays, 3 jet charters, recent yacht-related concierge query.',
+    rationale: 'LTV trajectory + life-event signal (mentioned "summer in Croatia with family"). Window: 14 days.',
+    proposed_action: 'Hand to Hermes for white-glove yacht charter offer. Personalized concierge call.',
+    expected_impact: 'Yacht GMV potential $80-220k. LTV uplift extends 2 years.',
+    evidence: ['LTV trajectory chart', 'Concierge query log', 'Family graph: 4 members + 2 minors'],
+    affected_segment: 'HNW Premium — yacht-curious',
+    est_revenue_usd: 150000,
+    confidence: 0.78, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: '6 HNW accounts trending toward churn — VIP save protocol',
+    summary: 'Top-10% LTV cohort showing -34% concierge engagement in 30d.',
+    rationale: 'Pattern matches "competitor onboarding" — usually they\'re evaluating Amex Centurion travel desk.',
+    proposed_action: 'Trigger VIP save: dedicated human concierge, custom city pick, locked Premium pricing for 24mo.',
+    expected_impact: 'Each save = $40-120k LTV protected. Conservative ROI 30x.',
+    evidence: ['Engagement timeseries', '6 accounts flagged', 'Competitive intel on Amex Centurion outreach'],
+    affected_segment: 'HNW — top-10% LTV',
+    est_users_impacted: 6, est_revenue_usd: 480000,
+    confidence: 0.82, priority: 'urgent', requires_permit: true,
+  },
+  {
+    title: 'Family-graph expansion — 22 HNW users have school-age children',
+    summary: 'Cross-reference of profile + concierge mentions identifies 22 candidates for Education vertical.',
+    rationale: 'Boarding-school + international-school search interest detected. New vertical fits portfolio.',
+    proposed_action: 'Pass to Iris + Hermes: scope education-advisory beta with Premium HNW cohort.',
+    expected_impact: 'New vertical revenue potential $4-12k per family/yr in advisory fees.',
+    evidence: ['22 family profiles matched', 'Concierge query mining', 'Vertical TAM analysis'],
+    confidence: 0.74, priority: 'medium', requires_permit: true,
+  },
+];
+
 const TEMPLATES: Record<AgentId, Template[]> = {
   legal: LEGAL_TEMPLATES,
   security: SECURITY_TEMPLATES,
   growth: GROWTH_TEMPLATES,
   product: PRODUCT_TEMPLATES,
   oracle: ORACLE_TEMPLATES,
+  atlas: ATLAS_TEMPLATES,
+  midas: MIDAS_TEMPLATES,
+  echo: ECHO_TEMPLATES,
+  sentinel: SENTINEL_TEMPLATES,
+  muse: MUSE_TEMPLATES,
+  praxis: PRAXIS_TEMPLATES,
+  forge: FORGE_TEMPLATES,
+  concord: CONCORD_TEMPLATES,
+  verdant: VERDANT_TEMPLATES,
+  atlas_ltv: ATLAS_LTV_TEMPLATES,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
