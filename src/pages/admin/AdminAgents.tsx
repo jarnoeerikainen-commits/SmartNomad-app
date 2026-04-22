@@ -29,7 +29,7 @@ import {
   type AgentActivityEvent, type DailyBriefing,
 } from '@/services/AgentOrchestratorService';
 
-const AGENT_ICONS: Record<AgentId, React.ComponentType<{ className?: string }>> = {
+const AGENT_ICONS: Record<AgentId, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   legal: Scale,
   security: Shield,
   growth: Rocket,
