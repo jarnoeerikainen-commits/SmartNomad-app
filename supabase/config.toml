@@ -86,3 +86,6 @@ verify_jwt = false
 
 [functions.venue-discovery]
 verify_jwt = false
+
+[functions.send-calendar-reminder]
+verify_jwt = false
