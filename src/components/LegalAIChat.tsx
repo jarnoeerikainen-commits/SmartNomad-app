@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Scale, Send, Loader2, AlertTriangle, Shield, MessageSquare, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "sonner";
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
+import { learnFromExchange } from '@/utils/conciergeLearning';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -104,6 +105,18 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
       // Auto-speak response if voice enabled
       if (voiceEnabled && assistantMessage) {
         speak(assistantMessage);
+      }
+
+      // 🧠 Closed-loop learning: distill memories + self-grade
+      if (assistantMessage) {
+        learnFromExchange({
+          surface: 'legal',
+          question: userMessage,
+          answer: assistantMessage,
+          contextSummary: `Location: ${currentLocation?.city || ''}, ${currentLocation?.country || ''}; Citizenship: ${citizenship || 'unknown'}`,
+          category: 'legal',
+          topic: userMessage.slice(0, 80),
+        });
       }
     } catch (error) {
       console.error('Chat error:', error);

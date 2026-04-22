@@ -766,13 +766,26 @@ export default function AITravelPlanner() {
       }
 
       setPlanLoading(false);
+
+      // 🧠 Closed-loop learning: distill the plan into memories + self-grade
+      if (fullText) {
+        const { learnFromExchange } = await import('@/utils/conciergeLearning');
+        learnFromExchange({
+          surface: 'planner',
+          question: `Plan a ${budget} ${tripType || 'trip'} (${pace} pace, ${duration || 'week'}) to ${dest?.name || region || 'anywhere'} interested in ${interests.join(', ') || 'general'}`,
+          answer: fullText,
+          contextSummary: `Destination: ${dest?.name}, ${dest?.country}; Budget: ${budget}; Pace: ${pace}; Interests: ${interests.join(', ')}; Month: ${month || 'any'}`,
+          category: 'travel',
+          topic: dest?.name || tripType || 'travel-plan',
+        });
+      }
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         toast({ title: 'Error', description: err.message, variant: 'destructive' });
       }
       setPlanLoading(false);
     }
-  }, [tripType, budget, pace, duration, groupSize, interests, month, region, toast]);
+  }, [tripType, budget, pace, duration, groupSize, interests, month, region, month, toast]);
 
   const stopPlan = useCallback(() => {
     abortRef.current?.abort();

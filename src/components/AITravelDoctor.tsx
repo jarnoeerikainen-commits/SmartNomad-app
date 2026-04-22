@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Stethoscope, Send, Loader2, AlertTriangle, MapPin, Activity, Thermometer, Pill, Baby, Plane, HeartPulse, ShieldCheck, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "sonner";
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
+import { learnFromExchange } from '@/utils/conciergeLearning';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -121,6 +122,18 @@ export const AITravelDoctor: React.FC<AITravelDoctorProps> = ({
       // Auto-speak response if voice enabled
       if (voiceEnabled && assistantMessage) {
         speak(assistantMessage);
+      }
+
+      // 🧠 Closed-loop learning: distill memories + self-grade
+      if (assistantMessage) {
+        learnFromExchange({
+          surface: 'medical',
+          question: userMessage,
+          answer: assistantMessage,
+          contextSummary: `Location: ${currentLocation?.city || ''}, ${currentLocation?.country || ''}; Citizenship: ${citizenship || 'unknown'}`,
+          category: 'medical',
+          topic: userMessage.slice(0, 80),
+        });
       }
     } catch (error) {
       console.error('Chat error:', error);
