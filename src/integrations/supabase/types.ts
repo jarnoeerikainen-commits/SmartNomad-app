@@ -1280,6 +1280,292 @@ export type Database = {
           },
         ]
       }
+      data_package_fields: {
+        Row: {
+          bucket_strategy: Json | null
+          created_at: string
+          data_type: string
+          description: string | null
+          display_name: string | null
+          field_name: string
+          id: string
+          is_identifier: boolean
+          is_partition_key: boolean
+          is_required: boolean
+          package_id: string
+          position: number
+          recency_days: number | null
+          transform: string
+        }
+        Insert: {
+          bucket_strategy?: Json | null
+          created_at?: string
+          data_type: string
+          description?: string | null
+          display_name?: string | null
+          field_name: string
+          id?: string
+          is_identifier?: boolean
+          is_partition_key?: boolean
+          is_required?: boolean
+          package_id: string
+          position?: number
+          recency_days?: number | null
+          transform?: string
+        }
+        Update: {
+          bucket_strategy?: Json | null
+          created_at?: string
+          data_type?: string
+          description?: string | null
+          display_name?: string | null
+          field_name?: string
+          id?: string
+          is_identifier?: boolean
+          is_partition_key?: boolean
+          is_required?: boolean
+          package_id?: string
+          position?: number
+          recency_days?: number | null
+          transform?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_package_fields_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "data_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_package_segments: {
+        Row: {
+          created_at: string
+          estimated_size: number
+          id: string
+          is_active: boolean
+          match_rule: Json
+          package_id: string
+          parent_segment_id: string | null
+          recency_days: number
+          segment_id: string
+          segment_name: string
+          source_type: string
+          tier: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          estimated_size?: number
+          id?: string
+          is_active?: boolean
+          match_rule?: Json
+          package_id: string
+          parent_segment_id?: string | null
+          recency_days?: number
+          segment_id: string
+          segment_name: string
+          source_type?: string
+          tier?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          estimated_size?: number
+          id?: string
+          is_active?: boolean
+          match_rule?: Json
+          package_id?: string
+          parent_segment_id?: string | null
+          recency_days?: number
+          segment_id?: string
+          segment_name?: string
+          source_type?: string
+          tier?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_package_segments_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "data_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_package_subscriptions: {
+        Row: {
+          contract_signed_at: string | null
+          contract_url: string | null
+          contracted_records: number | null
+          cpm_rate_usd: number | null
+          created_at: string
+          expires_at: string | null
+          flat_price_usd: number | null
+          id: string
+          last_invoice_at: string | null
+          max_records_per_query: number
+          metadata: Json
+          monthly_fee_usd: number | null
+          notes: string | null
+          package_id: string
+          partner_id: string
+          records_delivered: number
+          starts_at: string
+          status: string
+          tier: string
+          total_billed_usd: number
+          updated_at: string
+        }
+        Insert: {
+          contract_signed_at?: string | null
+          contract_url?: string | null
+          contracted_records?: number | null
+          cpm_rate_usd?: number | null
+          created_at?: string
+          expires_at?: string | null
+          flat_price_usd?: number | null
+          id?: string
+          last_invoice_at?: string | null
+          max_records_per_query?: number
+          metadata?: Json
+          monthly_fee_usd?: number | null
+          notes?: string | null
+          package_id: string
+          partner_id: string
+          records_delivered?: number
+          starts_at?: string
+          status?: string
+          tier?: string
+          total_billed_usd?: number
+          updated_at?: string
+        }
+        Update: {
+          contract_signed_at?: string | null
+          contract_url?: string | null
+          contracted_records?: number | null
+          cpm_rate_usd?: number | null
+          created_at?: string
+          expires_at?: string | null
+          flat_price_usd?: number | null
+          id?: string
+          last_invoice_at?: string | null
+          max_records_per_query?: number
+          metadata?: Json
+          monthly_fee_usd?: number | null
+          notes?: string | null
+          package_id?: string
+          partner_id?: string
+          records_delivered?: number
+          starts_at?: string
+          status?: string
+          tier?: string
+          total_billed_usd?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_package_subscriptions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "data_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_package_subscriptions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "api_partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_packages: {
+        Row: {
+          category: string
+          cookie_free: boolean
+          cpm_usd: number | null
+          created_at: string
+          description: string | null
+          estimated_universe_size: number | null
+          flat_price_usd: number | null
+          iab_taxonomy_id: string | null
+          iab_taxonomy_version: string | null
+          id: string
+          legal_basis: string
+          metadata: Json
+          min_k_anonymity: number
+          monthly_subscription_usd: number | null
+          name: string
+          pricing_model: string
+          provider_domain: string
+          provider_name: string
+          recency_days: number
+          refresh_cadence: string
+          requires_consent: boolean
+          slug: string
+          source_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          cookie_free?: boolean
+          cpm_usd?: number | null
+          created_at?: string
+          description?: string | null
+          estimated_universe_size?: number | null
+          flat_price_usd?: number | null
+          iab_taxonomy_id?: string | null
+          iab_taxonomy_version?: string | null
+          id?: string
+          legal_basis?: string
+          metadata?: Json
+          min_k_anonymity?: number
+          monthly_subscription_usd?: number | null
+          name: string
+          pricing_model?: string
+          provider_domain?: string
+          provider_name?: string
+          recency_days?: number
+          refresh_cadence?: string
+          requires_consent?: boolean
+          slug: string
+          source_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          cookie_free?: boolean
+          cpm_usd?: number | null
+          created_at?: string
+          description?: string | null
+          estimated_universe_size?: number | null
+          flat_price_usd?: number | null
+          iab_taxonomy_id?: string | null
+          iab_taxonomy_version?: string | null
+          id?: string
+          legal_basis?: string
+          metadata?: Json
+          min_k_anonymity?: number
+          monthly_subscription_usd?: number | null
+          name?: string
+          pricing_model?: string
+          provider_domain?: string
+          provider_name?: string
+          recency_days?: number
+          refresh_cadence?: string
+          requires_consent?: boolean
+          slug?: string
+          source_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       device_sessions: {
         Row: {
           created_at: string
@@ -1399,6 +1685,94 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      package_delivery_jobs: {
+        Row: {
+          consent_verified_count: number
+          cost_usd: number
+          cpm_used: number | null
+          created_at: string
+          fields_requested: string[]
+          id: string
+          ip_address: string | null
+          job_type: string
+          k_anonymity_passed: boolean
+          k_anonymity_value: number | null
+          latency_ms: number | null
+          package_id: string
+          partner_id: string
+          records_delivered: number
+          rejection_reason: string | null
+          request_params: Json
+          segments_requested: string[]
+          status: string
+          subscription_id: string | null
+        }
+        Insert: {
+          consent_verified_count?: number
+          cost_usd?: number
+          cpm_used?: number | null
+          created_at?: string
+          fields_requested?: string[]
+          id?: string
+          ip_address?: string | null
+          job_type: string
+          k_anonymity_passed?: boolean
+          k_anonymity_value?: number | null
+          latency_ms?: number | null
+          package_id: string
+          partner_id: string
+          records_delivered?: number
+          rejection_reason?: string | null
+          request_params?: Json
+          segments_requested?: string[]
+          status?: string
+          subscription_id?: string | null
+        }
+        Update: {
+          consent_verified_count?: number
+          cost_usd?: number
+          cpm_used?: number | null
+          created_at?: string
+          fields_requested?: string[]
+          id?: string
+          ip_address?: string | null
+          job_type?: string
+          k_anonymity_passed?: boolean
+          k_anonymity_value?: number | null
+          latency_ms?: number | null
+          package_id?: string
+          partner_id?: string
+          records_delivered?: number
+          rejection_reason?: string | null
+          request_params?: Json
+          segments_requested?: string[]
+          status?: string
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_delivery_jobs_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "data_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_delivery_jobs_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "api_partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_delivery_jobs_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "data_package_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -1892,6 +2266,10 @@ export type Database = {
         Args: { row_device_id: string; row_user_id: string }
         Returns: boolean
       }
+      check_package_access: {
+        Args: { p_package_slug: string; p_partner_id: string }
+        Returns: Json
+      }
       cleanup_expired_cache: { Args: never; Returns: number }
       clear_matured_earnings: { Args: never; Returns: number }
       credit_commission: {
@@ -1984,6 +2362,28 @@ export type Database = {
       migrate_device_to_user: {
         Args: { p_device_id: string; p_user_id: string }
         Returns: Json
+      }
+      record_package_delivery: {
+        Args: {
+          p_consent_verified: number
+          p_cost: number
+          p_cpm: number
+          p_fields: string[]
+          p_ip: string
+          p_job_type: string
+          p_k_passed: boolean
+          p_k_value: number
+          p_latency_ms: number
+          p_package_id: string
+          p_partner_id: string
+          p_records: number
+          p_rejection: string
+          p_request_params: Json
+          p_segments: string[]
+          p_status: string
+          p_subscription_id: string
+        }
+        Returns: string
       }
       record_referral_click: {
         Args: {
