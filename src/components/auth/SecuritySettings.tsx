@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useMFA } from '@/hooks/useMFA';
 import { useToast } from '@/hooks/use-toast';
 import MFAEnrollment from './MFAEnrollment';
+import SecurityActivityFeed from './SecurityActivityFeed';
 import { ShieldCheck, ShieldAlert, Sparkles, Trash2, Info, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -206,6 +207,9 @@ const SecuritySettings: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
+
+      {/* Recent security activity / audit feed */}
+      <SecurityActivityFeed />
     </div>
   );
 };
