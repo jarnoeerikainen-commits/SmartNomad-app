@@ -785,7 +785,7 @@ export default function AITravelPlanner() {
       }
       setPlanLoading(false);
     }
-  }, [tripType, budget, pace, duration, groupSize, interests, month, region, month, toast]);
+  }, [tripType, budget, pace, duration, groupSize, interests, month, region, toast]);
 
   const stopPlan = useCallback(() => {
     abortRef.current?.abort();
