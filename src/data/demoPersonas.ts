@@ -372,8 +372,7 @@ const generateJohnCalendar = (): DemoCalendarEvent[] => {
   return events;
 };
 
-  const meghanEvents: Omit<DemoCalendarEvent, 'date'>[] = [
-    { time: '06:30', title: 'Morning Yoga', type: 'sport', location: 'Equinox London' },
+
     { time: '08:00', title: 'Exec Team Standup', type: 'meeting', location: 'Zoom' },
     { time: '09:30', title: 'Q1 Campaign Review', type: 'meeting', location: 'Office' },
     { time: '12:00', title: 'Lunch — Sushi Samba', type: 'dining', location: 'London' },
