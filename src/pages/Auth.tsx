@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Globe, Shield, Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import PasswordStrengthMeter, { evaluatePassword } from '@/components/auth/PasswordStrengthMeter';
 
 const Auth: React.FC = () => {
   const { isAuthenticated, isLoading, signIn, signUp, resetPassword } = useAuth();
@@ -67,8 +68,17 @@ const Auth: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (signupPassword.length < 6) {
-      toast({ title: 'Password too short', description: 'Minimum 6 characters required.', variant: 'destructive' });
+    if (signupPassword.length < 8) {
+      toast({ title: 'Password too short', description: 'Minimum 8 characters required.', variant: 'destructive' });
+      return;
+    }
+    const { score } = evaluatePassword(signupPassword);
+    if (score < 3) {
+      toast({
+        title: 'Password too weak',
+        description: 'Use a longer mix of letters, numbers and symbols — or a 16+ character passphrase.',
+        variant: 'destructive',
+      });
       return;
     }
     setLoading(true);
@@ -244,11 +254,12 @@ const Auth: React.FC = () => {
                     <div className="space-y-2">
                       <Label htmlFor="signup-password">Password</Label>
                       <div className="relative">
-                        <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="Min. 6 characters" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} />
+                        <Input id="signup-password" type={showPassword ? 'text' : 'password'} placeholder="Min. 8 characters" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={8} />
                         <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
+                      <PasswordStrengthMeter password={signupPassword} />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Creating account...' : 'Create Account'}
