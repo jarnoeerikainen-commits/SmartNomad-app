@@ -7,10 +7,11 @@ import EnhancedProfileForm from './EnhancedProfileForm';
 import SecuritySettings from './auth/SecuritySettings';
 import SnomadIdCard from './SnomadIdCard';
 import ConsentCenter from './consent/ConsentCenter';
+import CalendarSettingsCard from './calendar/CalendarSettingsCard';
 import { Subscription } from '@/types/subscription';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { User, Shield, FileText, Languages, UserCircle, ShieldCheck, Fingerprint } from 'lucide-react';
+import { User, Shield, FileText, Languages, UserCircle, ShieldCheck, Fingerprint, CalendarClock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -66,7 +67,7 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
         <SnomadIdCard />
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full max-w-5xl grid-cols-6">
+          <TabsList className="grid w-full max-w-5xl grid-cols-7">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <UserCircle className="h-4 w-4" />
               <span className="hidden sm:inline">User Profile</span>
@@ -78,6 +79,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
             <TabsTrigger value="mydata" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               <span className="hidden sm:inline">{t('common.my_data')}</span>
+            </TabsTrigger>
+            <TabsTrigger value="calendar" className="flex items-center gap-2">
+              <CalendarClock className="h-4 w-4" />
+              <span className="hidden sm:inline">Calendar</span>
             </TabsTrigger>
             <TabsTrigger value="security" className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" />
@@ -103,6 +108,10 @@ const Settings: React.FC<SettingsProps> = ({ subscription, onUpgradeClick, onPro
 
           <TabsContent value="mydata" className="mt-6">
             <ProfileDataViewer onEdit={handleProfileEdit} />
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-6">
+            <CalendarSettingsCard />
           </TabsContent>
 
           <TabsContent value="security" className="mt-6">

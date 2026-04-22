@@ -17,6 +17,7 @@ import ActionCards, { parseActionBlocks } from '@/components/chat/ActionCards';
 import CalendarProposalCards from '@/components/chat/CalendarProposalCards';
 import { parseCalendarBlocks } from '@/utils/calendarProposalParser';
 import { CalendarService } from '@/services/CalendarService';
+import { getCalendarPrefs } from '@/services/CalendarReminderEngine';
 import { dummyThreats } from '@/data/threatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { gatherFullAppContext, buildProfileSummary, addMemory } from '@/utils/conciergeMemory';
@@ -342,7 +343,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       },
       profileSummary: profileSummary || undefined,
       trackedCountries: fullAppContext.trackedCountries || undefined,
-      calendar: fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined,
+      calendar: (() => {
+        try {
+          const personaScope = (activePersona as any)?.id || (activePersona ? 'meghan' : null);
+          const brief = CalendarService.briefForAI(personaScope, 8);
+          const prefs = getCalendarPrefs();
+          const writeRule = prefs.aiAutoWrite
+            ? 'The user has allowed you to add events directly. When you propose an event, output a fenced ```calendar JSON block — the app will write it.'
+            : 'You may PROPOSE events but NEVER write silently. Output a fenced ```calendar JSON block; the user will tap "Add to calendar" to confirm.';
+          return `${brief}\n\nCalendar policy: ${writeRule}\nProposal schema: { "title": string, "start": "YYYY-MM-DDTHH:mm", "end"?: same, "category": one of travel|accommodation|meeting|meal|sport|wellness|family|personal|social|birthday|legal|reservation|reminder, "location"?: string, "notes"?: string }`;
+        } catch {
+          return fullAppContext.calendar ? JSON.stringify(fullAppContext.calendar).slice(0, 3000) : undefined;
+        }
+      })(),
       learnedMemories: fullAppContext.learnedMemories || undefined,
       persistentMemories: persistentMemories || undefined,
       conversationSummary: conversationSummary || undefined,
