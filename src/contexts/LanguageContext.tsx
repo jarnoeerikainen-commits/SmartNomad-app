@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { translateText } from '@/utils/autoTranslate';
 
 interface Language {
   code: string;
@@ -1320,8 +1321,35 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('app_language', currentLanguage);
   }, [currentLanguage]);
 
+  // Runtime auto-translation cache for keys that are NOT in the static dictionary.
+  // The first lookup returns English (or the key itself), then a background AI call
+  // populates the correct translation; the next render shows it.
+  const [autoTr, setAutoTr] = useState<Record<string, Record<string, string>>>({});
+  const requestedRef = useRef<Set<string>>(new Set());
+
   const t = (key: string): string => {
-    return translations[currentLanguage]?.[key] || translations['en']?.[key] || key;
+    const known = translations[currentLanguage]?.[key] || translations['en']?.[key];
+    if (known) return known;
+
+    // Unknown key — return as-is for instant render, kick off auto-translation
+    if (currentLanguage === 'en') return key;
+    const cached = autoTr[currentLanguage]?.[key];
+    if (cached) return cached;
+
+    const reqKey = `${currentLanguage}::${key}`;
+    if (!requestedRef.current.has(reqKey)) {
+      requestedRef.current.add(reqKey);
+      // Treat the key itself as the source text. Best effort, fire-and-forget.
+      translateText(key, currentLanguage).then((translated) => {
+        if (translated && translated !== key) {
+          setAutoTr((prev) => ({
+            ...prev,
+            [currentLanguage]: { ...(prev[currentLanguage] || {}), [key]: translated },
+          }));
+        }
+      }).catch(() => {});
+    }
+    return key;
   };
 
   const setLanguage = (code: string) => {
