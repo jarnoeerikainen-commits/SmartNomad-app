@@ -98,11 +98,18 @@ const Landing: React.FC = () => {
             <a href="#pricing" className="hover:text-[hsl(var(--gold))] transition-colors">Pricing</a>
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
-          <Link to="/app">
-            <Button size="sm" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-90 shadow-[var(--shadow-glow-gold)]">
-              Launch App <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/admin" className="hidden sm:inline-flex">
+              <Button size="sm" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white" title="Investor Back Office preview">
+                <Shield className="mr-1.5 h-3.5 w-3.5 text-[hsl(var(--gold))]" /> Back Office
+              </Button>
+            </Link>
+            <Link to="/app">
+              <Button size="sm" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-90 shadow-[var(--shadow-glow-gold)]">
+                Launch App <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
