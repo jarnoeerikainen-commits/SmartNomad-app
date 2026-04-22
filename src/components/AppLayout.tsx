@@ -16,6 +16,7 @@ import { Subscription } from '@/types/subscription';
 import { Skeleton } from './ui/skeleton';
 import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
 import MFAGate from '@/components/auth/MFAGate';
+import CalendarReminderBoot from '@/components/calendar/CalendarReminderBoot';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
 const TrackingSection = lazy(() => import('./sections/TrackingSection'));
@@ -563,6 +564,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           citizenship={userProfile?.citizenship}
         />
       </Suspense>
+
+      {/* Calendar reminder engine — boots the minute-tick scheduler and
+          wires chat/voice/toast bridges. Pure logic, no UI. */}
+      <CalendarReminderBoot />
 
       {/* Upgrade Modal */}
       {onUpgrade && (
