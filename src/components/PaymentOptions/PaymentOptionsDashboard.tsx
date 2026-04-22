@@ -248,6 +248,7 @@ const PaymentOptionsDashboard: React.FC = () => {
   }), [methods]);
 
   return (
+    <MFAGate flag="require_mfa_for_payments" area="your payment options">
     <div className="space-y-4 pb-20 md:pb-6">
       {/* Header */}
       <div className="flex items-center justify-between">
