@@ -325,7 +325,7 @@ export function generateDemoPartners(): DemoPartner[] {
   const r = rng(55443322);
   return PARTNERS.map((p, i) => {
     const tier: DemoPartner['tier'] = i < 6 ? 'enterprise' : i < 12 ? 'pro' : i < 18 ? 'scale' : 'growth';
-    const status: DemoPartner['status'] = r() < 0.85 ? 'active' : (r() < 0.5 ? 'trial' : 'paused');
+    const status: DemoPartner['status'] = (r() < 0.85 ? 'active' : (r() < 0.5 ? 'trial' : 'paused')) as DemoPartner['status'];
     const value = ({ enterprise: 240_000, pro: 96_000, scale: 36_000, growth: 12_000 } as Record<string,number>)[tier];
     const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0, 14);
     return {
