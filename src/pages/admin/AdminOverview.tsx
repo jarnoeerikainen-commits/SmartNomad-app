@@ -3,8 +3,9 @@ import { Card } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import {
   Users, Activity, Zap, LifeBuoy, AlertTriangle, DollarSign,
-  Coins, Building2, Wallet, TrendingUp, Loader2
+  Coins, Building2, Wallet, TrendingUp, Loader2,
 } from 'lucide-react';
+import { platformRollup } from '@/utils/adminDemoData';
 
 interface Stats {
   total_users: number;
