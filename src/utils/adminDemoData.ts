@@ -221,7 +221,7 @@ export function generateDemoAffiliates(users: DemoUser[], count = 140): DemoAffi
       user_email: u.email,
       user_name: `${u.first_name} ${u.last_name}`,
       referral_code: `${handle.toUpperCase()}-${(i * 37 % 9999).toString().padStart(4,'0')}`,
-      status: r() < 0.86 ? 'active' : (r() < 0.5 ? 'paused' : 'pending_kyc'),
+      status: (r() < 0.86 ? 'active' : (r() < 0.5 ? 'paused' : 'pending_kyc')) as DemoAffiliate['status'],
       tier,
       channel: pick(r, channels),
       total_clicks: clicks,
