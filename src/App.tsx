@@ -38,10 +38,10 @@ const AdminData = lazy(() => import("./pages/admin/AdminData"));
 const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
 const AdminAudit = lazy(() => import("./pages/admin/AdminAudit"));
 
-// Show "Back to Website" pill on all routes EXCEPT the marketing landing
+// Show "Back to Website" pill on all routes EXCEPT the marketing landing and admin shell
 const ConditionalBackButton = () => {
   const location = useLocation();
-  if (location.pathname === "/") return null;
+  if (location.pathname === "/" || location.pathname.startsWith("/admin")) return null;
   return <BackToWebsiteButton />;
 };
 
