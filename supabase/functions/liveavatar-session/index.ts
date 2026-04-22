@@ -31,19 +31,21 @@ async function pickAvatarId(apiKey: string): Promise<string> {
   }
 
   const json = await res.json();
-  console.log('[liveavatar-session] public avatars raw:', JSON.stringify(json).slice(0, 800));
 
-  // Try multiple shapes
+  // LiveAvatar returns { code, data: { count, results: [...] } }
   let avatars: Array<any> = [];
-  if (Array.isArray(json?.data)) avatars = json.data;
+  if (Array.isArray(json?.data?.results)) avatars = json.data.results;
   else if (Array.isArray(json?.data?.avatars)) avatars = json.data.avatars;
-  else if (Array.isArray(json?.data?.items)) avatars = json.data.items;
-  else if (Array.isArray(json?.avatars)) avatars = json.avatars;
-  else if (Array.isArray(json?.items)) avatars = json.items;
-  else if (Array.isArray(json)) avatars = json;
+  else if (Array.isArray(json?.data)) avatars = json.data;
+  else if (Array.isArray(json?.results)) avatars = json.results;
 
-  if (!Array.isArray(avatars) || avatars.length === 0) {
-    throw new Error('no public avatars returned');
+  // Filter to ACTIVE, non-expired, has-id
+  avatars = avatars.filter(
+    (a) => a?.id && a?.status === 'ACTIVE' && !a?.is_expired,
+  );
+
+  if (avatars.length === 0) {
+    throw new Error('no active public avatars returned');
   }
 
   // Prefer a warm female-sounding name
