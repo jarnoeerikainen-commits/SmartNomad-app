@@ -96,5 +96,5 @@ verify_jwt = false
 [functions.admin-concierge]
 verify_jwt = false
 
-[functions.heygen-token]
+[functions.liveavatar-session]
 verify_jwt = false
