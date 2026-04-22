@@ -17,7 +17,17 @@
 // ledger schema is identical, so no UI changes required.
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type AgentId = 'legal' | 'security' | 'growth' | 'product' | 'oracle';
+export type AgentId =
+  // Original 5 — Sovereign Back-Office Protocol
+  | 'legal' | 'security' | 'growth' | 'product' | 'oracle'
+  // Tier 1 — Highest leverage (curation, pricing, retention)
+  | 'atlas' | 'midas' | 'echo'
+  // Tier 2 — Operating depth (crisis, content, supply ops)
+  | 'sentinel' | 'muse' | 'praxis'
+  // Tier 3 — Optimization & long-term (experimentation, trust, ESG, LTV)
+  | 'forge' | 'concord' | 'verdant' | 'atlas_ltv';
+
+export type AgentTier = 'core' | 'tier1' | 'tier2' | 'tier3';
 
 export type AgentMode = 'demo' | 'live';
 
