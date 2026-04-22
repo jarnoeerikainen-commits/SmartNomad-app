@@ -445,7 +445,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'ees': return <EESCenter countries={countries} />;
       case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
-      case 'snomad-id': return <SnomadIdVault />;
+      case 'snomad-id': return <MFAGate flag="require_mfa_for_sensitive" area="your Snomad ID identity vault"><SnomadIdVault /></MFAGate>;
       case 'customize': return <FeatureCustomizer />;
       case 'integrations': return <ConnectorsDashboard />;
       case 'lifestyle-hub': return <LifestyleHub />;
