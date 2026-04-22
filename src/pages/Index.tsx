@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import SovereignAccessTour from '@/components/permissions/SovereignAccessTour';
+import AuroraIntro from '@/components/avatar/AuroraIntro';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -14,6 +15,7 @@ const Index = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showAuroraIntro, setShowAuroraIntro] = useState(false);
   const [showSovereignTour, setShowSovereignTour] = useState(false);
   const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
@@ -59,11 +61,22 @@ const Index = () => {
     // Show onboarding for first-time users
     if (!hasSeenOnboarding) {
       setShowOnboarding(true);
+    } else if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
+      // First post-onboarding launch → meet Aurora
+      setShowAuroraIntro(true);
     } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-      // First post-onboarding launch → show Sovereign Access tour
+      // After Aurora → Sovereign Access tour
       setShowSovereignTour(true);
     }
   }, []);
+
+  const handleCloseAuroraIntro = () => {
+    localStorage.setItem('supernomad_avatar_intro_seen', '1');
+    setShowAuroraIntro(false);
+    if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
+      setShowSovereignTour(true);
+    }
+  };
 
   const handleCloseSovereignTour = () => {
     localStorage.setItem('supernomad_sovereign_tour_seen', '1');
@@ -213,10 +226,19 @@ const Index = () => {
       {showOnboarding && (
         <OnboardingFlow onComplete={() => {
           setShowOnboarding(false);
-          if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
+          if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
+            setShowAuroraIntro(true);
+          } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
             setShowSovereignTour(true);
           }
         }} />
+      )}
+
+      {showAuroraIntro && (
+        <AuroraIntro
+          userName={userProfile?.firstName || userProfile?.name || 'Nomad'}
+          onComplete={handleCloseAuroraIntro}
+        />
       )}
 
       <SovereignAccessTour
