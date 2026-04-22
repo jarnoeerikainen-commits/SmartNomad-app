@@ -14,6 +14,236 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_ai_brain_runs: {
+        Row: {
+          completed_at: string | null
+          error: string | null
+          id: string
+          input_tokens: number | null
+          insights_created: number | null
+          latency_ms: number | null
+          model: string | null
+          output_tokens: number | null
+          recommendations_created: number | null
+          reports_created: number | null
+          scope: string
+          signals_scanned: Json
+          started_at: string
+          status: string
+          trigger: string
+          triggered_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          error?: string | null
+          id?: string
+          input_tokens?: number | null
+          insights_created?: number | null
+          latency_ms?: number | null
+          model?: string | null
+          output_tokens?: number | null
+          recommendations_created?: number | null
+          reports_created?: number | null
+          scope?: string
+          signals_scanned?: Json
+          started_at?: string
+          status?: string
+          trigger?: string
+          triggered_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          error?: string | null
+          id?: string
+          input_tokens?: number | null
+          insights_created?: number | null
+          latency_ms?: number | null
+          model?: string | null
+          output_tokens?: number | null
+          recommendations_created?: number | null
+          reports_created?: number | null
+          scope?: string
+          signals_scanned?: Json
+          started_at?: string
+          status?: string
+          trigger?: string
+          triggered_by?: string | null
+        }
+        Relationships: []
+      }
+      admin_ai_insights: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          affected_count: number | null
+          category: string
+          confidence: number
+          created_at: string
+          evidence: Json
+          expires_at: string | null
+          id: string
+          metric_snapshot: Json
+          severity: string
+          source_run_id: string | null
+          status: string
+          summary: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          affected_count?: number | null
+          category: string
+          confidence?: number
+          created_at?: string
+          evidence?: Json
+          expires_at?: string | null
+          id?: string
+          metric_snapshot?: Json
+          severity?: string
+          source_run_id?: string | null
+          status?: string
+          summary: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          affected_count?: number | null
+          category?: string
+          confidence?: number
+          created_at?: string
+          evidence?: Json
+          expires_at?: string | null
+          id?: string
+          metric_snapshot?: Json
+          severity?: string
+          source_run_id?: string | null
+          status?: string
+          summary?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      admin_ai_recommendations: {
+        Row: {
+          confidence: number
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          evidence: Json | null
+          expected_impact: string | null
+          expires_at: string | null
+          id: string
+          kind: string
+          priority: string
+          rationale: string
+          source_insight_id: string | null
+          source_run_id: string | null
+          status: string
+          suggested_action: string
+          target_segment: Json | null
+          title: string
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          evidence?: Json | null
+          expected_impact?: string | null
+          expires_at?: string | null
+          id?: string
+          kind: string
+          priority?: string
+          rationale: string
+          source_insight_id?: string | null
+          source_run_id?: string | null
+          status?: string
+          suggested_action: string
+          target_segment?: Json | null
+          title: string
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          evidence?: Json | null
+          expected_impact?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          priority?: string
+          rationale?: string
+          source_insight_id?: string | null
+          source_run_id?: string | null
+          status?: string
+          suggested_action?: string
+          target_segment?: Json | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_ai_recommendations_source_insight_id_fkey"
+            columns: ["source_insight_id"]
+            isOneToOne: false
+            referencedRelation: "admin_ai_insights"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_ai_reports: {
+        Row: {
+          concerns: Json
+          created_at: string
+          executive_summary: string
+          generated_by_run_id: string | null
+          highlights: Json
+          id: string
+          kpi_snapshot: Json
+          metadata: Json
+          narrative: string | null
+          period_end: string
+          period_start: string
+          timeframe: string
+          title: string
+        }
+        Insert: {
+          concerns?: Json
+          created_at?: string
+          executive_summary: string
+          generated_by_run_id?: string | null
+          highlights?: Json
+          id?: string
+          kpi_snapshot?: Json
+          metadata?: Json
+          narrative?: string | null
+          period_end: string
+          period_start: string
+          timeframe: string
+          title: string
+        }
+        Update: {
+          concerns?: Json
+          created_at?: string
+          executive_summary?: string
+          generated_by_run_id?: string | null
+          highlights?: Json
+          id?: string
+          kpi_snapshot?: Json
+          metadata?: Json
+          narrative?: string | null
+          period_end?: string
+          period_start?: string
+          timeframe?: string
+          title?: string
+        }
+        Relationships: []
+      }
       affiliate_accounts: {
         Row: {
           cleared_balance: number
@@ -2494,6 +2724,42 @@ export type Database = {
         Returns: Json
       }
       generate_snomad_id: { Args: never; Returns: string }
+      get_admin_brain_summary: {
+        Args: never
+        Returns: {
+          critical_insights: number
+          last_run_at: string
+          last_run_status: string
+          open_insights: number
+          pending_recommendations: number
+          reports_last_30d: number
+          urgent_recommendations: number
+        }[]
+      }
+      get_latest_admin_report: {
+        Args: { p_timeframe?: string }
+        Returns: {
+          concerns: Json
+          created_at: string
+          executive_summary: string
+          generated_by_run_id: string | null
+          highlights: Json
+          id: string
+          kpi_snapshot: Json
+          metadata: Json
+          narrative: string | null
+          period_end: string
+          period_start: string
+          timeframe: string
+          title: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_reports"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_my_snomad_id: { Args: never; Returns: string }
       get_or_create_affiliate_account: {
         Args: { p_user_id: string }

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, LifeBuoy, Brain, Database, Coins,
-  ShieldCheck, ArrowLeft, Eye, Crown
+  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles
 } from 'lucide-react';
 import { useStaffRole } from '@/hooks/useStaffRole';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/admin/users', icon: Users, label: 'Users' },
   { to: '/admin/tickets', icon: LifeBuoy, label: 'Support' },
   { to: '/admin/ai', icon: Brain, label: 'AI Analytics' },
+  { to: '/admin/brain', icon: Sparkles, label: 'AI Brain', badge: 'LIVE' },
   { to: '/admin/data', icon: Database, label: 'B2B Data' },
   { to: '/admin/affiliates', icon: Coins, label: 'Affiliates' },
   { to: '/admin/audit', icon: ShieldCheck, label: 'Audit Log' },
@@ -36,7 +37,7 @@ const AdminLayout: React.FC = () => {
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
+          {navItems.map(({ to, icon: Icon, label, end, badge }: any) => (
             <NavLink
               key={to}
               to={to}
@@ -50,7 +51,12 @@ const AdminLayout: React.FC = () => {
               }
             >
               <Icon className="h-4 w-4" />
-              {label}
+              <span className="flex-1">{label}</span>
+              {badge && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  {badge}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
