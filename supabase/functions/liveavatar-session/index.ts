@@ -151,11 +151,11 @@ Deno.serve(async (req) => {
     }
 
     console.log('[liveavatar-session] Picking avatar…');
-    const avatarId = await pickAvatarId(apiKey);
-    console.log(`[liveavatar-session] Avatar: ${avatarId}`);
+    const { avatarId, voiceId, name } = await pickAvatar(apiKey);
+    console.log(`[liveavatar-session] Avatar: ${name} (${avatarId}) voice=${voiceId ?? 'default'}`);
 
     console.log('[liveavatar-session] Creating session token…');
-    const sessionToken = await createSessionToken(apiKey, avatarId);
+    const sessionToken = await createSessionToken(apiKey, avatarId, voiceId);
 
     console.log('[liveavatar-session] Starting session…');
     const session = await startSession(sessionToken);
@@ -167,6 +167,7 @@ Deno.serve(async (req) => {
         livekitUrl: session.livekitUrl,
         livekitToken: session.livekitToken,
         avatarId,
+        avatarName: name,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
