@@ -1,0 +1,113 @@
+{
+  "sourceKeys": 185,
+  "languages": [
+    {
+      "code": "es",
+      "name": "Spanish",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "pt",
+      "name": "Portuguese",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "zh",
+      "name": "Chinese (Simplified)",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "fr",
+      "name": "French",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "de",
+      "name": "German",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "ar",
+      "name": "Arabic",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "ja",
+      "name": "Japanese",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "it",
+      "name": "Italian",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "ko",
+      "name": "Korean",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "hi",
+      "name": "Hindi",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "ru",
+      "name": "Russian",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    },
+    {
+      "code": "tr",
+      "name": "Turkish",
+      "total": 185,
+      "translated": 185,
+      "completion": 100,
+      "missing": [],
+      "extras": []
+    }
+  ]
+}
