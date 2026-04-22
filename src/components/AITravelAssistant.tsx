@@ -687,6 +687,36 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
 
+      // 🧠 Auto-evaluate the answer (back-office self-grading)
+      // → low scores trigger an internal "unhelpful" outcome that drops memory importance
+      if (assistantContent && assistantContent.length > 60) {
+        evaluateAnswer({
+          question: userMessage,
+          answer: assistantContent,
+          contextSummary: 'Concierge — see system context',
+        }).then((score) => {
+          if (!score) return;
+          // Persist any low-confidence signal as feedback so the loop closes
+          if ((score.overall ?? 1) < 0.55) {
+            recordOutcome({
+              kind: 'response_unhelpful',
+              conversationId: conversationIdRef.current,
+              topic: userMessage.slice(0, 80),
+              category: 'concierge',
+              metadata: { eval: score },
+            }).catch(() => {});
+          }
+          // If escalation was suggested but not already emitted by the model, surface it
+          if (score.upgrade_suggestion === 'escalate_human' && !escalation) {
+            setMessages(prev => prev.map(m =>
+              m.id === assistantId
+                ? { ...m, escalation: { reason: 'Low confidence — connect with a human specialist?' } }
+                : m
+            ));
+          }
+        }).catch(() => {});
+      }
+
       setIsTyping(false);
     } catch (error) {
       console.error('Chat error:', error);

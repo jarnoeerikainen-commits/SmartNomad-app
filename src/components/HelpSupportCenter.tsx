@@ -245,6 +245,19 @@ const AISupportChat = () => {
         }
       }
 
+      // 🧠 Closed-loop learning: distill memories + self-grade
+      if (assistantSoFar) {
+        const { learnFromExchange } = await import('@/utils/conciergeLearning');
+        learnFromExchange({
+          surface: 'support',
+          question: text,
+          answer: assistantSoFar,
+          contextSummary: JSON.stringify(getUserContext()).slice(0, 2000),
+          category: 'support',
+          topic: text.slice(0, 80),
+        });
+      }
+
       // Speak the response if voice enabled
       if (voiceEnabled && assistantSoFar) {
         const cleanText = assistantSoFar

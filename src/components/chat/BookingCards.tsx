@@ -3,6 +3,7 @@ import { Plane, Hotel, Car, ExternalLink, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { recordOutcome } from '@/utils/conciergeFeedback';
 
 interface BookingItem {
   type: 'flight' | 'hotel' | 'car';
@@ -66,7 +67,16 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
               <Card
                 key={idx}
                 className={`p-3 border cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.01] ${PROVIDER_COLORS[item.provider] || 'bg-muted/50'}`}
-                onClick={() => window.open(item.url, '_blank', 'noopener,noreferrer')}
+                onClick={() => {
+                  // 🧠 Closed-loop learning: record booking-card click as a positive signal
+                  recordOutcome({
+                    kind: 'booking_clicked',
+                    topic: item.route || item.city || item.label || item.provider,
+                    category: item.type === 'flight' ? 'travel' : item.type === 'hotel' ? 'accommodation' : 'transport',
+                    metadata: { provider: item.provider, type: item.type, url: item.url },
+                  }).catch(() => {});
+                  window.open(item.url, '_blank', 'noopener,noreferrer');
+                }}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
