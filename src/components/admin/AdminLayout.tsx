@@ -37,7 +37,7 @@ const AdminLayout: React.FC = () => {
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
+          {navItems.map(({ to, icon: Icon, label, end, badge }: any) => (
             <NavLink
               key={to}
               to={to}
@@ -51,7 +51,12 @@ const AdminLayout: React.FC = () => {
               }
             >
               <Icon className="h-4 w-4" />
-              {label}
+              <span className="flex-1">{label}</span>
+              {badge && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  {badge}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
