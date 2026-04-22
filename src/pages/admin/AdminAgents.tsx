@@ -21,12 +21,13 @@ import {
 import {
   Shield, Scale, Rocket, Palette, BarChart3, Crown, KeyRound, Activity,
   CheckCircle2, XCircle, AlertTriangle, Clock, Lock, FileCheck2, Sparkles,
-  RefreshCw, Eye, ShieldAlert,
+  RefreshCw, Eye, ShieldAlert, Compass, Coins, Heart, Tornado, FileText,
+  Network, FlaskConical, Users2, Leaf, Gem,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
-  AgentOrchestratorService, AGENTS, type AgentId, type AgentProposal,
-  type AgentActivityEvent, type DailyBriefing,
+  AgentOrchestratorService, AGENTS, AGENTS_BY_TIER, TIER_LABELS,
+  type AgentId, type AgentProposal, type AgentActivityEvent, type DailyBriefing, type AgentTier,
 } from '@/services/AgentOrchestratorService';
 
 const AGENT_ICONS: Record<AgentId, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -35,6 +36,16 @@ const AGENT_ICONS: Record<AgentId, React.ComponentType<React.SVGProps<SVGSVGElem
   growth: Rocket,
   product: Palette,
   oracle: BarChart3,
+  atlas: Compass,
+  midas: Coins,
+  echo: Heart,
+  sentinel: Tornado,
+  muse: FileText,
+  praxis: Network,
+  forge: FlaskConical,
+  concord: Users2,
+  verdant: Leaf,
+  atlas_ltv: Gem,
 };
 
 const PRIORITY_STYLES: Record<string, string> = {
