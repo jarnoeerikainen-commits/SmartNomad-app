@@ -31,8 +31,16 @@ async function pickAvatarId(apiKey: string): Promise<string> {
   }
 
   const json = await res.json();
-  const avatars: Array<{ id?: string; avatar_id?: string; name?: string }> =
-    json?.data?.avatars || json?.data || json?.avatars || [];
+  console.log('[liveavatar-session] public avatars raw:', JSON.stringify(json).slice(0, 800));
+
+  // Try multiple shapes
+  let avatars: Array<any> = [];
+  if (Array.isArray(json?.data)) avatars = json.data;
+  else if (Array.isArray(json?.data?.avatars)) avatars = json.data.avatars;
+  else if (Array.isArray(json?.data?.items)) avatars = json.data.items;
+  else if (Array.isArray(json?.avatars)) avatars = json.avatars;
+  else if (Array.isArray(json?.items)) avatars = json.items;
+  else if (Array.isArray(json)) avatars = json;
 
   if (!Array.isArray(avatars) || avatars.length === 0) {
     throw new Error('no public avatars returned');
