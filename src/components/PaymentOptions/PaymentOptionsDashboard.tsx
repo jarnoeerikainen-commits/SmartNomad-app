@@ -489,6 +489,7 @@ const PaymentOptionsDashboard: React.FC = () => {
         editMethod={editMethod}
       />
     </div>
+    </MFAGate>
   );
 };
 
