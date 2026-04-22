@@ -87,6 +87,7 @@ async function createSessionToken(
     method: 'POST',
     headers: {
       'X-API-KEY': apiKey,
+      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
