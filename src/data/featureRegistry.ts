@@ -5,7 +5,7 @@ import {
   MessageSquare, ShieldCheck, Siren, ShieldAlert, Stethoscope, Scale,
   Crown, Flag, Globe2, Building, Sparkles, BarChart3, Home, Car,
   Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
-  Locate, Tag, Phone, Moon, TrendingUp
+  Locate, Tag, Phone, Moon, TrendingUp, Receipt
 } from 'lucide-react';
 
 export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
@@ -41,6 +41,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'dash-discovery', label: 'Feature Discovery', icon: Gift, category: 'dashboard', description: 'Discover new features & tips', defaultVisible: true, defaultPinned: false },
 
   // TAX & COMPLIANCE
+  { id: 'expenses', label: 'Tax & Expense Hub', icon: Receipt, category: 'tax', badge: 'NEW', badgeVariant: 'default', description: 'Receipts, per-diem, VAT reclaim, OCR scanning & business/personal split', defaultVisible: true, defaultPinned: true, trustLevel: 'actionable' },
   { id: 'tax', label: 'Tax Dashboard', icon: Calculator, category: 'tax', description: 'Tax residency overview & compliance', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'tax-residency', label: 'Country Tracker', icon: MapPin, category: 'tax', badge: 'Core', description: 'Track days in each country', defaultVisible: true, defaultPinned: false, trustLevel: 'advisory' },
   { id: 'gps-monitor', label: 'GPS Day Monitor', icon: MapPin, category: 'tax', badge: 'GPS', badgeVariant: 'default', description: 'Auto-log days in each country via GPS with cap warnings', defaultVisible: true, defaultPinned: true, trustLevel: 'advisory' },

@@ -29,6 +29,7 @@ const CountryTracker = lazy(() => import('./CountryTracker'));
 const EnhancedNewsSection = lazy(() => import('./EnhancedNewsSection'));
 const TaxResidencyTracker = lazy(() => import('./TaxResidencyTracker'));
 const TaxResidencyHub = lazy(() => import('./TaxResidencyHub'));
+const ExpenseHub = lazy(() => import('./expenses/ExpenseHub').then(m => ({ default: m.ExpenseHub })));
 const VisaTrackingManager = lazy(() => import('./VisaTrackingManager'));
 const DocumentTracker = lazy(() => import('./DocumentTracker').then(m => ({ default: m.DocumentTracker })));
 const VaccinationTracker = lazy(() => import('./VaccinationTracker'));
@@ -323,6 +324,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'guardian': return <SuperNomadGuardian />;
       case 'threats': return <ThreatDashboard />;
       case 'dashboard': return renderBottomNavContent();
+      case 'expenses': return <ExpenseHub />;
       case 'tax':
         return (
           <TaxResidencyTracker 
