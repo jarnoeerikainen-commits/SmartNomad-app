@@ -443,6 +443,16 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       conversationSummary: bundle.conversationSummary,
       subscriptionTier: bundle.subscriptionTier,
       expenseSummary: bundle.expenseSummary,
+      // Live Supabase-backed expense intelligence (Phase 1+2 ExpenseHub).
+      // Hydrated async; falls back to localStorage summary if unavailable.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(await (async () => {
+        try {
+          const { ExpenseHubService } = await import('@/services/ExpenseHubService');
+          const live = await ExpenseHubService.getConciergeSummary();
+          return live ? { expenseSummary: live } : {};
+        } catch { return {}; }
+      })()),
       integrationContext: bundle.integrations,
       cultural: bundle.cultural,
       lifestyle: bundle.lifestyleConnectors,
