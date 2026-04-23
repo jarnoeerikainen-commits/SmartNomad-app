@@ -18,6 +18,7 @@ import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { FEATURE_REGISTRY, CATEGORY_LABELS } from '@/data/featureRegistry';
+import { buildFeatureCatalogForAI } from '@/data/featureAutoSync';
 
 interface ChatMessage {
   id: string;
@@ -128,10 +129,8 @@ const AISupportChat = () => {
       if (persona) context.activePersona = JSON.parse(persona).name;
     } catch {}
 
-    // Auto-generate feature catalog from registry + multilingual aliases.
-    // Adding a feature anywhere instantly makes Support AI aware of it,
-    // including aliases so users can ask in natural language / any language.
-    const { buildFeatureCatalogForAI } = await import('@/data/featureAutoSync');
+    // Auto-generated from FEATURE_REGISTRY + multilingual aliases — every
+    // new feature instantly becomes visible to Support AI in all languages.
     context.featureCatalog = buildFeatureCatalogForAI();
     context.totalFeatures = FEATURE_REGISTRY.length;
 
