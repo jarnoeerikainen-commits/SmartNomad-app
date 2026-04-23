@@ -113,8 +113,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     return buildGreetingParts({
       aiName,
       userName,
-      city: currentLocation?.city,
-      country: currentLocation?.country,
+      city: effectiveLocation?.city,
+      country: effectiveLocation?.country,
       mode: prefs.personalityMode || 'normal',
       travelMode,
     });
@@ -211,15 +211,21 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     setLanguage(currentLanguage);
   }, [currentLanguage, setLanguage]);
 
-  // Re-greet when persona / language / name / personality changes
+  // Re-greet when persona / language / name / personality / live location changes
+  // (only if user hasn't started chatting yet — we don't want to wipe an active conversation)
   useEffect(() => {
-    const parts = buildGreeting();
-    playGreeting(parts);
+    setMessages(prev => {
+      if (prev.some(m => m.isUser)) return prev; // user already engaged → keep
+      const parts = buildGreeting();
+      // play staggered greeting
+      playGreeting(parts);
+      return prev;
+    });
     if (activePersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode]);
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, effectiveLocation?.city, effectiveLocation?.country]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -255,8 +261,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             { role: 'user', content: followUpPrompt }
           ],
           userContext: {
-            currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
-            currentCity: activePersona ? activePersona.profile.city : currentLocation?.city,
+            currentCountry: activePersona ? activePersona.profile.country : effectiveLocation?.country,
+            currentCity: activePersona ? activePersona.profile.city : effectiveLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
@@ -360,7 +366,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const enhancedProfile = fullAppContext.enhancedProfile;
     const profileSummary = buildProfileSummary(enhancedProfile);
 
-    const userCity = activePersona ? activePersona.profile.city : currentLocation?.city;
+    const userCity = activePersona ? activePersona.profile.city : effectiveLocation?.city;
     let cityServicesContext = '';
     if (userCity) {
       try {
@@ -408,7 +414,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     })();
     const bundle = buildConciergeContextBundle({
       currentCity: userCity,
-      currentCountry: activePersona ? activePersona.profile.country : currentLocation?.country,
+      currentCountry: activePersona ? activePersona.profile.country : effectiveLocation?.country,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       persistentMemories,
