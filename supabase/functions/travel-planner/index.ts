@@ -3,6 +3,7 @@ import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_shared/schoolHolidays.ts";
+import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
