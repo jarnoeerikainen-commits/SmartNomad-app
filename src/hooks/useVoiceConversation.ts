@@ -355,6 +355,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     setVoiceEnabled((prev) => {
       if (prev) {
         speechSessionRef.current += 1;
+        elevenStreamRef.current?.cancel();
+        elevenStreamRef.current = null;
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
@@ -367,6 +369,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   useEffect(() => () => {
     speechSessionRef.current += 1;
     recognitionRef.current?.stop?.();
+    elevenStreamRef.current?.cancel();
+    elevenStreamRef.current = null;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
