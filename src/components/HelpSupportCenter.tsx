@@ -128,16 +128,11 @@ const AISupportChat = () => {
       if (persona) context.activePersona = JSON.parse(persona).name;
     } catch {}
 
-    // Auto-generate feature catalog from registry (always up-to-date)
-    const featureCatalog = Object.entries(
-      FEATURE_REGISTRY.reduce((acc, f) => {
-        const cat = CATEGORY_LABELS[f.category] || f.category;
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push(`${f.label}: ${f.description}${f.badge ? ` [${f.badge}]` : ''}`);
-        return acc;
-      }, {} as Record<string, string[]>)
-    ).map(([cat, items]) => `**${cat}:** ${items.join(' | ')}`).join('\n');
-    context.featureCatalog = featureCatalog;
+    // Auto-generate feature catalog from registry + multilingual aliases.
+    // Adding a feature anywhere instantly makes Support AI aware of it,
+    // including aliases so users can ask in natural language / any language.
+    const { buildFeatureCatalogForAI } = await import('@/data/featureAutoSync');
+    context.featureCatalog = buildFeatureCatalogForAI();
     context.totalFeatures = FEATURE_REGISTRY.length;
 
     return context;
