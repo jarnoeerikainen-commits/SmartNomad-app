@@ -85,6 +85,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'customize', label: 'Customize App', icon: BarChart3 },
         { id: 'integrations', label: 'Integrations Hub', icon: Plug, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'corporate', label: 'Corporate Travel', icon: Briefcase, badge: 'B2B', variant: 'default' as const },
         { id: 'lifestyle-hub', label: 'Lifestyle Intelligence', icon: Sparkles, badge: 'AI', variant: 'secondary' as const },
         { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
         { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
