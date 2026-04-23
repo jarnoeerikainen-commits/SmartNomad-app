@@ -182,7 +182,7 @@ const Landing: React.FC = () => {
                 <AlertTriangle className="mr-1.5 h-3 w-3" /> The Hidden Cost of Borderless Living
               </Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-                "The 184th day is the most expensive day of your life."
+                "The 184th day might be the most expensive day of your life."
               </h2>
               <p className="text-lg text-[hsl(30_12%_80%)] leading-relaxed">
                 One miscounted day can trigger tax residency in a country you never intended to live in: audits, double taxation, frozen bank accounts. SuperNomad counts every day silently — across <strong className="text-white">195+ jurisdictions</strong> — and warns you long before the line is crossed.
