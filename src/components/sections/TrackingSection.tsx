@@ -89,7 +89,7 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
   subscription,
   onUpgradeClick
 }) => {
-  const [activeTab, setActiveTab] = useState('countries');
+  const [activeTab, setActiveTab] = useState('expenses');
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const { toast } = useToast();
 
@@ -249,6 +249,10 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="expenses" className="flex items-center gap-2">
+            <Receipt className="h-4 w-4" />
+            <span className="hidden sm:inline">Expenses</span>
+          </TabsTrigger>
           <TabsTrigger value="countries" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
             <span className="hidden sm:inline">Countries</span>
@@ -256,10 +260,6 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
           <TabsTrigger value="tax" className="flex items-center gap-2">
             <Calculator className="h-4 w-4" />
             <span className="hidden sm:inline">Tax</span>
-          </TabsTrigger>
-          <TabsTrigger value="expenses" className="flex items-center gap-2">
-            <Receipt className="h-4 w-4" />
-            <span className="hidden sm:inline">Expenses</span>
           </TabsTrigger>
           <TabsTrigger value="visas" className="flex items-center gap-2">
             <Plane className="h-4 w-4" />
@@ -270,6 +270,10 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
             <span className="hidden sm:inline">Docs</span>
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="expenses" className="mt-6 animate-fade-in">
+          <ExpenseHub />
+        </TabsContent>
 
         <TabsContent value="countries" className="mt-6 animate-fade-in">
           <CountryTracker
@@ -290,10 +294,6 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
             onToggleCountDays={onToggleCountDays}
             currentLocation={null}
           />
-        </TabsContent>
-
-        <TabsContent value="expenses" className="mt-6 animate-fade-in">
-          <ExpenseHub />
         </TabsContent>
 
         <TabsContent value="visas" className="mt-6 animate-fade-in">
