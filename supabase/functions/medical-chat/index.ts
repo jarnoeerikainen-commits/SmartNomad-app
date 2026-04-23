@@ -168,7 +168,7 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
       body: JSON.stringify({
         model: getModel('intelligence'),
         messages: [
-          { role: 'system', content: withTruthProtocol(systemPrompt) },
+          { role: 'system', content: buildScopeGuard('medical') + withTruthProtocol(systemPrompt) },
           ...messages
         ],
         stream: true,

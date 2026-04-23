@@ -259,7 +259,7 @@ Generate the full plan now.`;
       body: JSON.stringify({
         model: getModel('intelligence'),
         messages: [
-          { role: "system", content: withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
+          { role: "system", content: buildScopeGuard('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
           { role: "user", content: userMessage },
         ],
         stream: true,
