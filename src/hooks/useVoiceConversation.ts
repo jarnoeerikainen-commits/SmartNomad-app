@@ -73,6 +73,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const wordFrameRef = useRef<number>(0);
   const wordIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mouthFallbackIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const elevenStreamRef = useRef<ElevenStreamHandle | null>(null);
+  const premiumDisabledRef = useRef<boolean>(!isPremiumVoiceEnabled());
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
