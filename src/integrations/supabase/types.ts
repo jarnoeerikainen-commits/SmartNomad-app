@@ -1823,6 +1823,314 @@ export type Database = {
         }
         Relationships: []
       }
+      expense_audit_log: {
+        Row: {
+          action: string
+          after_state: Json | null
+          before_state: Json | null
+          created_at: string
+          device_id: string
+          expense_id: string | null
+          id: string
+          metadata: Json
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          device_id: string
+          expense_id?: string | null
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          after_state?: Json | null
+          before_state?: Json | null
+          created_at?: string
+          device_id?: string
+          expense_id?: string | null
+          id?: string
+          metadata?: Json
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      expense_receipts: {
+        Row: {
+          created_at: string
+          device_id: string
+          expense_id: string | null
+          file_size_bytes: number | null
+          id: string
+          mime_type: string
+          ocr_completed_at: string | null
+          ocr_confidence: number | null
+          ocr_extracted: Json | null
+          ocr_model: string | null
+          ocr_raw: Json | null
+          ocr_status: string
+          sha256: string | null
+          storage_path: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          expense_id?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          mime_type?: string
+          ocr_completed_at?: string | null
+          ocr_confidence?: number | null
+          ocr_extracted?: Json | null
+          ocr_model?: string | null
+          ocr_raw?: Json | null
+          ocr_status?: string
+          sha256?: string | null
+          storage_path: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          expense_id?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          mime_type?: string
+          ocr_completed_at?: string | null
+          ocr_confidence?: number | null
+          ocr_extracted?: Json | null
+          ocr_model?: string | null
+          ocr_raw?: Json | null
+          ocr_status?: string
+          sha256?: string | null
+          storage_path?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_receipts_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expense_terms_acceptance: {
+        Row: {
+          accepted_at: string
+          device_id: string
+          id: string
+          ip_address: string | null
+          terms_version: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          accepted_at?: string
+          device_id: string
+          id?: string
+          ip_address?: string | null
+          terms_version: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          accepted_at?: string
+          device_id?: string
+          id?: string
+          ip_address?: string | null
+          terms_version?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      expense_trips: {
+        Row: {
+          business_percentage: number
+          countries: string[]
+          created_at: string
+          device_id: string
+          end_date: string
+          id: string
+          notes: string | null
+          per_diem_country_code: string | null
+          per_diem_mode: boolean
+          primary_country_code: string | null
+          purpose: string
+          start_date: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          business_percentage?: number
+          countries?: string[]
+          created_at?: string
+          device_id: string
+          end_date: string
+          id?: string
+          notes?: string | null
+          per_diem_country_code?: string | null
+          per_diem_mode?: boolean
+          primary_country_code?: string | null
+          purpose?: string
+          start_date: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          business_percentage?: number
+          countries?: string[]
+          created_at?: string
+          device_id?: string
+          end_date?: string
+          id?: string
+          notes?: string | null
+          per_diem_country_code?: string | null
+          per_diem_mode?: boolean
+          primary_country_code?: string | null
+          purpose?: string
+          start_date?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      expenses: {
+        Row: {
+          amount: number
+          amount_home: number | null
+          business_percentage: number
+          category: string
+          created_at: string
+          currency: string
+          description: string
+          device_id: string
+          expense_date: string
+          fx_rate: number | null
+          fx_rate_date: string | null
+          fx_source: string | null
+          home_currency: string | null
+          id: string
+          is_business: boolean
+          metadata: Json
+          payment_method: string | null
+          receipt_id: string | null
+          reclaim_status: string
+          source: string
+          source_ref: string | null
+          status: string
+          supplier_vat_id: string | null
+          tags: string[]
+          trip_id: string | null
+          updated_at: string
+          user_id: string | null
+          vat_amount: number
+          vat_rate: number | null
+          vat_reclaim_pct: number
+          vat_reclaimable: boolean
+          vendor: string | null
+          vendor_country_code: string | null
+        }
+        Insert: {
+          amount: number
+          amount_home?: number | null
+          business_percentage?: number
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string
+          device_id: string
+          expense_date: string
+          fx_rate?: number | null
+          fx_rate_date?: string | null
+          fx_source?: string | null
+          home_currency?: string | null
+          id?: string
+          is_business?: boolean
+          metadata?: Json
+          payment_method?: string | null
+          receipt_id?: string | null
+          reclaim_status?: string
+          source?: string
+          source_ref?: string | null
+          status?: string
+          supplier_vat_id?: string | null
+          tags?: string[]
+          trip_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          vat_amount?: number
+          vat_rate?: number | null
+          vat_reclaim_pct?: number
+          vat_reclaimable?: boolean
+          vendor?: string | null
+          vendor_country_code?: string | null
+        }
+        Update: {
+          amount?: number
+          amount_home?: number | null
+          business_percentage?: number
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string
+          device_id?: string
+          expense_date?: string
+          fx_rate?: number | null
+          fx_rate_date?: string | null
+          fx_source?: string | null
+          home_currency?: string | null
+          id?: string
+          is_business?: boolean
+          metadata?: Json
+          payment_method?: string | null
+          receipt_id?: string | null
+          reclaim_status?: string
+          source?: string
+          source_ref?: string | null
+          status?: string
+          supplier_vat_id?: string | null
+          tags?: string[]
+          trip_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          vat_amount?: number
+          vat_rate?: number | null
+          vat_reclaim_pct?: number
+          vat_reclaimable?: boolean
+          vendor?: string | null
+          vendor_country_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "expense_trips"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_expenses_receipt"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "expense_receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_graph_edges: {
         Row: {
           created_at: string
@@ -1868,6 +2176,45 @@ export type Database = {
           target_type?: string
           user_id?: string | null
           weight?: number | null
+        }
+        Relationships: []
+      }
+      mileage_rates_official: {
+        Row: {
+          country_code: string
+          currency: string
+          fetched_at: string
+          id: string
+          rate_per_km: number | null
+          rate_per_mile: number | null
+          source: string
+          source_url: string
+          vehicle_type: string
+          year: number
+        }
+        Insert: {
+          country_code: string
+          currency: string
+          fetched_at?: string
+          id?: string
+          rate_per_km?: number | null
+          rate_per_mile?: number | null
+          source: string
+          source_url: string
+          vehicle_type?: string
+          year: number
+        }
+        Update: {
+          country_code?: string
+          currency?: string
+          fetched_at?: string
+          id?: string
+          rate_per_km?: number | null
+          rate_per_mile?: number | null
+          source?: string
+          source_url?: string
+          vehicle_type?: string
+          year?: number
         }
         Relationships: []
       }
@@ -2003,6 +2350,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      per_diem_rates: {
+        Row: {
+          city: string | null
+          country_code: string
+          country_name: string
+          currency: string
+          daily_total: number | null
+          effective_from: string
+          effective_to: string | null
+          fetched_at: string
+          id: string
+          incidentals_rate: number
+          lodging_rate: number
+          meals_rate: number
+          notes: string | null
+          region: string | null
+          source: string
+          source_url: string
+          year: number
+        }
+        Insert: {
+          city?: string | null
+          country_code: string
+          country_name: string
+          currency?: string
+          daily_total?: number | null
+          effective_from: string
+          effective_to?: string | null
+          fetched_at?: string
+          id?: string
+          incidentals_rate?: number
+          lodging_rate?: number
+          meals_rate?: number
+          notes?: string | null
+          region?: string | null
+          source: string
+          source_url: string
+          year: number
+        }
+        Update: {
+          city?: string | null
+          country_code?: string
+          country_name?: string
+          currency?: string
+          daily_total?: number | null
+          effective_from?: string
+          effective_to?: string | null
+          fetched_at?: string
+          id?: string
+          incidentals_rate?: number
+          lodging_rate?: number
+          meals_rate?: number
+          notes?: string | null
+          region?: string | null
+          source?: string
+          source_url?: string
+          year?: number
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -2557,6 +2964,48 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      vat_reclaim_rules: {
+        Row: {
+          business_only: boolean
+          category: string
+          conditions: string | null
+          country_code: string
+          country_name: string
+          fetched_at: string
+          id: string
+          reclaim_pct: number
+          source: string
+          source_url: string
+          standard_vat_rate: number
+        }
+        Insert: {
+          business_only?: boolean
+          category: string
+          conditions?: string | null
+          country_code: string
+          country_name: string
+          fetched_at?: string
+          id?: string
+          reclaim_pct?: number
+          source: string
+          source_url: string
+          standard_vat_rate?: number
+        }
+        Update: {
+          business_only?: boolean
+          category?: string
+          conditions?: string | null
+          country_code?: string
+          country_name?: string
+          fetched_at?: string
+          id?: string
+          reclaim_pct?: number
+          source?: string
+          source_url?: string
+          standard_vat_rate?: number
         }
         Relationships: []
       }
