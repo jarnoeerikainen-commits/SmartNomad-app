@@ -104,3 +104,6 @@ verify_jwt = false
 
 [functions.karhoo-rides]
 verify_jwt = false
+
+[functions.source-monitor]
+verify_jwt = false
