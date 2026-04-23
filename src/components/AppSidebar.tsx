@@ -6,7 +6,7 @@ import {
   GraduationCap, Users, Tag, Stethoscope, Scale, Award, Wifi,
   CloudRain, BookOpen, Truck, Building2, Crown, Globe2, Building,
   Siren, ShieldCheck, ShieldAlert, Baby, Calendar, Cat, MessageSquare,
-  Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles
+  Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles, Receipt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -105,6 +105,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'tax',
       label: t('sidebar.tax_compliance'),
       items: [
+        { id: 'expenses', label: 'Tax & Expense Hub', icon: Receipt, badge: 'NEW', variant: 'default' as const },
         { id: 'tax', label: t('sidebar.tax_dashboard'), icon: Calculator },
         { id: 'gps-monitor', label: 'GPS Day Monitor', icon: Locate, badge: 'GPS', variant: 'default' as const },
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },

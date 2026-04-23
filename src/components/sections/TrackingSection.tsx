@@ -3,12 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp, Plus, Receipt } from 'lucide-react';
+import { MapPin, Calculator, Plane, FileText, AlertTriangle, Shield, Clock, TrendingUp, Plus } from 'lucide-react';
 import CountryTracker from '../CountryTracker';
 import TaxResidencyHub from '../TaxResidencyHub';
 import VisaTrackingManager from '../VisaTrackingManager';
 import { DocumentTracker } from '../DocumentTracker';
-import { ExpenseHub } from '../expenses/ExpenseHub';
 import { CountrySelector } from '../CountrySelector';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
@@ -89,7 +88,7 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
   subscription,
   onUpgradeClick
 }) => {
-  const [activeTab, setActiveTab] = useState('expenses');
+  const [activeTab, setActiveTab] = useState('countries');
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const { toast } = useToast();
 
@@ -248,11 +247,7 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
       <UrgencyAlert items={urgencyItems} />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="expenses" className="flex items-center gap-2">
-            <Receipt className="h-4 w-4" />
-            <span className="hidden sm:inline">Expenses</span>
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="countries" className="flex items-center gap-2">
             <MapPin className="h-4 w-4" />
             <span className="hidden sm:inline">Countries</span>
@@ -270,10 +265,6 @@ const TrackingSection: React.FC<TrackingSectionProps> = ({
             <span className="hidden sm:inline">Docs</span>
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="expenses" className="mt-6 animate-fade-in">
-          <ExpenseHub />
-        </TabsContent>
 
         <TabsContent value="countries" className="mt-6 animate-fade-in">
           <CountryTracker
