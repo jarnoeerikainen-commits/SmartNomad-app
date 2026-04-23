@@ -4,11 +4,24 @@ import {
   getWordAtCharIndex,
   sanitizeSpeechText,
 } from './voice/speechText';
+import { streamElevenLabsTTS, type ElevenStreamHandle } from './voice/elevenLabsStream';
 
 const LANG_TO_LOCALE: Record<string, string> = {
   en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR',
   de: 'de-DE', ar: 'ar-SA', ja: 'ja-JP', it: 'it-IT', ko: 'ko-KR',
   hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
+};
+
+// Allow users (or admin) to disable the premium voice via localStorage.
+const ELEVEN_PREF_KEY = 'sn_voice_premium';
+const isPremiumVoiceEnabled = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  try {
+    const v = localStorage.getItem(ELEVEN_PREF_KEY);
+    return v === null ? true : v === 'true';
+  } catch {
+    return true;
+  }
 };
 
 interface UseVoiceConversationReturn {
@@ -60,6 +73,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   const wordFrameRef = useRef<number>(0);
   const wordIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mouthFallbackIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const elevenStreamRef = useRef<ElevenStreamHandle | null>(null);
+  const premiumDisabledRef = useRef<boolean>(!isPremiumVoiceEnabled());
 
   const sttSupported = typeof window !== 'undefined' &&
     ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
@@ -167,11 +182,12 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       }
 
       if (silenceTimer) clearTimeout(silenceTimer);
+      // Snappier turn-taking: 900ms silence (was 1800ms) for natural dialogue
       silenceTimer = setTimeout(() => {
         const result = finalTranscript.trim() || interim.trim();
         if (result) onResult(result);
         recognition.stop();
-      }, 1800);
+      }, 900);
     };
 
     recognition.onerror = (event: any) => {
@@ -279,15 +295,56 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
 
     speechSessionRef.current += 1;
+    const sessionId = speechSessionRef.current;
     clearSpeechState();
     setSpokenText(clean);
 
-    // Use browser-native TTS with full avatar animation
+    // ─── Try premium ElevenLabs streaming first ─────────────────────────
+    if (!premiumDisabledRef.current) {
+      // Cancel any in-flight stream (barge-in)
+      elevenStreamRef.current?.cancel();
+
+      const handle = streamElevenLabsTTS({
+        text: clean,
+        lang: langRef.current,
+        gender: voiceGenderRef.current,
+        onStart: () => {
+          if (sessionId !== speechSessionRef.current) return;
+          setIsSpeaking(true);
+          stopFallbackMouthAnimation();
+        },
+        onOpenness: (level) => {
+          if (sessionId !== speechSessionRef.current) return;
+          setMouthOpenness(level);
+        },
+        onEnd: () => {
+          if (sessionId !== speechSessionRef.current) return;
+          elevenStreamRef.current = null;
+          clearSpeechState(onComplete);
+        },
+        onError: (err) => {
+          console.warn('[Voice] ElevenLabs failed, falling back to browser TTS:', err.message);
+          elevenStreamRef.current = null;
+          // Disable for this session if it's a config/billing issue
+          if (/401|402|invalid|exhausted|configured/i.test(err.message)) {
+            premiumDisabledRef.current = true;
+          }
+          if (sessionId !== speechSessionRef.current) return;
+          fallbackBrowserTTS(clean, onComplete);
+        },
+      });
+      elevenStreamRef.current = handle;
+      return;
+    }
+
+    // ─── Fallback: browser SpeechSynthesis ───────────────────────────────
     fallbackBrowserTTS(clean, onComplete);
-  }, [clearSpeechState, fallbackBrowserTTS, voiceEnabled]);
+  }, [clearSpeechState, fallbackBrowserTTS, stopFallbackMouthAnimation, voiceEnabled]);
 
   const stopSpeaking = useCallback(() => {
     speechSessionRef.current += 1;
+    elevenStreamRef.current?.cancel();
+    elevenStreamRef.current = null;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
@@ -298,6 +355,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     setVoiceEnabled((prev) => {
       if (prev) {
         speechSessionRef.current += 1;
+        elevenStreamRef.current?.cancel();
+        elevenStreamRef.current = null;
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
@@ -310,6 +369,8 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
   useEffect(() => () => {
     speechSessionRef.current += 1;
     recognitionRef.current?.stop?.();
+    elevenStreamRef.current?.cancel();
+    elevenStreamRef.current = null;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
