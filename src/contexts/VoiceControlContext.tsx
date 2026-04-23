@@ -202,7 +202,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
     const text = transcript.toLowerCase().trim();
     setLastCommand(transcript);
 
-    for (const cmd of VOICE_COMMANDS) {
+    for (const cmd of allCommands) {
       for (const pattern of cmd.patterns) {
         if (pattern.test(text)) {
           const [type, value] = cmd.action.split(':');
