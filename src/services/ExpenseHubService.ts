@@ -199,37 +199,38 @@ class ExpenseHubServiceImpl {
 
   async createExpense(input: Partial<ExpenseRow> & { amount: number; currency: string; expense_date: string; category: ExpenseCategory }): Promise<ExpenseRow> {
     const { data: userRes } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from("expenses")
-      .insert({
-        device_id: this.deviceId,
-        user_id: userRes?.user?.id ?? null,
-        trip_id: input.trip_id ?? null,
-        expense_date: input.expense_date,
-        amount: input.amount,
-        currency: input.currency,
-        amount_home: input.amount_home ?? null,
-        home_currency: input.home_currency ?? null,
-        fx_rate: input.fx_rate ?? null,
-        category: input.category,
-        description: input.description ?? "",
-        vendor: input.vendor ?? null,
-        vendor_country_code: input.vendor_country_code ?? null,
-        payment_method: input.payment_method ?? null,
-        vat_amount: input.vat_amount ?? 0,
-        vat_rate: input.vat_rate ?? null,
-        supplier_vat_id: input.supplier_vat_id ?? null,
-        vat_reclaimable: input.vat_reclaimable ?? false,
-        vat_reclaim_pct: input.vat_reclaim_pct ?? 0,
-        is_business: input.is_business ?? true,
-        business_percentage: input.business_percentage ?? 100,
-        source: input.source ?? "manual",
-        source_ref: input.source_ref ?? null,
-        receipt_id: input.receipt_id ?? null,
-        status: input.status ?? "draft",
-        tags: input.tags ?? [],
-        metadata: input.metadata ?? {},
-      })
+    const payload = {
+      device_id: this.deviceId,
+      user_id: userRes?.user?.id ?? null,
+      trip_id: input.trip_id ?? null,
+      expense_date: input.expense_date,
+      amount: input.amount,
+      currency: input.currency,
+      amount_home: input.amount_home ?? null,
+      home_currency: input.home_currency ?? null,
+      fx_rate: input.fx_rate ?? null,
+      category: input.category,
+      description: input.description ?? "",
+      vendor: input.vendor ?? null,
+      vendor_country_code: input.vendor_country_code ?? null,
+      payment_method: input.payment_method ?? null,
+      vat_amount: input.vat_amount ?? 0,
+      vat_rate: input.vat_rate ?? null,
+      supplier_vat_id: input.supplier_vat_id ?? null,
+      vat_reclaimable: input.vat_reclaimable ?? false,
+      vat_reclaim_pct: input.vat_reclaim_pct ?? 0,
+      is_business: input.is_business ?? true,
+      business_percentage: input.business_percentage ?? 100,
+      source: input.source ?? "manual",
+      source_ref: input.source_ref ?? null,
+      receipt_id: input.receipt_id ?? null,
+      status: input.status ?? "draft",
+      tags: input.tags ?? [],
+      metadata: input.metadata ?? {},
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase.from("expenses") as any)
+      .insert(payload)
       .select()
       .single();
     if (error) throw error;
