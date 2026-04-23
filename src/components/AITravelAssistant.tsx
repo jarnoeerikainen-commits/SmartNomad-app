@@ -34,6 +34,7 @@ import HumanSupportEscalation from '@/components/concierge/HumanSupportEscalatio
 import { buildConciergeContextBundle, renderContextNarrative } from '@/utils/conciergeContextBuilder';
 import { evaluateAnswer } from '@/utils/conciergeQuality';
 import { recordOutcome } from '@/utils/conciergeFeedback';
+import { buildGreetingParts, type GreetingPart } from '@/utils/conciergeGreetings';
 
 
 interface Message {
