@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
+import { fetchIPLocation, getGPSLocation } from '@/services/locationProviders';
 
 interface VPNStatus {
   detected: boolean;
@@ -24,58 +25,6 @@ const LocationContext = createContext<LocationContextType | undefined>(undefined
 const LOCATION_CACHE_KEY = 'supernomad_last_location';
 const LOCATION_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-async function fetchIPLocation(): Promise<LocationData | null> {
-  try {
-    const res = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en');
-    const data = await res.json();
-    return {
-      latitude: data.latitude,
-      longitude: data.longitude,
-      country: data.countryName || 'Unknown',
-      country_code: data.countryCode || 'XX',
-      city: data.city || data.locality || 'Unknown',
-      timestamp: Date.now(),
-    };
-  } catch {
-    return null;
-  }
-}
-
-function getGPSLocation(): Promise<LocationData | null> {
-  return new Promise((resolve) => {
-    if (!('geolocation' in navigator)) return resolve(null);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const res = await fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`
-          );
-          const data = await res.json();
-          resolve({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            country: data.countryName || 'Unknown',
-            country_code: data.countryCode || 'XX',
-            city: data.city || data.locality || 'Unknown',
-            timestamp: Date.now(),
-          });
-        } catch {
-          resolve({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            country: 'Unknown',
-            country_code: 'XX',
-            city: 'Unknown',
-            timestamp: Date.now(),
-          });
-        }
-      },
-      () => resolve(null),
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  });
-}
-
 function countriesMismatch(a?: LocationData | null, b?: LocationData | null): boolean {
   if (!a || !b) return false;
   if (a.country_code === 'XX' || b.country_code === 'XX') return false;
@@ -98,19 +47,27 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { toast } = useToast();
 
-  const resolveLocation = useCallback(async () => {
+  const resolveLocation = useCallback(async (opts?: { freshOnly?: boolean }) => {
     setIsLoading(true);
     setError(null);
 
-    // Run both GPS and IP lookup in parallel
-    const [gps, ip] = await Promise.all([getGPSLocation(), fetchIPLocation()]);
+    // Always run BOTH lookups in parallel.
+    // freshOnly forces GPS to bypass browser position cache — critical after VPN toggle.
+    const [gps, ip] = await Promise.all([
+      getGPSLocation({ freshOnly: opts?.freshOnly ?? true }),
+      fetchIPLocation(),
+    ]);
 
-    // Prefer GPS, fall back to IP
+    // Prefer GPS (real device location, immune to VPN), fall back to IP.
     const best = gps || ip;
 
     if (best) {
       setLocation(best);
-      localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(best));
+      try {
+        localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(best));
+      } catch {
+        /* ignore quota errors */
+      }
     } else {
       setError('Could not determine your location');
     }
@@ -124,12 +81,23 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         dismissed: prev.dismissed,
       }));
     } else {
-      setVpnStatus((prev) => ({ ...prev, detected: false }));
+      // Reset dismissed flag when VPN is no longer detected
+      setVpnStatus({
+        detected: false,
+        dismissed: false,
+        gpsLocation: gps || undefined,
+        ipLocation: ip || undefined,
+      });
     }
 
     setIsLoading(false);
     setIsTracking(true);
   }, []);
+
+  const refreshLocation = useCallback(
+    () => resolveLocation({ freshOnly: true }),
+    [resolveLocation]
+  );
 
   const dismissVPNWarning = useCallback(() => {
     setVpnStatus((prev) => ({ ...prev, dismissed: true }));
@@ -137,10 +105,29 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Initial load + interval
   useEffect(() => {
-    resolveLocation();
-    intervalRef.current = setInterval(resolveLocation, LOCATION_REFRESH_INTERVAL);
+    resolveLocation({ freshOnly: true });
+    intervalRef.current = setInterval(
+      () => resolveLocation({ freshOnly: true }),
+      LOCATION_REFRESH_INTERVAL
+    );
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [resolveLocation]);
+
+  // Re-resolve when tab regains focus / network comes back — catches VPN toggles instantly
+  useEffect(() => {
+    const trigger = () => resolveLocation({ freshOnly: true });
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') trigger();
+    };
+    window.addEventListener('focus', trigger);
+    window.addEventListener('online', trigger);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('focus', trigger);
+      window.removeEventListener('online', trigger);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [resolveLocation]);
 
@@ -164,7 +151,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isLoading,
         vpnStatus,
         error,
-        refreshLocation: resolveLocation,
+        refreshLocation,
         dismissVPNWarning,
       }}
     >
