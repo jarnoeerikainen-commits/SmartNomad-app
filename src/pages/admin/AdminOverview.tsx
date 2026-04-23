@@ -6,6 +6,7 @@ import {
   Coins, Building2, Wallet, TrendingUp, Loader2,
 } from 'lucide-react';
 import { platformRollup } from '@/utils/adminDemoData';
+import AICouncilDigest from '@/components/admin/AICouncilDigest';
 
 interface Stats {
   total_users: number;
@@ -58,33 +59,48 @@ const AdminOverview: React.FC = () => {
     { icon: Zap, label: 'AI Calls (24h)', value: fmt(stats.ai_calls_24h) },
     { icon: Brain2, label: 'AI Tokens (30d)', value: fmt(stats.ai_tokens_30d) },
     { icon: LifeBuoy, label: 'Open Tickets', value: fmt(stats.open_tickets) },
-    { icon: AlertTriangle, label: 'Urgent Tickets', value: fmt(stats.urgent_tickets), accent: stats.urgent_tickets > 0 ? 'text-red-400' : '' },
-    { icon: DollarSign, label: 'B2B Revenue (30d)', value: fmtUsd(stats.b2b_revenue_30d), accent: 'text-emerald-400' },
+    { icon: AlertTriangle, label: 'Urgent Tickets', value: fmt(stats.urgent_tickets), accent: stats.urgent_tickets > 0 ? 'text-red-300' : '' },
+    { icon: DollarSign, label: 'B2B Revenue (30d)', value: fmtUsd(stats.b2b_revenue_30d), accent: 'text-emerald-300' },
     { icon: Coins, label: 'Active Affiliates', value: fmt(stats.active_affiliates) },
     { icon: Building2, label: 'API Partners', value: fmt(stats.active_partners) },
     { icon: Wallet, label: 'Pending Payouts', value: fmtUsd(stats.pending_affiliate_payouts) },
   ];
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-8">
-        <h1 className="text-3xl font-display font-bold">Platform Overview</h1>
-        <p className="text-sm text-[hsl(30_12%_70%)] mt-1">
+        <h1 className="text-3xl font-display font-bold text-white">Platform Overview</h1>
+        <p className="text-sm text-[hsl(30_12%_80%)] mt-1">
           Real-time KPIs across users, AI usage, support, and revenue.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
         {cards.map(({ icon: Icon, label, value, accent }) => (
-          <Card key={label} className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <Icon className={`h-5 w-5 ${accent ?? 'text-[hsl(30_12%_70%)]'}`} />
+          <Card
+            key={label}
+            className="bg-gradient-to-br from-[hsl(220_22%_11%)] to-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.2)] p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.35)]"
+          >
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <Icon className={`h-5 w-5 ${accent ?? 'text-[hsl(var(--gold))]'}`} />
             </div>
-            <div className={`text-2xl font-bold ${accent ?? 'text-white'}`}>{value}</div>
-            <div className="text-xs text-[hsl(30_12%_65%)] mt-1">{label}</div>
+            <div
+              className={`text-2xl sm:text-3xl font-bold leading-tight tracking-tight tabular-nums break-words ${
+                accent ?? 'text-white'
+              }`}
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.45)' }}
+            >
+              {value}
+            </div>
+            <div className="text-[11px] sm:text-xs uppercase tracking-wider text-[hsl(30_12%_82%)] mt-1 font-medium">
+              {label}
+            </div>
           </Card>
         ))}
       </div>
+
+      {/* Daily AI council compilation */}
+      <AICouncilDigest />
     </div>
   );
 };
