@@ -330,7 +330,18 @@ export function discoverFeaturesByIntent(
   const words = normalized.split(/\s+/);
   const results: Map<string, DiscoveredFeature> = new Map();
 
-  for (const mapping of INTENT_MAPPINGS) {
+  // Merge curated INTENT_MAPPINGS with auto-generated mappings derived from
+  // FEATURE_REGISTRY + FEATURE_ALIASES. Curated entries win on tie because
+  // they have higher-quality contextTriggers; auto entries guarantee that
+  // every NEW feature is discoverable the moment it's added to the registry.
+  const auto = buildAutoIntentMappings();
+  const curatedIds = new Set(INTENT_MAPPINGS.map((m) => m.featureId));
+  const mergedMappings: IntentMapping[] = [
+    ...INTENT_MAPPINGS,
+    ...auto.filter((a) => !curatedIds.has(a.featureId)),
+  ];
+
+  for (const mapping of mergedMappings) {
     const feature = FEATURE_REGISTRY.find(f => f.id === mapping.featureId);
     if (!feature) continue;
 
@@ -360,7 +371,7 @@ export function discoverFeaturesByIntent(
       }
     }
 
-    // 3. Synonym matches
+    // 3. Synonym matches (multilingual aliases live here for auto-mappings)
     for (const synonym of mapping.synonyms) {
       if (normalized.includes(synonym.toLowerCase())) {
         score += 0.5;
@@ -379,7 +390,6 @@ export function discoverFeaturesByIntent(
       }
     }
 
-    // Cap score at 1.0
     score = Math.min(score, 1.0);
 
     if (score > 0.15) {
@@ -397,25 +407,23 @@ export function discoverFeaturesByIntent(
 
 /**
  * Returns a concise tool-routing prompt for the AI system prompt.
- * Tells the AI which features are available and how to reference them.
+ * Uses the rich auto-generated catalog (descriptions + multilingual aliases)
+ * so the Concierge can match user phrases in any of the 13 languages and emit
+ * the correct [NAVIGATE:feature_id] tag.
  */
 export function getToolRoutingPrompt(): string {
-  const grouped: Record<string, string[]> = {};
-  for (const feature of FEATURE_REGISTRY) {
-    const cat = CATEGORY_LABELS[feature.category] || feature.category;
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(`${feature.id}: ${feature.label} — ${feature.description}`);
-  }
+  const catalog = buildFeatureCatalogForAI();
+  return `\n**🧭 TOOL ROUTING — Live Feature Catalog (auto-synced from registry)**
+When a user asks about ANY topic below, reference the feature by its exact \`id\` so the app auto-navigates.
+Aliases include multilingual synonyms — match user phrases in ANY language.
 
-  let prompt = `\n**🧭 TOOL ROUTING — Available Features**\nWhen users ask about topics below, reference the specific feature by ID so the app can auto-navigate.\n`;
-  for (const [cat, features] of Object.entries(grouped)) {
-    prompt += `\n**${cat}:**\n`;
-    for (const f of features) {
-      prompt += `- ${f}\n`;
-    }
-  }
-  prompt += `\nTo suggest a feature, include: [NAVIGATE:feature_id] in your response.\n`;
-  return prompt;
+${catalog}
+
+**HOW TO USE:**
+- To suggest navigation, include \`[NAVIGATE:feature_id]\` exactly once per recommended feature.
+- Prefer the most specific feature. If user asks about "lost card" → \`[NAVIGATE:emergency-cards]\`, not generic \`[NAVIGATE:payment-options]\`.
+- Never invent feature IDs. Only use IDs that appear in the catalog above.
+`;
 }
 
 /**
