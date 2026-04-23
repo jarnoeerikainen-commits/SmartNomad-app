@@ -420,6 +420,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       integrationsString: getIntegrationContextForAI(),
     });
     const contextNarrative = renderContextNarrative(bundle);
+    // Hydrate live Supabase-backed expense summary (ExpenseHub Phase 1+2)
+    let liveExpenseSummary: string | undefined;
+    try {
+      const { ExpenseHubService } = await import('@/services/ExpenseHubService');
+      liveExpenseSummary = (await ExpenseHubService.getConciergeSummary()) || undefined;
+    } catch { /* ignore */ }
     const userContext = {
       currentCountry: bundle.location.country,
       currentCity: bundle.location.city,
@@ -442,7 +448,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       persistentMemories: bundle.persistentMemories,
       conversationSummary: bundle.conversationSummary,
       subscriptionTier: bundle.subscriptionTier,
-      expenseSummary: bundle.expenseSummary,
+      expenseSummary: liveExpenseSummary || bundle.expenseSummary,
       integrationContext: bundle.integrations,
       cultural: bundle.cultural,
       lifestyle: bundle.lifestyleConnectors,

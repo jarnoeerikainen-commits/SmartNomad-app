@@ -40,6 +40,7 @@ const AdminAgents = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminData = lazy(() => import("./pages/admin/AdminData"));
 const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
 const AdminAudit = lazy(() => import("./pages/admin/AdminAudit"));
+const AdminExpenses = lazy(() => import("./pages/admin/AdminExpenses"));
 
 // Show "Back to Website" pill on all routes EXCEPT the marketing landing and admin shell
 const ConditionalBackButton = () => {
@@ -97,6 +98,7 @@ const App = () => {
                     <Route path="data" element={<AdminData />} />
                     <Route path="affiliates" element={<AdminAffiliates />} />
                     <Route path="audit" element={<AdminAudit />} />
+                    <Route path="expenses" element={<AdminExpenses />} />
                   </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>

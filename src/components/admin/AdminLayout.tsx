@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, LifeBuoy, Brain, Database, Coins,
-  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network
+  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network, Receipt
 } from 'lucide-react';
 import { useStaffRole } from '@/hooks/useStaffRole';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,7 @@ const navItems = [
   { to: '/admin/ai', icon: Brain, label: 'AI Analytics' },
   { to: '/admin/brain', icon: Sparkles, label: 'AI Brain' },
   { to: '/admin/data', icon: Database, label: 'B2B Data' },
+  { to: '/admin/expenses', icon: Receipt, label: 'Tax & Expense', badge: 'NEW' },
   { to: '/admin/affiliates', icon: Coins, label: 'Affiliates' },
   { to: '/admin/audit', icon: ShieldCheck, label: 'Audit Log' },
 ];

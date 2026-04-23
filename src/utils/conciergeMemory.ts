@@ -116,7 +116,9 @@ export function gatherFullAppContext(): Record<string, any> {
     }
   } catch { }
 
-  // Expenses
+  // Expenses — Phase 1: legacy localStorage fallback (kept for offline drafts).
+  // The richer Supabase-backed summary is hydrated asynchronously by the
+  // Concierge context builder via ExpenseHubService.getConciergeSummary().
   try {
     const exp = localStorage.getItem('expenses');
     if (exp) {
