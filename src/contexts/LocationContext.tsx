@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
+import { fetchIPLocation, getGPSLocation } from '@/services/locationProviders';
 
 interface VPNStatus {
   detected: boolean;
@@ -23,58 +24,6 @@ const LocationContext = createContext<LocationContextType | undefined>(undefined
 
 const LOCATION_CACHE_KEY = 'supernomad_last_location';
 const LOCATION_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
-
-async function fetchIPLocation(): Promise<LocationData | null> {
-  try {
-    const res = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en');
-    const data = await res.json();
-    return {
-      latitude: data.latitude,
-      longitude: data.longitude,
-      country: data.countryName || 'Unknown',
-      country_code: data.countryCode || 'XX',
-      city: data.city || data.locality || 'Unknown',
-      timestamp: Date.now(),
-    };
-  } catch {
-    return null;
-  }
-}
-
-function getGPSLocation(): Promise<LocationData | null> {
-  return new Promise((resolve) => {
-    if (!('geolocation' in navigator)) return resolve(null);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const res = await fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`
-          );
-          const data = await res.json();
-          resolve({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            country: data.countryName || 'Unknown',
-            country_code: data.countryCode || 'XX',
-            city: data.city || data.locality || 'Unknown',
-            timestamp: Date.now(),
-          });
-        } catch {
-          resolve({
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-            country: 'Unknown',
-            country_code: 'XX',
-            city: 'Unknown',
-            timestamp: Date.now(),
-          });
-        }
-      },
-      () => resolve(null),
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  });
-}
 
 function countriesMismatch(a?: LocationData | null, b?: LocationData | null): boolean {
   if (!a || !b) return false;
