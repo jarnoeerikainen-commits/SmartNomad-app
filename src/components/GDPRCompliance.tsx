@@ -65,10 +65,27 @@ export const CookieConsent: React.FC = () => {
     });
   };
 
-  if (!isVisible) return null;
+  // Defer the cookie banner until first-time onboarding has completed so it
+  // doesn't sit on top of the welcome modal on small phones.
+  const [onboardingDone, setOnboardingDone] = useState(
+    () => typeof window !== 'undefined' && !!localStorage.getItem('hasSeenOnboarding')
+  );
+  useEffect(() => {
+    if (onboardingDone) return;
+    const check = () => {
+      if (localStorage.getItem('hasSeenOnboarding')) setOnboardingDone(true);
+    };
+    const id = window.setInterval(check, 600);
+    return () => window.clearInterval(id);
+  }, [onboardingDone]);
+
+  if (!isVisible || !onboardingDone) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-[60] md:bottom-4 md:left-auto md:right-4 md:w-96 max-h-[70vh] overflow-y-auto">
+    <div
+      className="fixed left-3 right-3 z-[60] md:left-auto md:right-4 md:w-96 max-h-[70vh] overflow-y-auto"
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.25rem)' }}
+    >
       <Card className="border border-border bg-background/95 backdrop-blur shadow-lg">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -124,14 +141,14 @@ export const CookieConsent: React.FC = () => {
               />
             </div>
           </div>
-          <div className="flex gap-2 pt-2">
-            <Button onClick={acceptAll} size="sm" className="flex-1">
+          <div className="flex flex-wrap gap-2 pt-2">
+            <Button onClick={acceptAll} size="sm" className="flex-1 min-w-[7rem]">
               Accept All
             </Button>
-            <Button onClick={acceptSelected} variant="outline" size="sm" className="flex-1">
+            <Button onClick={acceptSelected} variant="outline" size="sm" className="flex-1 min-w-[7rem]">
               Save Preferences
             </Button>
-            <Button onClick={rejectAll} variant="ghost" size="sm">
+            <Button onClick={rejectAll} variant="ghost" size="sm" className="w-full sm:w-auto">
               Reject All
             </Button>
           </div>

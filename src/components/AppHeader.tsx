@@ -63,7 +63,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     return usagePercentage >= 90;
   }).length;
   return <header className="sticky top-0 z-[70] w-full border-b bg-card/80 backdrop-blur-md shadow-soft">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-16 items-center justify-between gap-2 px-3 sm:px-4 max-w-full">
         {/* Left side - Menu and Logo */}
         <div className="flex items-center gap-4">
           {showMenuButton && <Button variant="ghost" size="sm" onClick={onMenuClick} className="md:hidden">
@@ -87,12 +87,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         </div>
 
         {/* Center - AQI + Demo Personas */}
-        <div className="flex items-center gap-1 sm:gap-3 min-w-0 overflow-x-auto scrollbar-hide">
-          <div className="hidden sm:block shrink-0">
+        <div className="flex items-center gap-1 sm:gap-3 min-w-0 flex-shrink overflow-hidden">
+          <div className="hidden md:block shrink-0">
             <AirQualityIndicator />
           </div>
-          <div className="h-5 w-px bg-border hidden sm:block shrink-0" />
-          <DemoPersonaSelector />
+          <div className="h-5 w-px bg-border hidden md:block shrink-0" />
+          <div className="min-w-0 flex-shrink">
+            <DemoPersonaSelector />
+          </div>
         </div>
 
         {/* Right side - Actions */}
