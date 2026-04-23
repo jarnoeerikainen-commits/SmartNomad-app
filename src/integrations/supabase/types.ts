@@ -1232,6 +1232,100 @@ export type Database = {
         }
         Relationships: []
       }
+      change_proposals: {
+        Row: {
+          ai_diff: Json
+          ai_summary: string
+          applied_at: string | null
+          change_category: string
+          created_at: string
+          current_snapshot_id: string
+          decided_at: string | null
+          decided_by: string | null
+          decision: string | null
+          decision_note: string | null
+          expires_at: string
+          id: string
+          injection_scan_findings: Json | null
+          injection_scan_passed: boolean
+          previous_snapshot_id: string | null
+          proposed_patch: Json | null
+          risk_level: string
+          risk_score: number
+          source_id: string
+          status: string
+          tls_verified: boolean
+        }
+        Insert: {
+          ai_diff?: Json
+          ai_summary: string
+          applied_at?: string | null
+          change_category: string
+          created_at?: string
+          current_snapshot_id: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string | null
+          decision_note?: string | null
+          expires_at?: string
+          id?: string
+          injection_scan_findings?: Json | null
+          injection_scan_passed?: boolean
+          previous_snapshot_id?: string | null
+          proposed_patch?: Json | null
+          risk_level: string
+          risk_score: number
+          source_id: string
+          status?: string
+          tls_verified?: boolean
+        }
+        Update: {
+          ai_diff?: Json
+          ai_summary?: string
+          applied_at?: string | null
+          change_category?: string
+          created_at?: string
+          current_snapshot_id?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string | null
+          decision_note?: string | null
+          expires_at?: string
+          id?: string
+          injection_scan_findings?: Json | null
+          injection_scan_passed?: boolean
+          previous_snapshot_id?: string | null
+          proposed_patch?: Json | null
+          risk_level?: string
+          risk_score?: number
+          source_id?: string
+          status?: string
+          tls_verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "change_proposals_current_snapshot_id_fkey"
+            columns: ["current_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_proposals_previous_snapshot_id_fkey"
+            columns: ["previous_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "source_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_proposals_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "verified_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           content: string
@@ -2629,6 +2723,101 @@ export type Database = {
         }
         Relationships: []
       }
+      source_audit_log: {
+        Row: {
+          actor_id: string | null
+          actor_role: string | null
+          created_at: string
+          details: Json
+          event_type: string
+          id: string
+          proposal_id: string | null
+          source_id: string | null
+        }
+        Insert: {
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          details?: Json
+          event_type: string
+          id?: string
+          proposal_id?: string | null
+          source_id?: string | null
+        }
+        Update: {
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          details?: Json
+          event_type?: string
+          id?: string
+          proposal_id?: string | null
+          source_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_audit_log_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "change_proposals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_audit_log_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "verified_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_snapshots: {
+        Row: {
+          content_hash: string
+          content_length: number
+          content_markdown: string | null
+          http_status: number | null
+          id: string
+          metadata: Json
+          scrape_latency_ms: number | null
+          scraped_at: string
+          source_id: string
+          tls_valid: boolean | null
+        }
+        Insert: {
+          content_hash: string
+          content_length?: number
+          content_markdown?: string | null
+          http_status?: number | null
+          id?: string
+          metadata?: Json
+          scrape_latency_ms?: number | null
+          scraped_at?: string
+          source_id: string
+          tls_valid?: boolean | null
+        }
+        Update: {
+          content_hash?: string
+          content_length?: number
+          content_markdown?: string | null
+          http_status?: number | null
+          id?: string
+          metadata?: Json
+          scrape_latency_ms?: number | null
+          scraped_at?: string
+          source_id?: string
+          tls_valid?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_snapshots_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "verified_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       staff_audit_log: {
         Row: {
           action: string
@@ -3051,6 +3240,78 @@ export type Database = {
         }
         Relationships: []
       }
+      verified_sources: {
+        Row: {
+          category: string
+          consecutive_failures: number
+          country_code: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          display_name: string
+          domain: string
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_scraped_at: string | null
+          last_status: string | null
+          metadata: Json
+          refresh_cadence_hours: number
+          risk_policy: string
+          source_type: string
+          target_feature_id: string | null
+          tls_required: boolean
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          category: string
+          consecutive_failures?: number
+          country_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_name: string
+          domain: string
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_scraped_at?: string | null
+          last_status?: string | null
+          metadata?: Json
+          refresh_cadence_hours?: number
+          risk_policy?: string
+          source_type: string
+          target_feature_id?: string | null
+          tls_required?: boolean
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          category?: string
+          consecutive_failures?: number
+          country_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_name?: string
+          domain?: string
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_scraped_at?: string | null
+          last_status?: string | null
+          metadata?: Json
+          refresh_cadence_hours?: number
+          risk_policy?: string
+          source_type?: string
+          target_feature_id?: string | null
+          tls_required?: boolean
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       affiliate_referral_clicks_safe: {
@@ -3264,6 +3525,53 @@ export type Database = {
         }[]
       }
       get_request_device_id: { Args: never; Returns: string }
+      get_source_monitor_summary: {
+        Args: never
+        Returns: {
+          active_sources: number
+          approved_24h: number
+          auto_applied_24h: number
+          high_risk_pending: number
+          injection_blocks_24h: number
+          last_run_at: string
+          pending_proposals: number
+          rejected_24h: number
+          scrape_errors_24h: number
+          total_sources: number
+        }[]
+      }
+      get_sources_due_for_refresh: {
+        Args: { p_limit?: number }
+        Returns: {
+          category: string
+          consecutive_failures: number
+          country_code: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          display_name: string
+          domain: string
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_scraped_at: string | null
+          last_status: string | null
+          metadata: Json
+          refresh_cadence_hours: number
+          risk_policy: string
+          source_type: string
+          target_feature_id: string | null
+          tls_required: boolean
+          updated_at: string
+          url: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "verified_sources"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_active_consent: {
         Args: { p_partner_id?: string; p_purpose: string; p_user_id: string }
         Returns: boolean
