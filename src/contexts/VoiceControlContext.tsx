@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { buildAutoVoicePatterns } from '@/data/featureAutoSync';
 
 interface VoiceCommand {
   patterns: RegExp[];
