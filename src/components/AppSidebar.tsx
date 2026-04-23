@@ -255,7 +255,31 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                           </Button>
                         );
                       }
-                      
+
+                      // Handle Back Office (route navigation)
+                      if (item.id === 'admin') {
+                        return (
+                          <Button
+                            key={item.id}
+                            variant="default"
+                            className="w-full justify-start gap-3 border-0 text-[hsl(220_22%_10%)] font-semibold shadow-medium hover:shadow-lg hover:scale-[1.02] transition-all"
+                            style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
+                            onClick={() => {
+                              navigate('/admin');
+                              onClose?.();
+                            }}
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span className="flex-1 text-left">{item.label}</span>
+                            {item.badge && (
+                              <Badge variant="secondary" className="ml-auto text-xs bg-[hsl(220_22%_10%)] text-[hsl(var(--gold))]">
+                                {item.badge}
+                              </Badge>
+                            )}
+                          </Button>
+                        );
+                      }
+
                       return (
                         <Button
                           key={item.id}
