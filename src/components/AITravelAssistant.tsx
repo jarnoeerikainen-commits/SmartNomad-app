@@ -35,6 +35,7 @@ import { buildConciergeContextBundle, renderContextNarrative } from '@/utils/con
 import { evaluateAnswer } from '@/utils/conciergeQuality';
 import { recordOutcome } from '@/utils/conciergeFeedback';
 import { buildGreetingParts, type GreetingPart } from '@/utils/conciergeGreetings';
+import { useLocation } from '@/contexts/LocationContext';
 
 
 interface Message {
@@ -59,6 +60,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 }) => {
   const { t, currentLanguage } = useLanguage();
   const { activePersona } = useDemoPersona();
+  // Live detected location from the global LocationContext.
+  // Used as a fallback (and as the source of truth for greeting refresh)
+  // so the greeting always mentions the user's real current location.
+  const { location: liveLocation } = useLocation();
+  const effectiveLocation = currentLocation || (liveLocation ? { country: liveLocation.country, city: liveLocation.city } : undefined);
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
