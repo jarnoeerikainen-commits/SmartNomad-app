@@ -258,13 +258,14 @@ class ExpenseHubServiceImpl {
 
   private async audit(expenseId: string | null, action: string, before: unknown, after: unknown) {
     const { data: userRes } = await supabase.auth.getUser();
-    await supabase.from("expense_audit_log").insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.from("expense_audit_log") as any).insert({
       device_id: this.deviceId,
       user_id: userRes?.user?.id ?? null,
       expense_id: expenseId,
       action,
-      before_state: before as never,
-      after_state: after as never,
+      before_state: before,
+      after_state: after,
     });
   }
 
@@ -281,8 +282,9 @@ class ExpenseHubServiceImpl {
     });
     if (upErr) throw upErr;
 
-    const { data: receiptRow, error: insErr } = await supabase
-      .from("expense_receipts").insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: receiptRow, error: insErr } = await (supabase.from("expense_receipts") as any)
+      .insert({
         device_id: this.deviceId,
         user_id: userRes?.user?.id ?? null,
         storage_path: path,
@@ -301,17 +303,19 @@ class ExpenseHubServiceImpl {
       if (ocrErr) throw ocrErr;
       extracted = ocrRes?.extracted ?? {};
       confidence = ocrRes?.confidence ?? 0;
-      await supabase.from("expense_receipts").update({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.from("expense_receipts") as any).update({
         ocr_status: ocrRes?.ok ? "done" : "failed",
-        ocr_extracted: extracted as never,
-        ocr_raw: ocrRes?.raw as never,
+        ocr_extracted: extracted,
+        ocr_raw: ocrRes?.raw,
         ocr_confidence: confidence,
         ocr_model: ocrRes?.ocrModel,
         ocr_completed_at: new Date().toISOString(),
       }).eq("id", receiptRow.id);
     } catch (e) {
       console.error("OCR failed:", e);
-      await supabase.from("expense_receipts").update({ ocr_status: "failed" }).eq("id", receiptRow.id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.from("expense_receipts") as any).update({ ocr_status: "failed" }).eq("id", receiptRow.id);
     }
 
     return { receiptId: receiptRow.id, extracted, confidence };
