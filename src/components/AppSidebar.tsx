@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Home, MapPin, FileText, CreditCard, Shield, Settings, HelpCircle,
   Newspaper, Calculator, Plane, Heart, AlertTriangle, Car,
@@ -6,7 +7,8 @@ import {
   GraduationCap, Users, Tag, Stethoscope, Scale, Award, Wifi,
   CloudRain, BookOpen, Truck, Building2, Crown, Globe2, Building,
   Siren, ShieldCheck, ShieldAlert, Baby, Calendar, Cat, MessageSquare,
-  Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles, Receipt
+  Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles, Receipt,
+  Briefcase
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +47,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const { isVisible } = useFeaturePreferences();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['premium', 'travel', 'local']);
   const ageGroup = typeof window !== 'undefined' ? localStorage.getItem('ageGroup') || 'adult' : 'adult';
@@ -78,6 +81,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'main',
       label: t('sidebar.quick_actions'),
       items: [
+        { id: 'admin', label: 'Back Office', icon: Briefcase, badge: 'STAFF', variant: 'default' as const },
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'customize', label: 'Customize App', icon: BarChart3 },
         { id: 'integrations', label: 'Integrations Hub', icon: Plug, badge: 'NEW', variant: 'secondary' as const },
