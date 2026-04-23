@@ -482,6 +482,37 @@ class ExpenseHubServiceImpl {
     }
     return { isExpense: false };
   }
+
+  /**
+   * Compact text summary for injection into Concierge AI context.
+   * Safe to call without auth — returns null if no data is visible.
+   */
+  async getConciergeSummary(): Promise<string | null> {
+    try {
+      const stats = await this.getStats();
+      if (!stats.count) return null;
+      const topCats = Object.entries(stats.byCategory)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([c, v]) => `${c} $${Math.round(v)}`)
+        .join(", ");
+      const topCountries = Object.entries(stats.byCountry)
+        .filter(([k]) => k !== "UNKNOWN")
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([c, v]) => `${c} $${Math.round(v)}`)
+        .join(", ");
+      return [
+        `Tracked expenses: ${stats.count} entries, $${Math.round(stats.total)} total`,
+        `Business $${Math.round(stats.business)} · Personal $${Math.round(stats.personal)}`,
+        `Reclaimable VAT $${Math.round(stats.reclaimableVAT)}`,
+        topCats && `Top categories: ${topCats}`,
+        topCountries && `Top countries: ${topCountries}`,
+      ].filter(Boolean).join(". ");
+    } catch {
+      return null;
+    }
+  }
 }
 
 function mapAgenticCategory(c: string): ExpenseCategory {
