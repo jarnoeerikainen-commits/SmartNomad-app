@@ -24,6 +24,7 @@ const LocationContext = createContext<LocationContextType | undefined>(undefined
 
 const LOCATION_CACHE_KEY = 'supernomad_last_location';
 const LOCATION_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const LOCATION_CACHE_MAX_AGE = 2 * 60 * 1000; // 2 minutes
 
 function countriesMismatch(a?: LocationData | null, b?: LocationData | null): boolean {
   if (!a || !b) return false;
@@ -35,7 +36,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [location, setLocation] = useState<LocationData | null>(() => {
     try {
       const cached = localStorage.getItem(LOCATION_CACHE_KEY);
-      return cached ? JSON.parse(cached) : null;
+      if (!cached) return null;
+      const parsed = JSON.parse(cached) as LocationData;
+      if (!parsed?.timestamp) return null;
+      return Date.now() - parsed.timestamp <= LOCATION_CACHE_MAX_AGE ? parsed : null;
     } catch {
       return null;
     }
@@ -61,8 +65,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       fetchIPLocation(),
     ]);
 
-    // Prefer GPS (real device location, immune to VPN), fall back to IP.
-    const best = gps || ip;
+    // Prefer GPS (real device location, immune to VPN), fall back to IP only when GPS is unavailable.
+    const gpsValid = Boolean(gps && gps.country_code !== 'XX' && gps.country !== 'Unknown');
+    const ipValid = Boolean(ip && ip.country_code !== 'XX' && ip.country !== 'Unknown');
+    const best = gpsValid ? gps : ipValid ? ip : null;
 
     if (requestSeq !== requestSeqRef.current) return;
 
@@ -74,6 +80,12 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         /* ignore quota errors */
       }
     } else {
+      setLocation(null);
+      try {
+        localStorage.removeItem(LOCATION_CACHE_KEY);
+      } catch {
+        /* ignore storage errors */
+      }
       setError('Could not determine your location');
     }
 
