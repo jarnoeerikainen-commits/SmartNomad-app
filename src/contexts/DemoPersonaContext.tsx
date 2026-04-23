@@ -23,6 +23,11 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const setPersona = useCallback((id: 'meghan' | 'john' | null) => {
     setActivePersonaId(id);
+    // Publish to window so non-React services (e.g. ExpenseHubService) can read it
+    if (typeof window !== 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__demoPersonaId = id;
+    }
     if (id && DEMO_PERSONAS[id]) {
       // Store profile in localStorage so existing app systems pick it up
       const p = DEMO_PERSONAS[id];
