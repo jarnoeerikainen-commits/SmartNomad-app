@@ -26,19 +26,37 @@ function normalizeCountryName(country?: string, countryCode?: string): string {
 async function firstSuccessfulLocation(
   providers: Array<() => Promise<LocationData | null>>
 ): Promise<LocationData | null> {
-  try {
-    return await Promise.any(
-      providers.map(async (provider) => {
-        const result = await provider();
-        if (!result || result.country_code === 'XX') {
-          throw new Error('No location result');
-        }
-        return result;
-      })
-    );
-  } catch {
-    return null;
-  }
+  return new Promise((resolve) => {
+    if (!providers.length) {
+      resolve(null);
+      return;
+    }
+
+    let pending = providers.length;
+    let settled = false;
+
+    const finishIfDone = () => {
+      pending -= 1;
+      if (!settled && pending <= 0) {
+        resolve(null);
+      }
+    };
+
+    providers.forEach((provider) => {
+      provider()
+        .then((result) => {
+          if (!settled && result && result.country_code !== 'XX') {
+            settled = true;
+            resolve(result);
+            return;
+          }
+          finishIfDone();
+        })
+        .catch(() => {
+          finishIfDone();
+        });
+    });
+  });
 }
 
 async function fetchWithTimeout(url: string, ms = TIMEOUT_MS): Promise<Response> {

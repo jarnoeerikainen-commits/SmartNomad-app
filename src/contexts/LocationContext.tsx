@@ -45,10 +45,13 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [error, setError] = useState<string | null>(null);
   const [vpnStatus, setVpnStatus] = useState<VPNStatus>({ detected: false, dismissed: false });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const watchIdRef = useRef<number | null>(null);
+  const requestSeqRef = useRef(0);
   const { toast } = useToast();
 
-  const resolveLocation = useCallback(async (opts?: { freshOnly?: boolean }) => {
-    setIsLoading(true);
+  const resolveLocation = useCallback(async (opts?: { freshOnly?: boolean; silent?: boolean }) => {
+    const requestSeq = ++requestSeqRef.current;
+    if (!opts?.silent) setIsLoading(true);
     setError(null);
 
     // Always run BOTH lookups in parallel.
@@ -60,6 +63,8 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     // Prefer GPS (real device location, immune to VPN), fall back to IP.
     const best = gps || ip;
+
+    if (requestSeq !== requestSeqRef.current) return;
 
     if (best) {
       setLocation(best);
@@ -90,8 +95,8 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       });
     }
 
-    setIsLoading(false);
-    setIsTracking(true);
+    if (!opts?.silent) setIsLoading(false);
+    setIsTracking(Boolean(best));
   }, []);
 
   const refreshLocation = useCallback(
@@ -112,6 +117,32 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [resolveLocation]);
+
+  // Live GPS updates so Concierge location refreshes immediately after movement/VPN changes.
+  useEffect(() => {
+    if (!('geolocation' in navigator)) return;
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      () => {
+        resolveLocation({ freshOnly: true, silent: true });
+      },
+      () => {
+        // Ignore watch errors here; periodic/manual refresh still runs.
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
     };
   }, [resolveLocation]);
 
