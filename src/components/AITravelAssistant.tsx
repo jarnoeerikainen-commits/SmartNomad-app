@@ -786,10 +786,32 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const sentText = inputMessage;
     setInputMessage('');
-    setIsTyping(true);
 
-    await streamChat(inputMessage);
+    // ─── Ride-hailing intent: inject a RideBookingCard before the model replies
+    const rideIntent = RideHailingService.detectRideIntent(sentText);
+    if (rideIntent.isRide) {
+      const city = effectiveLocation?.city || currentLocation?.city || 'your city';
+      const dropoff = rideIntent.dropoffHint || (sentText.match(/airport/i) ? `${city} airport` : 'destination');
+      const whenLine = rideIntent.whenHint && rideIntent.whenHint !== 'now' ? ` for **${rideIntent.whenHint}**` : '';
+      const rideBlock = '```ride\n' + JSON.stringify({
+        pickup: `Current location, ${city}`,
+        dropoff,
+        city,
+      }) + '\n```';
+      const assistantMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        content: `On it. Pulling live ride options${whenLine}. Pick one and I'll dispatch the driver. 🖤\n\n${rideBlock}`,
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, assistantMsg]);
+      return; // skip LLM round-trip — the ride card is the answer
+    }
+
+    setIsTyping(true);
+    await streamChat(sentText);
   };
 
   const handleMicClick = async () => {
