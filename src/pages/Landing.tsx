@@ -99,9 +99,10 @@ const Landing: React.FC = () => {
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/admin" className="hidden sm:inline-flex">
-              <Button size="sm" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white" title="Investor Back Office preview">
-                <Shield className="mr-1.5 h-3.5 w-3.5 text-[hsl(var(--gold))]" /> Back Office
+            <Link to="/admin" className="inline-flex">
+              <Button size="sm" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white px-2 sm:px-3" title="Investor Back Office preview">
+                <Shield className="h-3.5 w-3.5 text-[hsl(var(--gold))] sm:mr-1.5" />
+                <span className="hidden sm:inline">Back Office</span>
               </Button>
             </Link>
             <Link to="/app">
