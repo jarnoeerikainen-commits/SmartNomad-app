@@ -8,7 +8,9 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed:demo": "node scripts/seed-demo.mjs",
+    "seed:demo:reset": "node scripts/seed-demo.mjs --reset"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",
