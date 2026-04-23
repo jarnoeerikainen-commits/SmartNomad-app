@@ -1217,7 +1217,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   const { text: calText, proposals: calProposals } = !message.isUser
                     ? parseCalendarBlocks(actionText)
                     : { text: actionText, proposals: [] };
-                  const parts = calText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|CALENDAR_PROPOSAL)_(\d+)\}\}/);
+                  const { text: rideText, rides } = !message.isUser
+                    ? parseRideBlocks(calText)
+                    : { text: calText, rides: [] };
+                  const parts = rideText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|CALENDAR_PROPOSAL|RIDE_CARD)_(\d+)\}\}/);
                   return (
                     <div
                       key={message.id}
@@ -1233,23 +1236,25 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                         <div className="flex items-start gap-2">
                           {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           <div className="flex-1 min-w-0">
-                            {calText.includes('{{BOOKING_CARD_') || calText.includes('{{ACTION_CARD_') || calText.includes('{{CALENDAR_PROPOSAL_') ? (
+                            {rideText.includes('{{BOOKING_CARD_') || rideText.includes('{{ACTION_CARD_') || rideText.includes('{{CALENDAR_PROPOSAL_') || rideText.includes('{{RIDE_CARD_') ? (
                               parts.map((part, i) => {
                                 if (i % 2 === 1) {
                                   const idx = parseInt(part);
                                   if (bookings[idx]) return <BookingCards key={`b-${i}`} items={bookings[idx]} />;
                                   if (actions[idx]) return <ActionCards key={`a-${i}`} items={actions[idx]} />;
                                   if (calProposals[idx]) return <CalendarProposalCards key={`c-${i}`} items={calProposals[idx]} />;
+                                  if (rides[idx]) return <RideBookingCard key={`r-${i}`} pickup={{ address: rides[idx].pickup, city: rides[idx].city }} dropoff={{ address: rides[idx].dropoff }} whenISO={rides[idx].whenISO} />;
                                   return null;
                                 }
                                 return part ? <span key={`t-${i}`} className="whitespace-pre-wrap">{part}</span> : null;
                               })
                             ) : (
                               <>
-                                <span className="whitespace-pre-wrap">{calText}</span>
+                                <span className="whitespace-pre-wrap">{rideText}</span>
                                 {bookings.map((b, bi) => <BookingCards key={`b-${bi}`} items={b} />)}
                                 {actions.map((a, ai) => <ActionCards key={`a-${ai}`} items={a} />)}
                                 {calProposals.map((c, ci) => <CalendarProposalCards key={`c-${ci}`} items={c} />)}
+                                {rides.map((r, ri) => <RideBookingCard key={`r-${ri}`} pickup={{ address: r.pickup, city: r.city }} dropoff={{ address: r.dropoff }} whenISO={r.whenISO} />)}
                               </>
                             )}
                           </div>
