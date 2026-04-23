@@ -135,6 +135,8 @@ class ExpenseHubServiceImpl {
   private get deviceId() { return getDeviceId(); }
 
   async hasAcceptedTerms(): Promise<boolean> {
+    // Demo personas auto-accept (investors shouldn't see legal modal on first click)
+    if (getActiveDemoPersonaId()) return true;
     const { data } = await supabase
       .from("expense_terms_acceptance")
       .select("id")
@@ -271,6 +273,10 @@ class ExpenseHubServiceImpl {
   }
 
   async deleteExpense(id: string): Promise<void> {
+    if (id.startsWith("demo-")) {
+      // Demo seeds are read-only — silently no-op so the UI feels responsive.
+      return;
+    }
     const before = await supabase.from("expenses").select("*").eq("id", id).single();
     const { error } = await supabase.from("expenses").delete().eq("id", id);
     if (error) throw error;
@@ -278,6 +284,17 @@ class ExpenseHubServiceImpl {
   }
 
   private async audit(expenseId: string | null, action: string, before: unknown, after: unknown) {
+    const { data: userRes } = await supabase.auth.getUser();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.from("expense_audit_log") as any).insert({
+      device_id: this.deviceId,
+      user_id: userRes?.user?.id ?? null,
+      expense_id: expenseId,
+      action,
+      before_state: before,
+      after_state: after,
+    });
+  }
     const { data: userRes } = await supabase.auth.getUser();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabase.from("expense_audit_log") as any).insert({
