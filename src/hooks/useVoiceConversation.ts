@@ -182,11 +182,12 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
       }
 
       if (silenceTimer) clearTimeout(silenceTimer);
+      // Snappier turn-taking: 900ms silence (was 1800ms) for natural dialogue
       silenceTimer = setTimeout(() => {
         const result = finalTranscript.trim() || interim.trim();
         if (result) onResult(result);
         recognition.stop();
-      }, 1800);
+      }, 900);
     };
 
     recognition.onerror = (event: any) => {
