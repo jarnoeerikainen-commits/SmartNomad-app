@@ -64,7 +64,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   // Used as a fallback (and as the source of truth for greeting refresh)
   // so the greeting always mentions the user's real current location.
   const { location: liveLocation } = useLocation();
-  const effectiveLocation = currentLocation || (liveLocation ? { country: liveLocation.country, city: liveLocation.city } : undefined);
+  const effectiveLocation = liveLocation && liveLocation.country_code !== 'XX' && liveLocation.country !== 'Unknown'
+    ? { country: liveLocation.country, city: liveLocation.city }
+    : currentLocation && currentLocation.country !== 'Unknown'
+      ? currentLocation
+      : undefined;
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
@@ -101,8 +105,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       return buildGreetingParts({
         aiName,
         userName,
-        city: p.profile.city,
-        country: p.profile.country,
+        city: effectiveLocation?.city,
+        country: effectiveLocation?.country,
         mode: prefs.personalityMode || 'normal',
         travelMode,
         nextTrip: nextTrip ? { destination: nextTrip.destination, dates: nextTrip.dates, purpose: nextTrip.purpose } : undefined,
@@ -261,8 +265,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             { role: 'user', content: followUpPrompt }
           ],
           userContext: {
-            currentCountry: activePersona ? activePersona.profile.country : effectiveLocation?.country,
-            currentCity: activePersona ? activePersona.profile.city : effectiveLocation?.city,
+            currentCountry: effectiveLocation?.country,
+            currentCity: effectiveLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
@@ -366,7 +370,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const enhancedProfile = fullAppContext.enhancedProfile;
     const profileSummary = buildProfileSummary(enhancedProfile);
 
-    const userCity = activePersona ? activePersona.profile.city : effectiveLocation?.city;
+    const userCity = effectiveLocation?.city;
     let cityServicesContext = '';
     if (userCity) {
       try {
@@ -414,7 +418,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     })();
     const bundle = buildConciergeContextBundle({
       currentCity: userCity,
-      currentCountry: activePersona ? activePersona.profile.country : effectiveLocation?.country,
+      currentCountry: effectiveLocation?.country,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       persistentMemories,

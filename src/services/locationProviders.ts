@@ -7,7 +7,58 @@ import { LocationData } from '@/types/country';
  * Each provider is wrapped with a timeout. First success wins.
  */
 
-const TIMEOUT_MS = 6000;
+const TIMEOUT_MS = 3500;
+const LOCATION_IP_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/location-ip`;
+
+const englishRegionNames =
+  typeof Intl !== 'undefined' && 'DisplayNames' in Intl
+    ? new Intl.DisplayNames(['en'], { type: 'region' })
+    : null;
+
+function normalizeCountryName(country?: string, countryCode?: string): string {
+  const normalizedCode = countryCode?.toUpperCase();
+  if (normalizedCode && englishRegionNames) {
+    const englishName = englishRegionNames.of(normalizedCode);
+    if (englishName) return englishName;
+  }
+  return country || 'Unknown';
+}
+
+async function firstSuccessfulLocation(
+  providers: Array<() => Promise<LocationData | null>>
+): Promise<LocationData | null> {
+  return new Promise((resolve) => {
+    if (!providers.length) {
+      resolve(null);
+      return;
+    }
+
+    let pending = providers.length;
+    let settled = false;
+
+    const finishIfDone = () => {
+      pending -= 1;
+      if (!settled && pending <= 0) {
+        resolve(null);
+      }
+    };
+
+    providers.forEach((provider) => {
+      provider()
+        .then((result) => {
+          if (!settled && result && result.country_code !== 'XX') {
+            settled = true;
+            resolve(result);
+            return;
+          }
+          finishIfDone();
+        })
+        .catch(() => {
+          finishIfDone();
+        });
+    });
+  });
+}
 
 async function fetchWithTimeout(url: string, ms = TIMEOUT_MS): Promise<Response> {
   const ctrl = new AbortController();
@@ -30,7 +81,7 @@ async function ipFromIpwho(): Promise<LocationData | null> {
     return {
       latitude: Number(d.latitude) || 0,
       longitude: Number(d.longitude) || 0,
-      country: d.country || 'Unknown',
+      country: normalizeCountryName(d.country, d.country_code),
       country_code: d.country_code || 'XX',
       city: d.city || 'Unknown',
       timestamp: Date.now(),
@@ -49,7 +100,7 @@ async function ipFromIpapi(): Promise<LocationData | null> {
     return {
       latitude: Number(d.latitude) || 0,
       longitude: Number(d.longitude) || 0,
-      country: d.country_name || 'Unknown',
+      country: normalizeCountryName(d.country_name, d.country_code),
       country_code: d.country_code || 'XX',
       city: d.city || 'Unknown',
       timestamp: Date.now(),
@@ -67,7 +118,7 @@ async function ipFromBigDataCloud(): Promise<LocationData | null> {
     return {
       latitude: Number(d.latitude) || 0,
       longitude: Number(d.longitude) || 0,
-      country: d.countryName || 'Unknown',
+      country: normalizeCountryName(d.countryName, d.countryCode),
       country_code: d.countryCode || 'XX',
       city: d.city || d.locality || 'Unknown',
       timestamp: Date.now(),
@@ -77,8 +128,27 @@ async function ipFromBigDataCloud(): Promise<LocationData | null> {
   }
 }
 
+async function ipFromSupabaseFunction(): Promise<LocationData | null> {
+  try {
+    const r = await fetchWithTimeout(LOCATION_IP_FUNCTION_URL);
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d?.country_code) return null;
+    return {
+      latitude: Number(d.latitude) || 0,
+      longitude: Number(d.longitude) || 0,
+      country: normalizeCountryName(d.country, d.country_code),
+      country_code: d.country_code || 'XX',
+      city: d.city || 'Unknown',
+      timestamp: Date.now(),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  return (await ipFromIpwho()) || (await ipFromIpapi()) || (await ipFromBigDataCloud());
+  return firstSuccessfulLocation([ipFromSupabaseFunction, ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
@@ -94,7 +164,7 @@ async function rgBigDataCloud(lat: number, lon: number): Promise<LocationData | 
     return {
       latitude: lat,
       longitude: lon,
-      country: d.countryName || 'Unknown',
+      country: normalizeCountryName(d.countryName, d.countryCode),
       country_code: d.countryCode || 'XX',
       city: d.city || d.locality || 'Unknown',
       timestamp: Date.now(),
@@ -104,16 +174,10 @@ async function rgBigDataCloud(lat: number, lon: number): Promise<LocationData | 
   }
 }
 
-async function rgOpenMeteo(lat: number, lon: number): Promise<LocationData | null> {
-  // Open-Meteo doesn't have reverse geocoding, but its geocoding search by name is useless here.
-  // We use the BigDataCloud free endpoint as primary; fall back to Nominatim.
-  return null;
-}
-
 async function rgNominatim(lat: number, lon: number): Promise<LocationData | null> {
   try {
     const r = await fetchWithTimeout(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1&accept-language=en`
     );
     if (!r.ok) return null;
     const d = await r.json();
@@ -122,7 +186,7 @@ async function rgNominatim(lat: number, lon: number): Promise<LocationData | nul
     return {
       latitude: lat,
       longitude: lon,
-      country: a.country || 'Unknown',
+      country: normalizeCountryName(a.country, a.country_code),
       country_code: (a.country_code || 'XX').toUpperCase(),
       city: a.city || a.town || a.village || a.municipality || a.county || 'Unknown',
       timestamp: Date.now(),
@@ -134,9 +198,10 @@ async function rgNominatim(lat: number, lon: number): Promise<LocationData | nul
 
 export async function reverseGeocode(lat: number, lon: number): Promise<LocationData | null> {
   return (
-    (await rgBigDataCloud(lat, lon)) ||
-    (await rgOpenMeteo(lat, lon)) ||
-    (await rgNominatim(lat, lon)) || {
+    (await firstSuccessfulLocation([
+      () => rgBigDataCloud(lat, lon),
+      () => rgNominatim(lat, lon),
+    ])) || {
       latitude: lat,
       longitude: lon,
       country: 'Unknown',
