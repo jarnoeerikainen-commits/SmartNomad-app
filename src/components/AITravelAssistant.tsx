@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
+import { ConciergeQuickLinks } from './BackToWebsiteButton';
 
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -890,7 +891,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <CardTitle className="text-xs font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
-            <div className="flex gap-0.5">
+            <div className="flex gap-0.5 items-center">
+              <ConciergeQuickLinks />
               <ConciergeSettings onPrefsChange={setConciergePrefs} />
               {ttsSupported && (
                 <TooltipProvider>

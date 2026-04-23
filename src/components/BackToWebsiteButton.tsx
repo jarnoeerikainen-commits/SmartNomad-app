@@ -7,19 +7,13 @@ import { Globe, Briefcase } from 'lucide-react';
  *  • "Website" — back to the marketing landing page
  *  • "Back Office" — straight to the staff/investor admin shell
  *
- * Always visible on mobile and desktop, positioned above the bottom nav.
+ * Desktop only (md+). On mobile these links are rendered inline inside
+ * the Concierge top bar via <ConciergeQuickLinks /> to avoid covering
+ * the chat input area.
  */
 const BackToWebsiteButton: React.FC = () => {
   return (
-    <div
-      className="fixed left-3 md:bottom-4 md:left-4 z-[60] flex flex-col gap-2"
-      style={{
-        bottom:
-          typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
-            ? 'calc(env(safe-area-inset-bottom, 0px) + 9rem)'
-            : undefined,
-      }}
-    >
+    <div className="hidden md:flex fixed md:bottom-4 md:left-4 z-[60] flex-col gap-2">
       <Link
         to="/admin"
         aria-label="Open SuperNomad Back Office"
@@ -37,6 +31,34 @@ const BackToWebsiteButton: React.FC = () => {
         Website
       </Link>
     </div>
+  );
+};
+
+/**
+ * Compact icon-only versions of the Website / Back Office links, designed
+ * to live inline inside the mobile Concierge top bar (next to the settings
+ * gear). Keeps the buttons accessible without obstructing the chat input.
+ */
+export const ConciergeQuickLinks: React.FC = () => {
+  return (
+    <>
+      <Link
+        to="/admin"
+        aria-label="Open SuperNomad Back Office"
+        title="Back Office"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground/80 hover:text-foreground hover:bg-accent transition-colors"
+      >
+        <Briefcase className="h-4 w-4 text-[hsl(var(--gold))]" />
+      </Link>
+      <Link
+        to="/"
+        aria-label="Back to SuperNomad website"
+        title="Website"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground/80 hover:text-foreground hover:bg-accent transition-colors"
+      >
+        <Globe className="h-4 w-4 text-[hsl(var(--gold))]" />
+      </Link>
+    </>
   );
 };
 
