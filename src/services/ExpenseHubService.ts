@@ -7,6 +7,14 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { getDeviceId } from "@/utils/deviceId";
+import { getDemoExpensesForPersona } from "@/data/demoExpenseSeeds";
+
+/** Active demo persona id (set by DemoPersonaContext via window). */
+function getActiveDemoPersonaId(): string | null {
+  if (typeof window === "undefined") return null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (window as any).__demoPersonaId ?? null;
+}
 
 export type ExpenseCategory =
   | "flight" | "hotel" | "meal" | "transport" | "mileage" | "daily_allowance"
@@ -196,7 +204,20 @@ class ExpenseHubServiceImpl {
     if (opts.limit) q = q.limit(opts.limit);
     const { data, error } = await q;
     if (error) throw error;
-    return (data ?? []) as ExpenseRow[];
+    let rows = (data ?? []) as ExpenseRow[];
+
+    // Blend in demo persona seeds (read-only) so investors see a populated dashboard
+    const personaId = getActiveDemoPersonaId();
+    if (personaId) {
+      const demo = getDemoExpensesForPersona(personaId).filter((d) => {
+        if (opts.from && d.expense_date < opts.from) return false;
+        if (opts.to && d.expense_date > opts.to) return false;
+        return true;
+      });
+      rows = [...demo, ...rows].sort((a, b) => (a.expense_date < b.expense_date ? 1 : -1));
+      if (opts.limit) rows = rows.slice(0, opts.limit);
+    }
+    return rows;
   }
 
   async createExpense(input: Partial<ExpenseRow> & { amount: number; currency: string; expense_date: string; category: ExpenseCategory }): Promise<ExpenseRow> {
