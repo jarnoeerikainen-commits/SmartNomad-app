@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
+import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -167,7 +168,7 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
       body: JSON.stringify({
         model: getModel('intelligence'),
         messages: [
-          { role: 'system', content: withTruthProtocol(systemPrompt) },
+          { role: 'system', content: buildScopeGuard('medical') + withTruthProtocol(systemPrompt) },
           ...messages
         ],
         stream: true,
