@@ -29,7 +29,7 @@ const DEFAULT_PREFS: ConciergePreferences = {
   userName: '',
   personalityMode: 'normal',
   voiceGender: 'woman',
-  aiName: 'Concierge',
+  aiName: 'Your Concierge',
   avatarFace: 'female',
   avatarVisible: true,
 };
