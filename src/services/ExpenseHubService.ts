@@ -295,17 +295,6 @@ class ExpenseHubServiceImpl {
       after_state: after,
     });
   }
-    const { data: userRes } = await supabase.auth.getUser();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.from("expense_audit_log") as any).insert({
-      device_id: this.deviceId,
-      user_id: userRes?.user?.id ?? null,
-      expense_id: expenseId,
-      action,
-      before_state: before,
-      after_state: after,
-    });
-  }
 
   // ─── Receipts + OCR ──────────────────────────────────────
   async uploadReceiptAndOCR(file: File): Promise<{ receiptId: string; extracted: Record<string, unknown>; confidence: number }> {
