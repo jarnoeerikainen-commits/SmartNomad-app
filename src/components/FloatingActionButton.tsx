@@ -22,7 +22,10 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction })
   ];
 
   return (
-    <div className="fixed bottom-[9rem] right-4 md:bottom-6 md:right-24 z-30">
+    <div
+      className="fixed right-4 md:right-24 z-30"
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 9rem)' }}
+    >
       <TooltipProvider>
         <div className="flex flex-col-reverse items-end gap-3">
           {/* Action buttons */}
