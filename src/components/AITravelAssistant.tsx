@@ -15,6 +15,8 @@ import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import ActionCards, { parseActionBlocks } from '@/components/chat/ActionCards';
 import CalendarProposalCards from '@/components/chat/CalendarProposalCards';
+import RideBookingCard, { parseRideBlocks } from '@/components/chat/RideBookingCard';
+import { RideHailingService } from '@/services/RideHailingService';
 import { parseCalendarBlocks } from '@/utils/calendarProposalParser';
 import { CalendarService } from '@/services/CalendarService';
 import { getCalendarPrefs } from '@/services/CalendarReminderEngine';
