@@ -107,3 +107,6 @@ verify_jwt = false
 
 [functions.source-monitor]
 verify_jwt = false
+
+[functions.seed-acme-demo]
+verify_jwt = false
