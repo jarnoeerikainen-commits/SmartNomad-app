@@ -14,6 +14,7 @@ interface FloatingActionButtonProps {
 
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
 
   const actions = [
     { id: 'add-country', label: 'Add Country Visit', icon: MapPin, color: 'gradient-primary' },
@@ -24,7 +25,11 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction })
   return (
     <div
       className="fixed right-4 md:right-24 z-30"
-      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 9rem)' }}
+      style={{
+        bottom: isMobile
+          ? 'calc(env(safe-area-inset-bottom, 0px) + 9rem)'
+          : '1.5rem',
+      }}
     >
       <TooltipProvider>
         <div className="flex flex-col-reverse items-end gap-3">
