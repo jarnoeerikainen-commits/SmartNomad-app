@@ -1232,6 +1232,177 @@ export type Database = {
         }
         Relationships: []
       }
+      business_trip_expenses: {
+        Row: {
+          amount: number
+          amount_base: number | null
+          category: string
+          created_at: string
+          currency: string
+          description: string
+          expense_date: string
+          id: string
+          is_billable: boolean
+          is_reimbursable: boolean
+          metadata: Json
+          organization_id: string
+          payment_method: string | null
+          receipt_url: string | null
+          trip_id: string
+          user_id: string
+          vendor: string | null
+        }
+        Insert: {
+          amount: number
+          amount_base?: number | null
+          category: string
+          created_at?: string
+          currency?: string
+          description: string
+          expense_date?: string
+          id?: string
+          is_billable?: boolean
+          is_reimbursable?: boolean
+          metadata?: Json
+          organization_id: string
+          payment_method?: string | null
+          receipt_url?: string | null
+          trip_id: string
+          user_id: string
+          vendor?: string | null
+        }
+        Update: {
+          amount?: number
+          amount_base?: number | null
+          category?: string
+          created_at?: string
+          currency?: string
+          description?: string
+          expense_date?: string
+          id?: string
+          is_billable?: boolean
+          is_reimbursable?: boolean
+          metadata?: Json
+          organization_id?: string
+          payment_method?: string | null
+          receipt_url?: string | null
+          trip_id?: string
+          user_id?: string
+          vendor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_trip_expenses_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_trip_expenses_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "business_trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_trips: {
+        Row: {
+          actual_cost: number
+          approved_at: string | null
+          approver_id: string | null
+          booking_refs: Json
+          created_at: string
+          currency: string
+          destination_city: string | null
+          destination_country: string | null
+          end_date: string
+          estimated_cost: number
+          id: string
+          member_id: string
+          metadata: Json
+          notes: string | null
+          organization_id: string
+          origin_city: string | null
+          policy_violations: Json
+          purpose: string
+          rejection_reason: string | null
+          start_date: string
+          status: string
+          trip_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_cost?: number
+          approved_at?: string | null
+          approver_id?: string | null
+          booking_refs?: Json
+          created_at?: string
+          currency?: string
+          destination_city?: string | null
+          destination_country?: string | null
+          end_date: string
+          estimated_cost?: number
+          id?: string
+          member_id: string
+          metadata?: Json
+          notes?: string | null
+          organization_id: string
+          origin_city?: string | null
+          policy_violations?: Json
+          purpose: string
+          rejection_reason?: string | null
+          start_date: string
+          status?: string
+          trip_code?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_cost?: number
+          approved_at?: string | null
+          approver_id?: string | null
+          booking_refs?: Json
+          created_at?: string
+          currency?: string
+          destination_city?: string | null
+          destination_country?: string | null
+          end_date?: string
+          estimated_cost?: number
+          id?: string
+          member_id?: string
+          metadata?: Json
+          notes?: string | null
+          organization_id?: string
+          origin_city?: string | null
+          policy_violations?: Json
+          purpose?: string
+          rejection_reason?: string | null
+          start_date?: string
+          status?: string
+          trip_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_trips_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "organization_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_trips_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       change_proposals: {
         Row: {
           ai_diff: Json
@@ -2357,6 +2528,181 @@ export type Database = {
         }
         Relationships: []
       }
+      organization_invites: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          created_at: string
+          department: string | null
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          organization_id: string
+          role: string
+          status: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          department?: string | null
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          organization_id: string
+          role?: string
+          status?: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          department?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          organization_id?: string
+          role?: string
+          status?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_invites_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_members: {
+        Row: {
+          cost_center: string | null
+          department: string | null
+          employee_id: string | null
+          id: string
+          invited_by: string | null
+          is_active: boolean
+          job_title: string | null
+          joined_at: string
+          metadata: Json
+          organization_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          cost_center?: string | null
+          department?: string | null
+          employee_id?: string | null
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean
+          job_title?: string | null
+          joined_at?: string
+          metadata?: Json
+          organization_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          cost_center?: string | null
+          department?: string | null
+          employee_id?: string | null
+          id?: string
+          invited_by?: string | null
+          is_active?: boolean
+          job_title?: string | null
+          joined_at?: string
+          metadata?: Json
+          organization_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          billing_currency: string
+          billing_email: string
+          billing_method: string
+          country_code: string | null
+          created_at: string
+          created_by: string
+          demo: boolean
+          id: string
+          industry: string | null
+          is_active: boolean
+          join_code: string
+          legal_name: string | null
+          logo_url: string | null
+          metadata: Json
+          name: string
+          size_band: string | null
+          slug: string
+          tax_id: string | null
+          travel_policy: Json
+          updated_at: string
+        }
+        Insert: {
+          billing_currency?: string
+          billing_email: string
+          billing_method?: string
+          country_code?: string | null
+          created_at?: string
+          created_by: string
+          demo?: boolean
+          id?: string
+          industry?: string | null
+          is_active?: boolean
+          join_code: string
+          legal_name?: string | null
+          logo_url?: string | null
+          metadata?: Json
+          name: string
+          size_band?: string | null
+          slug: string
+          tax_id?: string | null
+          travel_policy?: Json
+          updated_at?: string
+        }
+        Update: {
+          billing_currency?: string
+          billing_email?: string
+          billing_method?: string
+          country_code?: string | null
+          created_at?: string
+          created_by?: string
+          demo?: boolean
+          id?: string
+          industry?: string | null
+          is_active?: boolean
+          join_code?: string
+          legal_name?: string | null
+          logo_url?: string | null
+          metadata?: Json
+          name?: string
+          size_band?: string | null
+          slug?: string
+          tax_id?: string | null
+          travel_policy?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       package_delivery_jobs: {
         Row: {
           consent_verified_count: number
@@ -3433,6 +3779,7 @@ export type Database = {
         }
         Returns: Json
       }
+      generate_org_join_code: { Args: never; Returns: string }
       generate_snomad_id: { Args: never; Returns: string }
       get_admin_brain_summary: {
         Args: never
@@ -3507,6 +3854,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_org_dashboard_stats: { Args: { p_org_id: string }; Returns: Json }
       get_platform_stats: {
         Args: never
         Returns: {
@@ -3587,6 +3935,9 @@ export type Database = {
       has_staff_role: { Args: { _user_id: string }; Returns: boolean }
       has_verified_mfa: { Args: never; Returns: boolean }
       is_demo_mode: { Args: never; Returns: boolean }
+      is_org_admin: { Args: { p_org_id: string }; Returns: boolean }
+      is_org_approver: { Args: { p_org_id: string }; Returns: boolean }
+      is_org_member: { Args: { p_org_id: string }; Returns: boolean }
       log_ai_usage: {
         Args: {
           p_cache_hit?: boolean

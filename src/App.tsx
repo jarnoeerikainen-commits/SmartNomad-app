@@ -26,6 +26,7 @@ const Auth = lazy(() => import("./pages/Auth"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AffiliateDashboard = lazy(() => import("./pages/AffiliateDashboard"));
 const ReferralRedirect = lazy(() => import("./pages/ReferralRedirect"));
+const CorporateDashboard = lazy(() => import("./pages/CorporateDashboard"));
 
 // Back Office (admin / staff)
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
@@ -86,6 +87,7 @@ const App = () => {
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/translation-manager" element={<TranslationManager />} />
                   <Route path="/affiliate" element={<AffiliateDashboard />} />
+                  <Route path="/corporate" element={<CorporateDashboard />} />
                   <Route path="/r/:code" element={<ReferralRedirect />} />
                   <Route path="/admin" element={<AdminGuard><AdminLayout /></AdminGuard>}>
                     <Route index element={<AdminOverview />} />
