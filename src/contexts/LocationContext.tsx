@@ -151,7 +151,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         isLoading,
         vpnStatus,
         error,
-        refreshLocation: resolveLocation,
+        refreshLocation,
         dismissVPNWarning,
       }}
     >
