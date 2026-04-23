@@ -295,15 +295,56 @@ export const useVoiceConversation = (initialLang = 'en'): UseVoiceConversationRe
     }
 
     speechSessionRef.current += 1;
+    const sessionId = speechSessionRef.current;
     clearSpeechState();
     setSpokenText(clean);
 
-    // Use browser-native TTS with full avatar animation
+    // ─── Try premium ElevenLabs streaming first ─────────────────────────
+    if (!premiumDisabledRef.current) {
+      // Cancel any in-flight stream (barge-in)
+      elevenStreamRef.current?.cancel();
+
+      const handle = streamElevenLabsTTS({
+        text: clean,
+        lang: langRef.current,
+        gender: voiceGenderRef.current,
+        onStart: () => {
+          if (sessionId !== speechSessionRef.current) return;
+          setIsSpeaking(true);
+          stopFallbackMouthAnimation();
+        },
+        onOpenness: (level) => {
+          if (sessionId !== speechSessionRef.current) return;
+          setMouthOpenness(level);
+        },
+        onEnd: () => {
+          if (sessionId !== speechSessionRef.current) return;
+          elevenStreamRef.current = null;
+          clearSpeechState(onComplete);
+        },
+        onError: (err) => {
+          console.warn('[Voice] ElevenLabs failed, falling back to browser TTS:', err.message);
+          elevenStreamRef.current = null;
+          // Disable for this session if it's a config/billing issue
+          if (/401|402|invalid|exhausted|configured/i.test(err.message)) {
+            premiumDisabledRef.current = true;
+          }
+          if (sessionId !== speechSessionRef.current) return;
+          fallbackBrowserTTS(clean, onComplete);
+        },
+      });
+      elevenStreamRef.current = handle;
+      return;
+    }
+
+    // ─── Fallback: browser SpeechSynthesis ───────────────────────────────
     fallbackBrowserTTS(clean, onComplete);
-  }, [clearSpeechState, fallbackBrowserTTS, voiceEnabled]);
+  }, [clearSpeechState, fallbackBrowserTTS, stopFallbackMouthAnimation, voiceEnabled]);
 
   const stopSpeaking = useCallback(() => {
     speechSessionRef.current += 1;
+    elevenStreamRef.current?.cancel();
+    elevenStreamRef.current = null;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
