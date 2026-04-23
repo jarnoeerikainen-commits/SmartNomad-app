@@ -138,7 +138,8 @@ class ExpenseHubServiceImpl {
 
   async acceptTerms(): Promise<void> {
     const { data: userRes } = await supabase.auth.getUser();
-    await supabase.from("expense_terms_acceptance").insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.from("expense_terms_acceptance") as any).insert({
       device_id: this.deviceId,
       user_id: userRes?.user?.id ?? null,
       terms_version: TERMS_VERSION,
@@ -158,22 +159,23 @@ class ExpenseHubServiceImpl {
 
   async createTrip(input: Partial<ExpenseTripRow> & { title: string; start_date: string; end_date: string }): Promise<ExpenseTripRow> {
     const { data: userRes } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from("expense_trips")
-      .insert({
-        device_id: this.deviceId,
-        user_id: userRes?.user?.id ?? null,
-        title: input.title,
-        start_date: input.start_date,
-        end_date: input.end_date,
-        purpose: input.purpose ?? "business",
-        business_percentage: input.business_percentage ?? 100,
-        primary_country_code: input.primary_country_code ?? null,
-        countries: input.countries ?? [],
-        per_diem_mode: input.per_diem_mode ?? false,
-        per_diem_country_code: input.per_diem_country_code ?? null,
-        notes: input.notes ?? null,
-      })
+    const tripPayload = {
+      device_id: this.deviceId,
+      user_id: userRes?.user?.id ?? null,
+      title: input.title,
+      start_date: input.start_date,
+      end_date: input.end_date,
+      purpose: input.purpose ?? "business",
+      business_percentage: input.business_percentage ?? 100,
+      primary_country_code: input.primary_country_code ?? null,
+      countries: input.countries ?? [],
+      per_diem_mode: input.per_diem_mode ?? false,
+      per_diem_country_code: input.per_diem_country_code ?? null,
+      notes: input.notes ?? null,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase.from("expense_trips") as any)
+      .insert(tripPayload)
       .select()
       .single();
     if (error) throw error;
