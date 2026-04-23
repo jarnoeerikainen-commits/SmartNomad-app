@@ -63,12 +63,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   // Live detected location from the global LocationContext.
   // Used as a fallback (and as the source of truth for greeting refresh)
   // so the greeting always mentions the user's real current location.
-  const { location: liveLocation } = useLocation();
-  const effectiveLocation = liveLocation && liveLocation.country_code !== 'XX' && liveLocation.country !== 'Unknown'
-    ? { country: liveLocation.country, city: liveLocation.city }
-    : currentLocation && currentLocation.country !== 'Unknown'
-      ? currentLocation
-      : undefined;
+  const { location: liveLocation, isLoading: isLocationLoading } = useLocation();
+  const effectiveLocation = !isLocationLoading && liveLocation && liveLocation.country_code !== 'XX' && liveLocation.country !== 'Unknown'
+    ? {
+        country: liveLocation.country,
+        city: liveLocation.city && liveLocation.city !== 'Unknown' ? liveLocation.city : undefined,
+      }
+    : undefined;
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
@@ -87,6 +88,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const conversationIdRef = useRef<string | null>(null);
   const distillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exchangeCountRef = useRef(0);
+  const hasUserMessagesRef = useRef(false);
 
   const buildGreeting = (): GreetingPart[] => {
     const prefs = getConciergePrefs();
@@ -170,26 +172,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   } = useVoiceConversation(currentLanguage);
   const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
 
-  // On mount: schedule the staggered remainder of the initial greeting
   useEffect(() => {
-    const parts = buildGreeting();
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    parts.slice(1).forEach((p, idx) => {
-      const t = setTimeout(() => {
-        setMessages(prev => {
-          // only append if greeting is still the only thing on screen-ish
-          if (prev.some(m => m.isUser)) return prev;
-          return [
-            ...prev,
-            { id: `greet-init-${idx + 1}`, content: p.content, isUser: false, timestamp: new Date() },
-          ];
-        });
-      }, p.delay);
-      timers.push(t);
-    });
-    return () => timers.forEach(clearTimeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    hasUserMessagesRef.current = messages.some((message) => message.isUser);
+  }, [messages]);
 
   // Auto-show avatar again when speech stops
   useEffect(() => {
@@ -218,18 +203,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   // Re-greet when persona / language / name / personality / live location changes
   // (only if user hasn't started chatting yet — we don't want to wipe an active conversation)
   useEffect(() => {
-    setMessages(prev => {
-      if (prev.some(m => m.isUser)) return prev; // user already engaged → keep
-      const parts = buildGreeting();
-      // play staggered greeting
-      playGreeting(parts);
-      return prev;
-    });
+    if (!activePersona && isLocationLoading) return;
+    if (hasUserMessagesRef.current) return;
+
+    const parts = buildGreeting();
+    playGreeting(parts);
+
     if (activePersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, effectiveLocation?.city, effectiveLocation?.country]);
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, effectiveLocation?.city, effectiveLocation?.country, isLocationLoading]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 

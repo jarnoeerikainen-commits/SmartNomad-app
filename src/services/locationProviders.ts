@@ -24,6 +24,17 @@ function normalizeCountryName(country?: string, countryCode?: string): string {
   return country || 'Unknown';
 }
 
+function normalizeCityName(city?: string): string {
+  const normalized = city?.trim();
+  if (!normalized) return 'Unknown';
+
+  return normalized
+    .replace(/\s+Municipality$/i, '')
+    .replace(/\s+Urban Okrug$/i, '')
+    .replace(/\s+Metropolitan Borough$/i, '')
+    .trim() || 'Unknown';
+}
+
 async function firstSuccessfulLocation(
   providers: Array<() => Promise<LocationData | null>>
 ): Promise<LocationData | null> {
@@ -83,7 +94,7 @@ async function ipFromIpwho(): Promise<LocationData | null> {
       longitude: Number(d.longitude) || 0,
       country: normalizeCountryName(d.country, d.country_code),
       country_code: d.country_code || 'XX',
-      city: d.city || 'Unknown',
+      city: normalizeCityName(d.city),
       timestamp: Date.now(),
     };
   } catch {
@@ -102,7 +113,7 @@ async function ipFromIpapi(): Promise<LocationData | null> {
       longitude: Number(d.longitude) || 0,
       country: normalizeCountryName(d.country_name, d.country_code),
       country_code: d.country_code || 'XX',
-      city: d.city || 'Unknown',
+      city: normalizeCityName(d.city),
       timestamp: Date.now(),
     };
   } catch {
@@ -120,7 +131,7 @@ async function ipFromBigDataCloud(): Promise<LocationData | null> {
       longitude: Number(d.longitude) || 0,
       country: normalizeCountryName(d.countryName, d.countryCode),
       country_code: d.countryCode || 'XX',
-      city: d.city || d.locality || 'Unknown',
+      city: normalizeCityName(d.city || d.locality),
       timestamp: Date.now(),
     };
   } catch {
@@ -139,7 +150,7 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
       longitude: Number(d.longitude) || 0,
       country: normalizeCountryName(d.country, d.country_code),
       country_code: d.country_code || 'XX',
-      city: d.city || 'Unknown',
+      city: normalizeCityName(d.city),
       timestamp: Date.now(),
     };
   } catch {
@@ -166,7 +177,7 @@ async function rgBigDataCloud(lat: number, lon: number): Promise<LocationData | 
       longitude: lon,
       country: normalizeCountryName(d.countryName, d.countryCode),
       country_code: d.countryCode || 'XX',
-      city: d.city || d.locality || 'Unknown',
+      city: normalizeCityName(d.city || d.locality),
       timestamp: Date.now(),
     };
   } catch {
@@ -188,7 +199,9 @@ async function rgNominatim(lat: number, lon: number): Promise<LocationData | nul
       longitude: lon,
       country: normalizeCountryName(a.country, a.country_code),
       country_code: (a.country_code || 'XX').toUpperCase(),
-      city: a.city || a.town || a.village || a.municipality || a.county || 'Unknown',
+      city: normalizeCityName(
+        a.city || a.town || a.village || a.hamlet || d?.name || a.city_district || a.suburb || a.municipality || a.county
+      ),
       timestamp: Date.now(),
     };
   } catch {
