@@ -1,0 +1,63 @@
+{
+  "info": {
+    "name": "SuperNomad B2B API",
+    "_postman_id": "supernomad-b2b-v1",
+    "description": "Ready-to-import collection for the SuperNomad partner gateway. Set the `apiKey` variable to your partner key, then run `Info` to confirm access.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://xeunjlpzvitnrepyzatg.supabase.co/functions/v1" },
+    { "key": "apiKey",  "value": "snk_live_REPLACE_ME" },
+    { "key": "snomadId", "value": "SN-K3PR-9X4M-WT2N" }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key",   "value": "x-api-key", "type": "string" },
+      { "key": "value", "value": "{{apiKey}}", "type": "string" },
+      { "key": "in",    "value": "header",     "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "Info — list allowed resources",
+      "request": { "method": "GET", "url": "{{baseUrl}}/supernomad-gateway/v1/info" }
+    },
+    {
+      "name": "Travel history",
+      "request": { "method": "GET", "url": "{{baseUrl}}/supernomad-gateway/v1/travel_history?country_code=PT" }
+    },
+    {
+      "name": "Platform stats",
+      "request": { "method": "GET", "url": "{{baseUrl}}/supernomad-gateway/v1/platform_stats" }
+    },
+    {
+      "name": "Feature catalog",
+      "request": { "method": "GET", "url": "{{baseUrl}}/supernomad-gateway/v1/feature_catalog" }
+    },
+    {
+      "name": "Trust Pass — verify tier",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/trust-pass-verify",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"snomad_id\": \"{{snomadId}}\",\n  \"required_tier\": \"nomad\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Data package query",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/data-package-query",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"package_slug\": \"high-intent-business-travelers-eu\",\n  \"fields\": [\"country_code\",\"industry_segment\"],\n  \"segments\": [\"frequent_flyer\"]\n}"
+        }
+      }
+    }
+  ]
+}

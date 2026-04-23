@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: SuperNomad B2B API Gateway
+  version: "1.0.0"
+  description: |
+    Partner-facing API for verified data, Trust Pass tier checks, and
+    consent-gated data packages. See `docs/API.md` for the long form.
+  contact:
+    email: partners@supernomad.com
+servers:
+  - url: https://xeunjlpzvitnrepyzatg.supabase.co/functions/v1
+    description: Production
+security:
+  - ApiKey: []
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    Envelope:
+      type: object
+      required: [success, partner, resource, data, meta]
+      properties:
+        success: { type: boolean }
+        partner: { type: string }
+        resource: { type: string }
+        data:    { description: Resource-specific payload }
+        meta:
+          type: object
+          properties:
+            recordCount:    { type: integer }
+            maxRecords:     { type: integer }
+            piiAnonymized:  { type: boolean }
+            timestamp:      { type: string, format: date-time }
+            latencyMs:      { type: integer }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:   { type: string }
+        message: { type: string }
+        availableResources:
+          type: array
+          items: { type: string }
+    TrustVerifyResp:
+      type: object
+      properties:
+        verified:         { type: boolean }
+        actual_tier:      { type: string, enum: [unverified, human, nomad, sovereign] }
+        required_tier:    { type: string }
+        credential_count: { type: integer }
+        verified_at:      { type: string, format: date-time }
+paths:
+  /supernomad-gateway/v1/info:
+    get:
+      summary: Partner profile + allowed resources
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  partner: { type: string }
+                  tier:    { type: string }
+                  availableResources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        resource:      { type: string }
+                        permission:    { type: string }
+                        maxRecords:    { type: integer }
+                        piiAnonymized: { type: boolean }
+        "401": { description: Missing key, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "403": { description: Invalid key, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /supernomad-gateway/v1/travel_history:
+    get:
+      summary: Travel records
+      parameters:
+        - in: query; name: device_id;   schema: { type: string }
+        - in: query; name: country_code; schema: { type: string }
+        - in: query; name: from_date;    schema: { type: string, format: date }
+        - in: query; name: to_date;      schema: { type: string, format: date }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Envelope" } } } }
+        "403": { description: No policy }
+        "429": { description: Rate-limited }
+  /supernomad-gateway/v1/platform_stats:
+    get:
+      summary: Aggregate platform stats
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Envelope" } } } }
+  /trust-pass-verify:
+    post:
+      summary: Verify a snomad_id holds a given Trust Pass tier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [snomad_id, required_tier]
+              properties:
+                snomad_id:     { type: string, example: SN-K3PR-9X4M-WT2N }
+                required_tier: { type: string, enum: [human, nomad, sovereign] }
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/TrustVerifyResp" } } } }
+        "402": { description: No active subscription }
+        "403": { description: No consent on file }
+  /data-package-query:
+    post:
+      summary: Run a k-anonymous query against a data package
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [package_slug]
+              properties:
+                package_slug: { type: string }
+                fields:       { type: array, items: { type: string } }
+                segments:     { type: array, items: { type: string } }
+      responses:
+        "200": { description: OK }
+        "422": { description: K-anonymity violation }
