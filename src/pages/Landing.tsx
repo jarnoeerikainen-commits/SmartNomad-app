@@ -175,14 +175,14 @@ const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_hsl(0_0%_0%/0.7)] ring-1 ring-[hsl(43_96%_56%/0.2)]">
-              <img src={day184Img} alt="The 184th day is the most expensive day of your life" loading="lazy" className="w-full h-auto" width={1024} height={1024} />
+              <img src={day184Img} alt="The 184th day might be the most expensive day of your life" loading="lazy" className="w-full h-auto" width={1024} height={1024} />
             </div>
             <div className="space-y-6">
               <Badge className="bg-[hsl(0_80%_58%/0.15)] text-[hsl(0_80%_68%)] border-[hsl(0_80%_58%/0.3)]">
                 <AlertTriangle className="mr-1.5 h-3 w-3" /> The Hidden Cost of Borderless Living
               </Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-                "The 184th day is the most expensive day of your life."
+                "The 184th day might be the most expensive day of your life."
               </h2>
               <p className="text-lg text-[hsl(30_12%_80%)] leading-relaxed">
                 One miscounted day can trigger tax residency in a country you never intended to live in: audits, double taxation, frozen bank accounts. SuperNomad counts every day silently — across <strong className="text-white">195+ jurisdictions</strong> — and warns you long before the line is crossed.
