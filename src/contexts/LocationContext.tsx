@@ -95,7 +95,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       });
     }
 
-    if (!opts?.silent) setIsLoading(false);
+    setIsLoading(false);
     setIsTracking(Boolean(best));
   }, []);
 

@@ -98,3 +98,6 @@ verify_jwt = false
 
 [functions.liveavatar-session]
 verify_jwt = false
+
+[functions.location-ip]
+verify_jwt = false
