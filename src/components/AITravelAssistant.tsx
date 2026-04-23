@@ -138,6 +138,83 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     });
   };
 
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const parts = buildGreeting();
+    return [{
+      id: 'greet-init-0',
+      content: parts[0]?.content || '',
+      isUser: false,
+      timestamp: new Date(),
+    }];
+  });
+  const [inputMessage, setInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [showMicBubble, setShowMicBubble] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const {
+    isListening, isSpeaking, voiceEnabled,
+    currentWord, mouthOpenness, micPermission,
+    startListening, stopListening, speak, stopSpeaking,
+    toggleVoice, sttSupported, ttsSupported, setVoiceGender, setLanguage
+  } = useVoiceConversation(currentLanguage);
+  const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
+
+  // On mount: schedule the staggered remainder of the initial greeting
+  useEffect(() => {
+    const parts = buildGreeting();
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    parts.slice(1).forEach((p, idx) => {
+      const t = setTimeout(() => {
+        setMessages(prev => {
+          // only append if greeting is still the only thing on screen-ish
+          if (prev.some(m => m.isUser)) return prev;
+          return [
+            ...prev,
+            { id: `greet-init-${idx + 1}`, content: p.content, isUser: false, timestamp: new Date() },
+          ];
+        });
+      }, p.delay);
+      timers.push(t);
+    });
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-show avatar again when speech stops
+  useEffect(() => {
+    if (!isSpeaking) {
+      setAvatarHidden(false);
+    }
+  }, [isSpeaking]);
+
+  // Show mic speech bubble once for new users
+  useEffect(() => {
+    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
+    if (!seen && sttSupported) {
+      const timer = setTimeout(() => setShowMicBubble(true), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [sttSupported]);
+
+  useEffect(() => {
+    setVoiceGender(conciergePrefs.voiceGender);
+  }, [conciergePrefs.voiceGender, setVoiceGender]);
+
+  useEffect(() => {
+    setLanguage(currentLanguage);
+  }, [currentLanguage, setLanguage]);
+
+  // Re-greet when persona / language / name / personality changes
+  useEffect(() => {
+    const parts = buildGreeting();
+    playGreeting(parts);
+    if (activePersona && !voiceEnabled && ttsSupported) {
+      toggleVoice();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode]);
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
