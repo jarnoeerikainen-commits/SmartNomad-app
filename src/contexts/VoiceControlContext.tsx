@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { buildAutoVoicePatterns } from '@/data/featureAutoSync';
 
 interface VoiceCommand {
   patterns: RegExp[];
@@ -186,11 +187,22 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
 
   const fb = FEEDBACK_MESSAGES[currentLanguage] || FEEDBACK_MESSAGES.en;
 
+  // Merge curated multilingual VOICE_COMMANDS with auto-generated patterns
+  // derived from FEATURE_REGISTRY + FEATURE_ALIASES. Curated patterns win
+  // because they appear first — auto patterns ensure every NEW feature is
+  // voice-callable the moment it's added to the registry.
+  const allCommands = useMemo<VoiceCommand[]>(() => {
+    const auto = buildAutoVoicePatterns();
+    const knownActions = new Set(VOICE_COMMANDS.map((c) => c.action));
+    const extras = auto.filter((a) => !knownActions.has(a.action));
+    return [...VOICE_COMMANDS, ...extras];
+  }, []);
+
   const processCommand = useCallback((transcript: string) => {
     const text = transcript.toLowerCase().trim();
     setLastCommand(transcript);
 
-    for (const cmd of VOICE_COMMANDS) {
+    for (const cmd of allCommands) {
       for (const pattern of cmd.patterns) {
         if (pattern.test(text)) {
           const [type, value] = cmd.action.split(':');
@@ -247,7 +259,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
     const feedback = `${fb.notUnderstood} "${transcript}". Say "SuperNomad" ${fb.helpIntro}`;
     setLastFeedback(feedback);
     voice.speak(feedback);
-  }, [voice, fb]);
+  }, [voice, fb, allCommands]);
 
   const startGlobalListening = useCallback(() => {
     voice.startListening(processCommand);

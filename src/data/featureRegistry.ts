@@ -24,6 +24,13 @@ export interface FeatureItem {
   system?: boolean;
   /** Trust level determines confirmation and undo behavior for AI actions */
   trustLevel?: TrustLevel;
+  /**
+   * Optional extra search terms — multilingual synonyms, common phrasings,
+   * voice-friendly aliases. Auto-wired into voice control + AI intent routing
+   * via featureAutoSync.ts. Adding a feature here automatically makes it
+   * voice-navigable and discoverable by the Concierge & Support AI.
+   */
+  aliases?: string[];
 }
 
 // System items that are ALWAYS visible and cannot be customized

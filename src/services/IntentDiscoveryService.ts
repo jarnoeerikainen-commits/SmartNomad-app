@@ -5,6 +5,7 @@
  */
 
 import { FEATURE_REGISTRY, FeatureItem, CATEGORY_LABELS } from '@/data/featureRegistry';
+import { buildAutoIntentMappings, buildFeatureCatalogForAI } from '@/data/featureAutoSync';
 
 // Semantic intent map: maps user intents/phrases to feature IDs with confidence
 interface IntentMapping {
