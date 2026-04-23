@@ -20,6 +20,14 @@ function getClientIP(req: Request): string | null {
   );
 }
 
+function getCountryCode(req: Request): string | null {
+  return req.headers.get('cf-ipcountry') || req.headers.get('x-vercel-ip-country') || null;
+}
+
+function getCityHint(req: Request): string | null {
+  return req.headers.get('x-vercel-ip-city') || null;
+}
+
 function normalizeCountryName(country?: string, countryCode?: string): string {
   const code = countryCode?.toUpperCase();
   try {
@@ -34,10 +42,32 @@ function normalizeCountryName(country?: string, countryCode?: string): string {
   return country || 'Unknown';
 }
 
+function normalizeCityName(city?: string): string {
+  const normalized = city?.trim();
+  if (!normalized) return 'Unknown';
+
+  return normalized
+    .replace(/\s+Municipality$/i, '')
+    .replace(/\s+Urban Okrug$/i, '')
+    .replace(/\s+Metropolitan Borough$/i, '')
+    .trim() || 'Unknown';
+}
+
+async function fetchWithTimeout(url: string, timeoutMs = 3000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function fetchIpApi(ip: string) {
-  const response = await fetch(`https://ipapi.co/${ip}/json/`, {
-    headers: { Accept: 'application/json' },
-  });
+  const response = await fetchWithTimeout(`https://ipapi.co/${ip}/json/`);
   if (!response.ok) throw new Error(`ipapi failed: ${response.status}`);
   const data = await response.json();
   if (data?.error) throw new Error('ipapi lookup error');
@@ -47,7 +77,56 @@ async function fetchIpApi(ip: string) {
     longitude: Number(data.longitude) || 0,
     country: normalizeCountryName(data.country_name, data.country_code),
     country_code: data.country_code || 'XX',
-    city: data.city || 'Unknown',
+    city: normalizeCityName(data.city),
+    timestamp: Date.now(),
+  };
+}
+
+async function fetchIpWho(ip: string) {
+  const response = await fetchWithTimeout(
+    `https://ipwho.is/${ip}?fields=success,latitude,longitude,city,country,country_code`
+  );
+  if (!response.ok) throw new Error(`ipwho failed: ${response.status}`);
+  const data = await response.json();
+  if (!data?.success) throw new Error('ipwho lookup error');
+
+  return {
+    latitude: Number(data.latitude) || 0,
+    longitude: Number(data.longitude) || 0,
+    country: normalizeCountryName(data.country, data.country_code),
+    country_code: data.country_code || 'XX',
+    city: normalizeCityName(data.city),
+    timestamp: Date.now(),
+  };
+}
+
+async function resolveIpLocation(ip: string) {
+  const providers = [fetchIpWho, fetchIpApi];
+
+  for (const provider of providers) {
+    try {
+      const result = await provider(ip);
+      if (result.country_code && result.country_code !== 'XX') {
+        return result;
+      }
+    } catch (error) {
+      console.error('location-ip provider failed', error);
+    }
+  }
+
+  return null;
+}
+
+function buildHeaderFallback(req: Request) {
+  const countryCode = getCountryCode(req);
+  if (!countryCode) return null;
+
+  return {
+    latitude: 0,
+    longitude: 0,
+    country: normalizeCountryName(undefined, countryCode),
+    country_code: countryCode.toUpperCase(),
+    city: normalizeCityName(getCityHint(req) || undefined),
     timestamp: Date.now(),
   };
 }
@@ -57,9 +136,14 @@ Deno.serve(async (req) => {
 
   try {
     const ip = getClientIP(req);
-    if (!ip) return json({ error: 'client_ip_unavailable' }, 400);
+    const location = ip ? await resolveIpLocation(ip) : null;
 
-    const location = await fetchIpApi(ip);
+    if (!location) {
+      const fallback = buildHeaderFallback(req);
+      if (fallback) return json(fallback);
+      return json({ error: 'client_ip_unavailable' }, 400);
+    }
+
     return json(location);
   } catch (error) {
     console.error('location-ip failed', error);
