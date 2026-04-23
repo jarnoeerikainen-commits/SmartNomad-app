@@ -78,99 +78,65 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const distillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const exchangeCountRef = useRef(0);
 
-  const getWelcomeMessage = (): string => {
-    const city = currentLocation?.city || '';
+  const buildGreeting = (): GreetingPart[] => {
     const prefs = getConciergePrefs();
-    const aiName = prefs.aiName || 'Concierge';
-    const mode = prefs.personalityMode || 'normal';
+    const aiName = prefs.aiName || 'Your Concierge';
     const userName = activePersona ? activePersona.profile.firstName : prefs.userName;
-    const nameGreeting = userName ? userName : '';
+
+    let travelMode: 'personal' | 'business' = 'personal';
+    try {
+      const tm = JSON.parse(localStorage.getItem('travelMode') || '{}');
+      if (tm?.mode === 'business') travelMode = 'business';
+    } catch {}
 
     if (activePersona) {
       const p = activePersona;
       const nextTrip = p.travel.upcomingTrips[0];
-      const tripInfo = nextTrip ? `Your next trip to **${nextTrip.destination}** (${nextTrip.dates}) is coming up — ${nextTrip.purpose}.` : '';
-
-      switch (mode) {
-        case 'strict':
-          return `${nameGreeting}. ${aiName} ready.\n- Location: ${p.profile.city}\n${tripInfo ? `- Next trip: ${nextTrip!.destination} (${nextTrip!.dates})\n` : ''}- State your request.`;
-        case 'humor':
-          return `Hey ${nameGreeting}! 🎉 It's me, **${aiName}** — your favorite travel buddy who never sleeps (because I literally can't 😅)!\n\nYou're vibing in **${p.profile.city}** right now. ${tripInfo ? `Ooh, ${tripInfo} Exciting stuff! 🌴` : ''}\n\nSo what's the plan? Flights? Hotels with rooftop pools? An eSIM so you can Instagram your food? I'm ALL ears! 🤣✈️`;
-        case 'dark_humor':
-          return `Ah, ${nameGreeting}. **${aiName}** here — your reluctant digital companion. 💀\n\nI see you're in **${p.profile.city}**. How... geographical of you. ${tripInfo ? `${tripInfo} I'm sure nothing will go wrong. 🙃` : ''}\n\nSo, what fresh travel chaos can I help you navigate today? Overpriced flights? Hotels that call a closet a "cozy room"? I'm at your service. 😏`;
-        default:
-          return `Hi ${nameGreeting} 👋 I'm **${aiName}**, welcome back! I see you're in **${p.profile.city}** right now.\n\nI've got your calendar loaded and I know your upcoming trips. ${tripInfo}\n\nNeed me to help with anything? Flights, hotels${p.accommodation.mustHave.includes('gym') ? ' with a gym & sauna' : ''}, ${p.services.usesFrequently[0]?.toLowerCase()}, or something else? Just ask! ✈️`;
-      }
+      return buildGreetingParts({
+        aiName,
+        userName,
+        city: p.profile.city,
+        country: p.profile.country,
+        mode: prefs.personalityMode || 'normal',
+        travelMode,
+        nextTrip: nextTrip ? { destination: nextTrip.destination, dates: nextTrip.dates, purpose: nextTrip.purpose } : undefined,
+        isReturning: true,
+      });
     }
 
-    switch (mode) {
-      case 'strict':
-        return `${nameGreeting ? `${nameGreeting}.` : ''} ${aiName} online.${city ? ` Location: ${city}.` : ''}\n- Ready for queries.\n- State your request.`;
-      case 'humor':
-        return `${nameGreeting ? `Hey ${nameGreeting}!` : 'Hey there!'} 🎉 I'm **${aiName}** — part travel genius, part stand-up comedian, zero percent boring! 😎${city ? `\n\nI see you're in **${city}** — great choice! Well, any choice is great when you've got ME helping! 🤣` : ''}\n\nSo where are we going? Somewhere with beaches? Mountains? A place where the WiFi is faster than my jokes? Let's plan something epic! ✈️🌴`;
-      case 'dark_humor':
-        return `${nameGreeting ? `${nameGreeting}.` : 'Hello.'} **${aiName}** here. 💀${city ? ` I see you're in **${city}**. I'd say "how exciting" but we both know you're probably just staring at a screen.` : ' Another day, another traveler who thinks they can outrun their problems.'}\n\nI'm your concierge — which is a fancy word for "person who Googles things but makes it sound impressive." 🙃\n\nSo, what impossible travel fantasy shall I make slightly less impossible today? 😏`;
-      default:
-        return `${nameGreeting ? `Hi ${nameGreeting} 👋` : 'Hi there 👋'} I'm **${aiName}**, your personal concierge.${city ? ` I see you're in **${city}** right now.` : ''}\n\nThe more we chat — and the more you fill out your profile and share your calendar — the better I get at looking out for you. From flights and hotels to insurance gaps, luggage tips, and things you didn't even know you needed.\n\nThink of me as that well-traveled friend who's always one step ahead. Let's get started — **where are you headed next?** ✈️`;
-    }
+    return buildGreetingParts({
+      aiName,
+      userName,
+      city: currentLocation?.city,
+      country: currentLocation?.country,
+      mode: prefs.personalityMode || 'normal',
+      travelMode,
+    });
   };
 
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: getWelcomeMessage(),
+  const greetingTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const playGreeting = (parts: GreetingPart[]) => {
+    // clear pending timers
+    greetingTimersRef.current.forEach(clearTimeout);
+    greetingTimersRef.current = [];
+    // first part appears immediately, others staggered
+    setMessages(parts.slice(0, 1).map((p, i) => ({
+      id: `greet-${Date.now()}-${i}`,
+      content: p.content,
       isUser: false,
-      timestamp: new Date()
-    }
-  ]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [showMicBubble, setShowMicBubble] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-  const {
-    isListening, isSpeaking, voiceEnabled,
-    currentWord, mouthOpenness, micPermission,
-    startListening, stopListening, speak, stopSpeaking,
-    toggleVoice, sttSupported, ttsSupported, setVoiceGender, setLanguage
-  } = useVoiceConversation(currentLanguage);
-  const [conciergePrefs, setConciergePrefs] = useState<ConciergePreferences>(getConciergePrefs);
-
-  // Auto-show avatar again when speech stops
-  useEffect(() => {
-    if (!isSpeaking) {
-      setAvatarHidden(false);
-    }
-  }, [isSpeaking]);
-
-  // Show mic speech bubble once for new users
-  useEffect(() => {
-    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
-    if (!seen && sttSupported) {
-      const timer = setTimeout(() => setShowMicBubble(true), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [sttSupported]);
-
-  useEffect(() => {
-    setVoiceGender(conciergePrefs.voiceGender);
-  }, [conciergePrefs.voiceGender, setVoiceGender]);
-
-  useEffect(() => {
-    setLanguage(currentLanguage);
-  }, [currentLanguage, setLanguage]);
-
-  useEffect(() => {
-    setMessages([{
-      id: '1',
-      content: getWelcomeMessage(),
-      isUser: false,
-      timestamp: new Date()
-    }]);
-    if (activePersona && !voiceEnabled && ttsSupported) {
-      toggleVoice();
-    }
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode]);
+      timestamp: new Date(),
+    })));
+    parts.slice(1).forEach((p, idx) => {
+      const t = setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          { id: `greet-${Date.now()}-${idx + 1}`, content: p.content, isUser: false, timestamp: new Date() },
+        ]);
+      }, p.delay);
+      greetingTimersRef.current.push(t);
+    });
+  };
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
