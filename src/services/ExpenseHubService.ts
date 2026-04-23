@@ -242,8 +242,8 @@ class ExpenseHubServiceImpl {
 
   async updateExpense(id: string, patch: Partial<ExpenseRow>): Promise<ExpenseRow> {
     const before = await supabase.from("expenses").select("*").eq("id", id).single();
-    const { data, error } = await supabase
-      .from("expenses").update(patch as never).eq("id", id).select().single();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase.from("expenses") as any).update(patch).eq("id", id).select().single();
     if (error) throw error;
     await this.audit(id, "expense.updated", before.data, data);
     return data as ExpenseRow;
