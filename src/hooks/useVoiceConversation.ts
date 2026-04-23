@@ -4,11 +4,24 @@ import {
   getWordAtCharIndex,
   sanitizeSpeechText,
 } from './voice/speechText';
+import { streamElevenLabsTTS, type ElevenStreamHandle } from './voice/elevenLabsStream';
 
 const LANG_TO_LOCALE: Record<string, string> = {
   en: 'en-US', es: 'es-ES', pt: 'pt-BR', zh: 'zh-CN', fr: 'fr-FR',
   de: 'de-DE', ar: 'ar-SA', ja: 'ja-JP', it: 'it-IT', ko: 'ko-KR',
   hi: 'hi-IN', ru: 'ru-RU', tr: 'tr-TR',
+};
+
+// Allow users (or admin) to disable the premium voice via localStorage.
+const ELEVEN_PREF_KEY = 'sn_voice_premium';
+const isPremiumVoiceEnabled = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  try {
+    const v = localStorage.getItem(ELEVEN_PREF_KEY);
+    return v === null ? true : v === 'true';
+  } catch {
+    return true;
+  }
 };
 
 interface UseVoiceConversationReturn {
