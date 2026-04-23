@@ -259,7 +259,7 @@ export const VoiceControlProvider: React.FC<VoiceControlProviderProps> = ({ chil
     const feedback = `${fb.notUnderstood} "${transcript}". Say "SuperNomad" ${fb.helpIntro}`;
     setLastFeedback(feedback);
     voice.speak(feedback);
-  }, [voice, fb]);
+  }, [voice, fb, allCommands]);
 
   const startGlobalListening = useCallback(() => {
     voice.startListening(processCommand);
