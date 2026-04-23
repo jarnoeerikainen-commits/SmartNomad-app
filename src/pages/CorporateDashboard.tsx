@@ -57,22 +57,26 @@ const CorporateDashboard: React.FC = () => {
   async function loadOrgs() {
     setLoading(true);
     try {
-      if (user) {
-        const mine = await CorporateService.listMyOrgs();
-        setOrgs(mine);
-        if (mine.length > 0 && !selectedOrg) {
-          await selectOrg(mine[0], mine[0].my_role);
-          setLoading(false);
-          return;
-        }
-      }
+      // Always load demo orgs (for showcase + fallback)
       const demos = await CorporateService.listDemoOrgs();
       setDemoOrgs(demos);
-      if (!user && demos.length > 0 && !selectedOrg) {
-        await selectOrg(demos[0], 'employee');
+
+      let mine: Array<Organization & { my_role: string }> = [];
+      if (user) {
+        mine = await CorporateService.listMyOrgs();
+        setOrgs(mine);
+      }
+
+      if (!selectedOrg) {
+        if (mine.length > 0) {
+          await selectOrg(mine[0], mine[0].my_role);
+        } else if (demos.length > 0) {
+          // Logged-in users with no org, AND guests, both fall through to demo
+          await selectOrg(demos[0], 'employee');
+        }
       }
     } catch (e) {
-      console.error(e);
+      console.error('loadOrgs failed', e);
     } finally {
       setLoading(false);
     }
