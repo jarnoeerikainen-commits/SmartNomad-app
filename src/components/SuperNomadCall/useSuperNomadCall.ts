@@ -15,6 +15,9 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
   const [lastError, setLastError] = useState<string | null>(null);
   const tickRef = useRef<number | null>(null);
   const aiSimRef = useRef<number | null>(null);
+  // Hard kill-switch shared across the simulation chain so End/Mute can
+  // immediately stop *all* future utterances even mid-await.
+  const cancelledRef = useRef<boolean>(false);
 
   const refreshHistory = useCallback(async () => {
     try {
