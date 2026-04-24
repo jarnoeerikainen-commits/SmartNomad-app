@@ -71,7 +71,7 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       // Hydrate the session row
       const { data: row } = await supabase.from('call_sessions').select('*').eq('id', data.callId).single();
       if (row) {
-        setActiveCall(row as CallSession);
+        setActiveCall(row as unknown as CallSession);
         if (lane === 'ai_concierge') startAiSimulation(row.id, callee);
       }
       return data.callId as string;
