@@ -71,6 +71,54 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_ai_daily_briefings: {
+        Row: {
+          briefing_date: string
+          concerns: Json
+          created_at: string
+          director_rollup: Json
+          executive_summary: string
+          generated_by_run_id: string | null
+          highlights: Json
+          id: string
+          kpi_snapshot: Json
+          metadata: Json
+          narrative: string | null
+          pending_approvals: Json
+          title: string
+        }
+        Insert: {
+          briefing_date?: string
+          concerns?: Json
+          created_at?: string
+          director_rollup?: Json
+          executive_summary: string
+          generated_by_run_id?: string | null
+          highlights?: Json
+          id?: string
+          kpi_snapshot?: Json
+          metadata?: Json
+          narrative?: string | null
+          pending_approvals?: Json
+          title: string
+        }
+        Update: {
+          briefing_date?: string
+          concerns?: Json
+          created_at?: string
+          director_rollup?: Json
+          executive_summary?: string
+          generated_by_run_id?: string | null
+          highlights?: Json
+          id?: string
+          kpi_snapshot?: Json
+          metadata?: Json
+          narrative?: string | null
+          pending_approvals?: Json
+          title?: string
+        }
+        Relationships: []
+      }
       admin_ai_director_runs: {
         Row: {
           completed_at: string | null
@@ -184,12 +232,15 @@ export type Database = {
       }
       admin_ai_opportunities: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           category: string
           city: string | null
           concierge_offer: Json
           country: string | null
           created_at: string
           currency: string
+          decision_note: string | null
           director: Database["public"]["Enums"]["director_role"]
           end_at: string | null
           est_audience: number | null
@@ -202,6 +253,9 @@ export type Database = {
           popularity_score: number
           pushed_to_concierge: boolean
           pushed_to_sales: boolean
+          rejected_at: string | null
+          rejected_by: string | null
+          requires_approval: boolean
           sales_target_segments: Json
           source: string | null
           source_run_id: string | null
@@ -216,12 +270,15 @@ export type Database = {
           vip_packages: Json
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           category: string
           city?: string | null
           concierge_offer?: Json
           country?: string | null
           created_at?: string
           currency?: string
+          decision_note?: string | null
           director: Database["public"]["Enums"]["director_role"]
           end_at?: string | null
           est_audience?: number | null
@@ -234,6 +291,9 @@ export type Database = {
           popularity_score?: number
           pushed_to_concierge?: boolean
           pushed_to_sales?: boolean
+          rejected_at?: string | null
+          rejected_by?: string | null
+          requires_approval?: boolean
           sales_target_segments?: Json
           source?: string | null
           source_run_id?: string | null
@@ -248,12 +308,15 @@ export type Database = {
           vip_packages?: Json
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           category?: string
           city?: string | null
           concierge_offer?: Json
           country?: string | null
           created_at?: string
           currency?: string
+          decision_note?: string | null
           director?: Database["public"]["Enums"]["director_role"]
           end_at?: string | null
           est_audience?: number | null
@@ -266,6 +329,9 @@ export type Database = {
           popularity_score?: number
           pushed_to_concierge?: boolean
           pushed_to_sales?: boolean
+          rejected_at?: string | null
+          rejected_by?: string | null
+          requires_approval?: boolean
           sales_target_segments?: Json
           source?: string | null
           source_run_id?: string | null
@@ -295,6 +361,7 @@ export type Database = {
           kind: string
           priority: string
           rationale: string
+          requires_approval: boolean
           source_insight_id: string | null
           source_run_id: string | null
           status: string
@@ -315,6 +382,7 @@ export type Database = {
           kind: string
           priority?: string
           rationale: string
+          requires_approval?: boolean
           source_insight_id?: string | null
           source_run_id?: string | null
           status?: string
@@ -335,6 +403,7 @@ export type Database = {
           kind?: string
           priority?: string
           rationale?: string
+          requires_approval?: boolean
           source_insight_id?: string | null
           source_run_id?: string | null
           status?: string
@@ -4371,6 +4440,89 @@ export type Database = {
         }
         Returns: Json
       }
+      decide_opportunity: {
+        Args: {
+          p_approve: boolean
+          p_id: string
+          p_note?: string
+          p_push_concierge?: boolean
+          p_push_sales?: boolean
+        }
+        Returns: {
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          city: string | null
+          concierge_offer: Json
+          country: string | null
+          created_at: string
+          currency: string
+          decision_note: string | null
+          director: Database["public"]["Enums"]["director_role"]
+          end_at: string | null
+          est_audience: number | null
+          est_ticket_price_max: number | null
+          est_ticket_price_min: number | null
+          exclusivity_score: number
+          expires_at: string | null
+          id: string
+          metadata: Json
+          popularity_score: number
+          pushed_to_concierge: boolean
+          pushed_to_sales: boolean
+          rejected_at: string | null
+          rejected_by: string | null
+          requires_approval: boolean
+          sales_target_segments: Json
+          source: string | null
+          source_run_id: string | null
+          sponsor_packages: Json
+          start_at: string | null
+          status: string
+          summary: string
+          tags: string[]
+          title: string
+          url: string | null
+          venue: string | null
+          vip_packages: Json
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_opportunities"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      decide_recommendation: {
+        Args: { p_approve: boolean; p_id: string; p_note?: string }
+        Returns: {
+          confidence: number
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          evidence: Json | null
+          expected_impact: string | null
+          expires_at: string | null
+          id: string
+          kind: string
+          priority: string
+          rationale: string
+          requires_approval: boolean
+          source_insight_id: string | null
+          source_run_id: string | null
+          status: string
+          suggested_action: string
+          target_segment: Json | null
+          title: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_recommendations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       evaluate_agentic_guardrail: {
         Args: {
           p_amount: number
@@ -4395,6 +4547,21 @@ export type Database = {
           urgent_recommendations: number
         }[]
       }
+      get_directors_ecosystem_summary: {
+        Args: never
+        Returns: {
+          active_opportunities: number
+          approved_24h: number
+          director: string
+          last_run_at: string
+          last_run_status: string
+          pending_approval: number
+          pushed_to_concierge: number
+          pushed_to_sales: number
+          rejected_24h: number
+          total_runs_7d: number
+        }[]
+      }
       get_directors_summary: { Args: never; Returns: Json }
       get_latest_admin_report: {
         Args: { p_timeframe?: string }
@@ -4416,6 +4583,30 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "admin_ai_reports"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      get_latest_daily_briefing: {
+        Args: never
+        Returns: {
+          briefing_date: string
+          concerns: Json
+          created_at: string
+          director_rollup: Json
+          executive_summary: string
+          generated_by_run_id: string | null
+          highlights: Json
+          id: string
+          kpi_snapshot: Json
+          metadata: Json
+          narrative: string | null
+          pending_approvals: Json
+          title: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_daily_briefings"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -4702,7 +4893,17 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "premium" | "user"
-      director_role: "events" | "sports" | "vip"
+      director_role:
+        | "events"
+        | "sports"
+        | "vip"
+        | "affiliate"
+        | "loyalty"
+        | "sponsorship"
+        | "b2b_sales"
+        | "pricing"
+        | "aviation"
+        | "happiness"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4831,7 +5032,18 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "premium", "user"],
-      director_role: ["events", "sports", "vip"],
+      director_role: [
+        "events",
+        "sports",
+        "vip",
+        "affiliate",
+        "loyalty",
+        "sponsorship",
+        "b2b_sales",
+        "pricing",
+        "aviation",
+        "happiness",
+      ],
     },
   },
 } as const
