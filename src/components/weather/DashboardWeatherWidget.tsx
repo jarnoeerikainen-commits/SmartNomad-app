@@ -21,13 +21,22 @@ const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavig
   const currentLat = locationData?.latitude;
 
   useEffect(() => {
-    // Mock weather for current location
+    // Evidence-First: deterministic climate estimate (NOT random) until a real
+    // weather API is wired. Values are stable per city + day so the same user
+    // sees the same numbers, and the widget is clearly labeled "Estimate".
     const match = TOP_WEATHER_CITIES.find(c => c.city.toLowerCase() === currentCity.toLowerCase());
     const lat = currentLat ?? match?.lat ?? 45;
     const isEquatorial = Math.abs(lat) < 23;
-    const month = new Date().getMonth();
+    const now = new Date();
+    const month = now.getMonth();
+    const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000);
     const isSummer = lat > 0 ? (month >= 4 && month <= 9) : (month <= 2 || month >= 10);
     const base = isEquatorial ? 28 : isSummer ? 24 : 10;
+
+    // Stable per-city seed (sum of char codes)
+    const citySeed = currentCity.split('').reduce((s, ch) => s + ch.charCodeAt(0), 0);
+    const seed = (citySeed + dayOfYear) % 1000;
+    const seedNorm = (n: number) => ((seed * 9301 + n * 49297) % 233280) / 233280;
 
     const conditions = [
       { name: 'Sunny', icon: 'sun' },
@@ -35,20 +44,20 @@ const DashboardWeatherWidget: React.FC<DashboardWeatherWidgetProps> = ({ onNavig
       { name: 'Cloudy', icon: 'cloud' },
       { name: 'Light Rain', icon: 'cloud-rain' },
     ];
-    const c = conditions[Math.floor(Math.random() * conditions.length)];
-    const temp = Math.round(base + Math.random() * 6 - 3);
+    const c = conditions[Math.floor(seedNorm(1) * conditions.length)];
+    const temp = Math.round(base + seedNorm(2) * 6 - 3);
 
     setWeather({
       temp,
       condition: c.name,
       icon: c.icon,
-      humidity: Math.round(40 + Math.random() * 35),
-      windSpeed: Math.round(5 + Math.random() * 15),
-      high: temp + Math.round(Math.random() * 4 + 1),
-      low: temp - Math.round(Math.random() * 4 + 1),
-      alerts: Math.random() > 0.8 ? 1 : 0,
+      humidity: Math.round(40 + seedNorm(3) * 35),
+      windSpeed: Math.round(5 + seedNorm(4) * 15),
+      high: temp + Math.round(seedNorm(5) * 4 + 1),
+      low: temp - Math.round(seedNorm(6) * 4 + 1),
+      alerts: seedNorm(7) > 0.8 ? 1 : 0,
     });
-  }, [currentCity]);
+  }, [currentCity, currentLat]);
 
   if (!weather) return null;
 
