@@ -24,7 +24,7 @@ const SuperNomadCallCard: React.FC<SuperNomadCallCardProps> = ({ onNavigate }) =
         kind: 'demo_persona',
         id: activePersonaId,
         personaId: activePersonaId,
-        displayName: activePersona?.name ?? activePersonaId,
+        displayName: activePersona?.label ?? activePersonaId,
       }
     : null;
 
