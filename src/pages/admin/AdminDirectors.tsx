@@ -572,13 +572,25 @@ const AdminDirectors: React.FC = () => {
             </div>
           </div>
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-            <TabsList className="bg-[hsl(220_22%_8%)] flex-wrap h-auto">
-              <TabsTrigger value="pending" className="data-[state=active]:bg-amber-500/15 data-[state=active]:text-amber-400">
+            <TabsList className="bg-[hsl(220_22%_8%)] flex-wrap h-auto text-white/85">
+              <TabsTrigger
+                value="pending"
+                className="text-white/85 hover:text-white data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-300"
+              >
                 Pending ({pendingCount})
               </TabsTrigger>
-              <TabsTrigger value="all">All ({opps.length})</TabsTrigger>
+              <TabsTrigger
+                value="all"
+                className="text-white/85 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white"
+              >
+                All ({opps.length})
+              </TabsTrigger>
               {ALL.map((d) => (
-                <TabsTrigger key={d} value={d} className="text-xs">
+                <TabsTrigger
+                  key={d}
+                  value={d}
+                  className="text-xs text-white/85 hover:text-white data-[state=active]:bg-white/10 data-[state=active]:text-white"
+                >
                   {d.replace('_', ' ')} ({stats[d].count})
                 </TabsTrigger>
               ))}
