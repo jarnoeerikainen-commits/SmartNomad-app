@@ -154,6 +154,16 @@ const nextOccurrence = (today: Date, month: number, day: number): Date => {
   return candidate;
 };
 
+// Format helpers used by the dynamic AI context builder
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const formatShort = (d: Date) => `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+const formatLong = (d: Date) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const formatRange = (start: Date, days: number) => {
+  const end = addDays(start, Math.max(0, days - 1));
+  if (start.getMonth() === end.getMonth()) return `${MONTH_NAMES[start.getMonth()]} ${start.getDate()}-${end.getDate()}`;
+  return `${formatShort(start)} – ${formatShort(end)}`;
+};
+
 const generateMeghanCalendar = (): DemoCalendarEvent[] => {
   const events: DemoCalendarEvent[] = [];
   const today = new Date();
