@@ -12,6 +12,7 @@ import {
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { useSuperNomadCall } from './useSuperNomadCall';
 import { CallWaveform } from './CallWaveform';
+import { cancelSpeech } from './speech';
 import { CallParty, CallLane, ContactEntry } from './types';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -329,7 +330,18 @@ const ActiveCallPanel: React.FC<{ call: any; onEnd: () => void }> = ({ call, onE
         </ScrollArea>
 
         <div className="flex gap-2 justify-center pt-1">
-          <Button size="sm" variant={muted ? 'default' : 'outline'} onClick={() => setMuted(m => !m)}>
+          <Button
+            size="sm"
+            variant={muted ? 'default' : 'outline'}
+            onClick={() => {
+              setMuted(m => {
+                const next = !m;
+                if (next) cancelSpeech();
+                return next;
+              });
+            }}
+            title={muted ? 'Unmute concierge audio' : 'Mute concierge audio'}
+          >
             {muted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
           </Button>
           <Button size="sm" variant="outline"><Volume2 className="h-4 w-4" /></Button>
