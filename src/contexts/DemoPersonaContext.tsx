@@ -124,8 +124,12 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
       // Store calendar
       localStorage.setItem('demoCalendar', JSON.stringify(p.calendar));
-      // Store AI context
+      // Store AI context (dynamically built from today's date)
       localStorage.setItem('demoAiContext', p.aiContext);
+      // Re-seed the unified calendar so reminders + concierge stay future-anchored
+      try {
+        CalendarService.reseedDemoPersona(id);
+      } catch { /* ignore */ }
       // Demo personas are always adults — bypass age gate
       localStorage.setItem('ageGroup', 'adult');
       localStorage.setItem('hasSeenOnboarding', 'true');
