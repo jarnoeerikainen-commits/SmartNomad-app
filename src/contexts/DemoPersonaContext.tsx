@@ -145,6 +145,27 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, []);
 
+  // Day-rollover watcher: when local date changes, regenerate the persona
+  // snapshot so calendar + AI context always speak in future tense.
+  useEffect(() => {
+    if (!activePersonaId) return;
+    const dayKey = () => {
+      const t = new Date();
+      return `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}`;
+    };
+    let lastDay = dayKey();
+    const interval = window.setInterval(() => {
+      const current = dayKey();
+      if (current !== lastDay) {
+        lastDay = current;
+        refreshDemoPersonas();
+        // Re-apply the persona to refresh localStorage + calendar seed
+        setPersona(activePersonaId as 'meghan' | 'john');
+      }
+    }, 60_000); // check every minute — cheap
+    return () => window.clearInterval(interval);
+  }, [activePersonaId, setPersona]);
+
   const activePersona = activePersonaId ? DEMO_PERSONAS[activePersonaId] || null : null;
 
   return (
