@@ -132,6 +132,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'trust-pass', label: 'Trust Pass', icon: ShieldCheck, category: 'premium', badge: 'NEW', badgeVariant: 'default', description: 'Verifiable credentials for elite chats, Vibe-Match & Sovereign Marketplace (powered by walt.id)', defaultVisible: true, defaultPinned: true, trustLevel: 'high_stakes' },
   { id: 'sovereign-access', label: 'Sovereign Access', icon: ShieldCheck, category: 'premium', badge: 'NEW', badgeVariant: 'secondary', description: 'Granular control of every device permission & data source — granted just-in-time, revocable forever', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
   { id: 'travel-inbox', label: 'Travel Inbox', icon: Mail, category: 'travel', badge: 'NEW', badgeVariant: 'secondary', description: 'Import flight & hotel confirmations from Gmail, Outlook, or a private forward-to address', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'supernomad-call', label: 'SuperNomad Call', icon: Phone, category: 'premium', badge: 'NEW', badgeVariant: 'default', description: 'Unified calling: AI Concierge, trusted contacts, or any phone in the world — end-to-end private', defaultVisible: true, defaultPinned: true, trustLevel: 'actionable', aliases: ['call', 'phone', 'dial', 'concierge call', 'voice call', 'ring'] },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {

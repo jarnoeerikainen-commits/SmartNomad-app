@@ -1420,6 +1420,301 @@ export type Database = {
           },
         ]
       }
+      call_messages: {
+        Row: {
+          call_id: string | null
+          ciphertext: string | null
+          conversation_key: string | null
+          created_at: string
+          id: string
+          is_demo: boolean
+          message_type: string
+          metadata: Json
+          plaintext: string | null
+          recipient_id: string
+          recipient_kind: string
+          recipient_persona_id: string | null
+          recipient_user_id: string | null
+          sender_id: string
+          sender_kind: string
+          sender_persona_id: string | null
+          sender_user_id: string | null
+        }
+        Insert: {
+          call_id?: string | null
+          ciphertext?: string | null
+          conversation_key?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          message_type?: string
+          metadata?: Json
+          plaintext?: string | null
+          recipient_id: string
+          recipient_kind: string
+          recipient_persona_id?: string | null
+          recipient_user_id?: string | null
+          sender_id: string
+          sender_kind: string
+          sender_persona_id?: string | null
+          sender_user_id?: string | null
+        }
+        Update: {
+          call_id?: string | null
+          ciphertext?: string | null
+          conversation_key?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          message_type?: string
+          metadata?: Json
+          plaintext?: string | null
+          recipient_id?: string
+          recipient_kind?: string
+          recipient_persona_id?: string | null
+          recipient_user_id?: string | null
+          sender_id?: string
+          sender_kind?: string
+          sender_persona_id?: string | null
+          sender_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_messages_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "call_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      call_participants: {
+        Row: {
+          call_id: string
+          created_at: string
+          display_name: string | null
+          id: string
+          is_muted: boolean
+          is_video_on: boolean
+          joined_at: string | null
+          left_at: string | null
+          metadata: Json
+          participant_id: string
+          participant_kind: string
+          persona_id: string | null
+          state: string
+          user_id: string | null
+        }
+        Insert: {
+          call_id: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          is_muted?: boolean
+          is_video_on?: boolean
+          joined_at?: string | null
+          left_at?: string | null
+          metadata?: Json
+          participant_id: string
+          participant_kind: string
+          persona_id?: string | null
+          state?: string
+          user_id?: string | null
+        }
+        Update: {
+          call_id?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          is_muted?: boolean
+          is_video_on?: boolean
+          joined_at?: string | null
+          left_at?: string | null
+          metadata?: Json
+          participant_id?: string
+          participant_kind?: string
+          persona_id?: string | null
+          state?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_participants_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "call_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      call_permissions: {
+        Row: {
+          can_call: boolean
+          can_message: boolean
+          can_video: boolean
+          created_at: string
+          expires_at: string | null
+          grantee_id: string
+          grantee_kind: string
+          id: string
+          is_demo: boolean
+          metadata: Json
+          owner_device_id: string | null
+          owner_persona_id: string | null
+          owner_user_id: string | null
+          reason: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          can_call?: boolean
+          can_message?: boolean
+          can_video?: boolean
+          created_at?: string
+          expires_at?: string | null
+          grantee_id: string
+          grantee_kind: string
+          id?: string
+          is_demo?: boolean
+          metadata?: Json
+          owner_device_id?: string | null
+          owner_persona_id?: string | null
+          owner_user_id?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          can_call?: boolean
+          can_message?: boolean
+          can_video?: boolean
+          created_at?: string
+          expires_at?: string | null
+          grantee_id?: string
+          grantee_kind?: string
+          id?: string
+          is_demo?: boolean
+          metadata?: Json
+          owner_device_id?: string | null
+          owner_persona_id?: string | null
+          owner_user_id?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      call_sessions: {
+        Row: {
+          ai_actions: Json
+          ai_summary: string | null
+          answered_at: string | null
+          billed_to: string | null
+          call_kind: string
+          callee_id: string
+          callee_kind: string
+          callee_persona_id: string | null
+          callee_phone: string | null
+          callee_user_id: string | null
+          caller_device_id: string | null
+          caller_id: string
+          caller_kind: string
+          caller_persona_id: string | null
+          caller_user_id: string | null
+          cost_cents: number
+          cost_currency: string
+          created_at: string
+          direction: string
+          duration_seconds: number
+          end_reason: string | null
+          ended_at: string | null
+          id: string
+          initiated_at: string
+          is_demo: boolean
+          lane: string
+          metadata: Json
+          provider: string | null
+          provider_call_sid: string | null
+          recording_consent: boolean
+          recording_url: string | null
+          status: string
+          transcript: Json
+          updated_at: string
+        }
+        Insert: {
+          ai_actions?: Json
+          ai_summary?: string | null
+          answered_at?: string | null
+          billed_to?: string | null
+          call_kind?: string
+          callee_id: string
+          callee_kind: string
+          callee_persona_id?: string | null
+          callee_phone?: string | null
+          callee_user_id?: string | null
+          caller_device_id?: string | null
+          caller_id: string
+          caller_kind: string
+          caller_persona_id?: string | null
+          caller_user_id?: string | null
+          cost_cents?: number
+          cost_currency?: string
+          created_at?: string
+          direction?: string
+          duration_seconds?: number
+          end_reason?: string | null
+          ended_at?: string | null
+          id?: string
+          initiated_at?: string
+          is_demo?: boolean
+          lane: string
+          metadata?: Json
+          provider?: string | null
+          provider_call_sid?: string | null
+          recording_consent?: boolean
+          recording_url?: string | null
+          status?: string
+          transcript?: Json
+          updated_at?: string
+        }
+        Update: {
+          ai_actions?: Json
+          ai_summary?: string | null
+          answered_at?: string | null
+          billed_to?: string | null
+          call_kind?: string
+          callee_id?: string
+          callee_kind?: string
+          callee_persona_id?: string | null
+          callee_phone?: string | null
+          callee_user_id?: string | null
+          caller_device_id?: string | null
+          caller_id?: string
+          caller_kind?: string
+          caller_persona_id?: string | null
+          caller_user_id?: string | null
+          cost_cents?: number
+          cost_currency?: string
+          created_at?: string
+          direction?: string
+          duration_seconds?: number
+          end_reason?: string | null
+          ended_at?: string | null
+          id?: string
+          initiated_at?: string
+          is_demo?: boolean
+          lane?: string
+          metadata?: Json
+          provider?: string | null
+          provider_call_sid?: string | null
+          recording_consent?: boolean
+          recording_url?: string | null
+          status?: string
+          transcript?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       change_proposals: {
         Row: {
           ai_diff: Json
@@ -2101,6 +2396,45 @@ export type Database = {
           id?: string
           last_seen_at?: string
           metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      e2e_identity_keys: {
+        Row: {
+          algorithm: string
+          created_at: string
+          device_id: string
+          id: string
+          identity_key_public: string
+          one_time_prekeys: Json
+          rotated_at: string | null
+          signed_prekey_public: string
+          signed_prekey_signature: string
+          user_id: string | null
+        }
+        Insert: {
+          algorithm?: string
+          created_at?: string
+          device_id: string
+          id?: string
+          identity_key_public: string
+          one_time_prekeys?: Json
+          rotated_at?: string | null
+          signed_prekey_public: string
+          signed_prekey_signature: string
+          user_id?: string | null
+        }
+        Update: {
+          algorithm?: string
+          created_at?: string
+          device_id?: string
+          id?: string
+          identity_key_public?: string
+          one_time_prekeys?: Json
+          rotated_at?: string | null
+          signed_prekey_public?: string
+          signed_prekey_signature?: string
           user_id?: string | null
         }
         Relationships: []
