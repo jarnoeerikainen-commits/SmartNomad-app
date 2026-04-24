@@ -1,6 +1,6 @@
 ---
-name: Security Hardening (Apr 2026 — pass 2)
-description: Real AES-256-GCM client encryption, MFAGate component, CSP + permission headers, referral PII masking via safe view
+name: Security Hardening (Apr 2026 — pass 2 + pen-test pass 3/4)
+description: Real AES-256-GCM client encryption, MFAGate, CSP/permission headers, referral PII masking, plus pen-test pass closing demo-org + device-id-spoof + storage + cache vulnerabilities
 type: feature
 ---
 
@@ -37,8 +37,42 @@ type: feature
 - **AgenticWallet MFA gate**: confirmed already covered — `AgenticWalletDashboard` is rendered as a tab inside `PaymentOptionsDashboard`, which is wrapped by `<MFAGate flag="require_mfa_for_payments">`.
 - **Frontend tests**: added Vitest + Testing Library setup (`vitest.config.ts`, `src/test/setup.ts`). 12 tests passing covering `secureStorage` round-trip, legacy format compat, IV uniqueness, and `evaluatePassword` scoring.
 
-### Production rollout checklist
-1. Supabase Auth → enable **Leaked password protection** (HIBP) and **TOTP**.
+## Pass-3/4 — Automated pen test (24 Apr 2026)
+
+Ran `security--run_security_scan` + `supabase--linter` + `code--dependency_scan`. Baseline: 0 dep CVEs, 0 linter issues, 1 TODO, 7 console.logs, 1 safe `dangerouslySetInnerHTML` (shadcn chart). Scanner found 5 RLS issues — all closed by two migrations.
+
+### Pass-3 fixes (migration `20260424_pen_test_pass_3`)
+1. **Demo-org PII** — dropped `anyone reads demo org members/trips/expenses` policies (role `public`). Replaced with `authenticated`-only equivalents on `organization_members`, `business_trips`, `business_trip_expenses`. Demo personas remain visible because they sign in as Supabase guest sessions (still `authenticated` role).
+2. **Expense-table device-id spoofing** — dropped policies that called `check_data_access(device_id, user_id)` (which falls back to caller-controlled `x-device-id` header when `auth.uid()` is null). Replaced with strict `auth.uid() IS NOT NULL AND user_id = auth.uid()` policies on `expenses`, `expense_trips`, `expense_receipts`, `expense_audit_log`, `expense_terms_acceptance`. Added matching `service_role` ALL policies so edge functions retain full access.
+3. **Support-ticket device-id spoofing** — dropped `Guests read/create tickets by device` policies. Guests must now go through the support edge function (service-role insert).
+4. **OAuth refresh token plaintext** — added `encrypted_refresh_token` + `encryption_version` columns. Created `oauth_connections_safe` view (security_invoker) exposing only `has_refresh_token` boolean. Plaintext column marked DEPRECATED via `COMMENT`.
+5. **AI cache cross-tenant leak** — added `user_scope text DEFAULT 'global'` column + `(user_scope, cache_key)` index. Edge functions must scope lookups going forward.
+
+### Pass-4 fixes (migration `20260424_pen_test_pass_4`)
+6. **Receipts storage bucket device-id spoofing** — `receipts_owner_{select,insert,update,delete}` policies on `storage.objects` rebuilt to require `auth.uid() IS NOT NULL` and folder ownership matches `auth.uid()`. Device-id branch removed entirely.
+7. **Organizations billing leak via demo flag** — dropped `members can view their org` (which OR'd `is_org_member(id) OR demo = true` exposing billing_email/join_code/billing_method to all auth users). New policy is members-only. Created `organizations_public` view exposing only `id, name, slug, logo_url, demo, timestamps` for demo discovery.
+8. **AI cache explicit deny** — added `ai_cache_no_client_read` policy `FOR SELECT TO authenticated USING (false)` for defense-in-depth (service role still has full ALL access).
+
+### Final scan (post pass-4)
+- 0 critical, 0 high, 4 informational notes — all reviewed and confirmed non-issues by the scanner itself:
+  - `user_roles` escalation: "this flow appears correct" (RESTRICTIVE policy blocks self-grant).
+  - `referral_clicks` retention: admin-only is correct posture.
+  - `oauth_connections` no client INSERT: intentional (created via edge-function callback).
+  - `agentic_transactions` no DELETE: intentional (immutable audit trail).
+- `supabase--linter`: 0 issues.
+- `code--dependency_scan`: 0 high/critical CVEs.
+
+### Code-quality sweep
+- `tsc --noEmit`: clean.
+- 1 TODO/FIXME across 136k LOC.
+- 7 `console.log` (acceptable).
+- Single `dangerouslySetInnerHTML` (shadcn `chart.tsx` — internal CSS, safe).
+
+### Production rollout checklist (carries over from pass-2)
+1. Supabase Auth → enable Leaked password protection + TOTP.
 2. `UPDATE app_settings SET require_mfa_for_payments = true, require_mfa_for_sensitive = true WHERE id = 1;`
-3. Insert at least one admin row in `user_roles` so admin policies are reachable.
-4. Verify CSP doesn't block any production domains you've added (extend `connect-src`).
+3. Insert at least one admin row in `user_roles`.
+4. Verify CSP `connect-src` covers any new production domains.
+5. **NEW**: Wire `oauth-refresh` edge function to write `encrypted_refresh_token` + null out plaintext `refresh_token` on next token rotation.
+6. **NEW**: Update edge-function cache reads/writes to pass `user_scope` (use `'global'` only for non-PII generic content).
+7. **NEW**: Switch any client code reading from `oauth_connections` to `oauth_connections_safe`; switch demo-org listings to `organizations_public`.
