@@ -114,6 +114,7 @@ const TrustPassDashboard = lazy(() => import('./TrustPassDashboard'));
 const GPSDayMonitor = lazy(() => import('./GPSDayMonitor'));
 const SovereignAccessCenter = lazy(() => import('./permissions/SovereignAccessCenter'));
 const TravelInboxImport = lazy(() => import('./permissions/TravelInboxImport'));
+const SuperNomadCall = lazy(() => import('./SuperNomadCall/SuperNomadCall'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
@@ -463,6 +464,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'trust-pass': return <TrustPassDashboard />;
       case 'sovereign-access': return <SovereignAccessCenter />;
       case 'travel-inbox': return <TravelInboxImport />;
+      case 'supernomad-call': return <SuperNomadCall />;
       case 'gps-monitor':
         return (
           <GPSDayMonitor
