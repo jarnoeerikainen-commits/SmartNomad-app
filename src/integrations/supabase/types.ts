@@ -859,6 +859,7 @@ export type Database = {
           query_text: string
           response_text: string
           token_count: number
+          user_scope: string
         }
         Insert: {
           cache_key: string
@@ -871,6 +872,7 @@ export type Database = {
           query_text: string
           response_text: string
           token_count?: number
+          user_scope?: string
         }
         Update: {
           cache_key?: string
@@ -883,6 +885,7 @@ export type Database = {
           query_text?: string
           response_text?: string
           token_count?: number
+          user_scope?: string
         }
         Relationships: []
       }
@@ -2487,6 +2490,8 @@ export type Database = {
         Row: {
           access_token_expires_at: string | null
           created_at: string
+          encrypted_refresh_token: string | null
+          encryption_version: number
           id: string
           last_synced_at: string | null
           lookback_days: number
@@ -2501,6 +2506,8 @@ export type Database = {
         Insert: {
           access_token_expires_at?: string | null
           created_at?: string
+          encrypted_refresh_token?: string | null
+          encryption_version?: number
           id?: string
           last_synced_at?: string | null
           lookback_days?: number
@@ -2515,6 +2522,8 @@ export type Database = {
         Update: {
           access_token_expires_at?: string | null
           created_at?: string
+          encrypted_refresh_token?: string | null
+          encryption_version?: number
           id?: string
           last_synced_at?: string | null
           lookback_days?: number
@@ -3715,6 +3724,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      oauth_connections_safe: {
+        Row: {
+          access_token_expires_at: string | null
+          created_at: string | null
+          has_refresh_token: boolean | null
+          id: string | null
+          last_synced_at: string | null
+          lookback_days: number | null
+          provider: string | null
+          provider_email: string | null
+          scope: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          access_token_expires_at?: string | null
+          created_at?: string | null
+          has_refresh_token?: never
+          id?: string | null
+          last_synced_at?: string | null
+          lookback_days?: number | null
+          provider?: string | null
+          provider_email?: string | null
+          scope?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          access_token_expires_at?: string | null
+          created_at?: string | null
+          has_refresh_token?: never
+          id?: string | null
+          last_synced_at?: string | null
+          lookback_days?: number | null
+          provider?: string | null
+          provider_email?: string | null
+          scope?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       v_active_trust_credentials: {
         Row: {
