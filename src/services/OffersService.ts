@@ -82,15 +82,17 @@ export class OffersService {
     try {
       const offers = await this.generateValidatedOffersForService(service, locationString, location);
       
-      // Apply Trust AI filtering and ranking
-      const trustItems: Partial<TrustItem>[] = offers.map(offer => ({
+      // Apply Trust AI filtering and ranking.
+      // Evidence-First: rating/reviews come from the offer source — no random fillers.
+      // If the source omits them, leave undefined so the UI can show "—" instead of fake numbers.
+      const trustItems: Partial<TrustItem>[] = offers.map((offer, idx) => ({
         service_name: offer.title,
-        rating: offer.rating || 4.5 + Math.random() * 0.4,
+        rating: offer.rating,
         verified: true,
         category: service,
         source: offer.provider,
         trust_score: undefined,
-        reviews: Math.floor(Math.random() * 150) + 50,
+        reviews: (offer as any).reviews,
         summary: offer.description,
         price: offer.price,
         url: offer.url,

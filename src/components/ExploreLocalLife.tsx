@@ -345,8 +345,10 @@ const generateMockEvents = (): LocalEvent[] => {
         website: `https://events.supernomad.app/${cityData.name.toLowerCase().replace(/\s/g, '-')}`,
         registrationUrl: t.isFree ? undefined : `https://tickets.supernomad.app/${id}`,
         contactEmail: `events@supernomad.app`,
-        rating: 4.2 + Math.random() * 0.7,
-        reviews: 80 + Math.floor(Math.random() * 200),
+        // Evidence-First: deterministic placeholder until real venue rating API is wired.
+        // Stable per-event seed so values don't shift between renders.
+        rating: 4.2 + ((index * 13 + t.dayOffset) % 7) / 10,
+        reviews: 80 + ((index * 37 + t.dayOffset * 11) % 200),
         trustBadges: t.trustBadges,
       });
     });

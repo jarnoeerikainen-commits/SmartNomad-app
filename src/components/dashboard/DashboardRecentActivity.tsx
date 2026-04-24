@@ -29,39 +29,9 @@ export const DashboardRecentActivity: React.FC<DashboardRecentActivityProps> = (
       }
     });
 
-    // Add mock recent activities for demo
-    const now = Date.now();
-    const mockActivities = [
-      {
-        id: 'today-1',
-        type: 'tracking',
-        title: 'Day tracking updated',
-        description: 'Added 2 days in current location',
-        icon: Calendar,
-        timestamp: now,
-        color: 'text-success'
-      },
-      {
-        id: 'yesterday',
-        type: 'document',
-        title: 'Document uploaded',
-        description: 'Visa application form saved to vault',
-        icon: FileCheck,
-        timestamp: now - 86400000,
-        color: 'text-secondary'
-      },
-      {
-        id: '3days',
-        type: 'report',
-        title: 'Tax report generated',
-        description: 'Q4 2024 residency summary created',
-        icon: TrendingUp,
-        timestamp: now - 259200000,
-        color: 'text-accent'
-      }
-    ];
-
-    return [...mockActivities, ...activities]
+    // Evidence-First: only return real activity from country tracking data.
+    // No synthetic mock entries — empty state handled below.
+    return activities
       .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, 6);
   };

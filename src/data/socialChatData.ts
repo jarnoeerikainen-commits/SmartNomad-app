@@ -80,7 +80,8 @@ function buildProfile(id: number, s: ProfileSeed): SocialProfile {
     arrivalDate: new Date(s.nextDate || '2026-04-01'),
     purpose: s.nextPurpose || 'Travel', visibility: 'public' as const,
   }] : [];
-  const trustScore = 82 + Math.floor(Math.random() * 16);
+  // Evidence-First: deterministic trust score derived from profile id (stable across sessions).
+  const trustScore = 82 + (id * 7) % 16;
   const vLevel = trustScore > 92 ? 'premium' : trustScore > 85 ? 'verified' : 'basic';
   return {
     id: String(id),
