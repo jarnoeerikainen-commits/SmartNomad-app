@@ -10,6 +10,7 @@ import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import SovereignAccessNudge from '@/components/dashboard/SovereignAccessNudge';
+import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
 import { Badge } from '@/components/ui/badge';
@@ -40,6 +41,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
       <SovereignAccessNudge onOpen={() => onNavigate('sovereign-access')} />
+      <SuperNomadCallCard onNavigate={onNavigate} />
       {/* Top row: Threat + Welcome */}
       {(showThreat || showWelcome) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
