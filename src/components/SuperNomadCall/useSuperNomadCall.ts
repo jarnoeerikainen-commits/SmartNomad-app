@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { CallParty, CallLane, CallSession } from './types';
+import { speakLine, cancelSpeech, primeSpeech, isSpeechAvailable } from './speech';
 
 interface UseSuperNomadCallOpts {
   isDemo: boolean;
@@ -52,6 +53,11 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       setLastError('No active caller — pick a demo persona or sign in');
       return null;
     }
+    // CRITICAL: prime the SpeechSynthesis engine inside the user-gesture
+    // chain BEFORE any async work. This unlocks audio on iOS / Safari /
+    // Chrome autoplay policy so later .speak() calls actually produce sound.
+    primeSpeech();
+
     setBusy(true); setLastError(null);
     try {
       const { data, error } = await supabase.functions.invoke('supernomad-call', {
@@ -85,6 +91,7 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
 
   const end = useCallback(async (callId: string) => {
     if (aiSimRef.current) { window.clearTimeout(aiSimRef.current); aiSimRef.current = null; }
+    cancelSpeech();
     try {
       await supabase.functions.invoke('supernomad-call', { body: { action: 'end', callId } });
     } catch (e) { console.warn('end failed', e); }
