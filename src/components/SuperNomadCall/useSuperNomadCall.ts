@@ -27,7 +27,7 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       }
       const { data, error } = await supabase.functions.invoke('supernomad-call', { body: payload });
       if (error) throw error;
-      setHistory((data?.calls as CallSession[]) ?? []);
+      setHistory((data?.calls as unknown as CallSession[]) ?? []);
     } catch (e) {
       console.warn('[supernomad-call] history failed', e);
     }
