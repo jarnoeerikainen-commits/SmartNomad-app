@@ -93,8 +93,14 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
   }, [isDemo, selfParty]);
 
   const end = useCallback(async (callId: string) => {
+    // 1. Flip kill-switch FIRST — this stops the simulation chain
+    //    even if it's mid-await on speakLine().
+    cancelledRef.current = true;
+    // 2. Clear any pending timeout
     if (aiSimRef.current) { window.clearTimeout(aiSimRef.current); aiSimRef.current = null; }
+    // 3. Hard-cancel speech synthesis (twice — Safari sometimes ignores the first)
     cancelSpeech();
+    setTimeout(() => cancelSpeech(), 50);
     try {
       await supabase.functions.invoke('supernomad-call', { body: { action: 'end', callId } });
     } catch (e) { console.warn('end failed', e); }
@@ -108,13 +114,14 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
   // actually hears the call. We wait for each utterance to finish before
   // advancing so transcript & audio stay in sync.
   const startAiSimulation = useCallback((callId: string, callee: CallParty) => {
+    // Reset kill-switch for this fresh simulation
+    cancelledRef.current = false;
     const persona = callee.personaId ?? 'guest';
     const lines = SIM_SCRIPTS[persona] ?? SIM_SCRIPTS.guest;
     let idx = 0;
-    let cancelled = false;
 
     const playNext = async () => {
-      if (cancelled || idx >= lines.length) return;
+      if (cancelledRef.current || idx >= lines.length) return;
       const chunk = lines[idx++];
 
       // Persist transcript chunk (best-effort, fire-and-forget)
@@ -123,6 +130,7 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       }).catch(() => {});
 
       // Update UI immediately so the caption appears as it's spoken
+      if (cancelledRef.current) return;
       setActiveCall(c => c && c.id === callId
         ? { ...c, transcript: [...(c.transcript ?? []), chunk], status: 'in_progress' }
         : c);
@@ -131,21 +139,23 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       // delay if SpeechSynthesis isn't available (e.g. some embedded webviews)
       if (isSpeechAvailable()) {
         await speakLine(chunk.text, chunk.role === 'ai' ? 'ai' : 'user', persona);
+        if (cancelledRef.current) return;
         // Small natural pause between speakers
         await new Promise<void>(r => { aiSimRef.current = window.setTimeout(r, 350); });
       } else {
         await new Promise<void>(r => { aiSimRef.current = window.setTimeout(r, 2400 + Math.random() * 1500); });
       }
-      if (!cancelled) playNext();
+      if (!cancelledRef.current) playNext();
     };
 
-    // Track cancellation via ref so end()/cleanup stops the chain
     aiSimRef.current = window.setTimeout(() => { playNext(); }, 600);
-    return () => { cancelled = true; cancelSpeech(); };
   }, []);
 
   // Stop speech if component unmounts mid-call
-  useEffect(() => () => { cancelSpeech(); }, []);
+  useEffect(() => () => {
+    cancelledRef.current = true;
+    cancelSpeech();
+  }, []);
 
   return { history, activeCall, busy, lastError, initiate, end, refreshHistory, setActiveCall };
 }
