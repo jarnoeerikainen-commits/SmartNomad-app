@@ -92,7 +92,15 @@ export const speakLine = (
 /** Cancel any in-flight or queued speech immediately. */
 export const cancelSpeech = () => {
   if (!isSpeechAvailable()) return;
-  try { window.speechSynthesis.cancel(); } catch { /* noop */ }
+  try {
+    // Some engines need resume() before cancel() reliably flushes
+    // a paused/in-flight utterance (notably Chromium on Linux).
+    window.speechSynthesis.resume();
+    window.speechSynthesis.cancel();
+    // Double-cancel guards against Safari race where the first cancel
+    // is swallowed if called during the boundary event.
+    setTimeout(() => { try { window.speechSynthesis.cancel(); } catch { /* noop */ } }, 0);
+  } catch { /* noop */ }
 };
 
 /**
