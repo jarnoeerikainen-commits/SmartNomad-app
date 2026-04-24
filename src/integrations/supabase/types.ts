@@ -71,6 +71,63 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_ai_director_runs: {
+        Row: {
+          completed_at: string | null
+          director: Database["public"]["Enums"]["director_role"]
+          error: string | null
+          id: string
+          input_tokens: number
+          latency_ms: number
+          model: string | null
+          notes: Json
+          opportunities_created: number
+          output_tokens: number
+          pushed_recommendations: number
+          scope: string
+          sponsor_packages_created: number
+          started_at: string
+          status: string
+          trigger: string
+        }
+        Insert: {
+          completed_at?: string | null
+          director: Database["public"]["Enums"]["director_role"]
+          error?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string | null
+          notes?: Json
+          opportunities_created?: number
+          output_tokens?: number
+          pushed_recommendations?: number
+          scope?: string
+          sponsor_packages_created?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Update: {
+          completed_at?: string | null
+          director?: Database["public"]["Enums"]["director_role"]
+          error?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string | null
+          notes?: Json
+          opportunities_created?: number
+          output_tokens?: number
+          pushed_recommendations?: number
+          scope?: string
+          sponsor_packages_created?: number
+          started_at?: string
+          status?: string
+          trigger?: string
+        }
+        Relationships: []
+      }
       admin_ai_insights: {
         Row: {
           acknowledged_at: string | null
@@ -122,6 +179,105 @@ export type Database = {
           status?: string
           summary?: string
           title?: string
+        }
+        Relationships: []
+      }
+      admin_ai_opportunities: {
+        Row: {
+          category: string
+          city: string | null
+          concierge_offer: Json
+          country: string | null
+          created_at: string
+          currency: string
+          director: Database["public"]["Enums"]["director_role"]
+          end_at: string | null
+          est_audience: number | null
+          est_ticket_price_max: number | null
+          est_ticket_price_min: number | null
+          exclusivity_score: number
+          expires_at: string | null
+          id: string
+          metadata: Json
+          popularity_score: number
+          pushed_to_concierge: boolean
+          pushed_to_sales: boolean
+          sales_target_segments: Json
+          source: string | null
+          source_run_id: string | null
+          sponsor_packages: Json
+          start_at: string | null
+          status: string
+          summary: string
+          tags: string[]
+          title: string
+          url: string | null
+          venue: string | null
+          vip_packages: Json
+        }
+        Insert: {
+          category: string
+          city?: string | null
+          concierge_offer?: Json
+          country?: string | null
+          created_at?: string
+          currency?: string
+          director: Database["public"]["Enums"]["director_role"]
+          end_at?: string | null
+          est_audience?: number | null
+          est_ticket_price_max?: number | null
+          est_ticket_price_min?: number | null
+          exclusivity_score?: number
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          popularity_score?: number
+          pushed_to_concierge?: boolean
+          pushed_to_sales?: boolean
+          sales_target_segments?: Json
+          source?: string | null
+          source_run_id?: string | null
+          sponsor_packages?: Json
+          start_at?: string | null
+          status?: string
+          summary: string
+          tags?: string[]
+          title: string
+          url?: string | null
+          venue?: string | null
+          vip_packages?: Json
+        }
+        Update: {
+          category?: string
+          city?: string | null
+          concierge_offer?: Json
+          country?: string | null
+          created_at?: string
+          currency?: string
+          director?: Database["public"]["Enums"]["director_role"]
+          end_at?: string | null
+          est_audience?: number | null
+          est_ticket_price_max?: number | null
+          est_ticket_price_min?: number | null
+          exclusivity_score?: number
+          expires_at?: string | null
+          id?: string
+          metadata?: Json
+          popularity_score?: number
+          pushed_to_concierge?: boolean
+          pushed_to_sales?: boolean
+          sales_target_segments?: Json
+          source?: string | null
+          source_run_id?: string | null
+          sponsor_packages?: Json
+          start_at?: string | null
+          status?: string
+          summary?: string
+          tags?: string[]
+          title?: string
+          url?: string | null
+          venue?: string | null
+          vip_packages?: Json
         }
         Relationships: []
       }
@@ -4239,6 +4395,7 @@ export type Database = {
           urgent_recommendations: number
         }[]
       }
+      get_directors_summary: { Args: never; Returns: Json }
       get_latest_admin_report: {
         Args: { p_timeframe?: string }
         Returns: {
@@ -4545,6 +4702,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "premium" | "user"
+      director_role: "events" | "sports" | "vip"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4673,6 +4831,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "premium", "user"],
+      director_role: ["events", "sports", "vip"],
     },
   },
 } as const
