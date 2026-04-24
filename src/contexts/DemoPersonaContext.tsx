@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { DEMO_PERSONAS, DemoPersona } from '@/data/demoPersonas';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { DEMO_PERSONAS, DemoPersona, refreshDemoPersonas } from '@/data/demoPersonas';
 import { MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, getAwardCardsAIContext } from '@/data/awardProgramsData';
+import { CalendarService } from '@/services/CalendarService';
 
 interface DemoPersonaContextType {
   activePersona: DemoPersona | null;
@@ -123,8 +124,12 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
       // Store calendar
       localStorage.setItem('demoCalendar', JSON.stringify(p.calendar));
-      // Store AI context
+      // Store AI context (dynamically built from today's date)
       localStorage.setItem('demoAiContext', p.aiContext);
+      // Re-seed the unified calendar so reminders + concierge stay future-anchored
+      try {
+        CalendarService.reseedDemoPersona(id);
+      } catch { /* ignore */ }
       // Demo personas are always adults — bypass age gate
       localStorage.setItem('ageGroup', 'adult');
       localStorage.setItem('hasSeenOnboarding', 'true');
@@ -139,6 +144,27 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Don't clear userProfile/enhancedProfile — let user keep their own data
     }
   }, []);
+
+  // Day-rollover watcher: when local date changes, regenerate the persona
+  // snapshot so calendar + AI context always speak in future tense.
+  useEffect(() => {
+    if (!activePersonaId) return;
+    const dayKey = () => {
+      const t = new Date();
+      return `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}`;
+    };
+    let lastDay = dayKey();
+    const interval = window.setInterval(() => {
+      const current = dayKey();
+      if (current !== lastDay) {
+        lastDay = current;
+        refreshDemoPersonas();
+        // Re-apply the persona to refresh localStorage + calendar seed
+        setPersona(activePersonaId as 'meghan' | 'john');
+      }
+    }, 60_000); // check every minute — cheap
+    return () => window.clearInterval(interval);
+  }, [activePersonaId, setPersona]);
 
   const activePersona = activePersonaId ? DEMO_PERSONAS[activePersonaId] || null : null;
 

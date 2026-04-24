@@ -154,6 +154,16 @@ const nextOccurrence = (today: Date, month: number, day: number): Date => {
   return candidate;
 };
 
+// Format helpers used by the dynamic AI context builder
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const formatShort = (d: Date) => `${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+const formatLong = (d: Date) => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const formatRange = (start: Date, days: number) => {
+  const end = addDays(start, Math.max(0, days - 1));
+  if (start.getMonth() === end.getMonth()) return `${MONTH_NAMES[start.getMonth()]} ${start.getDate()}-${end.getDate()}`;
+  return `${formatShort(start)} – ${formatShort(end)}`;
+};
+
 const generateMeghanCalendar = (): DemoCalendarEvent[] => {
   const events: DemoCalendarEvent[] = [];
   const today = new Date();
@@ -372,7 +382,7 @@ const generateJohnCalendar = (): DemoCalendarEvent[] => {
   return events;
 };
 
-export const DEMO_PERSONAS: Record<string, DemoPersona> = {
+const DEMO_PERSONAS_BASE: Record<string, DemoPersona> = {
   meghan: {
     id: 'meghan',
     label: 'Business Woman',
@@ -821,4 +831,140 @@ LIFESTYLE: Serious triathlete — swims 3km, bikes 60km, runs 8km daily. Races: 
 
 PERSONALITY: Action-oriented, values efficiency, family-first when not working. Needs help coordinating family logistics alongside heavy business travel. Appreciates proactive suggestions about reward point usage, seat selection, family restaurants, children's activities, relocation services, and race logistics.`,
   },
+};
+
+// ───────────────────────────────────────────────────────────────
+// DYNAMIC PERSONA WRAPPER
+// Both `calendar` and `aiContext` are derived from TODAY every time
+// a persona is read. This guarantees:
+//   • The concierge always speaks in future tense (no stale "Mar 2"
+//     dates frozen at module load).
+//   • Birthdays & annual events roll forward to their next occurrence.
+//   • If the user keeps a tab open across midnight, the next read
+//     returns a freshly anchored calendar.
+// We cache per UTC-day to avoid recomputing on every property read.
+// ───────────────────────────────────────────────────────────────
+
+const personaCache = new Map<string, { dayKey: string; persona: DemoPersona }>();
+
+const todayKey = () => {
+  const t = new Date();
+  return `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}`;
+};
+
+// Build dynamic upcomingTrips list from the freshly generated calendar.
+const buildUpcomingTrips = (calendar: DemoCalendarEvent[]): DemoPersona['travel']['upcomingTrips'] => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const travelEvents = calendar
+    .filter((e) => e.type === 'travel' && new Date(e.date) >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 12);
+  return travelEvents.map((e) => {
+    // Title looks like: "✈️ BA15 Business Class to Singapore (Seat 14A)"
+    const destMatch = e.title.match(/to\s+([A-Z][\w\s.\-']+?)(?:\s*\(|$)/);
+    const destination = destMatch ? destMatch[1].trim() : e.location;
+    const d = new Date(e.date);
+    return {
+      destination,
+      dates: `${formatShort(d)}, ${d.getFullYear()}`,
+      purpose: e.title.replace(/^[✈️🚄\s]+/u, '').slice(0, 80),
+    };
+  });
+};
+
+// Build the dynamic AI brief that gets injected into the concierge prompt.
+const buildAiContext = (
+  base: DemoPersona,
+  calendar: DemoCalendarEvent[],
+): string => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayLabel = formatLong(today);
+
+  // Next 8 travel events as concrete future references
+  const upcomingTravel = calendar
+    .filter((e) => e.type === 'travel' && new Date(e.date) >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 8)
+    .map((e) => {
+      const d = new Date(e.date);
+      const destMatch = e.title.match(/to\s+([A-Z][\w\s.\-']+?)(?:\s*\(|$)/);
+      const dest = destMatch ? destMatch[1].trim() : e.location;
+      return `${dest} (${formatShort(d)})`;
+    })
+    .join(', ');
+
+  // Next 5 birthdays / annual events
+  const upcomingMilestones = calendar
+    .filter((e) => ['birthday', 'gala', 'holiday'].includes(e.type) && new Date(e.date) >= today)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 5)
+    .map((e) => `${e.title.replace(/^[🎂🎄🎆🎭💐🥂🇺🇸🇸🇬🦃\s]+/u, '').slice(0, 60)} (${formatShort(new Date(e.date))})`)
+    .join('; ');
+
+  // Inject a fresh "today" header + dynamic future references in front of
+  // the static persona brief, then strip the original "Next trips: ..." line
+  // so the AI never sees stale anchor dates.
+  const cleaned = base.aiContext
+    .replace(/Next trips:[^.]*\./i, '')
+    .replace(/\s{2,}/g, ' ');
+
+  return [
+    `TODAY IS ${todayLabel}. All dates below are forward-looking — never refer to events in the past tense.`,
+    `UPCOMING TRAVEL (next 90 days): ${upcomingTravel || 'No travel scheduled.'}`,
+    `UPCOMING MILESTONES: ${upcomingMilestones || 'None in the next 90 days.'}`,
+    '',
+    cleaned,
+  ].join('\n');
+};
+
+const buildPersona = (id: string): DemoPersona | undefined => {
+  const base = DEMO_PERSONAS_BASE[id];
+  if (!base) return undefined;
+  // Always regenerate calendar from today — generators are pure, ~O(few hundred items)
+  const calendar =
+    id === 'meghan' ? generateMeghanCalendar() :
+    id === 'john'   ? generateJohnCalendar()   :
+    base.calendar;
+
+  return {
+    ...base,
+    calendar,
+    travel: { ...base.travel, upcomingTrips: buildUpcomingTrips(calendar) },
+    aiContext: buildAiContext(base, calendar),
+  };
+};
+
+const getPersona = (id: string): DemoPersona | undefined => {
+  const key = todayKey();
+  const cached = personaCache.get(id);
+  if (cached && cached.dayKey === key) return cached.persona;
+  const fresh = buildPersona(id);
+  if (fresh) personaCache.set(id, { dayKey: key, persona: fresh });
+  return fresh;
+};
+
+export const DEMO_PERSONAS: Record<string, DemoPersona> = new Proxy(DEMO_PERSONAS_BASE, {
+  get(_target, prop: string) {
+    if (typeof prop !== 'string') return undefined;
+    return getPersona(prop);
+  },
+  ownKeys(target) {
+    return Reflect.ownKeys(target);
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    if (prop in target) {
+      return { enumerable: true, configurable: true, value: getPersona(prop as string) };
+    }
+    return undefined;
+  },
+  has(target, prop) {
+    return prop in target;
+  },
+}) as Record<string, DemoPersona>;
+
+/** Force-refresh the cached persona snapshots (e.g. on day rollover). */
+export const refreshDemoPersonas = (): void => {
+  personaCache.clear();
 };
