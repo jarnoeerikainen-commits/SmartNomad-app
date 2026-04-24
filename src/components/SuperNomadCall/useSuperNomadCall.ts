@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { CallParty, CallLane, CallSession } from './types';
+import { speakLine, cancelSpeech, primeSpeech, isSpeechAvailable } from './speech';
 
 interface UseSuperNomadCallOpts {
   isDemo: boolean;
@@ -52,6 +53,11 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       setLastError('No active caller — pick a demo persona or sign in');
       return null;
     }
+    // CRITICAL: prime the SpeechSynthesis engine inside the user-gesture
+    // chain BEFORE any async work. This unlocks audio on iOS / Safari /
+    // Chrome autoplay policy so later .speak() calls actually produce sound.
+    primeSpeech();
+
     setBusy(true); setLastError(null);
     try {
       const { data, error } = await supabase.functions.invoke('supernomad-call', {
@@ -85,6 +91,7 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
 
   const end = useCallback(async (callId: string) => {
     if (aiSimRef.current) { window.clearTimeout(aiSimRef.current); aiSimRef.current = null; }
+    cancelSpeech();
     try {
       await supabase.functions.invoke('supernomad-call', { body: { action: 'end', callId } });
     } catch (e) { console.warn('end failed', e); }
@@ -94,23 +101,48 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
 
   // ─── AI concierge demo simulator ──────────────────────────
   // Plays a short, persona-aware conversation so the demo feels alive.
+  // Each line is SPOKEN via the browser's SpeechSynthesis API so the user
+  // actually hears the call. We wait for each utterance to finish before
+  // advancing so transcript & audio stay in sync.
   const startAiSimulation = useCallback((callId: string, callee: CallParty) => {
     const persona = callee.personaId ?? 'guest';
     const lines = SIM_SCRIPTS[persona] ?? SIM_SCRIPTS.guest;
     let idx = 0;
-    const playNext = () => {
-      if (idx >= lines.length) return;
+    let cancelled = false;
+
+    const playNext = async () => {
+      if (cancelled || idx >= lines.length) return;
       const chunk = lines[idx++];
+
+      // Persist transcript chunk (best-effort, fire-and-forget)
       supabase.functions.invoke('supernomad-call', {
         body: { action: 'append_transcript', callId, transcriptChunk: chunk },
       }).catch(() => {});
+
+      // Update UI immediately so the caption appears as it's spoken
       setActiveCall(c => c && c.id === callId
         ? { ...c, transcript: [...(c.transcript ?? []), chunk], status: 'in_progress' }
         : c);
-      aiSimRef.current = window.setTimeout(playNext, 2400 + Math.random() * 1500);
+
+      // Speak — wait for end before next line. Falls back to a fixed
+      // delay if SpeechSynthesis isn't available (e.g. some embedded webviews)
+      if (isSpeechAvailable()) {
+        await speakLine(chunk.text, chunk.role === 'ai' ? 'ai' : 'user', persona);
+        // Small natural pause between speakers
+        await new Promise<void>(r => { aiSimRef.current = window.setTimeout(r, 350); });
+      } else {
+        await new Promise<void>(r => { aiSimRef.current = window.setTimeout(r, 2400 + Math.random() * 1500); });
+      }
+      if (!cancelled) playNext();
     };
-    aiSimRef.current = window.setTimeout(playNext, 900);
+
+    // Track cancellation via ref so end()/cleanup stops the chain
+    aiSimRef.current = window.setTimeout(() => { playNext(); }, 600);
+    return () => { cancelled = true; cancelSpeech(); };
   }, []);
+
+  // Stop speech if component unmounts mid-call
+  useEffect(() => () => { cancelSpeech(); }, []);
 
   return { history, activeCall, busy, lastError, initiate, end, refreshHistory, setActiveCall };
 }
