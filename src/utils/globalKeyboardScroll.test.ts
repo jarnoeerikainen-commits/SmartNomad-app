@@ -19,9 +19,10 @@ function makeScrollable() {
     scrollHeight: { value: 1200, configurable: true },
   });
   scrollable.scrollTop = 0;
-  scrollable.scrollBy = vi.fn(({ top }: ScrollToOptions) => {
-    scrollable.scrollTop += top ?? 0;
+  const scrollByMock = vi.fn((options?: ScrollToOptions | number, y?: number) => {
+    scrollable.scrollTop += typeof options === 'number' ? y ?? 0 : options?.top ?? 0;
   });
+  scrollable.scrollBy = scrollByMock as typeof scrollable.scrollBy;
   document.body.appendChild(scrollable);
   return scrollable;
 }
