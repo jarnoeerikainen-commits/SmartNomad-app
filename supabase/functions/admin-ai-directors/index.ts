@@ -296,6 +296,21 @@ GROUND RULES (Evidence-First / Source of Truth):
   };
 }
 
+const cleanText = (value: unknown, max = 500) =>
+  typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
+
+const cleanIso = (value: unknown) => {
+  const text = cleanText(value, 80);
+  if (!text) return null;
+  const time = Date.parse(text);
+  return Number.isFinite(time) ? new Date(time).toISOString() : null;
+};
+
+const cleanPackages = (value: unknown) => Array.isArray(value) ? value.slice(0, 4) : [];
+
+const cleanStringArray = (value: unknown, limit = 12) =>
+  Array.isArray(value) ? value.map((item) => String(item).trim()).filter(Boolean).slice(0, limit) : [];
+
 // ─── Persist opportunities + queue recommendations ────────────────────
 async function persist(director: Director, runId: string, ops: any[]) {
   if (!ops.length) return { opportunities_created: 0, sponsor_packages_created: 0, pushed_recommendations: 0 };
@@ -305,12 +320,12 @@ async function persist(director: Director, runId: string, ops: any[]) {
     category: String(o.category ?? "other").toLowerCase(),
     title: String(o.title).slice(0, 200),
     summary: String(o.summary ?? "").slice(0, 1500),
-    city: o.city ?? null,
-    country: o.country ?? null,
-    venue: o.venue ?? null,
-    start_at: o.start_at ?? null,
-    end_at: o.end_at ?? null,
-    url: o.url ?? null,
+    city: cleanText(o.city, 120),
+    country: cleanText(o.country, 120),
+    venue: cleanText(o.venue, 180),
+    start_at: cleanIso(o.start_at),
+    end_at: cleanIso(o.end_at),
+    url: cleanText(o.url, 500),
     source: "ai_synth",
     popularity_score: Math.min(100, Math.max(0, Number(o.popularity_score ?? 50))),
     exclusivity_score: Math.min(100, Math.max(0, Number(o.exclusivity_score ?? 50))),
@@ -318,11 +333,11 @@ async function persist(director: Director, runId: string, ops: any[]) {
     est_ticket_price_min: o.est_ticket_price_min ?? null,
     est_ticket_price_max: o.est_ticket_price_max ?? null,
     currency: (o.currency ?? "USD").toUpperCase().slice(0, 3),
-    vip_packages: o.vip_packages ?? [],
-    sponsor_packages: o.sponsor_packages ?? [],
-    concierge_offer: o.concierge_offer ?? {},
-    sales_target_segments: o.sales_target_segments ?? [],
-    tags: Array.isArray(o.tags) ? o.tags.slice(0, 12) : [],
+    vip_packages: cleanPackages(o.vip_packages),
+    sponsor_packages: cleanPackages(o.sponsor_packages),
+    concierge_offer: typeof o.concierge_offer === "object" && o.concierge_offer ? o.concierge_offer : {},
+    sales_target_segments: cleanStringArray(o.sales_target_segments),
+    tags: cleanStringArray(o.tags),
     source_run_id: runId,
     metadata: { notes: o.notes ?? null },
     expires_at: new Date(Date.now() + 60 * 86400_000).toISOString(),
