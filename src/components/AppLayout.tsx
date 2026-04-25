@@ -229,12 +229,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const handleSectionChange = useCallback((section: string) => {
     setActiveSection(section);
     setBottomNavTab('home');
+    setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const handleBottomNavChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const renderBottomNavContent = () => {
