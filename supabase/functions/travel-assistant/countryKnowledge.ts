@@ -1147,19 +1147,6 @@ export const COUNTRY_DATABASE: Record<string, CountryInfo> = {
     safetyNotes: "Safe. Belgrade very walkable. Don't discuss Kosovo politics. Nightlife goes until sunrise.",
     taxResidencyDays: 183,
     utcOffset: "+1"
-  },
-  "portugal": {
-    currency: "EUR (€). Cards widely accepted. MB Way popular.",
-    language: "Portuguese. Good English.",
-    emergency: "112",
-    businessHours: "Mon-Fri 9AM-6PM. Lunch 1-2:30PM.",
-    tipping: "5-10%. Not expected.",
-    culturalNotes: "Fado music. Pastel de nata. Coffee culture.",
-    manners: "Friendly, warm. Don't compare to Spain.",
-    dressCode: "Relaxed casual.",
-    safetyNotes: "Very safe. Digital nomad visa available.",
-    taxResidencyDays: 183,
-    utcOffset: "0"
   }
 };
 
