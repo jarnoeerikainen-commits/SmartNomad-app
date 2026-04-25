@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 // ═══════════════════════════════════════════════════════════
 // SuperNomad Call — unified call orchestration
@@ -19,13 +19,19 @@ const TWILIO_FROM = Deno.env.get('TWILIO_PHONE_NUMBER');
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+type Party = { kind: string; id: string; personaId?: string; userId?: string; deviceId?: string; phone?: string };
+type SignalType = 'offer' | 'answer' | 'ice' | 'hangup' | 'renegotiate';
+type PresenceStatus = 'online' | 'busy' | 'offline';
+
 interface CallRequest {
-  action: 'initiate' | 'answer' | 'end' | 'append_transcript' | 'send_message' | 'list_history';
+  action:
+    | 'initiate' | 'answer' | 'reject' | 'end' | 'append_transcript' | 'send_message' | 'list_history'
+    | 'heartbeat_presence' | 'send_signal' | 'list_signals' | 'mark_signal_consumed' | 'readiness';
   // initiate
   lane?: 'ai_concierge' | 'p2p' | 'pstn_outbound' | 'group_sfu';
   callKind?: 'voice' | 'video' | 'message_only';
-  caller?: { kind: string; id: string; personaId?: string; userId?: string; deviceId?: string };
-  callee?: { kind: string; id: string; personaId?: string; userId?: string; phone?: string };
+  caller?: Party;
+  callee?: Party;
   isDemo?: boolean;
   reason?: string;
   // shared
@@ -38,6 +44,13 @@ interface CallRequest {
   personaId?: string;
   userId?: string;
   limit?: number;
+  // production readiness
+  signalType?: SignalType;
+  signalPayload?: Record<string, unknown>;
+  recipientUserId?: string;
+  signalId?: string;
+  presence?: PresenceStatus;
+  deviceId?: string;
 }
 
 serve(async (req) => {
@@ -45,14 +58,21 @@ serve(async (req) => {
 
   try {
     const body: CallRequest = await req.json();
+    const auth = await getAuthContext(req);
 
     switch (body.action) {
-      case 'initiate':       return json(await initiateCall(body));
-      case 'answer':         return json(await answerCall(body.callId!));
-      case 'end':            return json(await endCall(body.callId!));
+      case 'initiate':       return json(await initiateCall(body, auth.userId));
+      case 'answer':         return json(await answerCall(body.callId!, auth.userId));
+      case 'reject':         return json(await rejectCall(body.callId!, auth.userId));
+      case 'end':            return json(await endCall(body.callId!, auth.userId));
       case 'append_transcript': return json(await appendTranscript(body.callId!, body.transcriptChunk!));
       case 'send_message':   return json(await sendMessage(body));
-      case 'list_history':   return json(await listHistory(body));
+      case 'list_history':   return json(await listHistory(body, auth.userId));
+      case 'heartbeat_presence': return json(await heartbeatPresence(body, auth.userId));
+      case 'send_signal':    return json(await sendSignal(body, auth.userId));
+      case 'list_signals':   return json(await listSignals(body, auth.userId));
+      case 'mark_signal_consumed': return json(await markSignalConsumed(body, auth.userId));
+      case 'readiness':      return json(await readiness());
       default:
         return json({ error: 'unknown_action' }, 400);
     }
