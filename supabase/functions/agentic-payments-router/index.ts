@@ -15,6 +15,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.50.0";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.50.0";
 import {
   selectProtocol, generateIntentId, issueVirtualCard,
   buildX402Required, encodeX402Required, encodeX402Settlement,
@@ -40,6 +41,16 @@ interface RouterRequest {
   intentId?: string;
   userApproved?: boolean;
 }
+
+type AppSupabaseClient = SupabaseClient<any, "public", any>;
+type GuardrailResult = {
+  approved: boolean;
+  auto_execute?: boolean;
+  requires_user_approval: boolean;
+  guardrail_id?: string | null;
+  reason?: string;
+};
+type DbRow = Record<string, any>;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
@@ -108,7 +119,7 @@ async function handleQuote(body: RouterRequest) {
 }
 
 // ─── Action: authorize ────────────────────────────────────
-async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleAuthorize(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.payment) throw new Error('payment field required for authorize');
   if (!userId) {
     // Demo / device-only mode → return a non-persisted preview
@@ -130,7 +141,7 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
   const quote = selectProtocol(body.payment);
 
   // Evaluate guardrail
-  const { data: guardrailResult, error: gErr } = await supabase.rpc('evaluate_agentic_guardrail', {
+  const { data: rawGuardrailResult, error: gErr } = await supabase.rpc('evaluate_agentic_guardrail', {
     p_user_id: userId,
     p_amount: body.payment.amount,
     p_currency: body.payment.currency,
@@ -138,6 +149,7 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
     p_protocol: quote.protocol,
   });
   if (gErr) throw new Error(`guardrail evaluation failed: ${gErr.message}`);
+  const guardrailResult = rawGuardrailResult as GuardrailResult;
 
   const intentId = generateIntentId();
 
@@ -174,8 +186,9 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
       .select('id, last4')
       .single();
     if (cardErr) throw new Error(`virtual card insert failed: ${cardErr.message}`);
-    virtualCardId = cardRow.id;
-    virtualCardLast4 = cardRow.last4;
+    const typedCardRow = cardRow as { id: string; last4: string };
+    virtualCardId = typedCardRow.id;
+    virtualCardLast4 = typedCardRow.last4;
   }
 
   const { data: intent, error: iErr } = await supabase
@@ -215,17 +228,28 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
 }
 
 // ─── Action: execute ──────────────────────────────────────
-async function handleExecute(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleExecute(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required for execute');
   if (!userId) throw new Error('authentication required to execute payments');
 
-  const { data: intent, error: fErr } = await supabase
+  const { data: rawIntent, error: fErr } = await supabase
     .from('agentic_payment_intents')
-    .select('*, agentic_virtual_cards(*)')
+    .select('*')
     .eq('intent_id', body.intentId)
     .eq('user_id', userId)
     .single();
-  if (fErr || !intent) throw new Error(`intent not found: ${body.intentId}`);
+  if (fErr || !rawIntent) throw new Error(`intent not found: ${body.intentId}`);
+  const intent = rawIntent as DbRow;
+
+  let virtualCardLast4: string | null = null;
+  if (intent.virtual_card_id) {
+    const { data: card } = await supabase
+      .from('agentic_virtual_cards')
+      .select('last4')
+      .eq('id', intent.virtual_card_id)
+      .maybeSingle();
+    virtualCardLast4 = (card as { last4?: string } | null)?.last4 ?? null;
+  }
 
   if (intent.status === 'completed') {
     return { success: true, alreadyCompleted: true, intent };
@@ -275,7 +299,7 @@ async function handleExecute(supabase: ReturnType<typeof createClient>, body: Ro
       status: 'completed',
       ai_initiated: intent.ai_initiated,
       user_approved: true,
-      virtual_card_last4: intent.agentic_virtual_cards?.last4 ?? null,
+      virtual_card_last4: virtualCardLast4,
       crypto_network: intent.protocol === 'x402' ? 'base' : null,
       crypto_tx_hash: intent.protocol === 'x402' ? receipt?.transaction ?? null : null,
       trust_score: intent.trust_score,
@@ -289,15 +313,23 @@ async function handleExecute(supabase: ReturnType<typeof createClient>, body: Ro
 }
 
 // ─── Action: refund ───────────────────────────────────────
-async function handleRefund(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleRefund(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required');
   if (!userId) throw new Error('authentication required');
+
+  const { data: rawIntent, error: intentErr } = await supabase
+    .from('agentic_payment_intents')
+    .select('id')
+    .eq('intent_id', body.intentId)
+    .eq('user_id', userId)
+    .single();
+  if (intentErr || !rawIntent) throw new Error(`intent not found: ${body.intentId}`);
+  const intent = rawIntent as { id: string };
 
   const { data: txn, error } = await supabase
     .from('agentic_transactions')
     .update({ status: 'refunded' })
-    .eq('intent_id', (await supabase
-      .from('agentic_payment_intents').select('id').eq('intent_id', body.intentId).eq('user_id', userId).single()).data?.id)
+    .eq('intent_id', intent.id)
     .eq('user_id', userId)
     .select()
     .single();
@@ -312,7 +344,7 @@ async function handleRefund(supabase: ReturnType<typeof createClient>, body: Rou
 }
 
 // ─── Action: status ───────────────────────────────────────
-async function handleStatus(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleStatus(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required');
   if (!userId) throw new Error('authentication required');
 

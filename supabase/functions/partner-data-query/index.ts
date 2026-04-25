@@ -197,7 +197,7 @@ Deno.serve(async (req) => {
         });
       }
 
-      const safeRows = (rows ?? []).map(anonymizeRow);
+      const safeRows = ((rows ?? []) as unknown as Record<string, unknown>[]).map(anonymizeRow);
       recordsReturned = safeRows.length;
 
       // Audit log per-subject

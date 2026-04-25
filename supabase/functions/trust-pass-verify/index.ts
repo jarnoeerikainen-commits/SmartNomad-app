@@ -47,7 +47,7 @@ function validate(body: unknown): { ok: true; data: VerifyRequest } | { ok: fals
   if (typeof b.purpose !== "string" || b.purpose.length < 3 || b.purpose.length > 200) {
     return { ok: false, error: "purpose required (3-200 chars)" };
   }
-  return { ok: true, data: b as VerifyRequest };
+  return { ok: true, data: b as unknown as VerifyRequest };
 }
 
 Deno.serve(async (req: Request) => {

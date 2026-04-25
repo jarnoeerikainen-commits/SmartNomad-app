@@ -361,7 +361,7 @@ Deno.serve(async (req) => {
         partner: partner.partner_name,
         tier: partner.tier,
         status: 'operational',
-        availableResources: [],
+        availableResources: [] as Array<{ resource: string; category: string | null; permission: string; maxRecords: number; piiAnonymized: boolean }>,
         documentation: 'https://docs.supernomad.com/api',
         timestamp: new Date().toISOString(),
       };

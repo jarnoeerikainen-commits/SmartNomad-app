@@ -9,6 +9,7 @@
 // Standards: W3C Verifiable Credentials 2.0, SD-JWT-VC, OID4VC, OID4VP, eIDAS 2.0.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import {
   computeTierFromTypes,
   deriveCredentialId,
@@ -78,20 +79,20 @@ function validateBody(body: unknown): { ok: true; data: RequestBody } | { ok: fa
       if (typeof b.did !== "string" || !b.did.startsWith("did:")) {
         return { ok: false, error: "did must be a valid DID string" };
       }
-      return { ok: true, data: b as IssueRequestBody };
+      return { ok: true, data: b as unknown as IssueRequestBody };
     }
     case "verify":
       if (typeof b.jwt !== "string" || b.jwt.split(".").length !== 3) {
         return { ok: false, error: "jwt must be a compact JWS (3 base64url segments)" };
       }
-      return { ok: true, data: b as VerifyRequestBody };
+      return { ok: true, data: b as unknown as VerifyRequestBody };
     case "revoke":
       if (typeof b.credential_id !== "string" || !b.credential_id.startsWith("urn:")) {
         return { ok: false, error: "credential_id must be a urn:uuid:* string" };
       }
-      return { ok: true, data: b as RevokeRequestBody };
+      return { ok: true, data: b as unknown as RevokeRequestBody };
     case "status":
-      return { ok: true, data: b as StatusRequestBody };
+      return { ok: true, data: b as unknown as StatusRequestBody };
     default:
       return { ok: false, error: `unknown action: ${b.action}` };
   }
@@ -115,7 +116,7 @@ function defaultClaims(type: CredentialType): Record<string, unknown> {
   }
 }
 
-async function issueCredential(body: IssueRequestBody, supabase: ReturnType<typeof createClient>) {
+async function issueCredential(body: IssueRequestBody, supabase: SupabaseClient<any, "public", any>) {
   const now = Math.floor(Date.now() / 1000);
   const oneYear = 365 * 24 * 60 * 60;
   const credentialId = deriveCredentialId(body.did, body.type);
