@@ -44,6 +44,7 @@ serve(async (req) => {
       citizenship: sanitize(body.userContext.citizenship),
       language: sanitize(body.userContext.language, 50),
       cultural: (body.userContext.cultural && typeof body.userContext.cultural === 'object') ? body.userContext.cultural : undefined,
+      lifestyle: (body.userContext.lifestyle && typeof body.userContext.lifestyle === 'object') ? body.userContext.lifestyle : undefined,
     } : undefined;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
