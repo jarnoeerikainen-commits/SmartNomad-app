@@ -145,6 +145,7 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -158,6 +159,33 @@
     overflow-x: hidden;
     padding-top: env(safe-area-inset-top, 0px);
     overscroll-behavior-y: contain;
+    cursor: default;
+  }
+
+  input,
+  textarea,
+  [contenteditable="true"] {
+    caret-color: hsl(var(--primary));
+  }
+
+  button,
+  a,
+  [role="button"],
+  [role="tab"],
+  [role="menuitem"],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
   }
 
   /* Prevent any descendant from forcing horizontal scroll on mobile */
