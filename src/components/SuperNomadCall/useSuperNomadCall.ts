@@ -63,6 +63,9 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
 
     setBusy(true); setLastError(null);
     try {
+      if (!isDemo && lane === 'p2p' && (!selfParty.userId || !callee.userId)) {
+        throw new Error('Real user-to-user calls require both people to be signed-in SuperNomad members.');
+      }
       const { data, error } = await supabase.functions.invoke('supernomad-call', {
         body: {
           action: 'initiate',
@@ -91,6 +94,18 @@ export function useSuperNomadCall({ isDemo, selfParty }: UseSuperNomadCallOpts) 
       setBusy(false);
     }
   }, [isDemo, selfParty]);
+
+  useEffect(() => {
+    if (isDemo || !selfParty?.userId) return;
+    const heartbeat = () => {
+      supabase.functions.invoke('supernomad-call', {
+        body: { action: 'heartbeat_presence', presence: activeCall ? 'busy' : 'online', callId: activeCall?.id, deviceId: selfParty.deviceId },
+      }).catch(() => {});
+    };
+    heartbeat();
+    const id = window.setInterval(heartbeat, 30000);
+    return () => window.clearInterval(id);
+  }, [activeCall?.id, isDemo, selfParty?.deviceId, selfParty?.userId]);
 
   const end = useCallback(async (callId: string) => {
     // 1. Flip kill-switch FIRST — this stops the simulation chain
