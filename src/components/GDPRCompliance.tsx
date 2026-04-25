@@ -19,9 +19,28 @@ export const CookieConsent: React.FC = () => {
 
   useEffect(() => {
     const consent = localStorage.getItem('cookieConsent');
-    if (!consent) {
+    const demoConsent = localStorage.getItem('supernomad_demo_consent');
+    if (!consent && !demoConsent) {
       setIsVisible(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const acceptDemoConsent = () => {
+      const demoPreferences = {
+        necessary: true,
+        analytics: false,
+        marketing: false,
+        functional: true,
+      };
+      setPreferences(demoPreferences);
+      localStorage.setItem('cookieConsent', JSON.stringify(demoPreferences));
+      localStorage.setItem('supernomad_demo_consent', 'true');
+      setIsVisible(false);
+    };
+
+    window.addEventListener('supernomad:demo-consent', acceptDemoConsent);
+    return () => window.removeEventListener('supernomad:demo-consent', acceptDemoConsent);
   }, []);
 
   const acceptAll = () => {
