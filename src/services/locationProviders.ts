@@ -159,7 +159,7 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  return firstSuccessfulLocation([ipFromSupabaseFunction, ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
+  return firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud, ipFromSupabaseFunction]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------

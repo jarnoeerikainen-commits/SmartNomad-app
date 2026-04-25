@@ -133,6 +133,14 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Demo personas are always adults — bypass age gate
       localStorage.setItem('ageGroup', 'adult');
       localStorage.setItem('hasSeenOnboarding', 'true');
+      localStorage.setItem('cookieConsent', JSON.stringify({
+        necessary: true,
+        analytics: false,
+        marketing: false,
+        functional: true,
+      }));
+      localStorage.setItem('supernomad_demo_consent', 'true');
+      window.dispatchEvent(new CustomEvent('supernomad:demo-consent'));
       // Store award cards AI context for concierge
       const awardCards = id === 'meghan' ? MEGHAN_AWARD_CARDS : JOHN_AWARD_CARDS;
       localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));

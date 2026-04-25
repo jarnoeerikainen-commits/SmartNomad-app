@@ -15,6 +15,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { TrustProvider } from "./contexts/TrustContext";
 import SovereignConfirmation from "./components/trust/SovereignConfirmation";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
@@ -68,6 +69,7 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
           <BrowserRouter>
+          <ScrollToTop />
           <AuthProvider>
           <LocationProvider>
           <DemoPersonaProvider>
