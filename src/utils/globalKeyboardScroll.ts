@@ -54,9 +54,11 @@ function findScrollableAncestor(start: Element | null) {
 
 export function getKeyboardScrollTarget(target: EventTarget | null) {
   const element = target instanceof Element ? target : document.activeElement;
+  const appContainer = document.querySelector(SCROLLABLE_SELECTOR);
+
   return (
     findScrollableAncestor(element) ??
-    (document.querySelector(SCROLLABLE_SELECTOR) as HTMLElement | null) ??
+    (appContainer && canScroll(appContainer) ? (appContainer as HTMLElement) : null) ??
     (document.scrollingElement as HTMLElement | null) ??
     document.documentElement
   );
@@ -100,10 +102,17 @@ export function handleGlobalKeyboardScroll(event: KeyboardEvent) {
   const delta = getScrollDelta(event.key, target);
   if (!delta) return;
 
-  const before = target.scrollTop;
-  target.scrollBy({ top: delta, behavior: 'auto' });
+  const isDocumentTarget = target === document.documentElement || target === document.body || target === document.scrollingElement;
+  const before = isDocumentTarget ? window.scrollY : target.scrollTop;
 
-  if (target.scrollTop !== before) {
+  if (isDocumentTarget) {
+    window.scrollBy({ top: delta, behavior: 'auto' });
+  } else {
+    target.scrollBy({ top: delta, behavior: 'auto' });
+  }
+
+  const after = isDocumentTarget ? window.scrollY : target.scrollTop;
+  if (after !== before) {
     event.preventDefault();
   }
 }

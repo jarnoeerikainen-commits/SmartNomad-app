@@ -14,6 +14,7 @@ afterEach(() => {
 function makeScrollable() {
   const scrollable = document.createElement('main');
   scrollable.dataset.appScrollContainer = 'true';
+  scrollable.style.overflowY = 'auto';
   Object.defineProperties(scrollable, {
     clientHeight: { value: 400, configurable: true },
     scrollHeight: { value: 1200, configurable: true },
@@ -36,6 +37,18 @@ describe('globalKeyboardScroll', () => {
   it('uses the app scroll container as the fallback target', () => {
     const scrollable = makeScrollable();
     expect(getKeyboardScrollTarget(document.body)).toBe(scrollable);
+  });
+
+  it('falls back to document scrolling when the app container cannot scroll', () => {
+    const container = document.createElement('main');
+    container.dataset.appScrollContainer = 'true';
+    Object.defineProperties(container, {
+      clientHeight: { value: 400, configurable: true },
+      scrollHeight: { value: 400, configurable: true },
+    });
+    document.body.appendChild(container);
+
+    expect(getKeyboardScrollTarget(document.body)).toBe(document.scrollingElement ?? document.documentElement);
   });
 
   it('scrolls down with ArrowDown and prevents browser conflicts', () => {
