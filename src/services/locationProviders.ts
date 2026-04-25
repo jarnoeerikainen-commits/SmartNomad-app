@@ -8,7 +8,9 @@ import { LocationData } from '@/types/country';
  */
 
 const TIMEOUT_MS = 3500;
-const LOCATION_IP_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/location-ip`;
+const LOCATION_IP_FUNCTION_URL = import.meta.env.VITE_SUPABASE_URL
+  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/location-ip`
+  : '';
 
 const englishRegionNames =
   typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -140,6 +142,8 @@ async function ipFromBigDataCloud(): Promise<LocationData | null> {
 }
 
 async function ipFromSupabaseFunction(): Promise<LocationData | null> {
+  if (!LOCATION_IP_FUNCTION_URL) return null;
+
   try {
     const r = await fetchWithTimeout(LOCATION_IP_FUNCTION_URL);
     if (!r.ok) return null;
@@ -159,7 +163,7 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  return firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud, ipFromSupabaseFunction]);
+  return firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
