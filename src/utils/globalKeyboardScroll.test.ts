@@ -14,6 +14,7 @@ afterEach(() => {
 function makeScrollable() {
   const scrollable = document.createElement('main');
   scrollable.dataset.appScrollContainer = 'true';
+  scrollable.style.overflowY = 'auto';
   Object.defineProperties(scrollable, {
     clientHeight: { value: 400, configurable: true },
     scrollHeight: { value: 1200, configurable: true },
@@ -47,7 +48,7 @@ describe('globalKeyboardScroll', () => {
     });
     document.body.appendChild(container);
 
-    expect(getKeyboardScrollTarget(document.body)).toBe(document.scrollingElement);
+    expect(getKeyboardScrollTarget(document.body)).toBe(document.scrollingElement ?? document.documentElement);
   });
 
   it('scrolls down with ArrowDown and prevents browser conflicts', () => {
