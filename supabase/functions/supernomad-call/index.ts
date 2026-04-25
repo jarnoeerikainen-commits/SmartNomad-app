@@ -247,14 +247,73 @@ async function sendMessage(req: CallRequest) {
 }
 
 // ─── History ──────────────────────────────────────────────
-async function listHistory(req: CallRequest) {
+async function listHistory(req: CallRequest, authUserId: string | null) {
   let q = admin.from('call_sessions').select('*').order('initiated_at', { ascending: false }).limit(req.limit ?? 50);
   if (req.personaId) q = q.or(`caller_persona_id.eq.${req.personaId},callee_persona_id.eq.${req.personaId}`);
-  else if (req.userId) q = q.or(`caller_user_id.eq.${req.userId},callee_user_id.eq.${req.userId}`);
+  else if (req.userId && authUserId === req.userId) q = q.or(`caller_user_id.eq.${req.userId},callee_user_id.eq.${req.userId}`);
+  else if (authUserId && !req.isDemo) q = q.or(`caller_user_id.eq.${authUserId},callee_user_id.eq.${authUserId}`);
   else if (req.isDemo) q = q.eq('is_demo', true);
+  else return { success: true, calls: [] };
   const { data, error } = await q;
   if (error) throw error;
   return { success: true, calls: data ?? [] };
+}
+
+// ─── Presence / Signaling / Readiness ─────────────────────
+async function heartbeatPresence(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  await setPresence(authUserId!, req.presence ?? 'online', req.deviceId ?? null, req.callId ?? null);
+  return { success: true, userId: authUserId, status: req.presence ?? 'online' };
+}
+
+async function sendSignal(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.callId || !req.signalType || !req.signalPayload) throw new Error('Missing callId, signalType, or signalPayload');
+  const call = await requireParticipant(req.callId, authUserId);
+  const recipientUserId = req.recipientUserId ?? (call.caller_user_id === authUserId ? call.callee_user_id : call.caller_user_id);
+  const { data, error } = await admin.from('call_signals').insert({
+    call_id: req.callId,
+    sender_user_id: authUserId,
+    recipient_user_id: recipientUserId,
+    signal_type: req.signalType,
+    payload: sanitizeSignalPayload(req.signalPayload),
+  }).select('id, created_at').single();
+  if (error) throw error;
+  return { success: true, signal: data };
+}
+
+async function listSignals(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.callId) throw new Error('Missing callId');
+  await requireParticipant(req.callId, authUserId);
+  const { data, error } = await admin.from('call_signals')
+    .select('id, call_id, sender_user_id, recipient_user_id, signal_type, payload, consumed_at, created_at')
+    .eq('call_id', req.callId)
+    .or(`recipient_user_id.eq.${authUserId},sender_user_id.eq.${authUserId}`)
+    .order('created_at', { ascending: true })
+    .limit(req.limit ?? 100);
+  if (error) throw error;
+  return { success: true, signals: data ?? [] };
+}
+
+async function markSignalConsumed(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.signalId) throw new Error('Missing signalId');
+  const { data, error } = await admin.from('call_signals').update({ consumed_at: new Date().toISOString() })
+    .eq('id', req.signalId).eq('recipient_user_id', authUserId).select('id').single();
+  if (error) throw error;
+  return { success: true, signal: data };
+}
+
+async function readiness() {
+  const realCallingEnabled = await isRealCallingEnabled();
+  return {
+    success: true,
+    realCallingEnabled,
+    demoSafe: true,
+    capabilities: ['call_lifecycle', 'permission_gate', 'presence', 'webrtc_signaling', 'p2p_ready', 'pstn_bridge_ready'],
+    nextExternalRequirements: ['TURN provider credentials for hostile mobile networks', 'push notifications for offline incoming calls'],
+  };
 }
 
 // ─── Permission Check ─────────────────────────────────────
