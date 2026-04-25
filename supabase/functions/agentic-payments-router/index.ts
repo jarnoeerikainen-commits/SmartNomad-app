@@ -15,6 +15,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.50.0";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.50.0";
 import {
   selectProtocol, generateIntentId, issueVirtualCard,
   buildX402Required, encodeX402Required, encodeX402Settlement,
@@ -40,6 +41,16 @@ interface RouterRequest {
   intentId?: string;
   userApproved?: boolean;
 }
+
+type AppSupabaseClient = SupabaseClient<any, "public", any>;
+type GuardrailResult = {
+  approved: boolean;
+  auto_execute?: boolean;
+  requires_user_approval: boolean;
+  guardrail_id?: string | null;
+  reason?: string;
+};
+type DbRow = Record<string, any>;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
@@ -108,7 +119,7 @@ async function handleQuote(body: RouterRequest) {
 }
 
 // ─── Action: authorize ────────────────────────────────────
-async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleAuthorize(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.payment) throw new Error('payment field required for authorize');
   if (!userId) {
     // Demo / device-only mode → return a non-persisted preview
@@ -138,6 +149,7 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
     p_protocol: quote.protocol,
   });
   if (gErr) throw new Error(`guardrail evaluation failed: ${gErr.message}`);
+  const guardrailResult = rawGuardrailResult as GuardrailResult;
 
   const intentId = generateIntentId();
 
@@ -174,8 +186,9 @@ async function handleAuthorize(supabase: ReturnType<typeof createClient>, body: 
       .select('id, last4')
       .single();
     if (cardErr) throw new Error(`virtual card insert failed: ${cardErr.message}`);
-    virtualCardId = cardRow.id;
-    virtualCardLast4 = cardRow.last4;
+    const typedCardRow = cardRow as { id: string; last4: string };
+    virtualCardId = typedCardRow.id;
+    virtualCardLast4 = typedCardRow.last4;
   }
 
   const { data: intent, error: iErr } = await supabase
