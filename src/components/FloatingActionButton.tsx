@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Plane, MapPin, FileText, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +14,17 @@ interface FloatingActionButtonProps {
 
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : false
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    const handleChange = () => setIsMobile(mql.matches);
+    handleChange();
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, []);
 
   const actions = [
     { id: 'add-country', label: 'Add Country Visit', icon: MapPin, color: 'gradient-primary' },
@@ -44,7 +54,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction })
                         onAction(action.id);
                         setIsExpanded(false);
                       }}
-                      className={`h-12 w-12 rounded-full ${action.color} shadow-large hover:shadow-glow transition-all duration-300`}
+                      className={`h-12 w-12 rounded-full ${action.color} shadow-large hover:shadow-glow transition-all duration-300 touch-manipulation`}
                       size="lg"
                     >
                       <action.icon className="h-5 w-5 text-white" />
@@ -61,7 +71,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onAction })
           {/* Main FAB button */}
           <Button
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`h-16 w-16 rounded-full transition-all duration-300 ${
+            className={`h-16 w-16 rounded-full transition-all duration-300 touch-manipulation ${
               isExpanded 
                 ? 'bg-destructive hover:bg-destructive/90 rotate-45' 
                 : 'gradient-hero shadow-large hover:shadow-glow'
