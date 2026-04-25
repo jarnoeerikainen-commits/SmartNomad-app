@@ -267,6 +267,7 @@ GROUND RULES (Evidence-First / Source of Truth):
       ],
       tools,
       tool_choice: { type: "function", function: { name: "deliver_opportunities" } },
+      max_tokens: 8192,
     }),
   });
   const latency = Date.now() - t0;
@@ -278,13 +279,17 @@ GROUND RULES (Evidence-First / Source of Truth):
     throw new Error(`AI gateway ${resp.status}: ${txt.slice(0, 300)}`);
   }
   const data = await resp.json();
+  const finishReason = data?.choices?.[0]?.finish_reason;
+  if (finishReason === "length") {
+    throw new Error("AI response was truncated before the director returned a complete opportunity batch");
+  }
   const call = data?.choices?.[0]?.message?.tool_calls?.[0];
   if (!call?.function?.arguments) throw new Error("No tool call returned by model");
   const parsed = JSON.parse(call.function.arguments);
   const usage = data?.usage ?? {};
 
   return {
-    opportunities: parsed.opportunities ?? [],
+    opportunities: Array.isArray(parsed.opportunities) ? parsed.opportunities : [],
     latency,
     input_tokens: usage.prompt_tokens ?? 0,
     output_tokens: usage.completion_tokens ?? 0,
