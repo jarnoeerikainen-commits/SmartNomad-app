@@ -214,16 +214,16 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-[55] bg-black/50 md:hidden cursor-pointer" 
+          className="fixed inset-0 z-[55] bg-foreground/50 md:hidden cursor-pointer" 
           onClick={() => onClose?.()}
           aria-hidden="true"
         />
       )}
       
       <aside className={`
-        fixed left-0 top-16 z-[60] h-[calc(100dvh-4rem-4rem)] w-[280px] max-w-[85vw] transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
+        fixed left-0 top-[calc(4rem+env(safe-area-inset-top,0px))] z-[60] h-[calc(100dvh-4rem-env(safe-area-inset-top,0px)-4rem-env(safe-area-inset-bottom,0px))] w-[280px] max-w-[85vw] transform border-r bg-card shadow-large transition-transform duration-300 ease-in-out overflow-hidden
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:top-0 md:z-auto md:h-[calc(100dvh-4rem)] md:w-64 md:max-w-64 md:translate-x-0
+        md:relative md:top-0 md:z-auto md:h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))] md:w-64 md:max-w-64 md:translate-x-0
       `}>
         <div className="flex h-full flex-col">
           {/* Navigation */}

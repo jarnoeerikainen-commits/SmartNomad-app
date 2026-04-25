@@ -146,20 +146,22 @@
     text-size-adjust: 100%;
     overflow-x: hidden;
     scroll-behavior: smooth;
+    height: 100%;
   }
 
   body {
     @apply bg-background text-foreground;
     background: var(--gradient-subtle);
     min-height: 100dvh;
+    min-height: -webkit-fill-available;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    padding-top: env(safe-area-inset-top, 0px);
     overscroll-behavior-y: contain;
     cursor: default;
+    touch-action: manipulation;
   }
 
   input,
@@ -193,6 +195,20 @@
     overflow-x: hidden;
     min-width: 0;
     max-width: 100vw;
+    min-height: 100dvh;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 
   /* Hide scrollbars where requested but keep scrolling */
@@ -202,7 +218,7 @@
   /* Tap targets — at least 40px on touch devices */
   @media (pointer: coarse) {
     button, a[role="button"], [role="tab"] {
-      min-height: 40px;
+      min-height: 44px;
     }
   }
 

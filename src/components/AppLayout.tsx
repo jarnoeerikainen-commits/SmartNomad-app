@@ -118,7 +118,7 @@ const SuperNomadCall = lazy(() => import('./SuperNomadCall/SuperNomadCall'));
 
 // Loading fallback for lazy sections
 const SectionLoader = () => (
-  <div className="space-y-4 p-4">
+  <div className="space-y-4 p-4 pb-[calc(env(safe-area-inset-bottom,0px)+6rem)]">
     <Skeleton className="h-8 w-48" />
     <Skeleton className="h-32 w-full" />
     <Skeleton className="h-32 w-full" />
@@ -488,7 +488,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   return (
     <VoiceControlProvider onNavigate={handleVoiceNavigate} onTabChange={handleVoiceTabChange}>
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background pt-[env(safe-area-inset-top,0px)]">
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
@@ -506,7 +506,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         }}
       />
       
-      <div className="flex">
+      <div className="flex min-h-[calc(100dvh-4rem-env(safe-area-inset-top,0px))]">
         <AppSidebar 
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
@@ -516,8 +516,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={openUpgradeModal}
         />
         
-          <main className="flex-1 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
-            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-36 md:pb-6">
+          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
+            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-[calc(env(safe-area-inset-bottom,0px)+10rem)] md:pb-6">
               <div className="animate-fade-in">
                 {renderActiveSection()}
               </div>

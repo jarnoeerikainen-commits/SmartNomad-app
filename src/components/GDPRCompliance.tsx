@@ -102,7 +102,7 @@ export const CookieConsent: React.FC = () => {
 
   return (
     <div
-      className="fixed left-3 right-3 z-[60] md:left-auto md:right-4 md:w-96 max-h-[70vh] overflow-y-auto"
+      className="fixed left-3 right-3 z-[60] max-h-[min(70dvh,28rem)] overflow-y-auto overscroll-contain md:left-auto md:right-4 md:w-96"
       style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 5.25rem)' }}
     >
       <Card className="border border-border bg-background/95 backdrop-blur shadow-lg">
@@ -160,7 +160,7 @@ export const CookieConsent: React.FC = () => {
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:flex-wrap">
             <Button onClick={acceptAll} size="sm" className="flex-1 min-w-[7rem]">
               Accept All
             </Button>
