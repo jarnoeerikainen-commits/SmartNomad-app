@@ -272,6 +272,21 @@ const DEMO_BRIEFING: DailyBriefing = {
   created_at: new Date().toISOString(),
 };
 
+const makeDemoSweep = (director: Director | 'all') => {
+  const stamp = Date.now();
+  const source = director === 'all' ? DEMO_OPPS : DEMO_OPPS.filter((o) => o.director === director);
+  return source.map((o, i) => ({
+    ...o,
+    id: `demo-${director}-${stamp}-${i}`,
+    created_at: new Date(stamp - i * 60_000).toISOString(),
+    approved_at: null,
+    rejected_at: null,
+    decision_note: null,
+    pushed_to_concierge: false,
+    pushed_to_sales: false,
+  }));
+};
+
 // ─── Component ──────────────────────────────────────────────────────
 const AdminDirectors: React.FC = () => {
   const { isDemoMode } = useStaffRole();
@@ -316,6 +331,13 @@ const AdminDirectors: React.FC = () => {
     setRunning((s) => ({ ...s, [key]: true }));
     const t = toast.loading(director === 'all' ? 'Running all 10 directors…' : `${DIRECTORS[director].label} sourcing…`);
     try {
+      if (isDemoMode) {
+        const demoRows = makeDemoSweep(director);
+        setOpps((current) => [...demoRows, ...current].slice(0, 120));
+        setActiveTab(director === 'all' ? 'pending' : director);
+        toast.success(director === 'all' ? 'Demo sweep complete — all directors refreshed' : `${DIRECTORS[director].label}: demo sweep refreshed`, { id: t });
+        return;
+      }
       const { data, error } = await supabase.functions.invoke('admin-ai-directors', {
         body: director === 'all' ? { all: true, trigger: 'manual', scope: 'sweep' } : { director, trigger: 'manual', scope: 'sweep' },
       });
@@ -338,6 +360,16 @@ const AdminDirectors: React.FC = () => {
     setGenBriefing(true);
     const t = toast.loading('Generating daily briefing…');
     try {
+      if (isDemoMode) {
+        setBriefing({
+          ...DEMO_BRIEFING,
+          id: `demo-brief-${Date.now()}`,
+          title: `Daily Briefing — ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} — AI Directors refreshed`,
+          created_at: new Date().toISOString(),
+        });
+        toast.success('Daily briefing regenerated (demo)', { id: t });
+        return;
+      }
       const { data, error } = await supabase.functions.invoke('admin-daily-briefing', {
         body: { trigger: 'manual' },
       });
