@@ -16,6 +16,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { TrustProvider } from "./contexts/TrustContext";
 import SovereignConfirmation from "./components/trust/SovereignConfirmation";
 import ScrollToTop from "./components/ScrollToTop";
+import { GlobalKeyboardScroll } from "./components/GlobalKeyboardScroll";
 
 // Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
@@ -70,6 +71,7 @@ const App = () => {
           <TooltipProvider>
           <BrowserRouter>
           <ScrollToTop />
+          <GlobalKeyboardScroll />
           <AuthProvider>
           <LocationProvider>
           <DemoPersonaProvider>
