@@ -38,6 +38,18 @@ describe('globalKeyboardScroll', () => {
     expect(getKeyboardScrollTarget(document.body)).toBe(scrollable);
   });
 
+  it('falls back to document scrolling when the app container cannot scroll', () => {
+    const container = document.createElement('main');
+    container.dataset.appScrollContainer = 'true';
+    Object.defineProperties(container, {
+      clientHeight: { value: 400, configurable: true },
+      scrollHeight: { value: 400, configurable: true },
+    });
+    document.body.appendChild(container);
+
+    expect(getKeyboardScrollTarget(document.body)).toBe(document.scrollingElement);
+  });
+
   it('scrolls down with ArrowDown and prevents browser conflicts', () => {
     const scrollable = makeScrollable();
     const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
