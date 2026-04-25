@@ -10,6 +10,7 @@ import {
   Mic, MicOff, Volume2, ShieldCheck, Clock, Trash2, MessageSquare,
 } from 'lucide-react';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useSuperNomadCall } from './useSuperNomadCall';
 import { CallWaveform } from './CallWaveform';
 import { cancelSpeech } from './speech';
@@ -24,6 +25,7 @@ const fmtTime = (s: number) => {
 
 const SuperNomadCall: React.FC = () => {
   const { activePersona, activePersonaId, isDemo } = useDemoPersona();
+  const { user } = useAuth();
   const [tab, setTab] = useState<'concierge' | 'people' | 'phone' | 'history' | 'permits'>('concierge');
   const [dialNumber, setDialNumber] = useState('');
   const [dialReason, setDialReason] = useState('');
@@ -38,10 +40,13 @@ const SuperNomadCall: React.FC = () => {
         displayName: `${activePersona.profile.firstName} ${activePersona.profile.lastName}`,
       };
     }
+    if (user) {
+      return { kind: 'user', id: user.id, userId: user.id, displayName: user.email ?? 'SuperNomad Member' };
+    }
     return { kind: 'user', id: 'guest', displayName: 'Guest' };
-  }, [activePersona, activePersonaId]);
+  }, [activePersona, activePersonaId, user]);
 
-  const useDemoLane = !activePersonaId ? true : isDemo;
+  const useDemoLane = activePersonaId ? isDemo : !user;
 
   const { history, activeCall, busy, lastError, initiate, end } = useSuperNomadCall({
     isDemo: useDemoLane,
