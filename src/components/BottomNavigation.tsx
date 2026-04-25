@@ -21,7 +21,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTa
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-border md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -35,7 +35,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTa
               size="sm"
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                "flex flex-col items-center justify-center h-full flex-1 rounded-none transition-all duration-200",
+                "flex flex-col items-center justify-center h-full flex-1 min-w-0 rounded-none transition-all duration-200 touch-manipulation",
                 isActive && "text-primary",
                 isEmergency && "text-destructive hover:text-destructive"
               )}
@@ -48,7 +48,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTa
                 )} 
               />
               <span className={cn(
-                "text-xs font-medium",
+                "w-full truncate text-center text-xs font-medium leading-tight",
                 isActive && "font-semibold"
               )}>
                 {t(tab.labelKey)}
