@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
 // ═══════════════════════════════════════════════════════════
 // SuperNomad Call — unified call orchestration
@@ -19,13 +19,19 @@ const TWILIO_FROM = Deno.env.get('TWILIO_PHONE_NUMBER');
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+type Party = { kind: string; id: string; personaId?: string; userId?: string; deviceId?: string; phone?: string };
+type SignalType = 'offer' | 'answer' | 'ice' | 'hangup' | 'renegotiate';
+type PresenceStatus = 'online' | 'busy' | 'offline';
+
 interface CallRequest {
-  action: 'initiate' | 'answer' | 'end' | 'append_transcript' | 'send_message' | 'list_history';
+  action:
+    | 'initiate' | 'answer' | 'reject' | 'end' | 'append_transcript' | 'send_message' | 'list_history'
+    | 'heartbeat_presence' | 'send_signal' | 'list_signals' | 'mark_signal_consumed' | 'readiness';
   // initiate
   lane?: 'ai_concierge' | 'p2p' | 'pstn_outbound' | 'group_sfu';
   callKind?: 'voice' | 'video' | 'message_only';
-  caller?: { kind: string; id: string; personaId?: string; userId?: string; deviceId?: string };
-  callee?: { kind: string; id: string; personaId?: string; userId?: string; phone?: string };
+  caller?: Party;
+  callee?: Party;
   isDemo?: boolean;
   reason?: string;
   // shared
@@ -38,6 +44,13 @@ interface CallRequest {
   personaId?: string;
   userId?: string;
   limit?: number;
+  // production readiness
+  signalType?: SignalType;
+  signalPayload?: Record<string, unknown>;
+  recipientUserId?: string;
+  signalId?: string;
+  presence?: PresenceStatus;
+  deviceId?: string;
 }
 
 serve(async (req) => {
@@ -45,14 +58,21 @@ serve(async (req) => {
 
   try {
     const body: CallRequest = await req.json();
+    const auth = await getAuthContext(req);
 
     switch (body.action) {
-      case 'initiate':       return json(await initiateCall(body));
-      case 'answer':         return json(await answerCall(body.callId!));
-      case 'end':            return json(await endCall(body.callId!));
+      case 'initiate':       return json(await initiateCall(body, auth.userId));
+      case 'answer':         return json(await answerCall(body.callId!, auth.userId));
+      case 'reject':         return json(await rejectCall(body.callId!, auth.userId));
+      case 'end':            return json(await endCall(body.callId!, auth.userId));
       case 'append_transcript': return json(await appendTranscript(body.callId!, body.transcriptChunk!));
       case 'send_message':   return json(await sendMessage(body));
-      case 'list_history':   return json(await listHistory(body));
+      case 'list_history':   return json(await listHistory(body, auth.userId));
+      case 'heartbeat_presence': return json(await heartbeatPresence(body, auth.userId));
+      case 'send_signal':    return json(await sendSignal(body, auth.userId));
+      case 'list_signals':   return json(await listSignals(body, auth.userId));
+      case 'mark_signal_consumed': return json(await markSignalConsumed(body, auth.userId));
+      case 'readiness':      return json(await readiness());
       default:
         return json({ error: 'unknown_action' }, 400);
     }
@@ -63,9 +83,24 @@ serve(async (req) => {
 });
 
 // ─── Initiate ─────────────────────────────────────────────
-async function initiateCall(req: CallRequest) {
+async function initiateCall(req: CallRequest, authUserId: string | null) {
   if (!req.caller || !req.callee || !req.lane) {
     throw new Error('Missing caller, callee, or lane');
+  }
+
+  const realCalling = await isRealCallingEnabled();
+  if (!req.isDemo && !realCalling) {
+    return { success: false, error: 'real_calling_disabled', message: 'Real calling is not enabled yet. Demo calls are still available.' };
+  }
+
+  if (!req.isDemo) {
+    requireAuth(authUserId);
+    if (req.caller.kind !== 'user' || req.caller.userId !== authUserId || req.caller.id !== authUserId) {
+      return { success: false, error: 'caller_mismatch', message: 'Authenticated user must be the caller.' };
+    }
+    if (req.lane === 'p2p' && (!req.callee.userId || req.callee.kind !== 'user')) {
+      return { success: false, error: 'callee_user_required', message: 'Real person-to-person calls require a logged-in user recipient.' };
+    }
   }
 
   // Permission check (skip for demo)
@@ -135,22 +170,40 @@ async function initiateCall(req: CallRequest) {
     return { success: true, callId: data.id, lane: req.lane, opening };
   }
 
-  // p2p — just return the session; client opens WebRTC via Realtime signaling
+  if (!req.isDemo && req.lane === 'p2p') {
+    await setPresence(authUserId!, 'busy', req.caller.deviceId ?? null, data.id);
+    return { success: true, callId: data.id, lane: req.lane, signaling: 'call_signals', stun: defaultIceServers() };
+  }
+
+  // p2p demo — preserve current behavior: session row only, no media stack.
   return { success: true, callId: data.id, lane: req.lane };
 }
 
 // ─── Answer / End ─────────────────────────────────────────
-async function answerCall(callId: string) {
+async function answerCall(callId: string, authUserId: string | null) {
+  const call = await requireParticipant(callId, authUserId, { allowDemo: true });
   const { data, error } = await admin.from('call_sessions').update({
-    status: 'answered', answered_at: new Date().toISOString(),
+    status: call.is_demo ? 'answered' : 'in_progress', answered_at: new Date().toISOString(),
   }).eq('id', callId).select().single();
   if (error) throw error;
   await admin.from('call_participants').update({ state: 'joined', joined_at: new Date().toISOString() })
     .eq('call_id', callId).eq('state', 'ringing');
+  if (authUserId) await setPresence(authUserId, 'busy', null, callId);
   return { success: true, call: data };
 }
 
-async function endCall(callId: string) {
+async function rejectCall(callId: string, authUserId: string | null) {
+  await requireParticipant(callId, authUserId, { requireCallee: true, allowDemo: true });
+  const { data, error } = await admin.from('call_sessions').update({
+    status: 'rejected', ended_at: new Date().toISOString(), end_reason: 'rejected',
+  }).eq('id', callId).select().single();
+  if (error) throw error;
+  if (authUserId) await setPresence(authUserId, 'online', null, null);
+  return { success: true, call: data };
+}
+
+async function endCall(callId: string, authUserId: string | null) {
+  await requireParticipant(callId, authUserId, { allowDemo: true });
   const { data: existing } = await admin.from('call_sessions').select('answered_at, initiated_at').eq('id', callId).single();
   const start = existing?.answered_at ?? existing?.initiated_at ?? new Date().toISOString();
   const duration = Math.max(0, Math.floor((Date.now() - new Date(start).getTime()) / 1000));
@@ -162,6 +215,7 @@ async function endCall(callId: string) {
   if (error) throw error;
   await admin.from('call_participants').update({ state: 'left', left_at: new Date().toISOString() })
     .eq('call_id', callId).is('left_at', null);
+  if (authUserId) await setPresence(authUserId, 'online', null, null);
   return { success: true, call: data };
 }
 
@@ -193,26 +247,142 @@ async function sendMessage(req: CallRequest) {
 }
 
 // ─── History ──────────────────────────────────────────────
-async function listHistory(req: CallRequest) {
+async function listHistory(req: CallRequest, authUserId: string | null) {
   let q = admin.from('call_sessions').select('*').order('initiated_at', { ascending: false }).limit(req.limit ?? 50);
   if (req.personaId) q = q.or(`caller_persona_id.eq.${req.personaId},callee_persona_id.eq.${req.personaId}`);
-  else if (req.userId) q = q.or(`caller_user_id.eq.${req.userId},callee_user_id.eq.${req.userId}`);
+  else if (req.userId && authUserId === req.userId) q = q.or(`caller_user_id.eq.${req.userId},callee_user_id.eq.${req.userId}`);
+  else if (authUserId && !req.isDemo) q = q.or(`caller_user_id.eq.${authUserId},callee_user_id.eq.${authUserId}`);
   else if (req.isDemo) q = q.eq('is_demo', true);
+  else return { success: true, calls: [] };
   const { data, error } = await q;
   if (error) throw error;
   return { success: true, calls: data ?? [] };
 }
 
+// ─── Presence / Signaling / Readiness ─────────────────────
+async function heartbeatPresence(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  await setPresence(authUserId!, req.presence ?? 'online', req.deviceId ?? null, req.callId ?? null);
+  return { success: true, userId: authUserId, status: req.presence ?? 'online' };
+}
+
+async function sendSignal(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.callId || !req.signalType || !req.signalPayload) throw new Error('Missing callId, signalType, or signalPayload');
+  const call = await requireParticipant(req.callId, authUserId);
+  const recipientUserId = req.recipientUserId ?? (call.caller_user_id === authUserId ? call.callee_user_id : call.caller_user_id);
+  const { data, error } = await admin.from('call_signals').insert({
+    call_id: req.callId,
+    sender_user_id: authUserId,
+    recipient_user_id: recipientUserId,
+    signal_type: req.signalType,
+    payload: sanitizeSignalPayload(req.signalPayload),
+  }).select('id, created_at').single();
+  if (error) throw error;
+  return { success: true, signal: data };
+}
+
+async function listSignals(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.callId) throw new Error('Missing callId');
+  await requireParticipant(req.callId, authUserId);
+  const { data, error } = await admin.from('call_signals')
+    .select('id, call_id, sender_user_id, recipient_user_id, signal_type, payload, consumed_at, created_at')
+    .eq('call_id', req.callId)
+    .or(`recipient_user_id.eq.${authUserId},sender_user_id.eq.${authUserId}`)
+    .order('created_at', { ascending: true })
+    .limit(req.limit ?? 100);
+  if (error) throw error;
+  return { success: true, signals: data ?? [] };
+}
+
+async function markSignalConsumed(req: CallRequest, authUserId: string | null) {
+  requireAuth(authUserId);
+  if (!req.signalId) throw new Error('Missing signalId');
+  const { data, error } = await admin.from('call_signals').update({ consumed_at: new Date().toISOString() })
+    .eq('id', req.signalId).eq('recipient_user_id', authUserId).select('id').single();
+  if (error) throw error;
+  return { success: true, signal: data };
+}
+
+async function readiness() {
+  const realCallingEnabled = await isRealCallingEnabled();
+  return {
+    success: true,
+    realCallingEnabled,
+    demoSafe: true,
+    capabilities: ['call_lifecycle', 'permission_gate', 'presence', 'webrtc_signaling', 'p2p_ready', 'pstn_bridge_ready'],
+    nextExternalRequirements: ['TURN provider credentials for hostile mobile networks', 'push notifications for offline incoming calls'],
+  };
+}
+
 // ─── Permission Check ─────────────────────────────────────
-async function checkPermission(caller: any, callee: any): Promise<boolean> {
+async function checkPermission(caller: Party, callee: Party): Promise<boolean> {
   if (callee.kind === 'ai_concierge') return true;       // AI is always reachable from owner
   if (callee.kind === 'external_phone') return true;     // PSTN — billed to caller
+  if (caller.userId && callee.userId && caller.userId === callee.userId) return true;
   const { data } = await admin.from('call_permissions').select('id')
     .eq('grantee_kind', caller.kind).eq('grantee_id', caller.id)
     .eq('status', 'active')
     .or(callee.userId ? `owner_user_id.eq.${callee.userId}` : `owner_persona_id.eq.${callee.personaId}`)
     .limit(1);
   return !!(data && data.length);
+}
+
+async function getAuthContext(req: Request): Promise<{ userId: string | null }> {
+  const token = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '').trim();
+  if (!token) return { userId: null };
+  const { data, error } = await admin.auth.getUser(token);
+  if (error || !data.user) return { userId: null };
+  return { userId: data.user.id };
+}
+
+function requireAuth(userId: string | null): asserts userId is string {
+  if (!userId) throw new Error('auth_required');
+}
+
+async function isRealCallingEnabled(): Promise<boolean> {
+  const { data } = await admin.rpc('is_real_calling_enabled');
+  return data === true;
+}
+
+async function requireParticipant(callId: string, authUserId: string | null, opts: { requireCallee?: boolean; allowDemo?: boolean } = {}) {
+  const { data, error } = await admin.from('call_sessions')
+    .select('id, is_demo, caller_user_id, callee_user_id')
+    .eq('id', callId)
+    .single();
+  if (error || !data) throw new Error('call_not_found');
+  if (data.is_demo && opts.allowDemo) return data;
+  requireAuth(authUserId);
+  const isCaller = data.caller_user_id === authUserId;
+  const isCallee = data.callee_user_id === authUserId;
+  if (opts.requireCallee ? !isCallee : !(isCaller || isCallee)) throw new Error('not_call_participant');
+  return data;
+}
+
+async function setPresence(userId: string, status: PresenceStatus, deviceId: string | null, callId: string | null) {
+  await admin.from('call_presence').upsert({
+    user_id: userId,
+    status,
+    device_id: deviceId,
+    active_call_id: callId,
+    last_seen_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' });
+}
+
+function sanitizeSignalPayload(payload: Record<string, unknown>) {
+  const text = JSON.stringify(payload);
+  if (text.length > 64_000) throw new Error('signal_payload_too_large');
+  return payload;
+}
+
+function defaultIceServers() {
+  const turnUrl = Deno.env.get('WEBRTC_TURN_URL');
+  const turnUsername = Deno.env.get('WEBRTC_TURN_USERNAME');
+  const turnCredential = Deno.env.get('WEBRTC_TURN_CREDENTIAL');
+  const servers: Record<string, unknown>[] = [{ urls: ['stun:stun.l.google.com:19302', 'stun:global.stun.twilio.com:3478'] }];
+  if (turnUrl && turnUsername && turnCredential) servers.push({ urls: turnUrl, username: turnUsername, credential: turnCredential });
+  return servers;
 }
 
 // ─── Twilio bridge ────────────────────────────────────────
@@ -236,7 +406,7 @@ async function placeTwilioCall(toPhone: string, isDemo?: boolean) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────
-function personaName(p: any): string {
+function personaName(p: Party): string {
   if (p.kind === 'ai_concierge') return 'SuperNomad Concierge';
   if (p.personaId === 'meghan') return 'Meghan Clarke';
   if (p.personaId === 'john') return 'John Sterling';

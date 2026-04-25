@@ -1401,6 +1401,7 @@ export type Database = {
         Row: {
           demo_mode_enabled: boolean
           id: number
+          real_calling_enabled: boolean
           require_auth: boolean
           require_mfa_for_payments: boolean
           require_mfa_for_sensitive: boolean
@@ -1409,6 +1410,7 @@ export type Database = {
         Insert: {
           demo_mode_enabled?: boolean
           id?: number
+          real_calling_enabled?: boolean
           require_auth?: boolean
           require_mfa_for_payments?: boolean
           require_mfa_for_sensitive?: boolean
@@ -1417,6 +1419,7 @@ export type Database = {
         Update: {
           demo_mode_enabled?: boolean
           id?: number
+          real_calling_enabled?: boolean
           require_auth?: boolean
           require_mfa_for_payments?: boolean
           require_mfa_for_sensitive?: boolean
@@ -1829,6 +1832,44 @@ export type Database = {
         }
         Relationships: []
       }
+      call_presence: {
+        Row: {
+          active_call_id: string | null
+          device_id: string | null
+          last_seen_at: string
+          metadata: Json
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active_call_id?: string | null
+          device_id?: string | null
+          last_seen_at?: string
+          metadata?: Json
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active_call_id?: string | null
+          device_id?: string | null
+          last_seen_at?: string
+          metadata?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_presence_active_call_id_fkey"
+            columns: ["active_call_id"]
+            isOneToOne: false
+            referencedRelation: "call_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       call_sessions: {
         Row: {
           ai_actions: Json
@@ -1939,6 +1980,47 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      call_signals: {
+        Row: {
+          call_id: string
+          consumed_at: string | null
+          created_at: string
+          id: string
+          payload: Json
+          recipient_user_id: string | null
+          sender_user_id: string
+          signal_type: string
+        }
+        Insert: {
+          call_id: string
+          consumed_at?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json
+          recipient_user_id?: string | null
+          sender_user_id: string
+          signal_type: string
+        }
+        Update: {
+          call_id?: string
+          consumed_at?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json
+          recipient_user_id?: string | null
+          sender_user_id?: string
+          signal_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_signals_call_id_fkey"
+            columns: ["call_id"]
+            isOneToOne: false
+            referencedRelation: "call_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       change_proposals: {
         Row: {
@@ -4732,6 +4814,7 @@ export type Database = {
       is_org_admin: { Args: { p_org_id: string }; Returns: boolean }
       is_org_approver: { Args: { p_org_id: string }; Returns: boolean }
       is_org_member: { Args: { p_org_id: string }; Returns: boolean }
+      is_real_calling_enabled: { Args: never; Returns: boolean }
       log_ai_usage: {
         Args: {
           p_cache_hit?: boolean
