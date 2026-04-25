@@ -317,15 +317,72 @@ async function readiness() {
 }
 
 // ─── Permission Check ─────────────────────────────────────
-async function checkPermission(caller: any, callee: any): Promise<boolean> {
+async function checkPermission(caller: Party, callee: Party): Promise<boolean> {
   if (callee.kind === 'ai_concierge') return true;       // AI is always reachable from owner
   if (callee.kind === 'external_phone') return true;     // PSTN — billed to caller
+  if (caller.userId && callee.userId && caller.userId === callee.userId) return true;
   const { data } = await admin.from('call_permissions').select('id')
     .eq('grantee_kind', caller.kind).eq('grantee_id', caller.id)
     .eq('status', 'active')
     .or(callee.userId ? `owner_user_id.eq.${callee.userId}` : `owner_persona_id.eq.${callee.personaId}`)
     .limit(1);
   return !!(data && data.length);
+}
+
+async function getAuthContext(req: Request): Promise<{ userId: string | null }> {
+  const token = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '').trim();
+  if (!token) return { userId: null };
+  const { data, error } = await admin.auth.getUser(token);
+  if (error || !data.user) return { userId: null };
+  return { userId: data.user.id };
+}
+
+function requireAuth(userId: string | null): asserts userId is string {
+  if (!userId) throw new Error('auth_required');
+}
+
+async function isRealCallingEnabled(): Promise<boolean> {
+  const { data } = await admin.rpc('is_real_calling_enabled');
+  return data === true;
+}
+
+async function requireParticipant(callId: string, authUserId: string | null, opts: { requireCallee?: boolean; allowDemo?: boolean } = {}) {
+  const { data, error } = await admin.from('call_sessions')
+    .select('id, is_demo, caller_user_id, callee_user_id')
+    .eq('id', callId)
+    .single();
+  if (error || !data) throw new Error('call_not_found');
+  if (data.is_demo && opts.allowDemo) return data;
+  requireAuth(authUserId);
+  const isCaller = data.caller_user_id === authUserId;
+  const isCallee = data.callee_user_id === authUserId;
+  if (opts.requireCallee ? !isCallee : !(isCaller || isCallee)) throw new Error('not_call_participant');
+  return data;
+}
+
+async function setPresence(userId: string, status: PresenceStatus, deviceId: string | null, callId: string | null) {
+  await admin.from('call_presence').upsert({
+    user_id: userId,
+    status,
+    device_id: deviceId,
+    active_call_id: callId,
+    last_seen_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' });
+}
+
+function sanitizeSignalPayload(payload: Record<string, unknown>) {
+  const text = JSON.stringify(payload);
+  if (text.length > 64_000) throw new Error('signal_payload_too_large');
+  return payload;
+}
+
+function defaultIceServers() {
+  const turnUrl = Deno.env.get('WEBRTC_TURN_URL');
+  const turnUsername = Deno.env.get('WEBRTC_TURN_USERNAME');
+  const turnCredential = Deno.env.get('WEBRTC_TURN_CREDENTIAL');
+  const servers: Record<string, unknown>[] = [{ urls: ['stun:stun.l.google.com:19302', 'stun:global.stun.twilio.com:3478'] }];
+  if (turnUrl && turnUsername && turnCredential) servers.push({ urls: turnUrl, username: turnUsername, credential: turnCredential });
+  return servers;
 }
 
 // ─── Twilio bridge ────────────────────────────────────────
@@ -349,7 +406,7 @@ async function placeTwilioCall(toPhone: string, isDemo?: boolean) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────
-function personaName(p: any): string {
+function personaName(p: Party): string {
   if (p.kind === 'ai_concierge') return 'SuperNomad Concierge';
   if (p.personaId === 'meghan') return 'Meghan Clarke';
   if (p.personaId === 'john') return 'John Sterling';
