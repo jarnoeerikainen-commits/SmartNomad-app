@@ -6,6 +6,7 @@
 // Triggered by pg_cron daily and on-demand by admins.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -335,7 +336,7 @@ interface RunStats {
 }
 
 async function processSource(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient<any, "public", any>,
   source: VerifiedSource,
   stats: RunStats,
 ): Promise<void> {
