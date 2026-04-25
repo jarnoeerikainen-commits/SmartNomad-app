@@ -228,7 +228,7 @@ async function handleAuthorize(supabase: AppSupabaseClient, body: RouterRequest,
 }
 
 // ─── Action: execute ──────────────────────────────────────
-async function handleExecute(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleExecute(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required for execute');
   if (!userId) throw new Error('authentication required to execute payments');
 
@@ -313,15 +313,23 @@ async function handleExecute(supabase: ReturnType<typeof createClient>, body: Ro
 }
 
 // ─── Action: refund ───────────────────────────────────────
-async function handleRefund(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleRefund(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required');
   if (!userId) throw new Error('authentication required');
+
+  const { data: rawIntent, error: intentErr } = await supabase
+    .from('agentic_payment_intents')
+    .select('id')
+    .eq('intent_id', body.intentId)
+    .eq('user_id', userId)
+    .single();
+  if (intentErr || !rawIntent) throw new Error(`intent not found: ${body.intentId}`);
+  const intent = rawIntent as { id: string };
 
   const { data: txn, error } = await supabase
     .from('agentic_transactions')
     .update({ status: 'refunded' })
-    .eq('intent_id', (await supabase
-      .from('agentic_payment_intents').select('id').eq('intent_id', body.intentId).eq('user_id', userId).single()).data?.id)
+    .eq('intent_id', intent.id)
     .eq('user_id', userId)
     .select()
     .single();
@@ -336,7 +344,7 @@ async function handleRefund(supabase: ReturnType<typeof createClient>, body: Rou
 }
 
 // ─── Action: status ───────────────────────────────────────
-async function handleStatus(supabase: ReturnType<typeof createClient>, body: RouterRequest, userId: string | null) {
+async function handleStatus(supabase: AppSupabaseClient, body: RouterRequest, userId: string | null) {
   if (!body.intentId) throw new Error('intentId required');
   if (!userId) throw new Error('authentication required');
 
