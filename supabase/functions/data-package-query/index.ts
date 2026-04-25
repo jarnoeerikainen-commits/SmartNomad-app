@@ -334,17 +334,17 @@ Deno.serve(async (req) => {
       }
 
       // Apply per-field transforms
-      const transformed = (rows ?? []).map((row) => {
+      const transformed = ((rows ?? []) as unknown as Record<string, unknown>[]).map((row) => {
         const out: Record<string, unknown> = {};
         for (const f of effective) {
           const cfg = fieldConfig.get(f);
           if (!cfg) continue;
-          const raw = (row as Record<string, unknown>)[f];
+          const raw = row[f];
           out[f] = applyTransform(raw, cfg.transform, cfg.bucket_strategy as Record<string, unknown> | null);
         }
         // include snomad_id only if explicitly whitelisted
         if (effective.includes('snomad_id')) {
-          out.snomad_id = (row as Record<string, unknown>).snomad_id;
+          out.snomad_id = row.snomad_id;
         }
         return out;
       });
