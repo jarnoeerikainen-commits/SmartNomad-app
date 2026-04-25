@@ -149,6 +149,7 @@ Return a structured briefing with:
       ],
       tools,
       tool_choice: { type: "function", function: { name: "deliver_briefing" } },
+      max_tokens: 4096,
     }),
   });
   const latency = Date.now() - t0;
@@ -160,6 +161,9 @@ Return a structured briefing with:
     throw new Error(`AI gateway ${resp.status}: ${txt.slice(0, 300)}`);
   }
   const data = await resp.json();
+  if (data?.choices?.[0]?.finish_reason === "length") {
+    throw new Error("AI response was truncated before the daily briefing was complete");
+  }
   const call = data?.choices?.[0]?.message?.tool_calls?.[0];
   if (!call?.function?.arguments) throw new Error("No tool call returned by model");
 
