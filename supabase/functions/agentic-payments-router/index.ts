@@ -141,7 +141,7 @@ async function handleAuthorize(supabase: AppSupabaseClient, body: RouterRequest,
   const quote = selectProtocol(body.payment);
 
   // Evaluate guardrail
-  const { data: guardrailResult, error: gErr } = await supabase.rpc('evaluate_agentic_guardrail', {
+  const { data: rawGuardrailResult, error: gErr } = await supabase.rpc('evaluate_agentic_guardrail', {
     p_user_id: userId,
     p_amount: body.payment.amount,
     p_currency: body.payment.currency,
@@ -232,13 +232,24 @@ async function handleExecute(supabase: ReturnType<typeof createClient>, body: Ro
   if (!body.intentId) throw new Error('intentId required for execute');
   if (!userId) throw new Error('authentication required to execute payments');
 
-  const { data: intent, error: fErr } = await supabase
+  const { data: rawIntent, error: fErr } = await supabase
     .from('agentic_payment_intents')
-    .select('*, agentic_virtual_cards(*)')
+    .select('*')
     .eq('intent_id', body.intentId)
     .eq('user_id', userId)
     .single();
-  if (fErr || !intent) throw new Error(`intent not found: ${body.intentId}`);
+  if (fErr || !rawIntent) throw new Error(`intent not found: ${body.intentId}`);
+  const intent = rawIntent as DbRow;
+
+  let virtualCardLast4: string | null = null;
+  if (intent.virtual_card_id) {
+    const { data: card } = await supabase
+      .from('agentic_virtual_cards')
+      .select('last4')
+      .eq('id', intent.virtual_card_id)
+      .maybeSingle();
+    virtualCardLast4 = (card as { last4?: string } | null)?.last4 ?? null;
+  }
 
   if (intent.status === 'completed') {
     return { success: true, alreadyCompleted: true, intent };
@@ -288,7 +299,7 @@ async function handleExecute(supabase: ReturnType<typeof createClient>, body: Ro
       status: 'completed',
       ai_initiated: intent.ai_initiated,
       user_approved: true,
-      virtual_card_last4: intent.agentic_virtual_cards?.last4 ?? null,
+      virtual_card_last4: virtualCardLast4,
       crypto_network: intent.protocol === 'x402' ? 'base' : null,
       crypto_tx_hash: intent.protocol === 'x402' ? receipt?.transaction ?? null : null,
       trust_score: intent.trust_score,
