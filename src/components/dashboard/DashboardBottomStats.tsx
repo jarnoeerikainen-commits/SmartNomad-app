@@ -55,8 +55,7 @@ const DashboardBottomStats: React.FC<DashboardBottomStatsProps> = ({ countries, 
 
   return (
     <div 
-      className="fixed left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border/50 shadow-large cursor-pointer hover:bg-muted/50 transition-colors touch-manipulation"
-      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 4rem)' }}
+      className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4rem)] md:bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-lg border-t border-border/50 shadow-large cursor-pointer hover:bg-muted/50 transition-colors touch-manipulation"
       onClick={onOpenTracking}
     >
       <div className="container max-w-7xl mx-auto px-4 py-3">
