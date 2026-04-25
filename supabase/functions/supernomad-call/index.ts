@@ -83,9 +83,24 @@ serve(async (req) => {
 });
 
 // ─── Initiate ─────────────────────────────────────────────
-async function initiateCall(req: CallRequest) {
+async function initiateCall(req: CallRequest, authUserId: string | null) {
   if (!req.caller || !req.callee || !req.lane) {
     throw new Error('Missing caller, callee, or lane');
+  }
+
+  const realCalling = await isRealCallingEnabled();
+  if (!req.isDemo && !realCalling) {
+    return { success: false, error: 'real_calling_disabled', message: 'Real calling is not enabled yet. Demo calls are still available.' };
+  }
+
+  if (!req.isDemo) {
+    requireAuth(authUserId);
+    if (req.caller.kind !== 'user' || req.caller.userId !== authUserId || req.caller.id !== authUserId) {
+      return { success: false, error: 'caller_mismatch', message: 'Authenticated user must be the caller.' };
+    }
+    if (req.lane === 'p2p' && (!req.callee.userId || req.callee.kind !== 'user')) {
+      return { success: false, error: 'callee_user_required', message: 'Real person-to-person calls require a logged-in user recipient.' };
+    }
   }
 
   // Permission check (skip for demo)
@@ -155,22 +170,40 @@ async function initiateCall(req: CallRequest) {
     return { success: true, callId: data.id, lane: req.lane, opening };
   }
 
-  // p2p — just return the session; client opens WebRTC via Realtime signaling
+  if (!req.isDemo && req.lane === 'p2p') {
+    await setPresence(authUserId!, 'busy', req.caller.deviceId ?? null, data.id);
+    return { success: true, callId: data.id, lane: req.lane, signaling: 'call_signals', stun: defaultIceServers() };
+  }
+
+  // p2p demo — preserve current behavior: session row only, no media stack.
   return { success: true, callId: data.id, lane: req.lane };
 }
 
 // ─── Answer / End ─────────────────────────────────────────
-async function answerCall(callId: string) {
+async function answerCall(callId: string, authUserId: string | null) {
+  const call = await requireParticipant(callId, authUserId, { allowDemo: true });
   const { data, error } = await admin.from('call_sessions').update({
-    status: 'answered', answered_at: new Date().toISOString(),
+    status: call.is_demo ? 'answered' : 'in_progress', answered_at: new Date().toISOString(),
   }).eq('id', callId).select().single();
   if (error) throw error;
   await admin.from('call_participants').update({ state: 'joined', joined_at: new Date().toISOString() })
     .eq('call_id', callId).eq('state', 'ringing');
+  if (authUserId) await setPresence(authUserId, 'busy', null, callId);
   return { success: true, call: data };
 }
 
-async function endCall(callId: string) {
+async function rejectCall(callId: string, authUserId: string | null) {
+  await requireParticipant(callId, authUserId, { requireCallee: true, allowDemo: true });
+  const { data, error } = await admin.from('call_sessions').update({
+    status: 'rejected', ended_at: new Date().toISOString(), end_reason: 'rejected',
+  }).eq('id', callId).select().single();
+  if (error) throw error;
+  if (authUserId) await setPresence(authUserId, 'online', null, null);
+  return { success: true, call: data };
+}
+
+async function endCall(callId: string, authUserId: string | null) {
+  await requireParticipant(callId, authUserId, { allowDemo: true });
   const { data: existing } = await admin.from('call_sessions').select('answered_at, initiated_at').eq('id', callId).single();
   const start = existing?.answered_at ?? existing?.initiated_at ?? new Date().toISOString();
   const duration = Math.max(0, Math.floor((Date.now() - new Date(start).getTime()) / 1000));
@@ -182,6 +215,7 @@ async function endCall(callId: string) {
   if (error) throw error;
   await admin.from('call_participants').update({ state: 'left', left_at: new Date().toISOString() })
     .eq('call_id', callId).is('left_at', null);
+  if (authUserId) await setPresence(authUserId, 'online', null, null);
   return { success: true, call: data };
 }
 
