@@ -14,6 +14,306 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_ai_agent_controls: {
+        Row: {
+          agent_key: string
+          agent_type: string
+          automation_level: string
+          can_write_to_user_surfaces: boolean
+          created_at: string
+          daily_run_limit: number
+          daily_token_budget: number
+          description: string
+          director: Database["public"]["Enums"]["director_role"] | null
+          disabled_reason: string | null
+          display_name: string
+          escalation_rules: Json
+          feature_flags: Json
+          id: string
+          input_sources: Json
+          last_run_at: string | null
+          last_run_status: string | null
+          metadata: Json
+          model_tier: string
+          next_run_at: string | null
+          output_targets: Json
+          owner_role: string
+          requires_approval: boolean
+          schedule_cron: string | null
+          schedule_label: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_key: string
+          agent_type?: string
+          automation_level?: string
+          can_write_to_user_surfaces?: boolean
+          created_at?: string
+          daily_run_limit?: number
+          daily_token_budget?: number
+          description?: string
+          director?: Database["public"]["Enums"]["director_role"] | null
+          disabled_reason?: string | null
+          display_name: string
+          escalation_rules?: Json
+          feature_flags?: Json
+          id?: string
+          input_sources?: Json
+          last_run_at?: string | null
+          last_run_status?: string | null
+          metadata?: Json
+          model_tier?: string
+          next_run_at?: string | null
+          output_targets?: Json
+          owner_role?: string
+          requires_approval?: boolean
+          schedule_cron?: string | null
+          schedule_label?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_key?: string
+          agent_type?: string
+          automation_level?: string
+          can_write_to_user_surfaces?: boolean
+          created_at?: string
+          daily_run_limit?: number
+          daily_token_budget?: number
+          description?: string
+          director?: Database["public"]["Enums"]["director_role"] | null
+          disabled_reason?: string | null
+          display_name?: string
+          escalation_rules?: Json
+          feature_flags?: Json
+          id?: string
+          input_sources?: Json
+          last_run_at?: string | null
+          last_run_status?: string | null
+          metadata?: Json
+          model_tier?: string
+          next_run_at?: string | null
+          output_targets?: Json
+          owner_role?: string
+          requires_approval?: boolean
+          schedule_cron?: string | null
+          schedule_label?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_ai_agent_daily_reports: {
+        Row: {
+          agent_key: string
+          created_at: string
+          director: Database["public"]["Enums"]["director_role"] | null
+          estimated_cost_usd: number
+          generated_by_run_id: string | null
+          id: string
+          issues: Json
+          metadata: Json
+          metrics: Json
+          next_actions: Json
+          performance_score: number
+          report_date: string
+          suggestions: Json
+          summary: string
+          title: string
+          token_usage: number
+          wins: Json
+        }
+        Insert: {
+          agent_key: string
+          created_at?: string
+          director?: Database["public"]["Enums"]["director_role"] | null
+          estimated_cost_usd?: number
+          generated_by_run_id?: string | null
+          id?: string
+          issues?: Json
+          metadata?: Json
+          metrics?: Json
+          next_actions?: Json
+          performance_score?: number
+          report_date?: string
+          suggestions?: Json
+          summary: string
+          title: string
+          token_usage?: number
+          wins?: Json
+        }
+        Update: {
+          agent_key?: string
+          created_at?: string
+          director?: Database["public"]["Enums"]["director_role"] | null
+          estimated_cost_usd?: number
+          generated_by_run_id?: string | null
+          id?: string
+          issues?: Json
+          metadata?: Json
+          metrics?: Json
+          next_actions?: Json
+          performance_score?: number
+          report_date?: string
+          suggestions?: Json
+          summary?: string
+          title?: string
+          token_usage?: number
+          wins?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_ai_agent_daily_reports_agent_key_fkey"
+            columns: ["agent_key"]
+            isOneToOne: false
+            referencedRelation: "admin_ai_agent_controls"
+            referencedColumns: ["agent_key"]
+          },
+        ]
+      }
+      admin_ai_agent_runs: {
+        Row: {
+          agent_key: string
+          completed_at: string | null
+          created_by: string | null
+          director: Database["public"]["Enums"]["director_role"] | null
+          error: string | null
+          id: string
+          input_tokens: number
+          latency_ms: number
+          metadata: Json
+          output_tokens: number
+          outputs: Json
+          scope: string
+          signals_scanned: Json
+          started_at: string
+          status: string
+          suggested_improvements: Json
+          trigger: string
+        }
+        Insert: {
+          agent_key: string
+          completed_at?: string | null
+          created_by?: string | null
+          director?: Database["public"]["Enums"]["director_role"] | null
+          error?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          metadata?: Json
+          output_tokens?: number
+          outputs?: Json
+          scope?: string
+          signals_scanned?: Json
+          started_at?: string
+          status?: string
+          suggested_improvements?: Json
+          trigger?: string
+        }
+        Update: {
+          agent_key?: string
+          completed_at?: string | null
+          created_by?: string | null
+          director?: Database["public"]["Enums"]["director_role"] | null
+          error?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          metadata?: Json
+          output_tokens?: number
+          outputs?: Json
+          scope?: string
+          signals_scanned?: Json
+          started_at?: string
+          status?: string
+          suggested_improvements?: Json
+          trigger?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_ai_agent_runs_agent_key_fkey"
+            columns: ["agent_key"]
+            isOneToOne: false
+            referencedRelation: "admin_ai_agent_controls"
+            referencedColumns: ["agent_key"]
+          },
+        ]
+      }
+      admin_ai_agent_suggestions: {
+        Row: {
+          agent_key: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          director: Database["public"]["Enums"]["director_role"] | null
+          evidence: Json
+          expected_impact: string | null
+          expires_at: string | null
+          id: string
+          priority: string
+          rationale: string
+          requires_approval: boolean
+          risk_level: string
+          source_report_id: string | null
+          status: string
+          suggested_action: string
+          suggestion_type: string
+          title: string
+        }
+        Insert: {
+          agent_key: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          director?: Database["public"]["Enums"]["director_role"] | null
+          evidence?: Json
+          expected_impact?: string | null
+          expires_at?: string | null
+          id?: string
+          priority?: string
+          rationale: string
+          requires_approval?: boolean
+          risk_level?: string
+          source_report_id?: string | null
+          status?: string
+          suggested_action: string
+          suggestion_type?: string
+          title: string
+        }
+        Update: {
+          agent_key?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          director?: Database["public"]["Enums"]["director_role"] | null
+          evidence?: Json
+          expected_impact?: string | null
+          expires_at?: string | null
+          id?: string
+          priority?: string
+          rationale?: string
+          requires_approval?: boolean
+          risk_level?: string
+          source_report_id?: string | null
+          status?: string
+          suggested_action?: string
+          suggestion_type?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_ai_agent_suggestions_agent_key_fkey"
+            columns: ["agent_key"]
+            isOneToOne: false
+            referencedRelation: "admin_ai_agent_controls"
+            referencedColumns: ["agent_key"]
+          },
+        ]
+      }
       admin_ai_brain_runs: {
         Row: {
           completed_at: string | null
@@ -4617,6 +4917,24 @@ export type Database = {
       }
       generate_org_join_code: { Args: never; Returns: string }
       generate_snomad_id: { Args: never; Returns: string }
+      get_admin_agent_control_summary: {
+        Args: never
+        Returns: {
+          active_agents: number
+          autonomous_agents: number
+          computed_at: string
+          disabled_agents: number
+          failed_runs_24h: number
+          high_priority_suggestions: number
+          paused_agents: number
+          pending_suggestions: number
+          recommend_only_agents: number
+          reports_today: number
+          runs_24h: number
+          tokens_24h: number
+          total_agents: number
+        }[]
+      }
       get_admin_brain_summary: {
         Args: never
         Returns: {
@@ -4667,6 +4985,34 @@ export type Database = {
           to: "admin_ai_reports"
           isOneToOne: true
           isSetofReturn: false
+        }
+      }
+      get_latest_agent_daily_reports: {
+        Args: { p_limit?: number }
+        Returns: {
+          agent_key: string
+          created_at: string
+          director: Database["public"]["Enums"]["director_role"] | null
+          estimated_cost_usd: number
+          generated_by_run_id: string | null
+          id: string
+          issues: Json
+          metadata: Json
+          metrics: Json
+          next_actions: Json
+          performance_score: number
+          report_date: string
+          suggestions: Json
+          summary: string
+          title: string
+          token_usage: number
+          wins: Json
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_agent_daily_reports"
+          isOneToOne: false
+          isSetofReturn: true
         }
       }
       get_latest_daily_briefing: {
@@ -4844,6 +5190,22 @@ export type Database = {
         Args: { p_device_id: string; p_user_id: string }
         Returns: Json
       }
+      record_admin_ai_agent_run: {
+        Args: {
+          p_agent_key: string
+          p_error?: string
+          p_input_tokens?: number
+          p_latency_ms?: number
+          p_output_tokens?: number
+          p_outputs?: Json
+          p_scope?: string
+          p_signals_scanned?: Json
+          p_status: string
+          p_suggested_improvements?: Json
+          p_trigger: string
+        }
+        Returns: string
+      }
       record_package_delivery: {
         Args: {
           p_consent_verified: number
@@ -4963,6 +5325,53 @@ export type Database = {
           target_type: string
           weight: number
         }[]
+      }
+      update_admin_ai_agent_control: {
+        Args: {
+          p_agent_key: string
+          p_automation_level?: string
+          p_can_write_to_user_surfaces?: boolean
+          p_daily_run_limit?: number
+          p_daily_token_budget?: number
+          p_disabled_reason?: string
+          p_requires_approval?: boolean
+          p_status?: string
+        }
+        Returns: {
+          agent_key: string
+          agent_type: string
+          automation_level: string
+          can_write_to_user_surfaces: boolean
+          created_at: string
+          daily_run_limit: number
+          daily_token_budget: number
+          description: string
+          director: Database["public"]["Enums"]["director_role"] | null
+          disabled_reason: string | null
+          display_name: string
+          escalation_rules: Json
+          feature_flags: Json
+          id: string
+          input_sources: Json
+          last_run_at: string | null
+          last_run_status: string | null
+          metadata: Json
+          model_tier: string
+          next_run_at: string | null
+          output_targets: Json
+          owner_role: string
+          requires_approval: boolean
+          schedule_cron: string | null
+          schedule_label: string
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_agent_controls"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       user_owns_row: { Args: { row_user_id: string }; Returns: boolean }
       verify_trust_tier: {
