@@ -18,6 +18,8 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   isAI?: boolean;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface ChatGroup {

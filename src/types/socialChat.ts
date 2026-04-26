@@ -70,6 +70,8 @@ export interface ChatMessage {
   timestamp: Date;
   type: 'message' | 'ai_suggestion' | 'system';
   isAI?: boolean;
+  imageUrl?: string;
+  imageAlt?: string;
 }
 
 export interface ChatRoom {
