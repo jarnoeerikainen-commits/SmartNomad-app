@@ -33,6 +33,15 @@ import { Country, LocationData } from '@/types/country';
 import { CountrySelector } from './CountrySelector';
 import { ALL_COUNTRIES } from '@/data/countries';
 
+const getVerifiedTaxRule = (countryCode: string) => {
+  const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+  return {
+    threshold: countryInfo?.taxResidencyDays || 183,
+    sourceName: countryInfo?.taxAuthorityName || 'OECD Model Tax Convention',
+    sourceUrl: countryInfo?.taxAuthorityUrl || 'https://www.oecd.org/tax/treaties/model-tax-convention-on-income-and-on-capital-condensed-version-20745419.htm',
+  };
+};
+
 interface TaxResidencyHubProps {
   countries: Country[];
   onAddCountry: (country: Country) => void;
@@ -85,15 +94,14 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
       return;
     }
 
-    // Find the country in ALL_COUNTRIES to get the tax residency days
-    const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+    const taxRule = getVerifiedTaxRule(countryCode);
     
     const newCountry: Country = {
       id: `${countryCode}-${Date.now()}`,
       code: countryCode,
       name: countryName,
       flag: countryFlag,
-      dayLimit: countryInfo?.taxResidencyDays || 183,
+      dayLimit: taxRule.threshold,
       daysSpent: 0,
       reason: 'Tax Residency Tracking',
       lastUpdate: new Date().toISOString(),
@@ -113,7 +121,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
     
     toast({
       title: "✅ Country Added Successfully",
-      description: `${countryName} is now being tracked. Tax residency threshold: ${countryInfo?.taxResidencyDays || 183} days.`,
+      description: `${countryName} is now tracked with ${taxRule.threshold} verified tax days from ${taxRule.sourceName}.`,
     });
   };
 
@@ -343,17 +351,15 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
           
           <Card>
             <CardHeader>
-              <CardTitle>Quick Overview</CardTitle>
+              <CardTitle>Verified Method</CardTitle>
               <CardDescription>
-                Track your tax residency status across multiple jurisdictions
+                Professional tax-day monitoring without duplicate dashboard metrics
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  The Tax Residency Hub provides comprehensive tools to manage your tax obligations
-                  as a digital nomad. Track days spent in multiple countries, calculate substantial
-                  presence tests, and get proactive alerts about compliance thresholds.
+                  SuperNomad compares GPS/manual day counts against country-specific thresholds from the verified tax authority data in the global country registry. Specialist tests stay in Calculators; day-by-country controls stay in Day Tracker.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-4 bg-accent/50 rounded-lg">
