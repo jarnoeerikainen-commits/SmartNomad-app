@@ -62,7 +62,7 @@ export function useMovingServices() {
   const getAIPricing = useCallback(async (moveRequest: Partial<MovingRequest>): Promise<any> => {
     try {
       setLoading(true);
-      const runId = AdminAgentActivityService.startRun({ surface: 'Moving AI', command: `Estimate relocation pricing for ${moveRequest.from?.city || 'origin'} to ${moveRequest.to?.city || 'destination'}`, functionName: 'moving-ai-assistant' });
+      const runId = AdminAgentActivityService.startRun({ surface: 'Moving AI', command: 'Estimate relocation pricing from the submitted move request', functionName: 'moving-ai-assistant' });
       const { data, error } = await supabase.functions.invoke('moving-ai-assistant', {
         body: { 
           action: 'estimate-pricing',
