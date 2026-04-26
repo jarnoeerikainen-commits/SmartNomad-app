@@ -118,8 +118,9 @@ async function requireAdmin(req: Request) {
 
 async function gatherSignals() {
   const since = new Date(Date.now() - 24 * 3600_000).toISOString();
+  const platformStats = await Promise.resolve(admin.rpc("get_platform_stats" as never)).then((r: any) => r?.data?.[0] ?? null).catch(() => null);
   const [platform, dailyBriefing, agentReports, conciergeDaily, brainReports, ceoControls, ceoPermissions, pendingSuggestions] = await Promise.all([
-    admin.rpc("get_platform_stats" as never).then((r: any) => r?.data?.[0] ?? null).catch(() => null),
+    Promise.resolve(platformStats),
     admin.from("admin_ai_daily_briefings").select("title,executive_summary,highlights,concerns,director_rollup,pending_approvals,kpi_snapshot,created_at").order("briefing_date", { ascending: false }).limit(3),
     admin.from("admin_ai_agent_daily_reports").select("agent_key,title,summary,performance_score,suggestions,token_usage,estimated_cost_usd,report_date").gte("created_at", since).order("created_at", { ascending: false }).limit(30),
     admin.from("admin_concierge_performance_daily").select("segment,total_sessions,conversion_events,avg_quality_score,escalation_rate,token_usage,estimated_cost_usd,revenue_signal_usd,report_date").order("report_date", { ascending: false }).limit(10),
@@ -253,6 +254,7 @@ Deno.serve(async (req) => {
     if (reportError) throw reportError;
 
     const suggestions = Array.isArray(report.suggestions) ? report.suggestions.slice(0, 12) : [];
+    let dispatch = { director_orders_created: 0, agent_runs_queued: 0 };
     if (suggestions.length) {
       await admin.from("admin_ai_ceo_suggestions").insert(suggestions.map((s: any) => ({
         source_report_id: saved.id,
@@ -265,9 +267,10 @@ Deno.serve(async (req) => {
         confidence: Number.isFinite(Number(s.confidence)) ? Number(s.confidence) : 0.75,
         evidence: { source: "admin-ai-ceo", report_date: today },
       })));
+      dispatch = await dispatchCeoOrders(saved.id, suggestions, today, auth.userId);
     }
 
-    return json({ ok: true, report_id: saved.id, suggestions_created: suggestions.length, report_date: today });
+    return json({ ok: true, report_id: saved.id, suggestions_created: suggestions.length, ...dispatch, report_date: today });
   } catch (err) {
     console.error("admin-ai-ceo fatal:", err);
     return json({ ok: false, error: String(err).slice(0, 500) }, 500);
