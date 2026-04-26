@@ -25,6 +25,10 @@ const stepIcon: Record<string, React.ElementType> = {
   failed: TriangleAlert,
 };
 
+function hostFromUrl(url: string) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; }
+}
+
 const AdminAgentLive: React.FC = () => {
   const [runs, setRuns] = useState<AgentActivityRun[]>([]);
   const [, setTick] = useState(0);
@@ -141,6 +145,32 @@ const AdminAgentLive: React.FC = () => {
                     {(run.result_summary || run.error) && (
                       <div className="mt-4 rounded border border-[hsl(var(--gold)/0.1)] bg-[hsl(220_22%_10%)] p-3 text-sm text-[hsl(30_12%_72%)]">
                         {run.error || run.result_summary}
+                      </div>
+                    )}
+                    {(run.response_excerpt || run.answer_agents?.length || run.answer_sources?.length || run.websites?.length) && (
+                      <div className="mt-4 space-y-3 rounded border border-[hsl(var(--gold)/0.1)] bg-[hsl(220_22%_10%)] p-3">
+                        {run.response_excerpt && (
+                          <div>
+                            <div className="text-xs uppercase tracking-wider text-[hsl(var(--gold))]">Concierge response</div>
+                            <p className="mt-1 line-clamp-6 text-sm text-[hsl(30_12%_78%)]">{run.response_excerpt}</p>
+                          </div>
+                        )}
+                        {!!run.answer_agents?.length && (
+                          <div className="flex flex-wrap gap-2">
+                            {run.answer_agents.map((agent) => <Badge key={agent} variant="outline" className="border-emerald-500/25 text-emerald-300">{agent}</Badge>)}
+                          </div>
+                        )}
+                        {!!run.answer_sources?.length && (
+                          <div className="space-y-1 text-xs text-[hsl(30_12%_62%)]">
+                            {run.answer_sources.map((source) => <div key={source}>• {source}</div>)}
+                          </div>
+                        )}
+                        {!!run.websites?.length && (
+                          <div className="flex flex-wrap gap-2 text-xs">
+                            {run.websites.map((site) => <span key={site} className="rounded border border-[hsl(var(--gold)/0.14)] px-2 py-1 text-[hsl(30_12%_70%)]">{hostFromUrl(site)}</span>)}
+                          </div>
+                        )}
+                        {run.verification_note && <div className="text-xs text-emerald-300">{run.verification_note}</div>}
                       </div>
                     )}
                   </div>

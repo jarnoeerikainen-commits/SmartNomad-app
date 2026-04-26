@@ -28,6 +28,11 @@ export interface AgentActivityRun {
   directors: string[];
   steps: AgentActivityStep[];
   result_summary?: string;
+  response_excerpt?: string;
+  answer_agents?: string[];
+  answer_sources?: string[];
+  websites?: string[];
+  verification_note?: string;
   error?: string;
 }
 
@@ -194,7 +199,13 @@ export const AdminAgentActivityService = {
     timers.set(run.id, ids);
     return run.id;
   },
-  completeRun(runId: string, summary = 'Completed; response constrained to verified context and known sources.') {
+  completeRun(runId: string, summary = 'Completed; response constrained to verified context and known sources.', details?: {
+    responseExcerpt?: string;
+    answerAgents?: string[];
+    answerSources?: string[];
+    websites?: string[];
+    verificationNote?: string;
+  }) {
     load();
     timers.get(runId)?.forEach((t) => clearTimeout(t));
     timers.delete(runId);
@@ -203,6 +214,11 @@ export const AdminAgentActivityService = {
     run.steps = run.steps.map((s) => ({ ...s, status: s.status === 'failed' || s.status === 'blocked' ? s.status : 'done', completed_at: s.completed_at || now() }));
     run.status = 'completed';
     run.result_summary = summary;
+    run.response_excerpt = details?.responseExcerpt?.slice(0, 1400);
+    run.answer_agents = details?.answerAgents?.slice(0, 8);
+    run.answer_sources = details?.answerSources?.slice(0, 12);
+    run.websites = details?.websites?.slice(0, 12);
+    run.verification_note = details?.verificationNote;
     run.updated_at = now();
     persist();
   },

@@ -734,7 +734,33 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         latencyMs: Math.max(0, latencyMs),
         outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
       });
-      AdminAgentActivityService.completeRun(runId, `Concierge response completed with ${bundle.cityServicesContext ? 'city services, ' : ''}${bundle.calendar ? 'calendar, ' : ''}memory and truth-protocol checks.`);
+      const websiteMatches = Array.from(new Set([
+        ...assistantContent.matchAll(/https?:\/\/[^\s)\]]+/g),
+        ...cityServicesContext.matchAll(/https?:\/\/[^\s;)]+/g),
+      ].map((match) => match[0].replace(/[.,;:!?]+$/, ''))));
+      const answerSources = [
+        'Verified conversation context and user request',
+        persistentMemories ? 'RLS-scoped concierge memories' : '',
+        conversationSummary ? 'Compressed prior discussion summary' : '',
+        bundle.cityServicesContext ? `Verified city services context for ${bundle.location.city || 'current city'}` : '',
+        bundle.calendar ? 'User calendar context and write-policy guardrail' : '',
+        bundle.threatIntelligence ? 'Threat intelligence context' : '',
+        websiteMatches.length ? 'Websites visible in verified provider/answer context' : '',
+        'Zero-hallucination truth protocol',
+      ].filter(Boolean);
+      AdminAgentActivityService.completeRun(
+        runId,
+        `Concierge response completed with ${bundle.cityServicesContext ? 'city services, ' : ''}${bundle.calendar ? 'calendar, ' : ''}memory and truth-protocol checks.`,
+        {
+          responseExcerpt: assistantContent,
+          answerAgents: ['Concierge Governor', 'Context Builder', 'Source Verifier', 'Specialist Responder'],
+          answerSources,
+          websites: websiteMatches,
+          verificationNote: confidence === 'needs_review'
+            ? 'Low confidence/unknowns detected — user should be offered deeper verification.'
+            : 'Answer recorded as verified-context constrained; unknowns must be disclosed by protocol.',
+        },
+      );
 
       // Follow-up logic (less frequent with chunked messages since last chunk already asks a question)
       const shouldFollowUp = chunks.length <= 1 && exchangeCountRef.current % 4 === 0 && Math.random() > 0.6 && assistantContent;
