@@ -1,3 +1,5 @@
+import { supabase } from '@/integrations/supabase/client';
+
 export type AgentActivityStatus = 'running' | 'completed' | 'failed';
 export type AgentStepStatus = 'queued' | 'running' | 'done' | 'blocked' | 'failed';
 
@@ -33,6 +35,12 @@ export interface AgentActivityRun {
   answer_sources?: string[];
   websites?: string[];
   verification_note?: string;
+  model?: string;
+  input_tokens?: number;
+  output_tokens?: number;
+  latency_ms?: number;
+  estimated_cost_usd?: number;
+  proof_hash?: string;
   error?: string;
 }
 
@@ -161,6 +169,50 @@ function setStep(runId: string, stepIndex: number, status: AgentStepStatus) {
   persist();
 }
 
+function estimateCost(model = 'google/gemini-3-flash-preview', inputTokens = 0, outputTokens = 0) {
+  const rates: Record<string, { input: number; output: number }> = {
+    'google/gemini-3-flash-preview': { input: 0.00035, output: 0.00105 },
+    'google/gemini-2.5-flash': { input: 0.0003, output: 0.001 },
+    'google/gemini-2.5-flash-lite': { input: 0.0001, output: 0.0004 },
+    'google/gemini-2.5-pro': { input: 0.00125, output: 0.005 },
+  };
+  const rate = rates[model] || rates['google/gemini-3-flash-preview'];
+  return Number(((inputTokens / 1000) * rate.input + (outputTokens / 1000) * rate.output).toFixed(6));
+}
+
+async function persistProof(run: AgentActivityRun) {
+  try {
+    await supabase.functions.invoke('ai-execution-proof', {
+      body: {
+        run_ref: run.id,
+        surface: run.surface,
+        persona: run.persona,
+        user_alias: run.user_alias,
+        command: run.command,
+        primary_agent: run.primary_agent,
+        function_name: run.function_name,
+        status: run.status,
+        route: run.route,
+        directors: run.directors,
+        steps: run.steps,
+        sources: run.sources,
+        response_excerpt: run.response_excerpt,
+        answer_agents: run.answer_agents,
+        answer_sources: run.answer_sources,
+        websites: run.websites,
+        verification_note: run.verification_note,
+        model: run.model || 'google/gemini-3-flash-preview',
+        input_tokens: run.input_tokens || Math.ceil(run.command.length / 4),
+        output_tokens: run.output_tokens || Math.ceil((run.response_excerpt || '').length / 4),
+        latency_ms: run.latency_ms || Math.max(0, run.updated_at - run.ts),
+        cache_hit: false,
+        estimated_cost_usd: run.estimated_cost_usd,
+        error: run.error,
+      },
+    });
+  } catch {}
+}
+
 export const AdminAgentActivityService = {
   subscribe(cb: (items: AgentActivityRun[]) => void) {
     load();
@@ -192,9 +244,12 @@ export const AdminAgentActivityService = {
       sources: sourcePlan(input.surface, input.command),
       directors: route.directors,
       steps: buildSteps(input.surface, input.command, input.functionName),
+      model: 'google/gemini-3-flash-preview',
+      input_tokens: Math.ceil(input.command.length / 4),
     };
     runs = [run, ...runs];
     persist();
+    persistProof(run);
     const ids = [0, 1, 2, 3].map((idx) => window.setTimeout(() => setStep(run.id, idx, 'running'), 350 + idx * 650));
     timers.set(run.id, ids);
     return run.id;
@@ -205,6 +260,10 @@ export const AdminAgentActivityService = {
     answerSources?: string[];
     websites?: string[];
     verificationNote?: string;
+    model?: string;
+    inputTokens?: number;
+    outputTokens?: number;
+    latencyMs?: number;
   }) {
     load();
     timers.get(runId)?.forEach((t) => clearTimeout(t));
@@ -219,8 +278,14 @@ export const AdminAgentActivityService = {
     run.answer_sources = details?.answerSources?.slice(0, 12);
     run.websites = details?.websites?.slice(0, 12);
     run.verification_note = details?.verificationNote;
+    run.model = details?.model || run.model || 'google/gemini-3-flash-preview';
+    run.input_tokens = details?.inputTokens || run.input_tokens || Math.ceil(run.command.length / 4);
+    run.output_tokens = details?.outputTokens || Math.ceil((run.response_excerpt || '').length / 4);
+    run.latency_ms = details?.latencyMs || Math.max(0, now() - run.ts);
+    run.estimated_cost_usd = estimateCost(run.model, run.input_tokens, run.output_tokens);
     run.updated_at = now();
     persist();
+    persistProof(run);
   },
   failRun(runId: string, error: string) {
     load();
@@ -232,8 +297,11 @@ export const AdminAgentActivityService = {
     if (active >= 0) run.steps[active] = { ...run.steps[active], status: 'failed', completed_at: now() };
     run.status = 'failed';
     run.error = error;
+    run.latency_ms = Math.max(0, now() - run.ts);
+    run.estimated_cost_usd = estimateCost(run.model, run.input_tokens, run.output_tokens);
     run.updated_at = now();
     persist();
+    persistProof(run);
   },
 };
 
