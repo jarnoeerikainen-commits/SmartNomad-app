@@ -59,13 +59,45 @@ Also look for contextual scenarios like:
 - Similar weekend activity interests (biking, hiking, dining)
 - Attending the same events or conferences
 
-Return a JSON array of match suggestions with scores and reasons.`;
+Use only provided profiles. Do not invent people, private facts, events, or unverifiable claims. Return structured output through the tool only.`;
 
       const userPrompt = `User Profile: ${JSON.stringify(userProfile, null, 2)}
 
 Available Profiles: ${JSON.stringify(availableProfiles.slice(0, 10), null, 2)}
 
 Provide 5 best matches with scores (70-99), reasons for the match, common interests, shared locations, and 2-3 conversation starters for each. Focus on actionable connections — same city overlap, shared activities, events they could attend together.`;
+
+      const matchTool = {
+        type: 'function',
+        function: {
+          name: 'return_matches',
+          description: 'Return the best social matches from the provided profiles only',
+          parameters: {
+            type: 'object',
+            properties: {
+              matches: {
+                type: 'array',
+                maxItems: 5,
+                items: {
+                  type: 'object',
+                  properties: {
+                    profile: { type: 'object' },
+                    matchScore: { type: 'number' },
+                    reasons: { type: 'array', items: { type: 'string' }, maxItems: 4 },
+                    commonInterests: { type: 'array', items: { type: 'string' }, maxItems: 5 },
+                    sharedLocations: { type: 'array', items: { type: 'string' }, maxItems: 3 },
+                    conversationStarters: { type: 'array', items: { type: 'string' }, maxItems: 3 },
+                  },
+                  required: ['profile', 'matchScore', 'reasons', 'commonInterests', 'sharedLocations', 'conversationStarters'],
+                  additionalProperties: false,
+                },
+              },
+            },
+            required: ['matches'],
+            additionalProperties: false,
+          },
+        },
+      };
 
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
@@ -79,7 +111,10 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
           ],
-          temperature: 0.7,
+          tools: [matchTool],
+          tool_choice: { type: 'function', function: { name: 'return_matches' } },
+          temperature: 0.35,
+          max_tokens: 900,
         }),
       });
 
@@ -100,11 +135,10 @@ Provide 5 best matches with scores (70-99), reasons for the match, common intere
       }
 
       const data = await response.json();
-      const aiResponse = data.choices[0].message.content;
+      const toolArgs = data.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
 
       try {
-        const cleanJson = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        const matches = JSON.parse(cleanJson);
+        const matches = JSON.parse(toolArgs || '{}').matches || [];
         return new Response(JSON.stringify({ matches }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });

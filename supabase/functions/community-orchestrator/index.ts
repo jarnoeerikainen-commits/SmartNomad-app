@@ -127,13 +127,13 @@ serve(async (req) => {
     }
 
     const reqBody: any = {
-      model: 'google/gemini-3-flash-preview',
+      model: mode === 'quick_replies' ? 'google/gemini-2.5-flash-lite' : 'google/gemini-3-flash-preview',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      temperature: 0.85,
-      max_tokens: 400,
+      temperature: mode === 'quick_replies' ? 0.45 : 0.72,
+      max_tokens: mode === 'ai_nudge' ? 110 : mode === 'quick_replies' ? 140 : 320,
     };
     if (tools) { reqBody.tools = tools; reqBody.tool_choice = toolChoice; }
 
