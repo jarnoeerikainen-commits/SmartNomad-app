@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,14 +11,73 @@ import {
 } from 'recharts';
 import {
   Activity, Sparkles, Send, FileText, Lightbulb, Globe2, Zap, Users, DollarSign,
-  AlertTriangle, Smile, Loader2, Radio, RefreshCw, MessageSquareHeart,
+  AlertTriangle, Smile, Loader2, Radio, RefreshCw, MessageSquareHeart, Bot, ShieldCheck,
+  SlidersHorizontal, Gauge, Lock, Coins, CheckCircle2, PauseCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   AdminLiveSignalsService, type LiveSignal, type LiveAggregate,
 } from '@/services/AdminLiveSignalsService';
+import { useStaffRole } from '@/hooks/useStaffRole';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
+
+type ConciergeControl = {
+  agent_key: string;
+  display_name: string;
+  agent_type: string;
+  description: string;
+  status: string;
+  automation_level: string;
+  model_tier: string;
+  daily_token_budget: number;
+  daily_run_limit: number;
+  requires_approval: boolean;
+  can_write_to_user_surfaces: boolean;
+  schedule_label: string;
+  metadata?: Record<string, unknown> | null;
+};
+
+type ConciergeRule = {
+  rule_key: string;
+  category: string;
+  title: string;
+  rule_text: string;
+  status: string;
+  priority: number;
+  applies_to: string[];
+};
+
+type ConciergeReport = {
+  id: string;
+  agent_key: string;
+  title: string;
+  summary: string;
+  performance_score: number;
+  suggestions: string[];
+  token_usage: number;
+  estimated_cost_usd: number;
+};
+
+const DEMO_CONTROLS: ConciergeControl[] = [
+  { agent_key: 'concierge.governor', display_name: 'Concierge Governor', agent_type: 'governor', description: 'Main user-facing brain: routes intent, enforces rules, protects safety, margin and quality.', status: 'paused', automation_level: 'recommend_only', model_tier: 'balanced', daily_token_budget: 70000, daily_run_limit: 2000, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'Every conversation, policy-gated' },
+  { agent_key: 'concierge.router', display_name: 'Intent Router', agent_type: 'specialist', description: 'Cheap first-pass classifier for travel, local life, expat, business, booking, safety, revenue or support.', status: 'paused', automation_level: 'recommend_only', model_tier: 'speed', daily_token_budget: 18000, daily_run_limit: 10000, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'Per message preflight' },
+  { agent_key: 'concierge.safety', display_name: 'Safety & Risk Gatekeeper', agent_type: 'specialist', description: 'Runs Danger Gate, scams, high-risk travel checks and source-grounded warnings before monetization.', status: 'paused', automation_level: 'recommend_only', model_tier: 'balanced', daily_token_budget: 38000, daily_run_limit: 3500, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'Every destination or risk mention' },
+  { agent_key: 'concierge.revenue', display_name: 'Revenue Opportunity Agent', agent_type: 'specialist', description: 'Finds useful paid upgrades, partner offers and high-LTV moments without damaging trust.', status: 'paused', automation_level: 'recommend_only', model_tier: 'speed', daily_token_budget: 20000, daily_run_limit: 2500, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'After high-intent requests' },
+  { agent_key: 'concierge.local-life', display_name: 'Local Life Agent', agent_type: 'specialist', description: 'Verified restaurants, gyms, clubs, doctors, coworking, errands and practical city life.', status: 'paused', automation_level: 'recommend_only', model_tier: 'speed', daily_token_budget: 32000, daily_run_limit: 3500, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'On local intent' },
+  { agent_key: 'concierge.finops', display_name: 'Concierge Token Sentinel', agent_type: 'specialist', description: 'Cuts spend with routing, cache checks, compact context, compression and sampled audits.', status: 'paused', automation_level: 'recommend_only', model_tier: 'speed', daily_token_budget: 16000, daily_run_limit: 1200, requires_approval: true, can_write_to_user_surfaces: false, schedule_label: 'Hourly + surge windows' },
+];
+
+const DEMO_RULES: ConciergeRule[] = [
+  { rule_key: 'truth.verified_only', category: 'truth', title: 'Evidence-first recommendations', rule_text: 'Never invent venues, prices, policies, dates, reviews or availability. Use verified app state, user data or named trusted sources.', status: 'active', priority: 1, applies_to: ['all'] },
+  { rule_key: 'profit.trust_first', category: 'revenue', title: 'Trust-preserving monetization', rule_text: 'Offer paid upgrades only when they improve the user outcome. No hard sell, fake urgency or hidden sponsorship framing.', status: 'active', priority: 10, applies_to: ['concierge.revenue'] },
+  { rule_key: 'tokens.route_before_answer', category: 'finops', title: 'Route before expensive reasoning', rule_text: 'Classify intent and risk first, then call specialists only when needed.', status: 'active', priority: 20, applies_to: ['concierge.router'] },
+];
+
+const DEMO_REPORTS: ConciergeReport[] = [
+  { id: 'demo-concierge-report-1', agent_key: 'concierge.governor', title: 'Concierge Governor Launch Baseline', summary: 'Control plane ready in safe mode. Enable router and safety gate first, then sampled quality audits.', performance_score: 89, suggestions: ['Keep all agents paused until staff review', 'Enable router and safety gate first'], token_usage: 0, estimated_cost_usd: 0 },
+  { id: 'demo-concierge-report-2', agent_key: 'concierge.finops', title: 'Token Sentinel Baseline', summary: 'Route-first, compact context, cheap classifiers and cache reuse are prepared for lower token burn.', performance_score: 91, suggestions: ['Limit specialist calls to high-value or high-risk turns'], token_usage: 0, estimated_cost_usd: 0 },
+];
 
 const KIND_COLOR: Record<string, string> = {
   wish: 'text-emerald-300',
@@ -50,6 +110,7 @@ const QUICK_PROMPTS = [
 const FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-concierge`;
 
 const AdminConcierge: React.FC = () => {
+  const { isDemoMode, isAdmin } = useStaffRole();
   const [signals, setSignals] = useState<LiveSignal[]>([]);
   const [agg, setAgg] = useState<LiveAggregate>(() => AdminLiveSignalsService.aggregate());
   const [messages, setMessages] = useState<Msg[]>([
@@ -62,6 +123,10 @@ const AdminConcierge: React.FC = () => {
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [pulse, setPulse] = useState(0);
+  const [controls, setControls] = useState<ConciergeControl[]>(DEMO_CONTROLS);
+  const [rules, setRules] = useState<ConciergeRule[]>(DEMO_RULES);
+  const [reports, setReports] = useState<ConciergeReport[]>(DEMO_REPORTS);
+  const [loadingControl, setLoadingControl] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +142,85 @@ const AdminConcierge: React.FC = () => {
       off();
     };
   }, []);
+
+  useEffect(() => {
+    async function loadConciergeControlPlane() {
+      if (isDemoMode) {
+        setLoadingControl(false);
+        return;
+      }
+      try {
+        const [controlsRes, rulesRes, reportsRes] = await Promise.all([
+          supabase.from('admin_ai_agent_controls' as any).select('*').like('agent_key', 'concierge.%').order('agent_type').order('display_name'),
+          supabase.from('admin_concierge_rules' as any).select('*').order('priority'),
+          supabase.rpc('get_latest_agent_daily_reports' as any, { p_limit: 20 }),
+        ]);
+        if (controlsRes.data?.length) setControls(controlsRes.data as unknown as ConciergeControl[]);
+        if (rulesRes.data?.length) setRules(rulesRes.data as unknown as ConciergeRule[]);
+        const conciergeReports = ((reportsRes.data ?? []) as unknown as ConciergeReport[]).filter((r) => r.agent_key?.startsWith('concierge.'));
+        if (conciergeReports.length) setReports(conciergeReports);
+      } catch (e) {
+        console.warn('Concierge control fallback:', e);
+      } finally {
+        setLoadingControl(false);
+      }
+    }
+    loadConciergeControlPlane();
+  }, [isDemoMode]);
+
+  async function updateControl(agentKey: string, patch: Partial<ConciergeControl>) {
+    if (isDemoMode) {
+      setControls((current) => current.map((c) => (c.agent_key === agentKey ? { ...c, ...patch } : c)));
+      toast.info('Demo mode — Concierge control changed only in this preview.');
+      return;
+    }
+    if (!isAdmin) {
+      toast.error('Admin role required to change Concierge controls.');
+      return;
+    }
+    const { data, error } = await supabase.rpc('update_admin_ai_agent_control' as any, {
+      p_agent_key: agentKey,
+      p_status: patch.status ?? null,
+      p_automation_level: patch.automation_level ?? null,
+      p_daily_token_budget: patch.daily_token_budget ?? null,
+      p_daily_run_limit: patch.daily_run_limit ?? null,
+      p_requires_approval: patch.requires_approval ?? null,
+      p_can_write_to_user_surfaces: patch.can_write_to_user_surfaces ?? null,
+      p_disabled_reason: null,
+    });
+    if (error) {
+      toast.error(`Could not update Concierge agent: ${error.message}`);
+      return;
+    }
+    setControls((current) => current.map((c) => (c.agent_key === agentKey ? data as unknown as ConciergeControl : c)));
+    toast.success('Concierge agent updated.');
+  }
+
+  async function toggleRule(rule: ConciergeRule) {
+    const nextStatus = rule.status === 'active' ? 'paused' : 'active';
+    if (isDemoMode) {
+      setRules((current) => current.map((r) => (r.rule_key === rule.rule_key ? { ...r, status: nextStatus } : r)));
+      toast.info('Demo mode — rule changed only in this preview.');
+      return;
+    }
+    if (!isAdmin) {
+      toast.error('Admin role required to change Concierge rules.');
+      return;
+    }
+    const { data, error } = await supabase.rpc('update_admin_concierge_rule' as any, {
+      p_rule_key: rule.rule_key,
+      p_status: nextStatus,
+      p_rule_text: null,
+      p_priority: null,
+      p_metadata: null,
+    });
+    if (error) {
+      toast.error(`Could not update rule: ${error.message}`);
+      return;
+    }
+    setRules((current) => current.map((r) => (r.rule_key === rule.rule_key ? data as unknown as ConciergeRule : r)));
+    toast.success('Concierge rule updated.');
+  }
 
   // ── Auto-scroll chat
   useEffect(() => {
@@ -106,6 +250,14 @@ const AdminConcierge: React.FC = () => {
     }
     return buckets;
   }, [signals, pulse]);
+
+  const controlKpis = useMemo(() => ({
+    total: controls.length,
+    active: controls.filter((c) => c.status === 'active').length,
+    paused: controls.filter((c) => c.status === 'paused').length,
+    budget: controls.reduce((sum, c) => sum + Number(c.daily_token_budget || 0), 0),
+    rules: rules.filter((r) => r.status === 'active').length,
+  }), [controls, rules]);
 
   const regionData = useMemo(
     () =>
@@ -223,6 +375,99 @@ const AdminConcierge: React.FC = () => {
         <KpiTile icon={AlertTriangle} label="Open problems" value={agg.open_problems.toString()} accent="text-rose-300" />
         <KpiTile icon={Smile} label="Positive sentiment" value={`${agg.positive_pct}%`} accent="text-emerald-300" />
       </div>
+
+
+      <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal className="h-4 w-4 text-[hsl(var(--gold))]" />
+              <h2 className="font-semibold">User Concierge AI Control Plane</h2>
+              <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30">
+                {isDemoMode ? 'Demo safe' : 'Staff gated'}
+              </Badge>
+            </div>
+            <p className="text-xs text-[hsl(30_12%_65%)] mt-1">
+              {controlKpis.total} agents · {controlKpis.active} active · {controlKpis.paused} paused · {controlKpis.rules} active rules · {controlKpis.budget.toLocaleString()} daily token cap
+            </p>
+          </div>
+          {loadingControl && <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_65%)]"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading controls</div>}
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {controls.map((c) => (
+              <Card key={c.agent_key} className="bg-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.12)] p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      {c.agent_type === 'governor' ? <Bot className="h-4 w-4 text-[hsl(var(--gold))]" /> : <Gauge className="h-4 w-4 text-emerald-300" />}
+                      <span className="font-semibold text-sm truncate">{c.display_name}</span>
+                    </div>
+                    <div className="text-[11px] text-[hsl(30_12%_62%)] mt-1 line-clamp-2">{c.description}</div>
+                  </div>
+                  <Button size="sm" variant="ghost" className="h-8 px-2" onClick={() => updateControl(c.agent_key, { status: c.status === 'active' ? 'paused' : 'active' })}>
+                    {c.status === 'active' ? <CheckCircle2 className="h-4 w-4 text-emerald-300" /> : <PauseCircle className="h-4 w-4 text-amber-300" />}
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
+                  <KpiMini label="Mode" value={c.automation_level.replace('_', ' ')} />
+                  <KpiMini label="Model" value={c.model_tier} />
+                  <KpiMini label="Budget" value={`${Math.round(c.daily_token_budget / 1000)}k`} />
+                </div>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <Badge className={c.requires_approval ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'}>
+                    {c.requires_approval ? 'approval required' : 'auto allowed'}
+                  </Badge>
+                  <Badge className={c.can_write_to_user_surfaces ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-sky-500/15 text-sky-300 border-sky-500/30'}>
+                    {c.can_write_to_user_surfaces ? 'can write live' : 'back-office only'}
+                  </Badge>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateControl(c.agent_key, { automation_level: 'recommend_only', requires_approval: true, can_write_to_user_surfaces: false })}>
+                    <Lock className="h-3 w-3 mr-1" /> Safe
+                  </Button>
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateControl(c.agent_key, { automation_level: 'supervised_auto', requires_approval: true, can_write_to_user_surfaces: false })}>
+                    Supervised
+                  </Button>
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateControl(c.agent_key, { daily_token_budget: Math.max(5000, Math.round(c.daily_token_budget * 0.8)) })}>
+                    -20% tokens
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="space-y-3">
+            <Card className="bg-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.12)] p-4">
+              <div className="flex items-center gap-2 mb-3"><ShieldCheck className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm">Rules & Habits</h3></div>
+              <div className="space-y-2">
+                {rules.slice(0, 7).map((rule) => (
+                  <button key={rule.rule_key} onClick={() => toggleRule(rule)} className="w-full text-left p-2 rounded bg-[hsl(220_22%_6%)] border border-[hsl(43_96%_56%/0.1)] hover:border-[hsl(43_96%_56%/0.3)] transition-colors">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs font-medium">{rule.title}</div>
+                      <Badge className={rule.status === 'active' ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-slate-500/15 text-slate-300 border-slate-500/30'}>{rule.status}</Badge>
+                    </div>
+                    <div className="text-[11px] text-[hsl(30_12%_65%)] mt-1 line-clamp-2">{rule.rule_text}</div>
+                  </button>
+                ))}
+              </div>
+            </Card>
+            <Card className="bg-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.12)] p-4">
+              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm">Daily Performance Reports</h3></div>
+              <div className="space-y-3">
+                {reports.slice(0, 4).map((report) => (
+                  <div key={report.id} className="border-l-2 border-[hsl(43_96%_56%/0.35)] pl-3">
+                    <div className="text-sm font-medium">{report.title}</div>
+                    <div className="text-xs text-[hsl(30_12%_68%)] line-clamp-2 mt-1">{report.summary}</div>
+                    <div className="text-[10px] text-[hsl(30_12%_55%)] mt-1">Score {Number(report.performance_score).toFixed(0)} · {report.token_usage.toLocaleString()} tokens · ${Number(report.estimated_cost_usd).toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </Card>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* LEFT: live ticker + charts */}
@@ -418,6 +663,13 @@ const AdminConcierge: React.FC = () => {
     </div>
   );
 };
+
+const KpiMini: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div className="rounded bg-[hsl(220_22%_6%)] border border-[hsl(43_96%_56%/0.08)] p-2">
+    <div className="text-[9px] uppercase tracking-wider text-[hsl(30_12%_55%)]">{label}</div>
+    <div className="text-[11px] text-[hsl(30_12%_88%)] truncate">{value}</div>
+  </div>
+);
 
 const KpiTile: React.FC<{ icon: any; label: string; value: string; accent: string }> = ({
   icon: Icon, label, value, accent,
