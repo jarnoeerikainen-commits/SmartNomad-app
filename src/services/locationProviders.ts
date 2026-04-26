@@ -163,7 +163,10 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  return firstSuccessfulLocation([ipFromSupabaseFunction, ipFromIpapi, ipFromBigDataCloud]);
+  const supabaseLocation = await ipFromSupabaseFunction();
+  if (supabaseLocation) return supabaseLocation;
+
+  return firstSuccessfulLocation([ipFromIpapi, ipFromBigDataCloud]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
@@ -214,10 +217,12 @@ async function rgNominatim(lat: number, lon: number): Promise<LocationData | nul
 }
 
 export async function reverseGeocode(lat: number, lon: number): Promise<LocationData | null> {
+  const nominatimLocation = await rgNominatim(lat, lon);
+  if (nominatimLocation) return nominatimLocation;
+
   return (
     (await firstSuccessfulLocation([
       () => rgBigDataCloud(lat, lon),
-      () => rgNominatim(lat, lon),
     ])) || {
       latitude: lat,
       longitude: lon,

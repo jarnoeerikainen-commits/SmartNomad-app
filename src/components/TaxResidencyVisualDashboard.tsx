@@ -4,15 +4,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Country } from '@/types/country';
 import { AlertTriangle, CheckCircle, Shield, TrendingUp, Globe, ExternalLink, Home, Briefcase, Heart, DollarSign, FileCheck, Scale } from 'lucide-react';
-import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, RadialBar, RadialBarChart, PolarAngleAxis, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ALL_COUNTRIES } from '@/data/countries';
 
 interface TaxResidencyVisualDashboardProps {
   countries: Country[];
   homeCountryCode?: string;
 }
 
-// Government data sources for verification
+// Government data sources for verification where a country-specific authority is not in ALL_COUNTRIES.
 const TAX_DATA_SOURCES = {
   US: { name: 'IRS', url: 'https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test' },
   GB: { name: 'HMRC', url: 'https://www.gov.uk/guidance/tax-residence' },
@@ -27,6 +28,16 @@ const TAX_DATA_SOURCES = {
   DEFAULT: { name: 'OECD Model Tax Convention', url: 'https://www.oecd.org/tax/treaties/model-tax-convention-on-income-and-on-capital-condensed-version-20745419.htm' }
 };
 
+const getCountryTaxSource = (country: Country) => {
+  const countryInfo = ALL_COUNTRIES.find(c => c.code === country.code);
+  const fallback = TAX_DATA_SOURCES[country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT;
+  return {
+    threshold: countryInfo?.taxResidencyDays || country.dayLimit || 183,
+    sourceName: countryInfo?.taxAuthorityName || fallback.name,
+    sourceUrl: countryInfo?.taxAuthorityUrl || fallback.url,
+  };
+};
+
 const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = ({ 
   countries, 
   homeCountryCode 
@@ -34,8 +45,8 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
   // Calculate tax residency metrics for each country
   const countryMetrics = useMemo(() => {
     return countries.map(country => {
-      const daysSpent = country.yearlyDaysSpent || 0;
-      const threshold = 183; // Standard tax residency threshold
+      const daysSpent = country.yearlyDaysSpent || country.daysSpent || 0;
+      const { threshold, sourceName, sourceUrl } = getCountryTaxSource(country);
       const daysRemaining = Math.max(0, threshold - daysSpent);
       const progress = Math.min((daysSpent / threshold) * 100, 100);
       
@@ -61,10 +72,39 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
         status,
         statusColor,
         statusLabel,
+        threshold,
+        sourceName,
+        sourceUrl,
         isHome: country.code.toLowerCase() === homeCountryCode?.toLowerCase()
       };
     });
   }, [countries, homeCountryCode]);
+
+  // Overall global status
+  const globalStatus = useMemo(() => {
+    const atRisk = countryMetrics.filter(m => m.status === 'danger').length;
+    const warning = countryMetrics.filter(m => m.status === 'warning').length;
+    
+    if (atRisk > 0) return { status: 'danger', label: 'Review Required', color: 'hsl(var(--destructive))', icon: AlertTriangle };
+    if (warning > 0) return { status: 'warning', label: 'Approaching Threshold', color: 'hsl(var(--warning))', icon: AlertTriangle };
+    return { status: 'safe', label: 'No Threshold Triggered', color: 'hsl(var(--success))', icon: CheckCircle };
+  }, [countryMetrics]);
+
+  const globalDaysData = useMemo(() => {
+    return countryMetrics
+      .map(metric => ({
+        name: metric.country.name,
+        code: metric.country.code,
+        flag: metric.country.flag,
+        days: metric.daysSpent,
+        threshold: metric.threshold,
+        remaining: metric.daysRemaining,
+        progress: Math.round(metric.progress),
+        fill: metric.statusColor,
+      }))
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 12);
+  }, [countryMetrics]);
 
   // Find home country or most critical country for main display
   const mainCountry = useMemo(() => {
@@ -100,16 +140,6 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
       </Card>
     );
   }
-
-  // Overall global status
-  const globalStatus = useMemo(() => {
-    const atRisk = countryMetrics.filter(m => m.status === 'danger').length;
-    const warning = countryMetrics.filter(m => m.status === 'warning').length;
-    
-    if (atRisk > 0) return { status: 'danger', label: 'Tax Resident', color: 'hsl(var(--destructive))', icon: AlertTriangle };
-    if (warning > 0) return { status: 'warning', label: 'Approaching Threshold', color: 'hsl(var(--warning))', icon: AlertTriangle };
-    return { status: 'safe', label: 'Safe Zone', color: 'hsl(var(--success))', icon: CheckCircle };
-  }, [countryMetrics]);
 
   return (
     <div className="space-y-6">
@@ -197,7 +227,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                     days remaining
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    of 183 days
+                    of {mainCountry.threshold} days
                   </div>
                 </div>
               </div>
@@ -230,7 +260,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                 </Card>
                 <Card className="p-4 bg-card/50">
                   <div className="text-sm text-muted-foreground mb-1">Threshold</div>
-                  <div className="text-3xl font-bold">183</div>
+                  <div className="text-3xl font-bold">{mainCountry.threshold}</div>
                 </Card>
               </div>
 
@@ -270,7 +300,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                   <div className="text-sm">
                     <span className="font-medium">Tax Resident Status</span>
                     <p className="text-muted-foreground mt-1">
-                      You've exceeded the 183-day threshold and may be considered a tax resident.
+                      You've exceeded the {mainCountry.threshold}-day threshold and may be considered a tax resident.
                     </p>
                   </div>
                 </div>
@@ -293,12 +323,11 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                         size="sm"
                         className="h-8 px-2"
                         onClick={() => {
-                          const source = TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT;
-                          window.open(source.url, '_blank');
+                          window.open(mainCountry.sourceUrl, '_blank');
                         }}
                       >
                         <ExternalLink className="w-3 h-3 mr-1" />
-                        {(TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT).name}
+                        {mainCountry.sourceName}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -308,6 +337,57 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                 </TooltipProvider>
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Global Country Days Graph */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            Global Days by Country
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            One consolidated view of followed countries, compared against each verified local tax-residency threshold.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[320px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={globalDaysData} layout="vertical" margin={{ top: 8, right: 24, left: 8, bottom: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                <XAxis type="number" stroke="hsl(var(--muted-foreground))" allowDecimals={false} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={112}
+                  tick={({ x, y, payload }) => {
+                    const item = globalDaysData.find(d => d.name === payload.value);
+                    return (
+                      <text x={x} y={y} dy={4} textAnchor="end" fill="hsl(var(--foreground))" fontSize={12}>
+                        {item?.flag} {payload.value}
+                      </text>
+                    );
+                  }}
+                />
+                <Bar dataKey="days" radius={[0, 6, 6, 0]} barSize={18}>
+                  {globalDaysData.map((entry) => (
+                    <Cell key={entry.code} fill={entry.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {globalDaysData.map(item => (
+              <div key={item.code} className="flex items-center justify-between gap-3 rounded-lg border bg-card/50 p-3 text-sm">
+                <span className="font-medium truncate">{item.flag} {item.name}</span>
+                <span className="text-muted-foreground whitespace-nowrap">
+                  {item.days}/{item.threshold} · {item.progress}%
+                </span>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -439,7 +519,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Days</span>
-                        <span className="font-bold">{metric.daysSpent}/183</span>
+                        <span className="font-bold">{metric.daysSpent}/{metric.threshold}</span>
                       </div>
                       <div className="relative h-2 bg-muted rounded-full overflow-hidden">
                         <div 
