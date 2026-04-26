@@ -24,6 +24,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -152,7 +153,7 @@ const briefs: Record<
 async function sourceWithAI(director: Director, scope: string) {
   const brief = briefs[director];
 
-  const systemPrompt = `You are the SuperNomad ${brief.title}. You work 24/7 sourcing premium opportunities for a high-net-worth global nomad platform. You partner tightly with Sales, Marketing, the Concierge AI, and the other AI Directors. Every opportunity must be SELLABLE, BUNDLEABLE, or DIRECTLY ACTIONABLE.
+  const systemPrompt = withTruthProtocol(`You are the SuperNomad ${brief.title}. You work 24/7 sourcing premium opportunities for a high-net-worth global nomad platform. You partner tightly with Sales, Marketing, the Concierge AI, and the other AI Directors. Every opportunity must be SELLABLE, BUNDLEABLE, or DIRECTLY ACTIONABLE.
 
 Your mandate: ${brief.mandate}
 
@@ -171,7 +172,7 @@ GROUND RULES (Evidence-First / Source of Truth):
    - 1 Concierge / sales bundle (one-line pitch + bundle parts)
    - sales target segments
    - popularity_score (0-100) and exclusivity_score (0-100)
-- ALL outputs require human approval before being pushed to Concierge or Sales — phrase rationale as a recommendation, not as a done deal.`;
+- ALL outputs require human approval before being pushed to Concierge or Sales — phrase rationale as a recommendation, not as a done deal.`);
 
   const userPrompt = `Scope: ${scope}. Return your next batch of opportunities NOW. Today is ${new Date().toISOString().slice(0, 10)}.`;
 
