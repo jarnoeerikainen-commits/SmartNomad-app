@@ -19,7 +19,7 @@ describe('AdminAgentLive slow-response resilience', () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    vi.clearAllTimers();
     vi.useRealTimers();
     localStorage.clear();
   });
@@ -39,7 +39,7 @@ describe('AdminAgentLive slow-response resilience', () => {
       });
     });
 
-    expect(await screen.findByText('AI Agent Workstream')).toBeInTheDocument();
+    expect(screen.getByText('AI Agent Workstream')).toBeInTheDocument();
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
     expect(screen.getByText(/John asks for verified hotel recommendations/i)).toBeInTheDocument();
 

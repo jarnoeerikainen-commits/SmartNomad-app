@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AITravelAssistant from '../AITravelAssistant';
 import AdminAgentLive from '@/pages/admin/AdminAgentLive';
@@ -153,7 +152,7 @@ describe('AITravelAssistant slow-response resilience', () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    vi.clearAllTimers();
     vi.unstubAllGlobals();
     vi.useRealTimers();
     localStorage.clear();
@@ -162,8 +161,6 @@ describe('AITravelAssistant slow-response resilience', () => {
   it('shows typing during a slow concierge stream, completes, and mirrors proof details into Live Agent Feed', async () => {
     const errors: unknown[] = [];
     const errorSpy = vi.spyOn(console, 'error').mockImplementation((...args) => errors.push(args));
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
     render(
       <>
         <AITravelAssistant />
@@ -172,8 +169,8 @@ describe('AITravelAssistant slow-response resilience', () => {
     );
 
     const input = await screen.findByPlaceholderText('Ask concierge...');
-    await user.type(input, 'Find verified hotel recommendations with websites');
-    await user.keyboard('{Enter}');
+    fireEvent.change(input, { target: { value: 'Find verified hotel recommendations with websites' } });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
     expect(screen.getByText(/Find verified hotel recommendations/i)).toBeInTheDocument();
