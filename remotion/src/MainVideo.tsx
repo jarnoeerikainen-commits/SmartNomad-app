@@ -110,7 +110,7 @@ const Shot = ({ shot, index }: { shot: typeof shots[number]; index: number }) =>
 
   return (
     <AbsoluteFill style={{ opacity: exit, background: C.deep }}>
-      <Img src={staticFile(shot.image)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: `scale(${imageScale}) translateX(${imageX}px)`, filter: "saturate(0.98) contrast(1.08)" }} />
+      <Img src={staticFile(shot.image)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: `scale(${imageScale}) translateX(${imageX}px)`, filter: shot.image.includes("command_phone") ? "blur(2px) saturate(0.95) contrast(1.08)" : "saturate(0.98) contrast(1.08)" }} />
       <div style={{ position: "absolute", inset: 0, background: index % 2 === 0 ? "linear-gradient(90deg, rgba(5,7,11,0.92) 0%, rgba(5,7,11,0.64) 42%, rgba(5,7,11,0.08) 100%)" : "linear-gradient(270deg, rgba(5,7,11,0.92) 0%, rgba(5,7,11,0.62) 44%, rgba(5,7,11,0.12) 100%)" }} />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 70% 20%, rgba(212,175,55,0.14), transparent 30%), radial-gradient(circle at 30% 80%, rgba(24,184,167,0.12), transparent 34%)" }} />
       <div style={{ position: "absolute", top: 142, left: index % 2 === 0 ? 96 : 1040, width: isFinal ? 760 : 720, opacity: contentOp, transform: `translate(${contentX}px, ${contentY}px)` }}>
