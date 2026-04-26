@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./countryKnowledge.ts";
 import { pickModelForMessages } from "../_shared/modelRouter.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
@@ -1149,6 +1150,35 @@ When users ask about local services in any of our 100 covered cities, direct the
 ${userContext?.language && userContext.language !== 'en' ? `The user's app is set to language code "${userContext.language}". You MUST respond ENTIRELY in this language. All text, recommendations, tips, warnings — everything in the user's language. Booking card labels can stay in English for search engine compatibility, but all conversational text MUST be in the user's selected language. Adapt your tone, cultural references, and expressions to feel natural in that language.` : 'Respond in English.'}`;
 }
 
+
+async function getConciergeControlPrompt(): Promise<string> {
+  const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+  const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!SUPABASE_URL || !SERVICE_KEY) return "";
+
+  try {
+    const admin = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
+    const [rulesRes, controlsRes] = await Promise.all([
+      admin.from("admin_concierge_rules").select("rule_key,category,title,rule_text,priority,applies_to").eq("status", "active").order("priority").limit(12),
+      admin.from("admin_ai_agent_controls").select("agent_key,display_name,status,automation_level,model_tier,daily_token_budget,requires_approval,can_write_to_user_surfaces,metadata").like("agent_key", "concierge.%").order("agent_key"),
+    ]);
+
+    const rules = rulesRes.data ?? [];
+    const controls = controlsRes.data ?? [];
+    if (!rules.length && !controls.length) return "";
+
+    const activeAgents = controls.filter((c: any) => c.status === "active");
+    const budget = controls.reduce((sum: number, c: any) => sum + Number(c.daily_token_budget || 0), 0);
+    const ruleText = rules.map((r: any) => `- [${r.category}] ${r.title}: ${String(r.rule_text).slice(0, 420)}`).join("\n");
+    const controlText = controls.map((c: any) => `- ${c.agent_key}: ${c.status}, ${c.automation_level}, model=${c.model_tier}, approval=${c.requires_approval ? "yes" : "no"}, live_write=${c.can_write_to_user_surfaces ? "yes" : "no"}`).join("\n");
+
+    return `\n\n**BACK-OFFICE CONCIERGE CONTROL PLANE (authoritative):**\n${controls.length} Concierge agents configured, ${activeAgents.length} active, daily token cap ${budget}. Agents are behavior controls, not a reason to call extra models. Be token-friendly: route mentally first, answer directly when simple, use compact context, avoid unnecessary long output.\n\nActive rules:\n${ruleText}\n\nAgent states:\n${controlText}\n\nIf a rule conflicts with personality mode, the rule wins. If can_write_to_user_surfaces is false, never imply an automated real-world action already happened.`;
+  } catch (e) {
+    console.warn("Concierge control prompt unavailable", e);
+    return "";
+  }
+}
+
 // ═══════════════════════════════════════════════════════════
 // EDGE FUNCTION HANDLER
 // ═══════════════════════════════════════════════════════════
@@ -1276,7 +1306,8 @@ serve(async (req) => {
     const venueRows = await getCuratedVenuesForCity(typeof venueCity === 'string' ? venueCity : undefined);
     const venueSection = renderVenuesForPrompt(venueRows, typeof venueCity === 'string' ? venueCity : undefined);
 
-    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}`);
+    const conciergeControlSection = await getConciergeControlPrompt();
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);
