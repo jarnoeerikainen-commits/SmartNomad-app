@@ -99,13 +99,13 @@ const Landing: React.FC = () => {
   return (
     <div className="min-h-screen bg-[hsl(220_22%_8%)] text-[hsl(30_12%_95%)] overflow-x-hidden">
       {filmMode !== 'closed' && (
-        <div className="fixed inset-0 z-[80] bg-[hsl(220_22%_4%/0.96)] backdrop-blur-xl flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-label="SuperNomad cinematic video">
-          <div className="relative w-full max-w-6xl overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.28)] bg-[hsl(220_22%_8%)] shadow-[0_40px_120px_-30px_hsl(0_0%_0%/0.9)]">
+        <div className="fixed inset-0 z-[80] bg-[hsl(220_22%_4%/0.96)] backdrop-blur-xl flex items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-label="SuperNomad cinematic video">
+          <div className="relative w-full max-w-6xl max-h-[calc(100svh-1.5rem)] overflow-y-auto rounded-2xl border border-[hsl(43_96%_56%/0.28)] bg-[hsl(220_22%_8%)] shadow-[0_40px_120px_-30px_hsl(0_0%_0%/0.9)]">
             <button onClick={() => setFilmMode('closed')} className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[hsl(43_96%_56%/0.28)] bg-[hsl(220_22%_8%/0.72)] text-white hover:bg-[hsl(43_96%_56%/0.14)]" aria-label="Skip video teaser">
               <X className="h-5 w-5" />
             </button>
             <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
-              <div className="relative min-h-[300px] sm:min-h-[520px] overflow-hidden bg-[hsl(220_22%_5%)]">
+              <div className="relative min-h-[240px] sm:min-h-[420px] lg:min-h-[520px] overflow-hidden bg-[hsl(220_22%_5%)]">
                 <video
                   key={filmMode}
                   className="h-full w-full object-cover"
@@ -146,13 +146,13 @@ const Landing: React.FC = () => {
       {/* ============= TOP NAV ============= */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[hsl(220_22%_8%/0.7)] border-b border-[hsl(43_96%_56%/0.15)]">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          <a href="#top" className="flex items-center gap-2.5">
+          <a href="#top" className="flex shrink-0 items-center gap-2.5">
             <img src={logo} alt="SuperNomad logo" className="h-9 w-9 rounded-md object-cover ring-1 ring-[hsl(43_96%_56%/0.4)]" width={36} height={36} />
-            <span className="font-display text-lg font-bold tracking-wide">
+            <span className="font-display text-lg font-bold tracking-wide whitespace-nowrap">
               Super<span className="text-[hsl(var(--gold))]">Nomad</span>
             </span>
           </a>
-            <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
+            <nav className="hidden xl:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
               <button type="button" onClick={() => setFilmMode('teaser')} className="hover:text-[hsl(var(--gold))] transition-colors">Teaser</button>
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
             <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
