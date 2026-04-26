@@ -139,12 +139,17 @@ function formatAgo(ts: number) {
 }
 
 const AdminAgents: React.FC = () => {
+  const { isDemoMode, isAdmin } = useStaffRole();
   const [, force] = useState(0);
   const [filter, setFilter] = useState<AgentId | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'open' | 'all' | 'approved' | 'rejected'>('open');
   const [selected, setSelected] = useState<AgentProposal | null>(null);
   const [permitKey, setPermitKey] = useState('');
   const [governorNote, setGovernorNote] = useState('');
+  const [controls, setControls] = useState<LiveControl[]>(DEMO_CONTROLS);
+  const [reports, setReports] = useState<LiveReport[]>(DEMO_REPORTS);
+  const [suggestions, setSuggestions] = useState<LiveSuggestion[]>(DEMO_SUGGESTIONS);
+  const [loadingLive, setLoadingLive] = useState(true);
 
   useEffect(() => {
     const unsub = AgentOrchestratorService.subscribe(() => force((x) => x + 1));
@@ -153,10 +158,69 @@ const AdminAgents: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    document.title = 'Back Office — Agent Council · SuperNomad';
+    async function loadLiveControlPlane() {
+      if (isDemoMode) {
+        setLoadingLive(false);
+        return;
+      }
+      try {
+        const [controlsRes, reportsRes, suggestionsRes] = await Promise.all([
+          supabase.from('admin_ai_agent_controls' as any).select('*').order('agent_type').order('display_name'),
+          supabase.rpc('get_latest_agent_daily_reports' as any, { p_limit: 12 }),
+          supabase.from('admin_ai_agent_suggestions' as any).select('*').eq('status', 'pending').order('created_at', { ascending: false }).limit(20),
+        ]);
+        if (controlsRes.data?.length) setControls(controlsRes.data as unknown as LiveControl[]);
+        if (reportsRes.data?.length) setReports(reportsRes.data as unknown as LiveReport[]);
+        if (suggestionsRes.data?.length) setSuggestions(suggestionsRes.data as unknown as LiveSuggestion[]);
+      } catch (e) {
+        console.warn('Agent control plane fallback:', e);
+      } finally {
+        setLoadingLive(false);
+      }
+    }
+    loadLiveControlPlane();
+  }, [isDemoMode]);
+
+  async function updateControl(agentKey: string, patch: Partial<LiveControl>) {
+    if (isDemoMode) {
+      setControls((current) => current.map((c) => (c.agent_key === agentKey ? { ...c, ...patch } : c)));
+      toast.info('Demo mode — control changed only in this preview.');
+      return;
+    }
+    if (!isAdmin) {
+      toast.error('Admin role required to change agent controls.');
+      return;
+    }
+    const { data, error } = await supabase.rpc('update_admin_ai_agent_control' as any, {
+      p_agent_key: agentKey,
+      p_status: patch.status ?? null,
+      p_automation_level: patch.automation_level ?? null,
+      p_daily_token_budget: patch.daily_token_budget ?? null,
+      p_daily_run_limit: patch.daily_run_limit ?? null,
+      p_requires_approval: patch.requires_approval ?? null,
+      p_can_write_to_user_surfaces: patch.can_write_to_user_surfaces ?? null,
+      p_disabled_reason: null,
+    });
+    if (error) {
+      toast.error(`Could not update agent: ${error.message}`);
+      return;
+    }
+    setControls((current) => current.map((c) => (c.agent_key === agentKey ? data as unknown as LiveControl : c)));
+    toast.success('Agent control updated.');
+  }
+
   const proposals = AgentOrchestratorService.getProposals();
   const activity = AgentOrchestratorService.getActivity();
   const briefing = AgentOrchestratorService.getLatestBriefing();
   const kpis = AgentOrchestratorService.kpis();
+  const liveKpis = useMemo(() => ({
+    total: controls.length,
+    active: controls.filter((c) => c.status === 'active').length,
+    paused: controls.filter((c) => c.status === 'paused').length,
+    budget: controls.reduce((s, c) => s + c.daily_token_budget, 0),
+  }), [controls]);
 
   const visible = useMemo(() => {
     return proposals.filter((p) => {
