@@ -167,7 +167,9 @@ describe('AITravelAssistant slow-response resilience', () => {
 
     const input = await screen.findByPlaceholderText('Ask concierge...');
     fireEvent.change(input, { target: { value: 'Find verified hotel recommendations with websites' } });
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    await act(async () => {
+      fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    });
 
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
     expect(screen.getAllByText(/Find verified hotel recommendations/i).length).toBeGreaterThan(0);
@@ -178,8 +180,12 @@ describe('AITravelAssistant slow-response resilience', () => {
 
     await waitFor(() => expect(screen.getByText(/If unknown, I will say I do not know/i)).toBeInTheDocument());
     await waitFor(() => expect(screen.getAllByText('COMPLETED').length).toBeGreaterThan(0));
+    await waitFor(() => expect(screen.queryByText('RUNNING')).not.toBeInTheDocument());
     expect(screen.getAllByText(/example.com/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Failed to get response/i)).not.toBeInTheDocument();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
     expect(errors).toHaveLength(0);
 
     errorSpy.mockRestore();
