@@ -32,10 +32,11 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/SuperNomad_Trailer.mp4",
+  outputLocation: "/mnt/documents/SuperNomad_Dynamic_Teaser.mp4",
   puppeteerInstance: browser,
-  muted: true,
+  muted: false,
   concurrency: 1,
+  audioCodec: "aac",
   onProgress: ({ progress }) => {
     if (Math.round(progress * 100) % 10 === 0) {
       process.stdout.write(`\rProgress: ${Math.round(progress * 100)}%`);
@@ -43,5 +44,5 @@ await renderMedia({
   },
 });
 
-console.log("\nDone! Output: /mnt/documents/SuperNomad_Trailer.mp4");
+console.log("\nDone! Output: /mnt/documents/SuperNomad_Dynamic_Teaser.mp4");
 await browser.close({ silent: false });
