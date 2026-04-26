@@ -149,20 +149,23 @@ function buildHeaderFallback(req: Request) {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    return json({ error: 'method_not_allowed' }, 405);
+  }
 
   try {
+    const fallback = buildHeaderFallback(req);
     const ip = getClientIP(req);
     const location = ip ? await resolveIpLocation(ip) : null;
 
     if (!location) {
-      const fallback = buildHeaderFallback(req);
       if (fallback) return json(fallback);
-      return json({ error: 'client_ip_unavailable' }, 400);
+      return json({ error: 'client_ip_unavailable' }, 200);
     }
 
     return json(location);
   } catch (error) {
     console.error('location-ip failed', error);
-    return json({ error: 'location_lookup_failed' }, 502);
+    return json({ error: 'location_lookup_failed' }, 200);
   }
 });
