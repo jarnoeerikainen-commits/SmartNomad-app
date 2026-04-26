@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// Anti-Hallucination + Human-Escalation Protocol  (v2)
+// Anti-Hallucination + Human-Escalation Protocol  (v3)
 // ───────────────────────────────────────────────────────────
 // Stricter VERIFIED-SOURCES gate. Concierge must:
 //   1. Only state facts from trusted sources or app-supplied context
@@ -52,7 +52,7 @@ export const ANTI_HALLUCINATION_PROTOCOL = `
 `.trim();
 
 /**
- * Append the protocol to any system prompt.
+  * Append the protocol to any system prompt.
  */
 export function withTruthProtocol(systemPrompt: string): string {
   return `${systemPrompt}\n\n${ANTI_HALLUCINATION_PROTOCOL}`;
