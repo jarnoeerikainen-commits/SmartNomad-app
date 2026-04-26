@@ -25,19 +25,25 @@ function getCountryCode(req: Request): string | null {
 }
 
 function getCityHint(req: Request): string | null {
-  return req.headers.get('x-vercel-ip-city') || null;
+  const city = req.headers.get('x-vercel-ip-city');
+  if (!city) return null;
+  try {
+    return decodeURIComponent(city);
+  } catch {
+    return city;
+  }
 }
 
 function normalizeCountryName(country?: string, countryCode?: string): string {
   const code = countryCode?.toUpperCase();
-  try {
-    if (code) {
+  if (code && code !== 'XX') {
+    try {
       const names = new Intl.DisplayNames(['en'], { type: 'region' });
       const english = names.of(code);
       if (english) return english;
+    } catch {
+      // Intl.DisplayNames can be unavailable in edge cold starts; fall back safely.
     }
-  } catch {
-    // ignore
   }
   return country || 'Unknown';
 }
@@ -53,7 +59,7 @@ function normalizeCityName(city?: string): string {
     .trim() || 'Unknown';
 }
 
-async function fetchWithTimeout(url: string, timeoutMs = 3000) {
+async function fetchWithTimeout(url: string, timeoutMs = 2500) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -101,6 +107,16 @@ async function fetchIpWho(ip: string) {
 }
 
 async function resolveIpLocation(ip: string) {
+  if (
+    ip === '127.0.0.1' ||
+    ip === '::1' ||
+    ip.startsWith('10.') ||
+    ip.startsWith('192.168.') ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)
+  ) {
+    return null;
+  }
+
   const providers = [fetchIpWho, fetchIpApi];
 
   for (const provider of providers) {
