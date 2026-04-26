@@ -240,6 +240,34 @@
 }
 
 @layer utilities {
+  .admin-backoffice {
+    color: hsl(30 12% 96%);
+  }
+
+  .admin-backoffice :is(p, span, div, td, th, li, label, input, textarea, select) {
+    border-color: inherit;
+  }
+
+  .admin-backoffice .text-muted-foreground,
+  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_5"],
+  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_6"],
+  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_7"] {
+    color: hsl(30 12% 92%) !important;
+  }
+
+  .admin-backoffice :is(h1, h2, h3, h4, h5, h6),
+  .admin-backoffice :is(table, thead, tbody, tr, th, td) {
+    color: hsl(30 12% 96%);
+  }
+
+  .admin-backoffice :is(table) {
+    min-width: max-content;
+  }
+
+  .admin-backoffice [data-radix-scroll-area-viewport] {
+    min-width: 0;
+  }
+
   .gradient-primary {
     background: var(--gradient-primary);
   }

@@ -29,7 +29,7 @@ const AdminLayout: React.FC = () => {
   const { role, isDemoMode } = useStaffRole();
 
   return (
-    <div className="min-h-screen bg-[hsl(220_22%_8%)] text-[hsl(30_12%_95%)]">
+    <div className="admin-backoffice min-h-screen bg-[hsl(220_22%_8%)] text-[hsl(30_12%_95%)]">
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-40 w-60 border-r border-[hsl(43_96%_56%/0.15)] bg-[hsl(220_22%_6%)] flex flex-col">
         <div className="px-5 py-4 border-b border-[hsl(43_96%_56%/0.15)]">
@@ -87,7 +87,7 @@ const AdminLayout: React.FC = () => {
       </aside>
 
       {/* Main */}
-      <main className="ml-60 min-h-screen">
+      <main className="ml-60 min-h-screen min-w-0 overflow-x-auto pb-10">
         <Outlet />
       </main>
     </div>

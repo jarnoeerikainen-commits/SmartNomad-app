@@ -34,7 +34,7 @@ const AdminAI: React.FC = () => {
   useEffect(() => {
     document.title = 'Back Office — AI Analytics · SuperNomad';
     (async () => {
-      const [{ data }, { data: proofData }] = await Promise.all([
+      const [{ data }, proofResult] = await Promise.all([
         supabase
           .from('ai_usage_logs')
           .select('function_name,input_tokens,output_tokens,cache_hit,created_at')
@@ -48,7 +48,7 @@ const AdminAI: React.FC = () => {
           .limit(200),
       ]);
 
-      setProofs((proofData || []) as AIProof[]);
+      if (!proofResult.error) setProofs((proofResult.data || []) as AIProof[]);
 
       const demo = getAdminDemoDataset().aiUsage;
       if (data && data.length > 0) {
@@ -121,7 +121,7 @@ const AdminAI: React.FC = () => {
     <div className="p-6 lg:p-10 space-y-6">
       <header>
         <h1 className="text-3xl font-display font-bold">AI Analytics</h1>
-        <p className="text-sm text-[hsl(30_12%_70%)] mt-1">
+        <p className="text-sm text-[hsl(30_12%_92%)] mt-1">
           {stats.workers} autonomous AI workers · {fmt(stats.calls)} calls/7d · {(stats.tokens / 1_000_000).toFixed(1)}M tokens
         </p>
       </header>
@@ -204,6 +204,7 @@ const AdminAI: React.FC = () => {
       {!!proofs.length && (
         <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
           <h2 className="font-semibold mb-3">Latest AI execution proofs</h2>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(43_96%_56%/0.15)] hover:bg-transparent">
@@ -218,6 +219,7 @@ const AdminAI: React.FC = () => {
               ))}
             </TableBody>
           </Table>
+          </div>
         </Card>
       )}
 
@@ -226,6 +228,7 @@ const AdminAI: React.FC = () => {
         {loading ? (
           <div className="py-12 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-[hsl(var(--gold))]" /></div>
         ) : (
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(43_96%_56%/0.15)] hover:bg-transparent">
@@ -260,6 +263,7 @@ const AdminAI: React.FC = () => {
               ))}
             </TableBody>
           </Table>
+          </div>
         )}
       </Card>
     </div>

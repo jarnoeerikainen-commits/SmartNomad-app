@@ -2,7 +2,7 @@ import { LocationData } from '@/types/country';
 
 /**
  * Robust multi-provider location resolution.
- * - IP location: tries ipwho.is → ipapi.co → bigdatacloud (fallback)
+ * - IP location: tries Supabase edge proxy → ipapi.co → bigdatacloud (fallback)
  * - Reverse geocode (lat/lon → city/country): tries bigdatacloud → open-meteo geocoding → nominatim
  * Each provider is wrapped with a timeout. First success wins.
  */
@@ -163,7 +163,7 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  return firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
+  return firstSuccessfulLocation([ipFromSupabaseFunction, ipFromIpapi, ipFromBigDataCloud]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
