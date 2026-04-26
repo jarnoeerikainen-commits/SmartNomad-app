@@ -566,6 +566,28 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* ============= AI MAP ============= */}
+      <section className="relative py-20 md:py-28 border-t border-[hsl(43_96%_56%/0.1)] overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(at_50%_50%,hsl(43_96%_56%/0.08)_0px,transparent_48%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14 max-w-3xl mx-auto">
+            <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] mb-4"><Route className="mr-1.5 h-3 w-3" /> AI command map</Badge>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">One user request. A full operating system behind it.</h2>
+            <p className="text-lg text-[hsl(30_12%_80%)]">The public website now makes the intelligence layer visible: CEO strategy, directors, concierge routing and specialist agents working together without wasting tokens.</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            {aiMap.map(({ icon: Icon, title, desc }, index) => (
+              <div key={title} className="relative rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_12%/0.78)] p-6">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--gold-dark))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)]"><Icon className="h-6 w-6" /></div>
+                <div className="text-[10px] uppercase tracking-[0.24em] text-[hsl(var(--gold))]">Layer 0{index + 1}</div>
+                <h3 className="mt-2 font-display text-2xl font-bold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[hsl(30_12%_76%)]">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============= LIFESTYLE ============= */}
       <section className="py-20 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
