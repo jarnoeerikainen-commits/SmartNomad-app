@@ -371,6 +371,176 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_ai_ceo_permissions: {
+        Row: {
+          can_affect_costs: boolean
+          can_affect_pricing: boolean
+          can_affect_user_surfaces: boolean
+          decision_area: string
+          description: string
+          max_daily_actions: number
+          metadata: Json
+          permission_key: string
+          requires_master_password: boolean
+          risk_level: string
+          status: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          can_affect_costs?: boolean
+          can_affect_pricing?: boolean
+          can_affect_user_surfaces?: boolean
+          decision_area?: string
+          description?: string
+          max_daily_actions?: number
+          metadata?: Json
+          permission_key: string
+          requires_master_password?: boolean
+          risk_level?: string
+          status?: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          can_affect_costs?: boolean
+          can_affect_pricing?: boolean
+          can_affect_user_surfaces?: boolean
+          decision_area?: string
+          description?: string
+          max_daily_actions?: number
+          metadata?: Json
+          permission_key?: string
+          requires_master_password?: boolean
+          risk_level?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      admin_ai_ceo_reports: {
+        Row: {
+          business_health: Json
+          created_at: string
+          customer_experience: Json
+          executive_summary: string
+          generated_by_run_id: string | null
+          id: string
+          learning_updates: Json
+          metadata: Json
+          narrative: string | null
+          product_opportunities: Json
+          report_date: string
+          revenue_opportunities: Json
+          risk_register: Json
+          source_rollups: Json
+          title: string
+        }
+        Insert: {
+          business_health?: Json
+          created_at?: string
+          customer_experience?: Json
+          executive_summary: string
+          generated_by_run_id?: string | null
+          id?: string
+          learning_updates?: Json
+          metadata?: Json
+          narrative?: string | null
+          product_opportunities?: Json
+          report_date?: string
+          revenue_opportunities?: Json
+          risk_register?: Json
+          source_rollups?: Json
+          title: string
+        }
+        Update: {
+          business_health?: Json
+          created_at?: string
+          customer_experience?: Json
+          executive_summary?: string
+          generated_by_run_id?: string | null
+          id?: string
+          learning_updates?: Json
+          metadata?: Json
+          narrative?: string | null
+          product_opportunities?: Json
+          report_date?: string
+          revenue_opportunities?: Json
+          risk_register?: Json
+          source_rollups?: Json
+          title?: string
+        }
+        Relationships: []
+      }
+      admin_ai_ceo_suggestions: {
+        Row: {
+          category: string
+          confidence: number
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          evidence: Json
+          expected_impact: string | null
+          id: string
+          priority: string
+          rationale: string
+          requires_master_approval: boolean
+          source_report_id: string | null
+          status: string
+          suggested_action: string
+          title: string
+        }
+        Insert: {
+          category?: string
+          confidence?: number
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          evidence?: Json
+          expected_impact?: string | null
+          id?: string
+          priority?: string
+          rationale: string
+          requires_master_approval?: boolean
+          source_report_id?: string | null
+          status?: string
+          suggested_action: string
+          title: string
+        }
+        Update: {
+          category?: string
+          confidence?: number
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          evidence?: Json
+          expected_impact?: string | null
+          id?: string
+          priority?: string
+          rationale?: string
+          requires_master_approval?: boolean
+          source_report_id?: string | null
+          status?: string
+          suggested_action?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_ai_ceo_suggestions_source_report_id_fkey"
+            columns: ["source_report_id"]
+            isOneToOne: false
+            referencedRelation: "admin_ai_ceo_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_ai_daily_briefings: {
         Row: {
           briefing_date: string
@@ -4906,6 +5076,37 @@ export type Database = {
         }
         Returns: Json
       }
+      decide_admin_ai_ceo_suggestion: {
+        Args: {
+          p_decision_note?: string
+          p_status: string
+          p_suggestion_id: string
+        }
+        Returns: {
+          category: string
+          confidence: number
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          evidence: Json
+          expected_impact: string | null
+          id: string
+          priority: string
+          rationale: string
+          requires_master_approval: boolean
+          source_report_id: string | null
+          status: string
+          suggested_action: string
+          title: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_ceo_suggestions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       decide_opportunity: {
         Args: {
           p_approve: boolean
@@ -5029,6 +5230,18 @@ export type Database = {
           pending_recommendations: number
           reports_last_30d: number
           urgent_recommendations: number
+        }[]
+      }
+      get_ai_ceo_summary: {
+        Args: never
+        Returns: {
+          active_ceo_agents: number
+          critical_suggestions: number
+          daily_token_budget: number
+          latest_report_at: string
+          latest_report_title: string
+          locked_permissions: number
+          pending_suggestions: number
         }[]
       }
       get_concierge_control_summary: {
@@ -5465,6 +5678,37 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "admin_ai_agent_controls"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      update_admin_ai_ceo_permission: {
+        Args: {
+          p_max_daily_actions?: number
+          p_metadata?: Json
+          p_permission_key: string
+          p_requires_master_password?: boolean
+          p_status?: string
+        }
+        Returns: {
+          can_affect_costs: boolean
+          can_affect_pricing: boolean
+          can_affect_user_surfaces: boolean
+          decision_area: string
+          description: string
+          max_daily_actions: number
+          metadata: Json
+          permission_key: string
+          requires_master_password: boolean
+          risk_level: string
+          status: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_ai_ceo_permissions"
           isOneToOne: true
           isSetofReturn: false
         }
