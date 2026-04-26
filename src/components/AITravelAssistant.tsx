@@ -756,6 +756,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           answerAgents: ['Concierge Governor', 'Context Builder', 'Source Verifier', 'Specialist Responder'],
           answerSources,
           websites: websiteMatches,
+          model: 'google/gemini-3-flash-preview',
+          inputTokens: Math.ceil((userMessage.length + persistentMemories.length + conversationSummary.length + cityServicesContext.length + demoAiContext.length + awardCardsContext.length + jetSearchContext.length) / 4),
+          outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
+          latencyMs,
           verificationNote: confidence === 'needs_review'
             ? 'Low confidence/unknowns detected — user should be offered deeper verification.'
             : 'Answer recorded as verified-context constrained; unknowns must be disclosed by protocol.',
