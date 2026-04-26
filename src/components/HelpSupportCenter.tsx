@@ -19,6 +19,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { FEATURE_REGISTRY, CATEGORY_LABELS } from '@/data/featureRegistry';
 import { buildFeatureCatalogForAI } from '@/data/featureAutoSync';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 interface ChatMessage {
   id: string;
@@ -183,6 +184,7 @@ const AISupportChat = () => {
     }));
 
     let assistantSoFar = '';
+    const runId = AdminAgentActivityService.startRun({ surface: 'Support AI', command: text, functionName: 'support-ai' });
 
     try {
       const resp = await fetch(chatUrl, {
@@ -268,8 +270,10 @@ const AISupportChat = () => {
       if (assistantSoFar.toLowerCase().includes('human agent') || assistantSoFar.toLowerCase().includes('support ticket')) {
         setShowEscalation(true);
       }
+      AdminAgentActivityService.completeRun(runId, 'Support AI answered from feature registry, user context and escalation rules.');
 
     } catch (err: any) {
+      AdminAgentActivityService.failRun(runId, 'Support AI unavailable; human escalation offered.');
       toast.error('Support AI temporarily unavailable. Please try again.');
       setMessages(prev => [...prev, {
         id: 'err-' + Date.now(),
