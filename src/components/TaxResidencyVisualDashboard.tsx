@@ -341,6 +341,57 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
         </CardContent>
       </Card>
 
+      {/* Global Country Days Graph */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-primary" />
+            Global Days by Country
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            One consolidated view of followed countries, compared against each verified local tax-residency threshold.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[320px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={globalDaysData} layout="vertical" margin={{ top: 8, right: 24, left: 8, bottom: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+                <XAxis type="number" stroke="hsl(var(--muted-foreground))" allowDecimals={false} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={112}
+                  tick={({ x, y, payload }) => {
+                    const item = globalDaysData.find(d => d.name === payload.value);
+                    return (
+                      <text x={x} y={y} dy={4} textAnchor="end" fill="hsl(var(--foreground))" fontSize={12}>
+                        {item?.flag} {payload.value}
+                      </text>
+                    );
+                  }}
+                />
+                <Bar dataKey="days" radius={[0, 6, 6, 0]} barSize={18}>
+                  {globalDaysData.map((entry) => (
+                    <Cell key={entry.code} fill={entry.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {globalDaysData.map(item => (
+              <div key={item.code} className="flex items-center justify-between gap-3 rounded-lg border bg-card/50 p-3 text-sm">
+                <span className="font-medium truncate">{item.flag} {item.name}</span>
+                <span className="text-muted-foreground whitespace-nowrap">
+                  {item.days}/{item.threshold} · {item.progress}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Tie-Breaker Matrix */}
       {mainCountry && mainCountry.daysSpent >= 150 && (
         <Card className="border-warning/50">
