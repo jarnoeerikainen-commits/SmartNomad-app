@@ -406,7 +406,7 @@ Deno.serve(async (req) => {
     }
 
     // 4. Persist
-    const counts = await persistOutputs(runId, aiOut.parsed, signals, scope, windowHours);
+    const counts = await persistOutputs(runId!, aiOut.parsed, signals, scope, windowHours);
 
     // 5. Close run
     await admin
