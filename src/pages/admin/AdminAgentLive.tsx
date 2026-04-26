@@ -88,7 +88,7 @@ const AdminAgentLive: React.FC = () => {
           </div>
           <span className="text-xs text-[hsl(30_12%_60%)]">Newest first · verified-only policy</span>
         </div>
-        <ScrollArea className="h-[calc(100vh-310px)] min-h-[420px]">
+        <ScrollArea className="min-h-[520px]">
           <div className="divide-y divide-[hsl(var(--gold)/0.1)]">
             {runs.map((run) => (
               <div key={run.id} className="p-4">
@@ -152,7 +152,7 @@ const AdminAgentLive: React.FC = () => {
                         {run.response_excerpt && (
                           <div>
                             <div className="text-xs uppercase tracking-wider text-[hsl(var(--gold))]">Concierge response</div>
-                            <p className="mt-1 line-clamp-6 text-sm text-[hsl(30_12%_78%)]">{run.response_excerpt}</p>
+                            <p className="mt-1 whitespace-pre-wrap break-words text-sm text-[hsl(30_12%_92%)]">{run.response_excerpt}</p>
                           </div>
                         )}
                         {!!run.answer_agents?.length && (
