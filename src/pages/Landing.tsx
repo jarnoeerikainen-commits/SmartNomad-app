@@ -113,7 +113,6 @@ const Landing: React.FC = () => {
                   poster={filmMode === 'teaser' ? heroImg : travelImg}
                   controls
                   autoPlay
-                  muted
                   playsInline
                   preload="metadata"
                 />
@@ -125,7 +124,7 @@ const Landing: React.FC = () => {
               </div>
               <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-8">
                 <div className="space-y-5">
-                  <div className="flex items-center gap-2 text-sm text-[hsl(30_12%_78%)]"><Clock className="h-4 w-4 text-[hsl(var(--gold))]" /> Skip anytime · no sound required</div>
+                  <div className="flex items-center gap-2 text-sm text-[hsl(30_12%_78%)]"><Clock className="h-4 w-4 text-[hsl(var(--gold))]" /> Skip anytime · warm voice narration included</div>
                   {(filmMode === 'teaser' ? cinematicMoments.slice(0, 3) : cinematicMoments).map((moment, index) => (
                     <div key={moment.label} className="flex gap-4 rounded-xl border border-[hsl(43_96%_56%/0.14)] bg-[hsl(220_22%_12%/0.72)] p-4">
                       <span className="font-display text-2xl text-[hsl(var(--gold))]">0{index + 1}</span>
