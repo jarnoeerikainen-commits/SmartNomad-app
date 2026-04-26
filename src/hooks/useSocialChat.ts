@@ -153,6 +153,7 @@ export const useSocialChat = () => {
     roomId: string,
     content: string,
     senderId: string,
+    attachment?: Pick<ChatMessage, 'imageUrl' | 'imageAlt'>,
   ): Promise<void> => {
     const userId = getCurrentUserId();
     const userName = getCurrentUserName();
@@ -170,6 +171,7 @@ export const useSocialChat = () => {
       content,
       timestamp: new Date(),
       type: 'message',
+      ...attachment,
     };
 
     updateRoomMessage(roomId, newMessage);
