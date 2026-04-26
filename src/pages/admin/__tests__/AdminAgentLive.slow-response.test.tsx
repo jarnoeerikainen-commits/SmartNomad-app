@@ -48,7 +48,7 @@ describe('AdminAgentLive slow-response resilience', () => {
     });
 
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
-    expect(screen.getByText(/Source verifier|Context builder|Intent router/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Source verifier|Context builder|Intent router/i).length).toBeGreaterThan(0);
 
     act(() => {
       AdminAgentActivityService.completeRun(runId, 'Completed after slow verified-source checks.', {

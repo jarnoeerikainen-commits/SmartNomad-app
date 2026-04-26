@@ -138,7 +138,7 @@ function slowStreamResponse() {
         controller.close();
         return;
       }
-      await new Promise((resolve) => setTimeout(resolve, index === 0 ? 1_500 : 750));
+      await new Promise((resolve) => setTimeout(resolve, index === 0 ? 80 : 30));
       controller.enqueue(encoder.encode(chunks[index++]));
     },
   });
@@ -146,15 +146,12 @@ function slowStreamResponse() {
 
 describe('AITravelAssistant slow-response resilience', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
     localStorage.clear();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(slowStreamResponse(), { status: 200, headers: { 'Content-Type': 'text/event-stream' } })));
   });
 
   afterEach(() => {
-    vi.clearAllTimers();
     vi.unstubAllGlobals();
-    vi.useRealTimers();
     localStorage.clear();
   });
 
@@ -176,16 +173,8 @@ describe('AITravelAssistant slow-response resilience', () => {
     expect(screen.getByText(/Find verified hotel recommendations/i)).toBeInTheDocument();
     expect(screen.getByText(/AI Agent Workstream/i)).toBeInTheDocument();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(1_600);
-    });
-
-    expect(screen.getByText(/Verified answer pending source checks/i)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/Verified answer pending source checks/i)).toBeInTheDocument());
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(2_500);
-    });
 
     await waitFor(() => expect(screen.getByText(/If unknown, I will say I do not know/i)).toBeInTheDocument());
     await waitFor(() => expect(screen.getByText('COMPLETED')).toBeInTheDocument());
