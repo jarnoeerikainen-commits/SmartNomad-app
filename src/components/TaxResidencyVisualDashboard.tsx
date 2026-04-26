@@ -519,7 +519,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Days</span>
-                        <span className="font-bold">{metric.daysSpent}/183</span>
+                        <span className="font-bold">{metric.daysSpent}/{metric.threshold}</span>
                       </div>
                       <div className="relative h-2 bg-muted rounded-full overflow-hidden">
                         <div 
