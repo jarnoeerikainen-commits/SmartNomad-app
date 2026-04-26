@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -72,6 +73,7 @@ export const CyberGuardianChat: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    const runId = AdminAgentActivityService.startRun({ surface: 'Cyber Guardian', command: textToSend, functionName: 'cyber-assistant' });
 
     try {
       const { data, error } = await supabase.functions.invoke('cyber-assistant', {
@@ -92,9 +94,11 @@ export const CyberGuardianChat: React.FC = () => {
           timestamp: new Date()
         };
         setMessages(prev => [...prev, assistantMessage]);
+        AdminAgentActivityService.completeRun(runId, 'Cyber Guardian completed risk triage with safety-first response rules.');
       }
     } catch (error) {
       console.error('Chat error:', error);
+      AdminAgentActivityService.failRun(runId, 'Cyber assistant unavailable; emergency fallback surfaced.');
       toast({
         title: "Connection Error",
         description: "Unable to reach AI assistant. Please try again.",
