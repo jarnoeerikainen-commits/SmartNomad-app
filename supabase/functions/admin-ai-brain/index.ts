@@ -8,6 +8,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -136,11 +137,11 @@ async function gatherSignals(windowHours: number) {
 
 // ─── AI synthesis (structured output via tool calling) ────────────────────
 async function synthesizeWithAI(signals: Record<string, unknown>, scope: string) {
-  const systemPrompt = `You are the SuperNomad Back Office AI Brain. You analyse platform telemetry and produce
+  const systemPrompt = withTruthProtocol(`You are the SuperNomad Back Office AI Brain. You analyse platform telemetry and produce
 crisp, actionable intelligence for human admins of a premium nomad lifestyle platform.
 
 Tone: confident, precise, executive. Avoid filler. Prefer numbers over adjectives.
-Always ground claims in the supplied evidence.`;
+Always ground claims in the supplied evidence.`);
 
   const userPrompt = `Analyse the following ${scope} telemetry snapshot and return:
 1. 4–6 INSIGHTS (anomalies, patterns, opportunities, risk, behavior, churn signals, growth)
