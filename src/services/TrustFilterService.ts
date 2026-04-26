@@ -29,6 +29,8 @@ export interface TrustFilterOptions {
   requireVerified?: boolean;
   preferLocal?: boolean;
   includeRecent?: boolean;
+  requireWebsite?: boolean;
+  requireReviews?: boolean;
 }
 
 const TRUSTED_SOURCES = [
@@ -56,7 +58,9 @@ export class TrustFilterService {
       minRating = 4.0,
       requireVerified = true,
       preferLocal = true,
-      includeRecent = true
+      includeRecent = true,
+      requireWebsite = true,
+      requireReviews = true
     } = options;
 
     return items.filter(item => {
@@ -70,7 +74,10 @@ export class TrustFilterService {
       if (!this.isSourceTrusted(item.source)) return false;
 
       // Must have at least some reviews (no fake listings)
-      if (item.reviews < 1) return false;
+      if (requireReviews && item.reviews < 1) return false;
+
+      // Recommendation cards must link to a real service/source website
+      if (requireWebsite && !this.hasValidWebsite(item.url)) return false;
 
       return true;
     });
@@ -188,6 +195,16 @@ export class TrustFilterService {
     return TRUSTED_SOURCES.some(trusted => 
       source.toLowerCase().includes(trusted.toLowerCase())
     );
+  }
+
+  static hasValidWebsite(value?: string): boolean {
+    if (!value) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.hostname.includes('.');
+    } catch {
+      return false;
+    }
   }
 
   /**
