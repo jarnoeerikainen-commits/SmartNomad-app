@@ -12,6 +12,86 @@ const MODEL = "google/gemini-3-flash-preview";
 
 const admin = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
 
+const DIRECTOR_ROUTES: Record<string, { director: string; preferredAgents: string[]; risk: string }> = {
+  product: { director: "happiness", preferredAgents: ["ceo.product-inventor", "quality.concierge-auditor", "happiness.director"], risk: "medium" },
+  cx: { director: "happiness", preferredAgents: ["quality.concierge-auditor", "happiness.director", "ceo.strategy-chief"], risk: "medium" },
+  concierge: { director: "happiness", preferredAgents: ["quality.concierge-auditor", "happiness.director"], risk: "medium" },
+  revenue: { director: "b2b_sales", preferredAgents: ["revenue.b2b-scout", "ceo.profit-architect", "affiliate.director"], risk: "high" },
+  partner: { director: "b2b_sales", preferredAgents: ["revenue.b2b-scout", "ceo.strategy-chief"], risk: "high" },
+  b2b: { director: "b2b_sales", preferredAgents: ["revenue.b2b-scout", "ceo.strategy-chief"], risk: "high" },
+  pricing: { director: "pricing", preferredAgents: ["pricing.director", "finops.token-sentinel", "ceo.profit-architect"], risk: "critical" },
+  margin: { director: "pricing", preferredAgents: ["finops.token-sentinel", "pricing.director", "ceo.profit-architect"], risk: "high" },
+  cost: { director: "pricing", preferredAgents: ["finops.token-sentinel", "pricing.director"], risk: "high" },
+  affiliate: { director: "affiliate", preferredAgents: ["affiliate.director", "revenue.b2b-scout"], risk: "high" },
+  events: { director: "events", preferredAgents: ["events.director", "ceo.strategy-chief"], risk: "medium" },
+  sports: { director: "sports", preferredAgents: ["sports.director", "events.director"], risk: "medium" },
+  vip: { director: "vip", preferredAgents: ["vip.director", "ceo.strategy-chief"], risk: "high" },
+  strategy: { director: "b2b_sales", preferredAgents: ["ceo.strategy-chief", "revenue.b2b-scout", "happiness.director"], risk: "high" },
+  safety: { director: "happiness", preferredAgents: ["quality.concierge-auditor", "happiness.director"], risk: "high" },
+};
+
+function routeCeoOrder(rawCategory: unknown, title: unknown, action: unknown) {
+  const haystack = `${rawCategory ?? ""} ${title ?? ""} ${action ?? ""}`.toLowerCase();
+  const key = Object.keys(DIRECTOR_ROUTES).find((k) => haystack.includes(k)) ?? "strategy";
+  return DIRECTOR_ROUTES[key];
+}
+
+async function dispatchCeoOrders(reportId: string, suggestions: any[], reportDate: string, userId: string) {
+  if (!suggestions.length) return { director_orders_created: 0, agent_runs_queued: 0 };
+
+  const { data: controls } = await admin
+    .from("admin_ai_agent_controls")
+    .select("agent_key,director,status")
+    .in("agent_key", Array.from(new Set(Object.values(DIRECTOR_ROUTES).flatMap((r) => r.preferredAgents))));
+  const available = new Set((controls ?? []).map((c: any) => c.agent_key));
+
+  const directorRows = suggestions.map((s: any) => {
+    const route = routeCeoOrder(s.category, s.title, s.suggested_action);
+    const agentKey = route.preferredAgents.find((key) => available.has(key)) ?? "brain.governor";
+    return {
+      agent_key: agentKey,
+      director: route.director,
+      suggestion_type: "ceo_order",
+      priority: String(s.priority ?? "medium").slice(0, 20),
+      title: String(s.title ?? "CEO order").slice(0, 220),
+      rationale: String(s.rationale ?? "Routed from AI CEO synthesis."),
+      suggested_action: String(s.suggested_action ?? "Investigate and return a recommendation for admin approval."),
+      expected_impact: s.expected_impact ? String(s.expected_impact) : null,
+      risk_level: route.risk,
+      requires_approval: true,
+      status: "pending",
+      source_report_id: reportId,
+      evidence: {
+        source: "admin-ai-ceo",
+        report_id: reportId,
+        report_date: reportDate,
+        ceo_category: s.category ?? "strategy",
+        confidence: Number.isFinite(Number(s.confidence)) ? Number(s.confidence) : 0.75,
+        routed_to_director: route.director,
+        routed_to_agent: agentKey,
+        closed_loop: "ceo_to_director_to_agent_to_daily_report_to_ceo",
+      },
+    };
+  });
+
+  const { data: createdOrders } = await admin.from("admin_ai_agent_suggestions").insert(directorRows).select("id,agent_key,director,title,priority");
+  const runRows = (createdOrders ?? []).map((o: any) => ({
+    agent_key: o.agent_key,
+    director: o.director,
+    trigger: "ceo_order",
+    status: "queued",
+    scope: "ceo_directive",
+    created_by: userId,
+    signals_scanned: { source: "admin-ai-ceo", report_id: reportId, suggestion_id: o.id },
+    outputs: {},
+    suggested_improvements: [],
+    metadata: { ceo_report_id: reportId, ceo_order_id: o.id, title: o.title, priority: o.priority, closed_loop: true },
+  }));
+  if (runRows.length) await admin.from("admin_ai_agent_runs").insert(runRows);
+
+  return { director_orders_created: createdOrders?.length ?? 0, agent_runs_queued: runRows.length };
+}
+
 function json(body: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -38,8 +118,9 @@ async function requireAdmin(req: Request) {
 
 async function gatherSignals() {
   const since = new Date(Date.now() - 24 * 3600_000).toISOString();
+  const platformStats = await Promise.resolve(admin.rpc("get_platform_stats" as never)).then((r: any) => r?.data?.[0] ?? null).catch(() => null);
   const [platform, dailyBriefing, agentReports, conciergeDaily, brainReports, ceoControls, ceoPermissions, pendingSuggestions] = await Promise.all([
-    admin.rpc("get_platform_stats" as never).then((r: any) => r?.data?.[0] ?? null).catch(() => null),
+    Promise.resolve(platformStats),
     admin.from("admin_ai_daily_briefings").select("title,executive_summary,highlights,concerns,director_rollup,pending_approvals,kpi_snapshot,created_at").order("briefing_date", { ascending: false }).limit(3),
     admin.from("admin_ai_agent_daily_reports").select("agent_key,title,summary,performance_score,suggestions,token_usage,estimated_cost_usd,report_date").gte("created_at", since).order("created_at", { ascending: false }).limit(30),
     admin.from("admin_concierge_performance_daily").select("segment,total_sessions,conversion_events,avg_quality_score,escalation_rate,token_usage,estimated_cost_usd,revenue_signal_usd,report_date").order("report_date", { ascending: false }).limit(10),
@@ -173,6 +254,7 @@ Deno.serve(async (req) => {
     if (reportError) throw reportError;
 
     const suggestions = Array.isArray(report.suggestions) ? report.suggestions.slice(0, 12) : [];
+    let dispatch = { director_orders_created: 0, agent_runs_queued: 0 };
     if (suggestions.length) {
       await admin.from("admin_ai_ceo_suggestions").insert(suggestions.map((s: any) => ({
         source_report_id: saved.id,
@@ -185,9 +267,10 @@ Deno.serve(async (req) => {
         confidence: Number.isFinite(Number(s.confidence)) ? Number(s.confidence) : 0.75,
         evidence: { source: "admin-ai-ceo", report_date: today },
       })));
+      dispatch = await dispatchCeoOrders(saved.id, suggestions, today, auth.userId);
     }
 
-    return json({ ok: true, report_id: saved.id, suggestions_created: suggestions.length, report_date: today });
+    return json({ ok: true, report_id: saved.id, suggestions_created: suggestions.length, ...dispatch, report_date: today });
   } catch (err) {
     console.error("admin-ai-ceo fatal:", err);
     return json({ ok: false, error: String(err).slice(0, 500) }, 500);
