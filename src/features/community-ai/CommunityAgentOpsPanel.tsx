@@ -17,14 +17,17 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
   const title = surface === 'pulse' ? 'Pulse AI Agent Ops' : 'Vibe AI Agent Ops';
 
   return (
-    <Card className="border-primary/20 bg-card/95">
+    <Card className="border-primary/50 bg-card shadow-large ring-1 ring-primary/15">
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Zap className="h-4 w-4 text-primary" /> {title}
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/15 text-primary ring-1 ring-primary/30">
+                <Zap className="h-4 w-4" />
+              </span>
+              {title}
             </CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-foreground/80">
               Optimized for compact context, verified-only decisions, live proof logs, safety alarms, and weekly quality reporting.
             </p>
           </div>
@@ -48,20 +51,22 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
       <CardContent className="space-y-4">
         <div className="grid gap-3 md:grid-cols-4">
           {metrics.map((metric) => (
-            <div key={metric.label} className="rounded-md border bg-background/60 p-3">
+            <div key={metric.label} className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{metric.label}</span>
-                <Database className="h-3.5 w-3.5 text-primary" />
+                <span className="text-[10px] uppercase tracking-wider text-foreground/75">{metric.label}</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-primary/15 text-primary">
+                  <Database className="h-3.5 w-3.5" />
+                </span>
               </div>
-              <div className="mt-1 text-sm font-semibold">{metric.value}</div>
-              <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{metric.detail}</p>
+              <div className="mt-2 text-base font-bold text-foreground">{metric.value}</div>
+              <p className="mt-1 text-[11px] leading-snug text-foreground/80">{metric.detail}</p>
             </div>
           ))}
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-md border bg-background/60 p-3">
-            <div className="mb-2 flex items-center gap-2 text-xs font-medium">
+          <div className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-foreground">
               <LineChart className="h-4 w-4 text-primary" /> Weekly quality, safety and token graph
             </div>
             <div className="h-48">
@@ -81,15 +86,15 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
 
           <div className="space-y-2">
             {alerts.map((alert) => (
-              <div key={alert.title} className="rounded-md border bg-background/60 p-3">
+              <div key={alert.title} className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
                 <div className="flex items-center gap-2">
                   {alert.level === 'healthy' ? <ShieldCheck className="h-4 w-4 text-success" /> : <Bell className="h-4 w-4 text-primary" />}
                   <Badge variant={alert.level === 'critical' ? 'destructive' : 'outline'} className="text-[10px] uppercase">
                     {alert.level}
                   </Badge>
-                  <span className="text-xs font-semibold">{alert.title}</span>
+                  <span className="text-xs font-semibold text-foreground">{alert.title}</span>
                 </div>
-                <p className="mt-1 text-[11px] leading-snug text-muted-foreground">{alert.detail}</p>
+                <p className="mt-1 text-[11px] leading-snug text-foreground/80">{alert.detail}</p>
               </div>
             ))}
           </div>
