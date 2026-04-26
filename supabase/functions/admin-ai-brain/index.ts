@@ -368,8 +368,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const trigger = body.trigger ?? "manual";
-    const scope = body.scope ?? "full"; // full | quick | focused
+    const trigger = typeof body.trigger === "string" ? body.trigger : "manual";
+    const scope = typeof body.scope === "string" ? body.scope : "full"; // full | quick | focused
     const windowHours = scope === "quick" ? 6 : scope === "focused" ? 24 : 168;
 
     // 1. Open a run row
