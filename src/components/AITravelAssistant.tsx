@@ -817,7 +817,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         isUser: false,
         timestamp: new Date(),
       };
+      const rideRunId = AdminAgentActivityService.startRun({ surface: 'Concierge AI', command: sentText, functionName: 'ride-hailing-local-router' });
       setMessages(prev => [...prev, assistantMsg]);
+      AdminAgentActivityService.completeRun(rideRunId, 'Ride intent routed locally to verified ride-booking card before any LLM round-trip.');
       return; // skip LLM round-trip — the ride card is the answer
     }
 
