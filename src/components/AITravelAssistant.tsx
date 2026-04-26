@@ -756,7 +756,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           answerAgents: ['Concierge Governor', 'Context Builder', 'Source Verifier', 'Specialist Responder'],
           answerSources,
           websites: websiteMatches,
-          verificationNote: confidence === 'low'
+          verificationNote: confidence === 'needs_review'
             ? 'Low confidence/unknowns detected — user should be offered deeper verification.'
             : 'Answer recorded as verified-context constrained; unknowns must be disclosed by protocol.',
         },
