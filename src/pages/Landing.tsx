@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +7,8 @@ import {
   Users, Bell, MessageCircle, Brain, MapPin, Award, Wallet,
   ArrowRight, Check, Rocket, Star, Mic, Eye, Zap, AlertTriangle,
   Apple, Smartphone, Hotel, UtensilsCrossed, Music2, Trophy,
-  Radar, Siren, ShieldAlert, Activity, Headphones, Heart
+  Radar, Siren, ShieldAlert, Activity, Headphones, Heart,
+  PlayCircle, X, Clock, Route, Building2, Film
 } from 'lucide-react';
 import logo from '@/assets/supernomad-logo.jpg';
 import heroImg from '@/assets/landing-hero.jpg';
@@ -18,6 +19,8 @@ import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
 
 const Landing: React.FC = () => {
+  const [filmMode, setFilmMode] = useState<'closed' | 'teaser' | 'full'>('closed');
+
   useEffect(() => {
     document.title = 'SuperNomad — The Operating System for Global Citizens';
     const meta = document.querySelector('meta[name="description"]');
@@ -77,6 +80,20 @@ const Landing: React.FC = () => {
     { icon: Shield, label: 'GDPR Art. 17' },
     { icon: Eye, label: 'Zero-Knowledge' },
     { icon: Check, label: 'CCPA Ready' },
+  ];
+
+  const cinematicMoments = [
+    { img: heroImg, label: 'Executive arrival', detail: 'Airport, hotel, route and safety handled before landing.' },
+    { img: travelImg, label: 'Borderless operations', detail: 'Trips, loyalty, receipts, tax days and visas in one timeline.' },
+    { img: communityImg, label: 'Local life instantly', detail: 'Padel, dinners, clubs, families and verified city services.' },
+    { img: securityImg, label: 'Sovereign protection', detail: 'Threat intelligence, identity vault and consent-first AI.' },
+  ];
+
+  const aiMap = [
+    { icon: Brain, title: 'AI CEO', desc: 'Synthesizes daily ecosystem reports and growth opportunities.' },
+    { icon: Headphones, title: 'Concierge Governor', desc: 'Routes every user intent to the cheapest capable specialist.' },
+    { icon: Plane, title: 'Travel Agents', desc: 'Flights, hotels, lounges, transport, loyalty and disruption recovery.' },
+    { icon: Shield, title: 'Trust Agents', desc: 'Vault, permissions, audit trail, risk controls and compliance.' },
   ];
 
   return (
