@@ -4,15 +4,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Country } from '@/types/country';
 import { AlertTriangle, CheckCircle, Shield, TrendingUp, Globe, ExternalLink, Home, Briefcase, Heart, DollarSign, FileCheck, Scale } from 'lucide-react';
-import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, RadialBar, RadialBarChart, PolarAngleAxis, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ALL_COUNTRIES } from '@/data/countries';
 
 interface TaxResidencyVisualDashboardProps {
   countries: Country[];
   homeCountryCode?: string;
 }
 
-// Government data sources for verification
+// Government data sources for verification where a country-specific authority is not in ALL_COUNTRIES.
 const TAX_DATA_SOURCES = {
   US: { name: 'IRS', url: 'https://www.irs.gov/individuals/international-taxpayers/substantial-presence-test' },
   GB: { name: 'HMRC', url: 'https://www.gov.uk/guidance/tax-residence' },
@@ -27,6 +28,16 @@ const TAX_DATA_SOURCES = {
   DEFAULT: { name: 'OECD Model Tax Convention', url: 'https://www.oecd.org/tax/treaties/model-tax-convention-on-income-and-on-capital-condensed-version-20745419.htm' }
 };
 
+const getCountryTaxSource = (country: Country) => {
+  const countryInfo = ALL_COUNTRIES.find(c => c.code === country.code);
+  const fallback = TAX_DATA_SOURCES[country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT;
+  return {
+    threshold: countryInfo?.taxResidencyDays || country.dayLimit || 183,
+    sourceName: countryInfo?.taxAuthorityName || fallback.name,
+    sourceUrl: countryInfo?.taxAuthorityUrl || fallback.url,
+  };
+};
+
 const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = ({ 
   countries, 
   homeCountryCode 
@@ -34,8 +45,8 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
   // Calculate tax residency metrics for each country
   const countryMetrics = useMemo(() => {
     return countries.map(country => {
-      const daysSpent = country.yearlyDaysSpent || 0;
-      const threshold = 183; // Standard tax residency threshold
+      const daysSpent = country.yearlyDaysSpent || country.daysSpent || 0;
+      const { threshold, sourceName, sourceUrl } = getCountryTaxSource(country);
       const daysRemaining = Math.max(0, threshold - daysSpent);
       const progress = Math.min((daysSpent / threshold) * 100, 100);
       
@@ -61,10 +72,39 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
         status,
         statusColor,
         statusLabel,
+        threshold,
+        sourceName,
+        sourceUrl,
         isHome: country.code.toLowerCase() === homeCountryCode?.toLowerCase()
       };
     });
   }, [countries, homeCountryCode]);
+
+  // Overall global status
+  const globalStatus = useMemo(() => {
+    const atRisk = countryMetrics.filter(m => m.status === 'danger').length;
+    const warning = countryMetrics.filter(m => m.status === 'warning').length;
+    
+    if (atRisk > 0) return { status: 'danger', label: 'Review Required', color: 'hsl(var(--destructive))', icon: AlertTriangle };
+    if (warning > 0) return { status: 'warning', label: 'Approaching Threshold', color: 'hsl(var(--warning))', icon: AlertTriangle };
+    return { status: 'safe', label: 'No Threshold Triggered', color: 'hsl(var(--success))', icon: CheckCircle };
+  }, [countryMetrics]);
+
+  const globalDaysData = useMemo(() => {
+    return countryMetrics
+      .map(metric => ({
+        name: metric.country.name,
+        code: metric.country.code,
+        flag: metric.country.flag,
+        days: metric.daysSpent,
+        threshold: metric.threshold,
+        remaining: metric.daysRemaining,
+        progress: Math.round(metric.progress),
+        fill: metric.statusColor,
+      }))
+      .sort((a, b) => b.days - a.days)
+      .slice(0, 12);
+  }, [countryMetrics]);
 
   // Find home country or most critical country for main display
   const mainCountry = useMemo(() => {
@@ -100,16 +140,6 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
       </Card>
     );
   }
-
-  // Overall global status
-  const globalStatus = useMemo(() => {
-    const atRisk = countryMetrics.filter(m => m.status === 'danger').length;
-    const warning = countryMetrics.filter(m => m.status === 'warning').length;
-    
-    if (atRisk > 0) return { status: 'danger', label: 'Tax Resident', color: 'hsl(var(--destructive))', icon: AlertTriangle };
-    if (warning > 0) return { status: 'warning', label: 'Approaching Threshold', color: 'hsl(var(--warning))', icon: AlertTriangle };
-    return { status: 'safe', label: 'Safe Zone', color: 'hsl(var(--success))', icon: CheckCircle };
-  }, [countryMetrics]);
 
   return (
     <div className="space-y-6">
