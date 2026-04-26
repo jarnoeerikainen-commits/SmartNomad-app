@@ -10,7 +10,7 @@ import logo from '@/assets/supernomad-logo.jpg';
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Overview', end: true },
-  { to: '/admin/concierge', icon: Radio, label: 'Live Concierge', badge: 'LIVE' },
+  { to: '/admin/concierge', icon: Radio, label: 'Concierge AI', badge: 'LIVE' },
   { to: '/admin/agents', icon: Network, label: 'Agent Council', badge: 'NEW' },
   { to: '/admin/users', icon: Users, label: 'Users' },
   { to: '/admin/tickets', icon: LifeBuoy, label: 'Support' },
