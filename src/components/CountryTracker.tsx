@@ -13,6 +13,7 @@ import { Country } from '@/types/country';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { CountrySelector } from './CountrySelector';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ALL_COUNTRIES } from '@/data/countries';
 
 interface CountryTrackerProps {
   countries: Country[];
@@ -29,12 +30,22 @@ const getRiskInfo = (country: Country) => {
   return { level: 'safe' as const, label: 'Safe', color: 'text-emerald-600' };
 };
 
+const getVerifiedRule = (countryCode: string, fallbackLimit: number) => {
+  const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+  return {
+    threshold: countryInfo?.taxResidencyDays || fallbackLimit,
+    sourceName: countryInfo?.taxAuthorityName || 'Verified country registry',
+    sourceUrl: countryInfo?.taxAuthorityUrl,
+  };
+};
+
 // Country card component with progress visualization
 const TrackedCountryCard: React.FC<{
   country: Country;
   onRemove: (code: string) => void;
 }> = ({ country, onRemove }) => {
   const risk = getRiskInfo(country);
+  const verifiedRule = getVerifiedRule(country.code, country.dayLimit);
   const pct = country.dayLimit > 0 ? Math.min((country.daysSpent / country.dayLimit) * 100, 100) : 0;
   const remaining = Math.max(country.dayLimit - country.daysSpent, 0);
 
@@ -104,6 +115,14 @@ const TrackedCountryCard: React.FC<{
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>{remaining > 0 ? `${remaining} days remaining` : 'Limit reached'}</span>
             <span>{Math.round(pct)}%</span>
+          </div>
+          <div className="flex items-center justify-between gap-2 rounded-md bg-muted/40 px-2 py-1 text-[11px] text-muted-foreground">
+            <span className="truncate">Verified: {verifiedRule.sourceName}</span>
+            {verifiedRule.sourceUrl && (
+              <a href={verifiedRule.sourceUrl} target="_blank" rel="noreferrer" className="font-medium text-primary hover:underline">
+                Source
+              </a>
+            )}
           </div>
         </div>
 
@@ -204,7 +223,8 @@ const CountryTracker: React.FC<CountryTrackerProps> = ({
 
   const handleSelectCountry = (countryCode: string, countryName: string, countryFlag: string) => {
     let defaultDayLimit = parseInt(dayLimit) || 90;
-    if (selectedReason === 'Tax residence tracking') defaultDayLimit = 183;
+    const countryInfo = ALL_COUNTRIES.find(c => c.code === countryCode);
+    if (selectedReason === 'Tax residence tracking') defaultDayLimit = countryInfo?.taxResidencyDays || 183;
     else if (selectedReason === 'Schengen area limit') defaultDayLimit = 90;
     else if (selectedReason === 'Work permit limit') defaultDayLimit = 365;
 
