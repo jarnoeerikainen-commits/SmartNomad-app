@@ -146,7 +146,8 @@ const Landing: React.FC = () => {
               Super<span className="text-[hsl(var(--gold))]">Nomad</span>
             </span>
           </a>
-          <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
+            <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
+              <button type="button" onClick={() => setFilmMode('teaser')} className="hover:text-[hsl(var(--gold))] transition-colors">Teaser</button>
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
             <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
             <a href="#guardian" className="hover:text-[hsl(var(--gold))] transition-colors">Guardian</a>
@@ -172,10 +173,11 @@ const Landing: React.FC = () => {
 
       {/* ============= HERO ============= */}
       <section id="top" className="relative min-h-[100svh] flex items-center pt-16 sm:pt-20">
-        <div className="absolute inset-0">
+          <div className="absolute inset-0">
           <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
+            <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-10 flex flex-col items-center text-center w-full">
@@ -200,17 +202,22 @@ const Landing: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
+              <button type="button" onClick={() => setFilmMode('teaser')}>
+                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.5)] bg-[hsl(220_22%_8%/0.35)] text-white hover:bg-[hsl(43_96%_56%/0.12)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
+                  <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[hsl(var(--gold))]" /> Watch teaser
+                </Button>
+              </button>
               <Link to="/app">
                 <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
                   <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
-              <a href="#ecosystem">
+              <button type="button" onClick={() => setFilmMode('full')}>
                 <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
-                  See what's inside
+                  Longer film
                 </Button>
-              </a>
+              </button>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
