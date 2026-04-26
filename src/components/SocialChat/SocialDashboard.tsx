@@ -13,6 +13,7 @@ import { AIMatchingSuggestions } from './AIMatchingSuggestions';
 import { TravelCalendar } from './TravelCalendar';
 import { getPersonaGroups, VibeGroup } from '@/data/vibeGroupsData';
 import { MAJOR_CITIES } from '@/data/socialChatData';
+import { CommunityAgentOpsPanel } from '@/features/community-ai/CommunityAgentOpsPanel';
 
 export const SocialDashboard = () => {
   const {
@@ -114,6 +115,8 @@ export const SocialDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      <CommunityAgentOpsPanel surface="vibe" />
 
       {/* Compact Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
