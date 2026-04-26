@@ -118,7 +118,7 @@ const Landing: React.FC = () => {
                 />
                 <div className="pointer-events-none absolute left-4 top-4 sm:left-6 sm:top-6">
                   <Badge className="border-[hsl(43_96%_56%/0.3)] bg-[hsl(220_22%_6%/0.78)] text-[hsl(var(--gold))]">
-                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '38-second teaser' : '72-second ecosystem film'}
+                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '30-second AI teaser' : '72-second ecosystem film'}
                   </Badge>
                 </div>
               </div>
