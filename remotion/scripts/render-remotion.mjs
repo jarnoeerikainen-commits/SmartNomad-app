@@ -32,7 +32,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/SuperNomad_Trailer.mp4",
+  outputLocation: "/mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4",
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,
@@ -43,5 +43,5 @@ await renderMedia({
   },
 });
 
-console.log("\nDone! Output: /mnt/documents/SuperNomad_Trailer.mp4");
+console.log("\nDone! Output: /mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4");
 await browser.close({ silent: false });
