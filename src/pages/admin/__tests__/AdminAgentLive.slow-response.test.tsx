@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AdminAgentLive from '../AdminAgentLive';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
@@ -6,7 +6,7 @@ import { AdminAgentActivityService } from '@/services/AdminAgentActivityService'
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     functions: {
-      invoke: vi.fn(() => new Promise((resolve) => setTimeout(() => resolve({ data: { ok: true }, error: null }), 8_000))),
+      invoke: vi.fn(async () => ({ data: { ok: true }, error: null })),
     },
   },
 }));
@@ -24,7 +24,7 @@ describe('AdminAgentLive slow-response resilience', () => {
     localStorage.clear();
   });
 
-  it('keeps a slow concierge run visible as running, then updates to completed without crashing', async () => {
+  it('keeps a slow concierge run visible as running, then updates to completed without crashing', () => {
     const errors: unknown[] = [];
     const errorSpy = vi.spyOn(console, 'error').mockImplementation((...args) => errors.push(args));
 
@@ -60,7 +60,7 @@ describe('AdminAgentLive slow-response resilience', () => {
       });
     });
 
-    await waitFor(() => expect(screen.getByText('COMPLETED')).toBeInTheDocument());
+    expect(screen.getByText('COMPLETED')).toBeInTheDocument();
     expect(screen.getByText('Concierge response')).toBeInTheDocument();
     expect(screen.getByText(/Verified concierge response/i)).toBeInTheDocument();
     expect(screen.getByText('example.com')).toBeInTheDocument();

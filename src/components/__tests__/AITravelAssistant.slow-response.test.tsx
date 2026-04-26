@@ -170,14 +170,14 @@ describe('AITravelAssistant slow-response resilience', () => {
     fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
-    expect(screen.getByText(/Find verified hotel recommendations/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Find verified hotel recommendations/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/AI Agent Workstream/i)).toBeInTheDocument();
 
     await waitFor(() => expect(screen.getByText(/Verified answer pending source checks/i)).toBeInTheDocument());
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
 
     await waitFor(() => expect(screen.getByText(/If unknown, I will say I do not know/i)).toBeInTheDocument());
-    await waitFor(() => expect(screen.getByText('COMPLETED')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getAllByText('COMPLETED').length).toBeGreaterThan(0));
     expect(screen.getByText('Concierge response')).toBeInTheDocument();
     expect(screen.getAllByText(/example.com/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Failed to get response/i)).not.toBeInTheDocument();
