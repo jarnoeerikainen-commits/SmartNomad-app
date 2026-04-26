@@ -18,6 +18,8 @@ import TrustBadge from '@/components/trust/TrustBadge';
 import { Switch } from '@/components/ui/switch';
 import { getDemoTierForId, getDemoVibeScore } from '@/utils/demoTrust';
 import { trustPassService } from '@/services/TrustPassService';
+import { CommunityAgentOpsPanel } from '@/features/community-ai/CommunityAgentOpsPanel';
+import { fileToImagePreview, recordCommunityProof } from '@/features/community-ai/communityAIOptimization';
 
 const ROTATE_INTERVAL = 8000; // 8 seconds — smooth and not too fast
 const VISIBLE_MATCHES = 6;
@@ -43,6 +45,7 @@ function pickNextBatch(
 export const NomadChatDashboard = () => {
   const { messages, sendMessage, isLoading, typing, quickReplies, quickLoading, pickQuickReply } = useCommunityChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pictureInputRef = useRef<HTMLInputElement>(null);
   const [messageInput, setMessageInput] = useState('');
   const [activeTab, setActiveTab] = useState('chat');
   const [triggerCreateGroup, setTriggerCreateGroup] = useState(false);
@@ -118,6 +121,19 @@ export const NomadChatDashboard = () => {
     setTriggerCreateGroup(true);
   };
 
+  const handlePicture = async (file?: File) => {
+    if (!file) return;
+    try {
+      const imageUrl = await fileToImagePreview(file);
+      sendMessage('Sharing a meetup picture for the group.', { imageUrl, imageAlt: file.name || 'Pulse meetup picture' });
+      recordCommunityProof('pulse', 'Picture added to Pulse demo chat', 'Pulse picture flow captured a local preview and routed production requirements through picture safety gate.');
+    } catch {
+      recordCommunityProof('pulse', 'Picture upload blocked', 'Pulse picture safety gate blocked a non-image or oversized file.');
+    } finally {
+      if (pictureInputRef.current) pictureInputRef.current.value = '';
+    }
+  };
+
   // Auto-speak AI responses
   const lastMsg = messages[messages.length - 1];
   const lastMsgIdRef = useState<string | null>(null);
@@ -167,6 +183,8 @@ export const NomadChatDashboard = () => {
           <Switch checked={verifiedOnly} onCheckedChange={setVerifiedOnly} />
           <TrustBadge tier={myTier} size="sm" showLabel />
         </div>
+        <CommunityAgentOpsPanel surface="pulse" onAddPicture={() => pictureInputRef.current?.click()} />
+        <input ref={pictureInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handlePicture(e.target.files?.[0])} />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -264,6 +282,9 @@ export const NomadChatDashboard = () => {
                       </div>
                       <div className={`p-3 rounded-lg ${message.senderId === 'current-user' ? 'bg-primary text-primary-foreground' : message.isAI ? 'bg-accent border border-primary/20' : 'bg-muted'}`}>
                         <p className="text-sm">{message.content}</p>
+                        {message.imageUrl && (
+                          <img src={message.imageUrl} alt={message.imageAlt || 'Pulse chat attachment'} className="mt-2 max-h-56 w-full rounded-md object-cover" />
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

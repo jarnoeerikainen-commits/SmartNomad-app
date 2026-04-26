@@ -12,6 +12,8 @@ import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickReplies } from './QuickReplies';
+import { CommunityAgentOpsPanel } from '@/features/community-ai/CommunityAgentOpsPanel';
+import { fileToImagePreview, recordCommunityProof } from '@/features/community-ai/communityAIOptimization';
 
 interface ChatInterfaceProps {
   chatRoom: ChatRoom;
@@ -26,6 +28,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const pictureInputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, typingByRoom, quickRepliesByRoom, quickLoadingByRoom, pickQuickReply } = useSocialChat();
   const typing = typingByRoom[chatRoom.id] || [];
   const quickReplies = quickRepliesByRoom[chatRoom.id] || [];
@@ -56,6 +59,19 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+  };
+
+  const handlePicture = async (file?: File) => {
+    if (!file) return;
+    try {
+      const imageUrl = await fileToImagePreview(file);
+      await sendMessage(chatRoom.id, 'Sharing a Vibe picture with this chat.', currentUserId, { imageUrl, imageAlt: file.name || 'Vibe chat picture' });
+      recordCommunityProof('vibe', 'Picture added to Vibe chat', 'Vibe picture flow captured a local preview and routed production requirements through picture safety gate.');
+    } catch {
+      recordCommunityProof('vibe', 'Picture upload blocked', 'Vibe picture safety gate blocked a non-image or oversized file.');
+    } finally {
+      if (pictureInputRef.current) pictureInputRef.current.value = '';
     }
   };
 
@@ -113,6 +129,9 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
     : chatRoom.messages;
 
   return (
+    <div className="space-y-3">
+    <CommunityAgentOpsPanel surface="vibe" onAddPicture={() => pictureInputRef.current?.click()} />
+    <input ref={pictureInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handlePicture(e.target.files?.[0])} />
     <Card className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-10rem)] min-h-[400px] max-h-[800px]">
       <CardHeader className="border-b py-3 px-4">
         <div className="flex items-center gap-3">
@@ -239,6 +258,9 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
                         } ${isHighlighted ? 'ring-2 ring-primary/50' : ''}`}
                       >
                         <p className="text-sm">{msg.content}</p>
+                        {msg.imageUrl && (
+                          <img src={msg.imageUrl} alt={msg.imageAlt || 'Vibe chat attachment'} className="mt-2 max-h-56 w-full rounded-md object-cover" />
+                        )}
                       </div>
                       <span className="text-xs text-muted-foreground mt-1">
                         {formatTime(new Date(msg.timestamp))}
@@ -296,5 +318,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 };
