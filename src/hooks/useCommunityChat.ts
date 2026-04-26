@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { ChatMessage } from '@/types/communityChat';
 import { DEMO_USERS, AVATAR_URLS, PULSE_PROFILES } from '@/data/communityChatData';
 import { supabase } from '@/integrations/supabase/client';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 const CURRENT_USER_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face';
 
@@ -135,6 +136,7 @@ export const useCommunityChat = () => {
     setTyping(fakeTypers);
 
     let replies: Array<{ memberId: string; memberName: string; content: string }> = [];
+    const repliesRunId = AdminAgentActivityService.startRun({ surface: 'Community Pulse', command: content, functionName: 'community-orchestrator' });
     try {
       const { data, error } = await supabase.functions.invoke('community-orchestrator', {
         body: {
@@ -148,7 +150,9 @@ export const useCommunityChat = () => {
       });
       if (error) throw error;
       replies = (data?.replies as any[] | undefined) || [];
+      AdminAgentActivityService.completeRun(repliesRunId, `Orchestrated ${replies.length} member replies for the live community thread.`);
     } catch {
+      AdminAgentActivityService.failRun(repliesRunId, 'Community orchestrator unavailable; fallback member reply used.');
       const u = pickRandom(DEMO_USERS);
       replies = [{ memberId: u.id, memberName: u.name, content: pickRandom(FALLBACK_REPLIES) }];
     }
@@ -175,6 +179,7 @@ export const useCommunityChat = () => {
 
     // 2) AI host follow-up (uses old community-chat function for compatibility)
     setIsLoading(true);
+    const aiRunId = AdminAgentActivityService.startRun({ surface: 'Community Pulse AI Host', command: content, functionName: 'community-chat' });
     try {
       const { data } = await supabase.functions.invoke('community-chat', {
         body: { message: content, context: { recentMessages: messages.slice(-5), users: DEMO_USERS, location: 'Dubai Marina' } },
@@ -192,10 +197,12 @@ export const useCommunityChat = () => {
         };
         addMessage(aiMessage);
         setIsLoading(false);
+        AdminAgentActivityService.completeRun(aiRunId, 'AI host added a verified community follow-up and refreshed quick replies.');
         // refresh quick replies based on the AI message
         refreshQuickReplies(aiMessage);
       }, cumulative + 600);
     } catch {
+      AdminAgentActivityService.failRun(aiRunId, 'Community AI host unavailable.');
       setIsLoading(false);
     }
   }, [messages, refreshQuickReplies]);
