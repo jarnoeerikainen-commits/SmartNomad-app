@@ -23,7 +23,7 @@ const browser = await openBrowser("chrome", {
 console.log("Selecting composition...");
 const composition = await selectComposition({
   serveUrl: bundled,
-  id: "main",
+  id: process.env.REMOTION_COMPOSITION_ID ?? "main",
   puppeteerInstance: browser,
 });
 
@@ -32,7 +32,7 @@ await renderMedia({
   composition,
   serveUrl: bundled,
   codec: "h264",
-  outputLocation: "/mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4",
+  outputLocation: process.env.REMOTION_OUTPUT ?? "/mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4",
   puppeteerInstance: browser,
   muted: true,
   concurrency: 1,
@@ -43,5 +43,5 @@ await renderMedia({
   },
 });
 
-console.log("\nDone! Output: /mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4");
+console.log(`\nDone! Output: ${process.env.REMOTION_OUTPUT ?? "/mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4"}`);
 await browser.close({ silent: false });
