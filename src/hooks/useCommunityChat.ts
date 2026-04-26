@@ -115,7 +115,7 @@ export const useCommunityChat = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const sendMessage = useCallback(async (content: string) => {
+  const sendMessage = useCallback(async (content: string, attachment?: Pick<ChatMessage, 'imageUrl' | 'imageAlt'>) => {
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       senderId: 'current-user',
@@ -123,6 +123,7 @@ export const useCommunityChat = () => {
       senderAvatar: CURRENT_USER_AVATAR,
       content,
       timestamp: new Date(),
+      ...attachment,
     };
     addMessage(userMessage);
     setQuickReplies([]);
