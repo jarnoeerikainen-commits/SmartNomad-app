@@ -110,3 +110,5 @@ verify_jwt = false
 
 [functions.seed-acme-demo]
 verify_jwt = false
+[functions.admin-ai-ceo]
+verify_jwt = false

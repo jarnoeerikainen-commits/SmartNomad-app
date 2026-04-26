@@ -1,6 +1,6 @@
 ---
 name: Back Office (admin dashboard)
-description: /admin shell with role gate, 8 dashboards including the AI Brain (24/7 autonomous intelligence with insights, recommendations, reports). Demo grants synthetic admin for investor preview.
+description: /admin shell with role gate, AI Brain, AI CEO, directors, concierge and agent controls. Demo grants synthetic admin for investor preview.
 type: feature
 ---
 
@@ -12,15 +12,16 @@ type: feature
 - **Demo mode** (no auth): synthetic admin granted, sidebar shows amber "Demo / Read-Only" badge. All dashboards fall back to seeded sample data.
 - Landing page top-right has a **Back Office** outline button for investors.
 
-## Dashboards (v2)
+## Dashboards (v3)
 1. **Overview** — KPIs from `get_platform_stats()` RPC.
 2. **Users** — top 100 profiles, in-page text search.
 3. **Support** — tickets with priority/status badges.
 4. **AI Analytics** — last-7-day usage rolled up by `function_name`.
-5. **AI Brain** ⭐ NEW — 24/7 autonomous intelligence. Generates Insights (anomaly/pattern/opportunity/risk/churn), Recommendations (new orders, concierge tweaks, churn saves, pricing) and Reports (executive rollups). Charts: 14d AI activity, revenue mix, concierge quality. Quick scan / Full analysis buttons. Demo seeds 6 insights, 5 recs, 1 report.
-6. **B2B Data** — `data_packages` catalog + `api_partners`.
-7. **Affiliates** — top earners.
-8. **Audit** — last 200 `staff_audit_log` entries.
+5. **AI Brain** — 24/7 autonomous intelligence. Generates Insights (anomaly/pattern/opportunity/risk/churn), Recommendations (new orders, concierge tweaks, churn saves, pricing) and Reports (executive rollups). Charts: 14d AI activity, revenue mix, concierge quality. Quick scan / Full analysis buttons. Demo seeds 6 insights, 5 recs, 1 report.
+6. **AI CEO** ⭐ NEW — board-level synthesis layer that reads daily reports from Concierge AI, directors, AI Brain and agent council. Produces daily CEO reports, product/profit/CX suggestions, learning updates and permission-gated decisions. Real execution stays master-password/admin gated; demo is fully visible but safe.
+7. **B2B Data** — `data_packages` catalog + `api_partners`.
+8. **Affiliates** — top earners.
+9. **Audit** — last 200 `staff_audit_log` entries.
 
 ## AI Brain architecture
 - Tables: `admin_ai_insights`, `admin_ai_recommendations`, `admin_ai_reports`, `admin_ai_brain_runs` — staff-only RLS via `has_staff_role()`.
