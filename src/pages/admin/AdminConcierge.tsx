@@ -486,7 +486,7 @@ const AdminConcierge: React.FC = () => {
                   className="text-xs leading-snug border-l-2 border-[hsl(43_96%_56%/0.3)] pl-2 py-1 hover:bg-white/[0.02] rounded-r"
                 >
                   <div className="flex items-center gap-1.5 text-[10px] text-[hsl(30_12%_60%)]">
-                    <span className={`font-bold uppercase tracking-wider ${KIND_COLOR[s.kind] ?? 'text-white'}`}>
+                    <span className={`font-bold uppercase tracking-wider ${KIND_COLOR[s.kind] ?? 'text-[hsl(30_12%_95%)]'}`}>
                       {KIND_LABEL[s.kind]}
                     </span>
                     <span>·</span>
@@ -536,7 +536,7 @@ const AdminConcierge: React.FC = () => {
                   <Tooltip contentStyle={{ background: 'hsl(220 22% 8%)', border: '1px solid hsl(43 96% 56% / 0.3)', borderRadius: 6, fontSize: 12 }} />
                   <Bar dataKey="n" radius={[4, 4, 0, 0]}>
                     {regionData.map((_, i) => (
-                      <Cell key={i} fill={['#06b6d4', '#f59e0b', '#a78bfa', '#34d399', '#fb7185'][i % 5]} />
+                      <Cell key={i} fill={['hsl(188 86% 53%)', 'hsl(38 92% 50%)', 'hsl(252 95% 76%)', 'hsl(158 64% 52%)', 'hsl(351 95% 71%)'][i % 5]} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -567,7 +567,7 @@ const AdminConcierge: React.FC = () => {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[hsl(43_96%_56%)] to-[hsl(33_96%_46%)] flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-black" />
+                  <Sparkles className="h-4 w-4 text-[hsl(220_22%_6%)]" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold">Brain Concierge</div>
@@ -652,7 +652,7 @@ const AdminConcierge: React.FC = () => {
               <Button
                 type="submit"
                 disabled={streaming || !input.trim()}
-                className="bg-[hsl(43_96%_56%)] text-black hover:bg-[hsl(43_96%_50%)]"
+                className="bg-[hsl(43_96%_56%)] text-[hsl(220_22%_6%)] hover:bg-[hsl(43_96%_50%)]"
               >
                 {streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
