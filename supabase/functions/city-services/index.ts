@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,6 +23,52 @@ const SERVICE_CATEGORIES = [
   "Childcare & Family Services",
   "Real Estate & Relocation",
 ];
+
+type ServiceProvider = {
+  name?: string;
+  rating?: number;
+  website?: string;
+  verified?: boolean;
+  reviewSource?: string;
+  reviewCount?: number;
+};
+
+function hasValidWebsite(value?: string): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname.includes(".");
+  } catch {
+    return false;
+  }
+}
+
+function verifiedProviderOnly(provider: ServiceProvider): boolean {
+  return Boolean(
+    provider?.name &&
+    provider.verified === true &&
+    typeof provider.rating === "number" &&
+    provider.rating >= 4 &&
+    typeof provider.reviewCount === "number" &&
+    provider.reviewCount > 0 &&
+    typeof provider.reviewSource === "string" &&
+    provider.reviewSource.trim().length > 1 &&
+    hasValidWebsite(provider.website)
+  );
+}
+
+function enforceVerifiedServiceData(data: any) {
+  if (!data || !Array.isArray(data.categories)) return data;
+  data.categories = data.categories
+    .map((category: any) => ({
+      ...category,
+      providers: Array.isArray(category.providers)
+        ? category.providers.filter(verifiedProviderOnly)
+        : [],
+    }))
+    .filter((category: any) => category.providers.length > 0);
+  return data;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
