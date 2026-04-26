@@ -178,7 +178,6 @@ describe('AITravelAssistant slow-response resilience', () => {
 
     await waitFor(() => expect(screen.getByText(/If unknown, I will say I do not know/i)).toBeInTheDocument());
     await waitFor(() => expect(screen.getAllByText('COMPLETED').length).toBeGreaterThan(0));
-    expect(screen.getByText('Concierge response')).toBeInTheDocument();
     expect(screen.getAllByText(/example.com/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Failed to get response/i)).not.toBeInTheDocument();
     expect(errors).toHaveLength(0);

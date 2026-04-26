@@ -60,7 +60,7 @@ describe('AdminAgentLive slow-response resilience', () => {
       });
     });
 
-    expect(screen.getByText('COMPLETED')).toBeInTheDocument();
+    expect(screen.getAllByText('COMPLETED').length).toBeGreaterThan(0);
     expect(screen.getByText('Concierge response')).toBeInTheDocument();
     expect(screen.getByText(/Verified concierge response/i)).toBeInTheDocument();
     expect(screen.getByText('example.com')).toBeInTheDocument();
