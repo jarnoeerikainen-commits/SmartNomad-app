@@ -3,6 +3,7 @@ import { SocialProfile, ChatRoom, ChatMessage, AIMatchSuggestion } from '@/types
 import { socialProfiles, demoChatRooms, AVATAR_URLS } from '@/data/socialChatData';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { supabase } from '@/integrations/supabase/client';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 const FALLBACK_REPLIES: string[] = [
   'That sounds great! Count me in 😄',
@@ -44,13 +45,16 @@ export const useSocialChat = () => {
 
   const getAIMatches = useCallback(async (userProfile: Partial<SocialProfile>): Promise<AIMatchSuggestion[]> => {
     setIsLoading(true);
+    const runId = AdminAgentActivityService.startRun({ surface: 'Social Match AI', command: 'Find compatible social matches', functionName: 'social-chat-ai' });
     try {
       const { data, error } = await supabase.functions.invoke('social-chat-ai', {
         body: { type: 'match', userProfile, availableProfiles: profiles.slice(0, 20) },
       });
       if (error) throw error;
+      AdminAgentActivityService.completeRun(runId, `Matched ${(data.matches || []).length} profiles using verified demo profile and community context.`);
       return data.matches || [];
     } catch {
+      AdminAgentActivityService.failRun(runId, 'Social match AI unavailable; fallback suggestions shown.');
       return profiles.filter(p => p.status === 'online').slice(0, 8).map(profile => ({
         profile,
         matchScore: Math.floor(Math.random() * 20) + 78,
@@ -184,6 +188,7 @@ export const useSocialChat = () => {
 
     // Orchestrated replies
     let replies: Array<{ memberId: string; memberName: string; content: string }> = [];
+    const runId = AdminAgentActivityService.startRun({ surface: 'Social Chat', command: content, functionName: 'community-orchestrator' });
     try {
       const memberPool = otherParticipants.map(p => {
         const prof = profiles.find(x => x.id === p.id);
@@ -200,7 +205,9 @@ export const useSocialChat = () => {
         },
       });
       replies = (data?.replies as any[] | undefined) || [];
+      AdminAgentActivityService.completeRun(runId, `Generated ${replies.length} community replies and quick-response context.`);
     } catch {
+      AdminAgentActivityService.failRun(runId, 'Community orchestrator unavailable; local fallback reply used.');
       if (otherParticipants.length > 0) {
         const r = pickRandom(otherParticipants);
         replies = [{ memberId: r.id, memberName: r.name, content: pickRandom(FALLBACK_REPLIES) }];
