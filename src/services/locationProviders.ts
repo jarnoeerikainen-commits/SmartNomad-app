@@ -11,6 +11,7 @@ const TIMEOUT_MS = 3500;
 const LOCATION_IP_FUNCTION_URL = import.meta.env.VITE_SUPABASE_URL
   ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/location-ip`
   : '';
+const USE_LOCATION_IP_EDGE = import.meta.env.VITE_USE_LOCATION_IP_EDGE === 'true';
 
 const englishRegionNames =
   typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -163,10 +164,12 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  const supabaseLocation = await ipFromSupabaseFunction();
-  if (supabaseLocation) return supabaseLocation;
+  const directLocation = await firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
+  if (directLocation) return directLocation;
 
-  return firstSuccessfulLocation([ipFromIpapi, ipFromBigDataCloud]);
+  if (!USE_LOCATION_IP_EDGE) return null;
+
+  return ipFromSupabaseFunction();
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
