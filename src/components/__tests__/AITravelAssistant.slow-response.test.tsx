@@ -173,7 +173,7 @@ describe('AITravelAssistant slow-response resilience', () => {
 
     const input = await screen.findByPlaceholderText('Ask concierge...');
     await user.type(input, 'Find verified hotel recommendations with websites');
-    await user.click(screen.getByRole('button', { name: '' }));
+    await user.keyboard('{Enter}');
 
     expect(screen.getByText('RUNNING')).toBeInTheDocument();
     expect(screen.getByText(/Find verified hotel recommendations/i)).toBeInTheDocument();
