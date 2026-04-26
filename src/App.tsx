@@ -41,6 +41,7 @@ const AdminBrain = lazy(() => import("./pages/admin/AdminBrain"));
 const AdminCEO = lazy(() => import("./pages/admin/AdminCEO"));
 const AdminDirectors = lazy(() => import("./pages/admin/AdminDirectors"));
 const AdminConcierge = lazy(() => import("./pages/admin/AdminConcierge"));
+const AdminAgentLive = lazy(() => import("./pages/admin/AdminAgentLive"));
 const AdminAgents = lazy(() => import("./pages/admin/AdminAgents"));
 const AdminData = lazy(() => import("./pages/admin/AdminData"));
 const AdminAffiliates = lazy(() => import("./pages/admin/AdminAffiliates"));
@@ -104,6 +105,7 @@ const App = () => {
                     <Route path="ceo" element={<AdminCEO />} />
                     <Route path="directors" element={<AdminDirectors />} />
                     <Route path="concierge" element={<AdminConcierge />} />
+                    <Route path="agent-live" element={<AdminAgentLive />} />
                     <Route path="agents" element={<AdminAgents />} />
                     <Route path="data" element={<AdminData />} />
                     <Route path="affiliates" element={<AdminAffiliates />} />

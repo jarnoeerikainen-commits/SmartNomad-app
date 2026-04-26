@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, LifeBuoy, Brain, Database, Coins,
-  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network, Receipt, Trophy, BriefcaseBusiness
+  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network, Receipt, Trophy, BriefcaseBusiness, Activity
 } from 'lucide-react';
 import { useStaffRole } from '@/hooks/useStaffRole';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import logo from '@/assets/supernomad-logo.jpg';
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Overview', end: true },
   { to: '/admin/concierge', icon: Radio, label: 'Concierge AI', badge: 'LIVE' },
+  { to: '/admin/agent-live', icon: Activity, label: 'Live Agent Feed', badge: 'ONLINE' },
   { to: '/admin/agents', icon: Network, label: 'Agent Council', badge: 'NEW' },
   { to: '/admin/users', icon: Users, label: 'Users' },
   { to: '/admin/tickets', icon: LifeBuoy, label: 'Support' },

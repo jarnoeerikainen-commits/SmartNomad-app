@@ -3,6 +3,7 @@ import { MovingServiceProvider, MovingRequest, MovingFilters, AIMovingAssessment
 import { movingProviders } from '@/data/movingServicesData';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 export function useMovingServices() {
   const [providers, setProviders] = useState<MovingServiceProvider[]>(movingProviders);
@@ -38,6 +39,7 @@ export function useMovingServices() {
   const getAIInventoryAssessment = useCallback(async (rooms: RoomInventory[]): Promise<AIMovingAssessment | null> => {
     try {
       setLoading(true);
+      const runId = AdminAgentActivityService.startRun({ surface: 'Moving AI', command: `Assess ${rooms.length} rooms for relocation inventory`, functionName: 'moving-ai-assistant' });
       const { data, error } = await supabase.functions.invoke('moving-ai-assistant', {
         body: { 
           action: 'assess-inventory',
@@ -46,6 +48,7 @@ export function useMovingServices() {
       });
 
       if (error) throw error;
+      AdminAgentActivityService.completeRun(runId, 'Inventory assessment completed through relocation specialist agents.');
       return data as AIMovingAssessment;
     } catch (error) {
       console.error('AI assessment error:', error);
@@ -59,6 +62,7 @@ export function useMovingServices() {
   const getAIPricing = useCallback(async (moveRequest: Partial<MovingRequest>): Promise<any> => {
     try {
       setLoading(true);
+      const runId = AdminAgentActivityService.startRun({ surface: 'Moving AI', command: 'Estimate relocation pricing from the submitted move request', functionName: 'moving-ai-assistant' });
       const { data, error } = await supabase.functions.invoke('moving-ai-assistant', {
         body: { 
           action: 'estimate-pricing',
@@ -67,6 +71,7 @@ export function useMovingServices() {
       });
 
       if (error) throw error;
+      AdminAgentActivityService.completeRun(runId, 'Pricing estimate completed with quote validation and provider matching.');
       return data;
     } catch (error) {
       console.error('AI pricing error:', error);

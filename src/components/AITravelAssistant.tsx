@@ -39,6 +39,7 @@ import { evaluateAnswer } from '@/utils/conciergeQuality';
 import { recordOutcome } from '@/utils/conciergeFeedback';
 import { buildGreetingParts, type GreetingPart } from '@/utils/conciergeGreetings';
 import { useLocation } from '@/contexts/LocationContext';
+import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 
 
 interface Message {
@@ -323,6 +324,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/travel-assistant`;
+    const runId = AdminAgentActivityService.startRun({ surface: 'Concierge AI', command: userMessage, functionName: 'travel-assistant' });
 
     // Create conversation in Supabase if not yet created
     if (!conversationIdRef.current) {
@@ -732,6 +734,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         latencyMs: Math.max(0, latencyMs),
         outputTokens: Math.ceil((assistantContent?.length || 0) / 4),
       });
+      AdminAgentActivityService.completeRun(runId, `Concierge response completed with ${bundle.cityServicesContext ? 'city services, ' : ''}${bundle.calendar ? 'calendar, ' : ''}memory and truth-protocol checks.`);
 
       // Follow-up logic (less frequent with chunked messages since last chunk already asks a question)
       const shouldFollowUp = chunks.length <= 1 && exchangeCountRef.current % 4 === 0 && Math.random() > 0.6 && assistantContent;
@@ -773,6 +776,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       setIsTyping(false);
     } catch (error) {
       console.error('Chat error:', error);
+      AdminAgentActivityService.failRun(runId, 'Concierge request failed; user was asked to try again.');
       toast({
         title: 'Error',
         description: 'Failed to get response. Please try again.',
@@ -813,7 +817,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         isUser: false,
         timestamp: new Date(),
       };
+      const rideRunId = AdminAgentActivityService.startRun({ surface: 'Concierge AI', command: sentText, functionName: 'ride-hailing-local-router' });
       setMessages(prev => [...prev, assistantMsg]);
+      AdminAgentActivityService.completeRun(rideRunId, 'Ride intent routed locally to verified ride-booking card before any LLM round-trip.');
       return; // skip LLM round-trip — the ride card is the answer
     }
 
