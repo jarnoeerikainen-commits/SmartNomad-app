@@ -227,7 +227,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                     days remaining
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    of 183 days
+                    of {mainCountry.threshold} days
                   </div>
                 </div>
               </div>
@@ -260,7 +260,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                 </Card>
                 <Card className="p-4 bg-card/50">
                   <div className="text-sm text-muted-foreground mb-1">Threshold</div>
-                  <div className="text-3xl font-bold">183</div>
+                  <div className="text-3xl font-bold">{mainCountry.threshold}</div>
                 </Card>
               </div>
 
@@ -300,7 +300,7 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                   <div className="text-sm">
                     <span className="font-medium">Tax Resident Status</span>
                     <p className="text-muted-foreground mt-1">
-                      You've exceeded the 183-day threshold and may be considered a tax resident.
+                      You've exceeded the {mainCountry.threshold}-day threshold and may be considered a tax resident.
                     </p>
                   </div>
                 </div>
@@ -323,12 +323,11 @@ const TaxResidencyVisualDashboard: React.FC<TaxResidencyVisualDashboardProps> = 
                         size="sm"
                         className="h-8 px-2"
                         onClick={() => {
-                          const source = TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT;
-                          window.open(source.url, '_blank');
+                          window.open(mainCountry.sourceUrl, '_blank');
                         }}
                       >
                         <ExternalLink className="w-3 h-3 mr-1" />
-                        {(TAX_DATA_SOURCES[mainCountry.country.code as keyof typeof TAX_DATA_SOURCES] || TAX_DATA_SOURCES.DEFAULT).name}
+                        {mainCountry.sourceName}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
