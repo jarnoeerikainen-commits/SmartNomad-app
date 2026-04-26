@@ -185,25 +185,28 @@ const Landing: React.FC = () => {
             <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-10 flex flex-col items-center text-center w-full">
-          <div className="space-y-3 sm:space-y-4 md:space-y-5 animate-fade-in max-w-4xl">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-7 md:py-10 flex flex-col items-center text-center w-full">
+          <div className="space-y-2.5 sm:space-y-3.5 md:space-y-5 animate-fade-in max-w-5xl">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
-            <h1 className="font-display font-bold leading-[0.95] tracking-tight">
-              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl break-words">
+            <h1 className="font-display font-bold leading-[0.95] tracking-tight [text-wrap:balance]">
+              <span className="block text-[clamp(2.65rem,8vw,6rem)] break-words">
                 <span className="text-white">Super</span>
                 <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
-              <span className="block mt-2 sm:mt-3 text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-semibold">
+              <span className="block mt-2 text-[clamp(1.25rem,3.6vw,2.5rem)] text-white font-semibold leading-tight">
+                Global Mobility, Orchestrated.
+              </span>
+              <span className="block mt-1 text-sm sm:text-lg md:text-xl text-[hsl(var(--gold-light))] font-semibold leading-snug">
                 Your borderless life, with One app.
               </span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-[hsl(30_12%_80%)] leading-snug max-w-2xl mx-auto">
-              <strong className="text-white">Global Mobility, Orchestrated.</strong> SuperNomad is the world’s first Proactive Mobility Ecosystem. We’ve replaced the chaos of fragmented apps and administrative friction with a single, Agentic Intelligence that manages your identity, residency, and lifestyle logistics in real-time.
+            <p className="text-sm sm:text-base md:text-lg text-[hsl(30_12%_82%)] leading-snug sm:leading-relaxed max-w-3xl mx-auto [text-wrap:balance]">
+              The world’s first Proactive Mobility Ecosystem — one Agentic Intelligence for identity, residency, travel and lifestyle logistics in real time.
             </p>
-            <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_75%)] leading-snug max-w-2xl mx-auto">
-              Built for the <strong className="text-white">850 million global professionals</strong> who call the world home. From securing your tax status and border clearance to autonomous flight, suite, and dining arrangements—SuperNomad doesn’t just track your journey. It <strong className="text-white">secures your life.</strong>
+            <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_76%)] leading-snug sm:leading-relaxed max-w-3xl mx-auto [text-wrap:balance]">
+              Built for <strong className="text-white">850 million global professionals</strong>: tax status, border clearance, flights, suites and dining arranged through one secure command layer.
             </p>
 
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
