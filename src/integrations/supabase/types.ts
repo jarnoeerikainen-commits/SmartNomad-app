@@ -769,6 +769,90 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_concierge_performance_daily: {
+        Row: {
+          avg_quality_score: number
+          conversion_events: number
+          created_at: string
+          escalation_rate: number
+          estimated_cost_usd: number
+          id: string
+          notes: Json
+          report_date: string
+          revenue_signal_usd: number
+          segment: string
+          token_usage: number
+          total_sessions: number
+        }
+        Insert: {
+          avg_quality_score?: number
+          conversion_events?: number
+          created_at?: string
+          escalation_rate?: number
+          estimated_cost_usd?: number
+          id?: string
+          notes?: Json
+          report_date?: string
+          revenue_signal_usd?: number
+          segment?: string
+          token_usage?: number
+          total_sessions?: number
+        }
+        Update: {
+          avg_quality_score?: number
+          conversion_events?: number
+          created_at?: string
+          escalation_rate?: number
+          estimated_cost_usd?: number
+          id?: string
+          notes?: Json
+          report_date?: string
+          revenue_signal_usd?: number
+          segment?: string
+          token_usage?: number
+          total_sessions?: number
+        }
+        Relationships: []
+      }
+      admin_concierge_rules: {
+        Row: {
+          applies_to: string[]
+          category: string
+          created_at: string
+          metadata: Json
+          priority: number
+          rule_key: string
+          rule_text: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          applies_to?: string[]
+          category?: string
+          created_at?: string
+          metadata?: Json
+          priority?: number
+          rule_key: string
+          rule_text: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          applies_to?: string[]
+          category?: string
+          created_at?: string
+          metadata?: Json
+          priority?: number
+          rule_key?: string
+          rule_text?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       affiliate_accounts: {
         Row: {
           cleared_balance: number
@@ -4947,6 +5031,18 @@ export type Database = {
           urgent_recommendations: number
         }[]
       }
+      get_concierge_control_summary: {
+        Args: never
+        Returns: {
+          active_agents: number
+          active_rules: number
+          last_report_at: string
+          paused_agents: number
+          pending_suggestions: number
+          total_agents: number
+          total_daily_token_budget: number
+        }[]
+      }
       get_directors_ecosystem_summary: {
         Args: never
         Returns: {
@@ -5369,6 +5465,33 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "admin_ai_agent_controls"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      update_admin_concierge_rule: {
+        Args: {
+          p_metadata?: Json
+          p_priority?: number
+          p_rule_key: string
+          p_rule_text?: string
+          p_status?: string
+        }
+        Returns: {
+          applies_to: string[]
+          category: string
+          created_at: string
+          metadata: Json
+          priority: number
+          rule_key: string
+          rule_text: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "admin_concierge_rules"
           isOneToOne: true
           isSetofReturn: false
         }
