@@ -105,16 +105,22 @@ const Landing: React.FC = () => {
               <X className="h-5 w-5" />
             </button>
             <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
-              <div className="relative min-h-[360px] sm:min-h-[520px] overflow-hidden">
-                <img src={filmMode === 'teaser' ? heroImg : travelImg} alt="SuperNomad cinematic preview" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.2)] to-[hsl(220_22%_5%/0.25)]" />
-                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
-                  <Badge className="mb-4 border-[hsl(43_96%_56%/0.3)] bg-[hsl(43_96%_56%/0.16)] text-[hsl(var(--gold))]">
-                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '38-second teaser' : 'Full ecosystem film'}
+              <div className="relative min-h-[300px] sm:min-h-[520px] overflow-hidden bg-[hsl(220_22%_5%)]">
+                <video
+                  key={filmMode}
+                  className="h-full w-full object-cover"
+                  src={filmMode === 'teaser' ? '/videos/supernomad-teaser.mp4' : '/videos/supernomad-ecosystem-film.mp4'}
+                  poster={filmMode === 'teaser' ? heroImg : travelImg}
+                  controls
+                  autoPlay
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
+                <div className="pointer-events-none absolute left-4 top-4 sm:left-6 sm:top-6">
+                  <Badge className="border-[hsl(43_96%_56%/0.3)] bg-[hsl(220_22%_6%/0.78)] text-[hsl(var(--gold))]">
+                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '38-second teaser' : '72-second ecosystem film'}
                   </Badge>
-                  <h2 className="font-display text-3xl sm:text-5xl font-bold leading-tight text-white">
-                    {filmMode === 'teaser' ? 'Your borderless life, compressed into one intelligence layer.' : 'The SuperNomad ecosystem: concierge, trust, commerce and company intelligence.'}
-                  </h2>
                 </div>
               </div>
               <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-8">
