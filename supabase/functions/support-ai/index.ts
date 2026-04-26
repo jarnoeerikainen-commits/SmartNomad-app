@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -364,7 +365,7 @@ serve(async (req) => {
     const trendPack = await getTrendPack();
     const trendSection = renderTrendPackForPrompt(trendPack, language || 'en');
 
-    const systemPrompt = `${SUPERNOMAD_KNOWLEDGE}${userContextSection}\n\n${trendSection}
+    const systemPrompt = withTruthProtocol(`${SUPERNOMAD_KNOWLEDGE}${userContextSection}\n\n${trendSection}
 
 ═══════════════════════════════════════
 YOUR ROLE & PERSONALITY
@@ -401,7 +402,7 @@ Current date/time: ${currentDateTime}
 - Data deletion requests that need verification
 - Bug reports that need developer investigation
 - Partnership or business inquiries
-- Legal compliance questions`;
+- Legal compliance questions`);
 
     // Validate and sanitize messages
     const sanitizedMessages = messages.slice(-30).map((m: any) => ({
