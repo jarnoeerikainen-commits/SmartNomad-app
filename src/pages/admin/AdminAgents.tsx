@@ -328,6 +328,98 @@ const AdminAgents: React.FC = () => {
         ))}
       </div>
 
+      {/* PRODUCTION CONTROL PLANE */}
+      <Card className="bg-[hsl(220_22%_6%)] border-[hsl(43_96%_56%/0.2)] p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <Lock className="h-4 w-4 text-[hsl(var(--gold))]" />
+              <h2 className="font-semibold">Production Agent Control Plane</h2>
+              <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30">
+                {isDemoMode ? 'Demo read-only' : 'Staff gated'}
+              </Badge>
+            </div>
+            <p className="text-xs text-[hsl(30_12%_65%)] mt-1">
+              {liveKpis.total} controlled agents · {liveKpis.active} active · {liveKpis.paused} paused · {liveKpis.budget.toLocaleString()} daily token budget
+            </p>
+          </div>
+          {loadingLive && <LoaderText />}
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {controls.map((c) => (
+              <Card key={c.agent_key} className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm truncate">{c.display_name}</span>
+                      <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_75%)] border-[hsl(43_96%_56%/0.15)] text-[10px]">
+                        {c.agent_type}
+                      </Badge>
+                    </div>
+                    <div className="text-[11px] text-[hsl(30_12%_62%)] mt-1 line-clamp-2">{c.description}</div>
+                  </div>
+                  <Switch
+                    checked={c.status === 'active'}
+                    onCheckedChange={(checked) => updateControl(c.agent_key, { status: checked ? 'active' : 'paused' })}
+                    aria-label={`Toggle ${c.display_name}`}
+                  />
+                </div>
+                <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
+                  <Stat label="Mode" value={c.automation_level.replace('_', ' ')} />
+                  <Stat label="Model" value={c.model_tier} />
+                  <Stat label="Budget" value={`${Math.round(c.daily_token_budget / 1000)}k`} />
+                </div>
+                <div className="flex flex-wrap items-center gap-2 mt-3">
+                  <Badge className={c.requires_approval ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'}>
+                    {c.requires_approval ? 'approval required' : 'no approval'}
+                  </Badge>
+                  <Badge className={c.can_write_to_user_surfaces ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-sky-500/15 text-sky-300 border-sky-500/30'}>
+                    {c.can_write_to_user_surfaces ? 'can write live' : 'back-office only'}
+                  </Badge>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateControl(c.agent_key, { automation_level: 'recommend_only', requires_approval: true, can_write_to_user_surfaces: false })}>
+                    Safe mode
+                  </Button>
+                  <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateControl(c.agent_key, { automation_level: 'supervised_auto', requires_approval: true })}>
+                    Supervised
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="space-y-3">
+            <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
+              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm">Daily Agent Reports</h3></div>
+              <div className="space-y-3">
+                {reports.slice(0, 4).map((r) => (
+                  <div key={r.id} className="border-l-2 border-[hsl(43_96%_56%/0.35)] pl-3">
+                    <div className="text-sm font-medium">{r.title}</div>
+                    <div className="text-xs text-[hsl(30_12%_68%)] line-clamp-2 mt-1">{r.summary}</div>
+                    <div className="text-[10px] text-[hsl(30_12%_55%)] mt-1">Score {Number(r.performance_score).toFixed(0)} · {r.token_usage.toLocaleString()} tokens</div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+            <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
+              <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-amber-300" /><h3 className="font-semibold text-sm">Performance Suggestions</h3></div>
+              <div className="space-y-2">
+                {suggestions.slice(0, 5).map((s) => (
+                  <div key={s.id} className="p-2 rounded bg-[hsl(220_22%_6%)] border border-[hsl(43_96%_56%/0.1)]">
+                    <Badge className={`${PRIORITY_STYLES[s.priority] ?? PRIORITY_STYLES.medium} text-[10px] mb-1`}>{s.priority}</Badge>
+                    <div className="text-xs font-medium">{s.title}</div>
+                    <div className="text-[11px] text-[hsl(30_12%_65%)] mt-1 line-clamp-2">{s.expected_impact ?? s.suggested_action}</div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </Card>
+
       {/* DAILY BRIEFING + ACTIVITY */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 bg-gradient-to-br from-[hsl(220_22%_6%)] to-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.25)] p-5">
