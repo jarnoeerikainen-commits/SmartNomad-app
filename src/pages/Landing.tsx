@@ -265,6 +265,38 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* ============= CINEMATIC ECOSYSTEM FILM STRIP ============= */}
+      <section className="relative overflow-hidden py-20 md:py-28 border-b border-[hsl(43_96%_56%/0.1)]">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(220_22%_6%),hsl(220_22%_10%)_45%,hsl(220_22%_6%))]" />
+        <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_20%_30%,hsl(43_96%_56%)_0,transparent_22%),radial-gradient(circle_at_80%_20%,hsl(12_88%_59%)_0,transparent_18%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-[0.9fr_1.4fr] gap-10 lg:gap-14 items-center">
+            <div className="space-y-6">
+              <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]"><PlayCircle className="mr-1.5 h-3 w-3" /> Cinematic website layer</Badge>
+              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">Less SaaS page. More private-bank travel command room.</h2>
+              <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">The new landing experience shows SuperNomad through real-world moments: arrival, protection, community, identity and company intelligence — while keeping instant access to the app and Back Office.</p>
+              <div className="flex flex-wrap gap-3">
+                <button type="button" onClick={() => setFilmMode('teaser')}><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button></button>
+                <button type="button" onClick={() => setFilmMode('full')}><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Open longer video</Button></button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {cinematicMoments.map((moment, index) => (
+                <button key={moment.label} type="button" onClick={() => setFilmMode(index === 0 ? 'teaser' : 'full')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
+                  <img src={moment.img} alt={moment.label} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.35)] to-transparent" />
+                  <div className="absolute bottom-0 p-4 sm:p-5">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-[hsl(var(--gold))]">Scene 0{index + 1}</div>
+                    <div className="font-display text-xl sm:text-2xl font-bold text-white">{moment.label}</div>
+                    <div className="mt-1 hidden sm:block text-xs leading-snug text-[hsl(30_12%_78%)]">{moment.detail}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ============= PAIN -> FIX ============= */}
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
