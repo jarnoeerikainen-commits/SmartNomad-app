@@ -6,12 +6,14 @@
 // wired via AgentOrchestratorService — flip MODE = 'live' to call edge fns.
 // ═══════════════════════════════════════════════════════════════════════════
 import React, { useEffect, useMemo, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
@@ -29,6 +31,7 @@ import {
   Network, FlaskConical, Users2, Leaf, Gem,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useStaffRole } from '@/hooks/useStaffRole';
 import {
   AgentOrchestratorService, AGENTS, AGENTS_BY_TIER, TIER_LABELS,
   type AgentId, type AgentProposal, type AgentActivityEvent, type DailyBriefing, type AgentTier,
@@ -67,6 +70,63 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
   expired: 'bg-slate-500/15 text-slate-400 border-slate-500/30',
 };
+
+type LiveControl = {
+  agent_key: string;
+  display_name: string;
+  director: string | null;
+  agent_type: string;
+  description: string;
+  status: string;
+  automation_level: string;
+  schedule_label: string;
+  model_tier: string;
+  daily_token_budget: number;
+  daily_run_limit: number;
+  requires_approval: boolean;
+  can_write_to_user_surfaces: boolean;
+  last_run_at: string | null;
+  last_run_status: string | null;
+};
+
+type LiveReport = {
+  id: string;
+  report_date: string;
+  agent_key: string;
+  title: string;
+  summary: string;
+  performance_score: number;
+  suggestions: string[];
+  token_usage: number;
+  estimated_cost_usd: number;
+};
+
+type LiveSuggestion = {
+  id: string;
+  agent_key: string;
+  priority: string;
+  title: string;
+  expected_impact: string | null;
+  suggested_action: string;
+  status: string;
+};
+
+const DEMO_CONTROLS: LiveControl[] = [
+  { agent_key: 'brain.governor', display_name: 'AI Brain Governor', director: null, agent_type: 'governor', description: 'Coordinates directors and executive reports.', status: 'paused', automation_level: 'recommend_only', schedule_label: 'Daily executive scan', model_tier: 'balanced', daily_token_budget: 120000, daily_run_limit: 6, requires_approval: true, can_write_to_user_surfaces: false, last_run_at: null, last_run_status: 'demo' },
+  { agent_key: 'finops.token-sentinel', display_name: 'Token Sentinel', director: 'pricing', agent_type: 'specialist', description: 'Watches token burn, cache hit rates and avoidable spend.', status: 'paused', automation_level: 'recommend_only', schedule_label: 'Hourly after approval', model_tier: 'speed', daily_token_budget: 18000, daily_run_limit: 12, requires_approval: true, can_write_to_user_surfaces: false, last_run_at: null, last_run_status: 'demo' },
+  { agent_key: 'quality.concierge-auditor', display_name: 'Concierge Quality Auditor', director: 'happiness', agent_type: 'specialist', description: 'Audits answer quality, personalization and escalation risk.', status: 'paused', automation_level: 'recommend_only', schedule_label: 'Every 4 hours after approval', model_tier: 'balanced', daily_token_budget: 30000, daily_run_limit: 6, requires_approval: true, can_write_to_user_surfaces: false, last_run_at: null, last_run_status: 'demo' },
+  { agent_key: 'revenue.b2b-scout', display_name: 'B2B Revenue Scout', director: 'b2b_sales', agent_type: 'specialist', description: 'Finds partner, data-package and white-label opportunities.', status: 'paused', automation_level: 'recommend_only', schedule_label: 'Daily after approval', model_tier: 'balanced', daily_token_budget: 40000, daily_run_limit: 3, requires_approval: true, can_write_to_user_surfaces: false, last_run_at: null, last_run_status: 'demo' },
+];
+
+const DEMO_REPORTS: LiveReport[] = [
+  { id: 'demo-report-1', report_date: new Date().toISOString().slice(0, 10), agent_key: 'finops.token-sentinel', title: 'Token Sentinel Daily Report', summary: 'Control baseline ready. Start with sampled scans and cheap model tiers before enabling automation.', performance_score: 88, suggestions: ['Keep classification on speed-tier models', 'Cap each agent before enabling schedules'], token_usage: 0, estimated_cost_usd: 0 },
+  { id: 'demo-report-2', report_date: new Date().toISOString().slice(0, 10), agent_key: 'quality.concierge-auditor', title: 'Concierge Quality Auditor Daily Report', summary: 'Quality-control specialist is ready to audit conversations without touching user-facing surfaces.', performance_score: 86, suggestions: ['Start with 5% sampled audits', 'Escalate high-stakes answers to support'], token_usage: 0, estimated_cost_usd: 0 },
+];
+
+const DEMO_SUGGESTIONS: LiveSuggestion[] = [
+  { id: 'demo-suggestion-1', agent_key: 'finops.token-sentinel', priority: 'high', title: 'Add per-agent daily token caps before enabling automation', expected_impact: 'Lower token burn and predictable margin.', suggested_action: 'Approve budgets per agent, then enable supervised automation first.', status: 'pending' },
+  { id: 'demo-suggestion-2', agent_key: 'quality.concierge-auditor', priority: 'high', title: 'Start with sampled concierge audits', expected_impact: 'Faster quality learning with lower AI cost.', suggested_action: 'Approve a 5% audit sample and raise high-risk findings only.', status: 'pending' },
+];
 
 function formatAgo(ts: number) {
   const s = Math.max(1, Math.round((Date.now() - ts) / 1000));
