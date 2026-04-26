@@ -1668,6 +1668,108 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_execution_proofs: {
+        Row: {
+          answer_agents: Json
+          answer_sources: Json
+          cache_hit: boolean
+          command: string
+          completed_at: string | null
+          confidence_policy: string
+          created_at: string
+          directors: Json
+          error: string | null
+          estimated_cost_usd: number
+          function_name: string | null
+          id: string
+          input_tokens: number
+          latency_ms: number
+          model: string | null
+          output_tokens: number
+          persona: string
+          primary_agent: string
+          proof_hash: string
+          response_excerpt: string | null
+          route: string
+          run_ref: string
+          sources: Json
+          started_at: string
+          status: string
+          steps: Json
+          surface: string
+          updated_at: string
+          user_alias: string
+          verification_note: string | null
+          websites: Json
+        }
+        Insert: {
+          answer_agents?: Json
+          answer_sources?: Json
+          cache_hit?: boolean
+          command: string
+          completed_at?: string | null
+          confidence_policy?: string
+          created_at?: string
+          directors?: Json
+          error?: string | null
+          estimated_cost_usd?: number
+          function_name?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string | null
+          output_tokens?: number
+          persona?: string
+          primary_agent: string
+          proof_hash: string
+          response_excerpt?: string | null
+          route: string
+          run_ref: string
+          sources?: Json
+          started_at?: string
+          status?: string
+          steps?: Json
+          surface: string
+          updated_at?: string
+          user_alias?: string
+          verification_note?: string | null
+          websites?: Json
+        }
+        Update: {
+          answer_agents?: Json
+          answer_sources?: Json
+          cache_hit?: boolean
+          command?: string
+          completed_at?: string | null
+          confidence_policy?: string
+          created_at?: string
+          directors?: Json
+          error?: string | null
+          estimated_cost_usd?: number
+          function_name?: string | null
+          id?: string
+          input_tokens?: number
+          latency_ms?: number
+          model?: string | null
+          output_tokens?: number
+          persona?: string
+          primary_agent?: string
+          proof_hash?: string
+          response_excerpt?: string | null
+          route?: string
+          run_ref?: string
+          sources?: Json
+          started_at?: string
+          status?: string
+          steps?: Json
+          surface?: string
+          updated_at?: string
+          user_alias?: string
+          verification_note?: string | null
+          websites?: Json
+        }
+        Relationships: []
+      }
       ai_memories: {
         Row: {
           category: string
@@ -5242,6 +5344,32 @@ export type Database = {
           latest_report_title: string
           locked_permissions: number
           pending_suggestions: number
+        }[]
+      }
+      get_ai_execution_daily: {
+        Args: { p_since?: string }
+        Returns: {
+          avg_latency_ms: number
+          day: string
+          estimated_cost_usd: number
+          failures: number
+          runs: number
+          tokens: number
+        }[]
+      }
+      get_ai_execution_summary: {
+        Args: { p_since?: string }
+        Returns: {
+          avg_latency_ms: number
+          cache_hit_rate: number
+          completed_runs: number
+          estimated_cost_usd: number
+          failed_runs: number
+          functions_used: number
+          models_used: number
+          total_runs: number
+          total_tokens: number
+          verified_runs: number
         }[]
       }
       get_concierge_control_summary: {
