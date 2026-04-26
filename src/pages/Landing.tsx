@@ -758,6 +758,22 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* ============= QUICK ACCESS ============= */}
+      <section className="py-10 border-y border-[hsl(43_96%_56%/0.1)] bg-[hsl(220_22%_7%)]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_11%/0.72)] p-5 sm:p-6">
+            <div className="text-center sm:text-left">
+              <div className="font-display text-2xl font-bold text-white">Go straight to the product.</div>
+              <div className="text-sm text-[hsl(30_12%_76%)]">The cinematic layer never blocks app access or investor/staff Back Office access.</div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><Rocket className="mr-2 h-4 w-4" /> Launch App</Button></Link>
+              <Link to="/admin"><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white"><Building2 className="mr-2 h-4 w-4 text-[hsl(var(--gold))]" /> Back Office</Button></Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ============= FINAL CTA ============= */}
       <section className="relative py-24 md:py-32 overflow-hidden">
         <div className="absolute inset-0">
