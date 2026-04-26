@@ -22,6 +22,8 @@ interface VenueRow {
   neighborhood: string | null;
   price_band: string | null;
   review_score: number;
+  review_count: number;
+  source_urls: string[] | null;
   why_recommended: string | null;
   signature_offering: string | null;
 }
@@ -38,7 +40,7 @@ export async function getCuratedVenuesForCity(city: string | undefined): Promise
 
   const { data, error } = await client()
     .from("curated_venues")
-    .select("category,name,neighborhood,price_band,review_score,why_recommended,signature_offering")
+    .select("category,name,neighborhood,price_band,review_score,review_count,source_urls,why_recommended,signature_offering")
     .ilike("city", city)
     .eq("status", "active")
     .order("quality_score", { ascending: false })
@@ -62,7 +64,7 @@ export function renderVenuesForPrompt(rows: VenueRow[], city?: string): string {
   }
   const lines: string[] = [
     `## CURATED LOCAL KNOWLEDGE — ${city || "current city"} (silent reference)`,
-    `These venues passed strict review/quality filters. Only mention them when genuinely relevant to the user's request — never recite the list. Prefer over generic suggestions.`,
+    `These venues passed strict review/quality filters with source URLs. Only mention them when genuinely relevant to the user's request. When recommending one, include its review evidence and at least one source/website hostname. Never recite unsupported venues.`,
     "",
   ];
   for (const [cat, items] of Object.entries(byCat)) {
@@ -72,7 +74,8 @@ export function renderVenuesForPrompt(rows: VenueRow[], city?: string): string {
         v.name,
         v.neighborhood ? `(${v.neighborhood})` : null,
         v.price_band || null,
-        `${v.review_score}★`,
+        `${v.review_score}★ / ${v.review_count} reviews`,
+        v.source_urls?.[0] ? `source: ${v.source_urls[0]}` : null,
         v.why_recommended ? `— ${v.why_recommended}` : null,
       ].filter(Boolean);
       lines.push(`- ${bits.join(" ")}`);

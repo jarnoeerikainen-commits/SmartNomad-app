@@ -92,7 +92,7 @@ export class OffersService {
         category: service,
         source: offer.provider,
         trust_score: undefined,
-        reviews: (offer as any).reviews,
+        reviews: offer.reviews,
         summary: offer.description,
         price: offer.price,
         url: offer.url,
@@ -104,7 +104,9 @@ export class OffersService {
       const filteredItems = TrustFilterService.processForDisplay(trustItems, {
         minRating: 4.0,
         requireVerified: true,
-        preferLocal: true
+        preferLocal: true,
+        requireWebsite: true,
+        requireReviews: true
       });
       
       // Convert back to Offer format

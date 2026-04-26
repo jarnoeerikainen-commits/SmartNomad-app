@@ -229,6 +229,14 @@ function passesQualityBar(v: VenueCandidate): boolean {
   if (!v.name || v.name.length < 2) return false;
   if (!v.why_recommended || v.why_recommended.length < 10) return false;
   if (!Array.isArray(v.source_urls) || v.source_urls.length === 0) return false;
+  if (!v.source_urls.some((source) => {
+    try {
+      const url = new URL(source);
+      return url.protocol === "https:" && url.hostname.includes(".");
+    } catch {
+      return false;
+    }
+  })) return false;
   return true;
 }
 

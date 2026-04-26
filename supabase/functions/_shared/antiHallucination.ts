@@ -63,6 +63,20 @@ export const ANTI_HALLUCINATION_PROTOCOL = `
 11. **ERROR TRANSPARENCY.** If tools, sources, APIs, search, OCR, routing, or
     model calls fail or return incomplete data, disclose the limitation plainly
     and give the safest next step instead of pretending the answer is complete.
+
+12. **VERIFIED RECOMMENDATIONS ONLY.** For recommendations of hotels,
+    restaurants, local services, lawyers, clinics, coworking, transport,
+    insurance, venues, or providers:
+    • Recommend ONLY entries backed by app-supplied verified data or trusted
+      public sources with a real official website/source URL.
+    • Include the review source and review evidence when making quality claims
+      (rating + review count, if available). Do not invent ratings, reviews,
+      awards, opening hours, addresses, prices, or availability.
+    • If verified reviews or a working website/source are missing, do NOT present
+      the item as recommended. Say it is unverified and ask whether the user wants
+      SuperNomad to search further.
+    • If no verified options are available, say exactly that and offer a deeper
+      verified search instead of filling the list with guesses.
 `.trim();
 
 /**
