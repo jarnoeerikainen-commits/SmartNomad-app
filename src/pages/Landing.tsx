@@ -196,14 +196,14 @@ const Landing: React.FC = () => {
                 <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
               <span className="block mt-2 sm:mt-3 text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-semibold">
-                Your borderless life, finally one app.
+                Your borderless life, with One app.
               </span>
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-[hsl(30_12%_80%)] leading-snug max-w-2xl mx-auto">
-              SuperNomad is the world's first Sovereign Operating System. We've replaced the chaos of fragmented travel apps, lost tax days, and endless KYC forms with a single, proactive AI intelligence.
+              <strong className="text-white">Global Mobility, Orchestrated.</strong> SuperNomad is the world’s first Proactive Mobility Ecosystem. We’ve replaced the chaos of fragmented apps and administrative friction with a single, Agentic Intelligence that manages your identity, residency, and lifestyle logistics in real-time.
             </p>
             <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_75%)] leading-snug max-w-2xl mx-auto">
-              Built for the <strong className="text-white">850 million global citizens</strong> who call the world home. SuperNomad doesn't just track your journey — it <strong className="text-white">secures your status</strong>.
+              Built for the <strong className="text-white">850 million global professionals</strong> who call the world home. From securing your tax status and border clearance to autonomous flight, suite, and dining arrangements—SuperNomad doesn’t just track your journey. It <strong className="text-white">secures your life.</strong>
             </p>
 
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
