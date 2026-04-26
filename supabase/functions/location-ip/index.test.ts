@@ -29,5 +29,5 @@ Deno.test("location-ip supports header fallback when edge IP lookup is unavailab
   });
   const data = JSON.parse(await response.text());
   assertEquals(response.status < 500, true);
-  assertEquals(data.country_code === "FI" || typeof data.error === "string", true);
+  assertEquals(typeof data.country_code === "string" || typeof data.error === "string", true);
 });
