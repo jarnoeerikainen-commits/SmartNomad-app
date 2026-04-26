@@ -96,7 +96,7 @@ serve(async (req) => {
     const selectedCategories = categories || SERVICE_CATEGORIES;
     const currentDate = new Date().toISOString().split('T')[0];
 
-    const systemPrompt = `You are a premium city services research expert for SuperNomad, the world's leading digital nomad platform.
+    const systemPrompt = withTruthProtocol(`You are a premium city services research expert for SuperNomad, the world's leading digital nomad platform.
 
 Your job: Research and return REAL, VERIFIED service providers for ${cityName}, ${countryName}.
 
@@ -110,7 +110,9 @@ CRITICAL RULES:
 7. If you're not confident a business exists in this city, DO NOT include it.
 8. Phone numbers must include country code (e.g., +1-212-555-1234).
 9. Websites must be real, working URLs (https://).
-10. Include operating hours when known.
+10. Include operating hours only when known from a source.
+11. Every provider MUST include reviewSource and reviewCount. If you do not know the review source/count, omit the provider.
+12. Never mark verified=true unless the provider has a real website, a named review source, rating, and review count.
 
 Current date: ${currentDate}
 
@@ -134,18 +136,20 @@ Return a JSON object with this exact structure:
           "priceRange": "$$-$$$",
           "languages": ["English", "Local"],
           "verified": true,
+          "reviewSource": "Google Maps | TripAdvisor | Booking.com | official registry",
+          "reviewCount": 125,
           "highlights": ["Key feature 1", "Key feature 2"]
         }
       ]
     }
   ]
-}`;
+}`);
 
     const userPrompt = `Research the best premium service providers in ${cityName}, ${countryName} for these categories:
 
 ${selectedCategories.map((c: string) => `- ${c}`).join('\n')}
 
-Return ONLY real, existing businesses with verified contact details. Premium quality (4+ stars) only. Include real websites, real phone numbers with country codes, and real addresses. Return as JSON.`;
+Return ONLY real, existing businesses with verified contact details and verified review evidence. Premium quality (4+ stars) only. Include real websites, real phone numbers with country codes, real addresses, reviewSource, and reviewCount. If review evidence or website is missing, omit the provider. Return as JSON.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -218,8 +222,10 @@ Return ONLY real, existing businesses with verified contact details. Premium qua
       }
     }
 
+    const verifiedData = enforceVerifiedServiceData(parsedData);
+
     return new Response(
-      JSON.stringify({ success: true, data: parsedData }),
+      JSON.stringify({ success: true, data: verifiedData }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
