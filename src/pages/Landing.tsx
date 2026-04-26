@@ -105,10 +105,10 @@ const Landing: React.FC = () => {
               <X className="h-5 w-5" />
             </button>
             <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
-              <div className="relative min-h-[240px] sm:min-h-[420px] lg:min-h-[520px] overflow-hidden bg-[hsl(220_22%_5%)]">
+              <div className="relative overflow-hidden bg-[hsl(220_22%_5%)]">
                 <video
                   key={filmMode}
-                  className="h-full w-full object-cover"
+                  className="aspect-video h-auto w-full object-contain bg-[hsl(220_22%_5%)]"
                   src={filmMode === 'teaser' ? '/videos/supernomad-teaser.mp4' : '/videos/supernomad-ecosystem-film.mp4'}
                   poster={filmMode === 'teaser' ? heroImg : travelImg}
                   controls
