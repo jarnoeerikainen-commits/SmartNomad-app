@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -76,7 +77,7 @@ Respond in JSON format.`;
       body: JSON.stringify({
         model: 'google/gemini-3-flash-preview',
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: withTruthProtocol(systemPrompt) },
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.7,

@@ -4,6 +4,8 @@
 // Public (verify_jwt = false) — staff guard is enforced client-side.
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -52,7 +54,7 @@ Deno.serve(async (req) => {
         "\n\nMODE: SUGGEST — return 3–5 concrete suggestions to improve the platform RIGHT NOW based on the live signals. Each: **Title** — one-line rationale grounded in a signal — concrete next step.";
     }
 
-    const systemContent = `${SYSTEM_PROMPT}${modeDirective}\n\nLIVE GLOBAL SIGNALS (refreshes every few seconds — admin sees these too):\n${liveContext || "(no live context attached)"}`;
+    const systemContent = withTruthProtocol(`${SYSTEM_PROMPT}${modeDirective}\n\nLIVE GLOBAL SIGNALS (refreshes every few seconds — admin sees these too):\n${liveContext || "(no live context attached)"}`);
 
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

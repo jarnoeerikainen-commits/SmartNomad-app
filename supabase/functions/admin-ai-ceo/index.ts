@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -161,7 +162,7 @@ function fallbackReport(signals: Record<string, unknown>) {
 async function synthesize(signals: Record<string, unknown>) {
   if (!LOVABLE_API_KEY) return fallbackReport(signals);
 
-  const systemPrompt = `You are SuperNomad's AI CEO: a sober, evidence-first executive operator for a global ecosystem serving business travellers, expats, nomads, HNW users and everyday travellers. Your job is to synthesize daily reports from Concierge AI, back-office directors, AI Brain, agent council and platform KPIs. You must improve user time-in-ecosystem, customer experience, profit, product strategy and risk posture. Never pretend actions are executed. Every material decision requires human approval and master-password permission in production.`;
+  const systemPrompt = withTruthProtocol(`You are SuperNomad's AI CEO: a sober, evidence-first executive operator for a global ecosystem serving business travellers, expats, nomads, HNW users and everyday travellers. Your job is to synthesize daily reports from Concierge AI, back-office directors, AI Brain, agent council and platform KPIs. You must improve user time-in-ecosystem, customer experience, profit, product strategy and risk posture. Never pretend actions are executed. Every material decision requires human approval and master-password permission in production.`);
   const userPrompt = `Create today's AI CEO report from these signals. Be specific, concise and commercially sharp. Suggest what to do, what not to do, and what to learn next. Raw signals:\n${JSON.stringify(signals, null, 2)}`;
 
   const tools = [{

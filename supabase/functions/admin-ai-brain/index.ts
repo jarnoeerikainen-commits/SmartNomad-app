@@ -8,6 +8,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -136,11 +137,11 @@ async function gatherSignals(windowHours: number) {
 
 // ─── AI synthesis (structured output via tool calling) ────────────────────
 async function synthesizeWithAI(signals: Record<string, unknown>, scope: string) {
-  const systemPrompt = `You are the SuperNomad Back Office AI Brain. You analyse platform telemetry and produce
+  const systemPrompt = withTruthProtocol(`You are the SuperNomad Back Office AI Brain. You analyse platform telemetry and produce
 crisp, actionable intelligence for human admins of a premium nomad lifestyle platform.
 
 Tone: confident, precise, executive. Avoid filler. Prefer numbers over adjectives.
-Always ground claims in the supplied evidence.`;
+Always ground claims in the supplied evidence.`);
 
   const userPrompt = `Analyse the following ${scope} telemetry snapshot and return:
 1. 4–6 INSIGHTS (anomalies, patterns, opportunities, risk, behavior, churn signals, growth)
@@ -367,8 +368,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const trigger = body.trigger ?? "manual";
-    const scope = body.scope ?? "full"; // full | quick | focused
+    const trigger = typeof body.trigger === "string" ? body.trigger : "manual";
+    const scope = typeof body.scope === "string" ? body.scope : "full"; // full | quick | focused
     const windowHours = scope === "quick" ? 6 : scope === "focused" ? 24 : 168;
 
     // 1. Open a run row
@@ -405,7 +406,7 @@ Deno.serve(async (req) => {
     }
 
     // 4. Persist
-    const counts = await persistOutputs(runId, aiOut.parsed, signals, scope, windowHours);
+    const counts = await persistOutputs(runId!, aiOut.parsed, signals, scope, windowHours);
 
     // 5. Close run
     await admin

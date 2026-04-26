@@ -20,8 +20,8 @@ export function inferConfidence(content: string): ConfidenceLevel {
   // Check for citation/source indicators
   const hasCitation = /(?:according to|source:|official|government website|verified|as of \d{4}|law \d+|article \d+|directive \d+)/i.test(content);
 
-  // Check for uncertainty language
-  const hasUncertainty = /(?:i'm not sure|this may vary|please verify|consult a|check with|i believe|it's possible|generally|typically|might|could be)/i.test(content);
+  // Check for uncertainty / unknown / search-offer language
+  const hasUncertainty = /(?:i'm not sure|this may vary|please verify|consult a|check with|i believe|it's possible|generally|typically|might|could be|i don't know|i do not know|i don't have|i do not have|cannot verify|can't verify|want me to search|search further|verify with)/i.test(content);
 
   if (isHighRisk && !hasCitation) return 'needs_review';
   if (hasUncertainty) return 'predictive';
