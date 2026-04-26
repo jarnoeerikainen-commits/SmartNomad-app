@@ -47,6 +47,15 @@ const AdminAgentLive: React.FC = () => {
     agents: new Set(runs.flatMap((r) => [r.primary_agent, ...r.steps.map((s) => s.agent)])).size,
   }), [runs]);
 
+  const communityOps = useMemo(() => {
+    const items = runs.filter((r) => /community|social|pulse|vibe/i.test(`${r.surface} ${r.function_name || ''} ${r.primary_agent}`));
+    const completed = items.filter((r) => r.status === 'completed').length;
+    const failed = items.filter((r) => r.status === 'failed').length;
+    const avgLatency = completed ? Math.round(items.filter((r) => r.status === 'completed').reduce((s, r) => s + (r.latency_ms || 0), 0) / completed) : 0;
+    const tokenSpend = items.reduce((s, r) => s + (r.input_tokens || 0) + (r.output_tokens || 0), 0);
+    return { items, completed, failed, avgLatency, tokenSpend };
+  }, [runs]);
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -80,6 +89,39 @@ const AdminAgentLive: React.FC = () => {
           </Card>
         ))}
       </div>
+
+      <Card className="border-[hsl(var(--gold)/0.16)] bg-[hsl(220_22%_6%)] p-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-medium text-[hsl(30_12%_90%)]">
+              <Bot className="h-4 w-4 text-[hsl(var(--gold))]" /> Pulse / Vibe AI operations report
+            </div>
+            <p className="mt-1 max-w-3xl text-xs text-[hsl(30_12%_62%)]">
+              Back-office view of community agents: token budget, safety alarms, latency, picture-gate readiness and proof logs for demo/live readiness.
+            </p>
+          </div>
+          <Badge className={communityOps.failed ? 'border-rose-500/30 bg-rose-500/15 text-rose-300' : 'border-emerald-500/30 bg-emerald-500/15 text-emerald-300'}>
+            {communityOps.failed ? `${communityOps.failed} alarms` : 'No active alarms'}
+          </Badge>
+        </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-4">
+          {[
+            ['Community runs', communityOps.items.length, 'Pulse + Vibe traces'],
+            ['Completed', communityOps.completed, 'Proof packets closed'],
+            ['Avg latency', `${communityOps.avgLatency}ms`, 'Completed runs'],
+            ['Tokens tracked', communityOps.tokenSpend.toLocaleString(), 'Input + output estimate'],
+          ].map(([label, value, hint]) => (
+            <div key={label} className="rounded-md border border-[hsl(var(--gold)/0.1)] bg-[hsl(220_22%_8%)] p-3">
+              <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_55%)]">{label}</div>
+              <div className="mt-1 text-xl font-semibold text-[hsl(30_12%_95%)]">{value}</div>
+              <div className="mt-1 h-1.5 overflow-hidden rounded bg-[hsl(220_22%_12%)]">
+                <div className="h-full rounded bg-[hsl(var(--gold))]" style={{ width: `${Math.min(100, Math.max(12, Number.parseInt(String(value).replace(/\D/g, ''), 10) || 28))}%` }} />
+              </div>
+              <div className="mt-1 text-[10px] text-[hsl(30_12%_55%)]">{hint}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       <Card className="border-[hsl(var(--gold)/0.16)] bg-[hsl(220_22%_6%)]">
         <div className="border-b border-[hsl(var(--gold)/0.14)] px-4 py-3 flex items-center justify-between">
