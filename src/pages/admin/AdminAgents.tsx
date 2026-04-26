@@ -28,7 +28,7 @@ import {
   Shield, Scale, Rocket, Palette, BarChart3, Crown, KeyRound, Activity,
   CheckCircle2, XCircle, AlertTriangle, Clock, Lock, FileCheck2, Sparkles,
   RefreshCw, Eye, ShieldAlert, Compass, Coins, Heart, Tornado, FileText,
-  Network, FlaskConical, Users2, Leaf, Gem,
+  Network, FlaskConical, Users2, Leaf, Gem, Loader2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useStaffRole } from '@/hooks/useStaffRole';
@@ -812,6 +812,12 @@ const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="p-2 rounded bg-[hsl(220_22%_4%)] border border-[hsl(43_96%_56%/0.1)]">
     <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)]">{label}</div>
     <div className="text-sm font-semibold mt-0.5">{value}</div>
+  </div>
+);
+
+const LoaderText: React.FC = () => (
+  <div className="inline-flex items-center gap-2 text-xs text-[hsl(30_12%_65%)]">
+    <Loader2 className="h-3.5 w-3.5 animate-spin text-[hsl(var(--gold))]" /> Loading controls
   </div>
 );
 
