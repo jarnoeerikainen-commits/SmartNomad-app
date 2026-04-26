@@ -90,17 +90,17 @@ const AdminAgentLive: React.FC = () => {
         ))}
       </div>
 
-      <Card className="border-[hsl(var(--gold)/0.16)] bg-[hsl(220_22%_6%)] p-4">
+      <Card className="border-border bg-card p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex items-center gap-2 text-sm font-medium text-[hsl(30_12%_90%)]">
-              <Bot className="h-4 w-4 text-[hsl(var(--gold))]" /> Pulse / Vibe AI operations report
+              <Bot className="h-4 w-4 text-primary" /> Pulse / Vibe AI operations report
             </div>
-            <p className="mt-1 max-w-3xl text-xs text-[hsl(30_12%_62%)]">
+            <p className="mt-1 max-w-3xl text-xs text-muted-foreground">
               Back-office view of community agents: token budget, safety alarms, latency, picture-gate readiness and proof logs for demo/live readiness.
             </p>
           </div>
-          <Badge className={communityOps.failed ? 'border-rose-500/30 bg-rose-500/15 text-rose-300' : 'border-emerald-500/30 bg-emerald-500/15 text-emerald-300'}>
+          <Badge className={communityOps.failed ? 'border-destructive/30 bg-destructive/15 text-destructive' : 'border-primary/30 bg-primary/15 text-primary'}>
             {communityOps.failed ? `${communityOps.failed} alarms` : 'No active alarms'}
           </Badge>
         </div>
@@ -111,13 +111,13 @@ const AdminAgentLive: React.FC = () => {
             ['Avg latency', `${communityOps.avgLatency}ms`, 'Completed runs'],
             ['Tokens tracked', communityOps.tokenSpend.toLocaleString(), 'Input + output estimate'],
           ].map(([label, value, hint]) => (
-            <div key={label} className="rounded-md border border-[hsl(var(--gold)/0.1)] bg-[hsl(220_22%_8%)] p-3">
-              <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_55%)]">{label}</div>
-              <div className="mt-1 text-xl font-semibold text-[hsl(30_12%_95%)]">{value}</div>
-              <div className="mt-1 h-1.5 overflow-hidden rounded bg-[hsl(220_22%_12%)]">
-                <div className="h-full rounded bg-[hsl(var(--gold))]" style={{ width: `${Math.min(100, Math.max(12, Number.parseInt(String(value).replace(/\D/g, ''), 10) || 28))}%` }} />
+            <div key={label} className="rounded-md border border-border bg-background/60 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+              <div className="mt-1 text-xl font-semibold text-foreground">{value}</div>
+              <div className="mt-1 h-1.5 overflow-hidden rounded bg-muted">
+                <div className="h-full rounded bg-primary" style={{ width: `${Math.min(100, Math.max(12, Number.parseInt(String(value).replace(/\D/g, ''), 10) || 28))}%` }} />
               </div>
-              <div className="mt-1 text-[10px] text-[hsl(30_12%_55%)]">{hint}</div>
+              <div className="mt-1 text-[10px] text-muted-foreground">{hint}</div>
             </div>
           ))}
         </div>
