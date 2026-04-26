@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,7 +7,8 @@ import {
   Users, Bell, MessageCircle, Brain, MapPin, Award, Wallet,
   ArrowRight, Check, Rocket, Star, Mic, Eye, Zap, AlertTriangle,
   Apple, Smartphone, Hotel, UtensilsCrossed, Music2, Trophy,
-  Radar, Siren, ShieldAlert, Activity, Headphones, Heart
+  Radar, Siren, ShieldAlert, Activity, Headphones, Heart,
+  PlayCircle, X, Clock, Route, Building2, Film
 } from 'lucide-react';
 import logo from '@/assets/supernomad-logo.jpg';
 import heroImg from '@/assets/landing-hero.jpg';
@@ -18,6 +19,8 @@ import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
 
 const Landing: React.FC = () => {
+  const [filmMode, setFilmMode] = useState<'closed' | 'teaser' | 'full'>('closed');
+
   useEffect(() => {
     document.title = 'SuperNomad — The Operating System for Global Citizens';
     const meta = document.querySelector('meta[name="description"]');
@@ -79,8 +82,61 @@ const Landing: React.FC = () => {
     { icon: Check, label: 'CCPA Ready' },
   ];
 
+  const cinematicMoments = [
+    { img: heroImg, label: 'Executive arrival', detail: 'Airport, hotel, route and safety handled before landing.' },
+    { img: travelImg, label: 'Borderless operations', detail: 'Trips, loyalty, receipts, tax days and visas in one timeline.' },
+    { img: communityImg, label: 'Local life instantly', detail: 'Padel, dinners, clubs, families and verified city services.' },
+    { img: securityImg, label: 'Sovereign protection', detail: 'Threat intelligence, identity vault and consent-first AI.' },
+  ];
+
+  const aiMap = [
+    { icon: Brain, title: 'AI CEO', desc: 'Synthesizes daily ecosystem reports and growth opportunities.' },
+    { icon: Headphones, title: 'Concierge Governor', desc: 'Routes every user intent to the cheapest capable specialist.' },
+    { icon: Plane, title: 'Travel Agents', desc: 'Flights, hotels, lounges, transport, loyalty and disruption recovery.' },
+    { icon: Shield, title: 'Trust Agents', desc: 'Vault, permissions, audit trail, risk controls and compliance.' },
+  ];
+
   return (
     <div className="min-h-screen bg-[hsl(220_22%_8%)] text-[hsl(30_12%_95%)] overflow-x-hidden">
+      {filmMode !== 'closed' && (
+        <div className="fixed inset-0 z-[80] bg-[hsl(220_22%_4%/0.96)] backdrop-blur-xl flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-label="SuperNomad cinematic video">
+          <div className="relative w-full max-w-6xl overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.28)] bg-[hsl(220_22%_8%)] shadow-[0_40px_120px_-30px_hsl(0_0%_0%/0.9)]">
+            <button onClick={() => setFilmMode('closed')} className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[hsl(43_96%_56%/0.28)] bg-[hsl(220_22%_8%/0.72)] text-white hover:bg-[hsl(43_96%_56%/0.14)]" aria-label="Skip video teaser">
+              <X className="h-5 w-5" />
+            </button>
+            <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
+              <div className="relative min-h-[360px] sm:min-h-[520px] overflow-hidden">
+                <img src={filmMode === 'teaser' ? heroImg : travelImg} alt="SuperNomad cinematic preview" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.2)] to-[hsl(220_22%_5%/0.25)]" />
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
+                  <Badge className="mb-4 border-[hsl(43_96%_56%/0.3)] bg-[hsl(43_96%_56%/0.16)] text-[hsl(var(--gold))]">
+                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '38-second teaser' : 'Full ecosystem film'}
+                  </Badge>
+                  <h2 className="font-display text-3xl sm:text-5xl font-bold leading-tight text-white">
+                    {filmMode === 'teaser' ? 'Your borderless life, compressed into one intelligence layer.' : 'The SuperNomad ecosystem: concierge, trust, commerce and company intelligence.'}
+                  </h2>
+                </div>
+              </div>
+              <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-8">
+                <div className="space-y-5">
+                  <div className="flex items-center gap-2 text-sm text-[hsl(30_12%_78%)]"><Clock className="h-4 w-4 text-[hsl(var(--gold))]" /> Skip anytime · no sound required</div>
+                  {(filmMode === 'teaser' ? cinematicMoments.slice(0, 3) : cinematicMoments).map((moment, index) => (
+                    <div key={moment.label} className="flex gap-4 rounded-xl border border-[hsl(43_96%_56%/0.14)] bg-[hsl(220_22%_12%/0.72)] p-4">
+                      <span className="font-display text-2xl text-[hsl(var(--gold))]">0{index + 1}</span>
+                      <div><div className="font-semibold text-white">{moment.label}</div><div className="text-sm leading-snug text-[hsl(30_12%_76%)]">{moment.detail}</div></div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold">Launch App</Button></Link>
+                  <Link to="/admin"><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Back Office</Button></Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ============= TOP NAV ============= */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[hsl(220_22%_8%/0.7)] border-b border-[hsl(43_96%_56%/0.15)]">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
@@ -90,7 +146,8 @@ const Landing: React.FC = () => {
               Super<span className="text-[hsl(var(--gold))]">Nomad</span>
             </span>
           </a>
-          <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
+            <nav className="hidden md:flex items-center gap-7 text-sm text-[hsl(30_12%_80%)]">
+              <button type="button" onClick={() => setFilmMode('teaser')} className="hover:text-[hsl(var(--gold))] transition-colors">Teaser</button>
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
             <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
             <a href="#guardian" className="hover:text-[hsl(var(--gold))] transition-colors">Guardian</a>
@@ -116,10 +173,11 @@ const Landing: React.FC = () => {
 
       {/* ============= HERO ============= */}
       <section id="top" className="relative min-h-[100svh] flex items-center pt-16 sm:pt-20">
-        <div className="absolute inset-0">
+          <div className="absolute inset-0">
           <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
+            <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-10 flex flex-col items-center text-center w-full">
@@ -144,17 +202,22 @@ const Landing: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
+              <button type="button" onClick={() => setFilmMode('teaser')}>
+                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.5)] bg-[hsl(220_22%_8%/0.35)] text-white hover:bg-[hsl(43_96%_56%/0.12)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
+                  <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[hsl(var(--gold))]" /> Watch teaser
+                </Button>
+              </button>
               <Link to="/app">
                 <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
                   <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
-              <a href="#ecosystem">
+              <button type="button" onClick={() => setFilmMode('full')}>
                 <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
-                  See what's inside
+                  Longer film
                 </Button>
-              </a>
+              </button>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
@@ -197,6 +260,38 @@ const Landing: React.FC = () => {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============= CINEMATIC ECOSYSTEM FILM STRIP ============= */}
+      <section className="relative overflow-hidden py-20 md:py-28 border-b border-[hsl(43_96%_56%/0.1)]">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(220_22%_6%),hsl(220_22%_10%)_45%,hsl(220_22%_6%))]" />
+        <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_20%_30%,hsl(43_96%_56%)_0,transparent_22%),radial-gradient(circle_at_80%_20%,hsl(12_88%_59%)_0,transparent_18%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-[0.9fr_1.4fr] gap-10 lg:gap-14 items-center">
+            <div className="space-y-6">
+              <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]"><PlayCircle className="mr-1.5 h-3 w-3" /> Cinematic website layer</Badge>
+              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">Less SaaS page. More private-bank travel command room.</h2>
+              <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">The new landing experience shows SuperNomad through real-world moments: arrival, protection, community, identity and company intelligence — while keeping instant access to the app and Back Office.</p>
+              <div className="flex flex-wrap gap-3">
+                <button type="button" onClick={() => setFilmMode('teaser')}><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button></button>
+                <button type="button" onClick={() => setFilmMode('full')}><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Open longer video</Button></button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              {cinematicMoments.map((moment, index) => (
+                <button key={moment.label} type="button" onClick={() => setFilmMode(index === 0 ? 'teaser' : 'full')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
+                  <img src={moment.img} alt={moment.label} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.35)] to-transparent" />
+                  <div className="absolute bottom-0 p-4 sm:p-5">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-[hsl(var(--gold))]">Scene 0{index + 1}</div>
+                    <div className="font-display text-xl sm:text-2xl font-bold text-white">{moment.label}</div>
+                    <div className="mt-1 hidden sm:block text-xs leading-snug text-[hsl(30_12%_78%)]">{moment.detail}</div>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -471,6 +566,28 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
+      {/* ============= AI MAP ============= */}
+      <section className="relative py-20 md:py-28 border-t border-[hsl(43_96%_56%/0.1)] overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(at_50%_50%,hsl(43_96%_56%/0.08)_0px,transparent_48%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14 max-w-3xl mx-auto">
+            <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] mb-4"><Route className="mr-1.5 h-3 w-3" /> AI command map</Badge>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">One user request. A full operating system behind it.</h2>
+            <p className="text-lg text-[hsl(30_12%_80%)]">The public website now makes the intelligence layer visible: CEO strategy, directors, concierge routing and specialist agents working together without wasting tokens.</p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            {aiMap.map(({ icon: Icon, title, desc }, index) => (
+              <div key={title} className="relative rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_12%/0.78)] p-6">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(var(--gold-dark))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)]"><Icon className="h-6 w-6" /></div>
+                <div className="text-[10px] uppercase tracking-[0.24em] text-[hsl(var(--gold))]">Layer 0{index + 1}</div>
+                <h3 className="mt-2 font-display text-2xl font-bold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[hsl(30_12%_76%)]">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============= LIFESTYLE ============= */}
       <section className="py-20 md:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -636,6 +753,22 @@ const Landing: React.FC = () => {
                 <div className="text-[10px] text-[hsl(30_12%_70%)]">Coming soon to</div>
                 <div className="font-semibold text-white">Google Play</div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============= QUICK ACCESS ============= */}
+      <section className="py-10 border-y border-[hsl(43_96%_56%/0.1)] bg-[hsl(220_22%_7%)]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_11%/0.72)] p-5 sm:p-6">
+            <div className="text-center sm:text-left">
+              <div className="font-display text-2xl font-bold text-white">Go straight to the product.</div>
+              <div className="text-sm text-[hsl(30_12%_76%)]">The cinematic layer never blocks app access or investor/staff Back Office access.</div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><Rocket className="mr-2 h-4 w-4" /> Launch App</Button></Link>
+              <Link to="/admin"><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white"><Building2 className="mr-2 h-4 w-4 text-[hsl(var(--gold))]" /> Back Office</Button></Link>
             </div>
           </div>
         </div>
