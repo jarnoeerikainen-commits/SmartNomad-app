@@ -212,12 +212,20 @@ export function smoothScrollBy(target: HTMLElement, delta: number) {
 }
 
 export function immediateScrollBy(target: HTMLElement, delta: number) {
-  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const maxTop = getMaxScrollTop(target);
   const currentTop = getCurrentScrollTop(target);
   setScrollTop(target, Math.max(0, Math.min(currentTop + delta, maxTop)));
 }
 
+function rememberPointerTarget(event: PointerEvent) {
+  lastPointerElement = event.target instanceof Element ? event.target : null;
+}
+
 export function installGlobalKeyboardScroll() {
+  window.addEventListener('pointermove', rememberPointerTarget, { capture: true, passive: true });
   window.addEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
-  return () => window.removeEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
+  return () => {
+    window.removeEventListener('pointermove', rememberPointerTarget, { capture: true });
+    window.removeEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
+  };
 }
