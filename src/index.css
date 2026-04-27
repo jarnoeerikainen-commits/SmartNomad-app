@@ -159,9 +159,38 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    overscroll-behavior-y: contain;
     cursor: default;
-    touch-action: manipulation;
+    overscroll-behavior-x: none;
+  }
+
+  @media (max-width: 767px) {
+    html,
+    body,
+    #root {
+      width: 100%;
+      max-width: 100vw;
+      min-height: 100dvh;
+      overflow-x: clip;
+    }
+
+    body {
+      overscroll-behavior-y: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    [data-app-scroll-container],
+    [data-radix-scroll-area-viewport],
+    .mobile-native-scroll {
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 8rem);
+    }
+
+    input,
+    textarea,
+    select {
+      scroll-margin-bottom: calc(env(safe-area-inset-bottom, 0px) + 8rem);
+    }
   }
 
   input,
@@ -190,7 +219,6 @@
     outline-offset: 3px;
   }
 
-  /* Prevent any descendant from forcing horizontal scroll on mobile */
   #root {
     overflow-x: hidden;
     min-width: 0;
