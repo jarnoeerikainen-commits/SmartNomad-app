@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, Stethoscope, Scale, Plane, MessageSquare } from 'lucide-react';
 import { AITravelDoctor } from '../AITravelDoctor';
@@ -47,9 +47,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
     },
   ];
 
-  const openAssistant = (assistantValue: string) => {
-    setActiveTab(assistantValue);
-
+  useEffect(() => {
     window.requestAnimationFrame(() => {
       assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
 
@@ -60,6 +58,10 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
         firstInteractive?.focus({ preventScroll: true });
       }
     });
+  }, [activeTab]);
+
+  const openAssistant = (assistantValue: string) => {
+    setActiveTab(assistantValue);
   };
 
   return (
