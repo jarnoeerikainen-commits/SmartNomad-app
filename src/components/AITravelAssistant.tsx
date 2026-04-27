@@ -74,6 +74,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         city: liveLocation.city && liveLocation.city !== 'Unknown' ? liveLocation.city : undefined,
       }
     : undefined;
+  const conciergeLocation = activePersona
+    ? { city: activePersona.profile.city, country: activePersona.profile.country }
+    : effectiveLocation;
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
@@ -111,8 +114,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       return buildGreetingParts({
         aiName,
         userName,
-        city: effectiveLocation?.city,
-        country: effectiveLocation?.country,
+        city: conciergeLocation?.city,
+        country: conciergeLocation?.country,
         mode: prefs.personalityMode || 'normal',
         travelMode,
         nextTrip: nextTrip ? { destination: nextTrip.destination, dates: nextTrip.dates, purpose: nextTrip.purpose } : undefined,
@@ -123,8 +126,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     return buildGreetingParts({
       aiName,
       userName,
-      city: effectiveLocation?.city,
-      country: effectiveLocation?.country,
+      city: conciergeLocation?.city,
+      country: conciergeLocation?.country,
       mode: prefs.personalityMode || 'normal',
       travelMode,
     });
@@ -217,7 +220,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       toggleVoice();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, effectiveLocation?.city, effectiveLocation?.country, isLocationLoading]);
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, conciergeLocation?.city, conciergeLocation?.country, isLocationLoading]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
