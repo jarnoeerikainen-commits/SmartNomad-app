@@ -49,6 +49,20 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
   ];
 
   useEffect(() => {
+    const openAssistantFromApp = (event: Event) => {
+      const detail = (event as CustomEvent<{ assistant?: string }>).detail;
+      const requestedAssistant = detail?.assistant;
+      if (requestedAssistant && assistants.some((assistant) => assistant.value === requestedAssistant)) {
+        shouldRevealAssistantRef.current = true;
+        setActiveTab(requestedAssistant);
+      }
+    };
+
+    window.addEventListener('supernomad:open-ai-assistant', openAssistantFromApp as EventListener);
+    return () => window.removeEventListener('supernomad:open-ai-assistant', openAssistantFromApp as EventListener);
+  }, []);
+
+  useEffect(() => {
     if (!shouldRevealAssistantRef.current) return;
     shouldRevealAssistantRef.current = false;
 
@@ -150,7 +164,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
         <div id="mobile-ai-assistant-panel" ref={assistantPanelRef} className="scroll-mt-4 md:scroll-mt-0">
           <TabsContent value="assistant" className="mt-6 animate-fade-in">
             <div data-ai-assistant-content="assistant">
-              <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} />
+              <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} embedded />
             </div>
           </TabsContent>
 
