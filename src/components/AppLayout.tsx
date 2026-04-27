@@ -175,14 +175,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     setActiveSection(section);
     setBottomNavTab('home');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const handleVoiceTabChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   // Return to dashboard when home event is triggered
@@ -196,7 +196,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       setBottomNavTab('home');
       setActiveSection('help');
       setSidebarOpen(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
     };
     window.addEventListener('supernomad:home', goHome);
     window.addEventListener('supernomad:open-support', openSupport as EventListener);
@@ -206,7 +206,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         setActiveSection(detail.section);
         setBottomNavTab('home');
         setSidebarOpen(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
       }
     };
     window.addEventListener('supernomad:navigate', handleNavigate as EventListener);
