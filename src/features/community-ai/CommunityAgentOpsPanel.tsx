@@ -33,14 +33,14 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
           </div>
           <div className="flex gap-2">
             {onAddPicture && (
-              <Button variant="outline" size="sm" onClick={onAddPicture} className="gap-2">
+              <Button variant="outline" size="sm" onClick={onAddPicture} className="gap-2 border-[hsl(var(--gold)/0.28)] bg-[hsl(220_22%_9%)] text-[hsl(30_12%_92%)] hover:bg-[hsl(var(--gold)/0.12)] hover:text-[hsl(var(--gold))]">
                 <Camera className="h-4 w-4" /> Picture
               </Button>
             )}
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
-              className="gap-2"
+              className="gap-2 border-[hsl(var(--gold)/0.28)] bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))] hover:bg-[hsl(var(--gold)/0.22)] hover:text-[hsl(30_12%_96%)]"
               onClick={() => recordCommunityProof(surface, `Audit ${title}`, `${title} audit packet created with token budget, safety, graph and report telemetry.`)}
             >
               <Activity className="h-4 w-4" /> Audit
@@ -75,7 +75,15 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--gold) / 0.16)" />
                   <XAxis dataKey="period" tick={{ fontSize: 10, fill: 'hsl(30 12% 68%)' }} />
                   <YAxis tick={{ fontSize: 10, fill: 'hsl(30 12% 68%)' }} />
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'hsl(220 22% 7%)',
+                      border: '1px solid hsl(var(--gold) / 0.24)',
+                      borderRadius: 6,
+                      color: 'hsl(30 12% 92%)',
+                    }}
+                    labelStyle={{ color: 'hsl(var(--gold))' }}
+                  />
                   <Area type="monotone" dataKey="quality" stroke="hsl(var(--gold))" fill="hsl(var(--gold) / 0.16)" name="Quality" />
                   <Area type="monotone" dataKey="safety" stroke="hsl(var(--success))" fill="hsl(var(--success) / 0.12)" name="Safety" />
                   <Area type="monotone" dataKey="tokens" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.14)" name="Tokens" />
