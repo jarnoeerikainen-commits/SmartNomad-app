@@ -723,7 +723,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
       // Trigger conversation compression when messages get long
       const currentMsgCount = messages.filter(m => m.id !== '1').length;
-      if (currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
+      if (!activePersona && currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
         const chatMessages = messages
           .filter(m => m.id !== '1')
           .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
