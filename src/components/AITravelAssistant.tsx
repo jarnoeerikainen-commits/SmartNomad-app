@@ -55,12 +55,14 @@ interface AITravelAssistantProps {
   currentLocation?: { country: string; city: string };
   citizenship?: string;
   userProfile?: any;
+  embedded?: boolean;
 }
 
 const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   currentLocation,
   citizenship,
-  userProfile
+  userProfile,
+  embedded = false
 }) => {
   const { t, currentLanguage } = useLanguage();
   const { activePersona, activePersonaId } = useDemoPersona();
@@ -85,13 +87,24 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const [mobileInitDone, setMobileInitDone] = useState(false);
   const [avatarHidden, setAvatarHidden] = useState(false);
 
-  // On mobile, start minimized so concierge top bar is visible on starting screen
+  // On mobile, the global concierge starts minimized; embedded assistant panels stay fully usable inline.
   useEffect(() => {
-    if (isMobile && !mobileInitDone) {
+    if (isMobile && !embedded && !mobileInitDone) {
       setIsMinimized(true);
       setMobileInitDone(true);
     }
-  }, [isMobile, mobileInitDone]);
+  }, [isMobile, embedded, mobileInitDone]);
+
+  useEffect(() => {
+    const openConcierge = (event: Event) => {
+      const detail = (event as CustomEvent<{ minimized?: boolean }>).detail;
+      setIsOpen(true);
+      setIsMinimized(detail?.minimized ?? false);
+      setAvatarHidden(false);
+    };
+    window.addEventListener('supernomad:open-concierge', openConcierge as EventListener);
+    return () => window.removeEventListener('supernomad:open-concierge', openConcierge as EventListener);
+  }, []);
   
   const conversationIdRef = useRef<string | null>(null);
   const distillTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -899,7 +912,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }, 120);
   };
 
-  if (!isOpen) {
+  if (!isOpen && !embedded) {
     return (
       <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
         <Button
@@ -922,8 +935,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   if (isMobile) {
     return (
-      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-        <Card className={`flex flex-col flex-1 min-h-0 glass-morphism shadow-large rounded-none overflow-hidden ${
+      <div
+        className={embedded ? 'relative z-0 flex min-h-[70dvh] flex-col md:hidden' : 'pointer-events-none fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden'}
+        style={{ paddingTop: embedded ? undefined : 'env(safe-area-inset-top, 0px)' }}
+      >
+        <Card className={`pointer-events-auto flex flex-col flex-1 min-h-0 glass-morphism shadow-large overflow-hidden ${embedded ? 'rounded-lg border' : 'rounded-none'} ${
           isMinimized ? 'flex-initial' : ''
         }`}>
           <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
@@ -963,22 +979,26 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsMinimized(!isMinimized)}
-                className="h-8 w-8 p-0"
-              >
-                {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-                className="h-8 w-8 p-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              {!embedded && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsMinimized(!isMinimized)}
+                    className="h-8 w-8 p-0"
+                  >
+                    {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
             </div>
           </CardHeader>
 
