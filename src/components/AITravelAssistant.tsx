@@ -226,7 +226,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: isMobile ? 'auto' : 'smooth', block: 'end' });
   };
 
   useEffect(() => {
@@ -890,6 +890,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const keepMobileComposerVisible = () => {
+    if (!isMobile) return;
+    window.setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 120);
   };
 
   if (!isOpen) {
