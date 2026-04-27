@@ -1,5 +1,8 @@
 const SCROLLABLE_SELECTOR = '[data-app-scroll-container]';
 const SCROLL_ANIMATION_MS = 180;
+const KEYBOARD_LINE_SCROLL_PX = 72;
+const KEYBOARD_PAGE_SCROLL_RATIO = 0.85;
+const MIN_KEYBOARD_PAGE_SCROLL_PX = 240;
 
 const scrollKeys = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
 
@@ -65,9 +68,13 @@ export function getKeyboardScrollTarget(target: EventTarget | null) {
   );
 }
 
+function getVisibleScrollHeight(target: HTMLElement) {
+  return isDocumentScrollTarget(target) ? window.innerHeight || target.clientHeight : target.clientHeight;
+}
+
 function getScrollDelta(key: string, target: HTMLElement) {
-  const line = 72;
-  const page = Math.max(target.clientHeight * 0.85, 240);
+  const line = KEYBOARD_LINE_SCROLL_PX;
+  const page = Math.max(getVisibleScrollHeight(target) * KEYBOARD_PAGE_SCROLL_RATIO, MIN_KEYBOARD_PAGE_SCROLL_PX);
 
   switch (key) {
     case 'ArrowDown':
