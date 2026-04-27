@@ -193,6 +193,12 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => window.clearInterval(interval);
   }, [activePersonaId, setPersona]);
 
+  useEffect(() => {
+    if (activePersonaId === 'meghan' || activePersonaId === 'john') {
+      setPersona(activePersonaId);
+    }
+  }, [activePersonaId, setPersona]);
+
   const activePersona = activePersonaId ? DEMO_PERSONAS[activePersonaId] || null : null;
 
   return (
