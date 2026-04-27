@@ -139,23 +139,23 @@ function isDocumentScrollTarget(target: HTMLElement) {
 }
 
 function getCurrentScrollTop(target: HTMLElement) {
-  return isDocumentScrollTarget(target) ? window.scrollY : target.scrollTop;
+  return isDocumentScrollTarget(target)
+    ? (document.scrollingElement as HTMLElement | null)?.scrollTop ?? window.scrollY
+    : target.scrollTop;
 }
 
 function setScrollTop(target: HTMLElement, top: number) {
   if (isDocumentScrollTarget(target)) {
-    window.scrollTo({ top, behavior: 'auto' });
+    const scrollElement = (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+    scrollElement.scrollTop = top;
+    document.body.scrollTop = top;
   } else {
     target.scrollTop = top;
   }
 }
 
-function easeOutCubic(progress: number) {
-  return 1 - Math.pow(1 - progress, 3);
-}
-
 export function smoothScrollBy(target: HTMLElement, delta: number) {
-  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const maxTop = getMaxScrollTop(target);
   const currentTop = getCurrentScrollTop(target);
   const existing = activeScrolls.get(target);
   const targetTop = Math.max(0, Math.min((existing?.targetTop ?? currentTop) + delta, maxTop));
@@ -167,24 +167,35 @@ export function smoothScrollBy(target: HTMLElement, delta: number) {
     return;
   }
 
-  if (existing) cancelAnimationFrame(existing.animationFrame);
+  if (existing) {
+    existing.targetTop = targetTop;
+    return;
+  }
 
   const state: SmoothScrollState = {
     animationFrame: 0,
-    startedAt: performance.now(),
-    startTop: currentTop,
     targetTop,
+    lastFrameAt: performance.now(),
   };
 
   const step = (now: number) => {
-    const progress = Math.min((now - state.startedAt) / SCROLL_ANIMATION_MS, 1);
-    const nextTop = state.startTop + (state.targetTop - state.startTop) * easeOutCubic(progress);
+    const elapsed = Math.max(now - state.lastFrameAt, 16);
+    state.lastFrameAt = now;
+
+    const latestMaxTop = getMaxScrollTop(target);
+    state.targetTop = Math.max(0, Math.min(state.targetTop, latestMaxTop));
+
+    const latestTop = getCurrentScrollTop(target);
+    const distance = state.targetTop - latestTop;
+    const alpha = 1 - Math.exp(-elapsed / SCROLL_TIME_CONSTANT_MS);
+    const nextTop = Math.abs(distance) <= SCROLL_SETTLE_THRESHOLD_PX ? state.targetTop : latestTop + distance * alpha;
     setScrollTop(target, nextTop);
 
-    if (progress < 1) {
+    if (Math.abs(state.targetTop - nextTop) > SCROLL_SETTLE_THRESHOLD_PX) {
       state.animationFrame = requestAnimationFrame(step);
       activeScrolls.set(target, state);
     } else {
+      setScrollTop(target, state.targetTop);
       activeScrolls.delete(target);
     }
   };
