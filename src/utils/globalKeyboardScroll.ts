@@ -181,12 +181,6 @@ export function immediateScrollBy(target: HTMLElement, delta: number) {
   setScrollTop(target, Math.max(0, Math.min(currentTop + delta, maxTop)));
 }
 
-/* c8 ignore start */
-function legacyScrollBy() {
-  return;
-}
-/* c8 ignore stop */
-
 export function installGlobalKeyboardScroll() {
   window.addEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
   return () => window.removeEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
