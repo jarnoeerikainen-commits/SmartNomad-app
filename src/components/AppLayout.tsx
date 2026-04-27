@@ -320,6 +320,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <AISection 
               subscription={subscription}
               onUpgradeClick={openUpgradeModal}
+              requestedAssistant={requestedAssistant}
               currentLocation={detectedLocation ? {
                 country: detectedLocation.country,
                 city: detectedLocation.city,
@@ -598,15 +599,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       />
       
       {/* AI Travel Assistant */}
-      <Suspense fallback={null}>
-        <AITravelAssistant 
-          currentLocation={detectedLocation ? { 
-            country: detectedLocation.country, 
-            city: detectedLocation.city 
-          } : undefined}
-          citizenship={userProfile?.citizenship}
-        />
-      </Suspense>
+      {bottomNavTab !== 'ai' && (
+        <Suspense fallback={null}>
+          <AITravelAssistant 
+            currentLocation={detectedLocation ? { 
+              country: detectedLocation.country, 
+              city: detectedLocation.city 
+            } : undefined}
+            citizenship={userProfile?.citizenship}
+          />
+        </Suspense>
+      )}
 
       {/* Calendar reminder engine — boots the minute-tick scheduler and
           wires chat/voice/toast bridges. Pure logic, no UI. */}
