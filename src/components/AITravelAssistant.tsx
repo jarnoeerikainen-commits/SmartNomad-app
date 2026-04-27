@@ -922,8 +922,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   if (isMobile) {
     return (
-      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-        <Card className={`flex flex-col flex-1 glass-morphism shadow-large rounded-none overflow-hidden ${
+      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <Card className={`flex flex-col flex-1 min-h-0 glass-morphism shadow-large rounded-none overflow-hidden ${
           isMinimized ? 'flex-initial' : ''
         }`}>
           <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
@@ -983,7 +983,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           </CardHeader>
 
           {!isMinimized && (
-            <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
+            <CardContent className="p-0 flex flex-col flex-1 min-h-0 overflow-hidden">
               {isSpeaking && conciergePrefs.avatarVisible && !avatarHidden && (
                 <div className="relative flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                   style={{
@@ -1017,8 +1017,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </div>
                 </div>
               )}
-              <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
-                <div className="space-y-4 pb-4">
+              <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0 px-3 mobile-native-scroll">
+                <div className="space-y-4 pb-4 pt-2">
                 {messages.map((message) => {
                     const { text: bookingText, bookings } = !message.isUser
                       ? parseBookingBlocks(message.content)
@@ -1032,7 +1032,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     const parts = rideText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|RIDE_CARD)_(\d+)\}\}/);
                     return (
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                        <div className={`max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed break-words ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           <div className="flex items-start gap-2">
                             {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                             <div className="flex-1 min-w-0">
