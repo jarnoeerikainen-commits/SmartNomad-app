@@ -256,8 +256,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             { role: 'user', content: followUpPrompt }
           ],
           userContext: {
-            currentCountry: effectiveLocation?.country,
-            currentCity: effectiveLocation?.city,
+            currentCountry: conciergeLocation?.country,
+            currentCity: conciergeLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
@@ -362,7 +362,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const enhancedProfile = fullAppContext.enhancedProfile;
     const profileSummary = buildProfileSummary(enhancedProfile);
 
-    const userCity = effectiveLocation?.city;
+    const userCity = conciergeLocation?.city;
     let cityServicesContext = '';
     if (userCity) {
       try {
@@ -410,7 +410,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     })();
     const bundle = buildConciergeContextBundle({
       currentCity: userCity,
-      currentCountry: effectiveLocation?.country,
+      currentCountry: conciergeLocation?.country,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       persistentMemories,
@@ -717,7 +717,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           const chatMessages = messages
             .filter(m => m.id !== '1')
             .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
-          aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
+          if (!activePersona) aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
         }, 5000);
       }
 
