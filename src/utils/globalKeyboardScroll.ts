@@ -1,5 +1,6 @@
 const SCROLLABLE_SELECTOR = '[data-app-scroll-container]';
-const SCROLL_ANIMATION_MS = 180;
+const SCROLL_TIME_CONSTANT_MS = 44;
+const SCROLL_SETTLE_THRESHOLD_PX = 1;
 const KEYBOARD_LINE_SCROLL_PX = 72;
 const KEYBOARD_PAGE_SCROLL_RATIO = 0.85;
 const MIN_KEYBOARD_PAGE_SCROLL_PX = 240;
@@ -72,9 +73,20 @@ function getVisibleScrollHeight(target: HTMLElement) {
   return isDocumentScrollTarget(target) ? window.innerHeight || target.clientHeight : target.clientHeight;
 }
 
+function getMaxScrollTop(target: HTMLElement) {
+  if (isDocumentScrollTarget(target)) {
+    const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight ?? 0);
+    const visibleHeight = window.innerHeight || document.documentElement.clientHeight;
+    return Math.max(scrollHeight - visibleHeight, 0);
+  }
+
+  return Math.max(target.scrollHeight - target.clientHeight, 0);
+}
+
 function getScrollDelta(key: string, target: HTMLElement) {
   const line = KEYBOARD_LINE_SCROLL_PX;
   const page = Math.max(getVisibleScrollHeight(target) * KEYBOARD_PAGE_SCROLL_RATIO, MIN_KEYBOARD_PAGE_SCROLL_PX);
+  const currentTop = getCurrentScrollTop(target);
 
   switch (key) {
     case 'ArrowDown':
@@ -86,9 +98,9 @@ function getScrollDelta(key: string, target: HTMLElement) {
     case 'PageUp':
       return -page;
     case 'Home':
-      return -target.scrollTop;
+      return -currentTop;
     case 'End':
-      return target.scrollHeight - target.clientHeight - target.scrollTop;
+      return getMaxScrollTop(target) - currentTop;
     default:
       return 0;
   }
@@ -116,9 +128,8 @@ export function handleGlobalKeyboardScroll(event: KeyboardEvent) {
 
 type SmoothScrollState = {
   animationFrame: number;
-  startedAt: number;
-  startTop: number;
   targetTop: number;
+  lastFrameAt: number;
 };
 
 const activeScrolls = new WeakMap<HTMLElement, SmoothScrollState>();
