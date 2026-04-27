@@ -718,13 +718,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           const chatMessages = messages
             .filter(m => m.id !== '1')
             .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
-          if (!activePersona) aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
+          if (!isDemoPersona) aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
         }, 5000);
       }
 
       // Trigger conversation compression when messages get long
       const currentMsgCount = messages.filter(m => m.id !== '1').length;
-      if (!activePersona && currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
+      if (!isDemoPersona && currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
         const chatMessages = messages
           .filter(m => m.id !== '1')
           .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
