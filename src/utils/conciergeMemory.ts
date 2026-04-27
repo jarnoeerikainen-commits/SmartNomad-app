@@ -14,6 +14,7 @@ export interface MemoryEntry {
 }
 
 export function getMemories(): MemoryEntry[] {
+  if (isDemoPersonaActive()) return [];
   try {
     const raw = localStorage.getItem(MEMORY_KEY);
     return raw ? JSON.parse(raw) : [];
@@ -21,6 +22,7 @@ export function getMemories(): MemoryEntry[] {
 }
 
 export function addMemory(entry: Omit<MemoryEntry, 'id' | 'learnedAt'>): void {
+  if (isDemoPersonaActive()) return;
   const memories = getMemories();
   // Deduplicate by similar fact
   const exists = memories.some(m => m.fact.toLowerCase() === entry.fact.toLowerCase());
@@ -42,6 +44,15 @@ export function addMemory(entry: Omit<MemoryEntry, 'id' | 'learnedAt'>): void {
 
 export function clearMemories(): void {
   localStorage.removeItem(MEMORY_KEY);
+}
+
+function isDemoPersonaActive(): boolean {
+  try {
+    const stored = localStorage.getItem('supernomad_active_demo_persona');
+    return stored === 'meghan' || stored === 'john' || !!localStorage.getItem('demoAiContext');
+  } catch {
+    return false;
+  }
 }
 
 /**
