@@ -17,6 +17,32 @@ interface AISectionProps {
 const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) => {
   const [activeTab, setActiveTab] = useState('assistant');
   const isPremium = subscription.tier !== 'free';
+  const assistants = [
+    {
+      value: 'assistant',
+      title: 'Travel Concierge',
+      description: 'Everyday travel help, bookings, local answers, and quick decisions.',
+      icon: MessageSquare,
+    },
+    {
+      value: 'doctor',
+      title: 'Health Advisor',
+      description: 'Travel health, symptoms, medicines, clinics, and wellness guidance.',
+      icon: Stethoscope,
+    },
+    {
+      value: 'lawyer',
+      title: 'Legal Advisor',
+      description: 'Visa, residency, tax, document, and compliance questions.',
+      icon: Scale,
+    },
+    {
+      value: 'planner',
+      title: 'Trip Planner',
+      description: 'Build complete itineraries for business, family, sports, or nomad trips.',
+      icon: Plane,
+    },
+  ];
 
   return (
     <div className="space-y-4 pb-20 md:pb-6">
@@ -48,8 +74,41 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) =
         </CardContent>
       </Card>
 
+      <div className="grid grid-cols-1 gap-3 md:hidden">
+        {assistants.map((assistant) => {
+          const Icon = assistant.icon;
+          const isActive = activeTab === assistant.value;
+
+          return (
+            <button
+              key={assistant.value}
+              type="button"
+              onClick={() => setActiveTab(assistant.value)}
+              className={`w-full rounded-xl border p-4 text-left transition-all touch-manipulation ${
+                isActive
+                  ? 'border-primary bg-primary/10 shadow-medium'
+                  : 'border-border bg-card hover:bg-muted/60'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-primary'}`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-base font-semibold leading-tight text-foreground">{assistant.title}</h3>
+                    {isActive && <Badge variant="secondary" className="shrink-0">Open</Badge>}
+                  </div>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{assistant.description}</p>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+        <TabsList className="hidden w-full grid-cols-2 md:grid lg:grid-cols-4">
           <TabsTrigger value="assistant" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span className="hidden sm:inline">Assistant</span>
