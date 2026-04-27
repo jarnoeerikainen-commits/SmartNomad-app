@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Bot, Stethoscope, Scale, Plane, MessageSquare } from 'lucide-react';
 import { AITravelDoctor } from '../AITravelDoctor';
@@ -12,10 +12,13 @@ import { Subscription } from '@/types/subscription';
 interface AISectionProps {
   subscription: Subscription;
   onUpgradeClick: () => void;
+  currentLocation?: { country: string; city: string };
+  citizenship?: string;
 }
 
-const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) => {
+const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship }) => {
   const [activeTab, setActiveTab] = useState('assistant');
+  const assistantPanelRef = useRef<HTMLDivElement | null>(null);
   const isPremium = subscription.tier !== 'free';
   const assistants = [
     {
@@ -43,6 +46,21 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) =
       icon: Plane,
     },
   ];
+
+  const openAssistant = (assistantValue: string) => {
+    setActiveTab(assistantValue);
+
+    window.requestAnimationFrame(() => {
+      assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        const firstInteractive = assistantPanelRef.current?.querySelector<HTMLElement>(
+          'textarea, input, button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        firstInteractive?.focus({ preventScroll: true });
+      }
+    });
+  };
 
   return (
     <div className="space-y-4 pb-20 md:pb-6">
@@ -83,7 +101,9 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) =
             <button
               key={assistant.value}
               type="button"
-              onClick={() => setActiveTab(assistant.value)}
+              aria-pressed={isActive}
+              aria-controls="mobile-ai-assistant-panel"
+              onClick={() => openAssistant(assistant.value)}
               className={`w-full rounded-xl border p-4 text-left transition-all touch-manipulation ${
                 isActive
                   ? 'border-primary bg-primary/10 shadow-medium'
@@ -127,21 +147,23 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick }) =
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="assistant" className="mt-6 animate-fade-in">
-          <AITravelAssistant />
-        </TabsContent>
+        <div id="mobile-ai-assistant-panel" ref={assistantPanelRef} className="scroll-mt-4 md:scroll-mt-0">
+          <TabsContent value="assistant" className="mt-6 animate-fade-in">
+            <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} />
+          </TabsContent>
 
-        <TabsContent value="doctor" className="mt-6 animate-fade-in">
-          <AITravelDoctor />
-        </TabsContent>
+          <TabsContent value="doctor" className="mt-6 animate-fade-in">
+            <AITravelDoctor currentLocation={currentLocation} citizenship={citizenship} />
+          </TabsContent>
 
-        <TabsContent value="lawyer" className="mt-6 animate-fade-in">
-          <AITravelLawyer subscription={subscription} onUpgradeClick={onUpgradeClick} />
-        </TabsContent>
+          <TabsContent value="lawyer" className="mt-6 animate-fade-in">
+            <AITravelLawyer currentLocation={currentLocation} subscription={subscription} onUpgradeClick={onUpgradeClick} />
+          </TabsContent>
 
-        <TabsContent value="planner" className="mt-6 animate-fade-in">
-          <AITravelPlanner />
-        </TabsContent>
+          <TabsContent value="planner" className="mt-6 animate-fade-in">
+            <AITravelPlanner />
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
