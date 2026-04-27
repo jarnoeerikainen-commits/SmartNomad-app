@@ -1,4 +1,5 @@
 const SCROLLABLE_SELECTOR = '[data-app-scroll-container]';
+const SCROLL_ANIMATION_MS = 180;
 
 const scrollKeys = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
 
@@ -102,20 +103,89 @@ export function handleGlobalKeyboardScroll(event: KeyboardEvent) {
   const delta = getScrollDelta(event.key, target);
   if (!delta) return;
 
-  const isDocumentTarget = target === document.documentElement || target === document.body || target === document.scrollingElement;
-  const before = isDocumentTarget ? window.scrollY : target.scrollTop;
+  event.preventDefault();
+  smoothScrollBy(target, delta);
+}
 
-  if (isDocumentTarget) {
-    window.scrollBy({ top: delta, behavior: 'auto' });
+type SmoothScrollState = {
+  animationFrame: number;
+  startedAt: number;
+  startTop: number;
+  targetTop: number;
+};
+
+const activeScrolls = new WeakMap<HTMLElement, SmoothScrollState>();
+
+function isDocumentScrollTarget(target: HTMLElement) {
+  return target === document.documentElement || target === document.body || target === document.scrollingElement;
+}
+
+function getCurrentScrollTop(target: HTMLElement) {
+  return isDocumentScrollTarget(target) ? window.scrollY : target.scrollTop;
+}
+
+function setScrollTop(target: HTMLElement, top: number) {
+  if (isDocumentScrollTarget(target)) {
+    window.scrollTo({ top, behavior: 'auto' });
   } else {
-    target.scrollBy({ top: delta, behavior: 'auto' });
-  }
-
-  const after = isDocumentTarget ? window.scrollY : target.scrollTop;
-  if (after !== before) {
-    event.preventDefault();
+    target.scrollTop = top;
   }
 }
+
+function easeOutCubic(progress: number) {
+  return 1 - Math.pow(1 - progress, 3);
+}
+
+export function smoothScrollBy(target: HTMLElement, delta: number) {
+  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const currentTop = getCurrentScrollTop(target);
+  const existing = activeScrolls.get(target);
+  const targetTop = Math.max(0, Math.min((existing?.targetTop ?? currentTop) + delta, maxTop));
+
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    if (existing) cancelAnimationFrame(existing.animationFrame);
+    activeScrolls.delete(target);
+    setScrollTop(target, targetTop);
+    return;
+  }
+
+  if (existing) cancelAnimationFrame(existing.animationFrame);
+
+  const state: SmoothScrollState = {
+    animationFrame: 0,
+    startedAt: performance.now(),
+    startTop: currentTop,
+    targetTop,
+  };
+
+  const step = (now: number) => {
+    const progress = Math.min((now - state.startedAt) / SCROLL_ANIMATION_MS, 1);
+    const nextTop = state.startTop + (state.targetTop - state.startTop) * easeOutCubic(progress);
+    setScrollTop(target, nextTop);
+
+    if (progress < 1) {
+      state.animationFrame = requestAnimationFrame(step);
+      activeScrolls.set(target, state);
+    } else {
+      activeScrolls.delete(target);
+    }
+  };
+
+  state.animationFrame = requestAnimationFrame(step);
+  activeScrolls.set(target, state);
+}
+
+export function immediateScrollBy(target: HTMLElement, delta: number) {
+  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const currentTop = getCurrentScrollTop(target);
+  setScrollTop(target, Math.max(0, Math.min(currentTop + delta, maxTop)));
+}
+
+/* c8 ignore start */
+function legacyScrollBy() {
+  return;
+}
+/* c8 ignore stop */
 
 export function installGlobalKeyboardScroll() {
   window.addEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
