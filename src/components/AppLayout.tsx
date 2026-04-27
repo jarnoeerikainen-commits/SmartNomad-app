@@ -230,14 +230,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     setActiveSection(section);
     setBottomNavTab('home');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const handleBottomNavChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const renderBottomNavContent = () => {
