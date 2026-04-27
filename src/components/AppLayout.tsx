@@ -530,8 +530,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={openUpgradeModal}
         />
         
-          <main data-app-scroll-container className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
-            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-[calc(env(safe-area-inset-bottom,0px)+10rem)] md:pb-6">
+          <main ref={mainScrollRef} data-app-scroll-container className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto mobile-native-scroll" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
+            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-[calc(env(safe-area-inset-bottom,0px)+11.5rem)] md:pb-6">
               <div className="animate-fade-in">
                 {renderActiveSection()}
               </div>
