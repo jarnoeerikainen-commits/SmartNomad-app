@@ -836,7 +836,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     // ─── Ride-hailing intent: inject a RideBookingCard before the model replies
     const rideIntent = RideHailingService.detectRideIntent(sentText);
     if (rideIntent.isRide) {
-      const city = effectiveLocation?.city || currentLocation?.city || 'your city';
+      const city = conciergeLocation?.city || currentLocation?.city || 'your city';
       const dropoff = rideIntent.dropoffHint || (sentText.match(/airport/i) ? `${city} airport` : 'destination');
       const whenLine = rideIntent.whenHint && rideIntent.whenHint !== 'now' ? ` for **${rideIntent.whenHint}**` : '';
       const rideBlock = '```ride\n' + JSON.stringify({
