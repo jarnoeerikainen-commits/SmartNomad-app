@@ -1087,7 +1087,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 </div>
               </ScrollArea>
 
-              <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
+              <div className="border-t p-3 flex-shrink-0 bg-background/95 backdrop-blur" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)' }}>
                 {/* Mic onboarding speech bubble */}
                 {showMicBubble && sttSupported && (
                   <div className="relative mb-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -1104,7 +1104,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-primary rotate-45 rounded-sm" />
                   </div>
                 )}
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-end">
                   {sttSupported && (
                     <TooltipProvider>
                       <Tooltip>
@@ -1129,8 +1129,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
+                    onFocus={keepMobileComposerVisible}
                     placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                     disabled={isTyping}
                   />
                   <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="px-3">
