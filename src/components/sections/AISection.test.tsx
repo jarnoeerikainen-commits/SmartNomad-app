@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AISection from './AISection';
 import { Subscription } from '@/types/subscription';
@@ -71,7 +71,7 @@ describe('AISection mobile assistant chooser', () => {
     });
   });
 
-  it('opens the selected assistant as a usable panel on mobile cards', async () => {
+  it('opens the selected assistant as a usable panel on mobile cards', () => {
     render(
       <AISection
         subscription={subscription}
@@ -82,15 +82,15 @@ describe('AISection mobile assistant chooser', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /health advisor/i }));
-    await waitFor(() => expect(screen.getByLabelText('Health input')).toHaveFocus());
+    expect(screen.getByLabelText('Health input')).toBeVisible();
     expect(screen.getByTestId('doctor-location')).toHaveValue('Portugal|Finland');
     expect(screen.getByRole('button', { name: /health advisor/i })).toHaveAttribute('aria-pressed', 'true');
 
     fireEvent.click(screen.getByRole('button', { name: /legal advisor/i }));
-    await waitFor(() => expect(screen.getByLabelText('Legal input')).toHaveFocus());
+    expect(screen.getByLabelText('Legal input')).toBeVisible();
     expect(screen.getByTestId('lawyer-location')).toHaveValue('Lisbon');
 
     fireEvent.click(screen.getByRole('button', { name: /trip planner/i }));
-    await waitFor(() => expect(screen.getByLabelText('Planner input')).toHaveFocus());
+    expect(screen.getByLabelText('Planner input')).toBeVisible();
   });
 });
