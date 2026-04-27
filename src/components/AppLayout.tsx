@@ -306,6 +306,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <AISection 
               subscription={subscription}
               onUpgradeClick={openUpgradeModal}
+              currentLocation={detectedLocation ? {
+                country: detectedLocation.country,
+                city: detectedLocation.city,
+              } : undefined}
+              citizenship={userProfile?.citizenship}
             />
           </Suspense>
         );
