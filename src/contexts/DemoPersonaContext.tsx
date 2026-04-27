@@ -17,6 +17,38 @@ const DemoPersonaContext = createContext<DemoPersonaContextType>({
   isDemo: false,
 });
 
+const DEMO_PROFILE_BACKUP_KEYS = {
+  userProfile: 'supernomad_pre_demo_userProfile',
+  enhancedProfile: 'supernomad_pre_demo_enhancedProfile',
+};
+
+const isDemoProfileValue = (value: string | null) => {
+  if (!value) return false;
+  return value.includes('meghan.clarke@demo.com') || value.includes('john.mitchell@demo.com');
+};
+
+const backupBeforeDemo = (key: 'userProfile' | 'enhancedProfile') => {
+  const current = localStorage.getItem(key);
+  const backupKey = DEMO_PROFILE_BACKUP_KEYS[key];
+  if (current && !isDemoProfileValue(current) && !localStorage.getItem(backupKey)) {
+    localStorage.setItem(backupKey, current);
+  }
+};
+
+const restoreAfterDemo = (key: 'userProfile' | 'enhancedProfile') => {
+  const backupKey = DEMO_PROFILE_BACKUP_KEYS[key];
+  const backup = localStorage.getItem(backupKey);
+  if (backup) {
+    localStorage.setItem(key, backup);
+    localStorage.removeItem(backupKey);
+    return;
+  }
+
+  if (isDemoProfileValue(localStorage.getItem(key))) {
+    localStorage.removeItem(key);
+  }
+};
+
 export const useDemoPersona = () => useContext(DemoPersonaContext);
 
 export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -36,6 +68,8 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (id && DEMO_PERSONAS[id]) {
       // Store profile in localStorage so existing app systems pick it up
       const p = DEMO_PERSONAS[id];
+      backupBeforeDemo('userProfile');
+      backupBeforeDemo('enhancedProfile');
       localStorage.setItem('supernomad_active_demo_persona', id);
       localStorage.setItem('demoPersona', JSON.stringify({
         id,
@@ -168,7 +202,10 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.removeItem('demoAiContext');
       localStorage.removeItem('demoCalendar');
       localStorage.removeItem('awardCardsAIContext');
-      // Don't clear userProfile/enhancedProfile — let user keep their own data
+      restoreAfterDemo('userProfile');
+      restoreAfterDemo('enhancedProfile');
+      localStorage.removeItem('jetSearchAIContext');
+      window.dispatchEvent(new CustomEvent('supernomad:demo-persona-cleared'));
     }
   }, []);
 
