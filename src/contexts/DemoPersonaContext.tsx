@@ -20,7 +20,11 @@ const DemoPersonaContext = createContext<DemoPersonaContextType>({
 export const useDemoPersona = () => useContext(DemoPersonaContext);
 
 export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activePersonaId, setActivePersonaId] = useState<string | null>(null);
+  const [activePersonaId, setActivePersonaId] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const stored = localStorage.getItem('supernomad_active_demo_persona');
+    return stored === 'meghan' || stored === 'john' ? stored : null;
+  });
 
   const setPersona = useCallback((id: 'meghan' | 'john' | null) => {
     setActivePersonaId(id);
@@ -32,6 +36,18 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (id && DEMO_PERSONAS[id]) {
       // Store profile in localStorage so existing app systems pick it up
       const p = DEMO_PERSONAS[id];
+      localStorage.setItem('supernomad_active_demo_persona', id);
+      localStorage.setItem('demoPersona', JSON.stringify({
+        id,
+        name: `${p.profile.firstName} ${p.profile.lastName}`,
+        profile: p.profile,
+      }));
+      localStorage.setItem('demoUserLocation', JSON.stringify({
+        city: p.profile.city,
+        country: p.profile.country,
+        source: 'demo_persona',
+      }));
+      localStorage.removeItem('concierge_memory');
       const profileData = {
         firstName: p.profile.firstName,
         lastName: p.profile.lastName,
@@ -146,6 +162,9 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));
     } else {
       // Clear demo data
+      localStorage.removeItem('supernomad_active_demo_persona');
+      localStorage.removeItem('demoPersona');
+      localStorage.removeItem('demoUserLocation');
       localStorage.removeItem('demoAiContext');
       localStorage.removeItem('demoCalendar');
       localStorage.removeItem('awardCardsAIContext');
@@ -172,6 +191,12 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
     }, 60_000); // check every minute — cheap
     return () => window.clearInterval(interval);
+  }, [activePersonaId, setPersona]);
+
+  useEffect(() => {
+    if (activePersonaId === 'meghan' || activePersonaId === 'john') {
+      setPersona(activePersonaId);
+    }
   }, [activePersonaId, setPersona]);
 
   const activePersona = activePersonaId ? DEMO_PERSONAS[activePersonaId] || null : null;

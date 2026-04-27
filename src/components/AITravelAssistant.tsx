@@ -74,6 +74,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         city: liveLocation.city && liveLocation.city !== 'Unknown' ? liveLocation.city : undefined,
       }
     : undefined;
+  const conciergeLocation = activePersona
+    ? { city: activePersona.profile.city, country: activePersona.profile.country }
+    : effectiveLocation;
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
@@ -111,8 +114,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       return buildGreetingParts({
         aiName,
         userName,
-        city: effectiveLocation?.city,
-        country: effectiveLocation?.country,
+        city: conciergeLocation?.city,
+        country: conciergeLocation?.country,
         mode: prefs.personalityMode || 'normal',
         travelMode,
         nextTrip: nextTrip ? { destination: nextTrip.destination, dates: nextTrip.dates, purpose: nextTrip.purpose } : undefined,
@@ -123,8 +126,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     return buildGreetingParts({
       aiName,
       userName,
-      city: effectiveLocation?.city,
-      country: effectiveLocation?.country,
+      city: conciergeLocation?.city,
+      country: conciergeLocation?.country,
       mode: prefs.personalityMode || 'normal',
       travelMode,
     });
@@ -217,7 +220,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       toggleVoice();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, effectiveLocation?.city, effectiveLocation?.country, isLocationLoading]);
+  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, conciergeLocation?.city, conciergeLocation?.country, isLocationLoading]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -253,8 +256,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             { role: 'user', content: followUpPrompt }
           ],
           userContext: {
-            currentCountry: effectiveLocation?.country,
-            currentCity: effectiveLocation?.city,
+            currentCountry: conciergeLocation?.country,
+            currentCity: conciergeLocation?.city,
             citizenship: activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
             demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
@@ -359,7 +362,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const enhancedProfile = fullAppContext.enhancedProfile;
     const profileSummary = buildProfileSummary(enhancedProfile);
 
-    const userCity = effectiveLocation?.city;
+    const userCity = conciergeLocation?.city;
     let cityServicesContext = '';
     if (userCity) {
       try {
@@ -407,7 +410,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     })();
     const bundle = buildConciergeContextBundle({
       currentCity: userCity,
-      currentCountry: effectiveLocation?.country,
+      currentCountry: conciergeLocation?.country,
       citizenship: activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       persistentMemories,
@@ -714,13 +717,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           const chatMessages = messages
             .filter(m => m.id !== '1')
             .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
-          aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
+          if (!activePersona) aiMemoryService.distillMemories(chatMessages, conversationIdRef.current || undefined);
         }, 5000);
       }
 
       // Trigger conversation compression when messages get long
       const currentMsgCount = messages.filter(m => m.id !== '1').length;
-      if (currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
+      if (!activePersona && currentMsgCount >= 12 && currentMsgCount % 6 === 0 && conversationIdRef.current) {
         const chatMessages = messages
           .filter(m => m.id !== '1')
           .map(m => ({ role: m.isUser ? 'user' as const : 'assistant' as const, content: m.content }));
@@ -833,7 +836,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     // ─── Ride-hailing intent: inject a RideBookingCard before the model replies
     const rideIntent = RideHailingService.detectRideIntent(sentText);
     if (rideIntent.isRide) {
-      const city = effectiveLocation?.city || currentLocation?.city || 'your city';
+      const city = conciergeLocation?.city || currentLocation?.city || 'your city';
       const dropoff = rideIntent.dropoffHint || (sentText.match(/airport/i) ? `${city} airport` : 'destination');
       const whenLine = rideIntent.whenHint && rideIntent.whenHint !== 'now' ? ` for **${rideIntent.whenHint}**` : '';
       const rideBlock = '```ride\n' + JSON.stringify({

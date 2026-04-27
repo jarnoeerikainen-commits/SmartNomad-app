@@ -17,8 +17,18 @@ class AIMemoryService {
     this.deviceId = getDeviceId();
   }
 
+  private isDemoPersonaActive(): boolean {
+    try {
+      const stored = localStorage.getItem('supernomad_active_demo_persona');
+      return stored === 'meghan' || stored === 'john' || !!localStorage.getItem('demoAiContext');
+    } catch {
+      return false;
+    }
+  }
+
   // ─── Session Management ────────────────────────────────
   async ensureSession(): Promise<void> {
+    if (this.isDemoPersonaActive()) return;
     if (this.sessionRegistered) return;
     try {
       const { error } = await supabase
@@ -35,6 +45,7 @@ class AIMemoryService {
 
   // ─── Conversation CRUD ─────────────────────────────────
   async createConversation(title?: string): Promise<string | null> {
+    if (this.isDemoPersonaActive()) return null;
     await this.ensureSession();
     try {
       const { data, error } = await supabase
@@ -51,6 +62,7 @@ class AIMemoryService {
   }
 
   async saveMessage(conversationId: string, role: 'user' | 'assistant', content: string): Promise<void> {
+    if (this.isDemoPersonaActive()) return;
     try {
       await supabase
         .from('chat_messages' as any)
@@ -179,6 +191,9 @@ class AIMemoryService {
     conversationSummary: string;
     tokenEstimate: number;
   }> {
+    if (this.isDemoPersonaActive()) {
+      return { persistentMemories: '', conversationSummary: '', tokenEstimate: 0 };
+    }
     let persistentMemories = '';
     let conversationSummary = '';
     let tokenEstimate = 0;
@@ -263,6 +278,7 @@ class AIMemoryService {
     messages: { role: string; content: string }[],
     conversationId?: string
   ): Promise<void> {
+    if (this.isDemoPersonaActive()) return;
     try {
       const { data, error } = await supabase.functions.invoke('memory-distill', {
         body: { messages, deviceId: this.deviceId, conversationId: conversationId || null }
