@@ -259,9 +259,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           userContext: {
             currentCountry: conciergeLocation?.country,
             currentCity: conciergeLocation?.city,
-            citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+            citizenship: isDemoPersona && activePersona ? activePersona.profile.nationality : citizenship,
             language: currentLanguage,
-            demoPersonaContext: localStorage.getItem('demoAiContext') || undefined,
+            demoPersonaContext: isDemoPersona ? localStorage.getItem('demoAiContext') || undefined : undefined,
             conciergePreferences: {
               userName: conciergePrefs.userName || undefined,
               personalityMode: conciergePrefs.personalityMode,
@@ -355,9 +355,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       .map(t => `[${t.severity.toUpperCase()}] ${t.title} — ${t.location.city}, ${t.location.country}: ${t.description} (Distance: ${t.distanceFromUser}km)`)
       .join('\n');
 
-    const demoAiContext = localStorage.getItem('demoAiContext') || '';
-    const awardCardsContext = localStorage.getItem('awardCardsAIContext') || '';
-    const jetSearchContext = localStorage.getItem('jetSearchAIContext') || '';
+    const demoAiContext = isDemoPersona ? localStorage.getItem('demoAiContext') || '' : '';
+    const awardCardsContext = isDemoPersona ? localStorage.getItem('awardCardsAIContext') || '' : '';
+    const jetSearchContext = isDemoPersona ? localStorage.getItem('jetSearchAIContext') || '' : '';
 
     const fullAppContext = gatherFullAppContext();
     const enhancedProfile = fullAppContext.enhancedProfile;
@@ -392,7 +392,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     })();
     const calendarString = (() => {
       try {
-        const personaScope = (activePersona as any)?.id || (activePersona ? 'meghan' : null);
+        const personaScope = isDemoPersona ? activePersonaId : null;
         const brief = CalendarService.briefForAI(personaScope, 8);
         const prefs = getCalendarPrefs();
         const writeRule = prefs.aiAutoWrite
@@ -412,7 +412,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     const bundle = buildConciergeContextBundle({
       currentCity: userCity,
       currentCountry: conciergeLocation?.country,
-      citizenship: activePersona ? activePersona.profile.nationality : citizenship,
+      citizenship: isDemoPersona && activePersona ? activePersona.profile.nationality : citizenship,
       language: currentLanguage,
       persistentMemories,
       conversationSummary,
