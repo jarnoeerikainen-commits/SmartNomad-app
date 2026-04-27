@@ -57,8 +57,15 @@ function findScrollableAncestor(start: Element | null) {
   return null;
 }
 
+let lastPointerElement: Element | null = null;
+
+function isPageLevelTarget(element: Element | null) {
+  return !element || element === document.body || element === document.documentElement;
+}
+
 export function getKeyboardScrollTarget(target: EventTarget | null) {
-  const element = target instanceof Element ? target : document.activeElement;
+  const eventElement = target instanceof Element ? target : null;
+  const element = isPageLevelTarget(eventElement) ? lastPointerElement ?? document.activeElement : eventElement;
   const appContainer = document.querySelector(SCROLLABLE_SELECTOR);
 
   return (
