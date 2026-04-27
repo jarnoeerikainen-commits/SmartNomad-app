@@ -57,7 +57,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
 
       if (window.matchMedia('(max-width: 767px)').matches) {
         const firstInteractive = assistantPanelRef.current?.querySelector<HTMLElement>(
-          '[data-state="active"] textarea, [data-state="active"] input, [data-state="active"] button:not([disabled]), [data-state="active"] [tabindex]:not([tabindex="-1"])'
+          '[role="tabpanel"]:not([hidden]) textarea, [role="tabpanel"]:not([hidden]) input, [role="tabpanel"]:not([hidden]) button:not([disabled]), [role="tabpanel"]:not([hidden]) [tabindex]:not([tabindex="-1"])'
         );
         firstInteractive?.focus({ preventScroll: true });
       }
