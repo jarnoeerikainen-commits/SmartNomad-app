@@ -186,16 +186,16 @@ const Landing: React.FC = () => {
         </div>
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-4 py-4 text-center sm:px-6 sm:py-6 md:py-8">
-          <div className="animate-fade-in w-full max-w-[68rem] space-y-3 sm:space-y-4 md:space-y-5">
+          <div className="animate-fade-in w-full max-w-[64rem] space-y-3 sm:space-y-4 md:space-y-5">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
-            <h1 className="mx-auto max-w-[14ch] font-display font-bold leading-none tracking-tight [text-wrap:balance]">
-              <span className="block text-[clamp(3rem,10vw,7rem)] break-words">
+            <h1 className="mx-auto font-display font-bold leading-none tracking-tight">
+              <span className="block whitespace-nowrap text-[clamp(2.8rem,8.5vw,6.5rem)]">
                 <span className="text-white">Super</span>
                 <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
-              <span className="mx-auto mt-3 block max-w-[22ch] text-[clamp(1.35rem,4vw,3rem)] font-semibold leading-tight text-white">
+              <span className="mx-auto mt-3 block max-w-[24ch] text-[clamp(1.25rem,3.3vw,2.5rem)] font-semibold leading-tight text-white [text-wrap:balance]">
                 Your borderless life, one app.
               </span>
             </h1>
