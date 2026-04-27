@@ -32,7 +32,7 @@ const Index = () => {
   useEffect(() => {
     const handler = () => {
       setShowOnboarding(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
     };
     window.addEventListener('supernomad:home', handler);
     return () => window.removeEventListener('supernomad:home', handler);

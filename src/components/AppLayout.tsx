@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
@@ -169,20 +169,35 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
+  const mainScrollRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const scrollMainToTop = () => {
+      const isPhone = window.matchMedia('(max-width: 767px)').matches;
+      const target = mainScrollRef.current;
+      if (isPhone && target) {
+        target.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('supernomad:scroll-main-top', scrollMainToTop);
+    return () => window.removeEventListener('supernomad:scroll-main-top', scrollMainToTop);
+  }, []);
 
   // Voice control navigation callbacks
   const handleVoiceNavigate = useCallback((section: string) => {
     setActiveSection(section);
     setBottomNavTab('home');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const handleVoiceTabChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   // Return to dashboard when home event is triggered
@@ -196,7 +211,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       setBottomNavTab('home');
       setActiveSection('help');
       setSidebarOpen(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
     };
     window.addEventListener('supernomad:home', goHome);
     window.addEventListener('supernomad:open-support', openSupport as EventListener);
@@ -206,7 +221,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         setActiveSection(detail.section);
         setBottomNavTab('home');
         setSidebarOpen(false);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
       }
     };
     window.addEventListener('supernomad:navigate', handleNavigate as EventListener);
@@ -230,14 +245,14 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     setActiveSection(section);
     setBottomNavTab('home');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const handleBottomNavChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
 
   const renderBottomNavContent = () => {
@@ -516,8 +531,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           onUpgradeClick={openUpgradeModal}
         />
         
-          <main data-app-scroll-container className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
-            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-[calc(env(safe-area-inset-bottom,0px)+10rem)] md:pb-6">
+          <main ref={mainScrollRef} data-app-scroll-container className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto mobile-native-scroll" onClick={() => { if (sidebarOpen) setSidebarOpen(false); }}>
+            <div className="container mx-auto p-3 sm:p-6 max-w-7xl pb-[calc(env(safe-area-inset-bottom,0px)+11.5rem)] md:pb-6">
               <div className="animate-fade-in">
                 {renderActiveSection()}
               </div>

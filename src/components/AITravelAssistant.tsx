@@ -226,7 +226,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: isMobile ? 'auto' : 'smooth', block: 'end' });
   };
 
   useEffect(() => {
@@ -892,6 +892,13 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }
   };
 
+  const keepMobileComposerVisible = () => {
+    if (!isMobile) return;
+    window.setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 120);
+  };
+
   if (!isOpen) {
     return (
       <div className={`fixed ${isMobile ? 'bottom-[5.5rem] right-4' : 'bottom-6 right-6'} z-40`}>
@@ -915,8 +922,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
   if (isMobile) {
     return (
-      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-        <Card className={`flex flex-col flex-1 glass-morphism shadow-large rounded-none overflow-hidden ${
+      <div className="fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <Card className={`flex flex-col flex-1 min-h-0 glass-morphism shadow-large rounded-none overflow-hidden ${
           isMinimized ? 'flex-initial' : ''
         }`}>
           <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
@@ -976,7 +983,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           </CardHeader>
 
           {!isMinimized && (
-            <CardContent className="p-0 flex flex-col flex-1 overflow-hidden">
+            <CardContent className="p-0 flex flex-col flex-1 min-h-0 overflow-hidden">
               {isSpeaking && conciergePrefs.avatarVisible && !avatarHidden && (
                 <div className="relative flex flex-col items-center justify-center py-3 flex-shrink-0 animate-fade-in"
                   style={{
@@ -1010,8 +1017,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </div>
                 </div>
               )}
-              <ScrollArea ref={scrollAreaRef} className="flex-1 px-4">
-                <div className="space-y-4 pb-4">
+              <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0 px-3 mobile-native-scroll">
+                <div className="space-y-4 pb-4 pt-2">
                 {messages.map((message) => {
                     const { text: bookingText, bookings } = !message.isUser
                       ? parseBookingBlocks(message.content)
@@ -1025,7 +1032,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     const parts = rideText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|RIDE_CARD)_(\d+)\}\}/);
                     return (
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                        <div className={`max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed break-words ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                           <div className="flex items-start gap-2">
                             {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                             <div className="flex-1 min-w-0">
@@ -1080,7 +1087,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 </div>
               </ScrollArea>
 
-              <div className="border-t p-3 flex-shrink-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0.75rem)' }}>
+              <div className="border-t p-3 flex-shrink-0 bg-background/95 backdrop-blur" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)' }}>
                 {/* Mic onboarding speech bubble */}
                 {showMicBubble && sttSupported && (
                   <div className="relative mb-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -1097,7 +1104,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     <div className="absolute -bottom-1.5 left-4 w-3 h-3 bg-primary rotate-45 rounded-sm" />
                   </div>
                 )}
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-end">
                   {sttSupported && (
                     <TooltipProvider>
                       <Tooltip>
@@ -1122,8 +1129,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
+                    onFocus={keepMobileComposerVisible}
                     placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
-                    className="flex-1"
+                    className="flex-1 min-w-0"
                     disabled={isTyping}
                   />
                   <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="px-3">

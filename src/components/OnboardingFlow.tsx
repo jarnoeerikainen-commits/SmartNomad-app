@@ -96,7 +96,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     // Child locked screen
     if (ageGroup === 'child') {
       return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <Card className="w-full max-w-md mx-4 shadow-large animate-scale-in">
             <CardContent className="p-8">
               <div className="flex justify-center mb-6">
@@ -151,7 +151,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
 
     // Birth year entry screen
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 backdrop-blur-sm">
         <Card className="w-full max-w-md mx-4 shadow-large animate-scale-in">
           <CardContent className="p-8">
             <div className="flex justify-between items-start mb-6">
@@ -205,7 +205,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const isLastStep = currentStep === featureSteps.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <Card className="w-full max-w-md mx-4 shadow-large animate-scale-in">
         <CardContent className="p-8">
           <div className="flex justify-between items-start mb-6">
