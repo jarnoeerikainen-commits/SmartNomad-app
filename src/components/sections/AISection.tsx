@@ -54,13 +54,6 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
 
     window.requestAnimationFrame(() => {
       assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-
-      if (window.matchMedia('(max-width: 767px)').matches) {
-        const firstInteractive = assistantPanelRef.current?.querySelector<HTMLElement>(
-          `[data-ai-assistant-content="${activeTab}"] textarea, [data-ai-assistant-content="${activeTab}"] input, [data-ai-assistant-content="${activeTab}"] button:not([disabled]), [data-ai-assistant-content="${activeTab}"] [tabindex]:not([tabindex="-1"])`
-        );
-        firstInteractive?.focus({ preventScroll: true });
-      }
     });
   }, [activeTab]);
 
