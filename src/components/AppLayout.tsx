@@ -173,8 +173,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   useEffect(() => {
     const scrollMainToTop = () => {
+      const isPhone = window.matchMedia('(max-width: 767px)').matches;
       const target = mainScrollRef.current;
-      if (target) {
+      if (isPhone && target) {
         target.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
