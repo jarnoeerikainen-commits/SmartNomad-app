@@ -1,5 +1,6 @@
 const SCROLLABLE_SELECTOR = '[data-app-scroll-container]';
-const SCROLL_ANIMATION_MS = 180;
+const SCROLL_TIME_CONSTANT_MS = 44;
+const SCROLL_SETTLE_THRESHOLD_PX = 1;
 const KEYBOARD_LINE_SCROLL_PX = 72;
 const KEYBOARD_PAGE_SCROLL_RATIO = 0.85;
 const MIN_KEYBOARD_PAGE_SCROLL_PX = 240;
@@ -56,8 +57,15 @@ function findScrollableAncestor(start: Element | null) {
   return null;
 }
 
+let lastPointerElement: Element | null = null;
+
+function isPageLevelTarget(element: Element | null) {
+  return !element || element === document.body || element === document.documentElement;
+}
+
 export function getKeyboardScrollTarget(target: EventTarget | null) {
-  const element = target instanceof Element ? target : document.activeElement;
+  const eventElement = target instanceof Element ? target : null;
+  const element = isPageLevelTarget(eventElement) ? lastPointerElement ?? document.activeElement : eventElement;
   const appContainer = document.querySelector(SCROLLABLE_SELECTOR);
 
   return (
@@ -72,9 +80,20 @@ function getVisibleScrollHeight(target: HTMLElement) {
   return isDocumentScrollTarget(target) ? window.innerHeight || target.clientHeight : target.clientHeight;
 }
 
+function getMaxScrollTop(target: HTMLElement) {
+  if (isDocumentScrollTarget(target)) {
+    const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight ?? 0);
+    const visibleHeight = window.innerHeight || document.documentElement.clientHeight;
+    return Math.max(scrollHeight - visibleHeight, 0);
+  }
+
+  return Math.max(target.scrollHeight - target.clientHeight, 0);
+}
+
 function getScrollDelta(key: string, target: HTMLElement) {
   const line = KEYBOARD_LINE_SCROLL_PX;
   const page = Math.max(getVisibleScrollHeight(target) * KEYBOARD_PAGE_SCROLL_RATIO, MIN_KEYBOARD_PAGE_SCROLL_PX);
+  const currentTop = getCurrentScrollTop(target);
 
   switch (key) {
     case 'ArrowDown':
@@ -86,9 +105,9 @@ function getScrollDelta(key: string, target: HTMLElement) {
     case 'PageUp':
       return -page;
     case 'Home':
-      return -target.scrollTop;
+      return -currentTop;
     case 'End':
-      return target.scrollHeight - target.clientHeight - target.scrollTop;
+      return getMaxScrollTop(target) - currentTop;
     default:
       return 0;
   }
@@ -116,9 +135,8 @@ export function handleGlobalKeyboardScroll(event: KeyboardEvent) {
 
 type SmoothScrollState = {
   animationFrame: number;
-  startedAt: number;
-  startTop: number;
   targetTop: number;
+  lastFrameAt: number;
 };
 
 const activeScrolls = new WeakMap<HTMLElement, SmoothScrollState>();
@@ -128,23 +146,23 @@ function isDocumentScrollTarget(target: HTMLElement) {
 }
 
 function getCurrentScrollTop(target: HTMLElement) {
-  return isDocumentScrollTarget(target) ? window.scrollY : target.scrollTop;
+  return isDocumentScrollTarget(target)
+    ? (document.scrollingElement as HTMLElement | null)?.scrollTop ?? window.scrollY
+    : target.scrollTop;
 }
 
 function setScrollTop(target: HTMLElement, top: number) {
   if (isDocumentScrollTarget(target)) {
-    window.scrollTo({ top, behavior: 'auto' });
+    const scrollElement = (document.scrollingElement as HTMLElement | null) ?? document.documentElement;
+    scrollElement.scrollTop = top;
+    document.body.scrollTop = top;
   } else {
     target.scrollTop = top;
   }
 }
 
-function easeOutCubic(progress: number) {
-  return 1 - Math.pow(1 - progress, 3);
-}
-
 export function smoothScrollBy(target: HTMLElement, delta: number) {
-  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const maxTop = getMaxScrollTop(target);
   const currentTop = getCurrentScrollTop(target);
   const existing = activeScrolls.get(target);
   const targetTop = Math.max(0, Math.min((existing?.targetTop ?? currentTop) + delta, maxTop));
@@ -156,24 +174,35 @@ export function smoothScrollBy(target: HTMLElement, delta: number) {
     return;
   }
 
-  if (existing) cancelAnimationFrame(existing.animationFrame);
+  if (existing) {
+    existing.targetTop = targetTop;
+    return;
+  }
 
   const state: SmoothScrollState = {
     animationFrame: 0,
-    startedAt: performance.now(),
-    startTop: currentTop,
     targetTop,
+    lastFrameAt: performance.now(),
   };
 
   const step = (now: number) => {
-    const progress = Math.min((now - state.startedAt) / SCROLL_ANIMATION_MS, 1);
-    const nextTop = state.startTop + (state.targetTop - state.startTop) * easeOutCubic(progress);
+    const elapsed = Math.max(now - state.lastFrameAt, 16);
+    state.lastFrameAt = now;
+
+    const latestMaxTop = getMaxScrollTop(target);
+    state.targetTop = Math.max(0, Math.min(state.targetTop, latestMaxTop));
+
+    const latestTop = getCurrentScrollTop(target);
+    const distance = state.targetTop - latestTop;
+    const alpha = 1 - Math.exp(-elapsed / SCROLL_TIME_CONSTANT_MS);
+    const nextTop = Math.abs(distance) <= SCROLL_SETTLE_THRESHOLD_PX ? state.targetTop : latestTop + distance * alpha;
     setScrollTop(target, nextTop);
 
-    if (progress < 1) {
+    if (Math.abs(state.targetTop - nextTop) > SCROLL_SETTLE_THRESHOLD_PX) {
       state.animationFrame = requestAnimationFrame(step);
       activeScrolls.set(target, state);
     } else {
+      setScrollTop(target, state.targetTop);
       activeScrolls.delete(target);
     }
   };
@@ -183,12 +212,20 @@ export function smoothScrollBy(target: HTMLElement, delta: number) {
 }
 
 export function immediateScrollBy(target: HTMLElement, delta: number) {
-  const maxTop = Math.max(target.scrollHeight - target.clientHeight, 0);
+  const maxTop = getMaxScrollTop(target);
   const currentTop = getCurrentScrollTop(target);
   setScrollTop(target, Math.max(0, Math.min(currentTop + delta, maxTop)));
 }
 
+function rememberPointerTarget(event: PointerEvent) {
+  lastPointerElement = event.target instanceof Element ? event.target : null;
+}
+
 export function installGlobalKeyboardScroll() {
+  window.addEventListener('pointermove', rememberPointerTarget, { capture: true, passive: true });
   window.addEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
-  return () => window.removeEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
+  return () => {
+    window.removeEventListener('pointermove', rememberPointerTarget, { capture: true });
+    window.removeEventListener('keydown', handleGlobalKeyboardScroll, { capture: true });
+  };
 }

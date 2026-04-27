@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   getKeyboardScrollTarget,
   handleGlobalKeyboardScroll,
+  smoothScrollBy,
   isKeyboardScrollKey,
   shouldIgnoreKeyboardScroll,
 } from './globalKeyboardScroll';
@@ -65,6 +66,25 @@ describe('globalKeyboardScroll', () => {
 
     expect(scrollable.scrollTop).toBe(72);
     expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('keeps one smooth animation active when PageDown is pressed repeatedly', () => {
+    const scrollable = makeScrollable();
+    let rafCallback: FrameRequestCallback | null = null;
+    const requestAnimationFrame = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      rafCallback = callback;
+      return 1;
+    });
+    const cancelAnimationFrame = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+
+    smoothScrollBy(scrollable, 340);
+    smoothScrollBy(scrollable, 340);
+    rafCallback?.(performance.now() + 80);
+
+    expect(requestAnimationFrame).toHaveBeenCalledTimes(2);
+    expect(cancelAnimationFrame).not.toHaveBeenCalled();
+    expect(scrollable.scrollTop).toBeGreaterThan(0);
+    expect(scrollable.scrollTop).toBeLessThanOrEqual(680);
   });
 
   it('does not steal arrow keys from text inputs or interactive roles', () => {
