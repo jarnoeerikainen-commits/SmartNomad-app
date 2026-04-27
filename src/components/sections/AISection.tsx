@@ -57,7 +57,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
 
       if (window.matchMedia('(max-width: 767px)').matches) {
         const firstInteractive = assistantPanelRef.current?.querySelector<HTMLElement>(
-          '[role="tabpanel"]:not([hidden]) textarea, [role="tabpanel"]:not([hidden]) input, [role="tabpanel"]:not([hidden]) button:not([disabled]), [role="tabpanel"]:not([hidden]) [tabindex]:not([tabindex="-1"])'
+          `[data-ai-assistant-content="${activeTab}"] textarea, [data-ai-assistant-content="${activeTab}"] input, [data-ai-assistant-content="${activeTab}"] button:not([disabled]), [data-ai-assistant-content="${activeTab}"] [tabindex]:not([tabindex="-1"])`
         );
         firstInteractive?.focus({ preventScroll: true });
       }
@@ -156,19 +156,27 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
 
         <div id="mobile-ai-assistant-panel" ref={assistantPanelRef} className="scroll-mt-4 md:scroll-mt-0">
           <TabsContent value="assistant" className="mt-6 animate-fade-in">
-            <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} />
+            <div data-ai-assistant-content="assistant">
+              <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} />
+            </div>
           </TabsContent>
 
           <TabsContent value="doctor" className="mt-6 animate-fade-in">
-            <AITravelDoctor currentLocation={currentLocation} citizenship={citizenship} />
+            <div data-ai-assistant-content="doctor">
+              <AITravelDoctor currentLocation={currentLocation} citizenship={citizenship} />
+            </div>
           </TabsContent>
 
           <TabsContent value="lawyer" className="mt-6 animate-fade-in">
-            <AITravelLawyer currentLocation={currentLocation} subscription={subscription} onUpgradeClick={onUpgradeClick} />
+            <div data-ai-assistant-content="lawyer">
+              <AITravelLawyer currentLocation={currentLocation} subscription={subscription} onUpgradeClick={onUpgradeClick} />
+            </div>
           </TabsContent>
 
           <TabsContent value="planner" className="mt-6 animate-fade-in">
-            <AITravelPlanner />
+            <div data-ai-assistant-content="planner">
+              <AITravelPlanner />
+            </div>
           </TabsContent>
         </div>
       </Tabs>
