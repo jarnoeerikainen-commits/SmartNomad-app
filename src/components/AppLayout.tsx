@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
@@ -169,6 +169,20 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
     return localStorage.getItem('upgradeBannerDismissed') === 'true';
   });
+  const mainScrollRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const scrollMainToTop = () => {
+      const target = mainScrollRef.current;
+      if (target) {
+        target.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('supernomad:scroll-main-top', scrollMainToTop);
+    return () => window.removeEventListener('supernomad:scroll-main-top', scrollMainToTop);
+  }, []);
 
   // Voice control navigation callbacks
   const handleVoiceNavigate = useCallback((section: string) => {
