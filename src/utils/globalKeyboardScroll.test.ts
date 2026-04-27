@@ -53,6 +53,11 @@ describe('globalKeyboardScroll', () => {
 
   it('scrolls down with ArrowDown and prevents browser conflicts', () => {
     const scrollable = makeScrollable();
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      callback(performance.now() + 200);
+      return 1;
+    });
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
     const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
     Object.defineProperty(event, 'target', { value: document.body });
 
