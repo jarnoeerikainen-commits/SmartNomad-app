@@ -14,9 +14,10 @@ interface AISectionProps {
   onUpgradeClick: () => void;
   currentLocation?: { country: string; city: string };
   citizenship?: string;
+  requestedAssistant?: string | null;
 }
 
-const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship }) => {
+const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship, requestedAssistant }) => {
   const [activeTab, setActiveTab] = useState('assistant');
   const assistantPanelRef = useRef<HTMLDivElement | null>(null);
   const shouldRevealAssistantRef = useRef(false);
@@ -49,13 +50,49 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
   ];
 
   useEffect(() => {
+    const openAssistantFromApp = (event: Event) => {
+      const detail = (event as CustomEvent<{ assistant?: string }>).detail;
+      const requestedAssistant = detail?.assistant;
+      if (requestedAssistant && assistants.some((assistant) => assistant.value === requestedAssistant)) {
+        shouldRevealAssistantRef.current = true;
+        setActiveTab(requestedAssistant);
+      }
+    };
+
+    window.addEventListener('supernomad:open-ai-assistant', openAssistantFromApp as EventListener);
+    return () => window.removeEventListener('supernomad:open-ai-assistant', openAssistantFromApp as EventListener);
+  }, []);
+
+  useEffect(() => {
     if (!shouldRevealAssistantRef.current) return;
     shouldRevealAssistantRef.current = false;
 
     window.requestAnimationFrame(() => {
-      assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      const panel = assistantPanelRef.current;
+      if (!panel) return;
+
+      const isPhone = window.matchMedia('(max-width: 767px)').matches;
+      const scrollContainer = panel.closest('[data-app-scroll-container]') as HTMLElement | null;
+      if (isPhone && scrollContainer) {
+        const panelRect = panel.getBoundingClientRect();
+        const containerRect = scrollContainer.getBoundingClientRect();
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollTop + panelRect.top - containerRect.top - 12,
+          behavior: 'smooth',
+        });
+        return;
+      }
+
+      panel.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (requestedAssistant && assistants.some((assistant) => assistant.value === requestedAssistant)) {
+      shouldRevealAssistantRef.current = true;
+      setActiveTab(requestedAssistant);
+    }
+  }, [requestedAssistant]);
 
   const openAssistant = (assistantValue: string) => {
     shouldRevealAssistantRef.current = true;
@@ -150,7 +187,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
         <div id="mobile-ai-assistant-panel" ref={assistantPanelRef} className="scroll-mt-4 md:scroll-mt-0">
           <TabsContent value="assistant" className="mt-6 animate-fade-in">
             <div data-ai-assistant-content="assistant">
-              <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} />
+              <AITravelAssistant currentLocation={currentLocation} citizenship={citizenship} embedded />
             </div>
           </TabsContent>
 

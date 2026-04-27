@@ -163,6 +163,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [bottomNavTab, setBottomNavTab] = useState('home');
+  const [requestedAssistant, setRequestedAssistant] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showProfileForm, setShowProfileForm] = useState(false);
@@ -218,8 +219,20 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     const handleNavigate = (e: Event) => {
       const detail = (e as CustomEvent<{ section?: string }>).detail;
       if (detail?.section) {
-        setActiveSection(detail.section);
-        setBottomNavTab('home');
+        const aiAssistantBySection: Record<string, string> = {
+          'ai-doctor': 'doctor',
+          'ai-lawyer': 'lawyer',
+          'ai-planner': 'planner',
+        };
+        if (aiAssistantBySection[detail.section]) {
+          setRequestedAssistant(aiAssistantBySection[detail.section]);
+          setBottomNavTab('ai');
+          setActiveSection('dashboard');
+        } else {
+          setRequestedAssistant(null);
+          setActiveSection(detail.section);
+          setBottomNavTab('home');
+        }
         setSidebarOpen(false);
         window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
       }
@@ -251,6 +264,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const handleBottomNavChange = useCallback((tab: string) => {
     setBottomNavTab(tab);
     setActiveSection('dashboard');
+    setRequestedAssistant(null);
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
   }, []);
@@ -306,6 +320,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <AISection 
               subscription={subscription}
               onUpgradeClick={openUpgradeModal}
+              requestedAssistant={requestedAssistant}
               currentLocation={detectedLocation ? {
                 country: detectedLocation.country,
                 city: detectedLocation.city,
@@ -584,15 +599,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       />
       
       {/* AI Travel Assistant */}
-      <Suspense fallback={null}>
-        <AITravelAssistant 
-          currentLocation={detectedLocation ? { 
-            country: detectedLocation.country, 
-            city: detectedLocation.city 
-          } : undefined}
-          citizenship={userProfile?.citizenship}
-        />
-      </Suspense>
+      {bottomNavTab !== 'ai' && (
+        <Suspense fallback={null}>
+          <AITravelAssistant 
+            currentLocation={detectedLocation ? { 
+              country: detectedLocation.country, 
+              city: detectedLocation.city 
+            } : undefined}
+            citizenship={userProfile?.citizenship}
+          />
+        </Suspense>
+      )}
 
       {/* Calendar reminder engine — boots the minute-tick scheduler and
           wires chat/voice/toast bridges. Pure logic, no UI. */}
