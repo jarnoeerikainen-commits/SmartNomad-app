@@ -19,6 +19,7 @@ interface AISectionProps {
 const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship }) => {
   const [activeTab, setActiveTab] = useState('assistant');
   const assistantPanelRef = useRef<HTMLDivElement | null>(null);
+  const shouldRevealAssistantRef = useRef(false);
   const isPremium = subscription.tier !== 'free';
   const assistants = [
     {
@@ -48,6 +49,9 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
   ];
 
   useEffect(() => {
+    if (!shouldRevealAssistantRef.current) return;
+    shouldRevealAssistantRef.current = false;
+
     window.requestAnimationFrame(() => {
       assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
 
@@ -61,6 +65,7 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
   }, [activeTab]);
 
   const openAssistant = (assistantValue: string) => {
+    shouldRevealAssistantRef.current = true;
     setActiveTab(assistantValue);
   };
 
