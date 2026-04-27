@@ -162,7 +162,6 @@
     overscroll-behavior-y: contain;
     cursor: default;
     touch-action: manipulation;
-    overscroll-behavior-x: none;
   }
 
   @media (max-width: 767px) {
