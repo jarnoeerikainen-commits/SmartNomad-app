@@ -68,7 +68,22 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
     shouldRevealAssistantRef.current = false;
 
     window.requestAnimationFrame(() => {
-      assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      const panel = assistantPanelRef.current;
+      if (!panel) return;
+
+      const isPhone = window.matchMedia('(max-width: 767px)').matches;
+      const scrollContainer = panel.closest('[data-app-scroll-container]') as HTMLElement | null;
+      if (isPhone && scrollContainer) {
+        const panelRect = panel.getBoundingClientRect();
+        const containerRect = scrollContainer.getBoundingClientRect();
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollTop + panelRect.top - containerRect.top - 12,
+          behavior: 'smooth',
+        });
+        return;
+      }
+
+      panel.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
   }, [activeTab]);
 
