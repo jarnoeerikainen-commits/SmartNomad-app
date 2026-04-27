@@ -63,7 +63,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   userProfile
 }) => {
   const { t, currentLanguage } = useLanguage();
-  const { activePersona } = useDemoPersona();
+  const { activePersona, activePersonaId } = useDemoPersona();
+  const isDemoPersona = activePersonaId === 'meghan' || activePersonaId === 'john';
   // Live detected location from the global LocationContext.
   // Used as a fallback (and as the source of truth for greeting refresh)
   // so the greeting always mentions the user's real current location.
@@ -74,7 +75,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         city: liveLocation.city && liveLocation.city !== 'Unknown' ? liveLocation.city : undefined,
       }
     : undefined;
-  const conciergeLocation = activePersona
+  const conciergeLocation = isDemoPersona && activePersona
     ? { city: activePersona.profile.city, country: activePersona.profile.country }
     : effectiveLocation;
   const { addThinkingStep, completeThinkingStep, clearThinking } = useTrust();
@@ -100,7 +101,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const buildGreeting = (): GreetingPart[] => {
     const prefs = getConciergePrefs();
     const aiName = prefs.aiName || 'Your Concierge';
-    const userName = activePersona ? activePersona.profile.firstName : prefs.userName;
+    const userName = isDemoPersona && activePersona ? activePersona.profile.firstName : prefs.userName;
 
     let travelMode: 'personal' | 'business' = 'personal';
     try {
@@ -108,7 +109,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       if (tm?.mode === 'business') travelMode = 'business';
     } catch {}
 
-    if (activePersona) {
+    if (isDemoPersona && activePersona) {
       const p = activePersona;
       const nextTrip = p.travel.upcomingTrips[0];
       return buildGreetingParts({
@@ -210,17 +211,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   // Re-greet when persona / language / name / personality / live location changes
   // (only if user hasn't started chatting yet — we don't want to wipe an active conversation)
   useEffect(() => {
-    if (!activePersona && isLocationLoading) return;
+    if (!isDemoPersona && isLocationLoading) return;
     if (hasUserMessagesRef.current) return;
 
     const parts = buildGreeting();
     playGreeting(parts);
 
-    if (activePersona && !voiceEnabled && ttsSupported) {
+    if (isDemoPersona && !voiceEnabled && ttsSupported) {
       toggleVoice();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePersona?.id, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, conciergeLocation?.city, conciergeLocation?.country, isLocationLoading]);
+  }, [activePersonaId, currentLanguage, conciergePrefs.userName, conciergePrefs.aiName, conciergePrefs.personalityMode, conciergeLocation?.city, conciergeLocation?.country, isLocationLoading]);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
