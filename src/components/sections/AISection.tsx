@@ -14,9 +14,10 @@ interface AISectionProps {
   onUpgradeClick: () => void;
   currentLocation?: { country: string; city: string };
   citizenship?: string;
+  requestedAssistant?: string | null;
 }
 
-const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship }) => {
+const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, currentLocation, citizenship, requestedAssistant }) => {
   const [activeTab, setActiveTab] = useState('assistant');
   const assistantPanelRef = useRef<HTMLDivElement | null>(null);
   const shouldRevealAssistantRef = useRef(false);
@@ -70,6 +71,13 @@ const AISection: React.FC<AISectionProps> = ({ subscription, onUpgradeClick, cur
       assistantPanelRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (requestedAssistant && assistants.some((assistant) => assistant.value === requestedAssistant)) {
+      shouldRevealAssistantRef.current = true;
+      setActiveTab(requestedAssistant);
+    }
+  }, [requestedAssistant]);
 
   const openAssistant = (assistantValue: string) => {
     shouldRevealAssistantRef.current = true;
