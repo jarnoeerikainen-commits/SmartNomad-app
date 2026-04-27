@@ -177,7 +177,7 @@ const Landing: React.FC = () => {
       </header>
 
       {/* ============= HERO ============= */}
-      <section id="top" className="relative min-h-[100svh] flex items-center pt-16 sm:pt-20">
+      <section id="top" className="relative flex min-h-[100svh] items-center pt-20 pb-8 sm:pt-24 sm:pb-12 lg:min-h-[min(900px,100svh)]">
           <div className="absolute inset-0">
           <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
@@ -185,44 +185,41 @@ const Landing: React.FC = () => {
             <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-7 md:py-10 flex flex-col items-center text-center w-full">
-          <div className="space-y-2.5 sm:space-y-3.5 md:space-y-5 animate-fade-in max-w-5xl">
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-4 py-4 text-center sm:px-6 sm:py-6 md:py-8">
+          <div className="animate-fade-in w-full max-w-[68rem] space-y-3 sm:space-y-4 md:space-y-5">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
-            <h1 className="font-display font-bold leading-[0.95] tracking-tight [text-wrap:balance]">
-              <span className="block text-[clamp(2.65rem,8vw,6rem)] break-words">
+            <h1 className="mx-auto max-w-[14ch] font-display font-bold leading-none tracking-tight [text-wrap:balance]">
+              <span className="block text-[clamp(3rem,10vw,7rem)] break-words">
                 <span className="text-white">Super</span>
                 <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
               </span>
-              <span className="block mt-2 text-[clamp(1.25rem,3.6vw,2.5rem)] text-white font-semibold leading-tight">
-                Global Mobility, Orchestrated.
-              </span>
-              <span className="block mt-1 text-sm sm:text-lg md:text-xl text-[hsl(var(--gold-light))] font-semibold leading-snug">
-                Your borderless life, with One app.
+              <span className="mx-auto mt-3 block max-w-[22ch] text-[clamp(1.35rem,4vw,3rem)] font-semibold leading-tight text-white">
+                Your borderless life, one app.
               </span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-[hsl(30_12%_82%)] leading-snug sm:leading-relaxed max-w-3xl mx-auto [text-wrap:balance]">
-              The world’s first Proactive Mobility Ecosystem — one Agentic Intelligence for identity, residency, travel and lifestyle logistics in real time.
+            <p className="mx-auto max-w-[46rem] text-sm leading-relaxed text-[hsl(30_12%_84%)] [text-wrap:balance] sm:text-base md:text-lg">
+              One secure AI command layer for identity, residency, travel, safety and lifestyle logistics — designed for people whose life moves across borders.
             </p>
-            <p className="text-xs sm:text-sm md:text-base text-[hsl(30_12%_76%)] leading-snug sm:leading-relaxed max-w-3xl mx-auto [text-wrap:balance]">
-              Built for <strong className="text-white">850 million global professionals</strong>: tax status, border clearance, flights, suites and dining arranged through one secure command layer.
+            <p className="mx-auto max-w-[42rem] text-xs leading-relaxed text-[hsl(30_12%_76%)] [text-wrap:balance] sm:text-sm md:text-base">
+              Track tax days, protect documents, manage border deadlines and coordinate plans from a single calm workspace.
             </p>
 
-            <div className="flex flex-wrap gap-2 sm:gap-3 pt-1 justify-center">
+            <div className="flex flex-col items-stretch justify-center gap-2 pt-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
               <button type="button" onClick={() => setFilmMode('teaser')}>
-                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.5)] bg-[hsl(220_22%_8%/0.35)] text-white hover:bg-[hsl(43_96%_56%/0.12)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
+                <Button size="lg" variant="outline" className="w-full border-[hsl(43_96%_56%/0.5)] bg-[hsl(220_22%_8%/0.35)] px-5 py-4 text-sm text-white hover:bg-[hsl(43_96%_56%/0.12)] hover:text-white sm:w-auto sm:px-7 sm:py-5 sm:text-base">
                   <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[hsl(var(--gold))]" /> Watch teaser
                 </Button>
               </button>
               <Link to="/app">
-                <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
+                <Button size="lg" className="w-full bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.02] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
                   <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
               <button type="button" onClick={() => setFilmMode('full')}>
-                <Button size="lg" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white text-sm sm:text-base px-5 sm:px-7 py-4 sm:py-5">
+                <Button size="lg" variant="outline" className="w-full border-[hsl(43_96%_56%/0.4)] bg-transparent px-5 py-4 text-sm text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white sm:w-auto sm:px-7 sm:py-5 sm:text-base">
                   Longer film
                 </Button>
               </button>
