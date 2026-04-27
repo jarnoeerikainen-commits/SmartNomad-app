@@ -17,17 +17,17 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
   const title = surface === 'pulse' ? 'Pulse AI Agent Ops' : 'Vibe AI Agent Ops';
 
   return (
-    <Card className="border-primary/50 bg-card shadow-large ring-1 ring-primary/15">
+    <Card className="border-[hsl(var(--gold)/0.22)] bg-[hsl(220_22%_6%)] shadow-large ring-1 ring-[hsl(var(--gold)/0.12)]">
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2 text-base text-foreground">
-              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/15 text-primary ring-1 ring-primary/30">
+            <CardTitle className="flex items-center gap-2 text-base text-[hsl(30_12%_95%)]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[hsl(var(--gold)/0.16)] text-[hsl(var(--gold))] ring-1 ring-[hsl(var(--gold)/0.34)]">
                 <Zap className="h-4 w-4" />
               </span>
               {title}
             </CardTitle>
-            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-foreground/80">
+            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-[hsl(30_12%_78%)]">
               Optimized for compact context, verified-only decisions, live proof logs, safety alarms, and weekly quality reporting.
             </p>
           </div>
@@ -51,34 +51,34 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
       <CardContent className="space-y-4">
         <div className="grid gap-3 md:grid-cols-4">
           {metrics.map((metric) => (
-            <div key={metric.label} className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
+            <div key={metric.label} className="rounded-md border border-[hsl(var(--gold)/0.18)] bg-[hsl(220_22%_8%)] p-3 shadow-sm">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] uppercase tracking-wider text-foreground/75">{metric.label}</span>
-                <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-primary/15 text-primary">
+                <span className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_68%)]">{metric.label}</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))]">
                   <Database className="h-3.5 w-3.5" />
                 </span>
               </div>
-              <div className="mt-2 text-base font-bold text-foreground">{metric.value}</div>
-              <p className="mt-1 text-[11px] leading-snug text-foreground/80">{metric.detail}</p>
+              <div className="mt-2 text-base font-bold text-[hsl(30_12%_96%)]">{metric.value}</div>
+              <p className="mt-1 text-[11px] leading-snug text-[hsl(30_12%_74%)]">{metric.detail}</p>
             </div>
           ))}
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
-            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-foreground">
-              <LineChart className="h-4 w-4 text-primary" /> Weekly quality, safety and token graph
+          <div className="rounded-md border border-[hsl(var(--gold)/0.18)] bg-[hsl(220_22%_8%)] p-3 shadow-sm">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-[hsl(30_12%_92%)]">
+              <LineChart className="h-4 w-4 text-[hsl(var(--gold))]" /> Weekly quality, safety and token graph
             </div>
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={reports} margin={{ top: 6, right: 8, left: -22, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                  <XAxis dataKey="period" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--gold) / 0.16)" />
+                  <XAxis dataKey="period" tick={{ fontSize: 10, fill: 'hsl(30 12% 68%)' }} />
+                  <YAxis tick={{ fontSize: 10, fill: 'hsl(30 12% 68%)' }} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="quality" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.18)" name="Quality" />
-                  <Area type="monotone" dataKey="safety" stroke="hsl(var(--success))" fill="hsl(var(--success) / 0.14)" name="Safety" />
-                  <Area type="monotone" dataKey="tokens" stroke="hsl(var(--accent-foreground))" fill="hsl(var(--accent) / 0.22)" name="Tokens" />
+                  <Area type="monotone" dataKey="quality" stroke="hsl(var(--gold))" fill="hsl(var(--gold) / 0.16)" name="Quality" />
+                  <Area type="monotone" dataKey="safety" stroke="hsl(var(--success))" fill="hsl(var(--success) / 0.12)" name="Safety" />
+                  <Area type="monotone" dataKey="tokens" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.14)" name="Tokens" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -86,15 +86,15 @@ export function CommunityAgentOpsPanel({ surface, onAddPicture }: CommunityAgent
 
           <div className="space-y-2">
             {alerts.map((alert) => (
-              <div key={alert.title} className="rounded-md border border-primary/25 bg-background p-3 shadow-sm">
+              <div key={alert.title} className="rounded-md border border-[hsl(var(--gold)/0.18)] bg-[hsl(220_22%_8%)] p-3 shadow-sm">
                 <div className="flex items-center gap-2">
-                  {alert.level === 'healthy' ? <ShieldCheck className="h-4 w-4 text-success" /> : <Bell className="h-4 w-4 text-primary" />}
-                  <Badge variant={alert.level === 'critical' ? 'destructive' : 'outline'} className="text-[10px] uppercase">
+                  {alert.level === 'healthy' ? <ShieldCheck className="h-4 w-4 text-emerald-300" /> : <Bell className="h-4 w-4 text-[hsl(var(--gold))]" />}
+                  <Badge variant={alert.level === 'critical' ? 'destructive' : 'outline'} className="border-[hsl(var(--gold)/0.24)] text-[10px] uppercase text-[hsl(30_12%_86%)]">
                     {alert.level}
                   </Badge>
-                  <span className="text-xs font-semibold text-foreground">{alert.title}</span>
+                  <span className="text-xs font-semibold text-[hsl(30_12%_94%)]">{alert.title}</span>
                 </div>
-                <p className="mt-1 text-[11px] leading-snug text-foreground/80">{alert.detail}</p>
+                <p className="mt-1 text-[11px] leading-snug text-[hsl(30_12%_74%)]">{alert.detail}</p>
               </div>
             ))}
           </div>
