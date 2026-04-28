@@ -40,19 +40,13 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
-      <SovereignAccessNudge onOpen={() => onNavigate('sovereign-access')} />
+      {showThreat && <ThreatDashboard />}
       <SuperNomadCallCard onNavigate={onNavigate} />
-      {/* Top row: Threat + Welcome */}
-      {(showThreat || showWelcome) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {showThreat && (
-            <div className="order-1">
-              <ThreatDashboard />
-            </div>
-          )}
+      <SovereignAccessNudge onOpen={() => onNavigate('sovereign-access')} />
 
-          {showWelcome && (
-            <div className={`${showThreat ? 'order-2' : 'order-1 md:col-span-2'} space-y-6`}>
+      {/* Welcome */}
+      {showWelcome && (
+        <div className="space-y-6">
               <div className="text-center space-y-4 mb-10 pt-2">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -69,8 +63,6 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
               </div>
 
               <DashboardHeroCards onNavigate={onNavigate} />
-            </div>
-          )}
         </div>
       )}
 
