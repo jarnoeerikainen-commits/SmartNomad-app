@@ -49,7 +49,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { isVisible } = useFeaturePreferences();
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['premium', 'travel', 'local']);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'tax', 'premium', 'travel', 'local']);
   const ageGroup = typeof window !== 'undefined' ? localStorage.getItem('ageGroup') || 'adult' : 'adult';
   const isTeenRestricted = ageGroup === 'teen';
   
@@ -84,13 +84,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'admin', label: 'Back Office', icon: Briefcase, badge: 'STAFF', variant: 'default' as const },
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'customize', label: 'Customize App', icon: BarChart3 },
-        { id: 'integrations', label: 'Integrations Hub', icon: Plug, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'corporate', label: 'Corporate Travel', icon: Briefcase, badge: 'B2B', variant: 'default' as const },
-        { id: 'lifestyle-hub', label: 'Lifestyle Intelligence', icon: Sparkles, badge: 'AI', variant: 'secondary' as const },
-        { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
-        { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
-        { id: 'sovereign-access', label: 'Sovereign Access', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
-        { id: 'travel-inbox', label: 'Travel Inbox', icon: Mail, badge: 'NEW', variant: 'secondary' as const },
       ]
     },
     {
@@ -123,6 +116,19 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
         { id: 'gov-apps', label: 'Government Apps', icon: Building },
         { id: 'tax-wealthy', label: 'Tax & Wealth Help', icon: DollarSign },
+      ]
+    },
+    {
+      id: 'mainMore',
+      label: t('sidebar.quick_actions'),
+      items: [
+        { id: 'integrations', label: 'Integrations Hub', icon: Plug, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'corporate', label: 'Corporate Travel', icon: Briefcase, badge: 'B2B', variant: 'default' as const },
+        { id: 'lifestyle-hub', label: 'Lifestyle Intelligence', icon: Sparkles, badge: 'AI', variant: 'secondary' as const },
+        { id: 'upgrade', label: t('sidebar.upgrade_plan'), icon: TrendingUp, badge: 'PRO', variant: 'secondary' as const },
+        { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, badge: 'VAULT', variant: 'secondary' as const },
+        { id: 'sovereign-access', label: 'Sovereign Access', icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
+        { id: 'travel-inbox', label: 'Travel Inbox', icon: Mail, badge: 'NEW', variant: 'secondary' as const },
       ]
     },
     {
