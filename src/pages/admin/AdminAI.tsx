@@ -179,6 +179,24 @@ const AdminAI: React.FC = () => {
         </Card>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" /> IMMUTABLE AUDIT TRAIL</div>
+          <div className="text-2xl font-bold text-emerald-300 mt-1">{fmt(stats.immutable)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">locked proofs with retention policy</div>
+        </Card>
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><AlertTriangle className="h-3.5 w-3.5 text-amber-300" /> ESCALATIONS</div>
+          <div className="text-2xl font-bold text-amber-300 mt-1">{fmt(stats.escalations)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">errors, safety gates, human handoffs</div>
+        </Card>
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> HUMAN APPROVALS</div>
+          <div className="text-2xl font-bold text-[hsl(var(--gold))] mt-1">{fmt(stats.approvals)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">approved, denied, pending, expired</div>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4 lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
@@ -221,13 +239,13 @@ const AdminAI: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(43_96%_56%/0.15)] hover:bg-transparent">
-                <TableHead>Surface</TableHead><TableHead>Agent</TableHead><TableHead>Model</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Tokens</TableHead><TableHead className="text-right">Cost</TableHead><TableHead>Verification</TableHead>
+                <TableHead>Category</TableHead><TableHead>Surface</TableHead><TableHead>Agent</TableHead><TableHead>Model</TableHead><TableHead>Status</TableHead><TableHead>Confidence</TableHead><TableHead>Approval</TableHead><TableHead>Sources</TableHead><TableHead>Excerpt</TableHead><TableHead>Hash</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {proofs.slice(0, 12).map((p) => (
                 <TableRow key={p.run_ref} className="border-[hsl(43_96%_56%/0.1)]">
-                  <TableCell>{p.surface}</TableCell><TableCell>{p.primary_agent}</TableCell><TableCell className="font-mono text-xs text-[hsl(var(--gold))]">{p.model || '—'}</TableCell><TableCell><Badge className={p.status === 'completed' ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : p.status === 'failed' ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))] border-[hsl(var(--gold)/0.3)]'}>{p.status}</Badge></TableCell><TableCell className="text-right">{fmt((p.input_tokens || 0) + (p.output_tokens || 0))}</TableCell><TableCell className="text-right">${Number(p.estimated_cost_usd || 0).toFixed(4)}</TableCell><TableCell className="max-w-[320px] truncate text-xs text-[hsl(30_12%_70%)]">{p.verification_note || 'Verified-only proof stored'}</TableCell>
+                  <TableCell className="font-mono text-xs">{p.request_category || 'general_ai'}</TableCell><TableCell>{p.surface}</TableCell><TableCell>{p.primary_agent}</TableCell><TableCell className="font-mono text-xs text-[hsl(var(--gold))]">{p.model || '—'}</TableCell><TableCell><Badge className={p.status === 'completed' ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : p.status === 'failed' ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))] border-[hsl(var(--gold)/0.3)]'}>{p.status}</Badge></TableCell><TableCell><Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30">{p.confidence_status || 'unverified'}</Badge></TableCell><TableCell className="text-xs">{p.human_approval_state || 'not_required'}</TableCell><TableCell className="text-xs">{Array.isArray(p.data_sources) ? p.data_sources.length : 0}</TableCell><TableCell className="max-w-[260px] truncate text-xs text-[hsl(30_12%_70%)]">{p.response_excerpt || p.verification_note || 'Proof stored'}</TableCell><TableCell className="font-mono text-[10px] text-[hsl(30_12%_60%)]">{p.proof_hash?.slice(0, 10) || '—'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
