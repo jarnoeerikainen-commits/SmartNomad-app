@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Loader2, Bot, Activity, Zap, Database, ShieldCheck, DollarSign, Timer } from 'lucide-react';
+import { Loader2, Bot, Activity, Zap, Database, ShieldCheck, DollarSign, Timer, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { getAdminDemoDataset, type DemoAIUsage } from '@/utils/adminDemoData';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from 'recharts';
 
@@ -23,6 +23,16 @@ type AIProof = {
   latency_ms: number;
   estimated_cost_usd: number;
   verification_note: string | null;
+  request_category?: string | null;
+  tools_actions?: unknown[];
+  data_sources?: unknown[];
+  confidence_status?: string | null;
+  human_approval_state?: string | null;
+  escalation_type?: string | null;
+  response_excerpt?: string | null;
+  proof_hash?: string | null;
+  retention_until?: string | null;
+  immutable_locked?: boolean;
   created_at: string;
 };
 
@@ -42,7 +52,7 @@ const AdminAI: React.FC = () => {
           .limit(5000),
         (supabase as any)
           .from('ai_execution_proofs')
-          .select('run_ref,surface,function_name,primary_agent,status,model,input_tokens,output_tokens,latency_ms,estimated_cost_usd,verification_note,created_at')
+          .select('run_ref,surface,function_name,primary_agent,status,model,input_tokens,output_tokens,latency_ms,estimated_cost_usd,verification_note,request_category,tools_actions,data_sources,confidence_status,human_approval_state,escalation_type,response_excerpt,proof_hash,retention_until,immutable_locked,created_at')
           .gte('created_at', new Date(Date.now() - 14 * 86400_000).toISOString())
           .order('created_at', { ascending: false })
           .limit(200),
@@ -87,6 +97,9 @@ const AdminAI: React.FC = () => {
       proofCost: proofs.reduce((sum, r) => sum + Number(r.estimated_cost_usd || 0), 0),
       avgLatency: proofs.length ? Math.round(proofs.reduce((sum, r) => sum + (r.latency_ms || 0), 0) / proofs.length) : 0,
       models: new Set(proofs.map((r) => r.model).filter(Boolean)).size,
+      escalations: proofs.filter((r) => r.escalation_type || r.confidence_status === 'escalated').length,
+      approvals: proofs.filter((r) => r.human_approval_state && r.human_approval_state !== 'not_required').length,
+      immutable: proofs.filter((r) => r.immutable_locked).length,
     };
   }, [rows, proofs]);
 
