@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+import { auditedAIGatewayJSON } from "../_shared/aiAudit.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,12 +30,6 @@ serve(async (req) => {
     }
     const rooms = Array.isArray(body.rooms) ? body.rooms.slice(0, MAX_ARRAY) : [];
     const moveRequest = body.moveRequest && typeof body.moveRequest === 'object' ? body.moveRequest : {};
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
-    if (!LOVABLE_API_KEY) {
-      throw new Error('Service configuration error');
-    }
-
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
@@ -68,13 +63,18 @@ Provide realistic cost estimate with min/max range and breakdown by: shipping, p
 Respond in JSON format.`;
     }
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const { data, response } = await auditedAIGatewayJSON({
+      functionName: 'moving-ai-assistant',
+      surface: 'Moving Services',
+      route: '/moving-ai-assistant',
+      primaryAgent: 'Moving Consultant AI',
+      requestCategory: action === 'assess-inventory' ? 'moving_inventory_assessment' : 'moving_price_estimate',
+      command: `${action}: ${userPrompt.slice(0, 900)}`,
+      toolsActions: ['inventory_analysis', 'cost_estimation', 'structured_json_output'],
+      dataSources: ['user_supplied_inventory', 'user_supplied_route', 'moving_estimation_rules'],
+      confidenceStatus: 'partially_verified',
+      verificationNote: 'Estimate generated from user-supplied move data; carrier quote required before booking.',
+    }, {
         model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: withTruthProtocol(systemPrompt) },
@@ -82,7 +82,6 @@ Respond in JSON format.`;
         ],
         temperature: 0.7,
         max_tokens: 1500
-      }),
     });
 
     if (!response.ok) {
@@ -91,7 +90,6 @@ Respond in JSON format.`;
       throw new Error(`AI gateway error: ${response.status}`);
     }
 
-    const data = await response.json();
     const aiResponse = data.choices[0].message.content;
 
     // Try to parse JSON response
