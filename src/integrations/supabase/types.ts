@@ -4310,6 +4310,66 @@ export type Database = {
         }
         Relationships: []
       }
+      production_resilience_checks: {
+        Row: {
+          backup_region: string | null
+          check_key: string
+          check_type: string
+          created_at: string
+          environment: string
+          evidence: Json
+          id: string
+          last_checked_at: string | null
+          next_due_at: string | null
+          notes: string | null
+          owner_role: string
+          primary_region: string | null
+          provider: string
+          runbook_url: string | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          backup_region?: string | null
+          check_key: string
+          check_type: string
+          created_at?: string
+          environment?: string
+          evidence?: Json
+          id?: string
+          last_checked_at?: string | null
+          next_due_at?: string | null
+          notes?: string | null
+          owner_role?: string
+          primary_region?: string | null
+          provider?: string
+          runbook_url?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          backup_region?: string | null
+          check_key?: string
+          check_type?: string
+          created_at?: string
+          environment?: string
+          evidence?: Json
+          id?: string
+          last_checked_at?: string | null
+          next_due_at?: string | null
+          notes?: string | null
+          owner_role?: string
+          primary_region?: string | null
+          provider?: string
+          runbook_url?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
