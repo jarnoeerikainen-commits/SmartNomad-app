@@ -36,6 +36,18 @@ type AIProof = {
   created_at: string;
 };
 
+const demoProofs: AIProof[] = [
+  {
+    run_ref: 'demo-proof-cyber-guardian', surface: 'Cyber Guardian', function_name: 'cyber-assistant', primary_agent: 'Cyber Guardian', status: 'completed', model: 'google/gemini-3-flash-preview', input_tokens: 1240, output_tokens: 680, latency_ms: 1380, estimated_cost_usd: 0.0011, verification_note: 'Demo: emergency protocol and escalation guidance logged.', request_category: 'safety_emergency_cybersecurity', tools_actions: ['risk_triage', 'emergency_steps', 'escalation_guidance'], data_sources: ['user_message_context', 'cyber_emergency_protocols'], confidence_status: 'partially_verified', human_approval_state: 'not_required', escalation_type: 'human_or_authority_if_critical', response_excerpt: 'Critical device theft steps delivered with bank, SIM, police and account-security actions.', proof_hash: 'demo7f3a91b2c4d5', retention_until: new Date(Date.now() + 6 * 365 * 86400_000).toISOString(), immutable_locked: true, created_at: new Date(Date.now() - 12 * 60_000).toISOString(),
+  },
+  {
+    run_ref: 'demo-proof-travel-planner', surface: 'Travel Planner', function_name: 'travel-planner', primary_agent: 'Voyager Pro', status: 'completed', model: 'google/gemini-3-flash-preview', input_tokens: 3120, output_tokens: 1180, latency_ms: 2240, estimated_cost_usd: 0.0023, verification_note: 'Demo: safety, holidays and booking-link checks logged.', request_category: 'travel_plan_generation', tools_actions: ['safety_protocol_check', 'school_holiday_check', 'booking_link_generation'], data_sources: ['destination_profile', 'school_holiday_pack', 'official_advisory_prompt_rules'], confidence_status: 'partially_verified', human_approval_state: 'not_required', escalation_type: 'danger_gate_if_level_4', response_excerpt: 'Trip plan streamed with safety/insurance constraints and booking search links.', proof_hash: 'demo1ab93fe77d02', retention_until: new Date(Date.now() + 6 * 365 * 86400_000).toISOString(), immutable_locked: true, created_at: new Date(Date.now() - 23 * 60_000).toISOString(),
+  },
+  {
+    run_ref: 'demo-proof-marketplace', surface: 'Marketplace', function_name: 'marketplace-ai', primary_agent: 'Marketplace Pricing AI', status: 'completed', model: 'google/gemini-3-flash-preview', input_tokens: 760, output_tokens: 240, latency_ms: 910, estimated_cost_usd: 0.0005, verification_note: 'Demo: seller-controlled price suggestion logged.', request_category: 'marketplace_pricing', tools_actions: ['price_suggestion', 'json_extraction'], data_sources: ['user_listing_details', 'marketplace_pricing_prompt_rules'], confidence_status: 'partially_verified', human_approval_state: 'not_required', escalation_type: null, response_excerpt: 'Suggested resale price with confidence and reasoning.', proof_hash: 'demo97ef0aa31b66', retention_until: new Date(Date.now() + 6 * 365 * 86400_000).toISOString(), immutable_locked: true, created_at: new Date(Date.now() - 35 * 60_000).toISOString(),
+  },
+];
+
 const AdminAI: React.FC = () => {
   const [rows, setRows] = useState<DemoAIUsage[]>([]);
   const [proofs, setProofs] = useState<AIProof[]>([]);
@@ -58,7 +70,8 @@ const AdminAI: React.FC = () => {
           .limit(200),
       ]);
 
-      if (!proofResult.error) setProofs((proofResult.data || []) as AIProof[]);
+      if (!proofResult.error && proofResult.data?.length) setProofs(proofResult.data as AIProof[]);
+      else setProofs(demoProofs);
 
       const demo = getAdminDemoDataset().aiUsage;
       if (data && data.length > 0) {
