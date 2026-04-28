@@ -208,12 +208,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const teenHiddenItems = ['social-chat', 'nomad-chat', 'marketplace'];
 
   const menuGroups = menuGroupsRaw.map(group => {
-    if (group.id === 'main') return group; // System group, always show
+    if (group.id === 'main' || group.id === 'mainMore') return group; // System groups, always show
     if (isTeenRestricted && teenHiddenGroups.includes(group.id)) return { ...group, items: [] };
     let items = group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id));
     if (isTeenRestricted) items = items.filter(item => !teenHiddenItems.includes(item.id));
     return { ...group, items };
-  }).filter(group => group.id === 'main' || group.items.length > 0);
+  }).filter(group => group.id === 'main' || group.id === 'mainMore' || group.items.length > 0);
   
   return (
     <>
@@ -235,7 +235,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
             {menuGroups.map((group) => {
-              if (group.id === 'main') {
+              if (group.id === 'main' || group.id === 'mainMore') {
                 return (
                   <div key={group.id} className="space-y-1 mb-4">
                     {group.items.map((item) => {
