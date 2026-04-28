@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
-import { Loader2, Bot, Activity, Zap, Database, ShieldCheck, DollarSign, Timer } from 'lucide-react';
+import { Loader2, Bot, Activity, Zap, Database, ShieldCheck, DollarSign, Timer, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { getAdminDemoDataset, type DemoAIUsage } from '@/utils/adminDemoData';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from 'recharts';
 
@@ -23,6 +23,16 @@ type AIProof = {
   latency_ms: number;
   estimated_cost_usd: number;
   verification_note: string | null;
+  request_category?: string | null;
+  tools_actions?: unknown[];
+  data_sources?: unknown[];
+  confidence_status?: string | null;
+  human_approval_state?: string | null;
+  escalation_type?: string | null;
+  response_excerpt?: string | null;
+  proof_hash?: string | null;
+  retention_until?: string | null;
+  immutable_locked?: boolean;
   created_at: string;
 };
 
@@ -42,7 +52,7 @@ const AdminAI: React.FC = () => {
           .limit(5000),
         (supabase as any)
           .from('ai_execution_proofs')
-          .select('run_ref,surface,function_name,primary_agent,status,model,input_tokens,output_tokens,latency_ms,estimated_cost_usd,verification_note,created_at')
+          .select('run_ref,surface,function_name,primary_agent,status,model,input_tokens,output_tokens,latency_ms,estimated_cost_usd,verification_note,request_category,tools_actions,data_sources,confidence_status,human_approval_state,escalation_type,response_excerpt,proof_hash,retention_until,immutable_locked,created_at')
           .gte('created_at', new Date(Date.now() - 14 * 86400_000).toISOString())
           .order('created_at', { ascending: false })
           .limit(200),
@@ -87,6 +97,9 @@ const AdminAI: React.FC = () => {
       proofCost: proofs.reduce((sum, r) => sum + Number(r.estimated_cost_usd || 0), 0),
       avgLatency: proofs.length ? Math.round(proofs.reduce((sum, r) => sum + (r.latency_ms || 0), 0) / proofs.length) : 0,
       models: new Set(proofs.map((r) => r.model).filter(Boolean)).size,
+      escalations: proofs.filter((r) => r.escalation_type || r.confidence_status === 'escalated').length,
+      approvals: proofs.filter((r) => r.human_approval_state && r.human_approval_state !== 'not_required').length,
+      immutable: proofs.filter((r) => r.immutable_locked).length,
     };
   }, [rows, proofs]);
 
@@ -166,6 +179,24 @@ const AdminAI: React.FC = () => {
         </Card>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" /> IMMUTABLE AUDIT TRAIL</div>
+          <div className="text-2xl font-bold text-emerald-300 mt-1">{fmt(stats.immutable)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">locked proofs with retention policy</div>
+        </Card>
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><AlertTriangle className="h-3.5 w-3.5 text-amber-300" /> ESCALATIONS</div>
+          <div className="text-2xl font-bold text-amber-300 mt-1">{fmt(stats.escalations)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">errors, safety gates, human handoffs</div>
+        </Card>
+        <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4">
+          <div className="flex items-center gap-2 text-xs text-[hsl(30_12%_70%)]"><ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--gold))]" /> HUMAN APPROVALS</div>
+          <div className="text-2xl font-bold text-[hsl(var(--gold))] mt-1">{fmt(stats.approvals)}</div>
+          <div className="text-xs text-[hsl(30_12%_60%)] mt-1">approved, denied, pending, expired</div>
+        </Card>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <Card className="bg-[hsl(220_22%_10%)] border-[hsl(43_96%_56%/0.15)] p-4 lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
@@ -208,13 +239,13 @@ const AdminAI: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-[hsl(43_96%_56%/0.15)] hover:bg-transparent">
-                <TableHead>Surface</TableHead><TableHead>Agent</TableHead><TableHead>Model</TableHead><TableHead>Status</TableHead><TableHead className="text-right">Tokens</TableHead><TableHead className="text-right">Cost</TableHead><TableHead>Verification</TableHead>
+                <TableHead>Category</TableHead><TableHead>Surface</TableHead><TableHead>Agent</TableHead><TableHead>Model</TableHead><TableHead>Status</TableHead><TableHead>Confidence</TableHead><TableHead>Approval</TableHead><TableHead>Sources</TableHead><TableHead>Excerpt</TableHead><TableHead>Hash</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {proofs.slice(0, 12).map((p) => (
                 <TableRow key={p.run_ref} className="border-[hsl(43_96%_56%/0.1)]">
-                  <TableCell>{p.surface}</TableCell><TableCell>{p.primary_agent}</TableCell><TableCell className="font-mono text-xs text-[hsl(var(--gold))]">{p.model || '—'}</TableCell><TableCell><Badge className={p.status === 'completed' ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : p.status === 'failed' ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))] border-[hsl(var(--gold)/0.3)]'}>{p.status}</Badge></TableCell><TableCell className="text-right">{fmt((p.input_tokens || 0) + (p.output_tokens || 0))}</TableCell><TableCell className="text-right">${Number(p.estimated_cost_usd || 0).toFixed(4)}</TableCell><TableCell className="max-w-[320px] truncate text-xs text-[hsl(30_12%_70%)]">{p.verification_note || 'Verified-only proof stored'}</TableCell>
+                  <TableCell className="font-mono text-xs">{p.request_category || 'general_ai'}</TableCell><TableCell>{p.surface}</TableCell><TableCell>{p.primary_agent}</TableCell><TableCell className="font-mono text-xs text-[hsl(var(--gold))]">{p.model || '—'}</TableCell><TableCell><Badge className={p.status === 'completed' ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : p.status === 'failed' ? 'bg-rose-500/15 text-rose-300 border-rose-500/30' : 'bg-[hsl(var(--gold)/0.14)] text-[hsl(var(--gold))] border-[hsl(var(--gold)/0.3)]'}>{p.status}</Badge></TableCell><TableCell><Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30">{p.confidence_status || 'unverified'}</Badge></TableCell><TableCell className="text-xs">{p.human_approval_state || 'not_required'}</TableCell><TableCell className="text-xs">{Array.isArray(p.data_sources) ? p.data_sources.length : 0}</TableCell><TableCell className="max-w-[260px] truncate text-xs text-[hsl(30_12%_70%)]">{p.response_excerpt || p.verification_note || 'Proof stored'}</TableCell><TableCell className="font-mono text-[10px] text-[hsl(30_12%_60%)]">{p.proof_hash?.slice(0, 10) || '—'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

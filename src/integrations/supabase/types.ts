@@ -1797,16 +1797,25 @@ export type Database = {
         Row: {
           answer_agents: Json
           answer_sources: Json
+          audit_schema_version: number
           cache_hit: boolean
           command: string
           completed_at: string | null
           confidence_policy: string
+          confidence_status: string
           created_at: string
+          data_sources: Json
           directors: Json
           error: string | null
+          escalation_reason: string | null
+          escalation_type: string | null
           estimated_cost_usd: number
           function_name: string | null
+          human_approval_actor: string | null
+          human_approval_at: string | null
+          human_approval_state: string
           id: string
+          immutable_locked: boolean
           input_tokens: number
           latency_ms: number
           model: string | null
@@ -1814,7 +1823,9 @@ export type Database = {
           persona: string
           primary_agent: string
           proof_hash: string
+          request_category: string
           response_excerpt: string | null
+          retention_until: string
           route: string
           run_ref: string
           sources: Json
@@ -1822,6 +1833,7 @@ export type Database = {
           status: string
           steps: Json
           surface: string
+          tools_actions: Json
           updated_at: string
           user_alias: string
           verification_note: string | null
@@ -1830,16 +1842,25 @@ export type Database = {
         Insert: {
           answer_agents?: Json
           answer_sources?: Json
+          audit_schema_version?: number
           cache_hit?: boolean
           command: string
           completed_at?: string | null
           confidence_policy?: string
+          confidence_status?: string
           created_at?: string
+          data_sources?: Json
           directors?: Json
           error?: string | null
+          escalation_reason?: string | null
+          escalation_type?: string | null
           estimated_cost_usd?: number
           function_name?: string | null
+          human_approval_actor?: string | null
+          human_approval_at?: string | null
+          human_approval_state?: string
           id?: string
+          immutable_locked?: boolean
           input_tokens?: number
           latency_ms?: number
           model?: string | null
@@ -1847,7 +1868,9 @@ export type Database = {
           persona?: string
           primary_agent: string
           proof_hash: string
+          request_category?: string
           response_excerpt?: string | null
+          retention_until?: string
           route: string
           run_ref: string
           sources?: Json
@@ -1855,6 +1878,7 @@ export type Database = {
           status?: string
           steps?: Json
           surface: string
+          tools_actions?: Json
           updated_at?: string
           user_alias?: string
           verification_note?: string | null
@@ -1863,16 +1887,25 @@ export type Database = {
         Update: {
           answer_agents?: Json
           answer_sources?: Json
+          audit_schema_version?: number
           cache_hit?: boolean
           command?: string
           completed_at?: string | null
           confidence_policy?: string
+          confidence_status?: string
           created_at?: string
+          data_sources?: Json
           directors?: Json
           error?: string | null
+          escalation_reason?: string | null
+          escalation_type?: string | null
           estimated_cost_usd?: number
           function_name?: string | null
+          human_approval_actor?: string | null
+          human_approval_at?: string | null
+          human_approval_state?: string
           id?: string
+          immutable_locked?: boolean
           input_tokens?: number
           latency_ms?: number
           model?: string | null
@@ -1880,7 +1913,9 @@ export type Database = {
           persona?: string
           primary_agent?: string
           proof_hash?: string
+          request_category?: string
           response_excerpt?: string | null
+          retention_until?: string
           route?: string
           run_ref?: string
           sources?: Json
@@ -1888,6 +1923,7 @@ export type Database = {
           status?: string
           steps?: Json
           surface?: string
+          tools_actions?: Json
           updated_at?: string
           user_alias?: string
           verification_note?: string | null
@@ -5235,6 +5271,105 @@ export type Database = {
           },
         ]
       }
+      ai_transparency_audit_view: {
+        Row: {
+          audit_schema_version: number | null
+          completed_at: string | null
+          confidence_status: string | null
+          created_at: string | null
+          data_sources: Json | null
+          error: string | null
+          escalation_reason: string | null
+          escalation_type: string | null
+          estimated_cost_usd: number | null
+          function_name: string | null
+          human_approval_actor: string | null
+          human_approval_at: string | null
+          human_approval_state: string | null
+          id: string | null
+          immutable_locked: boolean | null
+          input_tokens: number | null
+          latency_ms: number | null
+          model: string | null
+          output_tokens: number | null
+          primary_agent: string | null
+          proof_hash: string | null
+          request_category: string | null
+          response_excerpt: string | null
+          retention_until: string | null
+          route: string | null
+          run_ref: string | null
+          status: string | null
+          surface: string | null
+          tools_actions: Json | null
+          verification_note: string | null
+        }
+        Insert: {
+          audit_schema_version?: number | null
+          completed_at?: string | null
+          confidence_status?: string | null
+          created_at?: string | null
+          data_sources?: Json | null
+          error?: string | null
+          escalation_reason?: string | null
+          escalation_type?: string | null
+          estimated_cost_usd?: number | null
+          function_name?: string | null
+          human_approval_actor?: string | null
+          human_approval_at?: string | null
+          human_approval_state?: string | null
+          id?: string | null
+          immutable_locked?: boolean | null
+          input_tokens?: number | null
+          latency_ms?: number | null
+          model?: string | null
+          output_tokens?: number | null
+          primary_agent?: string | null
+          proof_hash?: string | null
+          request_category?: string | null
+          response_excerpt?: string | null
+          retention_until?: string | null
+          route?: string | null
+          run_ref?: string | null
+          status?: string | null
+          surface?: string | null
+          tools_actions?: Json | null
+          verification_note?: string | null
+        }
+        Update: {
+          audit_schema_version?: number | null
+          completed_at?: string | null
+          confidence_status?: string | null
+          created_at?: string | null
+          data_sources?: Json | null
+          error?: string | null
+          escalation_reason?: string | null
+          escalation_type?: string | null
+          estimated_cost_usd?: number | null
+          function_name?: string | null
+          human_approval_actor?: string | null
+          human_approval_at?: string | null
+          human_approval_state?: string | null
+          id?: string | null
+          immutable_locked?: boolean | null
+          input_tokens?: number | null
+          latency_ms?: number | null
+          model?: string | null
+          output_tokens?: number | null
+          primary_agent?: string | null
+          proof_hash?: string | null
+          request_category?: string | null
+          response_excerpt?: string | null
+          retention_until?: string | null
+          route?: string | null
+          run_ref?: string | null
+          status?: string | null
+          surface?: string | null
+          tools_actions?: Json | null
+          verification_note?: string | null
+        }
+        Relationships: []
+      }
       oauth_connections_safe: {
         Row: {
           access_token_expires_at: string | null
@@ -5555,6 +5690,24 @@ export type Database = {
           models_used: number
           total_runs: number
           total_tokens: number
+          verified_runs: number
+        }[]
+      }
+      get_ai_transparency_summary: {
+        Args: { p_since?: string }
+        Returns: {
+          approved_by_human: number
+          denied_by_human: number
+          escalated_runs: number
+          failed_runs: number
+          logged_completed: number
+          partially_verified_runs: number
+          pending_human_approval: number
+          retention_covered: number
+          sources_recorded: number
+          tools_recorded: number
+          total_runs: number
+          unverified_runs: number
           verified_runs: number
         }[]
       }

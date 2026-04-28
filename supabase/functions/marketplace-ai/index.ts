@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { auditedAIGatewayJSON } from "../_shared/aiAudit.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,12 +28,6 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const data = body.data && typeof body.data === 'object' ? body.data : {};
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
-    if (!LOVABLE_API_KEY) {
-      throw new Error('Service configuration error');
-    }
-
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
@@ -60,19 +55,23 @@ Provide a JSON response with:
 
 Consider: condition depreciation, local market demand, category popularity, and urgency factors.`;
 
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: aiData, response } = await auditedAIGatewayJSON({
+        functionName: 'marketplace-ai',
+        surface: 'Marketplace',
+        route: '/marketplace-ai',
+        primaryAgent: 'Marketplace Pricing AI',
+        requestCategory: 'marketplace_pricing',
+        command: pricingPrompt,
+        toolsActions: ['price_suggestion', 'json_extraction'],
+        dataSources: ['user_listing_details', 'marketplace_pricing_prompt_rules'],
+        confidenceStatus: 'partially_verified',
+        verificationNote: 'Price suggestion is AI-estimated from user-provided item details; seller remains decision-maker.',
+      }, {
           model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert marketplace pricing AI. Always respond with valid JSON only.` },
             { role: 'user', content: pricingPrompt }
           ],
-        }),
       });
 
       if (!response.ok) {
@@ -91,7 +90,6 @@ Consider: condition depreciation, local market demand, category popularity, and 
         throw new Error('AI service error');
       }
 
-      const aiData = await response.json();
       const content = aiData.choices[0].message.content;
       
       // Extract JSON from response
@@ -134,19 +132,23 @@ Provide JSON:
   "highlights": ["highlight1", "highlight2"]
 }`;
 
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: aiData, response } = await auditedAIGatewayJSON({
+        functionName: 'marketplace-ai',
+        surface: 'Marketplace',
+        route: '/marketplace-ai',
+        primaryAgent: 'Marketplace Copywriter AI',
+        requestCategory: 'marketplace_description',
+        command: descriptionPrompt,
+        toolsActions: ['listing_copy_generation', 'json_extraction'],
+        dataSources: ['user_listing_details', 'marketplace_copy_prompt_rules'],
+        confidenceStatus: 'partially_verified',
+        verificationNote: 'Listing description generated from user-provided item details; seller must verify accuracy before publishing.',
+      }, {
           model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert copywriter for marketplace listings. Always respond with valid JSON only.` },
             { role: 'user', content: descriptionPrompt }
           ],
-        }),
       });
 
       if (!response.ok) {
@@ -165,7 +167,6 @@ Provide JSON:
         throw new Error('AI service error');
       }
 
-      const aiData = await response.json();
       const content = aiData.choices[0].message.content;
       
       // Extract JSON from response

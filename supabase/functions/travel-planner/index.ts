@@ -4,6 +4,7 @@ import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_shared/schoolHolidays.ts";
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
+import { auditedAIGatewayStream } from "../_shared/aiAudit.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,11 +34,6 @@ serve(async (req) => {
     const userProfile = body.userProfile || null;
     const language = sanitize(body.language, 50);
     console.log("Travel planner full-plan request:", destination?.name || "general");
-
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("Service configuration error");
-    }
 
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
@@ -250,20 +246,27 @@ Generate the full plan now.`;
 
     console.log("Calling Lovable AI for full travel plan (streaming)");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: getModel('intelligence'),
+    const model = getModel('intelligence');
+    const { response } = await auditedAIGatewayStream({
+      functionName: 'travel-planner',
+      surface: 'Travel Planner',
+      route: '/travel-planner',
+      primaryAgent: 'Voyager Pro',
+      requestCategory: 'travel_plan_generation',
+      command: userMessage,
+      toolsActions: ['safety_protocol_check', 'school_holiday_check', 'booking_link_generation', 'scope_guard'],
+      dataSources: ['destination_profile', 'user_profile_context', 'school_holiday_pack', 'official_advisory_prompt_rules'],
+      confidenceStatus: 'partially_verified',
+      verificationNote: 'Planner uses verified-only protocol and prompt-level safety checks; user should verify live prices and official advisories before booking.',
+      humanApprovalState: destination ? 'not_required' : 'not_required',
+      escalationType: 'danger_gate_if_level_4',
+    }, {
+        model,
         messages: [
           { role: "system", content: buildScopeGuard('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
           { role: "user", content: userMessage },
         ],
         stream: true,
-      }),
     });
 
     if (!response.ok) {
