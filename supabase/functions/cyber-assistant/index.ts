@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+import { auditedAIGatewayJSON } from "../_shared/aiAudit.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -30,12 +31,6 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const messages = validateMessages(body.messages);
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
-    if (!LOVABLE_API_KEY) {
-      throw new Error('Service configuration error');
-    }
-
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
@@ -82,13 +77,19 @@ For financial fraud:
 
 Always provide specific, actionable advice tailored to the traveler's situation. If location is mentioned, consider local resources and regulations.`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    const { data, response } = await auditedAIGatewayJSON({
+      functionName: 'cyber-assistant',
+      surface: 'Cyber Guardian',
+      route: '/cyber-assistant',
+      primaryAgent: 'Cyber Guardian',
+      requestCategory: 'safety_emergency_cybersecurity',
+      command: messages[messages.length - 1]?.content || 'Cybersecurity assistance request',
+      toolsActions: ['risk_triage', 'emergency_steps', 'escalation_guidance'],
+      dataSources: ['user_message_context', 'cyber_emergency_protocols'],
+      confidenceStatus: 'partially_verified',
+      verificationNote: 'Advice constrained by Cyber Guardian protocol; high-risk emergencies should escalate to banks, embassies, providers, or local authorities.',
+      escalationType: 'human_or_authority_if_critical',
+    }, {
         model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: withTruthProtocol(systemPrompt) },
@@ -96,7 +97,6 @@ Always provide specific, actionable advice tailored to the traveler's situation.
         ],
         temperature: 0.7,
         max_tokens: 1000
-      }),
     });
 
     if (!response.ok) {
@@ -129,7 +129,6 @@ Always provide specific, actionable advice tailored to the traveler's situation.
       throw new Error('AI service error');
     }
 
-    const data = await response.json();
     const aiResponse = data.choices?.[0]?.message?.content || 'I apologize, but I couldn\'t process that request. Please try rephrasing your question.';
 
     return new Response(
