@@ -132,19 +132,23 @@ Provide JSON:
   "highlights": ["highlight1", "highlight2"]
 }`;
 
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: aiData, response } = await auditedAIGatewayJSON({
+        functionName: 'marketplace-ai',
+        surface: 'Marketplace',
+        route: '/marketplace-ai',
+        primaryAgent: 'Marketplace Copywriter AI',
+        requestCategory: 'marketplace_description',
+        command: descriptionPrompt,
+        toolsActions: ['listing_copy_generation', 'json_extraction'],
+        dataSources: ['user_listing_details', 'marketplace_copy_prompt_rules'],
+        confidenceStatus: 'partially_verified',
+        verificationNote: 'Listing description generated from user-provided item details; seller must verify accuracy before publishing.',
+      }, {
           model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert copywriter for marketplace listings. Always respond with valid JSON only.` },
             { role: 'user', content: descriptionPrompt }
           ],
-        }),
       });
 
       if (!response.ok) {
@@ -163,7 +167,6 @@ Provide JSON:
         throw new Error('AI service error');
       }
 
-      const aiData = await response.json();
       const content = aiData.choices[0].message.content;
       
       // Extract JSON from response
