@@ -1626,6 +1626,131 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_action_execution_audit: {
+        Row: {
+          action_fingerprint: string
+          action_type: string
+          created_at: string
+          denial_reason: string | null
+          device_id: string
+          function_name: string
+          id: string
+          mode: string
+          payload_summary: Json
+          permission_id: string | null
+          provider: string | null
+          result_summary: Json
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          action_fingerprint: string
+          action_type: string
+          created_at?: string
+          denial_reason?: string | null
+          device_id: string
+          function_name?: string
+          id?: string
+          mode?: string
+          payload_summary?: Json
+          permission_id?: string | null
+          provider?: string | null
+          result_summary?: Json
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          action_fingerprint?: string
+          action_type?: string
+          created_at?: string
+          denial_reason?: string | null
+          device_id?: string
+          function_name?: string
+          id?: string
+          mode?: string
+          payload_summary?: Json
+          permission_id?: string | null
+          provider?: string | null
+          result_summary?: Json
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_action_execution_audit_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "ai_action_permissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_action_permissions: {
+        Row: {
+          action_fingerprint: string
+          action_type: string
+          approval_note: string | null
+          approval_source: string
+          approved_by: string | null
+          consumed_at: string | null
+          created_at: string
+          device_id: string
+          execution_count: number
+          expires_at: string
+          id: string
+          max_executions: number
+          metadata: Json
+          requested_payload: Json
+          risk_level: string
+          scope: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_fingerprint: string
+          action_type: string
+          approval_note?: string | null
+          approval_source?: string
+          approved_by?: string | null
+          consumed_at?: string | null
+          created_at?: string
+          device_id: string
+          execution_count?: number
+          expires_at?: string
+          id?: string
+          max_executions?: number
+          metadata?: Json
+          requested_payload?: Json
+          risk_level?: string
+          scope?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_fingerprint?: string
+          action_type?: string
+          approval_note?: string | null
+          approval_source?: string
+          approved_by?: string | null
+          consumed_at?: string | null
+          created_at?: string
+          device_id?: string
+          execution_count?: number
+          expires_at?: string
+          id?: string
+          max_executions?: number
+          metadata?: Json
+          requested_payload?: Json
+          risk_level?: string
+          scope?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_cache: {
         Row: {
           cache_key: string
@@ -5302,6 +5427,7 @@ export type Database = {
         }
         Returns: Json
       }
+      expire_stale_ai_action_permissions: { Args: never; Returns: number }
       generate_org_join_code: { Args: never; Returns: string }
       generate_snomad_id: { Args: never; Returns: string }
       get_admin_agent_control_summary: {
@@ -5869,6 +5995,16 @@ export type Database = {
         }
       }
       user_owns_row: { Args: { row_user_id: string }; Returns: boolean }
+      verify_and_consume_ai_action_permission: {
+        Args: {
+          p_action_fingerprint: string
+          p_action_type: string
+          p_device_id: string
+          p_function_name?: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       verify_trust_tier: {
         Args: {
           p_partner_id: string
