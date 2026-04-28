@@ -55,19 +55,23 @@ Provide a JSON response with:
 
 Consider: condition depreciation, local market demand, category popularity, and urgency factors.`;
 
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const { data: aiData, response } = await auditedAIGatewayJSON({
+        functionName: 'marketplace-ai',
+        surface: 'Marketplace',
+        route: '/marketplace-ai',
+        primaryAgent: 'Marketplace Pricing AI',
+        requestCategory: 'marketplace_pricing',
+        command: pricingPrompt,
+        toolsActions: ['price_suggestion', 'json_extraction'],
+        dataSources: ['user_listing_details', 'marketplace_pricing_prompt_rules'],
+        confidenceStatus: 'partially_verified',
+        verificationNote: 'Price suggestion is AI-estimated from user-provided item details; seller remains decision-maker.',
+      }, {
           model: 'google/gemini-3-flash-preview',
           messages: [
             { role: 'system', content: `Current date: ${currentDateTime} (UTC). You are an expert marketplace pricing AI. Always respond with valid JSON only.` },
             { role: 'user', content: pricingPrompt }
           ],
-        }),
       });
 
       if (!response.ok) {
@@ -86,7 +90,6 @@ Consider: condition depreciation, local market demand, category popularity, and 
         throw new Error('AI service error');
       }
 
-      const aiData = await response.json();
       const content = aiData.choices[0].message.content;
       
       // Extract JSON from response
