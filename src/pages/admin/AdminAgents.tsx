@@ -496,9 +496,9 @@ const AdminAgents: React.FC = () => {
                   <h3 className="text-sm font-semibold text-[hsl(var(--gold))] uppercase tracking-wider">
                     {tierMeta.label}
                   </h3>
-                  <span className="text-[11px] text-[hsl(30_12%_60%)]">{tierMeta.tagline}</span>
+                  <span className="text-[11px] text-[hsl(30_12%_78%)]">{tierMeta.tagline}</span>
                 </div>
-                <span className="text-[10px] text-[hsl(30_12%_55%)] uppercase tracking-wider">
+                <span className="text-[10px] text-[hsl(30_12%_72%)] uppercase tracking-wider">
                   {tierAgents.length} agent{tierAgents.length === 1 ? '' : 's'}
                 </span>
               </div>
@@ -530,13 +530,13 @@ const AdminAgents: React.FC = () => {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="min-w-0">
-                            <div className="font-semibold text-sm truncate">{a.name}</div>
-                            <div className="text-[10px] text-[hsl(30_12%_60%)] truncate">{a.role}</div>
+                            <div className="font-semibold text-sm truncate text-[hsl(30_12%_96%)]">{a.name}</div>
+                            <div className="text-[10px] text-[hsl(30_12%_78%)] truncate">{a.role}</div>
                           </div>
                         </div>
                         <span className="text-lg shrink-0">{a.emoji}</span>
                       </div>
-                      <div className="text-[11px] text-[hsl(30_12%_65%)] mb-2 line-clamp-2">{a.team_label}</div>
+                      <div className="text-[11px] text-[hsl(30_12%_80%)] mb-2 line-clamp-2">{a.team_label}</div>
                       <div className="flex items-center gap-1.5 mb-2">
                         <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 text-[10px] px-1.5">
                           {open} open
@@ -573,8 +573,8 @@ const AdminAgents: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <FileCheck2 className="h-4 w-4 text-[hsl(var(--gold))]" />
-            <h2 className="font-semibold">Proposal Queue</h2>
-            <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_70%)] border-[hsl(43_96%_56%/0.2)]">
+             <h2 className="font-semibold text-[hsl(30_12%_96%)]">Proposal Queue</h2>
+             <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_88%)] border-[hsl(43_96%_56%/0.2)]">
               {visible.length}
             </Badge>
           </div>
@@ -635,7 +635,7 @@ const AdminAgents: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <div className="font-medium text-sm">{p.title}</div>
+                        <div className="font-medium text-sm text-[hsl(30_12%_96%)]">{p.title}</div>
                         <div className="flex gap-1 shrink-0">
                           <Badge className={`${PRIORITY_STYLES[p.priority]} text-[10px] px-1.5`}>
                             {p.priority.toUpperCase()}
@@ -649,8 +649,8 @@ const AdminAgents: React.FC = () => {
                           </Badge>
                         </div>
                       </div>
-                      <div className="text-xs text-[hsl(30_12%_70%)] mt-1 line-clamp-2">{p.summary}</div>
-                      <div className="flex items-center gap-3 mt-2 text-[10px] text-[hsl(30_12%_55%)] uppercase tracking-wider">
+                      <div className="text-xs text-[hsl(30_12%_84%)] mt-1 line-clamp-2">{p.summary}</div>
+                      <div className="flex items-center gap-3 mt-2 text-[10px] text-[hsl(30_12%_72%)] uppercase tracking-wider">
                         <span>{a.name}</span>
                         <span>·</span>
                         <span>{Math.round(p.confidence * 100)}% conf</span>
