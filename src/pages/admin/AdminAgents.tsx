@@ -273,12 +273,12 @@ const AdminAgents: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Crown className="h-5 w-5 text-[hsl(var(--gold))]" />
-            <h1 className="text-2xl font-semibold">Multi-Agent Orchestration</h1>
+            <h1 className="text-2xl font-semibold text-[hsl(30_12%_96%)]">Multi-Agent Orchestration</h1>
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]">
               Sovereign Back-Office Protocol
             </Badge>
           </div>
-          <p className="text-sm text-[hsl(30_12%_70%)] max-w-3xl">
+          <p className="text-sm text-[hsl(30_12%_84%)] max-w-3xl">
             5 specialised AI Department Leads operate <span className="text-[hsl(var(--gold))]">read-only / propose-only</span>.
             Every change requires Governor approval. High-impact items require a Human-in-the-Loop security permit.
           </p>
@@ -297,7 +297,7 @@ const AdminAgents: React.FC = () => {
               AgentOrchestratorService.triggerBriefing();
               toast.success('Daily briefing regenerated.');
             }}
-            className="border-[hsl(43_96%_56%/0.3)]"
+            className="border-[hsl(var(--gold)/0.55)] bg-[hsl(var(--gold))] text-[hsl(220_22%_6%)] hover:bg-[hsl(43_96%_50%)] hover:text-[hsl(220_22%_4%)] font-semibold shadow-[0_0_22px_hsl(var(--gold)/0.18)]"
           >
             <RefreshCw className="h-3.5 w-3.5 mr-1.5" /> Re-brief
           </Button>
@@ -320,10 +320,10 @@ const AdminAgents: React.FC = () => {
         ].map((k) => (
           <Card key={k.label} className="bg-[hsl(220_22%_6%)] border-[hsl(43_96%_56%/0.15)] p-4">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)]">{k.label}</span>
+              <span className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)]">{k.label}</span>
               <k.icon className={`h-4 w-4 ${k.tone}`} />
             </div>
-            <div className="text-2xl font-semibold">{k.value}</div>
+            <div className="text-2xl font-semibold text-[hsl(30_12%_96%)]">{k.value}</div>
           </Card>
         ))}
       </div>
@@ -334,12 +334,12 @@ const AdminAgents: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <Lock className="h-4 w-4 text-[hsl(var(--gold))]" />
-              <h2 className="font-semibold">Production Agent Control Plane</h2>
+              <h2 className="font-semibold text-[hsl(30_12%_96%)]">Production Agent Control Plane</h2>
               <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30">
                 {isDemoMode ? 'Demo read-only' : 'Staff gated'}
               </Badge>
             </div>
-            <p className="text-xs text-[hsl(30_12%_65%)] mt-1">
+            <p className="text-xs text-[hsl(30_12%_80%)] mt-1">
               {liveKpis.total} controlled agents · {liveKpis.active} active · {liveKpis.paused} paused · {liveKpis.budget.toLocaleString()} daily token budget
             </p>
           </div>
@@ -353,12 +353,12 @@ const AdminAgents: React.FC = () => {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm truncate">{c.display_name}</span>
-                      <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_75%)] border-[hsl(43_96%_56%/0.15)] text-[10px]">
+                      <span className="font-semibold text-sm truncate text-[hsl(30_12%_96%)]">{c.display_name}</span>
+                      <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_88%)] border-[hsl(43_96%_56%/0.18)] text-[10px]">
                         {c.agent_type}
                       </Badge>
                     </div>
-                    <div className="text-[11px] text-[hsl(30_12%_62%)] mt-1 line-clamp-2">{c.description}</div>
+                    <div className="text-[11px] text-[hsl(30_12%_78%)] mt-1 line-clamp-2">{c.description}</div>
                   </div>
                   <Switch
                     checked={c.status === 'active'}
@@ -393,25 +393,25 @@ const AdminAgents: React.FC = () => {
 
           <div className="space-y-3">
             <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
-              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm">Daily Agent Reports</h3></div>
+              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm text-[hsl(30_12%_96%)]">Daily Agent Reports</h3></div>
               <div className="space-y-3">
                 {reports.slice(0, 4).map((r) => (
                   <div key={r.id} className="border-l-2 border-[hsl(43_96%_56%/0.35)] pl-3">
-                    <div className="text-sm font-medium">{r.title}</div>
-                    <div className="text-xs text-[hsl(30_12%_68%)] line-clamp-2 mt-1">{r.summary}</div>
-                    <div className="text-[10px] text-[hsl(30_12%_55%)] mt-1">Score {Number(r.performance_score).toFixed(0)} · {r.token_usage.toLocaleString()} tokens</div>
+                    <div className="text-sm font-medium text-[hsl(30_12%_96%)]">{r.title}</div>
+                    <div className="text-xs text-[hsl(30_12%_82%)] line-clamp-2 mt-1">{r.summary}</div>
+                    <div className="text-[10px] text-[hsl(30_12%_70%)] mt-1">Score {Number(r.performance_score).toFixed(0)} · {r.token_usage.toLocaleString()} tokens</div>
                   </div>
                 ))}
               </div>
             </Card>
             <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
-              <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-amber-300" /><h3 className="font-semibold text-sm">Performance Suggestions</h3></div>
+              <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-amber-300" /><h3 className="font-semibold text-sm text-[hsl(30_12%_96%)]">Performance Suggestions</h3></div>
               <div className="space-y-2">
                 {suggestions.slice(0, 5).map((s) => (
                   <div key={s.id} className="p-2 rounded bg-[hsl(220_22%_6%)] border border-[hsl(43_96%_56%/0.1)]">
                     <Badge className={`${PRIORITY_STYLES[s.priority] ?? PRIORITY_STYLES.medium} text-[10px] mb-1`}>{s.priority}</Badge>
-                    <div className="text-xs font-medium">{s.title}</div>
-                    <div className="text-[11px] text-[hsl(30_12%_65%)] mt-1 line-clamp-2">{s.expected_impact ?? s.suggested_action}</div>
+                    <div className="text-xs font-medium text-[hsl(30_12%_96%)]">{s.title}</div>
+                    <div className="text-[11px] text-[hsl(30_12%_80%)] mt-1 line-clamp-2">{s.expected_impact ?? s.suggested_action}</div>
                   </div>
                 ))}
               </div>
@@ -426,10 +426,10 @@ const AdminAgents: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Crown className="h-4 w-4 text-[hsl(var(--gold))]" />
-              <h2 className="font-semibold">Daily 09:00 Governor Briefing</h2>
+              <h2 className="font-semibold text-[hsl(30_12%_96%)]">Daily 09:00 Governor Briefing</h2>
             </div>
             {briefing && (
-              <span className="text-xs text-[hsl(30_12%_60%)]">
+              <span className="text-xs text-[hsl(30_12%_78%)]">
                 {new Date(briefing.generated_at).toLocaleString()}
               </span>
             )}
@@ -448,11 +448,11 @@ const AdminAgents: React.FC = () => {
                     >
                       <Icon className="h-4 w-4 mt-0.5" style={{ color: AGENTS[id].color_token }} />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-[hsl(30_12%_60%)]">
+                        <div className="text-xs text-[hsl(30_12%_78%)]">
                           {AGENTS[id].name} · {AGENTS[id].team_label}
                         </div>
-                        <div className="text-sm truncate">{b.headline}</div>
-                        <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_55%)] mt-0.5">
+                        <div className="text-sm truncate text-[hsl(30_12%_96%)]">{b.headline}</div>
+                        <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_72%)] mt-0.5">
                           {b.metric}
                         </div>
                       </div>
@@ -460,12 +460,12 @@ const AdminAgents: React.FC = () => {
                   );
                 })}
               </div>
-              <div className="text-xs text-[hsl(30_12%_70%)] italic border-l-2 border-[hsl(var(--gold))] pl-3">
+              <div className="text-xs text-[hsl(30_12%_86%)] italic border-l-2 border-[hsl(var(--gold))] pl-3">
                 {briefing.governor_note}
               </div>
             </>
           ) : (
-            <div className="text-sm text-[hsl(30_12%_60%)]">Generating first briefing…</div>
+            <div className="text-sm text-[hsl(30_12%_82%)]">Generating first briefing…</div>
           )}
         </Card>
 
@@ -496,9 +496,9 @@ const AdminAgents: React.FC = () => {
                   <h3 className="text-sm font-semibold text-[hsl(var(--gold))] uppercase tracking-wider">
                     {tierMeta.label}
                   </h3>
-                  <span className="text-[11px] text-[hsl(30_12%_60%)]">{tierMeta.tagline}</span>
+                  <span className="text-[11px] text-[hsl(30_12%_78%)]">{tierMeta.tagline}</span>
                 </div>
-                <span className="text-[10px] text-[hsl(30_12%_55%)] uppercase tracking-wider">
+                <span className="text-[10px] text-[hsl(30_12%_72%)] uppercase tracking-wider">
                   {tierAgents.length} agent{tierAgents.length === 1 ? '' : 's'}
                 </span>
               </div>
@@ -530,13 +530,13 @@ const AdminAgents: React.FC = () => {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="min-w-0">
-                            <div className="font-semibold text-sm truncate">{a.name}</div>
-                            <div className="text-[10px] text-[hsl(30_12%_60%)] truncate">{a.role}</div>
+                            <div className="font-semibold text-sm truncate text-[hsl(30_12%_96%)]">{a.name}</div>
+                            <div className="text-[10px] text-[hsl(30_12%_78%)] truncate">{a.role}</div>
                           </div>
                         </div>
                         <span className="text-lg shrink-0">{a.emoji}</span>
                       </div>
-                      <div className="text-[11px] text-[hsl(30_12%_65%)] mb-2 line-clamp-2">{a.team_label}</div>
+                      <div className="text-[11px] text-[hsl(30_12%_80%)] mb-2 line-clamp-2">{a.team_label}</div>
                       <div className="flex items-center gap-1.5 mb-2">
                         <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 text-[10px] px-1.5">
                           {open} open
@@ -573,8 +573,8 @@ const AdminAgents: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <FileCheck2 className="h-4 w-4 text-[hsl(var(--gold))]" />
-            <h2 className="font-semibold">Proposal Queue</h2>
-            <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_70%)] border-[hsl(43_96%_56%/0.2)]">
+             <h2 className="font-semibold text-[hsl(30_12%_96%)]">Proposal Queue</h2>
+             <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_88%)] border-[hsl(43_96%_56%/0.2)]">
               {visible.length}
             </Badge>
           </div>
@@ -635,7 +635,7 @@ const AdminAgents: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <div className="font-medium text-sm">{p.title}</div>
+                        <div className="font-medium text-sm text-[hsl(30_12%_96%)]">{p.title}</div>
                         <div className="flex gap-1 shrink-0">
                           <Badge className={`${PRIORITY_STYLES[p.priority]} text-[10px] px-1.5`}>
                             {p.priority.toUpperCase()}
@@ -649,8 +649,8 @@ const AdminAgents: React.FC = () => {
                           </Badge>
                         </div>
                       </div>
-                      <div className="text-xs text-[hsl(30_12%_70%)] mt-1 line-clamp-2">{p.summary}</div>
-                      <div className="flex items-center gap-3 mt-2 text-[10px] text-[hsl(30_12%_55%)] uppercase tracking-wider">
+                      <div className="text-xs text-[hsl(30_12%_84%)] mt-1 line-clamp-2">{p.summary}</div>
+                      <div className="flex items-center gap-3 mt-2 text-[10px] text-[hsl(30_12%_72%)] uppercase tracking-wider">
                         <span>{a.name}</span>
                         <span>·</span>
                         <span>{Math.round(p.confidence * 100)}% conf</span>
@@ -801,7 +801,7 @@ const AdminAgents: React.FC = () => {
 
 const Section: React.FC<{ label: string; tone?: 'gold'; children: React.ReactNode }> = ({ label, tone, children }) => (
   <div>
-    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)] mb-1">{label}</div>
+    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)] mb-1">{label}</div>
     <div className={`text-sm ${tone === 'gold' ? 'text-[hsl(var(--gold))] font-medium' : 'text-[hsl(30_12%_85%)]'}`}>
       {children}
     </div>
@@ -810,8 +810,8 @@ const Section: React.FC<{ label: string; tone?: 'gold'; children: React.ReactNod
 
 const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="p-2 rounded bg-[hsl(220_22%_4%)] border border-[hsl(43_96%_56%/0.1)]">
-    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)]">{label}</div>
-    <div className="text-sm font-semibold mt-0.5">{value}</div>
+    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)]">{label}</div>
+    <div className="text-sm font-semibold mt-0.5 text-[hsl(30_12%_96%)]">{value}</div>
   </div>
 );
 
@@ -840,8 +840,8 @@ const ActivityRow: React.FC<{ ev: AgentActivityEvent }> = ({ ev }) => {
     <div className="flex items-start gap-2 text-xs">
       <Icon className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${tone}`} />
       <div className="flex-1 min-w-0">
-        <div className="text-[hsl(30_12%_85%)] truncate">{ev.text}</div>
-        <div className="text-[10px] text-[hsl(30_12%_55%)]">
+        <div className="text-[hsl(30_12%_94%)] truncate">{ev.text}</div>
+        <div className="text-[10px] text-[hsl(30_12%_72%)]">
           {isGov ? 'Governor' : a?.name} · {formatAgo(ev.ts)}
         </div>
       </div>
