@@ -273,12 +273,12 @@ const AdminAgents: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Crown className="h-5 w-5 text-[hsl(var(--gold))]" />
-            <h1 className="text-2xl font-semibold">Multi-Agent Orchestration</h1>
+            <h1 className="text-2xl font-semibold text-[hsl(30_12%_96%)]">Multi-Agent Orchestration</h1>
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]">
               Sovereign Back-Office Protocol
             </Badge>
           </div>
-          <p className="text-sm text-[hsl(30_12%_70%)] max-w-3xl">
+          <p className="text-sm text-[hsl(30_12%_84%)] max-w-3xl">
             5 specialised AI Department Leads operate <span className="text-[hsl(var(--gold))]">read-only / propose-only</span>.
             Every change requires Governor approval. High-impact items require a Human-in-the-Loop security permit.
           </p>
@@ -297,7 +297,7 @@ const AdminAgents: React.FC = () => {
               AgentOrchestratorService.triggerBriefing();
               toast.success('Daily briefing regenerated.');
             }}
-            className="border-[hsl(43_96%_56%/0.3)]"
+            className="border-[hsl(var(--gold)/0.55)] bg-[hsl(var(--gold))] text-[hsl(220_22%_6%)] hover:bg-[hsl(43_96%_50%)] hover:text-[hsl(220_22%_4%)] font-semibold shadow-[0_0_22px_hsl(var(--gold)/0.18)]"
           >
             <RefreshCw className="h-3.5 w-3.5 mr-1.5" /> Re-brief
           </Button>
@@ -320,10 +320,10 @@ const AdminAgents: React.FC = () => {
         ].map((k) => (
           <Card key={k.label} className="bg-[hsl(220_22%_6%)] border-[hsl(43_96%_56%/0.15)] p-4">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)]">{k.label}</span>
+              <span className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)]">{k.label}</span>
               <k.icon className={`h-4 w-4 ${k.tone}`} />
             </div>
-            <div className="text-2xl font-semibold">{k.value}</div>
+            <div className="text-2xl font-semibold text-[hsl(30_12%_96%)]">{k.value}</div>
           </Card>
         ))}
       </div>
