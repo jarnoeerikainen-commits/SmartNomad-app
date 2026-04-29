@@ -801,7 +801,7 @@ const AdminAgents: React.FC = () => {
 
 const Section: React.FC<{ label: string; tone?: 'gold'; children: React.ReactNode }> = ({ label, tone, children }) => (
   <div>
-    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)] mb-1">{label}</div>
+    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)] mb-1">{label}</div>
     <div className={`text-sm ${tone === 'gold' ? 'text-[hsl(var(--gold))] font-medium' : 'text-[hsl(30_12%_85%)]'}`}>
       {children}
     </div>
@@ -810,8 +810,8 @@ const Section: React.FC<{ label: string; tone?: 'gold'; children: React.ReactNod
 
 const Stat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="p-2 rounded bg-[hsl(220_22%_4%)] border border-[hsl(43_96%_56%/0.1)]">
-    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_60%)]">{label}</div>
-    <div className="text-sm font-semibold mt-0.5">{value}</div>
+    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_78%)]">{label}</div>
+    <div className="text-sm font-semibold mt-0.5 text-[hsl(30_12%_96%)]">{value}</div>
   </div>
 );
 
@@ -840,8 +840,8 @@ const ActivityRow: React.FC<{ ev: AgentActivityEvent }> = ({ ev }) => {
     <div className="flex items-start gap-2 text-xs">
       <Icon className={`h-3.5 w-3.5 mt-0.5 shrink-0 ${tone}`} />
       <div className="flex-1 min-w-0">
-        <div className="text-[hsl(30_12%_85%)] truncate">{ev.text}</div>
-        <div className="text-[10px] text-[hsl(30_12%_55%)]">
+        <div className="text-[hsl(30_12%_94%)] truncate">{ev.text}</div>
+        <div className="text-[10px] text-[hsl(30_12%_72%)]">
           {isGov ? 'Governor' : a?.name} · {formatAgo(ev.ts)}
         </div>
       </div>
