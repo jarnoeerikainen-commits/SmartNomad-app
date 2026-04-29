@@ -334,12 +334,12 @@ const AdminAgents: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <Lock className="h-4 w-4 text-[hsl(var(--gold))]" />
-              <h2 className="font-semibold">Production Agent Control Plane</h2>
+              <h2 className="font-semibold text-[hsl(30_12%_96%)]">Production Agent Control Plane</h2>
               <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30">
                 {isDemoMode ? 'Demo read-only' : 'Staff gated'}
               </Badge>
             </div>
-            <p className="text-xs text-[hsl(30_12%_65%)] mt-1">
+            <p className="text-xs text-[hsl(30_12%_80%)] mt-1">
               {liveKpis.total} controlled agents · {liveKpis.active} active · {liveKpis.paused} paused · {liveKpis.budget.toLocaleString()} daily token budget
             </p>
           </div>
@@ -353,12 +353,12 @@ const AdminAgents: React.FC = () => {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm truncate">{c.display_name}</span>
-                      <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_75%)] border-[hsl(43_96%_56%/0.15)] text-[10px]">
+                      <span className="font-semibold text-sm truncate text-[hsl(30_12%_96%)]">{c.display_name}</span>
+                      <Badge className="bg-[hsl(220_22%_10%)] text-[hsl(30_12%_88%)] border-[hsl(43_96%_56%/0.18)] text-[10px]">
                         {c.agent_type}
                       </Badge>
                     </div>
-                    <div className="text-[11px] text-[hsl(30_12%_62%)] mt-1 line-clamp-2">{c.description}</div>
+                    <div className="text-[11px] text-[hsl(30_12%_78%)] mt-1 line-clamp-2">{c.description}</div>
                   </div>
                   <Switch
                     checked={c.status === 'active'}
@@ -393,13 +393,13 @@ const AdminAgents: React.FC = () => {
 
           <div className="space-y-3">
             <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
-              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm">Daily Agent Reports</h3></div>
+              <div className="flex items-center gap-2 mb-3"><FileText className="h-4 w-4 text-[hsl(var(--gold))]" /><h3 className="font-semibold text-sm text-[hsl(30_12%_96%)]">Daily Agent Reports</h3></div>
               <div className="space-y-3">
                 {reports.slice(0, 4).map((r) => (
                   <div key={r.id} className="border-l-2 border-[hsl(43_96%_56%/0.35)] pl-3">
-                    <div className="text-sm font-medium">{r.title}</div>
-                    <div className="text-xs text-[hsl(30_12%_68%)] line-clamp-2 mt-1">{r.summary}</div>
-                    <div className="text-[10px] text-[hsl(30_12%_55%)] mt-1">Score {Number(r.performance_score).toFixed(0)} · {r.token_usage.toLocaleString()} tokens</div>
+                    <div className="text-sm font-medium text-[hsl(30_12%_96%)]">{r.title}</div>
+                    <div className="text-xs text-[hsl(30_12%_82%)] line-clamp-2 mt-1">{r.summary}</div>
+                    <div className="text-[10px] text-[hsl(30_12%_70%)] mt-1">Score {Number(r.performance_score).toFixed(0)} · {r.token_usage.toLocaleString()} tokens</div>
                   </div>
                 ))}
               </div>
