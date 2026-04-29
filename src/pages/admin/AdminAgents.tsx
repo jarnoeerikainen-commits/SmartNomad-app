@@ -405,13 +405,13 @@ const AdminAgents: React.FC = () => {
               </div>
             </Card>
             <Card className="bg-[hsl(220_22%_4%)] border-[hsl(43_96%_56%/0.12)] p-4">
-              <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-amber-300" /><h3 className="font-semibold text-sm">Performance Suggestions</h3></div>
+              <div className="flex items-center gap-2 mb-3"><Sparkles className="h-4 w-4 text-amber-300" /><h3 className="font-semibold text-sm text-[hsl(30_12%_96%)]">Performance Suggestions</h3></div>
               <div className="space-y-2">
                 {suggestions.slice(0, 5).map((s) => (
                   <div key={s.id} className="p-2 rounded bg-[hsl(220_22%_6%)] border border-[hsl(43_96%_56%/0.1)]">
                     <Badge className={`${PRIORITY_STYLES[s.priority] ?? PRIORITY_STYLES.medium} text-[10px] mb-1`}>{s.priority}</Badge>
-                    <div className="text-xs font-medium">{s.title}</div>
-                    <div className="text-[11px] text-[hsl(30_12%_65%)] mt-1 line-clamp-2">{s.expected_impact ?? s.suggested_action}</div>
+                    <div className="text-xs font-medium text-[hsl(30_12%_96%)]">{s.title}</div>
+                    <div className="text-[11px] text-[hsl(30_12%_80%)] mt-1 line-clamp-2">{s.expected_impact ?? s.suggested_action}</div>
                   </div>
                 ))}
               </div>
@@ -426,10 +426,10 @@ const AdminAgents: React.FC = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Crown className="h-4 w-4 text-[hsl(var(--gold))]" />
-              <h2 className="font-semibold">Daily 09:00 Governor Briefing</h2>
+              <h2 className="font-semibold text-[hsl(30_12%_96%)]">Daily 09:00 Governor Briefing</h2>
             </div>
             {briefing && (
-              <span className="text-xs text-[hsl(30_12%_60%)]">
+              <span className="text-xs text-[hsl(30_12%_78%)]">
                 {new Date(briefing.generated_at).toLocaleString()}
               </span>
             )}
@@ -448,11 +448,11 @@ const AdminAgents: React.FC = () => {
                     >
                       <Icon className="h-4 w-4 mt-0.5" style={{ color: AGENTS[id].color_token }} />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-[hsl(30_12%_60%)]">
+                        <div className="text-xs text-[hsl(30_12%_78%)]">
                           {AGENTS[id].name} · {AGENTS[id].team_label}
                         </div>
-                        <div className="text-sm truncate">{b.headline}</div>
-                        <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_55%)] mt-0.5">
+                        <div className="text-sm truncate text-[hsl(30_12%_96%)]">{b.headline}</div>
+                        <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_72%)] mt-0.5">
                           {b.metric}
                         </div>
                       </div>
@@ -460,12 +460,12 @@ const AdminAgents: React.FC = () => {
                   );
                 })}
               </div>
-              <div className="text-xs text-[hsl(30_12%_70%)] italic border-l-2 border-[hsl(var(--gold))] pl-3">
+              <div className="text-xs text-[hsl(30_12%_86%)] italic border-l-2 border-[hsl(var(--gold))] pl-3">
                 {briefing.governor_note}
               </div>
             </>
           ) : (
-            <div className="text-sm text-[hsl(30_12%_60%)]">Generating first briefing…</div>
+            <div className="text-sm text-[hsl(30_12%_82%)]">Generating first briefing…</div>
           )}
         </Card>
 
