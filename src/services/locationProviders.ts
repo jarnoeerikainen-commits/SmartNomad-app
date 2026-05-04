@@ -11,7 +11,10 @@ const TIMEOUT_MS = 3500;
 const LOCATION_IP_FUNCTION_URL = import.meta.env.VITE_SUPABASE_URL
   ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/location-ip`
   : '';
-const USE_LOCATION_IP_EDGE = import.meta.env.VITE_USE_LOCATION_IP_EDGE === 'true';
+// Always prefer our own edge proxy first — third-party IP providers (ipwho.is,
+// ipapi.co, bigdatacloud) frequently CORS-fail or rate-limit from browsers.
+// Set VITE_DISABLE_LOCATION_IP_EDGE=true to bypass for debugging only.
+const USE_LOCATION_IP_EDGE = import.meta.env.VITE_DISABLE_LOCATION_IP_EDGE !== 'true';
 
 const englishRegionNames =
   typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -164,12 +167,15 @@ async function ipFromSupabaseFunction(): Promise<LocationData | null> {
 }
 
 export async function fetchIPLocation(): Promise<LocationData | null> {
-  const directLocation = await firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
-  if (directLocation) return directLocation;
+  // PRIMARY: our own Supabase edge proxy (always works, server-side, no CORS).
+  if (USE_LOCATION_IP_EDGE) {
+    const edgeLocation = await ipFromSupabaseFunction();
+    if (edgeLocation) return edgeLocation;
+  }
 
-  if (!USE_LOCATION_IP_EDGE) return null;
-
-  return ipFromSupabaseFunction();
+  // FALLBACK: third-party providers, only if the edge proxy is unavailable.
+  // These often fail due to CORS / rate limits — that's fine, they're best-effort.
+  return firstSuccessfulLocation([ipFromIpwho, ipFromIpapi, ipFromBigDataCloud]);
 }
 
 // ---------- Reverse geocode (lat/lon → place) ----------
