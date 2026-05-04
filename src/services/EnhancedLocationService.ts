@@ -2,6 +2,7 @@
 import { Geolocation } from '@capacitor/geolocation';
 import { Device } from '@capacitor/device';
 import { LocationData } from '@/types/country';
+import { reverseGeocode as sharedReverseGeocode } from './locationProviders';
 
 interface VPNDetectionInfo {
   isVPNActive: boolean;
@@ -104,22 +105,9 @@ class EnhancedLocationService {
   }
 
   private async reverseGeocode(lat: number, lon: number): Promise<LocationData | null> {
-    try {
-      const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
-      const data = await response.json();
-      
-      return {
-        latitude: lat,
-        longitude: lon,
-        country: data.countryName || 'Unknown',
-        country_code: data.countryCode || 'XX',
-        city: data.city || data.locality || 'Unknown',
-        timestamp: Date.now()
-      };
-    } catch (error) {
-      console.error('Reverse geocoding failed:', error);
-      return null;
-    }
+    // Use the shared multi-provider resolver (Nominatim primary, BigDataCloud fallback)
+    // — avoids the bigdatacloud CORS failures we were seeing in production.
+    return sharedReverseGeocode(lat, lon);
   }
 
   stopBackgroundTracking(): void {
