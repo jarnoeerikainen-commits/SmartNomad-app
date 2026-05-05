@@ -119,12 +119,13 @@ After the plan, output a JSON booking block with real search links for flights, 
 
 \`\`\`json
 [
-  {"type": "flight", "provider": "Skyscanner", "url": "https://www.skyscanner.com/transport/flights/FROM/TO/YYMMDD/YYMMDD/", "label": "Search flights", "route": "ORIGIN → DESTINATION"},
-  {"type": "flight", "provider": "Google Flights", "url": "https://www.google.com/travel/flights", "label": "Compare flights"},
-  {"type": "hotel", "provider": "Booking.com", "url": "https://www.booking.com/searchresults.html?ss=DESTINATION", "label": "Search hotels", "city": "DESTINATION"},
-  {"type": "hotel", "provider": "Hotels.com", "url": "https://www.hotels.com/search.do?q-destination=DESTINATION", "label": "Compare hotels", "city": "DESTINATION"},
-  {"type": "car", "provider": "Discovercars", "url": "https://www.discovercars.com/", "label": "Rent a car"},
-  {"type": "car", "provider": "Kayak Cars", "url": "https://www.kayak.com/cars", "label": "Compare rentals"}
+  {"type": "flight", "provider": "Skyscanner", "url": "https://www.skyscanner.net/transport/flights/FROM/TO/YYMMDD/?adults=1&cabinclass=business", "label": "Search flights", "route": "ORIGIN → DESTINATION"},
+  {"type": "flight", "provider": "Google Flights", "url": "https://www.google.com/travel/flights?q=Flights%20to%20DESTINATION%20from%20ORIGIN", "label": "Compare flights"},
+  {"type": "hotel", "provider": "Booking.com", "url": "https://www.booking.com/searchresults.html?ss=DESTINATION&checkin=YYYY-MM-DD&checkout=YYYY-MM-DD&nflt=class%3D4%3Bclass%3D5", "label": "Search hotels", "city": "DESTINATION"},
+  {"type": "hotel", "provider": "Hotels.com", "url": "https://www.hotels.com/Hotel-Search?destination=DESTINATION&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&adults=1&star=4,5", "label": "Compare hotels", "city": "DESTINATION"},
+  {"type": "hotel", "provider": "Trivago", "url": "https://www.trivago.com/en-US/srl?query=DESTINATION", "label": "Compare prices", "city": "DESTINATION"},
+  {"type": "car", "provider": "Discovercars", "url": "https://www.discovercars.com/?city=DESTINATION&pickup=YYYY-MM-DD&dropoff=YYYY-MM-DD", "label": "Rent a car"},
+  {"type": "car", "provider": "Kayak Cars", "url": "https://www.kayak.com/cars/DESTINATION/YYYY-MM-DD/YYYY-MM-DD", "label": "Compare rentals"}
 ]
 \`\`\`
 
