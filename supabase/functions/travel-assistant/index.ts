@@ -854,27 +854,47 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 
 **CRITICAL FORMAT RULES:**
 - Use \`\`\`booking code blocks with a JSON array
-- Each item MUST have: "type" (flight/hotel/car), "provider" (exact company name), "url" (real search URL), "label" (human description)
+- Each item MUST have: "type" (flight/hotel/car), "provider" (exact company name), "url" (real search URL that ACTUALLY OPENS to results — test the URL pattern in your head), "label" (human description)
 - For FLIGHTS use type:"flight" — providers: "Skyscanner", "Google Flights", "Kayak"
-- For HOTELS use type:"hotel" — providers: "Booking.com", "Hotels.com", "Trivago"  
+- For HOTELS use type:"hotel" — providers: "Booking.com", "Hotels.com", "Trivago"
 - For CAR RENTALS use type:"car" — providers: "Rentalcars.com", "Kayak Cars", "Discovercars"
 - NEVER mix types! Default: Business Class for flights, 4-5★ for hotels
+- ALWAYS URL-encode city names with spaces (use %20 or +). Use ISO dates (YYYY-MM-DD) where the provider supports them.
 
-**EXACT FORMAT EXAMPLE for flights:**
+**🎯 GO SPECIFIC — ALWAYS (MANDATORY):**
+Generic search links are the FALLBACK. Whenever you have enough context (route, dates, city, user preferences), you MUST also propose 1–2 SPECIFIC options ABOVE the generic search cards:
+- **Specific flight:** name the airline + likely flight number + departure time + cabin (e.g., "Finnair AY1335 · 07:25 HEL→ARN · Business · ~€420"). Then deep-link the airline's own site if known, otherwise a Skyscanner URL pre-filtered to that carrier.
+- **Specific hotel:** name 1–2 real 4–5★ hotels in the right neighborhood matching the user's profile (e.g., "Hotel Diplomat Stockholm · 5★ · waterfront · ~€340/night"). Deep-link directly to that hotel's page on Booking.com using \`/hotel/<country-code>/<slug>.html?checkin=...&checkout=...\` when you know the slug; otherwise fall back to the generic \`searchresults.html\` URL.
+- Mark specific picks with \`"label"\` starting with "⭐ Pick:" so the user sees which is curated vs generic.
+- Never invent a flight number or hotel that you are not reasonably confident exists. If unsure, omit the specific pick and just give the search cards.
+
+**EXACT URL PATTERNS (verified working — copy these formats exactly):**
+- Skyscanner flight: \`https://www.skyscanner.net/transport/flights/<from-iata-lower>/<to-iata-lower>/<YYMMDD>/?adults=1&cabinclass=business\`
+- Google Flights: \`https://www.google.com/travel/flights?q=Flights%20to%20<City>%20from%20<City>%20on%20<YYYY-MM-DD>\`
+- Kayak flight: \`https://www.kayak.com/flights/<FROM-IATA>-<TO-IATA>/<YYYY-MM-DD>?sort=price_a\`
+- Booking.com search: \`https://www.booking.com/searchresults.html?ss=<City>&checkin=<YYYY-MM-DD>&checkout=<YYYY-MM-DD>&group_adults=1&nflt=class%3D4%3Bclass%3D5\`
+- Hotels.com search: \`https://www.hotels.com/Hotel-Search?destination=<City>&startDate=<YYYY-MM-DD>&endDate=<YYYY-MM-DD>&adults=1&sort=RECOMMENDED&star=4,5\`  ← use \`Hotel-Search\` (capital H, capital S), NOT \`/search\` or \`/search.do\` (those are dead).
+- Trivago search: \`https://www.trivago.com/en-US/srl?query=<City>\`  ← Use this simple query format. Do NOT invent path slugs like \`/srl/hotels-<City>?search=...\`, they 404.
+- Rentalcars: \`https://www.rentalcars.com/SearchResults.do?city=<City>&puDate=<YYYY-MM-DD>&doDate=<YYYY-MM-DD>\`
+- Discovercars: \`https://www.discovercars.com/?country=<country-slug>&city=<City>&pickup=<YYYY-MM-DD>&dropoff=<YYYY-MM-DD>\`
+- Kayak Cars: \`https://www.kayak.com/cars/<City>/<YYYY-MM-DD>/<YYYY-MM-DD>\`
+
+**EXACT FORMAT EXAMPLE for flights (specific pick + generic search):**
 \`\`\`booking
 [
-  {"type":"flight","provider":"Skyscanner","url":"https://www.skyscanner.com/transport/flights/hel/mila/260220/?adults=1&cabinclass=business","label":"Helsinki → Milan · Business Class"},
-  {"type":"flight","provider":"Google Flights","url":"https://www.google.com/travel/flights?q=flights+from+Helsinki+to+Milan","label":"Helsinki → Milan · Business Class"},
-  {"type":"flight","provider":"Kayak","url":"https://www.kayak.com/flights/HEL-MIL/2026-02-20?sort=price_a&fs=cabin=b","label":"Helsinki → Milan · Business Class"}
+  {"type":"flight","provider":"Skyscanner","url":"https://www.skyscanner.net/transport/flights/hel/mxp/260220/?adults=1&cabinclass=business","label":"⭐ Pick: Finnair AY1761 · 07:25 HEL→MXP · Business · ~€480"},
+  {"type":"flight","provider":"Google Flights","url":"https://www.google.com/travel/flights?q=Flights%20to%20Milan%20from%20Helsinki%20on%202026-02-20","label":"Helsinki → Milan · all carriers"},
+  {"type":"flight","provider":"Kayak","url":"https://www.kayak.com/flights/HEL-MIL/2026-02-20?sort=price_a","label":"Compare HEL → Milan · Feb 20"}
 ]
 \`\`\`
 
-**EXACT FORMAT EXAMPLE for hotels:**
+**EXACT FORMAT EXAMPLE for hotels (specific pick + generic search):**
 \`\`\`booking
 [
-  {"type":"hotel","provider":"Booking.com","url":"https://www.booking.com/searchresults.html?ss=Stockholm&checkin=2026-02-20&checkout=2026-02-22&class_min=4","label":"Stockholm · 4-5★ Hotels · Feb 20-22"},
-  {"type":"hotel","provider":"Hotels.com","url":"https://www.hotels.com/search?destination=Stockholm&startDate=2026-02-20&endDate=2026-02-22&star=40,50","label":"Stockholm · 4-5★ Hotels · Feb 20-22"},
-  {"type":"hotel","provider":"Trivago","url":"https://www.trivago.com/en-US/srl/hotels-Stockholm?search=200-220226","label":"Stockholm · 4-5★ Hotels · Feb 20-22"}
+  {"type":"hotel","provider":"Booking.com","url":"https://www.booking.com/hotel/se/diplomat.html?checkin=2026-02-20&checkout=2026-02-22","label":"⭐ Pick: Hotel Diplomat · 5★ waterfront · ~€340/night"},
+  {"type":"hotel","provider":"Booking.com","url":"https://www.booking.com/searchresults.html?ss=Stockholm&checkin=2026-02-20&checkout=2026-02-22&group_adults=1&nflt=class%3D4%3Bclass%3D5","label":"Stockholm · 4-5★ · Feb 20-22"},
+  {"type":"hotel","provider":"Hotels.com","url":"https://www.hotels.com/Hotel-Search?destination=Stockholm&startDate=2026-02-20&endDate=2026-02-22&adults=1&star=4,5","label":"Stockholm · 4-5★ · Feb 20-22"},
+  {"type":"hotel","provider":"Trivago","url":"https://www.trivago.com/en-US/srl?query=Stockholm","label":"Stockholm · compare prices"}
 ]
 \`\`\`
 
