@@ -37,7 +37,7 @@ const Landing: React.FC = () => {
   }, []);
 
   const stats = [
-    { value: '850M+', label: 'Global Citizens', sub: 'Who call the world home' },
+    { value: '300M+', label: 'Global Citizens', sub: 'Who call the world home' },
     { value: '$12K', label: 'Avg Tax Penalty', sub: 'Lost yearly to residency confusion' },
     { value: '200+', label: 'Hours Wasted', sub: 'On bureaucracy every year' },
     { value: '67%', label: 'Security Issues', sub: 'Of nomads report data breaches' },
