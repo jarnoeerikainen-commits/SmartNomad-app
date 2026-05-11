@@ -3,6 +3,7 @@ import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
+import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -168,8 +169,10 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
       },
       body: JSON.stringify({
         model: getModel('intelligence'),
+        temperature: 0.2,
+        top_p: 0.8,
         messages: [
-          { role: 'system', content: buildScopeGuard('medical') + withTruthProtocol(systemPrompt) },
+          { role: 'system', content: buildScopeGuard('medical') + buildVerifiedSourcesBlock('medical') + withTruthProtocol(systemPrompt) },
           ...messages
         ],
         stream: true,
