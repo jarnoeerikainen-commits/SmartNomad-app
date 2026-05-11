@@ -18,6 +18,19 @@ export function useUserMode() {
     try { localStorage.setItem(STORAGE_KEY, mode); } catch {}
   }, [mode]);
 
+  useEffect(() => {
+    const handler = () => {
+      const next = loadMode();
+      setModeState(prev => (prev === next ? prev : next));
+    };
+    window.addEventListener('supernomad:user-mode-changed', handler);
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('supernomad:user-mode-changed', handler);
+      window.removeEventListener('storage', handler);
+    };
+  }, []);
+
   const setMode = useCallback((next: UserMode) => {
     if (!(next in MODE_PRESETS)) return;
     setModeState(next);

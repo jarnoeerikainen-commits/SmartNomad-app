@@ -70,6 +70,24 @@ const Index = () => {
     }
   }, []);
 
+  // React to demo persona switching: reload countries + subscription from localStorage
+  useEffect(() => {
+    const reload = () => {
+      const c = localStorage.getItem('trackedCountries');
+      setCountries(c ? JSON.parse(c) : []);
+      const s = localStorage.getItem('subscription');
+      if (s) setSubscription(JSON.parse(s));
+      const p = localStorage.getItem('userProfile');
+      if (p) setUserProfile(JSON.parse(p));
+    };
+    window.addEventListener('supernomad:demo-persona-applied', reload);
+    window.addEventListener('supernomad:demo-persona-cleared', reload);
+    return () => {
+      window.removeEventListener('supernomad:demo-persona-applied', reload);
+      window.removeEventListener('supernomad:demo-persona-cleared', reload);
+    };
+  }, []);
+
   const handleCloseAuroraIntro = () => {
     localStorage.setItem('supernomad_avatar_intro_seen', '1');
     setShowAuroraIntro(false);

@@ -2,6 +2,34 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { DEMO_PERSONAS, DemoPersona, refreshDemoPersonas } from '@/data/demoPersonas';
 import { MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, getAwardCardsAIContext } from '@/data/awardProgramsData';
 import { CalendarService } from '@/services/CalendarService';
+import { DEMO_PERSONA_TRACKING } from '@/data/demoPersonaCountries';
+
+const DEMO_LIFESTYLE_BACKUP_KEYS = {
+  trackedCountries: 'supernomad_pre_demo_trackedCountries',
+  subscription: 'supernomad_pre_demo_subscription',
+  supernomad_user_mode: 'supernomad_pre_demo_user_mode',
+} as const;
+
+type LifestyleKey = keyof typeof DEMO_LIFESTYLE_BACKUP_KEYS;
+
+const backupLifestyle = (key: LifestyleKey) => {
+  const current = localStorage.getItem(key);
+  const backupKey = DEMO_LIFESTYLE_BACKUP_KEYS[key];
+  if (current !== null && !localStorage.getItem(backupKey)) {
+    localStorage.setItem(backupKey, current);
+  }
+};
+
+const restoreLifestyle = (key: LifestyleKey) => {
+  const backupKey = DEMO_LIFESTYLE_BACKUP_KEYS[key];
+  const backup = localStorage.getItem(backupKey);
+  if (backup !== null) {
+    localStorage.setItem(key, backup);
+    localStorage.removeItem(backupKey);
+  } else {
+    localStorage.removeItem(key);
+  }
+};
 
 interface DemoPersonaContextType {
   activePersona: DemoPersona | null;
@@ -194,6 +222,19 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // Store award cards AI context for concierge
       const awardCards = id === 'meghan' ? MEGHAN_AWARD_CARDS : JOHN_AWARD_CARDS;
       localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));
+
+      // Lifestyle wiring — countries, mode, subscription tier
+      const tracking = DEMO_PERSONA_TRACKING[id];
+      if (tracking) {
+        backupLifestyle('trackedCountries');
+        backupLifestyle('subscription');
+        backupLifestyle('supernomad_user_mode');
+        localStorage.setItem('trackedCountries', JSON.stringify(tracking.countries));
+        localStorage.setItem('subscription', JSON.stringify({ tier: tracking.tier, requestsUsed: 0, requestsLimit: 10000, lastReset: new Date().toISOString() }));
+        localStorage.setItem('supernomad_user_mode', tracking.mode);
+        window.dispatchEvent(new CustomEvent('supernomad:demo-persona-applied', { detail: { id } }));
+        window.dispatchEvent(new CustomEvent('supernomad:user-mode-changed', { detail: { mode: tracking.mode } }));
+      }
     } else {
       // Clear demo data
       localStorage.removeItem('supernomad_active_demo_persona');
@@ -204,8 +245,12 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.removeItem('awardCardsAIContext');
       restoreAfterDemo('userProfile');
       restoreAfterDemo('enhancedProfile');
+      restoreLifestyle('trackedCountries');
+      restoreLifestyle('subscription');
+      restoreLifestyle('supernomad_user_mode');
       localStorage.removeItem('jetSearchAIContext');
       window.dispatchEvent(new CustomEvent('supernomad:demo-persona-cleared'));
+      window.dispatchEvent(new CustomEvent('supernomad:user-mode-changed'));
     }
   }, []);
 
