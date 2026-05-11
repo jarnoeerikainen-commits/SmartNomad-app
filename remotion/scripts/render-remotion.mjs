@@ -34,7 +34,8 @@ await renderMedia({
   codec: "h264",
   outputLocation: process.env.REMOTION_OUTPUT ?? "/mnt/documents/SuperNomad_Dynamic_Teaser_silent.mp4",
   puppeteerInstance: browser,
-  muted: true,
+  muted: process.env.REMOTION_MUTED === "true",
+  audioCodec: "aac",
   concurrency: 1,
   onProgress: ({ progress }) => {
     if (Math.round(progress * 100) % 10 === 0) {

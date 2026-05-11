@@ -36,7 +36,7 @@ export const TeaserV2: React.FC = () => {
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 18 })} />
         <TransitionSeries.Sequence durationInFrames={170}><ConciergeSceneV2 /></TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 18 })} />
-        <TransitionSeries.Sequence durationInFrames={134}><ClosingSceneV2 /></TransitionSeries.Sequence>
+        <TransitionSeries.Sequence durationInFrames={265}><ClosingSceneV2 /></TransitionSeries.Sequence>
       </TransitionSeries>
       <Vignette />
       <FilmGrain />
@@ -63,7 +63,7 @@ export const EcosystemV2: React.FC = () => {
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 24 })} />
         <TransitionSeries.Sequence durationInFrames={560}><ConciergeSceneV2 /></TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 26 })} />
-        <TransitionSeries.Sequence durationInFrames={362}><ClosingSceneV2 /></TransitionSeries.Sequence>
+        <TransitionSeries.Sequence durationInFrames={870}><ClosingSceneV2 /></TransitionSeries.Sequence>
       </TransitionSeries>
       <Vignette />
       <FilmGrain />
