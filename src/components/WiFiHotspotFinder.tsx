@@ -72,7 +72,7 @@ const WiFiHotspotFinder: React.FC<WiFiHotspotFinderProps> = ({
   const [userContributions, setUserContributions] = useState(0);
   const [wifiTokens, setWifiTokens] = useState(0);
 
-  const isPremium = subscription.tier === 'premium';
+  const isPremium = subscription.tier !== 'free';
 
   // Mock hotspot data - in production, this would come from WiFi Map API
   const mockHotspots: WiFiHotspot[] = [
