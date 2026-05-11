@@ -19,7 +19,7 @@ import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
 
 const Landing: React.FC = () => {
-  const [filmMode, setFilmMode] = useState<'closed' | 'teaser' | 'full'>('closed');
+  const [filmMode, setFilmMode] = useState<'closed' | 'teaser'>('closed');
 
   useEffect(() => {
     document.title = 'SuperNomad — The Operating System for Global Citizens';
@@ -107,10 +107,9 @@ const Landing: React.FC = () => {
             <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
               <div className="relative overflow-hidden bg-[hsl(220_22%_5%)]">
                 <video
-                  key={filmMode}
                   className="aspect-video h-auto w-full object-contain bg-[hsl(220_22%_5%)]"
-                  src={filmMode === 'teaser' ? '/videos/supernomad-teaser.mp4' : '/videos/supernomad-ecosystem-film.mp4'}
-                  poster={filmMode === 'teaser' ? heroImg : travelImg}
+                  src="/videos/supernomad-teaser.mp4"
+                  poster={heroImg}
                   controls
                   autoPlay
                   playsInline
@@ -118,14 +117,14 @@ const Landing: React.FC = () => {
                 />
                 <div className="pointer-events-none absolute left-4 top-4 sm:left-6 sm:top-6">
                   <Badge className="border-[hsl(43_96%_56%/0.3)] bg-[hsl(220_22%_6%/0.78)] text-[hsl(var(--gold))]">
-                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '30-second AI teaser' : '60-second ecosystem film'}
+                    <Film className="mr-1.5 h-3 w-3" /> 30-second AI teaser
                   </Badge>
                 </div>
               </div>
               <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-8">
                 <div className="space-y-5">
                   <div className="flex items-center gap-2 text-sm text-[hsl(30_12%_78%)]"><Clock className="h-4 w-4 text-[hsl(var(--gold))]" /> Skip anytime · warm voice narration included</div>
-                  {(filmMode === 'teaser' ? cinematicMoments.slice(0, 3) : cinematicMoments).map((moment, index) => (
+                  {cinematicMoments.slice(0, 3).map((moment, index) => (
                     <div key={moment.label} className="flex gap-4 rounded-xl border border-[hsl(43_96%_56%/0.14)] bg-[hsl(220_22%_12%/0.72)] p-4">
                       <span className="font-display text-2xl text-[hsl(var(--gold))]">0{index + 1}</span>
                       <div><div className="font-semibold text-white">{moment.label}</div><div className="text-sm leading-snug text-[hsl(30_12%_76%)]">{moment.detail}</div></div>
@@ -218,11 +217,6 @@ const Landing: React.FC = () => {
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
-              <button type="button" onClick={() => setFilmMode('full')}>
-                <Button size="lg" variant="outline" className="w-full border-[hsl(43_96%_56%/0.4)] bg-transparent px-5 py-4 text-sm text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white sm:w-auto sm:px-7 sm:py-5 sm:text-base">
-                  Longer film
-                </Button>
-              </button>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
@@ -280,14 +274,13 @@ const Landing: React.FC = () => {
               <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]"><PlayCircle className="mr-1.5 h-3 w-3" /> Cinematic website layer</Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">Less SaaS page. More private-bank travel command room.</h2>
               <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">The new landing experience shows SuperNomad through real-world moments: arrival, protection, community, identity and company intelligence — while keeping instant access to the app and Back Office.</p>
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={() => setFilmMode('teaser')} className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button>
-                <Button onClick={() => setFilmMode('full')} variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Open longer video</Button>
-              </div>
+               <div className="flex flex-wrap gap-3">
+                 <Button onClick={() => setFilmMode('teaser')} className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button>
+               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {cinematicMoments.map((moment, index) => (
-                <button key={moment.label} type="button" onClick={() => setFilmMode(index === 0 ? 'teaser' : 'full')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
+                <button key={moment.label} type="button" onClick={() => setFilmMode('teaser')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
                   <img src={moment.img} alt={moment.label} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.35)] to-transparent" />
                   <div className="absolute bottom-0 p-4 sm:p-5">
