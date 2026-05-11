@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Home } from 'lucide-react';
+import { Crown, Home, Gem } from 'lucide-react';
 import { Subscription, PricingTier } from '@/types/subscription';
 
 interface PricingCardProps {
@@ -49,6 +49,24 @@ export const PRICING_TIERS: PricingTier[] = [
       'Travel Reports (PDF + Excel exports)',
       'Priority 24/7 support'
     ]
+  },
+  {
+    id: 'sovereign',
+    name: 'Sovereign',
+    price: 29,
+    billing: 'monthly',
+    description: 'White-glove. Family vault. Empty-leg alerts.',
+    userLimit: '4 seats',
+    features: [
+      'Everything in Premium',
+      'Unlimited AI requests',
+      'Dedicated Concierge persona with long-term memory',
+      'Family Vault — 4 seats with encrypted sharing',
+      'Priority Trust Pass verification (under 24h)',
+      'White-glove visa & tax review (quarterly)',
+      'Empty-leg private jet alerts',
+      'Direct line to human ops 24/7'
+    ]
   }
 ];
 
@@ -57,6 +75,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
 
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
+      case 'sovereign': return <Gem className="w-5 h-5" />;
       case 'premium': return <Crown className="w-5 h-5" />;
       default: return <Home className="w-5 h-5" />;
     }
@@ -72,7 +91,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
               {currentTier.name} Plan
             </CardTitle>
           </div>
-          {subscription.tier === 'premium' && (
+          {subscription.tier !== 'free' && (
             <Badge variant="secondary" className="bg-green-100 text-green-700">
               Active
             </Badge>
