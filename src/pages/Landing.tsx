@@ -19,7 +19,7 @@ import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
 
 const Landing: React.FC = () => {
-  const [filmMode, setFilmMode] = useState<'closed' | 'teaser' | 'full'>('closed');
+  const [filmMode, setFilmMode] = useState<'closed' | 'teaser'>('closed');
 
   useEffect(() => {
     document.title = 'SuperNomad — The Operating System for Global Citizens';
@@ -107,10 +107,9 @@ const Landing: React.FC = () => {
             <div className="grid lg:grid-cols-[1.4fr_0.9fr]">
               <div className="relative overflow-hidden bg-[hsl(220_22%_5%)]">
                 <video
-                  key={filmMode}
                   className="aspect-video h-auto w-full object-contain bg-[hsl(220_22%_5%)]"
-                  src={filmMode === 'teaser' ? '/videos/supernomad-teaser.mp4' : '/videos/supernomad-ecosystem-film.mp4'}
-                  poster={filmMode === 'teaser' ? heroImg : travelImg}
+                  src="/videos/supernomad-teaser.mp4"
+                  poster={heroImg}
                   controls
                   autoPlay
                   playsInline
@@ -118,14 +117,14 @@ const Landing: React.FC = () => {
                 />
                 <div className="pointer-events-none absolute left-4 top-4 sm:left-6 sm:top-6">
                   <Badge className="border-[hsl(43_96%_56%/0.3)] bg-[hsl(220_22%_6%/0.78)] text-[hsl(var(--gold))]">
-                    <Film className="mr-1.5 h-3 w-3" /> {filmMode === 'teaser' ? '30-second AI teaser' : '60-second ecosystem film'}
+                    <Film className="mr-1.5 h-3 w-3" /> 30-second AI teaser
                   </Badge>
                 </div>
               </div>
               <div className="p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-8">
                 <div className="space-y-5">
                   <div className="flex items-center gap-2 text-sm text-[hsl(30_12%_78%)]"><Clock className="h-4 w-4 text-[hsl(var(--gold))]" /> Skip anytime · warm voice narration included</div>
-                  {(filmMode === 'teaser' ? cinematicMoments.slice(0, 3) : cinematicMoments).map((moment, index) => (
+                  {cinematicMoments.slice(0, 3).map((moment, index) => (
                     <div key={moment.label} className="flex gap-4 rounded-xl border border-[hsl(43_96%_56%/0.14)] bg-[hsl(220_22%_12%/0.72)] p-4">
                       <span className="font-display text-2xl text-[hsl(var(--gold))]">0{index + 1}</span>
                       <div><div className="font-semibold text-white">{moment.label}</div><div className="text-sm leading-snug text-[hsl(30_12%_76%)]">{moment.detail}</div></div>
@@ -218,11 +217,6 @@ const Landing: React.FC = () => {
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
-              <button type="button" onClick={() => setFilmMode('full')}>
-                <Button size="lg" variant="outline" className="w-full border-[hsl(43_96%_56%/0.4)] bg-transparent px-5 py-4 text-sm text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white sm:w-auto sm:px-7 sm:py-5 sm:text-base">
-                  Longer film
-                </Button>
-              </button>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
