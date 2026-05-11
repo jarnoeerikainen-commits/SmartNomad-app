@@ -14,11 +14,11 @@ export const TaxPanel: React.FC<{ delay?: number }> = ({ delay = 12 }) => {
   const y = interpolate(enter, [0, 1], [40, 0]);
 
   const countries = [
-    { flag: "🇵🇹", name: "Portugal", days: 132, cap: 183, status: "safe" },
-    { flag: "🇪🇸", name: "Spain", days: 168, cap: 183, status: "warn" },
-    { flag: "🇸🇬", name: "Singapore", days: 41, cap: 183, status: "safe" },
-    { flag: "🇦🇪", name: "UAE", days: 22, cap: 183, status: "safe" },
-    { flag: "🇪🇪", name: "Estonia", days: 184, cap: 183, status: "trap" },
+    { flag: "PT", name: "Portugal", days: 132, cap: 183, status: "safe" },
+    { flag: "ES", name: "Spain", days: 168, cap: 183, status: "warn" },
+    { flag: "SG", name: "Singapore", days: 41, cap: 183, status: "safe" },
+    { flag: "AE", name: "UAE", days: 22, cap: 183, status: "safe" },
+    { flag: "EE", name: "Estonia", days: 184, cap: 183, status: "trap" },
   ];
 
   return (
