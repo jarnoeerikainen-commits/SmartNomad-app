@@ -101,7 +101,7 @@ const PricingCard: React.FC<PricingCardProps> = ({ subscription, onUpgradeClick 
       <CardContent className="space-y-3">
         <div>
           <div className="text-2xl font-bold text-primary mb-1">
-            {currentTier.price === 0 ? 'Free' : `$${currentTier.price}/month`}
+            {currentTier.price === 0 ? 'Free' : `${currentTier.id === 'sovereign' ? '€' : '$'}${currentTier.price}/month`}
           </div>
           <p className="text-xs text-muted-foreground mb-1">{currentTier.description}</p>
         </div>
