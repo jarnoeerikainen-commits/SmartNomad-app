@@ -2,6 +2,34 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { DEMO_PERSONAS, DemoPersona, refreshDemoPersonas } from '@/data/demoPersonas';
 import { MEGHAN_AWARD_CARDS, JOHN_AWARD_CARDS, getAwardCardsAIContext } from '@/data/awardProgramsData';
 import { CalendarService } from '@/services/CalendarService';
+import { DEMO_PERSONA_TRACKING } from '@/data/demoPersonaCountries';
+
+const DEMO_LIFESTYLE_BACKUP_KEYS = {
+  trackedCountries: 'supernomad_pre_demo_trackedCountries',
+  subscription: 'supernomad_pre_demo_subscription',
+  supernomad_user_mode: 'supernomad_pre_demo_user_mode',
+} as const;
+
+type LifestyleKey = keyof typeof DEMO_LIFESTYLE_BACKUP_KEYS;
+
+const backupLifestyle = (key: LifestyleKey) => {
+  const current = localStorage.getItem(key);
+  const backupKey = DEMO_LIFESTYLE_BACKUP_KEYS[key];
+  if (current !== null && !localStorage.getItem(backupKey)) {
+    localStorage.setItem(backupKey, current);
+  }
+};
+
+const restoreLifestyle = (key: LifestyleKey) => {
+  const backupKey = DEMO_LIFESTYLE_BACKUP_KEYS[key];
+  const backup = localStorage.getItem(backupKey);
+  if (backup !== null) {
+    localStorage.setItem(key, backup);
+    localStorage.removeItem(backupKey);
+  } else {
+    localStorage.removeItem(key);
+  }
+};
 
 interface DemoPersonaContextType {
   activePersona: DemoPersona | null;
