@@ -8,9 +8,13 @@ import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActi
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
+import ThreatTicker from '@/components/ThreatIntelligence/ThreatTicker';
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import SovereignAccessNudge from '@/components/dashboard/SovereignAccessNudge';
 import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
+import ModeSwitcher from '@/components/dashboard/ModeSwitcher';
+import ActiveTripCockpit from '@/components/dashboard/ActiveTripCockpit';
+import { useActiveTrip } from '@/hooks/useActiveTrip';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +32,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
   const { t } = useLanguage();
   const { getPinnedFeatures, isVisible } = useFeaturePreferences();
   const pinnedFeatures = getPinnedFeatures();
+  const { isActive: tripActive } = useActiveTrip(countries);
 
   const showThreat = isVisible('dash-threat');
   const showWelcome = isVisible('dash-welcome');
@@ -40,12 +45,15 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
+      <ThreatTicker onExpand={() => onNavigate('threats')} />
+      <ModeSwitcher />
+      {tripActive && <ActiveTripCockpit countries={countries} onNavigate={onNavigate} />}
       {showThreat && <ThreatDashboard />}
       <SuperNomadCallCard onNavigate={onNavigate} />
       <SovereignAccessNudge onOpen={() => onNavigate('sovereign-access')} />
 
       {/* Welcome */}
-      {showWelcome && (
+      {showWelcome && !tripActive && (
         <div className="space-y-6">
               <div className="text-center space-y-4 mb-10 pt-2">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-2">
