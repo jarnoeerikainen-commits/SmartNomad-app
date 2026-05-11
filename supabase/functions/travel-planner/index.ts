@@ -4,6 +4,7 @@ import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_shared/schoolHolidays.ts";
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
+import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
 import { auditedAIGatewayStream } from "../_shared/aiAudit.ts";
 
 const corsHeaders = {
@@ -263,8 +264,10 @@ Generate the full plan now.`;
       escalationType: 'danger_gate_if_level_4',
     }, {
         model,
+        temperature: 0.3,
+        top_p: 0.85,
         messages: [
-          { role: "system", content: buildScopeGuard('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
+          { role: "system", content: buildScopeGuard('travel-planner') + buildVerifiedSourcesBlock('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
           { role: "user", content: userMessage },
         ],
         stream: true,
