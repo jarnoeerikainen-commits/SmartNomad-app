@@ -274,14 +274,13 @@ const Landing: React.FC = () => {
               <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]"><PlayCircle className="mr-1.5 h-3 w-3" /> Cinematic website layer</Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">Less SaaS page. More private-bank travel command room.</h2>
               <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">The new landing experience shows SuperNomad through real-world moments: arrival, protection, community, identity and company intelligence — while keeping instant access to the app and Back Office.</p>
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={() => setFilmMode('teaser')} className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button>
-                <Button onClick={() => setFilmMode('full')} variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Open longer video</Button>
-              </div>
+               <div className="flex flex-wrap gap-3">
+                 <Button onClick={() => setFilmMode('teaser')} className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button>
+               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {cinematicMoments.map((moment, index) => (
-                <button key={moment.label} type="button" onClick={() => setFilmMode(index === 0 ? 'teaser' : 'full')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
+                <button key={moment.label} type="button" onClick={() => setFilmMode('teaser')} className="group relative overflow-hidden rounded-2xl border border-[hsl(43_96%_56%/0.18)] aspect-[4/3] text-left shadow-[0_24px_70px_-34px_hsl(0_0%_0%/0.9)]">
                   <img src={moment.img} alt={moment.label} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220_22%_5%)] via-[hsl(220_22%_8%/0.35)] to-transparent" />
                   <div className="absolute bottom-0 p-4 sm:p-5">
