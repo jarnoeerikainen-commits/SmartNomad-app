@@ -1,3 +1,11 @@
+import { loadFont as loadDisplay } from "@remotion/google-fonts/PlayfairDisplay";
+import { loadFont as loadUi } from "@remotion/google-fonts/Inter";
+import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
+
+const display = loadDisplay("normal", { weights: ["600", "700", "900"], subsets: ["latin"] });
+const ui = loadUi("normal", { weights: ["400", "500", "600", "700", "800"], subsets: ["latin"] });
+const mono = loadMono("normal", { weights: ["400", "600", "700"], subsets: ["latin"] });
+
 export const C = {
   deep: "#05070B",
   ink: "#0B111C",
@@ -15,7 +23,7 @@ export const C = {
 };
 
 export const FONT = {
-  display: '"Playfair Display", "Times New Roman", serif',
-  ui: '"Inter", "Helvetica Neue", Arial, sans-serif',
-  mono: '"JetBrains Mono", "Courier New", monospace',
+  display: display.fontFamily,
+  ui: ui.fontFamily,
+  mono: mono.fontFamily,
 };
