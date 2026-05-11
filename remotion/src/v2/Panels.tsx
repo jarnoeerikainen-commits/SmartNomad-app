@@ -56,7 +56,7 @@ export const TaxPanel: React.FC<{ delay?: number }> = ({ delay = 12 }) => {
             <div key={c.name} style={{ marginBottom: 14, opacity: rowEnter }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ fontSize: 22 }}>{c.flag}</div>
+                  <div style={{ width: 36, height: 24, borderRadius: 4, background: "rgba(212,175,55,0.16)", border: `1px solid ${C.gold}55`, display: "flex", alignItems: "center", justifyContent: "center", color: C.goldLight, fontSize: 11, fontWeight: 800, letterSpacing: 1, fontFamily: FONT.mono }}>{c.flag}</div>
                   <div style={{ color: C.pearl, fontSize: 17, fontWeight: 600 }}>{c.name}</div>
                 </div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6, fontFamily: FONT.mono }}>
