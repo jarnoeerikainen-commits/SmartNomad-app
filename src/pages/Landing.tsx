@@ -188,27 +188,33 @@ const Landing: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
+          {/* Spotlight glow */}
+          <div className="pointer-events-none absolute left-1/2 top-1/3 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,hsl(43_96%_56%/0.18),transparent_70%)] blur-2xl" />
         </div>
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-4 py-4 text-center sm:px-6 sm:py-6 md:py-8">
-          <div className="animate-fade-in w-full max-w-[64rem] space-y-3 sm:space-y-4 md:space-y-5">
+          <div className="animate-fade-in w-full max-w-[64rem] space-y-4 sm:space-y-5 md:space-y-6">
+            {/* Editorial registration mark */}
+            <div className="mx-auto flex items-center justify-center gap-3 font-mono text-[10px] uppercase tracking-[0.4em] text-[hsl(30_12%_70%)] sm:text-[11px]">
+              <span className="h-px w-8 bg-[hsl(43_96%_56%/0.5)]" />
+              <span>§ 01 · Sovereign OS · Est. 2026</span>
+              <span className="h-px w-8 bg-[hsl(43_96%_56%/0.5)]" />
+            </div>
+
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
             <h1 className="mx-auto font-display font-bold leading-none tracking-tight">
               <span className="block whitespace-nowrap text-[clamp(2.8rem,8.5vw,6.5rem)]">
                 <span className="text-white">Super</span>
-                <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
+                <span className="sn-gold-foil">Nomad</span>
               </span>
-              <span className="mx-auto mt-3 block max-w-[24ch] text-[clamp(1.25rem,3.3vw,2.5rem)] font-semibold leading-tight text-white [text-wrap:balance]">
-                Your borderless life, one app.
+              <span className="mx-auto mt-3 block min-h-[1.4em] max-w-[26ch] text-[clamp(1.25rem,3.3vw,2.5rem)] font-semibold italic leading-tight text-white [text-wrap:balance]">
+                <Typewriter text="Your borderless life, one app." />
               </span>
             </h1>
             <p className="mx-auto max-w-[46rem] text-sm leading-relaxed text-[hsl(30_12%_84%)] [text-wrap:balance] sm:text-base md:text-lg">
               One secure AI command layer for identity, residency, travel, safety and lifestyle logistics — designed for people whose life moves across borders.
-            </p>
-            <p className="mx-auto max-w-[42rem] text-xs leading-relaxed text-[hsl(30_12%_76%)] [text-wrap:balance] sm:text-sm md:text-base">
-              Track tax days, protect documents, manage border deadlines and coordinate plans from a single calm workspace.
             </p>
 
             <div className="flex flex-col items-stretch justify-center gap-2 pt-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
@@ -217,12 +223,14 @@ const Landing: React.FC = () => {
                   <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[hsl(var(--gold))]" /> Watch teaser
                 </Button>
               </button>
-              <Link to="/app">
-                <Button size="lg" className="w-full bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.02] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
-                  <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                </Button>
-              </Link>
+              <Magnetic>
+                <Link to="/app">
+                  <Button size="lg" className="sn-gold-ring w-full rounded-md bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.03] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
+                    <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  </Button>
+                </Link>
+              </Magnetic>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
