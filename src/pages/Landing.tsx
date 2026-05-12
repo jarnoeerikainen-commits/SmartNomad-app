@@ -17,6 +17,7 @@ import communityImg from '@/assets/landing-community.jpg';
 import securityImg from '@/assets/landing-security.jpg';
 import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
+import { LiveTicker, Typewriter, Magnetic, ScrollCounter, ConciergeOrb, HairlineFrame } from '@/components/landing/SovereignWow';
 
 const Landing: React.FC = () => {
   const [filmMode, setFilmMode] = useState<'closed' | 'teaser'>('closed');
