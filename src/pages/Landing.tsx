@@ -853,6 +853,9 @@ const Landing: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Breathing concierge orb (landing only) */}
+      <ConciergeOrb />
     </div>
   );
 };
