@@ -176,10 +176,15 @@ const Landing: React.FC = () => {
         </div>
       </header>
 
+      {/* Live ticker — sits flush under the nav, breathes the brand */}
+      <div className="fixed left-0 right-0 top-[60px] z-40">
+        <LiveTicker />
+      </div>
+
       {/* ============= HERO ============= */}
-      <section id="top" className="relative flex min-h-[100svh] items-center pt-20 pb-8 sm:pt-24 sm:pb-12 lg:min-h-[min(900px,100svh)]">
+      <section id="top" className="relative flex min-h-[100svh] items-center pt-28 pb-8 sm:pt-32 sm:pb-12 lg:min-h-[min(900px,100svh)]">
           <div className="absolute inset-0">
-          <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
+          <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover scale-105" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
