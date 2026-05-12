@@ -17,6 +17,7 @@ import communityImg from '@/assets/landing-community.jpg';
 import securityImg from '@/assets/landing-security.jpg';
 import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
+import { LiveTicker, Typewriter, Magnetic, ScrollCounter, ConciergeOrb, HairlineFrame } from '@/components/landing/SovereignWow';
 
 const Landing: React.FC = () => {
   const [filmMode, setFilmMode] = useState<'closed' | 'teaser'>('closed');
@@ -175,34 +176,45 @@ const Landing: React.FC = () => {
         </div>
       </header>
 
+      {/* Live ticker — sits flush under the nav, breathes the brand */}
+      <div className="fixed left-0 right-0 top-[60px] z-40">
+        <LiveTicker />
+      </div>
+
       {/* ============= HERO ============= */}
-      <section id="top" className="relative flex min-h-[100svh] items-center pt-20 pb-8 sm:pt-24 sm:pb-12 lg:min-h-[min(900px,100svh)]">
+      <section id="top" className="relative flex min-h-[100svh] items-center pt-28 pb-8 sm:pt-32 sm:pb-12 lg:min-h-[min(900px,100svh)]">
           <div className="absolute inset-0">
-          <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover" width={1920} height={1080} />
+          <img src={heroImg} alt="Global citizen at golden hour overlooking a futuristic skyline" className="w-full h-full object-cover scale-105" width={1920} height={1080} />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%/0.7)] via-[hsl(220_22%_8%/0.55)] to-[hsl(220_22%_8%)]" />
           <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220_22%_8%)] via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.06] bg-[linear-gradient(90deg,hsl(43_96%_56%/0.35)_1px,transparent_1px),linear-gradient(0deg,hsl(43_96%_56%/0.25)_1px,transparent_1px)] bg-[size:52px_52px]" />
+          {/* Spotlight glow */}
+          <div className="pointer-events-none absolute left-1/2 top-1/3 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,hsl(43_96%_56%/0.18),transparent_70%)] blur-2xl" />
         </div>
 
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-4 py-4 text-center sm:px-6 sm:py-6 md:py-8">
-          <div className="animate-fade-in w-full max-w-[64rem] space-y-3 sm:space-y-4 md:space-y-5">
+          <div className="animate-fade-in w-full max-w-[64rem] space-y-4 sm:space-y-5 md:space-y-6">
+            {/* Editorial registration mark */}
+            <div className="mx-auto flex items-center justify-center gap-3 font-mono text-[10px] uppercase tracking-[0.4em] text-[hsl(30_12%_70%)] sm:text-[11px]">
+              <span className="h-px w-8 bg-[hsl(43_96%_56%/0.5)]" />
+              <span>§ 01 · Sovereign OS · Est. 2026</span>
+              <span className="h-px w-8 bg-[hsl(43_96%_56%/0.5)]" />
+            </div>
+
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] hover:bg-[hsl(43_96%_56%/0.2)]">
               <Sparkles className="mr-1.5 h-3 w-3" /> The Sovereign OS for Global Citizens
             </Badge>
             <h1 className="mx-auto font-display font-bold leading-none tracking-tight">
               <span className="block whitespace-nowrap text-[clamp(2.8rem,8.5vw,6.5rem)]">
                 <span className="text-white">Super</span>
-                <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold-light))] to-[hsl(var(--gold-dark))] bg-clip-text text-transparent drop-shadow-[0_4px_30px_hsl(43_96%_56%/0.4)]">Nomad</span>
+                <span className="sn-gold-foil">Nomad</span>
               </span>
-              <span className="mx-auto mt-3 block max-w-[24ch] text-[clamp(1.25rem,3.3vw,2.5rem)] font-semibold leading-tight text-white [text-wrap:balance]">
-                Your borderless life, one app.
+              <span className="mx-auto mt-3 block min-h-[1.4em] max-w-[26ch] text-[clamp(1.25rem,3.3vw,2.5rem)] font-semibold italic leading-tight text-white [text-wrap:balance]">
+                <Typewriter text="Your borderless life, one app." />
               </span>
             </h1>
             <p className="mx-auto max-w-[46rem] text-sm leading-relaxed text-[hsl(30_12%_84%)] [text-wrap:balance] sm:text-base md:text-lg">
               One secure AI command layer for identity, residency, travel, safety and lifestyle logistics — designed for people whose life moves across borders.
-            </p>
-            <p className="mx-auto max-w-[42rem] text-xs leading-relaxed text-[hsl(30_12%_76%)] [text-wrap:balance] sm:text-sm md:text-base">
-              Track tax days, protect documents, manage border deadlines and coordinate plans from a single calm workspace.
             </p>
 
             <div className="flex flex-col items-stretch justify-center gap-2 pt-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
@@ -211,12 +223,14 @@ const Landing: React.FC = () => {
                   <PlayCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[hsl(var(--gold))]" /> Watch teaser
                 </Button>
               </button>
-              <Link to="/app">
-                <Button size="lg" className="w-full bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.02] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
-                  <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
-                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-                </Button>
-              </Link>
+              <Magnetic>
+                <Link to="/app">
+                  <Button size="lg" className="sn-gold-ring w-full rounded-md bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.03] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
+                    <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
+                    <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  </Button>
+                </Link>
+              </Magnetic>
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
@@ -244,8 +258,11 @@ const Landing: React.FC = () => {
               <Badge className="bg-[hsl(0_80%_58%/0.15)] text-[hsl(0_80%_68%)] border-[hsl(0_80%_58%/0.3)]">
                 <AlertTriangle className="mr-1.5 h-3 w-3" /> The Hidden Cost of Borderless Living
               </Badge>
-              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-                "The 184th day might be the most expensive day of your life."
+              <div aria-hidden className="font-display font-black leading-[0.85] tracking-tighter text-[clamp(6rem,18vw,12rem)]">
+                <span className="sn-gold-foil"><ScrollCounter to={184} duration={1600} /></span>
+              </div>
+              <h2 className="font-display text-2xl md:text-4xl font-bold italic leading-tight text-white">
+                "The 184<sup className="text-[0.6em] text-[hsl(var(--gold))]">th</sup> day might be the most expensive day of your life."
               </h2>
               <p className="text-lg text-[hsl(30_12%_80%)] leading-relaxed">
                 One miscounted day can trigger tax residency in a country you never intended to live in: audits, double taxation, frozen bank accounts. SuperNomad counts every day silently — across <strong className="text-white">195+ jurisdictions</strong> — and warns you long before the line is crossed.
@@ -836,6 +853,9 @@ const Landing: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Breathing concierge orb (landing only) */}
+      <ConciergeOrb />
     </div>
   );
 };
