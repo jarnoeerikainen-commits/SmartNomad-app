@@ -125,7 +125,7 @@ export const ConciergeOrb: React.FC = () => {
             </button>
           </div>
           <p className="leading-snug">{whisper}</p>
-          <Link to="/app" className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[hsl(var(--gold))] hover:text-[hsl(var(--gold-light))]">
+          <Link to="/app?tour=1" className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[hsl(var(--gold))] hover:text-[hsl(var(--gold-light))]">
             Begin tour <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
