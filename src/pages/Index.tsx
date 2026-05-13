@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import SovereignAccessTour from '@/components/permissions/SovereignAccessTour';
+import GuidedTour from '@/components/tour/GuidedTour';
 import AuroraIntro from '@/components/avatar/AuroraIntro';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
