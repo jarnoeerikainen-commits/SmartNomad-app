@@ -63,14 +63,14 @@ const Index = () => {
       setSubscription(JSON.parse(savedSubscription));
     }
 
-    // Show onboarding for first-time users
-    if (!hasSeenOnboarding) {
+    // Guided tour from landing takes precedence over onboarding overlays
+    if (showGuidedTour) {
+      // suppress others
+    } else if (!hasSeenOnboarding) {
       setShowOnboarding(true);
     } else if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
-      // First post-onboarding launch → meet Aurora
       setShowAuroraIntro(true);
     } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-      // After Aurora → Sovereign Access tour
       setShowSovereignTour(true);
     }
   }, []);
