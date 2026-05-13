@@ -18,6 +18,10 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAuroraIntro, setShowAuroraIntro] = useState(false);
   const [showSovereignTour, setShowSovereignTour] = useState(false);
+  const [showGuidedTour, setShowGuidedTour] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).get('tour') === '1';
+  });
   const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
