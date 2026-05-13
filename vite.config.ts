@@ -16,6 +16,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Published @heygen/streaming-avatar is missing its built `lib/` output
+      // and breaks Vite resolution. Alias to a local stub so production builds
+      // succeed; AuroraIntro (the only consumer) is gated behind a HeyGen key
+      // and is not on the guided-tour or main app path.
+      "@heygen/streaming-avatar": path.resolve(__dirname, "./src/lib/heygenStub.js"),
     },
   },
   build: {
