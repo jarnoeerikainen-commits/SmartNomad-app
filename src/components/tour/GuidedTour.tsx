@@ -92,14 +92,19 @@ const GuidedTour: React.FC<{ onExit: () => void }> = ({ onExit }) => {
   const [muted, setMuted] = useState(false);
   const [idx, setIdx] = useState(0);
   const cancelledRef = useRef(false);
-  const advanceTimerRef = useRef<number | null>(null);
 
   const stop = STOPS[idx];
   const total = STOPS.length;
   const progress = ((idx + 1) / total) * 100;
 
   const navigateTo = useCallback((section: string) => {
-    window.dispatchEvent(new CustomEvent('supernomad:navigate', { detail: { section } }));
+    // Bounce through home/dashboard first to fully tear down any prior
+    // panel (notably the AI Concierge tab), so the next section renders
+    // on a clean slate and isn't visually overlapped.
+    window.dispatchEvent(new CustomEvent('supernomad:home'));
+    window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('supernomad:navigate', { detail: { section } }));
+    }, 60);
   }, []);
 
   const goNext = useCallback(() => {
@@ -110,11 +115,20 @@ const GuidedTour: React.FC<{ onExit: () => void }> = ({ onExit }) => {
   const exit = useCallback(() => {
     cancelledRef.current = true;
     cancelSpeech();
-    if (advanceTimerRef.current) window.clearTimeout(advanceTimerRef.current);
     onExit();
   }, [onExit]);
 
-  // Drive each stop: navigate → speak → auto advance
+  // Split narration into sentences for reliable, complete TTS playback.
+  // Browsers (esp. Chrome) cut single utterances after ~15s — short
+  // sentences avoid that and let us guarantee no mid-sentence stops.
+  const splitSentences = (text: string): string[] => {
+    const parts = text
+      .replace(/\s+/g, ' ')
+      .match(/[^.!?]+[.!?]+["')\]]?|[^.!?]+$/g);
+    return (parts ?? [text]).map((s) => s.trim()).filter(Boolean);
+  };
+
+  // Drive each stop: navigate → speak ALL sentences fully → advance
   useEffect(() => {
     if (!started || paused) return;
     cancelledRef.current = false;
@@ -122,16 +136,40 @@ const GuidedTour: React.FC<{ onExit: () => void }> = ({ onExit }) => {
 
     navigateTo(stop.section);
     cancelSpeech();
-    if (advanceTimerRef.current) window.clearTimeout(advanceTimerRef.current);
 
+    const sentences = splitSentences(stop.narration);
+    // Floor dwell ensures the user sees the section even if speech is muted/unavailable
     const minDwell = stop.minDwellMs ?? Math.max(4500, stop.narration.length * 55);
-    const speechPromise = muted || !isSpeechAvailable()
-      ? new Promise<void>((r) => window.setTimeout(r, minDwell))
-      : speakLine(stop.narration, 'ai');
+    const dwellPromise = new Promise<void>((r) => window.setTimeout(r, minDwell));
 
-    const dwellPromise = new Promise<void>((r) => {
-      advanceTimerRef.current = window.setTimeout(r, minDwell);
-    });
+    const speechPromise: Promise<void> = (async () => {
+      if (muted || !isSpeechAvailable()) {
+        await new Promise<void>((r) => window.setTimeout(r, minDwell));
+        return;
+      }
+      // Chrome bug guard: keep speech engine awake during long narrations
+      const keepalive = window.setInterval(() => {
+        try {
+          if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+          }
+        } catch { /* noop */ }
+      }, 10000);
+      try {
+        for (const sentence of sentences) {
+          if (aborted || cancelledRef.current) break;
+          // speakLine resolves on end OR error — we always wait for it
+          await speakLine(sentence, 'ai');
+          // Tiny gap between sentences for natural cadence
+          if (!aborted && !cancelledRef.current) {
+            await new Promise<void>((r) => window.setTimeout(r, 120));
+          }
+        }
+      } finally {
+        window.clearInterval(keepalive);
+      }
+    })();
 
     Promise.all([speechPromise, dwellPromise]).then(() => {
       if (aborted || cancelledRef.current || paused) return;
@@ -144,7 +182,6 @@ const GuidedTour: React.FC<{ onExit: () => void }> = ({ onExit }) => {
 
     return () => {
       aborted = true;
-      if (advanceTimerRef.current) window.clearTimeout(advanceTimerRef.current);
       cancelSpeech();
     };
   }, [started, paused, idx, stop, muted, navigateTo, goNext, exit, total]);
