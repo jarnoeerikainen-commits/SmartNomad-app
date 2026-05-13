@@ -246,7 +246,21 @@ const Index = () => {
 
   return (
     <>
-      {showOnboarding && (
+      {showGuidedTour && (
+        <GuidedTour
+          onExit={() => {
+            setShowGuidedTour(false);
+            // Clear ?tour=1 from URL so reload doesn't restart
+            try {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('tour');
+              window.history.replaceState({}, '', url.toString());
+            } catch { /* noop */ }
+          }}
+        />
+      )}
+
+      {!showGuidedTour && showOnboarding && (
         <OnboardingFlow onComplete={() => {
           setShowOnboarding(false);
           if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
