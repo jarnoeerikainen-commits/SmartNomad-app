@@ -4,6 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
 import OnboardingFlow from '@/components/OnboardingFlow';
 import SovereignAccessTour from '@/components/permissions/SovereignAccessTour';
+import GuidedTour from '@/components/tour/GuidedTour';
 import AuroraIntro from '@/components/avatar/AuroraIntro';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
@@ -17,6 +18,10 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showAuroraIntro, setShowAuroraIntro] = useState(false);
   const [showSovereignTour, setShowSovereignTour] = useState(false);
+  const [showGuidedTour, setShowGuidedTour] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).get('tour') === '1';
+  });
   const { location: detectedLocation } = useLocation();
   const [subscription, setSubscription] = useState<Subscription>({
     tier: 'free',
@@ -58,14 +63,14 @@ const Index = () => {
       setSubscription(JSON.parse(savedSubscription));
     }
 
-    // Show onboarding for first-time users
-    if (!hasSeenOnboarding) {
+    // Guided tour from landing takes precedence over onboarding overlays
+    if (showGuidedTour) {
+      // suppress others
+    } else if (!hasSeenOnboarding) {
       setShowOnboarding(true);
     } else if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
-      // First post-onboarding launch → meet Aurora
       setShowAuroraIntro(true);
     } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-      // After Aurora → Sovereign Access tour
       setShowSovereignTour(true);
     }
   }, []);
@@ -241,7 +246,21 @@ const Index = () => {
 
   return (
     <>
-      {showOnboarding && (
+      {showGuidedTour && (
+        <GuidedTour
+          onExit={() => {
+            setShowGuidedTour(false);
+            // Clear ?tour=1 from URL so reload doesn't restart
+            try {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('tour');
+              window.history.replaceState({}, '', url.toString());
+            } catch { /* noop */ }
+          }}
+        />
+      )}
+
+      {!showGuidedTour && showOnboarding && (
         <OnboardingFlow onComplete={() => {
           setShowOnboarding(false);
           if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
