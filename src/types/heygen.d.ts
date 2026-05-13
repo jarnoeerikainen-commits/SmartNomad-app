@@ -4,7 +4,7 @@
 // which is only mounted post-signup with a HeyGen API key configured.
 declare module '@heygen/streaming-avatar' {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const StreamingAvatar: any;
+  class StreamingAvatar { constructor(...args: any[]); [key: string]: any; }
   export default StreamingAvatar;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   export const StreamingEvents: any;
