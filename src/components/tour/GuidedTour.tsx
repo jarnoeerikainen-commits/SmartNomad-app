@@ -43,10 +43,13 @@ const STOPS: Stop[] = [
       "Every visa, every expiry, every requirement. SuperNomad matches you to the right visa for your next destination — before you book the flight.",
   },
   {
-    section: 'ai',
+    // Stay on dashboard so the full Concierge chat panel doesn't take
+    // over the screen. The floating concierge presence remains visible
+    // alongside the dashboard while we narrate this step.
+    section: 'dashboard',
     title: 'Your A.I. Concierge',
     narration:
-      "Meet your concierge. Voice or chat, day or night. It books, plans, warns, translates, and remembers everything you tell it — encrypted end to end.",
+      "Meet your concierge — always one tap away. Voice or chat, day or night. It books, plans, warns, translates, and remembers everything you tell it — encrypted end to end.",
   },
   {
     section: 'explore-local-life',
