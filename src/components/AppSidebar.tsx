@@ -8,7 +8,7 @@ import {
   CloudRain, BookOpen, Truck, Building2, Crown, Globe2, Building,
   Siren, ShieldCheck, ShieldAlert, Baby, Calendar, Cat, MessageSquare,
   Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles, Receipt,
-  Briefcase
+  Briefcase, ChefHat
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -164,6 +164,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       label: t('sidebar.local_living'),
       items: [
         { id: 'global-city-services', label: t('sidebar.city_services'), icon: Building2 },
+        { id: 'fine-dining', label: 'Fine Dining', icon: ChefHat, badge: 'STARS', variant: 'secondary' as const },
         { id: 'weather-service', label: 'Weather Service', icon: CloudRain, badge: 'LIVE', variant: 'secondary' as const },
         { id: 'wellness', label: 'Wellness & Fitness', icon: Dumbbell, badge: 'NEW', variant: 'secondary' as const },
         { id: 'language-learning', label: t('sidebar.language_learning'), icon: BookOpen },

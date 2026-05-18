@@ -37,6 +37,7 @@ const SmartAlerts = lazy(() => import('./SmartAlerts').then(m => ({ default: m.S
 const TravelServices = lazy(() => import('./TravelServices'));
 const RemoteOffices = lazy(() => import('./RemoteWorkOffices/OfficeFinder'));
 const BusinessCentersPage = lazy(() => import('./BusinessCenters/BusinessCentersPage').then(m => ({ default: m.BusinessCentersPage })));
+const FineDiningHub = lazy(() => import('./FineDining/FineDiningHub'));
 const AirportLoungeAccess = lazy(() => import('./AirportLoungeAccess'));
 const GlobalCityServices = lazy(() => import('./GlobalCityServices'));
 const Settings = lazy(() => import('./Settings'));
@@ -432,6 +433,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'private-clubs': return <ClubsDirectory />;
       case 'family-services': return <NannyDirectory />;
       case 'global-city-services': return <GlobalCityServices />;
+      case 'fine-dining': return <FineDiningHub />;
       case 'my-travel-awards': return <MyAwards />;
       case 'esim': return <ESimServices />;
       case 'embassy': return <EmbassyDirectory />;
