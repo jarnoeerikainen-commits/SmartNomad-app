@@ -83,20 +83,54 @@ class FineDiningService {
       if (cached) return cached;
     }
 
-    const { data, error } = await supabase.functions.invoke('fine-dining', {
-      body: {
-        city: opts.city,
-        country: opts.country,
-        countryCode: opts.countryCode,
-        guides: opts.guides ?? ['michelin', 'worlds50best', 'la-liste', 'gault-millau'],
-        minStars: opts.minStars ?? 1,
-      },
-    });
+    // Use explicit fetch instead of supabase.functions.invoke — the Lovable
+    // preview proxy can intermittently interfere with the invoke() POST flow,
+    // producing "Failed to send a request to the Edge Function" errors.
+    const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fine-dining`;
+    const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
-    if (error) throw new Error(error.message || 'Failed to load fine dining data');
-    if (!data?.success || !data?.data) throw new Error(data?.error || 'No data returned');
+    let session: { access_token?: string } | null = null;
+    try {
+      const { data: s } = await supabase.auth.getSession();
+      session = s?.session ?? null;
+    } catch { /* anonymous ok */ }
 
-    const result = data.data as FineDiningCityData;
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: anonKey,
+          Authorization: `Bearer ${session?.access_token || anonKey}`,
+        },
+        body: JSON.stringify({
+          city: opts.city,
+          country: opts.country,
+          countryCode: opts.countryCode,
+          guides: opts.guides ?? ['michelin', 'worlds50best', 'la-liste', 'gault-millau'],
+          minStars: opts.minStars ?? 1,
+        }),
+      });
+    } catch (e) {
+      throw new Error(`Network error reaching fine dining service: ${e instanceof Error ? e.message : 'unknown'}`);
+    }
+
+    let payload: any = null;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error(`Fine dining service returned non-JSON (status ${response.status})`);
+    }
+
+    if (!response.ok) {
+      throw new Error(payload?.error || `Fine dining service error (${response.status})`);
+    }
+    if (!payload?.success || !payload?.data) {
+      throw new Error(payload?.error || 'No data returned');
+    }
+
+    const result = payload.data as FineDiningCityData;
     this.setCache(opts.cityId, result);
     return result;
   }
