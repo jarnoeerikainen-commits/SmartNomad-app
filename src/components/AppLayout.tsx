@@ -37,6 +37,7 @@ const SmartAlerts = lazy(() => import('./SmartAlerts').then(m => ({ default: m.S
 const TravelServices = lazy(() => import('./TravelServices'));
 const RemoteOffices = lazy(() => import('./RemoteWorkOffices/OfficeFinder'));
 const BusinessCentersPage = lazy(() => import('./BusinessCenters/BusinessCentersPage').then(m => ({ default: m.BusinessCentersPage })));
+const FineDiningHub = lazy(() => import('./FineDining/FineDiningHub'));
 const AirportLoungeAccess = lazy(() => import('./AirportLoungeAccess'));
 const GlobalCityServices = lazy(() => import('./GlobalCityServices'));
 const Settings = lazy(() => import('./Settings'));
