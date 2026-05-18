@@ -94,7 +94,7 @@ export async function callProvider<T>(opts: AdapterOptions<T>): Promise<AdapterR
   }
   const missing = required.filter((n) => !secrets[n]);
 
-  if (FORCE_DEMO || missing.length > 0) {
+  if (isForceDemo() || missing.length > 0) {
     const data = await opts.demo();
     return {
       data,
