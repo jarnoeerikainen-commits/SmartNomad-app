@@ -85,6 +85,7 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
 
   // LOCAL LIVING
   { id: 'global-city-services', label: 'City Services', icon: Building2, category: 'local', description: 'Services by city', defaultVisible: true, defaultPinned: false },
+  { id: 'fine-dining', label: 'Fine Dining', icon: ChefHat, category: 'local', badge: 'STARS', badgeVariant: 'secondary', description: 'Michelin, World\'s 50 Best, La Liste, Gault & Millau across the top 100 dining cities — with lead-time booking guidance', defaultVisible: true, defaultPinned: false },
   { id: 'weather-service', label: 'Weather Service', icon: CloudRain, category: 'local', badge: 'LIVE', badgeVariant: 'secondary', description: 'Weather & sport forecasts', defaultVisible: true, defaultPinned: true },
   { id: 'wellness', label: 'Wellness & Fitness', icon: Dumbbell, category: 'local', badge: 'NEW', badgeVariant: 'secondary', description: 'Gyms, yoga, spas', defaultVisible: true, defaultPinned: false },
   { id: 'language-learning', label: 'Language Learning', icon: BookOpen, category: 'local', description: 'Learn local languages', defaultVisible: true, defaultPinned: false },
