@@ -433,6 +433,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       case 'private-clubs': return <ClubsDirectory />;
       case 'family-services': return <NannyDirectory />;
       case 'global-city-services': return <GlobalCityServices />;
+      case 'fine-dining': return <FineDiningHub />;
       case 'my-travel-awards': return <MyAwards />;
       case 'esim': return <ESimServices />;
       case 'embassy': return <EmbassyDirectory />;
