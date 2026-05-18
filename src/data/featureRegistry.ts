@@ -7,7 +7,6 @@ import {
   Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
   Locate, Tag, Phone, Moon, TrendingUp, Receipt, ChefHat
 } from 'lucide-react';
-} from 'lucide-react';
 
 export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
 
