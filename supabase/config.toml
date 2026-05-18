@@ -112,3 +112,6 @@ verify_jwt = false
 verify_jwt = false
 [functions.admin-ai-ceo]
 verify_jwt = false
+
+[functions.fine-dining]
+verify_jwt = false
