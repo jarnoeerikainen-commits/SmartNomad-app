@@ -22,10 +22,11 @@ const StarChip: React.FC<{ stars: FineDiningRestaurant['michelinStars'] }> = ({ 
   if (stars === 'bib') {
     return <Badge variant="secondary" className="gap-1"><Award className="h-3 w-3" /> Bib Gourmand</Badge>;
   }
-  if (!stars || stars === 0) return null;
+  const count = typeof stars === 'number' ? stars : 0;
+  if (count <= 0) return null;
   return (
     <Badge variant="default" className="gap-1 bg-amber-500 hover:bg-amber-500 text-white">
-      {Array.from({ length: stars }).map((_, i) => <Star key={i} className="h-3 w-3 fill-white" />)}
+      {Array.from({ length: count }).map((_, i) => <Star key={i} className="h-3 w-3 fill-white" />)}
       <span className="ml-1">Michelin</span>
     </Badge>
   );
