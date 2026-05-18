@@ -82,7 +82,7 @@ export interface AdapterResult<T> {
   _error?: string;
 }
 
-const FORCE_DEMO = Deno.env.get("APP_FORCE_DEMO") === "1";
+const isForceDemo = () => Deno.env.get("APP_FORCE_DEMO") === "1";
 
 export async function callProvider<T>(opts: AdapterOptions<T>): Promise<AdapterResult<T>> {
   const started = performance.now();
@@ -94,7 +94,7 @@ export async function callProvider<T>(opts: AdapterOptions<T>): Promise<AdapterR
   }
   const missing = required.filter((n) => !secrets[n]);
 
-  if (FORCE_DEMO || missing.length > 0) {
+  if (isForceDemo() || missing.length > 0) {
     const data = await opts.demo();
     return {
       data,
