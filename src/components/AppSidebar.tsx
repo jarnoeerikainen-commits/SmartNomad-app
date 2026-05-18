@@ -8,7 +8,7 @@ import {
   CloudRain, BookOpen, Truck, Building2, Crown, Globe2, Building,
   Siren, ShieldCheck, ShieldAlert, Baby, Calendar, Cat, MessageSquare,
   Flag, Store, Dumbbell, BarChart3, Wrench, Locate, Fingerprint, Plug, Sparkles, Receipt,
-  Briefcase
+  Briefcase, ChefHat
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
