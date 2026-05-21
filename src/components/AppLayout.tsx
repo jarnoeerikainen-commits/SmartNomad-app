@@ -487,7 +487,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         return <Settings subscription={subscription} onUpgradeClick={openUpgradeModal} onProfileComplete={onProfileComplete} />;
       case 'help': return <HelpSupportCenter />;
       case 'wellness': return <WellnessDashboard />;
-      case 'etias': return <ETIASCenter />;
+      case 'etias': return <div className="p-4 md:p-6 max-w-5xl mx-auto"><TravelAuthorisations /></div>;
       case 'ees': return <EESCenter countries={countries} />;
       case 'visa-immigration': return <VisaImmigrationHub />;
       case 'weather-service': return <WeatherServiceDashboard />;
