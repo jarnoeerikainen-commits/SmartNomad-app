@@ -11,6 +11,7 @@ import {
   Phone, Mail, Smartphone, BookOpen, ChevronRight, Award, Landmark,
   ArrowRight, Info
 } from 'lucide-react';
+import TravelAuthorisations from './TravelAuthorisations';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
