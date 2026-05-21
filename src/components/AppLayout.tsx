@@ -96,7 +96,7 @@ const SocialDashboard = lazy(() => import('./SocialChat/SocialDashboard').then(m
 const HelpSupportCenter = lazy(() => import('./HelpSupportCenter'));
 const ProjectInfoDashboard = lazy(() => import('./ProjectInfoDashboard'));
 const WellnessDashboard = lazy(() => import('./Wellness/WellnessDashboard'));
-const ETIASCenter = lazy(() => import('./ETIASCenter'));
+const TravelAuthorisations = lazy(() => import('./TravelAuthorisations'));
 const EESCenter = lazy(() => import('./EESCenter'));
 const VisaImmigrationHub = lazy(() => import('./VisaImmigrationHub'));
 const VaccinationMedicineHub = lazy(() => import('./VaccinationMedicineHub'));
