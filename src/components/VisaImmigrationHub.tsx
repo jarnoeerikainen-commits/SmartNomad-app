@@ -11,6 +11,7 @@ import {
   Phone, Mail, Smartphone, BookOpen, ChevronRight, Award, Landmark,
   ArrowRight, Info
 } from 'lucide-react';
+import TravelAuthorisations from './TravelAuthorisations';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -338,10 +339,6 @@ const QUICK_LINKS = [
   { label: 'Henley Passport Index', url: 'https://www.henleyglobal.com/passport-index', icon: Award, color: 'text-yellow-500' },
   { label: 'IATA Travel Centre', url: 'https://www.iatatravelcentre.com', icon: Plane, color: 'text-primary' },
   { label: 'Schengen Calculator', url: 'https://www.schengenvisainfo.com/visa-calculator/', icon: MapPin, color: 'text-green-500' },
-  { label: 'US ESTA Application', url: 'https://esta.cbp.dhs.gov', icon: Shield, color: 'text-red-500' },
-  { label: 'UK ETA', url: 'https://www.gov.uk/guidance/apply-for-an-electronic-travel-authorisation-eta', icon: Shield, color: 'text-indigo-500' },
-  { label: 'Canada eTA', url: 'https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/eta.html', icon: Shield, color: 'text-red-400' },
-  { label: 'Australia ETA', url: 'https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/electronic-travel-authority-601', icon: Shield, color: 'text-amber-500' },
 ];
 
 // ─── Main Component ──────────────────────────────────────────────────────────
@@ -421,6 +418,9 @@ const VisaImmigrationHub: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Travel Authorisations — ESTA / ETA / ETIAS */}
+      <TravelAuthorisations />
 
       {/* Tabs */}
       <Tabs defaultValue="services" className="space-y-4">
