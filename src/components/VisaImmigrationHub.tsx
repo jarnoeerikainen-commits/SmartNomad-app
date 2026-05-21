@@ -419,6 +419,9 @@ const VisaImmigrationHub: React.FC = () => {
         </CardContent>
       </Card>
 
+      {/* Travel Authorisations — ESTA / ETA / ETIAS */}
+      <TravelAuthorisations />
+
       {/* Tabs */}
       <Tabs defaultValue="services" className="space-y-4">
         <TabsList className="w-full grid grid-cols-3">
