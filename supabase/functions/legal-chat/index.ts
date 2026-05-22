@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
+import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
