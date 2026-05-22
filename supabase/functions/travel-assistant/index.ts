@@ -1328,7 +1328,7 @@ serve(async (req) => {
     const venueSection = renderVenuesForPrompt(venueRows, typeof venueCity === 'string' ? venueCity : undefined);
 
     const conciergeControlSection = await getConciergeControlPrompt();
-    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${VISA_IMMIGRATION_PROTOCOL}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);
