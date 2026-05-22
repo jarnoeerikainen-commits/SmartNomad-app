@@ -374,12 +374,15 @@ const VisaImmigrationHub: React.FC = () => {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Plane className="h-6 w-6 text-primary" />
-          Visa & Immigration Hub
+          Visa, Immigration & Travel Authorisations
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Comprehensive visa services, government portals, passport offices & immigration links for 20+ countries
+          One verified hub for visas, government immigration portals, passport offices and pre-arrival
+          electronic permits (ESTA · UK ETA · ETIAS · Canada eTA · Australia ETA · NZeTA · K-ETA). All links go
+          directly to the official issuing authority — no middlemen, no inflated fees.
         </p>
       </div>
+
 
       {/* Search */}
       <div className="relative">
