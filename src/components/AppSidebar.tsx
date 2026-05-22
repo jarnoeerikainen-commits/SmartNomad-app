@@ -109,6 +109,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
         { id: 'gps-monitor', label: 'GPS Day Monitor', icon: Locate, badge: 'GPS', variant: 'default' as const },
         { id: 'tax-residency', label: t('sidebar.country_tracker'), icon: MapPin, badge: 'Core', variant: 'default' as const },
         { id: 'visas', label: t('sidebar.visa_manager'), icon: Plane },
+        { id: 'visa-assistance', label: 'Visa Assistance', icon: Globe2 },
         { id: 'vaccination-hub', label: 'Vaccinations & Medicines', icon: Heart, badge: 'WHO', variant: 'secondary' as const },
         { id: 'ees', label: 'EES Border Center', icon: Shield, badge: 'LIVE', variant: 'default' as const },
         { id: 'vault', label: t('sidebar.document_vault'), icon: Shield },
