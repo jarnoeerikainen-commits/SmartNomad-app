@@ -6,6 +6,7 @@ import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt, renderGlobalAwarenessForPrompt } from "../_shared/schoolHolidays.ts";
 import { getCuratedVenuesForCity, renderVenuesForPrompt } from "../_shared/curatedVenues.ts";
+import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
@@ -1327,7 +1328,7 @@ serve(async (req) => {
     const venueSection = renderVenuesForPrompt(venueRows, typeof venueCity === 'string' ? venueCity : undefined);
 
     const conciergeControlSection = await getConciergeControlPrompt();
-    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
+    const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${VISA_IMMIGRATION_PROTOCOL}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
 
     // Smart model routing — auto-picks the smartest model for this query
     const route = pickModelForMessages(messages);

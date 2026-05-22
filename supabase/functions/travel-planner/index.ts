@@ -6,6 +6,7 @@ import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_share
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
 import { auditedAIGatewayStream } from "../_shared/aiAudit.ts";
+import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -267,7 +268,7 @@ Generate the full plan now.`;
         temperature: 0.3,
         top_p: 0.85,
         messages: [
-          { role: "system", content: buildScopeGuard('travel-planner') + buildVerifiedSourcesBlock('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}`) },
+          { role: "system", content: buildScopeGuard('travel-planner') + buildVerifiedSourcesBlock('travel-planner') + withTruthProtocol(`${systemPrompt}${holidaySection ? `\n\n${holidaySection}` : ''}\n\n${VISA_IMMIGRATION_PROTOCOL}`) },
           { role: "user", content: userMessage },
         ],
         stream: true,
