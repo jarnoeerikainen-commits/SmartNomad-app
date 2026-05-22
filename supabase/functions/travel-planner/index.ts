@@ -6,6 +6,7 @@ import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt } from "../_share
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
 import { auditedAIGatewayStream } from "../_shared/aiAudit.ts";
+import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
