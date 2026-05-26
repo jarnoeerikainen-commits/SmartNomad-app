@@ -158,6 +158,7 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
 
   return (
     <div className="space-y-4">
+      <SourceOfTruthChip domain="legal" />
       <Alert className="border-orange-500/50 bg-orange-500/5">
         <AlertTriangle className="w-4 h-4 text-orange-500" />
         <AlertDescription className="text-xs">
