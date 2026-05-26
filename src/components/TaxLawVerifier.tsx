@@ -276,6 +276,7 @@ const TaxLawVerifier: React.FC = () => {
 
   return (
     <div className="space-y-6 p-4 max-w-4xl mx-auto">
+      <SourceOfTruthChip domain="tax" />
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
