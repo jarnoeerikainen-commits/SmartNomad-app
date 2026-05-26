@@ -371,6 +371,7 @@ const VisaImmigrationHub: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <SourceOfTruthChip domain="visa" />
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
