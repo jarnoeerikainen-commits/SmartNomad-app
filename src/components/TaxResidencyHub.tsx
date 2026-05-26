@@ -134,6 +134,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
   return (
     <div className="space-y-6">
+      <SourceOfTruthChip domain="tax" />
       {/* Hero Header */}
       <Card className="gradient-trust border-none text-primary-foreground">
         <CardHeader className="pb-4">
