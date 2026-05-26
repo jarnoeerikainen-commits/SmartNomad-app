@@ -1050,7 +1050,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     const { text: rideText, rides } = !message.isUser
                       ? parseRideBlocks(actionText)
                       : { text: actionText, rides: [] };
-                    const parts = rideText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|RIDE_CARD)_(\d+)\}\}/);
+                    const { text: chipText, chips } = !message.isUser
+                      ? parseActionChips(rideText)
+                      : { text: rideText, chips: [] };
+                    const parts = chipText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|RIDE_CARD)_(\d+)\}\}/);
                     return (
                       <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                         <div className={`max-w-[92%] rounded-lg px-3 py-2 text-sm leading-relaxed break-words ${message.isUser ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
