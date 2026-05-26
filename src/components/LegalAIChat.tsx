@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Scale, Send, Loader2, AlertTriangle, Shield, MessageSquare, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "sonner";
+import SourceOfTruthChip from '@/components/SourceOfTruthChip';
+import ActionChips, { parseActionChips } from '@/components/chat/ActionChips';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { learnFromExchange } from '@/utils/conciergeLearning';
 
