@@ -1320,7 +1320,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                         <div className="flex items-start gap-2">
                           {!message.isUser && <Bot className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                           <div className="flex-1 min-w-0">
-                            {rideText.includes('{{BOOKING_CARD_') || rideText.includes('{{ACTION_CARD_') || rideText.includes('{{CALENDAR_PROPOSAL_') || rideText.includes('{{RIDE_CARD_') ? (
+                            {chipText.includes('{{BOOKING_CARD_') || chipText.includes('{{ACTION_CARD_') || chipText.includes('{{CALENDAR_PROPOSAL_') || chipText.includes('{{RIDE_CARD_') ? (
                               parts.map((part, i) => {
                                 if (i % 2 === 1) {
                                   const idx = parseInt(part);
@@ -1334,13 +1334,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                               })
                             ) : (
                               <>
-                                <span className="whitespace-pre-wrap">{rideText}</span>
+                                <span className="whitespace-pre-wrap">{chipText}</span>
                                 {bookings.map((b, bi) => <BookingCards key={`b-${bi}`} items={b} />)}
                                 {actions.map((a, ai) => <ActionCards key={`a-${ai}`} items={a} />)}
                                 {calProposals.map((c, ci) => <CalendarProposalCards key={`c-${ci}`} items={c} />)}
                                 {rides.map((r, ri) => <RideBookingCard key={`r-${ri}`} pickup={{ address: r.pickup, city: r.city }} dropoff={{ address: r.dropoff }} whenISO={r.whenISO} />)}
                               </>
                             )}
+                            {chips.length > 0 && <ActionChips chips={chips} />}
                           </div>
                           {message.isUser && <User className="h-4 w-4 mt-0.5 flex-shrink-0" />}
                         </div>
