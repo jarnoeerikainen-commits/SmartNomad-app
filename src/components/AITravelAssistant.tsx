@@ -15,6 +15,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import BookingCards, { parseBookingBlocks } from '@/components/chat/BookingCards';
 import ActionCards, { parseActionBlocks } from '@/components/chat/ActionCards';
+import ActionChips, { parseActionChips } from '@/components/chat/ActionChips';
 import CalendarProposalCards from '@/components/chat/CalendarProposalCards';
 import RideBookingCard, { parseRideBlocks } from '@/components/chat/RideBookingCard';
 import { RideHailingService } from '@/services/RideHailingService';
