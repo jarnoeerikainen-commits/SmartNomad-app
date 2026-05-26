@@ -1301,7 +1301,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   const { text: rideText, rides } = !message.isUser
                     ? parseRideBlocks(calText)
                     : { text: calText, rides: [] };
-                  const parts = rideText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|CALENDAR_PROPOSAL|RIDE_CARD)_(\d+)\}\}/);
+                  const { text: chipText, chips } = !message.isUser
+                    ? parseActionChips(rideText)
+                    : { text: rideText, chips: [] };
+                  const parts = chipText.split(/\{\{(?:BOOKING_CARD|ACTION_CARD|CALENDAR_PROPOSAL|RIDE_CARD)_(\d+)\}\}/);
                   return (
                     <div
                       key={message.id}
