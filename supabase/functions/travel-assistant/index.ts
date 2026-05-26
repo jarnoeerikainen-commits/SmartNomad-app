@@ -7,6 +7,7 @@ import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts"
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt, renderGlobalAwarenessForPrompt } from "../_shared/schoolHolidays.ts";
 import { getCuratedVenuesForCity, renderVenuesForPrompt } from "../_shared/curatedVenues.ts";
 import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
+import { CONCIERGE_REPLY_PROTOCOL } from "../_shared/conciergeReplyProtocol.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
