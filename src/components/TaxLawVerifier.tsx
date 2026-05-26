@@ -8,6 +8,7 @@ import {
   ExternalLink, Search, Globe, FileCheck, Zap
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import SourceOfTruthChip from '@/components/SourceOfTruthChip';
 
 interface TaxLawEntry {
   countryCode: string;
