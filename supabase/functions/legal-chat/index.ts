@@ -206,7 +206,7 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
         temperature: 0.2,
         top_p: 0.8,
         messages: [
-          { role: 'system', content: buildScopeGuard('legal') + buildVerifiedSourcesBlock('legal') + withTruthProtocol(systemPrompt) + '\n\n' + VISA_IMMIGRATION_PROTOCOL },
+          { role: 'system', content: buildScopeGuard('legal') + buildVerifiedSourcesBlock('legal') + withTruthProtocol(systemPrompt) + '\n\n' + CONCIERGE_REPLY_PROTOCOL + '\n\n' + VISA_IMMIGRATION_PROTOCOL },
           ...messages
         ],
         stream: true,
