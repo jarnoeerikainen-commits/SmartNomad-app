@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
+import { CONCIERGE_REPLY_PROTOCOL } from "../_shared/conciergeReplyProtocol.ts";
 import { getModel } from "../_shared/modelRouter.ts";
 import { buildScopeGuard } from "../_shared/scopeGuard.ts";
 import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
@@ -205,7 +206,7 @@ ${userContext?.language && userContext.language !== 'en' ? `**🌍 LANGUAGE: The
         temperature: 0.2,
         top_p: 0.8,
         messages: [
-          { role: 'system', content: buildScopeGuard('legal') + buildVerifiedSourcesBlock('legal') + withTruthProtocol(systemPrompt) + '\n\n' + VISA_IMMIGRATION_PROTOCOL },
+          { role: 'system', content: buildScopeGuard('legal') + buildVerifiedSourcesBlock('legal') + withTruthProtocol(systemPrompt) + '\n\n' + CONCIERGE_REPLY_PROTOCOL + '\n\n' + VISA_IMMIGRATION_PROTOCOL },
           ...messages
         ],
         stream: true,

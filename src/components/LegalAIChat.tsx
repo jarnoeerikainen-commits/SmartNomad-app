@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Scale, Send, Loader2, AlertTriangle, Shield, MessageSquare, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "sonner";
+import SourceOfTruthChip from '@/components/SourceOfTruthChip';
+import ActionChips, { parseActionChips } from '@/components/chat/ActionChips';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { learnFromExchange } from '@/utils/conciergeLearning';
 
@@ -156,6 +158,7 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
 
   return (
     <div className="space-y-4">
+      <SourceOfTruthChip domain="legal" />
       <Alert className="border-orange-500/50 bg-orange-500/5">
         <AlertTriangle className="w-4 h-4 text-orange-500" />
         <AlertDescription className="text-xs">
@@ -193,13 +196,19 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
         <CardContent className="space-y-4">
           <ScrollArea ref={scrollRef} className="h-[400px] pr-4">
             <div className="space-y-4">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-lg px-4 py-2 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+              {messages.map((msg, idx) => {
+                const { text, chips } = msg.role === 'assistant'
+                  ? parseActionChips(msg.content)
+                  : { text: msg.content, chips: [] };
+                return (
+                  <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] rounded-lg px-4 py-2 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                      <p className="text-sm whitespace-pre-wrap">{text}</p>
+                      {chips.length > 0 && <ActionChips chips={chips} />}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {isLoading && (
                 <div className="flex justify-start"><div className="bg-muted rounded-lg px-4 py-2"><Loader2 className="w-4 h-4 animate-spin" /></div></div>
               )}

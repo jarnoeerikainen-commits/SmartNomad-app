@@ -1,4 +1,5 @@
 import React, { useState, lazy, Suspense } from 'react';
+import SourceOfTruthChip from '@/components/SourceOfTruthChip';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -134,6 +135,7 @@ const TaxResidencyHub: React.FC<TaxResidencyHubProps> = ({
 
   return (
     <div className="space-y-6">
+      <SourceOfTruthChip domain="tax" />
       {/* Hero Header */}
       <Card className="gradient-trust border-none text-primary-foreground">
         <CardHeader className="pb-4">
