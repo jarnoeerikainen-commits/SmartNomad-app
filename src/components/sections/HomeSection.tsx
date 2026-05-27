@@ -8,7 +8,7 @@ import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActi
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
-import ThreatTicker from '@/components/ThreatIntelligence/ThreatTicker';
+
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import SovereignAccessNudge from '@/components/dashboard/SovereignAccessNudge';
 import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
