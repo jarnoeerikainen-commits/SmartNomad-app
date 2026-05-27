@@ -8,7 +8,7 @@ import { DashboardSmartActions } from '@/components/dashboard/DashboardSmartActi
 import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentActivity';
 import DashboardQuickStats from '@/components/DashboardQuickStats';
 import ThreatDashboard from '@/components/ThreatIntelligence/ThreatDashboard';
-import ThreatTicker from '@/components/ThreatIntelligence/ThreatTicker';
+
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import SovereignAccessNudge from '@/components/dashboard/SovereignAccessNudge';
 import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
@@ -45,7 +45,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
-      <ThreatTicker onExpand={() => onNavigate('threats')} />
+      
       <ModeSwitcher />
       {tripActive && <ActiveTripCockpit countries={countries} onNavigate={onNavigate} />}
       {showThreat && <ThreatDashboard />}
