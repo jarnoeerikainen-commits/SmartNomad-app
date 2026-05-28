@@ -202,7 +202,7 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, userName, 
           detail={threatDetail}
           tone={threatTone}
           cta="Open Threat Intelligence"
-          onClick={() => onNavigate('threat-intelligence')}
+          onClick={() => onNavigate('threats')}
         />
       </div>
 
