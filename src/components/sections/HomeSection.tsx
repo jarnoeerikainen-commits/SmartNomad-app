@@ -13,6 +13,7 @@ import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
 import ModeSwitcher from '@/components/dashboard/ModeSwitcher';
 import ActiveTripCockpit from '@/components/dashboard/ActiveTripCockpit';
 import MorningBriefing from '@/components/dashboard/MorningBriefing';
+import UpcomingTripsBar from '@/components/dashboard/UpcomingTripsBar';
 import SchengenEESAlert from '@/components/dashboard/SchengenEESAlert';
 import { useActiveTrip } from '@/hooks/useActiveTrip';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
@@ -60,6 +61,9 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
 
       {/* Optional active trip cockpit (compact, only when on a trip) */}
       {tripActive && <ActiveTripCockpit countries={countries} onNavigate={onNavigate} />}
+
+      {/* Upcoming trips — categorized by purpose with visa/health/risk clearance */}
+      <UpcomingTripsBar onNavigate={onNavigate} />
 
       {/* Critical compliance nudge (auto-hides if irrelevant) */}
       <SchengenEESAlert countries={countries} onNavigate={onNavigate} />
