@@ -145,12 +145,73 @@ const JOHN_SEED: UpcomingTrip[] = [
   },
 ];
 
+// Generic demo seed — shown when no specific persona is active so every visitor
+// sees a populated, future-anchored Upcoming Trips bar on the home dashboard.
+const DEFAULT_SEED: UpcomingTrip[] = [
+  {
+    id: 'demo-lis',
+    destination: 'Lisbon', country: 'Portugal', countryCode: 'PT', flag: '🇵🇹',
+    purpose: 'business', purposeLabel: 'Client workshop',
+    startInDays: 5, durationDays: 3,
+    clearance: {
+      visa: 'clear', visaNote: 'Schengen 90/180 — most passports visa-free',
+      vaccinations: 'clear', vaccinationsNote: 'No requirements',
+      threats: 'clear', threatsNote: 'Low risk — no active advisories',
+    },
+  },
+  {
+    id: 'demo-bcn',
+    destination: 'Barcelona', country: 'Spain', countryCode: 'ES', flag: '🇪🇸',
+    purpose: 'pleasure', purposeLabel: 'City break',
+    startInDays: 17, durationDays: 4,
+    clearance: {
+      visa: 'clear', visaNote: 'Schengen 90/180 — most passports visa-free',
+      vaccinations: 'clear', vaccinationsNote: 'No requirements',
+      threats: 'warn', threatsNote: 'Elevated pickpocketing in tourist zones',
+    },
+  },
+  {
+    id: 'demo-dxb',
+    destination: 'Dubai', country: 'UAE', countryCode: 'AE', flag: '🇦🇪',
+    purpose: 'combo', purposeLabel: 'Summit + leisure',
+    startInDays: 28, durationDays: 5,
+    clearance: {
+      visa: 'clear', visaNote: 'Visa-on-arrival for 60+ nationalities',
+      vaccinations: 'clear', vaccinationsNote: 'Routine immunisations current',
+      threats: 'clear', threatsNote: 'Low risk — standard urban precautions',
+    },
+  },
+  {
+    id: 'demo-chx',
+    destination: 'Chamonix', country: 'France', countryCode: 'FR', flag: '🇫🇷',
+    purpose: 'sports', purposeLabel: 'Ski week',
+    startInDays: 41, durationDays: 6,
+    clearance: {
+      visa: 'clear', visaNote: 'Schengen 90/180 — most passports visa-free',
+      vaccinations: 'clear', vaccinationsNote: 'No requirements',
+      threats: 'warn', threatsNote: 'Avalanche advisories in alpine zones',
+    },
+  },
+  {
+    id: 'demo-bal',
+    destination: 'Bali', country: 'Indonesia', countryCode: 'ID', flag: '🇮🇩',
+    purpose: 'family', purposeLabel: 'Family holiday',
+    startInDays: 63, durationDays: 8,
+    clearance: {
+      visa: 'action', visaNote: 'Visa-on-arrival USD 35 — bring cash/QR',
+      vaccinations: 'warn', vaccinationsNote: 'Hep A + Typhoid recommended (CDC)',
+      threats: 'clear', threatsNote: 'Low risk in tourist zones',
+    },
+  },
+];
+
 /**
- * Returns the persona's upcoming trips with `startInDays` recomputed against today
- * (already absolute offsets — kept stable as the day rolls over so demo never shows past trips).
+ * Returns upcoming trips with `startInDays` resolved at render time.
+ * Falls back to a generic demo seed when no persona is active so the home
+ * dashboard always shows a populated, future-anchored Upcoming Trips bar.
  */
 export function getDemoUpcomingTrips(personaId: 'meghan' | 'john' | null): UpcomingTrip[] {
   if (personaId === 'meghan') return MEGHAN_SEED;
   if (personaId === 'john') return JOHN_SEED;
-  return [];
+  return DEFAULT_SEED;
 }
