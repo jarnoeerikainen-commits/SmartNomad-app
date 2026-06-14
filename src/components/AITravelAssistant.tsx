@@ -214,6 +214,27 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     }
   }, [sttSupported]);
 
+  // Listen for Home command-bar prefill events / localStorage handoff.
+  useEffect(() => {
+    const PREFILL = 'concierge:prefill';
+    const consume = () => {
+      try {
+        const raw = localStorage.getItem(PREFILL);
+        if (raw && raw.trim()) {
+          setInputMessage(prev => (prev ? prev : raw));
+          localStorage.removeItem(PREFILL);
+        }
+      } catch {}
+    };
+    consume();
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ text?: string }>).detail;
+      if (detail?.text) setInputMessage(detail.text);
+    };
+    window.addEventListener('concierge:prefill', handler as EventListener);
+    return () => window.removeEventListener('concierge:prefill', handler as EventListener);
+  }, []);
+
   useEffect(() => {
     setVoiceGender(conciergePrefs.voiceGender);
   }, [conciergePrefs.voiceGender, setVoiceGender]);

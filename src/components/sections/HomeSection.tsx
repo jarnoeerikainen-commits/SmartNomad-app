@@ -15,8 +15,14 @@ import ActiveTripCockpit from '@/components/dashboard/ActiveTripCockpit';
 import MorningBriefing from '@/components/dashboard/MorningBriefing';
 import UpcomingTripsBar from '@/components/dashboard/UpcomingTripsBar';
 import SchengenEESAlert from '@/components/dashboard/SchengenEESAlert';
+import HomeCommandBar from '@/components/dashboard/HomeCommandBar';
+import HomeCoachmarks from '@/components/dashboard/HomeCoachmarks';
+import SinceLastOpenedDelta from '@/components/dashboard/SinceLastOpenedDelta';
+import Next72Timeline from '@/components/dashboard/Next72Timeline';
+import BusinessKpiStrip from '@/components/dashboard/BusinessKpiStrip';
 import { useActiveTrip } from '@/hooks/useActiveTrip';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
+import { useUserMode } from '@/hooks/useUserMode';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +39,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
   const { getPinnedFeatures, isVisible } = useFeaturePreferences();
   const pinnedFeatures = getPinnedFeatures();
   const { isActive: tripActive } = useActiveTrip(countries);
+  const { mode } = useUserMode();
   const [showMore, setShowMore] = useState(false);
 
   const { user } = useAuth() as any;
@@ -56,14 +63,26 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
     <div className="space-y-6 max-w-5xl mx-auto pb-24 md:pb-6 px-0">
       <ModeSwitcher />
 
-      {/* The one-screen morning briefing */}
+      {/* Concierge command bar — top of Home */}
+      <HomeCommandBar onNavigate={onNavigate} />
+
+      {/* The unified morning briefing (hero status + 3 cards) */}
       <MorningBriefing countries={countries} userName={userName} onNavigate={onNavigate} />
+
+      {/* Since-you-last-opened delta (auto-hides if nothing) */}
+      <SinceLastOpenedDelta onNavigate={onNavigate} />
+
+      {/* Next 72h timeline (auto-hides unless a trip is within 72h) */}
+      <Next72Timeline onNavigate={onNavigate} />
 
       {/* Optional active trip cockpit (compact, only when on a trip) */}
       {tripActive && <ActiveTripCockpit countries={countries} onNavigate={onNavigate} />}
 
       {/* Upcoming trips — categorized by purpose with visa/health/risk clearance */}
       <UpcomingTripsBar onNavigate={onNavigate} />
+
+      {/* Business mode KPIs */}
+      {mode === 'business' && <BusinessKpiStrip onNavigate={onNavigate} />}
 
       {/* Critical compliance nudge (auto-hides if irrelevant) */}
       <SchengenEESAlert countries={countries} onNavigate={onNavigate} />
@@ -167,6 +186,9 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
           )}
         </div>
       )}
+
+      {/* One-time orientation overlay (per persona) */}
+      <HomeCoachmarks />
     </div>
   );
 };
