@@ -312,6 +312,31 @@ const UpcomingTripsBar: React.FC<Props> = ({ onNavigate }) => {
 
   const [activeTrip, setActiveTrip] = useState<UpcomingTrip | null>(null);
   const [open, setOpen] = useState(false);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [edges, setEdges] = useState<{ left: boolean; right: boolean }>({ left: false, right: false });
+
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const card = el.querySelector('button');
+      const cardWidth = card ? (card as HTMLElement).getBoundingClientRect().width + 12 : 300;
+      const idx = Math.round(el.scrollLeft / cardWidth);
+      setActiveIdx(Math.max(0, Math.min(trips.length - 1, idx)));
+      setEdges({
+        left: el.scrollLeft > 4,
+        right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+      });
+    };
+    onScroll();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [trips.length]);
 
   if (trips.length === 0) return null;
 
@@ -335,9 +360,29 @@ const UpcomingTripsBar: React.FC<Props> = ({ onNavigate }) => {
         </button>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 -mx-1 px-1 scrollbar-thin">
-        {trips.map(t => (
-          <TripCard key={t.id} trip={t} onOpen={() => openTrip(t)} onJump={onNavigate} />
+      <div className="relative">
+        {edges.left && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent z-10" />
+        )}
+        {edges.right && (
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent z-10" />
+        )}
+        <div
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 -mx-1 px-1 scrollbar-thin"
+        >
+          {trips.map(t => (
+            <TripCard key={t.id} trip={t} onOpen={() => openTrip(t)} onJump={onNavigate} />
+          ))}
+        </div>
+      </div>
+
+      <div className="md:hidden flex items-center justify-center gap-1.5 pt-0.5" aria-hidden="true">
+        {trips.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1 rounded-full transition-all ${i === activeIdx ? 'w-5 bg-primary' : 'w-1.5 bg-border'}`}
+          />
         ))}
       </div>
 
