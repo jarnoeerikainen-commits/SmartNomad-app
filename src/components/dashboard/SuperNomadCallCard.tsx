@@ -142,6 +142,9 @@ const SuperNomadCallCard: React.FC<SuperNomadCallCardProps> = ({ onNavigate }) =
           </div>
         )}
 
+        {/* HeyGen avatar opt-in */}
+        <HeyGenAvatarToggle />
+
         {/* Demo test buttons */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -185,6 +188,7 @@ const SuperNomadCallCard: React.FC<SuperNomadCallCardProps> = ({ onNavigate }) =
             </Button>
           </div>
         </div>
+
 
         {/* Open full module */}
         <Button
