@@ -20,6 +20,8 @@ import HomeCoachmarks from '@/components/dashboard/HomeCoachmarks';
 import SinceLastOpenedDelta from '@/components/dashboard/SinceLastOpenedDelta';
 import Next72Timeline from '@/components/dashboard/Next72Timeline';
 import BusinessKpiStrip from '@/components/dashboard/BusinessKpiStrip';
+import LastTimeHint from '@/components/dashboard/LastTimeHint';
+
 import { useActiveTrip } from '@/hooks/useActiveTrip';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
 import { useUserMode } from '@/hooks/useUserMode';
