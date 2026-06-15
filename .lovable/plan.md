@@ -1,8 +1,9 @@
-# SuperNomad Home & Demo Upgrade — Plan (no code yet)
+# SuperNomad Home & Demo Upgrade — Plan
 
-A pro-grade review of `/` (Home) across five lenses: mobile designer, travel pro, web designer, AI architect, business director. Plus what we should adopt from the **June 2026 Lovable platform**.
+Status: **Phases A, B, C, D shipped.** Phase E QA gates running each pass.
+Remaining platform-side: Subagents wiring in Concierge edge fn, Sensitive Data Scan + Wiz, Publish-from-chat.
 
----
+
 
 ## 1) What works today
 - `MorningBriefing` (Active Trip · Tax Days · Threats) — clear "one-screen" pattern.
