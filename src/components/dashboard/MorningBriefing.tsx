@@ -6,6 +6,8 @@ import { getDemoUpcomingTrips } from '@/data/upcomingTripsDemo';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 import { Button } from '@/components/ui/button';
 import HomePersonaQuickSwitch from './HomePersonaQuickSwitch';
+import CorporateBadge from './CorporateBadge';
+
 import {
   Plane, Scale, ShieldCheck, ShieldAlert, ArrowRight,
   CheckCircle2, AlertTriangle, Clock,
