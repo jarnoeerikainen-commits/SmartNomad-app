@@ -10,6 +10,8 @@ import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { useSuperNomadCall } from '@/components/SuperNomadCall/useSuperNomadCall';
 import { CallParty } from '@/components/SuperNomadCall/types';
 import { CallWaveform } from '@/components/SuperNomadCall/CallWaveform';
+import HeyGenAvatarToggle from './HeyGenAvatarToggle';
+
 
 interface SuperNomadCallCardProps {
   onNavigate: (section: string) => void;
