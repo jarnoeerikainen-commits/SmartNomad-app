@@ -6,6 +6,8 @@ import { getDemoUpcomingTrips } from '@/data/upcomingTripsDemo';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 import { Button } from '@/components/ui/button';
 import HomePersonaQuickSwitch from './HomePersonaQuickSwitch';
+import CorporateBadge from './CorporateBadge';
+
 import {
   Plane, Scale, ShieldCheck, ShieldAlert, ArrowRight,
   CheckCircle2, AlertTriangle, Clock,
@@ -192,12 +194,14 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, userName, 
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
+          <CorporateBadge onNavigate={onNavigate} />
           <HomePersonaQuickSwitch />
           <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-medium ${overallChip.cls}`}>
             <OverallIcon className="h-3.5 w-3.5" />
             {overallChip.text}
           </div>
         </div>
+
       </div>
 
       {/* Three focus cards */}

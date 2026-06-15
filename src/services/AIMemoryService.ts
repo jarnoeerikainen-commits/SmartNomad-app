@@ -365,6 +365,36 @@ class AIMemoryService {
   getDeviceId(): string {
     return this.deviceId;
   }
+
+  /**
+   * Recall a single short-form hint to surface on the Home screen.
+   * Looks at the most recent assistant memory (if any) and produces a
+   * "Last time…" one-liner. Returns null when nothing relevant is found
+   * or when running under a demo persona.
+   */
+  async recallForHome(destination?: string): Promise<string | null> {
+    if (this.isDemoPersonaActive()) return null;
+    try {
+      let query = supabase
+        .from('memory_chunks' as any)
+        .select('content, metadata, created_at')
+        .eq('device_id', this.deviceId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (destination) {
+        query = query.ilike('content', `%${destination}%`);
+      }
+      const { data } = await query;
+      const row: any = (data || [])[0];
+      if (!row?.content) return null;
+      const snippet = String(row.content).split(/[.\n]/)[0].trim().slice(0, 120);
+      if (!snippet) return null;
+      return `Last time you mentioned ${destination ? destination + ' — ' : ''}${snippet}…`;
+    } catch {
+      return null;
+    }
+  }
 }
 
 export const aiMemoryService = new AIMemoryService();
+

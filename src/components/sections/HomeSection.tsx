@@ -20,6 +20,8 @@ import HomeCoachmarks from '@/components/dashboard/HomeCoachmarks';
 import SinceLastOpenedDelta from '@/components/dashboard/SinceLastOpenedDelta';
 import Next72Timeline from '@/components/dashboard/Next72Timeline';
 import BusinessKpiStrip from '@/components/dashboard/BusinessKpiStrip';
+import LastTimeHint from '@/components/dashboard/LastTimeHint';
+
 import { useActiveTrip } from '@/hooks/useActiveTrip';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
 import { useUserMode } from '@/hooks/useUserMode';
@@ -69,8 +71,12 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       {/* The unified morning briefing (hero status + 3 cards) */}
       <MorningBriefing countries={countries} userName={userName} onNavigate={onNavigate} />
 
+      {/* "Last time…" memory hint (auto-hides for demo personas / no memory) */}
+      <LastTimeHint onClick={() => onNavigate('ai')} />
+
       {/* Since-you-last-opened delta (auto-hides if nothing) */}
       <SinceLastOpenedDelta onNavigate={onNavigate} />
+
 
       {/* Next 72h timeline (auto-hides unless a trip is within 72h) */}
       <Next72Timeline onNavigate={onNavigate} />
