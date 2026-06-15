@@ -71,8 +71,12 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       {/* The unified morning briefing (hero status + 3 cards) */}
       <MorningBriefing countries={countries} userName={userName} onNavigate={onNavigate} />
 
+      {/* "Last time…" memory hint (auto-hides for demo personas / no memory) */}
+      <LastTimeHint onClick={() => onNavigate('ai')} />
+
       {/* Since-you-last-opened delta (auto-hides if nothing) */}
       <SinceLastOpenedDelta onNavigate={onNavigate} />
+
 
       {/* Next 72h timeline (auto-hides unless a trip is within 72h) */}
       <Next72Timeline onNavigate={onNavigate} />
