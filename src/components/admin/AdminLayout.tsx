@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, Outlet, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Users, LifeBuoy, Brain, Database, Coins,
-  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network, Receipt, Trophy, BriefcaseBusiness, Activity
+  ShieldCheck, ArrowLeft, Eye, Crown, Sparkles, Radio, Network, Receipt, Trophy, BriefcaseBusiness, Activity, Send
 } from 'lucide-react';
 import { useStaffRole } from '@/hooks/useStaffRole';
 import { Badge } from '@/components/ui/badge';
