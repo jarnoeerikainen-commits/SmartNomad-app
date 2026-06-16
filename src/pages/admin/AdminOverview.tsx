@@ -307,38 +307,39 @@ const AdminOverview: React.FC = () => {
             <Brain className="h-4 w-4 text-[hsl(var(--gold))]" />
             <h2 className="text-sm font-semibold text-white tracking-wide uppercase">Brain</h2>
           </div>
-          <div className="space-y-3 text-sm">
-            <div>
-              <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)] mb-1">Top wish</div>
-              <div className="text-white text-sm leading-snug">
-                {agg?.top_wishes[0]?.text ?? '—'}
-              </div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)] mb-1">Hottest city</div>
-              <div className="text-white text-sm">{agg?.top_cities[0]?.city ?? '—'}</div>
-            </div>
-            <div className="pt-2 border-t border-white/10 space-y-1.5">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between text-white hover:bg-white/5"
-                onClick={() => navigate('/admin/brain')}
-              >
-                Open AI Brain <ArrowUpRight className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between text-white hover:bg-white/5"
-                onClick={() => navigate('/admin/ceo')}
-              >
-                AI CEO digest <ArrowUpRight className="h-3.5 w-3.5" />
-              </Button>
-            </div>
+          <HermesPanel agg={agg} stats={stats} />
+          <div className="mt-3 pt-3 border-t border-white/10 space-y-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between text-white hover:bg-white/5 h-8"
+              onClick={() => navigate('/admin/brain')}
+            >
+              Open AI Brain <ArrowUpRight className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between text-white hover:bg-white/5 h-8"
+              onClick={() => navigate('/admin/ceo')}
+            >
+              AI CEO digest <ArrowUpRight className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </Card>
       </div>
+
+      {/* AI Ops funnel */}
+      <Card className="bg-gradient-to-br from-[hsl(220_22%_11%)] to-[hsl(220_22%_8%)] border-[hsl(43_96%_56%/0.2)] p-4">
+        <AIOpsFunnel
+          steps={[
+            { label: 'Intents (concierge_q)', count: agg?.by_kind?.concierge_q ?? 0, tone: 'ok' },
+            { label: 'Resolutions (bookings + discoveries)', count: (agg?.by_kind?.booking ?? 0) + (agg?.by_kind?.discovery ?? 0), tone: 'ok' },
+            { label: 'Positive sentiment', count: Math.round(((agg?.positive_pct ?? 0) / 100) * (agg?.total_signals ?? 0)), tone: (agg?.positive_pct ?? 100) < 55 ? 'warn' : 'ok' },
+            { label: 'Escalations (problems + support)', count: (agg?.by_kind?.problem ?? 0) + (agg?.by_kind?.support ?? 0), tone: ((agg?.by_kind?.problem ?? 0) + (agg?.by_kind?.support ?? 0)) > 8 ? 'alert' : 'warn' },
+          ]}
+        />
+      </Card>
 
       {/* Secondary KPI strip (calm, dense, Stripe-style) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
