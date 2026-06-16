@@ -41,6 +41,7 @@ import { recordOutcome } from '@/utils/conciergeFeedback';
 import { buildGreetingParts, type GreetingPart } from '@/utils/conciergeGreetings';
 import { useLocation } from '@/contexts/LocationContext';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
+import { getHermesAssist } from '@/lib/conciergeHermes';
 
 
 interface Message {
@@ -811,6 +812,38 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         const followUpDelay = 2000 + Math.random() * 1500;
         setTimeout(() => triggerFollowUp(assistantContent, userMessage), followUpDelay);
       }
+
+      // 🪶 Hermes silent co-pilot — appends a short tip + next-action when confidence ≥ medium.
+      // Never blocks the streamed reply; fires after the answer is fully rendered.
+      if (assistantContent && assistantContent.length > 40) {
+        getHermesAssist({
+          userMessage,
+          persona: isDemoPersona && activePersona ? activePersona.id : 'guest',
+          isDemo: isDemoPersona,
+          route: typeof window !== 'undefined' ? window.location.pathname : '/',
+          city: conciergeLocation?.city ?? null,
+          signals: {
+            safety_alerts: dummyThreats.filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high')).length,
+          },
+        }).then((assist) => {
+          if (!assist || assist.confidence === 'low' || !assist.suggestion) return;
+          const tip = `\n\n_${assist.suggestion}_${assist.next_action ? `  → **${assist.next_action}**` : ''}`;
+          setMessages(prev => prev.map(m =>
+            m.id === assistantId ? { ...m, content: (m.content || '') + tip } : m
+          ));
+          // Silent escalation: ping admin cockpit via existing activity service
+          if (assist.escalate) {
+            try {
+              AdminAgentActivityService.startRun({
+                surface: 'Hermes Assist',
+                command: `Escalate: ${userMessage.slice(0, 120)}`,
+                functionName: 'concierge-hermes-assist',
+              });
+            } catch { /* noop */ }
+          }
+        }).catch(() => { /* never break user flow */ });
+      }
+
 
       // 🧠 Auto-evaluate the answer (back-office self-grading)
       // → low scores trigger an internal "unhelpful" outcome that drops memory importance
