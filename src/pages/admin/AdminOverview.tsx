@@ -11,6 +11,8 @@ import {
 import { platformRollup } from '@/utils/adminDemoData';
 import AICouncilDigest from '@/components/admin/AICouncilDigest';
 import { AdminLiveSignalsService, type LiveAggregate } from '@/services/AdminLiveSignalsService';
+import HermesPanel from '@/components/admin/HermesPanel';
+import AIOpsFunnel from '@/components/admin/AIOpsFunnel';
 import { useNavigate } from 'react-router-dom';
 
 interface Stats {
