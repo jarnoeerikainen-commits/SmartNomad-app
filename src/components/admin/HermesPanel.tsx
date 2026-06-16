@@ -103,16 +103,18 @@ const HermesPanel: React.FC<Props> = ({ agg, stats }) => {
               </div>
             );
           }
-          // Bold the recommended action
-          if (/\*\*Recommended next action:\*\*/i.test(trimmed)) {
-            const clean = trimmed.replace(/\*\*/g, '');
+          // Bold the recommended action line whether the model wrapped just the label or the whole sentence
+          if (/recommended next action/i.test(trimmed)) {
+            const clean = trimmed.replace(/\*\*/g, '').replace(/^[*-]\s*/, '');
             return (
               <div key={i} className="mt-2 pt-2 border-t border-white/10 text-[hsl(var(--gold))] font-semibold">
                 {clean}
               </div>
             );
           }
-          return <div key={i}>{trimmed}</div>;
+          // Strip stray markdown bold inline
+          const cleanLine = trimmed.replace(/\*\*(.+?)\*\*/g, '$1');
+          return <div key={i}>{cleanLine}</div>;
         })}
       </div>
 
