@@ -17,6 +17,7 @@ import { TrustProvider } from "./contexts/TrustContext";
 import SovereignConfirmation from "./components/trust/SovereignConfirmation";
 import ScrollToTop from "./components/ScrollToTop";
 import { GlobalKeyboardScroll } from "./components/GlobalKeyboardScroll";
+import GlobalCommandPalette from "./components/GlobalCommandPalette";
 
 // Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
@@ -82,6 +83,7 @@ const App = () => {
             <Sonner />
             <SovereignConfirmation />
             <ConditionalBackButton />
+            <GlobalCommandPalette />
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
                 <Routes>
                   <Route path="/" element={<Landing />} />
