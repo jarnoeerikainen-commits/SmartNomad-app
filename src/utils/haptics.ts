@@ -22,7 +22,7 @@ async function loadCapacitor() {
   capPromise = (async () => {
     try {
       // Capacitor Haptics is optional — only loads if installed
-      const mod: any = await import(/* @vite-ignore */ '@capacitor/haptics').catch(() => null);
+      const mod: any = await (new Function('s', 'return import(s)')('@capacitor/haptics')).catch(() => null);
       return mod?.Haptics ?? null;
     } catch { return null; }
   })();
