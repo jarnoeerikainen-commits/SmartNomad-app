@@ -546,3 +546,39 @@
     .sn-gold-foil, .sn-gold-ring::before, .sn-breathe, .sn-ticker-track, .sn-caret { animation: none !important; }
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   World-class polish foundations (Pass 1)
+   - Tabular numerics for money/counts/dates (no jitter)
+   - Keyboard-only focus ring via :focus-visible (no mouse-ring noise)
+   - Honor prefers-reduced-motion globally
+   - Min 44×44 touch targets utility
+   - "Tap" highlight off for app-like feel
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  .tnum, .tabular-nums, [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+@layer utilities {
+  .touch-44 { min-width: 44px; min-height: 44px; }
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+  .safe-top { padding-top: max(env(safe-area-inset-top), 0.5rem); }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
+}
