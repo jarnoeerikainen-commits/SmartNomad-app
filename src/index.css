@@ -272,17 +272,23 @@
 @layer utilities {
   .admin-backoffice {
     color: hsl(30 12% 96%);
+    /* Re-map semantic tokens to the admin dark surface so any page that uses
+       bg-background / bg-card / text-foreground / text-muted-foreground inside
+       the back office stays readable on the dark sidebar shell. */
+    --background: 220 22% 10%;
+    --foreground: 30 12% 95%;
+    --card: 220 20% 14%;
+    --card-foreground: 30 12% 95%;
+    --popover: 220 20% 14%;
+    --popover-foreground: 30 12% 95%;
+    --muted: 220 18% 20%;
+    --muted-foreground: 30 12% 80%;
+    --border: 220 18% 22%;
+    --input: 220 18% 22%;
   }
 
   .admin-backoffice :is(p, span, div, td, th, li, label, input, textarea, select) {
     border-color: inherit;
-  }
-
-  .admin-backoffice .text-muted-foreground,
-  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_5"],
-  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_6"],
-  .admin-backoffice :is(p, span, div, td, th, li)[class*="text-[hsl(30_12%_7"] {
-    color: hsl(30 12% 92%) !important;
   }
 
   .admin-backoffice :is(h1, h2, h3, h4, h5, h6),
@@ -297,6 +303,7 @@
   .admin-backoffice [data-radix-scroll-area-viewport] {
     min-width: 0;
   }
+
 
   .gradient-primary {
     background: var(--gradient-primary);
