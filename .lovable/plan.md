@@ -1,122 +1,152 @@
-# SuperNomad Home & Demo Upgrade — Plan
+# World-Class Redesign & Smarter Back Office
 
-Status: **Phases A, B, C, D shipped.** Phase E QA gates running each pass.
-Remaining platform-side: Subagents wiring in Concierge edge fn, Sensitive Data Scan + Wiz, Publish-from-chat.
-
-
-
-## 1) What works today
-- `MorningBriefing` (Active Trip · Tax Days · Threats) — clear "one-screen" pattern.
-- `UpcomingTripsBar` — purpose-coloured cards + Visa/Health/Risk pills + Trip Dossier sheet.
-- `ModeSwitcher`, `SovereignAccessNudge`, `SuperNomadCallCard`, Pinned, collapsible extras.
-- Source-of-truth chips on legal/tax/visa, Concierge action chips, brand-safe colours.
-
-## 2) Gaps a pro would flag
-
-**Mobile (designer)**
-- Header stack on Home is tall: section label + H1 + date + status pill all stack on narrow screens — pushes the 3 briefing cards below the fold.
-- Briefing cards `font-display text-2xl` headline often wraps to 2 lines on 360–390px → uneven card heights.
-- Quick-action row wraps awkwardly; "Customize home" loses `ml-auto` when wrapped.
-- Upcoming trips horizontal scroll has no visual edge-fade or pager dots → users miss that more cards exist.
-- Pinned grid jumps from 2→3→4→5 cols; on 360px the 2-col tiles feel cramped (icon + label + badge).
-
-**Travel professional**
-- No "Next 72 hours" timeline (flight in 18h → check-in opens → eSIM activates → weather at landing). The morning view is *state*, not *sequence*.
-- No "What changed since you last opened the app" delta (visa rule moved, fare dropped, threat upgraded).
-- Active-trip card hides when no trip — should show *"Next trip in 6d"* counter instead.
-- Tax card shows global 183/year only; nomads need *per-country* worst-offender + Schengen 90/180 inline.
-- No weather/airport-status chip for the *active trip city* in the briefing itself.
-
-**Web designer**
-- Status pill uses 3 different palettes — good — but the cards repeat the same border-tone, creating a "stripey" look when 2/3 cards are warn/alert. Needs a unified hero status bar instead of 3 tones competing.
-- Typography: 10px uppercase + 11px body + 12px CTA — too many micro-sizes; tighten to 2 scales.
-- No empty-state illustration for first-run / signed-out demo.
-
-**AI architect**
-- Concierge isn't surfaced on Home as a *primary input* — it's a call card. Wealthy users expect a single command line ("Move me to Lisbon for 10 days, business class, hold 24h").
-- Briefing doesn't pull from `AIMemoryService` (no "Last time you were in Dubai you booked X — repeat?").
-- No proactive nudge engine using the **3-Signal Rule** on Home (we have the framework but it isn't visible).
-
-**Business director**
-- Demo user lands on the *same* home as a real user — no guided "what you're seeing" overlay → demo conversion suffers.
-- No KPI strip for business mode (YTD travel spend, reclaimable VAT, lounge visits, loyalty points expiring).
-- No "Forward to accountant / assistant" one-tap from Home.
-- Corporate mode (org `ACMEDEMO`) has no Home indicator — user can't tell which profile is active.
+Scope: elevate SuperNomad's consumer surfaces and back office to "best-in-the-world" standard, benchmarked against the apps you compete with — **Revolut, Amex Centurion app, Linear, Vercel dashboard, Stripe Dashboard, Superhuman, Arc, Raycast, Notion, Nomad List, Wise Business**.
 
 ---
 
-## 3) New Lovable platform features to adopt
-From the **May/June 2026 changelog**:
+## Part 0 — Hermes clarification (1 min, before we code)
 
-| Feature | Use in SuperNomad |
+"Hermes" can mean three different things — they're not interchangeable:
+
+1. **Hermes (Meta's JS engine)** — only runs inside React Native. SuperNomad is **React 18 + Vite + Capacitor**, so Hermes does **not** apply. Capacitor uses the device WebView (JavaScriptCore on iOS, V8 on Android), not Hermes.
+2. **Hermès (luxury maison)** — brand/affiliate partnership. Possible via the existing Affiliate router, not a tech integration.
+3. **Hermes API (parcel courier)** — shipping rates for the relocation/moving module. Possible as a connector.
+
+**Default assumption: #1 (engine).** Answer: no, and we don't need it — Capacitor + a tuned WebView gives us native shell + 60fps already. If you meant #2 or #3, say which and I'll wire it.
+
+---
+
+## Part 1 — Consumer app: what "world-class" actually changes
+
+Benchmarks and the specific move we'll steal from each:
+
+| Source | Move we adopt |
 |---|---|
-| **Subagents** | Parallelise concierge research (visa + flights + weather + threat) in one turn. |
-| **Workspace Skills** | Codify "Plan-Code-Test-Fix-Test", "Source-of-truth chip audit", "Demo-data refresh" as reusable skills. |
-| **HeyGen Chat connector** | Already stubbed — wire a real avatar for Concierge Call card. |
-| **SEO & AI Search tab + Semrush** | Tune `supernomad1.lovable.app` marketing pages, not the app. |
-| **Google Maps Platform connector** | Replace ad-hoc map fallbacks in Threats / Local Life / Transport. |
-| **App Connectors** (Notion, Airtable, Brevo, GSC, Mailgun) | "Forward to accountant" via Brevo/Mailgun; trip notes → Notion; corporate exports → Airtable. |
-| **Sensitive Data Scanning** | Run across Identity Vault + Family Vault. |
-| **Database Health Check + Backup Restore** | Add to admin Ops page. |
-| **Static Egress IPs** | Pin for B2B partner allowlists (gateway). |
-| **Wiz Security Scanning** | Enable for the brand-safe main repo. |
-| **Publish-from-chat** | Use after each green test run. |
-| **New AI models** (GPT-Image-2, Gemini 3.5 Flash Lite, new embeddings) | Image-2 for trip cards, Flash-Lite for cheap classifications, new embeddings for hybrid search re-index. |
+| Linear | Cmd-K everywhere, instant route switch, keyboard-first |
+| Superhuman | Single-key shortcuts, "done" feel, zero loading spinners (skeletons only) |
+| Stripe Dashboard | Calm density, monospaced numerics, status pills with verbs not nouns |
+| Revolut | Hero balance/identity card, swipeable stories of "what's new for you" |
+| Amex Centurion | Concierge as the **primary** action, not a tab. Editorial typography. |
+| Arc / Raycast | Command bar that *does* things, not just searches |
+| Vercel | Empty states that teach, not apologize |
+| Nomad List | Dense data grid done elegantly (city scores) |
+
+### 1A. Global polish (applies app-wide)
+- **Motion contract**: 180ms ease-out for enter, 120ms ease-in for exit, spring only on hero. Kill any animation >300ms unless it's the Guardian heartbeat.
+- **Numerics**: all money / counts / dates use `font-feature-settings: "tnum"`. Eliminates jitter.
+- **Skeletons over spinners**: replace every `<Loader2 className="animate-spin">` with content-shaped skeletons.
+- **Empty states**: every empty list gets a 1-line headline + 1 CTA + 1 illustration token. No "No data" strings.
+- **Focus ring**: unified `--ring` token, visible on keyboard, invisible on mouse (`:focus-visible`).
+- **Touch targets**: min 44×44 everywhere (audit BottomNav, chip rows, FAB cluster).
+- **Safe-area**: `env(safe-area-inset-*)` everywhere, not just BottomNav.
+- **Reduced motion**: honor `prefers-reduced-motion` globally (one hook, not per-component).
+
+### 1B. Home / Morning Briefing — final layer
+- Hero "Today" card uses **editorial type**: Playfair display number for the date, gold hairline rule, single primary status verb.
+- "Now / Next" gets a **timeline rail** (Linear-style) instead of stacked cards on desktop ≥1024px.
+- **Command bar (Cmd-K)**: open from anywhere, routes + concierge prefill + recent trips + jump-to-document.
+- **"Since last opened" delta** — already built — moves above fold with a single dismiss affordance.
+- Persona quick-switch becomes a **segmented control** in the hero, not a separate row.
+
+### 1C. Concierge surface
+- Single avatar, **chat takes 100% of viewport** when invoked from Cmd-K, dims to side-panel on result.
+- Voice button is a **single physical state** (idle / listening / thinking / speaking) with a colored ring, not 4 different icons.
+- Streaming chunks land with a 60ms fade — no typewriter sound, no jitter.
+
+### 1D. Trip detail (the page you just unblocked)
+- Tabs become **segmented control with badge counts** (Threat 2, Visa 0, Health 1, Flights, Stays).
+- Each tab opens with a **2-line summary at the top** ("Greece is green. ETIAS in effect. Your insurance covers it.") — generated, not stubbed.
+- Sticky action bar at bottom: "Ask Concierge about this trip" + "Share with co-traveller".
+
+### 1E. Mobile-specific
+- **Bottom nav**: 5 items max, labels always on (Apple HIG), active item gets a 2px gold underline not a fill.
+- **Pull-to-refresh** on Home → re-runs Morning Briefing.
+- **Long-press a trip** → quick actions sheet (Edit dates, Add doc, Share, Delete).
+- **Haptics** via Capacitor on primary actions (book, confirm, danger-gate accept).
 
 ---
 
-## 4) Proposed changes (Home-first, phased)
+## Part 2 — Back Office: smarter, not just prettier
 
-### Phase A — Home clarity (mobile + visual)
-1. **Unified hero status bar** at top: one large pill ("All clear" / "1 item to review" / "Action required") + date + name. Removes 3-tone fight.
-2. **Briefing cards v2**:
-   - Fixed min-height, single-line headline with truncation + tooltip.
-   - Active-Trip card becomes **"Now / Next"** — if no active trip, shows countdown to next upcoming trip with the same component.
-   - Tax card adds inline Schengen 90/180 mini-bar + worst country pill.
-   - Threats card adds active-trip-city weather + airport-delay chip.
-3. **Concierge command bar** directly under hero: single input "Ask or command…" with mic + 4 chips (Plan, Hold, Forward, Add to calendar). Routes to Concierge with action intent.
-4. **Upcoming trips**: add left/right edge fade + dot indicator on mobile; snap to card.
-5. Typography: collapse to 2 sizes (eyebrow 10px / body 12px), one display family.
+Today the admin pages exist (`AdminOverview`, `AdminUsers`, `AdminAI`, `AdminAffiliates`, `AdminAudit`, `AdminData`, `AdminExpenses`, `AdminTickets`, `AdminAgentLive`). They look like a CRUD grid. Best-in-class admin = **Stripe + Linear + Vercel**: every screen answers "what should I do next?".
 
-### Phase B — Travel & business value
-6. **"Next 72h" timeline** card (collapsed by default): flight, check-in window, eSIM auto-activate, weather at landing, lounge access, ride hold.
-7. **"Since you last opened" delta** strip (auto-hides if nothing): rule change · price drop · threat upgrade.
-8. **Business mode KPI strip** (only in `business` mode): YTD spend, reclaimable VAT, points expiring <90d, last receipt OCR.
-9. **Corporate badge** (when `ACMEDEMO` org active): small chip next to name + "Switch to personal" action.
+### 2A. New top-level: **Operator Cockpit** (`/admin`)
+Replaces the current overview with a 3-column war-room:
+- **Left — Pulse**: live signals (concierge sessions/min, error rate, voice success %, payment success %), each as a sparkline with a tone color.
+- **Center — Actions queue**: AI-prioritised list of things a human should look at *right now* (failed payments, flagged tickets, low-confidence concierge replies, source-of-truth drift). Each row has a one-click resolve / escalate / snooze.
+- **Right — Brain**: today's AI CEO digest (already wired via `admin-ai-ceo`) + "ask the back office" prompt.
 
-### Phase C — Demo & onboarding
-10. **Demo coach-mark overlay** (one-time per persona): 4 spotlights on hero status, briefing, upcoming trips, concierge bar. Skippable, persisted in local storage.
-11. **Demo data parity for default user** (already done for Upcoming Trips) — extend to Active Trip + Tax days so the default demo shows a *currently active* trip, not empty state.
-12. **"Try as Meghan / John / Demo" persona switcher** pinned on Home for unauth visitors.
+### 2B. Smarter signals (uses existing edge functions)
+- `AdminLiveSignalsService` → add anomaly band: anything outside ±2σ of 7-day baseline turns amber.
+- `admin-daily-briefing` → render output in the cockpit's Brain pane (it currently isn't surfaced visually).
+- New tiny edge function `admin-next-actions` aggregates: failed `agentic-payments-router` rows, low-rated `concierge-evaluator` rows, stale `source-monitor` rows → returns a ranked queue.
 
-### Phase D — AI & platform
-13. Wrap Concierge multi-tool turns in **Subagents** (visa, flights, weather, threat) for ≤1.5s perceived latency.
-14. Replace heuristic memory recall on Home with **AIMemoryService.recallForHome()** (new) → produces 1-line "Last time…" hint.
-15. Add **Workspace Skill: `home-mobile-audit`** (Lighthouse + viewport screenshots at 360/390/430/768/1280).
-16. Wire **HeyGen** to `SuperNomadCallCard` as opt-in avatar mode.
-17. Run **Sensitive Data Scan** + **Wiz** before next publish.
+### 2C. Users page upgrade
+- Cohort filters as **saved views** (Linear-style).
+- Each user row → hover card with last session, persona, trust score, last concierge query.
+- Bulk actions: grant trial, force re-onboard, send concierge nudge.
 
-### Phase E — QA gates (every phase)
-- Visual: preview at 360 / 390 / 430 / 768 / 1280 / 1920.
-- Functional: Vitest for `MorningBriefing` thresholds (ok/warn/alert), `UpcomingTripsBar` sort, Concierge command-bar intent routing.
-- Voice: ensure new command bar + chips are voice-controllable (VOICE_CONTROL_DEFAULTS update).
-- Demo: Meghan, John, Default — each opens to a *populated*, *clear-cut* Home.
-- A11y: focus rings, aria-labels on all new chips, contrast on warn/alert tones.
-- Then **Publish-from-chat**.
+### 2D. AI Ops page upgrade
+- Replace the long list with a **funnel**: Intents → Resolutions → Satisfaction → Escalations, with click-through to traces.
+- Live tail of concierge replies (already partly built in `AdminAgentLive`) gets a "low-confidence only" toggle and a "label good / bad" inline for RLHF.
+
+### 2E. Design system for admin
+- Admin gets its own tighter type scale (`text-[13px]` base), monospaced numerics, denser table rows (40px), Stripe-style status pills, slate-on-near-black dark mode default.
+- Sidebar collapses to icon strip (already shadcn-supported).
+- Cmd-K shared with consumer app but with admin verbs ("ban user", "refund", "rerun concierge eval").
 
 ---
 
-## 5) Suggested execution order
-1. Phase A (1 pass, ~1 working session)
-2. Phase C (low risk, high demo impact)
-3. Phase B (medium)
-4. Phase D (platform — schedule alongside backend session)
-5. Phase E gates after every phase.
+## Part 3 — Build order (so we can ship & verify in passes)
 
-## 6) What I'd like you to confirm before coding
-- OK to **replace** today's 3-card briefing layout with the unified hero + redesigned cards (Phase A)?
-- Add the **Concierge command bar** at the top of Home (Phase A.3)?
-- Add a **one-time demo coach-mark** for first-run / persona switches (Phase C.10)?
-- Greenlight to wire **HeyGen** + **Subagents** now, or hold for a dedicated AI sprint?
+**Pass 1 — Foundations (no visual regressions, enables the rest)**
+1. Global motion + numerics + focus ring tokens in `src/index.css`.
+2. `useReducedMotion` + `useHotkeys` shared hooks.
+3. Skeleton primitives + standard EmptyState component.
+4. Audit & fix touch targets / safe-area in `BottomNav`, FAB cluster, chip rows.
 
-Reply with which phases to ship and any "no" items; I'll then code, test, fix, test.
+**Pass 2 — Consumer polish**
+5. Cmd-K palette wired to routes + concierge prefill (reuses `HomeCommandBar` event bus).
+6. Morning Briefing hero editorial pass.
+7. Trip detail tabs → segmented + 2-line AI summary header.
+8. Voice button single-state ring.
+
+**Pass 3 — Back office cockpit**
+9. New `/admin` overview layout (Pulse / Actions / Brain).
+10. `admin-next-actions` edge function + `AdminNextActionsService`.
+11. Surface `admin-daily-briefing` output in Brain pane.
+12. Users page hover card + saved views.
+13. AI Ops funnel view.
+14. Admin Cmd-K.
+
+**Pass 4 — Mobile native niceties**
+15. Pull-to-refresh on Home.
+16. Long-press quick actions on trip cards.
+17. Capacitor haptics on primary actions.
+
+**Pass 5 — Test & fix loop (every pass ends here)**
+- `bunx vitest run` on touched suites.
+- `browser--view_preview` at 390×844 (iPhone), 834×1194 (iPad), 1440×900 (desktop) — visual diff key screens.
+- Voice flow smoke: Cmd-K → "plan a trip to Lisbon next month" → confirm prefill lands in Concierge with TTS.
+- Admin smoke: load `/admin`, confirm Pulse + Actions + Brain populate, click-through one Action.
+
+---
+
+## Part 4 — Out of scope for this run (call out so it's not silently dropped)
+- New backend tables (we reuse existing schema).
+- Hermès brand affiliate or Hermes courier API (need your confirmation).
+- Renaming routes or changing nav information architecture beyond the cockpit.
+- Marketing site / `/landing` changes.
+
+---
+
+## Technical notes (for the record)
+- All new colors via existing semantic tokens in `index.css`; no hardcoded hex.
+- Cmd-K built on `cmdk` (already shadcn-compatible) — no new heavy dep.
+- Anomaly bands done client-side from existing signals; no new DB columns.
+- Admin Cmd-K gated by `useStaffRole` (already present).
+- Numerics use Tailwind arbitrary `font-variant-numeric: tabular-nums` utility — one class, app-wide.
+
+---
+
+**Confirm and I'll start with Pass 1 immediately, then ship Passes 2→4 with a test gate between each. Also tell me which "Hermes" you meant if it wasn't the JS engine.**
