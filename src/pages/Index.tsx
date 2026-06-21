@@ -63,6 +63,17 @@ const Index = () => {
       setSubscription(JSON.parse(savedSubscription));
     }
 
+    // Demo fast-path: `?demo=1` (or `?demo=meghan|john`) skips every onboarding
+    // overlay so investors and first-time demo users land straight on the app.
+    const params = new URLSearchParams(window.location.search);
+    const demoParam = params.get('demo');
+    if (demoParam && demoParam !== '0') {
+      localStorage.setItem('hasSeenOnboarding', '1');
+      localStorage.setItem('supernomad_avatar_intro_seen', '1');
+      localStorage.setItem('supernomad_sovereign_tour_seen', '1');
+      return;
+    }
+
     // Guided tour from landing takes precedence over onboarding overlays
     if (showGuidedTour) {
       // suppress others
