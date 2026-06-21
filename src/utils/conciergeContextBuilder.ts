@@ -6,7 +6,27 @@
 // Sources are tagged so the AI knows what is verified vs. inferred.
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { gatherFullAppContext, buildProfileSummary, getMemoryContext } from './conciergeMemory';
+import { gatherFullAppContext as _rawGatherFullAppContext, buildProfileSummary, getMemoryContext } from './conciergeMemory';
+
+// 60-second memoization — `gatherFullAppContext()` reads many localStorage
+// keys and is invoked on every Concierge keystroke-send. Caching cuts repeated
+// JSON.parse work and stabilizes the bundle within a single user turn.
+let _ctxCache: { ts: number; value: Record<string, any> } | null = null;
+const _CTX_TTL_MS = 60_000;
+function gatherFullAppContext(): Record<string, any> {
+  const now = Date.now();
+  if (_ctxCache && now - _ctxCache.ts < _CTX_TTL_MS) return _ctxCache.value;
+  const value = _rawGatherFullAppContext();
+  _ctxCache = { ts: now, value };
+  return value;
+}
+// Invalidate when persona switches or storage is cleared
+if (typeof window !== 'undefined') {
+  const inv = () => { _ctxCache = null; };
+  window.addEventListener('supernomad:demo-persona-applied', inv);
+  window.addEventListener('supernomad:demo-persona-cleared', inv);
+  window.addEventListener('storage', inv);
+}
 
 type Source = 'verified' | 'self_reported' | 'inferred' | 'connected';
 

@@ -36,7 +36,8 @@ async function gatherSignals(windowHours: number) {
         .from("ai_usage_logs")
         .select("function_name,model,input_tokens,output_tokens,latency_ms,cache_hit,error,created_at,user_id")
         .gte("created_at", since)
-        .limit(2000),
+        .order("created_at", { ascending: false })
+        .limit(500),
       admin
         .from("support_tickets")
         .select("id,priority,status,category,created_at,resolved_at,subject")

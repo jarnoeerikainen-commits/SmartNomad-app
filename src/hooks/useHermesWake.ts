@@ -29,7 +29,8 @@ interface WakeOptions {
 
 function readCache(): HermesBriefing | null {
   try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
+    // localStorage so wake survives new tabs/refresh (was sessionStorage)
+    const raw = localStorage.getItem(CACHE_KEY) ?? sessionStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     const b = JSON.parse(raw) as HermesBriefing;
     if (Date.now() - b.ts > TTL_MS) return null;
@@ -38,7 +39,7 @@ function readCache(): HermesBriefing | null {
 }
 
 function writeCache(b: HermesBriefing) {
-  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(b)); } catch { /* noop */ }
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(b)); } catch { /* noop */ }
 }
 
 export function useHermesWake(opts: WakeOptions = {}) {
