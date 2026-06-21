@@ -40,7 +40,23 @@ const SAFE_FALLBACK: HermesAssist = {
   source: "fallback",
 };
 
+// Topic gate — only invoke Hermes for high-stakes or signal-flagged messages.
+// Casual chitchat returns the safe fallback immediately, halving invocations.
+const HIGH_STAKES_RE = /(tax|residency|visa|immigration|legal|deport|prescription|diagnos|symptom|treaty|capital gains|inheritance|lawsuit|booking|payment|refund|cancel|safety|emergency|danger|threat|stolen|lost passport|fraud)/i;
+
+function isHighStakes(ctx: AssistContext): boolean {
+  if (HIGH_STAKES_RE.test(ctx.userMessage)) return true;
+  const s = ctx.signals ?? {};
+  if (s.safety_alerts && s.safety_alerts > 0) return true;
+  if (s.last_booking_failed) return true;
+  if (s.tax_warning) return true;
+  if ((s.open_tickets ?? 0) > 2) return true;
+  return false;
+}
+
 export async function getHermesAssist(ctx: AssistContext): Promise<HermesAssist> {
+  // Skip the round-trip entirely for casual messages — saves ~50% of calls.
+  if (!isHighStakes(ctx)) return SAFE_FALLBACK;
   try {
     const { data, error } = await supabase.functions.invoke("concierge-hermes-assist", {
       body: {
