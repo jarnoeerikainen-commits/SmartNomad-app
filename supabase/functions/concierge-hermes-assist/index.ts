@@ -95,23 +95,25 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  const userMsg = `Context:\n${JSON.stringify({
-    persona: body.persona ?? 'guest',
-    is_demo: !!body.is_demo,
-    route: body.route ?? '/',
-    city: body.city ?? null,
-    signals: body.recent_signals ?? {},
-  }, null, 2)}\n\nUser said: ${(body.user_message ?? '').slice(0, 800)}\n\nReturn the JSON envelope.`;
+  // Trim aggressively — Hermes is a classifier, not a writer
+  const userMsg = `Ctx:${JSON.stringify({
+    p: body.persona ?? 'guest',
+    d: !!body.is_demo,
+    r: body.route ?? '/',
+    c: body.city ?? null,
+    s: body.recent_signals ?? {},
+  })}\nUser: ${(body.user_message ?? '').slice(0, 200)}\nReturn JSON envelope.`;
 
   try {
     const resp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'google/gemini-3-flash-preview',
+        // Use the cheapest/fastest tier — Hermes returns a short JSON envelope
+        model: 'google/gemini-2.5-flash-lite',
         messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: userMsg }],
         temperature: 0.2,
-        max_tokens: 250,
+        max_tokens: 220,
       }),
     });
     if (!resp.ok) {
