@@ -12,7 +12,6 @@ import { SmartAlerts } from './SmartAlerts';
 import { DataManagement } from './GDPRCompliance';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { DemoPersonaSelector } from './DemoPersonaSelector';
 import AirQualityIndicator from './AirQualityIndicator';
 import { Country } from '@/types/country';
 import { AlertCircle } from 'lucide-react';
@@ -86,14 +85,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </Link>
         </div>
 
-        {/* Center - AQI + Demo Personas */}
+        {/* Center - local conditions */}
         <div className="flex items-center gap-1 sm:gap-3 min-w-0 flex-shrink overflow-hidden">
           <div className="hidden md:block shrink-0">
             <AirQualityIndicator />
-          </div>
-          <div className="h-5 w-px bg-border hidden md:block shrink-0" />
-          <div className="min-w-0 flex-shrink">
-            <DemoPersonaSelector />
           </div>
         </div>
 

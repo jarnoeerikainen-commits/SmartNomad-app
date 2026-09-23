@@ -63,11 +63,13 @@ const Index = () => {
       setSubscription(JSON.parse(savedSubscription));
     }
 
-    // Demo fast-path: `?demo=1` (or `?demo=meghan|john`) skips every onboarding
+    // Demo fast-path skips every onboarding. Named persona parameters are ignored.
     // overlay so investors and first-time demo users land straight on the app.
     const params = new URLSearchParams(window.location.search);
     const demoParam = params.get('demo');
     if (demoParam && demoParam !== '0') {
+      localStorage.removeItem('supernomad_active_demo_persona');
+      localStorage.removeItem('demoPersona');
       localStorage.setItem('hasSeenOnboarding', '1');
       localStorage.setItem('supernomad_avatar_intro_seen', '1');
       localStorage.setItem('supernomad_sovereign_tour_seen', '1');

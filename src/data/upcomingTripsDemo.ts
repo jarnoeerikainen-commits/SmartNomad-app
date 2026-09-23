@@ -211,7 +211,8 @@ const DEFAULT_SEED: UpcomingTrip[] = [
  * dashboard always shows a populated, future-anchored Upcoming Trips bar.
  */
 export function getDemoUpcomingTrips(personaId: 'meghan' | 'john' | null): UpcomingTrip[] {
-  if (personaId === 'meghan') return MEGHAN_SEED;
-  if (personaId === 'john') return JOHN_SEED;
+  // Named persona fixtures are retained for historical test compatibility only.
+  // Product surfaces always use the anonymous default seed.
+  if (personaId === 'meghan' || personaId === 'john') return DEFAULT_SEED;
   return DEFAULT_SEED;
 }
