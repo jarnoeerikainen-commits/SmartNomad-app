@@ -141,9 +141,9 @@ interface AppLayoutProps {
   onIncrementCountryDay?: (countryId: string) => void;
   subscription: Subscription;
   detectedLocation: LocationData | null;
-  userProfile: any;
+  userProfile: { citizenship?: string } | null;
   onUpgrade?: (tier: string) => void;
-  onProfileComplete?: (data: any) => void;
+  onProfileComplete?: (data: unknown) => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({

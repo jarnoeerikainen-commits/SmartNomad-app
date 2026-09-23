@@ -136,7 +136,10 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
     };
   }, []);
 
-  const nextBooking = useMemo(() => bookings[0] || null, [bookings]);
+  const nextBooking = useMemo(() => {
+    const now = Date.now();
+    return bookings.find((booking) => new Date(booking.result.order.itinerary.arrivalLocal).getTime() >= now) || null;
+  }, [bookings]);
   const tripHeadline = nextBooking ? `${nextBooking.bookingType === 'flight' ? '✈' : '▣'} ${nextBooking.result.order.itinerary.destinationLabel}` : 'No approved demo booking';
   const tripDetail = nextBooking
     ? `${dateLabel(nextBooking.result.order.itinerary.departureLocal)} · ${nextBooking.result.order.itinerary.carrierOrProperty} · ${money(nextBooking.result.order.amount, nextBooking.result.order.currency)}`
