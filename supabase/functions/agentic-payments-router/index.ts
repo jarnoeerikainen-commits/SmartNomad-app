@@ -241,16 +241,6 @@ async function handleExecute(supabase: AppSupabaseClient, body: RouterRequest, u
   if (fErr || !rawIntent) throw new Error(`intent not found: ${body.intentId}`);
   const intent = rawIntent as DbRow;
 
-  let virtualCardLast4: string | null = null;
-  if (intent.virtual_card_id) {
-    const { data: card } = await supabase
-      .from('agentic_virtual_cards')
-      .select('last4')
-      .eq('id', intent.virtual_card_id)
-      .maybeSingle();
-    virtualCardLast4 = (card as { last4?: string } | null)?.last4 ?? null;
-  }
-
   if (intent.status === 'completed') {
     return { success: true, alreadyCompleted: true, intent };
   }
@@ -274,62 +264,6 @@ async function handleExecute(supabase: AppSupabaseClient, body: RouterRequest, u
     reason: 'live_provider_and_reconciliation_not_configured',
     message: 'Live payment is blocked until a tokenized payment provider and supplier-order reconciliation are configured.',
   };
-
-  if (intent.status !== 'authorized' && !body.userApproved) {
-    return { success: false, reason: 'requires_user_approval', intent };
-  }
-
-  // Build protocol-specific receipt
-  const receipt = await buildProtocolReceipt(intent.protocol as Protocol, intent);
-
-  // Mark virtual card used (if any)
-  if (intent.virtual_card_id) {
-    await supabase.from('agentic_virtual_cards')
-      .update({ status: 'used', amount_spent: intent.amount, used_at: new Date().toISOString() })
-      .eq('id', intent.virtual_card_id);
-  }
-
-  // Update intent → completed
-  const { data: updated, error: uErr } = await supabase
-    .from('agentic_payment_intents')
-    .update({
-      status: 'completed',
-      receipt,
-      completed_at: new Date().toISOString(),
-      user_approved: true,
-    })
-    .eq('id', intent.id)
-    .select()
-    .single();
-  if (uErr) throw new Error(`intent update failed: ${uErr.message}`);
-
-  // Insert immutable transaction
-  const { data: txn, error: tErr } = await supabase
-    .from('agentic_transactions')
-    .insert({
-      intent_id: intent.id,
-      user_id: userId,
-      device_id: body.deviceId,
-      protocol: intent.protocol,
-      description: intent.description,
-      amount: intent.amount,
-      currency: intent.currency,
-      category: intent.category,
-      merchant: intent.merchant,
-      status: 'completed',
-      ai_initiated: intent.ai_initiated,
-      user_approved: true,
-      virtual_card_last4: virtualCardLast4,
-      crypto_network: intent.protocol === 'x402' ? 'base' : null,
-      crypto_tx_hash: intent.protocol === 'x402' ? receipt?.transaction ?? null : null,
-      trust_score: intent.trust_score,
-      receipt,
-    })
-    .select()
-    .single();
-  if (tErr) throw new Error(`transaction insert failed: ${tErr.message}`);
-
-  return { success: true, mode: MODE, intent: updated, transaction: txn, receipt };
 }
 
 // ─── Action: refund ───────────────────────────────────────
