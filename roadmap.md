@@ -50,4 +50,4 @@
 - [x] Reduce Home to Next Trip, Tax Days, and Threats Near You only.
 - [x] Remove seeded upcoming trips and show only user-approved demo flight or hotel records.
 - [x] Persist completed demo booking details safely and open the full record from Next Trip.
-- [ ] Verify flight and hotel completion, reload persistence, empty state, mobile layout, tests, lint, and build.
+- [x] Verify flight and hotel completion, reload persistence, empty state, mobile layout, tests, lint, and build.
