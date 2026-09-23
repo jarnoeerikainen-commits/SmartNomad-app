@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getDemoUpcomingTrips } from '@/data/upcomingTripsDemo';
 
 describe('getDemoUpcomingTrips', () => {
-  it('returns trips for meghan', () => {
+  it('legacy named IDs resolve to the same anonymous trips', () => {
     const trips = getDemoUpcomingTrips('meghan');
     expect(trips.length).toBeGreaterThan(0);
     trips.forEach(t => {
@@ -11,9 +11,8 @@ describe('getDemoUpcomingTrips', () => {
     });
   });
 
-  it('returns trips for john', () => {
-    const trips = getDemoUpcomingTrips('john');
-    expect(trips.length).toBeGreaterThan(0);
+    expect(getDemoUpcomingTrips('john')).toEqual(getDemoUpcomingTrips(null));
+    expect(trips).toEqual(getDemoUpcomingTrips(null));
   });
 
   it('returns a non-empty list for the default demo (null)', () => {
@@ -30,10 +29,8 @@ describe('getDemoUpcomingTrips', () => {
     }
   });
 
-  it('covers all five trip purposes across personas', () => {
+  it('covers the five trip purposes in the anonymous demo', () => {
     const all = [
-      ...getDemoUpcomingTrips('meghan'),
-      ...getDemoUpcomingTrips('john'),
       ...getDemoUpcomingTrips(null),
     ];
     const purposes = new Set(all.map(t => t.purpose));

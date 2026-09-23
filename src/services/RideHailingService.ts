@@ -72,6 +72,7 @@ export interface RideBooking {
   trackingUrl?: string;
   pricePaid?: number;
   currency: string;
+  simulated?: boolean;
 }
 
 // ─── Demo data: realistic city-aware mock quotes ──────────────────
@@ -248,6 +249,7 @@ export class RideHailingService {
       etaMinutes: 4,
       trackingUrl: undefined,
       currency: 'EUR',
+      simulated: true,
     };
   }
 
