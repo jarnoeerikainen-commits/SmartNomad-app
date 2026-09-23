@@ -17,10 +17,10 @@ Deno.test('rejects invalid airport codes', () => {
 });
 
 Deno.test('redacts passport, phone and card-like values', () => {
-  const redacted = maskSensitiveText('passport KC 348550 phone +358 994 0994 card 4242 4242 4242 4242');
-  assert(!redacted.includes('348550'));
-  assert(!redacted.includes('994 0994'));
-  assert(!redacted.includes('4242 4242'));
+  const redacted = maskSensitiveText('passport ZZ 123456 phone +000 000 0000 card 4111 1111 1111 1111');
+  assert(!redacted.includes('123456'));
+  assert(!redacted.includes('000 0000'));
+  assert(!redacted.includes('4111 1111'));
 });
 
 Deno.test('mandates fail closed for danger level 4 and changed price', () => {
