@@ -17,18 +17,6 @@ function getDeviceId(): string {
   return deviceId;
 }
 
-// Guest database policies use x-device-id, but Edge Functions do not. Keeping
-// that custom header on function calls forces browsers to preflight it and
-// breaks every function whose CORS policy only allows the Supabase SDK headers.
-const supabaseFetch: typeof fetch = (input, init = {}) => {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
-  if (!url.includes('/functions/v1/')) return fetch(input, init);
-
-  const headers = new Headers(init.headers);
-  headers.delete('x-device-id');
-  return fetch(input, { ...init, headers });
-};
-
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
@@ -39,7 +27,6 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     autoRefreshToken: true,
   },
   global: {
-    fetch: supabaseFetch,
     headers: {
       'x-device-id': getDeviceId(),
     },
