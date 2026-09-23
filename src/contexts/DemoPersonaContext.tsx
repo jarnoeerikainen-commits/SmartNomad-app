@@ -7,7 +7,6 @@ import { DEMO_PERSONA_TRACKING } from '@/data/demoPersonaCountries';
 const DEMO_LIFESTYLE_BACKUP_KEYS = {
   trackedCountries: 'supernomad_pre_demo_trackedCountries',
   subscription: 'supernomad_pre_demo_subscription',
-  supernomad_user_mode: 'supernomad_pre_demo_user_mode',
 } as const;
 
 type LifestyleKey = keyof typeof DEMO_LIFESTYLE_BACKUP_KEYS;
@@ -234,17 +233,14 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const awardCards = id === 'meghan' ? MEGHAN_AWARD_CARDS : JOHN_AWARD_CARDS;
       localStorage.setItem('awardCardsAIContext', getAwardCardsAIContext(awardCards));
 
-      // Lifestyle wiring — countries, mode, subscription tier
+      // Lifestyle wiring — countries and subscription tier
       const tracking = DEMO_PERSONA_TRACKING[id];
       if (tracking) {
         backupLifestyle('trackedCountries');
         backupLifestyle('subscription');
-        backupLifestyle('supernomad_user_mode');
         localStorage.setItem('trackedCountries', JSON.stringify(tracking.countries));
         localStorage.setItem('subscription', JSON.stringify({ tier: tracking.tier, requestsUsed: 0, requestsLimit: 10000, lastReset: new Date().toISOString() }));
-        localStorage.setItem('supernomad_user_mode', tracking.mode);
         window.dispatchEvent(new CustomEvent('supernomad:demo-persona-applied', { detail: { id } }));
-        window.dispatchEvent(new CustomEvent('supernomad:user-mode-changed', { detail: { mode: tracking.mode } }));
       }
     } else {
       // Clear demo data
@@ -259,10 +255,8 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       restoreAfterDemo('enhancedProfile');
       restoreLifestyle('trackedCountries');
       restoreLifestyle('subscription');
-      restoreLifestyle('supernomad_user_mode');
       localStorage.removeItem('jetSearchAIContext');
       window.dispatchEvent(new CustomEvent('supernomad:demo-persona-cleared'));
-      window.dispatchEvent(new CustomEvent('supernomad:user-mode-changed'));
     }
   }, []);
 

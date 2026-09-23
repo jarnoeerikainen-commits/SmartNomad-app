@@ -25,11 +25,18 @@ function loadPrefs(): FeaturePrefsMap {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const saved = JSON.parse(raw) as FeaturePrefsMap;
-      // Merge with defaults so new features appear
+      // Merge with defaults so new features appear without resetting choices.
       const defaults = buildDefaults();
       for (const key of Object.keys(defaults)) {
         if (!(key in saved)) {
           saved[key] = defaults[key];
+        } else {
+          saved[key] = {
+            ...defaults[key],
+            ...saved[key],
+            // A Home pin is always visible; repair older contradictory prefs.
+            visible: Boolean(saved[key].visible || saved[key].pinned),
+          };
         }
       }
       return saved;
@@ -61,7 +68,12 @@ export function useFeaturePreferences() {
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], visible: !prev[id]?.visible }
+      [id]: {
+        ...prev[id],
+        visible: !prev[id]?.visible,
+        // Hidden items cannot remain on Home.
+        pinned: prev[id]?.visible ? false : prev[id]?.pinned ?? false,
+      }
     }));
   }, []);
 
@@ -69,7 +81,12 @@ export function useFeaturePreferences() {
     if (isPausedSocialIntroductionFeature(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], pinned: !prev[id]?.pinned }
+      [id]: {
+        ...prev[id],
+        // Pinning places the item on Home and therefore makes it visible.
+        visible: prev[id]?.pinned ? prev[id]?.visible ?? true : true,
+        pinned: !prev[id]?.pinned,
+      }
     }));
   }, []);
 
@@ -78,7 +95,7 @@ export function useFeaturePreferences() {
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], visible }
+      [id]: { ...prev[id], visible, pinned: visible ? prev[id]?.pinned ?? false : false }
     }));
   }, []);
 
