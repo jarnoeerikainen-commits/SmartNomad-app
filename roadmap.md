@@ -6,7 +6,8 @@
 - [x] Disable timed recommendation windows and spoken match announcements.
 - [x] Hide people discovery, AI matching, and nearby-nomad discovery while paused.
 - [x] Block social matching and proactive meetup nudges in both app and edge functions.
-- [ ] Verify focused tests, preview build, and browser behavior.
+- [x] Verify focused tests and protected edge-function type checks.
+- [ ] Verify the latest preview build and browser behavior after deployment.
 
 - [x] Add authorized flight and hotel offer/order gateway with explicit demo/live provenance.
 - [x] Add secure traveller profiles and invitation-only booking mandates.

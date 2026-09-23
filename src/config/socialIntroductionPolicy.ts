@@ -9,3 +9,7 @@ const PAUSED_FEATURE_IDS = new Set(['local-nomads']);
 export function isPausedSocialIntroductionFeature(featureId: string): boolean {
   return SOCIAL_INTRODUCTIONS_PAUSED && PAUSED_FEATURE_IDS.has(featureId);
 }
+
+export function safeSectionDuringSocialPause(section: string): string {
+  return isPausedSocialIntroductionFeature(section) ? 'dashboard' : section;
+}

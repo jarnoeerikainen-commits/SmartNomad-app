@@ -378,8 +378,7 @@ export const SocialDashboard = () => {
                   <div className="text-center py-12">
                     <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">No conversations yet</h3>
-                    <p className="text-muted-foreground mb-4 text-sm">Start connecting with travelers</p>
-                    <Button onClick={() => setActiveTab('discover')}>Discover Travelers</Button>
+                    <p className="text-muted-foreground text-sm">Your existing conversations will appear here.</p>
                   </div>
                 )}
               </div>

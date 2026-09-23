@@ -144,11 +144,10 @@ HOW TO: Go to "Community" → "Marketplace". Browse or list items.
 - AI-moderated discussions
 HOW TO: Go to "Community" → "Nomad Pulse". Join rooms or create topics.
 
-**19. 🤝 SOCIAL MATCHING**
-- AI-powered nomad matching based on interests, location, travel style
-- Travel calendar sharing
-- Profile browsing
-HOW TO: Go to "Community" → "Social". View matches and connect.
+**19. 💬 EXISTING SOCIAL CHATS**
+- Existing user-initiated chats remain available
+- New-friend discovery, social matching, and SportBuddy introductions are paused for every user
+- No recommendation windows or spoken introductions are available while paused
 
 **20. 🚨 EMERGENCY SERVICES**
 - SOS contacts per country

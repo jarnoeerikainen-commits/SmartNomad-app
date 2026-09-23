@@ -84,6 +84,7 @@ export const useSocialChat = () => {
   }, []);
 
   const refreshQuickReplies = useCallback(async (roomId: string, lastMsg: ChatMessage, room: ChatRoom) => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
     setQuickLoadingByRoom(prev => ({ ...prev, [roomId]: true }));
     try {
       const { data } = await supabase.functions.invoke('community-orchestrator', {

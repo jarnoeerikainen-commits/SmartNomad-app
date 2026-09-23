@@ -47,7 +47,7 @@ const Landing: React.FC = () => {
   const pains = [
     { icon: Calculator, title: 'Tax Confusion', fix: 'Tax Intelligence Hub', desc: 'Overlapping jurisdictions, the 184-day trap, double taxation. We track every day, every threshold, and every rule — silently.' },
     { icon: FileCheck, title: 'Visa Stress', fix: 'Visa Auto-Matcher', desc: 'Expirations, renewal windows, entry rules. SuperNomad alerts you weeks before any deadline slips.' },
-    { icon: Users, title: 'Loneliness Abroad', fix: 'Pulse + Vibe Community', desc: '6.2M nomads online. Find your tribe in any city — sport partners, dinners, meetups, and mentors.' },
+    { icon: Users, title: 'Community Abroad', fix: 'Pulse Community', desc: 'Stay in touch through user-initiated community conversations.' },
     { icon: Lock, title: 'Security Gaps', fix: 'Snomad ID Vault', desc: 'AES-256-GCM encrypted vault for passports, banking, and medical records. Zero-knowledge — only you hold the key.' },
   ];
 
@@ -60,20 +60,20 @@ const Landing: React.FC = () => {
     { icon: Wallet, title: 'Agentic Wallet', desc: 'x402 protocol — AI books and pays autonomously, with your rules.' },
     { icon: AlertTriangle, title: 'Threat Intelligence', desc: '500+ live incidents across 200+ cities, with safety scores.' },
     { icon: Globe2, title: 'Local Living', desc: '700+ business centers, weather, and community across 100+ cities.' },
-    { icon: MessageCircle, title: 'Community', desc: 'Pulse meetups, Vibe chat, sport finder (padel, golf, cycling).' },
+    { icon: MessageCircle, title: 'Community', desc: 'User-initiated Pulse and Vibe conversations.' },
     { icon: Award, title: 'Award Cards', desc: '100+ loyalty programs with AI-optimized point redemption.' },
   ];
 
   const steps = [
     { n: '01', title: 'Onboard Securely', desc: 'Verify in under 2 minutes with biometric AI. End-to-end encrypted, GDPR and CCPA compliant from day one.', bullets: ['Biometric verification', 'GDPR & CCPA compliant', 'End-to-end encryption', 'Instant — no paperwork'] },
-    { n: '02', title: 'Connect & Configure', desc: 'Tell the AI your goals. SuperNomad auto-configures compliance tracking, finds your community, and curates the marketplace.', bullets: ['Custom compliance rules', 'Smart matchmaking', 'Marketplace curation', 'Automated alerts'] },
+    { n: '02', title: 'Connect & Configure', desc: 'Tell the AI your goals. SuperNomad configures compliance tracking and curates the marketplace.', bullets: ['Custom compliance rules', 'Travel preferences', 'Marketplace curation', 'Automated alerts'] },
     { n: '03', title: 'Live & Explore', desc: 'SuperNomad runs invisibly. It only interrupts when action is required — otherwise, you focus entirely on your life.', bullets: ['Invisible monitoring', 'Proactive tax alerts', 'Event discovery', '24/7 multilingual support'] },
   ];
 
   const sports = [
-    { emoji: '🏸', title: 'Padel', desc: 'Skill-based matchmaking, real-time courts, and ratings — globally.' },
+    { emoji: '🏸', title: 'Padel', desc: 'Court discovery, training information, and ratings — globally.' },
     { emoji: '🚴', title: 'Cycling', desc: 'GPS-curated routes, local groups, and terrain & difficulty maps.' },
-    { emoji: '🏌️', title: 'Golf', desc: 'Handicap matching, course reviews, and tournament discovery.' },
+    { emoji: '🏌️', title: 'Golf', desc: 'Course reviews, tee-time information, and tournament discovery.' },
   ];
 
   const trustBadges = [

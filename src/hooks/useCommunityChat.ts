@@ -27,7 +27,6 @@ export const useCommunityChat = () => {
     { id: '1', senderId: '3', senderName: 'Lena Martinez', senderAvatar: AVATAR_URLS.lena, content: 'Good morning everyone! ☀️ Just arrived at the co-working space near Marina. The wifi here is insane — 200mbps down.', timestamp: new Date(Date.now() - 5400000) },
     { id: '2', senderId: '2', senderName: 'Mike Johnson', senderAvatar: AVATAR_URLS.mike, content: 'Nice! I was thinking of heading there too. Anyone want to grab lunch after? I found an amazing Lebanese place nearby.', timestamp: new Date(Date.now() - 4200000) },
     { id: '3', senderId: '1', senderName: 'Sarah Chen', senderAvatar: AVATAR_URLS.sarah, content: 'Count me in! I need to step away from Figma for a bit 😅 Also — has anyone tried the new rooftop café on the 40th floor?', timestamp: new Date(Date.now() - 3600000) },
-    { id: '4', senderId: 'ai', senderName: 'SuperNomad AI', senderAvatar: '🤖', content: '📍 Based on your locations, I suggest meeting at Salt Café, Dubai Marina at 12:30pm — it\'s a 5-min walk for everyone and has great reviews from 847 nomads. I can reserve a table for 4 if you\'d like!', timestamp: new Date(Date.now() - 3000000), isAI: true },
     { id: '5', senderId: '5', senderName: 'Elena Rossi', senderAvatar: AVATAR_URLS.elena, content: 'Yes please! Reserve it 🙌 Also, anyone up for a sunset photography walk after? The light here is unreal this time of year.', timestamp: new Date(Date.now() - 1800000) },
     { id: '6', senderId: '2', senderName: 'Mike Johnson', senderAvatar: AVATAR_URLS.mike, content: 'I\'m in for both! This is why I love this community — best spontaneous plans ever.', timestamp: new Date(Date.now() - 900000) },
   ]);
@@ -48,6 +47,7 @@ export const useCommunityChat = () => {
 
   // ── Quick reply suggestions: refresh after each non-user message ──
   const refreshQuickReplies = useCallback(async (lastMsg: ChatMessage) => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
     if (lastMsg.senderId === 'current-user') return;
     setQuickLoading(true);
     try {
@@ -111,7 +111,7 @@ export const useCommunityChat = () => {
   // Initial quick replies for last message
   useEffect(() => {
     const last = messages[messages.length - 1];
-    if (last && quickReplies.length === 0 && !quickLoading) {
+    if (!SOCIAL_INTRODUCTIONS_PAUSED && last && quickReplies.length === 0 && !quickLoading) {
       refreshQuickReplies(last);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,6 +180,9 @@ export const useCommunityChat = () => {
     });
     setTimeout(() => setTyping([]), cumulative + 200);
 
+    // AI host recommendations remain fully paused by product policy.
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
+
     // 2) AI host follow-up (uses old community-chat function for compatibility)
     setIsLoading(true);
     const aiRunId = AdminAgentActivityService.startRun({ surface: 'Community Pulse AI Host', command: content, functionName: 'community-chat' });
@@ -188,7 +191,11 @@ export const useCommunityChat = () => {
         body: { message: content, context: { recentMessages: messages.slice(-5), users: DEMO_USERS, location: 'Dubai Marina' } },
       });
       setTimeout(() => {
-        const aiContent = data?.response || 'Great idea! I\'ve found 3 people nearby who are interested. Want me to create a group? 📍';
+        const aiContent = data?.response;
+        if (!aiContent) {
+          setIsLoading(false);
+          return;
+        }
         const aiMessage: ChatMessage = {
           id: `ai-${Date.now()}`,
           senderId: 'ai',
