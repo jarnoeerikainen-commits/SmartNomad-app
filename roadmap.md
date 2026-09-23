@@ -1,5 +1,15 @@
 # Booking readiness roadmap
 
+## Global social introduction pause
+
+- [x] Pause new-friend and SportBuddy introductions for every user.
+- [x] Disable timed recommendation windows and spoken match announcements.
+- [x] Hide people discovery, AI matching, and nearby-nomad discovery while paused.
+- [x] Block social matching and proactive meetup nudges in both app and edge functions.
+- [x] Verify focused tests and protected edge-function type checks.
+- [ ] Verify the latest preview build and browser behavior after deployment.
+- [ ] Deploy protected edge functions when the deployment environment provides Supabase access.
+
 - [x] Add authorized flight and hotel offer/order gateway with explicit demo/live provenance.
 - [x] Add secure traveller profiles and invitation-only booking mandates.
 - [x] Add quote expiry, repricing, approval, idempotency, order reconciliation, and audit records.

@@ -222,13 +222,6 @@ const INTENT_MAPPINGS: IntentMapping[] = [
     contextTriggers: ['buy from nomads', 'sell my laptop', 'second hand', 'marketplace deals'],
   },
   {
-    featureId: 'social-chat',
-    category: 'local',
-    keywords: ['social', 'meet', 'connect', 'friends', 'dating', 'network'],
-    synonyms: ['socialize', 'meetup', 'community', 'hangout'],
-    contextTriggers: ['meet other nomads', 'make friends', 'social events', 'connect with people'],
-  },
-  {
     featureId: 'news',
     category: 'local',
     keywords: ['news', 'headlines', 'updates', 'current events'],

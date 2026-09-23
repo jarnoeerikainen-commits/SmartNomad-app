@@ -4,6 +4,7 @@ import { socialProfiles, demoChatRooms, AVATAR_URLS } from '@/data/socialChatDat
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
+import { SOCIAL_INTRODUCTIONS_PAUSED } from '@/config/socialIntroductionPolicy';
 
 const FALLBACK_REPLIES: string[] = [
   'That sounds great! Count me in 😄',
@@ -44,6 +45,7 @@ export const useSocialChat = () => {
   }, [activePersona]);
 
   const getAIMatches = useCallback(async (userProfile: Partial<SocialProfile>): Promise<AIMatchSuggestion[]> => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return [];
     setIsLoading(true);
     const runId = AdminAgentActivityService.startRun({ surface: 'Social Match AI', command: 'Find compatible social matches', functionName: 'social-chat-ai' });
     try {
@@ -82,6 +84,7 @@ export const useSocialChat = () => {
   }, []);
 
   const refreshQuickReplies = useCallback(async (roomId: string, lastMsg: ChatMessage, room: ChatRoom) => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
     setQuickLoadingByRoom(prev => ({ ...prev, [roomId]: true }));
     try {
       const { data } = await supabase.functions.invoke('community-orchestrator', {
@@ -103,6 +106,7 @@ export const useSocialChat = () => {
   }, [activePersona]);
 
   const scheduleNudge = useCallback((roomId: string) => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
     if (nudgeTimers.current[roomId]) clearTimeout(nudgeTimers.current[roomId]);
     nudgeTimers.current[roomId] = setTimeout(async () => {
       const room = chatRooms.find(r => r.id === roomId);
@@ -143,7 +147,7 @@ export const useSocialChat = () => {
 
   // Schedule nudge on active room change / message change
   useEffect(() => {
-    if (activeChatRoom) scheduleNudge(activeChatRoom.id);
+    if (!SOCIAL_INTRODUCTIONS_PAUSED && activeChatRoom) scheduleNudge(activeChatRoom.id);
     return () => {
       Object.values(nudgeTimers.current).forEach(t => clearTimeout(t));
     };

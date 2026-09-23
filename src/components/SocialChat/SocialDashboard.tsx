@@ -9,7 +9,6 @@ import { useSocialChat } from '@/hooks/useSocialChat';
 import { useDemoPersona } from '@/contexts/DemoPersonaContext';
 import { ProfileCard } from './ProfileCard';
 import { ChatInterface } from './ChatInterface';
-import { AIMatchingSuggestions } from './AIMatchingSuggestions';
 import { TravelCalendar } from './TravelCalendar';
 import { getPersonaGroups, VibeGroup } from '@/data/vibeGroupsData';
 import { MAJOR_CITIES } from '@/data/socialChatData';
@@ -168,24 +167,16 @@ export const SocialDashboard = () => {
 
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5 text-xs">
+        <TabsList className="grid w-full grid-cols-3 text-xs">
           <TabsTrigger value="groups" className="text-xs px-1">
             <UsersRound className="mr-1 h-3.5 w-3.5" />
             <span className="hidden sm:inline">Groups</span>
             {groupUnread > 0 && <Badge variant="destructive" className="ml-1 text-[9px] h-4 px-1">{groupUnread}</Badge>}
           </TabsTrigger>
-          <TabsTrigger value="discover" className="text-xs px-1">
-            <Users className="mr-1 h-3.5 w-3.5" />
-            <span className="hidden sm:inline">People</span>
-          </TabsTrigger>
           <TabsTrigger value="messages" className="text-xs px-1">
             <MessageCircle className="mr-1 h-3.5 w-3.5" />
             <span className="hidden sm:inline">Chats</span>
             {unreadMessages > 0 && <Badge variant="destructive" className="ml-1 text-[9px] h-4 px-1">{unreadMessages}</Badge>}
-          </TabsTrigger>
-          <TabsTrigger value="ai-matches" className="text-xs px-1">
-            <Sparkles className="mr-1 h-3.5 w-3.5" />
-            <span className="hidden sm:inline">AI</span>
           </TabsTrigger>
           <TabsTrigger value="calendar" className="text-xs px-1">
             <Calendar className="mr-1 h-3.5 w-3.5" />
@@ -201,7 +192,7 @@ export const SocialDashboard = () => {
                 <UsersRound className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No groups yet</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Select a demo persona (Meghan or John) to see your auto-joined sports & expat groups
+                  Select a demo persona (Meghan or John) to see existing community groups
                 </p>
               </CardContent>
             </Card>
@@ -211,7 +202,7 @@ export const SocialDashboard = () => {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Your Groups</CardTitle>
                   <CardDescription className="text-xs">
-                    {personaGroups.length} groups · Auto-joined based on your profile & interests
+                    {personaGroups.length} existing groups
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -387,17 +378,12 @@ export const SocialDashboard = () => {
                   <div className="text-center py-12">
                     <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">No conversations yet</h3>
-                    <p className="text-muted-foreground mb-4 text-sm">Start connecting with travelers</p>
-                    <Button onClick={() => setActiveTab('discover')}>Discover Travelers</Button>
+                    <p className="text-muted-foreground text-sm">Your existing conversations will appear here.</p>
                   </div>
                 )}
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="ai-matches">
-          <AIMatchingSuggestions onStartChat={handleStartChat} />
         </TabsContent>
 
         <TabsContent value="calendar">

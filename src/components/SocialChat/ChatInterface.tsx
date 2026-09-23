@@ -5,10 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Send, Sparkles, Mic, MicOff, Volume2, VolumeX, FileText, Search, X } from 'lucide-react';
+import { ArrowLeft, Send, Sparkles, FileText, Search, X } from 'lucide-react';
 import { formatTime } from '@/utils/dateFormat';
 import { useSocialChat } from '@/hooks/useSocialChat';
-import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { supabase } from '@/integrations/supabase/client';
 import { TypingIndicator } from './TypingIndicator';
 import { QuickReplies } from './QuickReplies';
@@ -34,11 +33,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
   const quickReplies = quickRepliesByRoom[chatRoom.id] || [];
   const quickLoading = !!quickLoadingByRoom[chatRoom.id];
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const {
-    isListening, isSpeaking, voiceEnabled,
-    startListening, stopListening, speak,
-    toggleVoice, sttSupported, ttsSupported
-  } = useVoiceConversation();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,15 +69,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
     }
   };
 
-  // Auto-speak new non-user messages
-  useEffect(() => {
-    if (!voiceEnabled || chatRoom.messages.length === 0) return;
-    const last = chatRoom.messages[chatRoom.messages.length - 1];
-    if (last.senderId !== currentUserId) {
-      speak(last.content);
-    }
-  }, [chatRoom.messages.length, voiceEnabled]);
-
   // AI Catch-Up Summary
   const generateCatchUp = useCallback(async () => {
     setIsLoadingSummary(true);
@@ -105,9 +90,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
 
       if (error) throw error;
       setCatchUpSummary(data?.suggestion || 'No summary available');
-      if (voiceEnabled && data?.suggestion) {
-        speak(`Here's what you missed: ${data.suggestion}`);
-      }
     } catch {
       const topics = chatRoom.messages
         .filter(m => !m.isAI)
@@ -118,7 +100,7 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
     } finally {
       setIsLoadingSummary(false);
     }
-  }, [chatRoom.messages, voiceEnabled, speak]);
+  }, [chatRoom.messages]);
 
   // Filter messages by search query
   const displayMessages = searchQuery
@@ -166,11 +148,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
             <Button variant="ghost" size="sm" onClick={generateCatchUp} className="h-8 w-8 p-0" title="AI Catch-up Summary">
               <FileText className="h-4 w-4" />
             </Button>
-            {ttsSupported && (
-              <Button variant="ghost" size="sm" onClick={toggleVoice} className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`} title={voiceEnabled ? 'Disable voice' : 'Enable voice'}>
-                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-              </Button>
-            )}
           </div>
         </div>
 
@@ -285,27 +262,8 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
 
         <div className="border-t p-3">
           <div className="flex gap-2">
-            {sttSupported && (
-              <Button
-                onClick={() => {
-                  if (isListening) {
-                    stopListening();
-                  } else {
-                    startListening((text) => {
-                      if (text.trim()) handleSend(text);
-                    });
-                  }
-                }}
-                variant={isListening ? 'default' : 'outline'}
-                size="sm"
-                className={`px-3 flex-shrink-0 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
-                title={isListening ? 'Stop listening' : 'Voice input'}
-              >
-                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-              </Button>
-            )}
             <Input
-              placeholder={isListening ? 'Listening...' : 'Type your message...'}
+              placeholder="Type your message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyPress}

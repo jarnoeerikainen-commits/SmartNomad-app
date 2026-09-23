@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { FEATURE_REGISTRY, SYSTEM_FEATURES, FeatureItem } from '@/data/featureRegistry';
+import { isPausedSocialIntroductionFeature } from '@/config/socialIntroductionPolicy';
 
 export interface FeaturePref {
   visible: boolean;
@@ -45,15 +46,18 @@ export function useFeaturePreferences() {
   }, [prefs]);
 
   const isVisible = useCallback((id: string): boolean => {
+    if (isPausedSocialIntroductionFeature(id)) return false;
     if (SYSTEM_FEATURES.includes(id)) return true;
     return prefs[id]?.visible ?? true;
   }, [prefs]);
 
   const isPinned = useCallback((id: string): boolean => {
+    if (isPausedSocialIntroductionFeature(id)) return false;
     return prefs[id]?.pinned ?? false;
   }, [prefs]);
 
   const toggleVisible = useCallback((id: string) => {
+    if (isPausedSocialIntroductionFeature(id)) return;
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
@@ -62,6 +66,7 @@ export function useFeaturePreferences() {
   }, []);
 
   const togglePinned = useCallback((id: string) => {
+    if (isPausedSocialIntroductionFeature(id)) return;
     setPrefs(prev => ({
       ...prev,
       [id]: { ...prev[id], pinned: !prev[id]?.pinned }
@@ -69,6 +74,7 @@ export function useFeaturePreferences() {
   }, []);
 
   const setVisibility = useCallback((id: string, visible: boolean) => {
+    if (isPausedSocialIntroductionFeature(id)) return;
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,

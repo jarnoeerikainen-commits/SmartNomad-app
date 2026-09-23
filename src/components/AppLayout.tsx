@@ -10,13 +10,13 @@ import FloatingActionButton from './FloatingActionButton';
 import ErrorBoundary from './ErrorBoundary';
 import { CookieConsent } from './GDPRCompliance';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
-import SocialMatchNotifications from './SocialMatchNotifications';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { Skeleton } from './ui/skeleton';
 import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
 import MFAGate from '@/components/auth/MFAGate';
 import CalendarReminderBoot from '@/components/calendar/CalendarReminderBoot';
+import { safeSectionDuringSocialPause } from '@/config/socialIntroductionPolicy';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
 const TrackingSection = lazy(() => import('./sections/TrackingSection'));
@@ -189,7 +189,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   // Voice control navigation callbacks
   const handleVoiceNavigate = useCallback((section: string) => {
-    setActiveSection(section);
+    setActiveSection(safeSectionDuringSocialPause(section));
     setBottomNavTab('home');
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
@@ -231,7 +231,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           setActiveSection('dashboard');
         } else {
           setRequestedAssistant(null);
-          setActiveSection(detail.section);
+          setActiveSection(safeSectionDuringSocialPause(detail.section));
           setBottomNavTab('home');
         }
         setSidebarOpen(false);
@@ -256,7 +256,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   const handleSectionChange = useCallback((section: string) => {
-    setActiveSection(section);
+    setActiveSection(safeSectionDuringSocialPause(section));
     setBottomNavTab('home');
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
@@ -278,7 +278,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
             <HomeSection 
               countries={countries}
               subscription={subscription}
-              onNavigate={(section) => setActiveSection(section)}
+              onNavigate={(section) => setActiveSection(safeSectionDuringSocialPause(section))}
             />
             {!upgradeBannerDismissed && (
               <UpgradeBanner 
@@ -562,9 +562,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </main>
       </div>
       
-      {/* Social Match Push Notifications (Demo) */}
-      <SocialMatchNotifications />
-
       {/* GDPR Cookie Consent */}
       <CookieConsent />
       
