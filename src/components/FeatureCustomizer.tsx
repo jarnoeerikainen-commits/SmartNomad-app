@@ -69,7 +69,7 @@ const FeatureCustomizer: React.FC = () => {
             Customize My App
           </h2>
           <p className="text-muted-foreground mt-1">
-            Choose what is available, then pin what should appear on Home every time you open the app.
+            Choose what appears in navigation and pin your essentials to Home for every app opening.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={handleReset} className="gap-2 self-start">
@@ -200,7 +200,6 @@ const FeatureCustomizer: React.FC = () => {
                           size="sm"
                           className={`h-7 gap-1 text-xs ${pinned ? 'bg-primary/10 text-primary hover:bg-primary/20' : ''}`}
                           onClick={() => togglePinned(feature.id)}
-                          disabled={!visible}
                           aria-label={`${pinned ? 'Remove' : 'Add'} ${feature.label} ${pinned ? 'from' : 'to'} Home`}
                         >
                           <Pin className={`h-3 w-3 ${pinned ? 'fill-current' : ''}`} />

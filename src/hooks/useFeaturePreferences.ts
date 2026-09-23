@@ -12,10 +12,35 @@ export type FeaturePrefsMap = Record<string, FeaturePref>;
 
 const STORAGE_KEY = 'supernomad_feature_prefs';
 
+// Deliberately small default navigation set. Home pins are independent: a
+// feature may stay out of the sidebar while remaining one tap away on Home.
+const DEFAULT_VISIBLE_FEATURE_IDS = new Set([
+  'dash-threat',
+  'threats',
+  'tax-residency',
+  'gps-monitor',
+  'visas',
+  'visa-immigration',
+  'visa-assistance',
+  'etias',
+  'ees',
+  'visa-matcher',
+  'vaccination-hub',
+  'vault',
+  'payment-options',
+  'award-cards',
+  'digital-banks',
+  'money-transfers',
+  'crypto-cash',
+  'currency-converter',
+  'emergency-cards',
+  'travel-insurance',
+]);
+
 function buildDefaults(): FeaturePrefsMap {
   const map: FeaturePrefsMap = {};
   FEATURE_REGISTRY.forEach((f, i) => {
-    map[f.id] = { visible: f.defaultVisible, pinned: f.defaultPinned, order: i };
+    map[f.id] = { visible: DEFAULT_VISIBLE_FEATURE_IDS.has(f.id), pinned: f.defaultPinned, order: i };
   });
   return map;
 }
@@ -34,8 +59,6 @@ function loadPrefs(): FeaturePrefsMap {
           saved[key] = {
             ...defaults[key],
             ...saved[key],
-            // A Home pin is always visible; repair older contradictory prefs.
-            visible: Boolean(saved[key].visible || saved[key].pinned),
           };
         }
       }
@@ -73,8 +96,7 @@ export function useFeaturePreferences() {
       [id]: {
         ...prev[id],
         visible: !prev[id]?.visible,
-        // Hidden items cannot remain on Home.
-        pinned: prev[id]?.visible ? false : prev[id]?.pinned ?? false,
+        pinned: prev[id]?.pinned ?? false,
       }
     }));
   }, []);
@@ -85,8 +107,7 @@ export function useFeaturePreferences() {
       ...prev,
       [id]: {
         ...prev[id],
-        // Pinning places the item on Home and therefore makes it visible.
-        visible: prev[id]?.pinned ? prev[id]?.visible ?? true : true,
+        visible: prev[id]?.visible ?? true,
         pinned: !prev[id]?.pinned,
       }
     }));
@@ -97,7 +118,7 @@ export function useFeaturePreferences() {
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], visible, pinned: visible ? prev[id]?.pinned ?? false : false }
+      [id]: { ...prev[id], visible, pinned: prev[id]?.pinned ?? false }
     }));
   }, []);
 
