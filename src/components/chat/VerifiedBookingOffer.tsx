@@ -21,19 +21,20 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [executing, setExecuting] = useState(false);
+  const { bookingType, origin, destination, startDate, endDate, adults, cabin } = search;
 
   const load = useCallback(async () => {
     setLoading(true);
     setResult(null);
     try {
-      const found = await TravelCommerceService.search(search);
+      const found = await TravelCommerceService.search({ bookingType, origin, destination, startDate, endDate, adults, cabin });
       setOffers(found);
     } catch (error) {
       toast({ title: 'Offer search unavailable', description: error instanceof Error ? error.message : 'Please try again.', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
-  }, [search, toast]);
+  }, [adults, bookingType, cabin, destination, endDate, origin, startDate, toast]);
 
   useEffect(() => { void load(); }, [load]);
 
