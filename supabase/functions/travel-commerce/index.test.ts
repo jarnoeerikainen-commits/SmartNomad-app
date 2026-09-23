@@ -1,6 +1,12 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { buildDemoOffers, canUseMandate, hasReconciledSupplierOrder, maskSensitiveText, validateSearch } from '../_shared/travelCommerce.ts';
 
+Deno.test('browser CORS permits the shared client device header', async () => {
+  const source = await Deno.readTextFile(new URL('./index.ts', import.meta.url));
+  assert(source.includes("'Access-Control-Allow-Headers': `${corsHeaders['Access-Control-Allow-Headers']}, x-device-id`"));
+  assert(source.includes("new Response('ok', { headers: travelCommerceCorsHeaders })"));
+});
+
 Deno.test('validates flight search and builds transparent demo offers', () => {
   const search = validateSearch({ bookingType: 'flight', origin: 'HEL', destination: 'DXB', startDate: '2026-12-20', adults: 1, cabin: 'business' });
   const offers = buildDemoOffers(search, new Date('2026-09-23T11:00:00Z'));
