@@ -234,7 +234,7 @@ const Landing: React.FC = () => {
             </div>
 
             <p className="text-[11px] sm:text-xs text-[hsl(30_12%_70%)]">
-              <Check className="inline h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> No signup required for demo · Try as Meghan or John · Full demo access.
+              <Check className="inline h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> No signup required · Full guided demo access.
             </p>
 
             <div className="flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 pt-1 text-[11px] sm:text-xs text-[hsl(30_12%_75%)] justify-center">

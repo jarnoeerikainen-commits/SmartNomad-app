@@ -192,7 +192,7 @@ export const SocialDashboard = () => {
                 <UsersRound className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No groups yet</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Select a demo persona (Meghan or John) to see existing community groups
+                  Your existing community groups will appear here.
                 </p>
               </CardContent>
             </Card>

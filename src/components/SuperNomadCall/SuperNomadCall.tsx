@@ -154,7 +154,7 @@ const SuperNomadCall: React.FC = () => {
             <CardContent className="space-y-2">
               {contacts.length === 1 && (
                 <p className="text-sm text-muted-foreground p-2 border rounded-md bg-muted/30">
-                  Switch to Meghan or John (header → demo persona) to see person-to-person calling between two SuperNomad members.
+                  Add trusted contacts from your profile to enable person-to-person calling.
                 </p>
               )}
               {contacts.map((c) => (
@@ -332,12 +332,8 @@ const ActiveCallPanel: React.FC<{ call: any; onEnd: () => void }> = ({ call, onE
 
 const CallRow: React.FC<{ call: any }> = ({ call }) => {
   const counterparty =
-    call.callee_persona_id === 'meghan' ? 'Meghan Clarke' :
-    call.callee_persona_id === 'john'   ? 'John Mitchell' :
     call.callee_kind === 'ai_concierge' ? 'SuperNomad Concierge' :
     call.callee_kind === 'external_phone' ? (call.callee_phone || 'External') :
-    call.caller_persona_id === 'meghan' ? 'Meghan Clarke (incoming)' :
-    call.caller_persona_id === 'john'   ? 'John Mitchell (incoming)' :
     'Call';
   const Icon = call.caller_kind === 'ai_concierge' ? Sparkles : (call.lane === 'pstn_outbound' ? Globe2 : Phone);
   return (
