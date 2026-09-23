@@ -255,6 +255,26 @@ async function handleExecute(supabase: AppSupabaseClient, body: RouterRequest, u
     return { success: true, alreadyCompleted: true, intent };
   }
 
+  // This endpoint has no verified provider settlement or supplier-order reconciliation yet.
+  // Never convert locally generated protocol artifacts into a completed financial transaction.
+  if (MODE === 'demo') {
+    return {
+      success: true,
+      mode: 'demo',
+      simulated: true,
+      charged: false,
+      intent: { ...intent, status: 'authorized', user_approved: body.userApproved === true },
+      receipt: null,
+      message: 'Payment authorization simulated — no money moved and no supplier order was created.',
+    };
+  }
+  return {
+    success: false,
+    mode: 'live',
+    reason: 'live_provider_and_reconciliation_not_configured',
+    message: 'Live payment is blocked until a tokenized payment provider and supplier-order reconciliation are configured.',
+  };
+
   if (intent.status !== 'authorized' && !body.userApproved) {
     return { success: false, reason: 'requires_user_approval', intent };
   }

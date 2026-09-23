@@ -84,6 +84,9 @@ verify_jwt = false
 [functions.agentic-payments-router]
 verify_jwt = false
 
+[functions.travel-commerce]
+verify_jwt = false
+
 [functions.venue-discovery]
 verify_jwt = false
 

@@ -54,7 +54,7 @@ export function selectProtocol(req: PaymentRequest): QuoteResult {
     return buildQuote('mpp', req);
   }
 
-  // High-value bookings (>$200) at trusted merchants → Visa TAP (cryptographic agent identity, zero fraud declines)
+  // High-value bookings (>$200) at trusted merchants → Visa TAP identity signalling.
   if (req.amount >= 200 && (req.category === 'booking' || req.category === 'transport')) {
     return buildQuote('visa-tap', req);
   }
@@ -86,7 +86,7 @@ function buildQuote(protocol: Protocol, req: PaymentRequest): QuoteResult {
     'visa-tap': {
       estimatedFee: req.amount * 0.029 + 0.30,
       trustScore: 99,
-      reasoning: 'Visa Trusted Agent Protocol — RFC 9421 cryptographic agent identity, global merchant acceptance.',
+      reasoning: 'Visa Trusted Agent Protocol — RFC 9421 agent identity signalling; issuer approval is still required.',
       settlementTime: '<2s',
     },
     'stripe-issuing': {

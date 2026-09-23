@@ -62,8 +62,8 @@ additional code edits.
 
 | Key | Provider | Mode | Notes |
 |-----|----------|------|-------|
-| `flights` | Duffel / Amadeus / Kiwi | demo | Premium-search default |
-| `hotels` | Amadeus / Booking / Hotelbeds | demo | 5★ + suites by default |
+| `flights` | Duffel primary / Amadeus enterprise fallback | demo | Authorized supplier-shaped flow; live orders blocked until credentials and commercial access |
+| `hotels` | Duffel Stays primary / Hotelbeds fallback | demo | Search-to-confirm demo; live booking blocked until provider access |
 | `rides` | Karhoo / Uber / Lyft | ready | Karhoo = 100+ cities single contract |
 | `air-charter` | Paramount / Jettly / Avinode | demo | Empty-leg discounts |
 
@@ -78,8 +78,8 @@ additional code edits.
 
 | Key | Provider | Mode | Notes |
 |-----|----------|------|-------|
-| `stripe-issuing` | Stripe Issuing + Connect | ready | Virtual cards + payouts |
-| `x402` | Coinbase x402 | planned | AI-to-AI USDC micropay |
+| `stripe-issuing` | Stripe Issuing + Connect | ready | Tokenized-card boundary; UI references remain simulated until account approval |
+| `x402` | Coinbase x402 | planned | AI-to-AI USDC micropay; no live settlement configured |
 | `usdc-base` | Coinbase CDP | planned | Affiliate payouts on Base |
 
 ### 📣 Communication
