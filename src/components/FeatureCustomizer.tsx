@@ -11,8 +11,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from '@/hooks/use-toast';
 
 const FeatureCustomizer: React.FC = () => {
-  const { t } = useLanguage();
-  const { prefs, isVisible, isPinned, toggleVisible, togglePinned, resetToDefaults, getHiddenFeatures } = useFeaturePreferences();
+  useLanguage();
+  const { isVisible, isPinned, toggleVisible, togglePinned, resetToDefaults, getHiddenFeatures } = useFeaturePreferences();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showHiddenOnly, setShowHiddenOnly] = useState(false);
@@ -49,8 +49,10 @@ const FeatureCustomizer: React.FC = () => {
     return groups;
   }, [filteredFeatures]);
 
-  const hiddenCount = getHiddenFeatures().length;
-  const pinnedCount = FEATURE_REGISTRY.filter(f => isPinned(f.id)).length;
+  const customizableFeatures = FEATURE_REGISTRY.filter(f => !SYSTEM_FEATURES.includes(f.id));
+  const hiddenCount = customizableFeatures.filter(f => !isVisible(f.id)).length;
+  const visibleCount = customizableFeatures.length - hiddenCount;
+  const pinnedCount = customizableFeatures.filter(f => isPinned(f.id)).length;
 
   const handleReset = () => {
     resetToDefaults();
@@ -67,7 +69,7 @@ const FeatureCustomizer: React.FC = () => {
             Customize My App
           </h2>
           <p className="text-muted-foreground mt-1">
-            Show, hide, or pin features to your dashboard. Your app, your rules.
+            Choose what appears in navigation and pin your essentials to Home for every app opening.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={handleReset} className="gap-2 self-start">
@@ -80,7 +82,7 @@ const FeatureCustomizer: React.FC = () => {
       <div className="flex flex-wrap gap-3">
         <Badge variant="secondary" className="text-sm px-3 py-1">
           <Eye className="h-3.5 w-3.5 mr-1.5" />
-          {FEATURE_REGISTRY.length - hiddenCount} visible
+          {visibleCount} visible
         </Badge>
         <Badge variant="outline" className="text-sm px-3 py-1">
           <EyeOff className="h-3.5 w-3.5 mr-1.5" />
@@ -187,6 +189,7 @@ const FeatureCustomizer: React.FC = () => {
                             checked={visible}
                             onCheckedChange={() => toggleVisible(feature.id)}
                             className="scale-90"
+                            aria-label={`${visible ? 'Hide' : 'Show'} ${feature.label}`}
                           />
                           <span className="text-xs text-muted-foreground">
                             {visible ? 'Visible' : 'Hidden'}
@@ -197,7 +200,7 @@ const FeatureCustomizer: React.FC = () => {
                           size="sm"
                           className={`h-7 gap-1 text-xs ${pinned ? 'bg-primary/10 text-primary hover:bg-primary/20' : ''}`}
                           onClick={() => togglePinned(feature.id)}
-                          disabled={!visible}
+                          aria-label={`${pinned ? 'Remove' : 'Add'} ${feature.label} ${pinned ? 'from' : 'to'} Home`}
                         >
                           <Pin className={`h-3 w-3 ${pinned ? 'fill-current' : ''}`} />
                           {pinned ? 'Pinned' : 'Pin'}

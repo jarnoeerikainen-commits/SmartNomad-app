@@ -1,9 +1,7 @@
-// Country tracking + lifestyle wiring per demo persona.
-// Used by DemoPersonaContext to seed `trackedCountries`, user mode and tier
-// so every feature reflects the persona's real life when it is loaded.
+// Country tracking and subscription wiring per demo persona.
+// Used by DemoPersonaContext to seed `trackedCountries` and tier.
 
 import { Country } from '@/types/country';
-import { UserMode } from '@/data/modePresets';
 
 const today = () => new Date();
 const ago = (days: number) => {
@@ -61,11 +59,10 @@ const JOHN_COUNTRIES: Country[] = [
 
 export interface PersonaTracking {
   countries: Country[];
-  mode: UserMode;
   tier: 'free' | 'premium' | 'sovereign';
 }
 
 export const DEMO_PERSONA_TRACKING: Record<'meghan' | 'john', PersonaTracking> = {
-  meghan: { countries: MEGHAN_COUNTRIES, mode: 'business', tier: 'sovereign' },
-  john:   { countries: JOHN_COUNTRIES,   mode: 'family',   tier: 'sovereign' },
+  meghan: { countries: MEGHAN_COUNTRIES, tier: 'sovereign' },
+  john:   { countries: JOHN_COUNTRIES, tier: 'sovereign' },
 };

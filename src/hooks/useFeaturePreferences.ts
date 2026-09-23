@@ -12,10 +12,35 @@ export type FeaturePrefsMap = Record<string, FeaturePref>;
 
 const STORAGE_KEY = 'supernomad_feature_prefs';
 
+// Deliberately small default navigation set. Home pins are independent: a
+// feature may stay out of the sidebar while remaining one tap away on Home.
+const DEFAULT_VISIBLE_FEATURE_IDS = new Set([
+  'dash-threat',
+  'threats',
+  'tax-residency',
+  'gps-monitor',
+  'visas',
+  'visa-immigration',
+  'visa-assistance',
+  'etias',
+  'ees',
+  'visa-matcher',
+  'vaccination-hub',
+  'vault',
+  'payment-options',
+  'award-cards',
+  'digital-banks',
+  'money-transfers',
+  'crypto-cash',
+  'currency-converter',
+  'emergency-cards',
+  'travel-insurance',
+]);
+
 function buildDefaults(): FeaturePrefsMap {
   const map: FeaturePrefsMap = {};
   FEATURE_REGISTRY.forEach((f, i) => {
-    map[f.id] = { visible: f.defaultVisible, pinned: f.defaultPinned, order: i };
+    map[f.id] = { visible: DEFAULT_VISIBLE_FEATURE_IDS.has(f.id), pinned: f.defaultPinned, order: i };
   });
   return map;
 }
@@ -25,16 +50,23 @@ function loadPrefs(): FeaturePrefsMap {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const saved = JSON.parse(raw) as FeaturePrefsMap;
-      // Merge with defaults so new features appear
+      // Merge with defaults so new features appear without resetting choices.
       const defaults = buildDefaults();
       for (const key of Object.keys(defaults)) {
         if (!(key in saved)) {
           saved[key] = defaults[key];
+        } else {
+          saved[key] = {
+            ...defaults[key],
+            ...saved[key],
+          };
         }
       }
       return saved;
     }
-  } catch {}
+  } catch {
+    return buildDefaults();
+  }
   return buildDefaults();
 }
 
@@ -61,7 +93,11 @@ export function useFeaturePreferences() {
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], visible: !prev[id]?.visible }
+      [id]: {
+        ...prev[id],
+        visible: !prev[id]?.visible,
+        pinned: prev[id]?.pinned ?? false,
+      }
     }));
   }, []);
 
@@ -69,7 +105,11 @@ export function useFeaturePreferences() {
     if (isPausedSocialIntroductionFeature(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], pinned: !prev[id]?.pinned }
+      [id]: {
+        ...prev[id],
+        visible: prev[id]?.visible ?? true,
+        pinned: !prev[id]?.pinned,
+      }
     }));
   }, []);
 
@@ -78,7 +118,7 @@ export function useFeaturePreferences() {
     if (SYSTEM_FEATURES.includes(id)) return;
     setPrefs(prev => ({
       ...prev,
-      [id]: { ...prev[id], visible }
+      [id]: { ...prev[id], visible, pinned: prev[id]?.pinned ?? false }
     }));
   }, []);
 
