@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isPausedSocialIntroductionRequest } from '../_shared/socialIntroductionPolicy.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,6 +27,12 @@ serve(async (req) => {
     const type = sanitize(body.type, 50);
     if (!['match', 'conversation'].includes(type)) {
       return new Response(JSON.stringify({ error: 'Invalid type' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (isPausedSocialIntroductionRequest(type)) {
+      return new Response(JSON.stringify({ matches: [], paused: true }), {
+        status: 423,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
     const userProfile = body.userProfile || {};
     const availableProfiles = Array.isArray(body.availableProfiles) ? body.availableProfiles.slice(0, MAX_ARRAY) : [];

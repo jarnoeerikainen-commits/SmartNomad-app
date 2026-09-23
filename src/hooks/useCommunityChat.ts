@@ -3,6 +3,7 @@ import { ChatMessage } from '@/types/communityChat';
 import { DEMO_USERS, AVATAR_URLS, PULSE_PROFILES } from '@/data/communityChatData';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
+import { SOCIAL_INTRODUCTIONS_PAUSED } from '@/config/socialIntroductionPolicy';
 
 const CURRENT_USER_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face';
 
@@ -71,6 +72,7 @@ export const useCommunityChat = () => {
 
   // ── AI host nudge after silence (15s) ──
   const scheduleNudge = useCallback(() => {
+    if (SOCIAL_INTRODUCTIONS_PAUSED) return;
     if (nudgeTimerRef.current) clearTimeout(nudgeTimerRef.current);
     nudgeTimerRef.current = setTimeout(async () => {
       // Only nudge if still quiet and last msg wasn't an AI nudge
@@ -102,7 +104,7 @@ export const useCommunityChat = () => {
   }, [messages]);
 
   useEffect(() => {
-    scheduleNudge();
+    if (!SOCIAL_INTRODUCTIONS_PAUSED) scheduleNudge();
     return () => { if (nudgeTimerRef.current) clearTimeout(nudgeTimerRef.current); };
   }, [scheduleNudge]);
 

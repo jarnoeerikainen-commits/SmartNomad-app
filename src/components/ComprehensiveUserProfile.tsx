@@ -1049,7 +1049,7 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><Dumbbell className="w-5 h-5" /> Sports & Fitness</CardTitle>
-              <CardDescription>Find courts, gyms, and sports partners worldwide</CardDescription>
+              <CardDescription>Personalize courts, gyms, training, and recovery suggestions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">

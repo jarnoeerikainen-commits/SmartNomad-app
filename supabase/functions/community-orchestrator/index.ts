@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isPausedSocialIntroductionRequest } from '../_shared/socialIntroductionPolicy.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -31,6 +32,9 @@ serve(async (req) => {
     }
 
     const mode = sanitize(body.mode, 50) || 'replies';
+    if (isPausedSocialIntroductionRequest(mode)) {
+      return json({ mode, message: '', paused: true }, 423);
+    }
     const location = sanitize(body.location);
     const lastMessage = sanitize(body.lastMessage, MAX_MSG);
     const lastSenderName = sanitize(body.lastSenderName, 100);

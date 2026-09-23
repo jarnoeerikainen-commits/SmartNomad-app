@@ -10,7 +10,6 @@ import FloatingActionButton from './FloatingActionButton';
 import ErrorBoundary from './ErrorBoundary';
 import { CookieConsent } from './GDPRCompliance';
 import DashboardBottomStats from './dashboard/DashboardBottomStats';
-import SocialMatchNotifications from './SocialMatchNotifications';
 import { Country, LocationData } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { Skeleton } from './ui/skeleton';
@@ -562,9 +561,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           </main>
       </div>
       
-      {/* Social Match Push Notifications (Demo) */}
-      <SocialMatchNotifications />
-
       {/* GDPR Cookie Consent */}
       <CookieConsent />
       
