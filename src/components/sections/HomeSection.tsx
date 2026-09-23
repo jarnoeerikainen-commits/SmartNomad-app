@@ -9,7 +9,6 @@ import { DashboardRecentActivity } from '@/components/dashboard/DashboardRecentA
 import DashboardQuickStats from '@/components/DashboardQuickStats';
 import DashboardWeatherWidget from '@/components/weather/DashboardWeatherWidget';
 import SovereignAccessNudge from '@/components/dashboard/SovereignAccessNudge';
-import SuperNomadCallCard from '@/components/dashboard/SuperNomadCallCard';
 import ModeSwitcher from '@/components/dashboard/ModeSwitcher';
 import ActiveTripCockpit from '@/components/dashboard/ActiveTripCockpit';
 import MorningBriefing from '@/components/dashboard/MorningBriefing';
@@ -93,8 +92,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
       {/* Critical compliance nudge (auto-hides if irrelevant) */}
       <SchengenEESAlert countries={countries} onNavigate={onNavigate} />
 
-      {/* Concierge call + sovereign access — small, contextual */}
-      <SuperNomadCallCard onNavigate={onNavigate} />
+      {/* Sovereign access — small, contextual */}
       <SovereignAccessNudge onOpen={() => onNavigate('sovereign-access')} />
 
       {/* Pinned features */}

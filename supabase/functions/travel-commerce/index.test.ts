@@ -1,5 +1,5 @@
 import { assertEquals, assert } from 'https://deno.land/std@0.224.0/assert/mod.ts';
-import { buildDemoOffers, canUseMandate, hasReconciledSupplierOrder, maskSensitiveText, validateSearch } from '../_shared/travelCommerce.ts';
+import { buildBookingLineItems, buildDemoOffers, canUseMandate, hasReconciledSupplierOrder, maskSensitiveText, totalLineItems, validateSearch } from '../_shared/travelCommerce.ts';
 
 Deno.test('browser CORS permits the shared client device header', async () => {
   const source = await Deno.readTextFile(new URL('./index.ts', import.meta.url));
@@ -14,6 +14,29 @@ Deno.test('validates flight search and builds transparent demo offers', () => {
   assertEquals(offers[0].mode, 'demo');
   assertEquals(offers[0].supplier, 'Duffel');
   assert(offers[0].expiresAt > offers[0].verifiedAt);
+  assertEquals(offers[0].pricing.total, offers[0].amount);
+  assertEquals(offers[0].included.includes('1 checked bag · 23 kg'), true);
+  assertEquals(offers[0].optionalServices.length, 3);
+  assertEquals(offers[0].optionalServices[0].category, 'seat');
+  assertEquals(offers[0].optionalServices[1].category, 'baggage');
+});
+
+Deno.test('optional ancillaries are opt-in and update the all-in total deterministically', () => {
+  const search = validateSearch({ bookingType: 'flight', origin: 'HEL', destination: 'DXB', startDate: '2026-12-20', adults: 1, cabin: 'business' });
+  const first = buildDemoOffers(search, new Date('2026-09-23T11:00:00Z'))[0];
+  const again = buildDemoOffers(search, new Date('2026-09-23T11:00:00Z'))[0];
+  assertEquals(first, again);
+  const mandatory = buildBookingLineItems(first, []);
+  assertEquals(totalLineItems(mandatory), first.amount);
+  const selected = buildBookingLineItems(first, [first.optionalServices[0].id, first.optionalServices[1].id]);
+  assertEquals(totalLineItems(selected), first.amount + first.optionalServices[0].amount + first.optionalServices[1].amount);
+});
+
+Deno.test('hotel offer discloses mandatory fees and opt-in extras', () => {
+  const offer = buildDemoOffers(validateSearch({ bookingType: 'hotel', destination: 'Dubai', startDate: '2026-12-20', endDate: '2026-12-24', adults: 1 }), new Date('2026-09-23T11:00:00Z'))[0];
+  assert(offer.pricing.taxesAndMandatoryFees > 0);
+  assertEquals(offer.itinerary.duration, '4 night(s)');
+  assertEquals(offer.optionalServices.every((service) => service.category === 'hotel-extra'), true);
 });
 
 Deno.test('rejects invalid airport codes', () => {

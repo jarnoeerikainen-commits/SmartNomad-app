@@ -232,6 +232,24 @@ const ComprehensiveUserProfileComponent: React.FC<ComprehensiveUserProfileProps>
         </CardContent>
       </Card>
 
+      {new URLSearchParams(window.location.search).get('demo') && (
+        <Card className="border-primary/20">
+          <CardHeader>
+            <div className="flex items-center justify-between gap-3">
+              <div><CardTitle className="text-base">Demo traveller used for planning</CardTitle><CardDescription>Visible only in You and simulated booking records</CardDescription></div>
+              <Badge variant="outline">DEMO · MASKED</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
+            <p><span className="text-muted-foreground">Name</span><br /><strong>John</strong></p>
+            <p><span className="text-muted-foreground">Citizenship</span><br /><strong>Finnish · FI</strong></p>
+            <p><span className="text-muted-foreground">Home city</span><br /><strong>Tampere, Finland</strong></p>
+            <p><span className="text-muted-foreground">Passport</span><br /><strong>••••8550 · demo mask</strong></p>
+            <p className="sm:col-span-2 text-xs text-muted-foreground">Address and contact details are not retained in the demo. Add sensitive information only through the encrypted identity vault.</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Why share data */}
       <Alert className="bg-primary/5 border-primary/20">
         <Sparkles className="h-4 w-4" />

@@ -81,11 +81,11 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
           <CheckCircle2 className="h-5 w-5 text-green-600" />
           <div>
             <p className="font-bold text-sm">
-              {scheduledTime ? 'Ride Scheduled' : 'Driver Assigned'}
+              {booking.simulated ? 'Ride simulation complete' : scheduledTime ? 'Ride Scheduled' : 'Driver Assigned'}
             </p>
             <p className="text-xs text-muted-foreground">{booking.supplier} • {booking.vehicleName}</p>
           </div>
-          <Badge className="ml-auto bg-green-600 text-white">{booking.status}</Badge>
+          <Badge className="ml-auto" variant="outline">{booking.simulated ? 'DEMO · NOT BOOKED' : booking.status}</Badge>
         </div>
         <div className="grid grid-cols-2 gap-2 text-xs bg-background/80 rounded p-2 mb-2">
           <div><span className="text-muted-foreground">Driver:</span> <strong>{booking.driverName}</strong> ⭐ {booking.driverRating}</div>
@@ -93,12 +93,13 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
           <div><span className="text-muted-foreground">Vehicle:</span> {booking.vehicleColor} {booking.vehicleName}</div>
           <div><span className="text-muted-foreground">ETA:</span> <strong>{booking.etaMinutes} min</strong></div>
         </div>
-        {booking.driverPhone && (
+        {!booking.simulated && booking.driverPhone && (
           <Button variant="outline" size="sm" className="w-full h-8 text-xs gap-1"
             onClick={() => window.open(`tel:${booking.driverPhone}`)}>
             <Phone className="h-3 w-3" /> Call driver
           </Button>
         )}
+        {booking.simulated && <p className="text-[10px] text-muted-foreground">No real driver, vehicle, charge, or reservation exists.</p>}
       </Card>
     );
   }

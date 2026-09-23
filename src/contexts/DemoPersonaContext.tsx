@@ -81,9 +81,7 @@ export const useDemoPersona = () => useContext(DemoPersonaContext);
 
 export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activePersonaId, setActivePersonaId] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null;
-    const stored = localStorage.getItem('supernomad_active_demo_persona');
-    return stored === 'meghan' || stored === 'john' ? stored : null;
+    return null;
   });
 
   const setPersona = useCallback((id: 'meghan' | 'john' | null) => {

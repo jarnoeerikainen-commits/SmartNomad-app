@@ -29,6 +29,33 @@ export interface CommerceOffer {
   sourceUrl: string;
   holdSupported: boolean;
   requiresReprice: boolean;
+  pricing: { base: number; taxesAndMandatoryFees: number; total: number };
+  itinerary: {
+    originLabel: string; destinationLabel: string; departureLocal: string; arrivalLocal: string;
+    returnDepartureLocal?: string; returnArrivalLocal?: string; duration: string;
+    carrierOrProperty: string; serviceOrRoom: string; fareOrRate: string; checkIn?: string; checkOut?: string;
+  };
+  included: string[];
+  optionalServices: Array<{ id: string; category: 'seat' | 'baggage' | 'hotel-extra'; label: string; description: string; amount: number; currency: string }>;
+}
+
+export interface DemoBookingResult {
+  success: boolean;
+  mode: 'demo';
+  simulated: true;
+  charged: false;
+  ticketIssued: false;
+  roomReserved: false;
+  reconciled: boolean;
+  message: string;
+  order: {
+    publicOrderId: string; supplier: string; supplierOrderId: string; status: string; amount: number; currency: string;
+    itinerary: CommerceOffer['itinerary']; included: string[];
+    lineItems: Array<{ id: string; label: string; amount: number; currency: string; mandatory: boolean }>;
+    selectedServices: CommerceOffer['optionalServices']; cancellationTerms: string; reconciliationStatus: string;
+    traveller: { displayName: string; citizenship: string; city: string; passport: string; documentStatus: string };
+  };
+  payment: { rail: PaymentRail; status: 'simulated'; providerTransactionReference: null; fundingLabel: string };
 }
 
 async function invoke(body: Record<string, unknown>) {
@@ -49,8 +76,8 @@ export const TravelCommerceService = {
   approve(offer: CommerceOffer) {
     return invoke({ action: 'approve', offer });
   },
-  executeDemo(offer: CommerceOffer, paymentRail: PaymentRail) {
-    return invoke({ action: 'execute', offer, paymentRail, explicitApproval: true });
+  executeDemo(offer: CommerceOffer, paymentRail: PaymentRail, selectedServiceIds: string[]): Promise<DemoBookingResult> {
+    return invoke({ action: 'execute', offer, paymentRail, selectedServiceIds, explicitApproval: true });
   },
   cancel(offer: CommerceOffer) {
     return invoke({ action: 'cancel', offer });

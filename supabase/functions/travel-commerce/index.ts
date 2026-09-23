@@ -1,7 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
-import { buildDemoOffers, hasReconciledSupplierOrder, maskSensitiveText, validateSearch, type CommerceOffer, type PaymentRail } from '../_shared/travelCommerce.ts';
+import { buildBookingLineItems, buildDemoOffers, hasReconciledSupplierOrder, maskSensitiveText, totalLineItems, validateSearch, type CommerceOffer, type PaymentRail } from '../_shared/travelCommerce.ts';
 
 type Action = 'search' | 'prepare' | 'approve' | 'execute' | 'status' | 'cancel';
 
@@ -46,7 +46,8 @@ serve(async (req) => {
     if (action === 'execute') {
       if (body.explicitApproval !== true) return respond({ error: 'explicit_approval_required', safeMessage: 'Review the final price and choose Approve & simulate before continuing.' }, 403);
       const rail = validateRail(body.paymentRail);
-      const order = buildDemoOrder(offer, 'confirmed');
+      const selectedServiceIds = validateSelectedServices(body.selectedServiceIds, offer);
+      const order = buildDemoOrder(offer, 'simulated_complete', selectedServiceIds);
       order.supplierOrderId = `DEMO-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
       order.reconciliationStatus = 'matched';
       return respond({
@@ -55,9 +56,10 @@ serve(async (req) => {
         simulated: true,
         charged: false,
         ticketIssued: false,
+        roomReserved: false,
         order,
-        payment: { rail, status: 'simulated', providerTransactionReference: null },
-        message: 'Demo complete — no booking was made and no money moved.',
+        payment: { rail, status: 'simulated', providerTransactionReference: null, fundingLabel: 'Demo credits · no monetary value' },
+        message: 'Simulation complete. No ticket, room, ride or payment was created.',
         reconciled: hasReconciledSupplierOrder({ supplierOrderId: order.supplierOrderId, reconciliationStatus: order.reconciliationStatus }),
       });
     }
@@ -75,7 +77,16 @@ function validateOffer(value: unknown): CommerceOffer {
   if (!/^demo_(flight|hotel)_\d{6}$/.test(offer.offerId)) throw new Error('invalid demo offer');
   if (offer.mode !== 'demo' || !['flight', 'hotel'].includes(offer.bookingType)) throw new Error('invalid offer mode');
   if (!Number.isFinite(offer.amount) || offer.amount <= 0 || !/^[A-Z]{3}$/.test(offer.currency)) throw new Error('invalid offer price');
+  if (!offer.pricing || offer.pricing.total !== offer.amount || !Array.isArray(offer.optionalServices)) throw new Error('invalid offer breakdown');
   return offer;
+}
+
+function validateSelectedServices(value: unknown, offer: CommerceOffer): string[] {
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.length > 10 || value.some((id) => typeof id !== 'string' || id.length > 80)) throw new Error('invalid selected services');
+  const allowed = new Set(offer.optionalServices.map((service) => service.id));
+  if (value.some((id) => !allowed.has(id))) throw new Error('unknown selected service');
+  return [...new Set(value)];
 }
 
 function validateRail(value: unknown): PaymentRail {
@@ -83,7 +94,9 @@ function validateRail(value: unknown): PaymentRail {
   return 'tokenized-card';
 }
 
-function buildDemoOrder(offer: CommerceOffer, status: string) {
+function buildDemoOrder(offer: CommerceOffer, status: string, selectedServiceIds: string[] = []) {
+  const lineItems = buildBookingLineItems(offer, selectedServiceIds);
+  const selectedServices = offer.optionalServices.filter((service) => selectedServiceIds.includes(service.id));
   return {
     publicOrderId: `SN-DEMO-${offer.offerId.slice(-6)}`,
     supplier: offer.supplier,
@@ -92,13 +105,17 @@ function buildDemoOrder(offer: CommerceOffer, status: string) {
     status,
     approvalStatus: status === 'approval_required' ? 'required' : 'approved',
     paymentStatus: status === 'payment_authorized' || status === 'confirmed' ? 'authorized' : 'not_started',
-    amount: offer.amount,
+    amount: totalLineItems(lineItems),
     currency: offer.currency,
     offerExpiresAt: offer.expiresAt,
     cancellationTerms: offer.cancellationTerms,
     reconciliationStatus: 'not_started',
     idempotencyKey: `demo:${offer.offerId}`,
-    traveller: { displayName: 'John Smith', citizenship: 'FI', passport: 'DEMO-MASKED', documentStatus: 'masked-demo-only' },
+    itinerary: offer.itinerary,
+    included: offer.included,
+    lineItems,
+    selectedServices,
+    traveller: { displayName: 'John', citizenship: 'FI', city: 'Tampere', passport: '••••8550', documentStatus: 'masked-demo-only' },
   };
 }
 

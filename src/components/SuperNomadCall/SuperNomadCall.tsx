@@ -65,29 +65,8 @@ const SuperNomadCall: React.FC = () => {
         defaultPermit: true,
       },
     ];
-    // Demo persona ↔ persona contacts
-    if (activePersonaId === 'meghan') {
-      list.push({
-        id: 'john',
-        name: 'John Mitchell',
-        subtitle: 'Trusted contact · VP Engineering · Singapore',
-        party: { kind: 'demo_persona', id: 'john', personaId: 'john', displayName: 'John Mitchell' },
-        lane: 'p2p',
-        defaultPermit: true,
-      });
-    }
-    if (activePersonaId === 'john') {
-      list.push({
-        id: 'meghan',
-        name: 'Meghan Clarke',
-        subtitle: 'Trusted contact · Marketing Director · London',
-        party: { kind: 'demo_persona', id: 'meghan', personaId: 'meghan', displayName: 'Meghan Clarke' },
-        lane: 'p2p',
-        defaultPermit: true,
-      });
-    }
     return list;
-  }, [activePersonaId]);
+  }, []);
 
   // ─── Action handlers ───────────────────────────────────────
   const handleCallContact = (c: ContactEntry) => initiate(c.lane, c.party, 'Quick call from contacts');
@@ -175,7 +154,7 @@ const SuperNomadCall: React.FC = () => {
             <CardContent className="space-y-2">
               {contacts.length === 1 && (
                 <p className="text-sm text-muted-foreground p-2 border rounded-md bg-muted/30">
-                  Switch to Meghan or John (header → demo persona) to see person-to-person calling between two SuperNomad members.
+                  Add trusted contacts from your profile to enable person-to-person calling.
                 </p>
               )}
               {contacts.map((c) => (
@@ -272,12 +251,6 @@ const SuperNomadCall: React.FC = () => {
               </p>
               <div className="space-y-2">
                 <PermitRow name="SuperNomad Concierge" reason="Default — your AI concierge" status="active" />
-                {activePersonaId === 'meghan' && (
-                  <PermitRow name="John Mitchell" reason="Trusted contact — fellow SuperNomad" status="active" />
-                )}
-                {activePersonaId === 'john' && (
-                  <PermitRow name="Meghan Clarke" reason="Trusted contact — fellow SuperNomad" status="active" />
-                )}
                 <PermitRow name="Everyone else" reason="Blocked by default" status="blocked" />
               </div>
             </CardContent>
@@ -293,8 +266,6 @@ const ActiveCallPanel: React.FC<{ call: any; onEnd: () => void }> = ({ call, onE
   const [muted, setMuted] = useState(false);
   const inProgress = call.status === 'in_progress' || call.status === 'answered' || call.status === 'ringing';
   const counterparty =
-    call.callee_persona_id === 'meghan' ? 'Meghan Clarke' :
-    call.callee_persona_id === 'john'   ? 'John Mitchell' :
     call.callee_kind === 'ai_concierge' ? 'SuperNomad Concierge' :
     call.callee_kind === 'external_phone' ? (call.callee_phone || 'External number') :
     'Recipient';
@@ -361,12 +332,8 @@ const ActiveCallPanel: React.FC<{ call: any; onEnd: () => void }> = ({ call, onE
 
 const CallRow: React.FC<{ call: any }> = ({ call }) => {
   const counterparty =
-    call.callee_persona_id === 'meghan' ? 'Meghan Clarke' :
-    call.callee_persona_id === 'john'   ? 'John Mitchell' :
     call.callee_kind === 'ai_concierge' ? 'SuperNomad Concierge' :
     call.callee_kind === 'external_phone' ? (call.callee_phone || 'External') :
-    call.caller_persona_id === 'meghan' ? 'Meghan Clarke (incoming)' :
-    call.caller_persona_id === 'john'   ? 'John Mitchell (incoming)' :
     'Call';
   const Icon = call.caller_kind === 'ai_concierge' ? Sparkles : (call.lane === 'pstn_outbound' ? Globe2 : Phone);
   return (

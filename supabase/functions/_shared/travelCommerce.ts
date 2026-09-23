@@ -28,6 +28,44 @@ export interface CommerceOffer {
   sourceUrl: string;
   holdSupported: boolean;
   requiresReprice: boolean;
+  pricing: {
+    base: number;
+    taxesAndMandatoryFees: number;
+    total: number;
+  };
+  itinerary: {
+    originLabel: string;
+    destinationLabel: string;
+    departureLocal: string;
+    arrivalLocal: string;
+    returnDepartureLocal?: string;
+    returnArrivalLocal?: string;
+    duration: string;
+    carrierOrProperty: string;
+    serviceOrRoom: string;
+    fareOrRate: string;
+    checkIn?: string;
+    checkOut?: string;
+  };
+  included: string[];
+  optionalServices: OptionalService[];
+}
+
+export interface OptionalService {
+  id: string;
+  category: 'seat' | 'baggage' | 'hotel-extra';
+  label: string;
+  description: string;
+  amount: number;
+  currency: string;
+}
+
+export interface BookingLineItem {
+  id: string;
+  label: string;
+  amount: number;
+  currency: string;
+  mandatory: boolean;
 }
 
 const IATA_PATTERN = /^[A-Z]{3}$/;
@@ -71,7 +109,23 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
   const base = search.bookingType === 'flight'
     ? stableNumber(`${route}:${search.startDate}:${search.cabin}`, 420, 780)
     : stableNumber(`${route}:${search.adults}`, 180, 360);
-  return [0, 1].map((index) => ({
+  return [0, 1].map((index) => {
+    const fareOrRate = base + index * (search.bookingType === 'flight' ? 145 : 70);
+    const taxesAndMandatoryFees = search.bookingType === 'flight'
+      ? stableNumber(`${route}:tax:${index}`, 78, 86)
+      : stableNumber(`${route}:fees:${index}`, 24, 42);
+    const total = fareOrRate + taxesAndMandatoryFees;
+    const startHour = 8 + index * 3;
+    const endHour = startHour + (search.bookingType === 'flight' ? 6 : 1);
+    const optionalServices: OptionalService[] = search.bookingType === 'flight' ? [
+      { id: `seat-window-${index}`, category: 'seat', label: index === 0 ? 'Window seat 7A' : 'Aisle seat 6C', description: 'Supplier-shaped demo seat position; live availability must be rechecked.', amount: index === 0 ? 42 : 58, currency: 'EUR' },
+      { id: `bag-extra-${index}`, category: 'baggage', label: 'Additional checked bag · 23 kg', description: 'In addition to the included checked bag.', amount: 65, currency: 'EUR' },
+      { id: `bag-heavy-${index}`, category: 'baggage', label: 'Heavy-bag allowance · up to 32 kg', description: 'Applies to one checked bag; carrier limits govern live travel.', amount: 48, currency: 'EUR' },
+    ] : [
+      { id: `breakfast-${index}`, category: 'hotel-extra', label: 'Breakfast', description: `${search.adults || 1} guest${(search.adults || 1) > 1 ? 's' : ''}, per stay in this demo.`, amount: 54, currency: 'EUR' },
+      { id: `transfer-${index}`, category: 'hotel-extra', label: 'Flexible late checkout', description: 'Until 16:00, subject to live property confirmation.', amount: 45, currency: 'EUR' },
+    ];
+    return {
     offerId: `demo_${search.bookingType}_${stableNumber(`${route}:${index}`, 100000, 899999)}`,
     bookingType: search.bookingType,
     supplier: search.bookingType === 'flight' ? 'Duffel' : 'Duffel Stays',
@@ -80,7 +134,7 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
       ? `${index === 0 ? 'Direct' : 'Flexible'} ${search.cabin?.replace('_', ' ')} fare`
       : `${index === 0 ? 'Premium room' : 'Flexible room'} in ${search.destination}`,
     summary: `${route} · ${search.adults || 1} traveller${(search.adults || 1) > 1 ? 's' : ''}`,
-    amount: base + index * (search.bookingType === 'flight' ? 145 : 70),
+    amount: total,
     currency: 'EUR',
     verifiedAt,
     expiresAt,
@@ -89,7 +143,40 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
     sourceUrl: 'https://duffel.com/docs/api/overview/test-mode',
     holdSupported: search.bookingType === 'flight' && index === 1,
     requiresReprice: true,
-  }));
+    pricing: { base: fareOrRate, taxesAndMandatoryFees, total },
+    itinerary: search.bookingType === 'flight' ? {
+      originLabel: `${search.origin} airport`, destinationLabel: `${search.destination} airport`,
+      departureLocal: `${search.startDate}T${String(startHour).padStart(2, '0')}:20`,
+      arrivalLocal: `${search.startDate}T${String(endHour).padStart(2, '0')}:35`,
+      duration: '6h 15m', carrierOrProperty: 'Demo operating carrier',
+      serviceOrRoom: `SN${stableNumber(`${route}:flight:${index}`, 100, 800)} · Demo aircraft`,
+      fareOrRate: index === 0 ? 'Business Standard' : 'Business Flex',
+    } : {
+      originLabel: `${search.destination} airport`, destinationLabel: `${search.destination} hotel district`,
+      departureLocal: `${search.startDate}T15:00`, arrivalLocal: `${search.endDate || search.startDate}T12:00`,
+      duration: `${Math.max(1, Math.round(((Date.parse(`${search.endDate || search.startDate}T00:00:00Z`) - Date.parse(`${search.startDate}T00:00:00Z`)) / 86_400_000)))} night(s)`,
+      carrierOrProperty: `Demo ${index === 0 ? 'Grand' : 'Central'} Hotel`, serviceOrRoom: index === 0 ? 'King room · high floor' : 'King suite · city view',
+      fareOrRate: index === 0 ? 'Advance purchase' : 'Flexible rate', checkIn: '15:00', checkOut: '12:00',
+    },
+    included: search.bookingType === 'flight'
+      ? ['1 cabin bag · 8 kg', '1 checked bag · 23 kg', 'Business cabin meal', 'Standard seat assignment at check-in']
+      : ['1 room', 'Wi-Fi', 'Fitness centre access', 'All mandatory property fees shown'],
+    optionalServices,
+  };
+  });
+}
+
+export function buildBookingLineItems(offer: CommerceOffer, selectedServiceIds: string[]): BookingLineItem[] {
+  const selected = new Set(selectedServiceIds);
+  return [
+    { id: 'base', label: offer.bookingType === 'flight' ? 'Base fare' : 'Room rate', amount: offer.pricing.base, currency: offer.currency, mandatory: true },
+    { id: 'taxes', label: 'Taxes and mandatory fees', amount: offer.pricing.taxesAndMandatoryFees, currency: offer.currency, mandatory: true },
+    ...offer.optionalServices.filter((service) => selected.has(service.id)).map((service) => ({ id: service.id, label: service.label, amount: service.amount, currency: service.currency, mandatory: false })),
+  ];
+}
+
+export function totalLineItems(items: BookingLineItem[]): number {
+  return Math.round(items.reduce((sum, item) => sum + item.amount, 0) * 100) / 100;
 }
 
 export function maskSensitiveText(value: string): string {
