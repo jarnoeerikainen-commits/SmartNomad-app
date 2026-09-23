@@ -209,8 +209,8 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
           displayName: 'John Smith',
           citizenship: 'FI',
           city: 'Tampere',
-          passport: '••••8550',
-          contact: '••••0994',
+          passport: 'DEMO-MASKED',
+          contact: 'DEMO-MASKED',
           source: 'User-provided demo profile',
           storage: 'masked-only',
         }));

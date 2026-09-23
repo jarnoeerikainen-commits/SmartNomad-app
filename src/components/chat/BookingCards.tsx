@@ -99,9 +99,10 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
               </Card>
             ))}
           </div>
-          {parseVerifiedSearch(groupItems[0]) && (
-            <VerifiedBookingOffer search={parseVerifiedSearch(groupItems[0])!} />
-          )}
+          {(() => {
+            const verifiedSearch = parseVerifiedSearch(groupItems[0]);
+            return verifiedSearch ? <VerifiedBookingOffer search={verifiedSearch} /> : null;
+          })()}
         </div>
       ))}
     </div>

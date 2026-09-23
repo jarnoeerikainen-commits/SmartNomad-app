@@ -88,7 +88,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-2',
     name: 'Dining & Lifestyle',
-    description: 'Restaurants, lounges, experiences — auto-approve under $150',
+    description: 'Demo limits for restaurants, lounges, and experiences; live approval remains required.',
     maxPerTransaction: 500,
     maxDaily: 800,
     maxWeekly: 3000,
@@ -102,7 +102,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-3',
     name: 'Micro-Payments (x402)',
-    description: 'API calls, data queries, AI-to-AI exchanges — fully autonomous',
+    description: 'Demo limits for API calls and data queries; no live settlement is configured.',
     maxPerTransaction: 1,
     maxDaily: 25,
     maxWeekly: 100,
@@ -116,7 +116,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-4',
     name: 'Subscriptions',
-    description: 'SaaS tools, coworking, insurance — auto-approve under $100/mo',
+    description: 'Demo limits for subscriptions; live recurring authorization is not configured.',
     maxPerTransaction: 200,
     maxDaily: 500,
     maxWeekly: 1000,

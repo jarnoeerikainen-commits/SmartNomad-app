@@ -90,7 +90,7 @@ function buildDemoOrder(offer: CommerceOffer, status: string) {
     cancellationTerms: offer.cancellationTerms,
     reconciliationStatus: 'not_started',
     idempotencyKey: `demo:${offer.offerId}`,
-    traveller: { displayName: 'John Smith', citizenship: 'FI', passport: '••••8550', documentStatus: 'demo-encrypted' },
+    traveller: { displayName: 'John Smith', citizenship: 'FI', passport: 'DEMO-MASKED', documentStatus: 'masked-demo-only' },
   };
 }
 
