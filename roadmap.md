@@ -8,6 +8,7 @@
 - [x] Block social matching and proactive meetup nudges in both app and edge functions.
 - [x] Verify focused tests and protected edge-function type checks.
 - [ ] Verify the latest preview build and browser behavior after deployment.
+- [ ] Deploy protected edge functions when the deployment environment provides Supabase access.
 
 - [x] Add authorized flight and hotel offer/order gateway with explicit demo/live provenance.
 - [x] Add secure traveller profiles and invitation-only booking mandates.

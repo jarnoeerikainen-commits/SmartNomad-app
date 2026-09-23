@@ -192,7 +192,7 @@ export const SocialDashboard = () => {
                 <UsersRound className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No groups yet</h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Select a demo persona (Meghan or John) to see your auto-joined sports & expat groups
+                  Select a demo persona (Meghan or John) to see existing community groups
                 </p>
               </CardContent>
             </Card>
@@ -202,7 +202,7 @@ export const SocialDashboard = () => {
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Your Groups</CardTitle>
                   <CardDescription className="text-xs">
-                    {personaGroups.length} groups · Auto-joined based on your profile & interests
+                    {personaGroups.length} existing groups
                   </CardDescription>
                 </CardHeader>
               </Card>
