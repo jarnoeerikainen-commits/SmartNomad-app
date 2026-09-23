@@ -5,8 +5,16 @@ import { buildDemoOffers, hasReconciledSupplierOrder, maskSensitiveText, validat
 
 type Action = 'search' | 'prepare' | 'approve' | 'execute' | 'status' | 'cancel';
 
+// The app's shared Supabase client sends x-device-id on every request so guest
+// activity can be scoped safely. The SDK defaults do not include that header,
+// which causes browsers to stop at preflight before this function is reached.
+export const travelCommerceCorsHeaders = {
+  ...corsHeaders,
+  'Access-Control-Allow-Headers': `${corsHeaders['Access-Control-Allow-Headers']}, x-device-id`,
+};
+
 serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: travelCommerceCorsHeaders });
   if (req.method !== 'POST') return respond({ error: 'method_not_allowed' }, 405);
   try {
     const body = await req.json() as Record<string, unknown>;
@@ -95,5 +103,5 @@ function buildDemoOrder(offer: CommerceOffer, status: string) {
 }
 
 function respond(payload: unknown, status = 200) {
-  return new Response(JSON.stringify(payload), { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify(payload), { status, headers: { ...travelCommerceCorsHeaders, 'Content-Type': 'application/json' } });
 }
