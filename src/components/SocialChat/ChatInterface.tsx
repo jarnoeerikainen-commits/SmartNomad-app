@@ -148,11 +148,6 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
             <Button variant="ghost" size="sm" onClick={generateCatchUp} className="h-8 w-8 p-0" title="AI Catch-up Summary">
               <FileText className="h-4 w-4" />
             </Button>
-            {ttsSupported && (
-              <Button variant="ghost" size="sm" onClick={toggleVoice} className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`} title={voiceEnabled ? 'Disable voice' : 'Enable voice'}>
-                {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
-              </Button>
-            )}
           </div>
         </div>
 
@@ -267,27 +262,8 @@ export const ChatInterface = ({ chatRoom, onBack, currentUserId = 'demo-user' }:
 
         <div className="border-t p-3">
           <div className="flex gap-2">
-            {sttSupported && (
-              <Button
-                onClick={() => {
-                  if (isListening) {
-                    stopListening();
-                  } else {
-                    startListening((text) => {
-                      if (text.trim()) handleSend(text);
-                    });
-                  }
-                }}
-                variant={isListening ? 'default' : 'outline'}
-                size="sm"
-                className={`px-3 flex-shrink-0 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''}`}
-                title={isListening ? 'Stop listening' : 'Voice input'}
-              >
-                {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-              </Button>
-            )}
             <Input
-              placeholder={isListening ? 'Listening...' : 'Type your message...'}
+              placeholder="Type your message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyPress}
