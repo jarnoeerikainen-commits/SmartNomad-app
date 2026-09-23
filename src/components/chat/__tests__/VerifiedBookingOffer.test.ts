@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { parseVerifiedSearch } from '../BookingCards';
-import { describe, expect, it } from 'vitest';
 
 describe('parseVerifiedSearch', () => {
   it('extracts a flight route and date from a supported search URL', () => {

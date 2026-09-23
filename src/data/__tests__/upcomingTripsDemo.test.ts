@@ -9,8 +9,6 @@ describe('getDemoUpcomingTrips', () => {
       expect(t.startInDays).toBeGreaterThanOrEqual(0);
       expect(t.clearance).toBeDefined();
     });
-  });
-
     expect(getDemoUpcomingTrips('john')).toEqual(getDemoUpcomingTrips(null));
     expect(trips).toEqual(getDemoUpcomingTrips(null));
   });

@@ -35,4 +35,4 @@
 - [x] Ask about both airport-transfer directions and connect “Find a ride” to separate demo ride review.
 - [x] Remove named demo selectors from the header and morning view; ignore legacy named demo URLs.
 - [x] Keep John only as the masked Finnish demo traveller in You and simulated booking records.
-- [x] Complete automated and browser verification.
+- [ ] Complete automated and browser verification.
