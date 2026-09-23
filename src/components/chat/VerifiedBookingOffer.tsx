@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -22,8 +22,7 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
   const [result, setResult] = useState<string | null>(null);
   const [executing, setExecuting] = useState(false);
 
-  const searchKey = useMemo(() => JSON.stringify(search), [search]);
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     setResult(null);
     try {
@@ -34,9 +33,9 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, toast]);
 
-  useEffect(() => { void load(); }, [searchKey]);
+  useEffect(() => { void load(); }, [load]);
 
   const approve = async () => {
     if (!selected) return;
