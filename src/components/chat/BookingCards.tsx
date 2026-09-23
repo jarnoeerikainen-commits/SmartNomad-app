@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { recordOutcome } from '@/utils/conciergeFeedback';
+import VerifiedBookingOffer from '@/components/chat/VerifiedBookingOffer';
 
-interface BookingItem {
+export interface BookingItem {
   type: 'flight' | 'hotel' | 'car';
   provider: string;
   url: string;
@@ -98,11 +99,40 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
               </Card>
             ))}
           </div>
+          {(() => {
+            const verifiedSearch = parseVerifiedSearch(groupItems[0]);
+            return verifiedSearch ? <VerifiedBookingOffer search={verifiedSearch} /> : null;
+          })()}
         </div>
       ))}
     </div>
   );
 };
+
+export function parseVerifiedSearch(item?: BookingItem) {
+  if (!item?.url || item.url === '#') return null;
+  try {
+    const url = new URL(item.url);
+    if (item.type === 'flight') {
+      const pathMatch = url.pathname.match(/\/flights\/([A-Z]{3})-([A-Z]{3})\/(\d{4}-\d{2}-\d{2})/i)
+        || url.pathname.match(/\/transport\/flights\/([a-z]{3})\/([a-z]{3})\/(\d{6})/i);
+      if (!pathMatch) return null;
+      const compact = pathMatch[3];
+      const startDate = compact.length === 6 ? `20${compact.slice(0, 2)}-${compact.slice(2, 4)}-${compact.slice(4, 6)}` : compact;
+      return { bookingType: 'flight' as const, origin: pathMatch[1].toUpperCase(), destination: pathMatch[2].toUpperCase(), startDate, adults: 1, cabin: 'business' as const };
+    }
+    if (item.type === 'hotel') {
+      const destination = url.searchParams.get('ss') || url.searchParams.get('destination') || item.city;
+      const startDate = url.searchParams.get('checkin') || url.searchParams.get('startDate');
+      const endDate = url.searchParams.get('checkout') || url.searchParams.get('endDate');
+      if (!destination || !startDate) return null;
+      return { bookingType: 'hotel' as const, destination, startDate, endDate: endDate || undefined, adults: 1 };
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 export default BookingCards;
 

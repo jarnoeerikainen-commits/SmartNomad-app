@@ -121,7 +121,8 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items }) => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     initialItems.forEach((item, idx) => {
-      if (item.status === 'pending') {
+      const requiresExplicitAction = item.type === 'payment' || item.type === 'reservation' || item.type === 'form-submit';
+      if (item.status === 'pending' && !requiresExplicitAction) {
         // Move to in-progress after a short delay
         timers.push(setTimeout(() => {
           setActionStates(prev => {
@@ -184,6 +185,11 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items }) => {
             )}
 
             {/* Details */}
+            {action.status === 'pending' && (action.type === 'payment' || action.type === 'reservation' || action.type === 'form-submit') && (
+              <div className="rounded-md border border-warning/30 bg-warning/10 p-2 text-xs text-foreground">
+                Waiting for your explicit review. Concierge actions involving money, reservations, or submitted data never run automatically.
+              </div>
+            )}
             {action.details && action.status === 'completed' && (
               <div className="grid grid-cols-2 gap-1 text-[11px] bg-background/60 rounded p-2">
                 {Object.entries(action.details).map(([key, value]) => (

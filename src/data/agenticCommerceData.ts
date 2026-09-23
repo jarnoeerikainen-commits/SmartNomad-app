@@ -64,7 +64,7 @@ export const DEMO_WALLET_CONFIG: AgenticWalletConfig = {
   stripeIssuingEnabled: true,
   visaTapEnabled: true,
   mastercardCloudEnabled: true,
-  autoPayEnabled: true,
+  autoPayEnabled: false,
   maxAutoPayAmount: 100,
   preferredCryptoNetwork: 'base',
   usdcBalance: 2450.00,
@@ -74,7 +74,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-1',
     name: 'Travel Bookings',
-    description: 'Hotels, flights, car rentals — AI can book up to $500 without asking',
+    description: 'Demo policy for hotels, flights, and car rentals; real purchases always require user-present approval.',
     maxPerTransaction: 2000,
     maxDaily: 5000,
     maxWeekly: 15000,
@@ -88,7 +88,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-2',
     name: 'Dining & Lifestyle',
-    description: 'Restaurants, lounges, experiences — auto-approve under $150',
+    description: 'Demo limits for restaurants, lounges, and experiences; live approval remains required.',
     maxPerTransaction: 500,
     maxDaily: 800,
     maxWeekly: 3000,
@@ -102,7 +102,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-3',
     name: 'Micro-Payments (x402)',
-    description: 'API calls, data queries, AI-to-AI exchanges — fully autonomous',
+    description: 'Demo limits for API calls and data queries; no live settlement is configured.',
     maxPerTransaction: 1,
     maxDaily: 25,
     maxWeekly: 100,
@@ -116,7 +116,7 @@ export const DEMO_GUARDRAILS: SpendingGuardrail[] = [
   {
     id: 'gr-4',
     name: 'Subscriptions',
-    description: 'SaaS tools, coworking, insurance — auto-approve under $100/mo',
+    description: 'Demo limits for subscriptions; live recurring authorization is not configured.',
     maxPerTransaction: 200,
     maxDaily: 500,
     maxWeekly: 1000,
@@ -418,7 +418,7 @@ export const PROTOCOL_INFO = {
     color: 'text-blue-600 dark:text-blue-400',
     bgClass: 'bg-blue-50 dark:bg-blue-950/30',
     borderClass: 'border-blue-200 dark:border-blue-800',
-    description: 'Cryptographic proof of authorization. Banks recognize AI as a "Trusted Agent" — zero fraud declines.',
+    description: 'Cryptographic agent identity signalling. Issuer, merchant, and fraud checks still apply.',
     bestFor: 'Global merchant acceptance, physical venues, high-value bookings',
     provider: 'Visa MPP SDK',
     settlement: 'Visa network with TAP verification',

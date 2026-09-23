@@ -52,7 +52,7 @@ const DEMO_PROFILE_BACKUP_KEYS = {
 
 const isDemoProfileValue = (value: string | null) => {
   if (!value) return false;
-  return value.includes('meghan.clarke@demo.com') || value.includes('john.mitchell@demo.com');
+  return value.includes('meghan.clarke@demo.com') || value.includes('john.mitchell@demo.com') || value.includes('john.smith@demo.com');
 };
 
 const backupBeforeDemo = (key: 'userProfile' | 'enhancedProfile') => {
@@ -204,6 +204,19 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.setItem('demoCalendar', JSON.stringify(p.calendar));
       // Store AI context (dynamically built from today's date)
       localStorage.setItem('demoAiContext', p.aiContext);
+      if (id === 'john') {
+        localStorage.setItem('supernomad_demo_booking_traveller', JSON.stringify({
+          displayName: 'John Smith',
+          citizenship: 'FI',
+          city: 'Tampere',
+          passport: 'DEMO-MASKED',
+          contact: 'DEMO-MASKED',
+          source: 'User-provided demo profile',
+          storage: 'masked-only',
+        }));
+      } else {
+        localStorage.removeItem('supernomad_demo_booking_traveller');
+      }
       // Re-seed the unified calendar so reminders + concierge stay future-anchored
       try {
         CalendarService.reseedDemoPersona(id);
@@ -243,6 +256,7 @@ export const DemoPersonaProvider: React.FC<{ children: React.ReactNode }> = ({ c
       localStorage.removeItem('demoAiContext');
       localStorage.removeItem('demoCalendar');
       localStorage.removeItem('awardCardsAIContext');
+      localStorage.removeItem('supernomad_demo_booking_traveller');
       restoreAfterDemo('userProfile');
       restoreAfterDemo('enhancedProfile');
       restoreLifestyle('trackedCountries');
