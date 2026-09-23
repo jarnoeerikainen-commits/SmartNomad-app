@@ -4,7 +4,6 @@ import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
 import HomeSection from './sections/HomeSection';
 import QuickActions from './QuickActions';
-import UpgradeBanner from './UpgradeBanner';
 import UpgradeModal from './UpgradeModal';
 import FloatingActionButton from './FloatingActionButton';
 import ErrorBoundary from './ErrorBoundary';
@@ -142,9 +141,9 @@ interface AppLayoutProps {
   onIncrementCountryDay?: (countryId: string) => void;
   subscription: Subscription;
   detectedLocation: LocationData | null;
-  userProfile: any;
+  userProfile: { citizenship?: string } | null;
   onUpgrade?: (tier: string) => void;
-  onProfileComplete?: (data: any) => void;
+  onProfileComplete?: (data: unknown) => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({
@@ -168,9 +167,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showProfileForm, setShowProfileForm] = useState(false);
-  const [upgradeBannerDismissed, setUpgradeBannerDismissed] = useState(() => {
-    return localStorage.getItem('upgradeBannerDismissed') === 'true';
-  });
   const mainScrollRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -246,11 +242,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     };
   }, []);
 
-  const handleDismissBanner = useCallback(() => {
-    setUpgradeBannerDismissed(true);
-    localStorage.setItem('upgradeBannerDismissed', 'true');
-  }, []);
-
   const openUpgradeModal = useCallback(() => setShowUpgradeModal(true), []);
   const openProfileForm = useCallback(() => setShowProfileForm(true), []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -277,17 +268,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
           <div className="space-y-6">
             <HomeSection 
               countries={countries}
-              subscription={subscription}
               onNavigate={(section) => setActiveSection(safeSectionDuringSocialPause(section))}
             />
-            {!upgradeBannerDismissed && (
-              <UpgradeBanner 
-                subscription={subscription}
-                onUpgradeClick={openUpgradeModal}
-                onProfileFormClick={openProfileForm}
-                onDismiss={handleDismissBanner}
-              />
-            )}
           </div>
         );
       
