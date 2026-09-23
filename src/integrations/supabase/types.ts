@@ -2280,6 +2280,219 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_approval_events: {
+        Row: {
+          approved_amount: number
+          approved_currency: string
+          authentication_strength: string
+          booking_order_id: string
+          created_at: string
+          decision: string
+          evidence: Json
+          id: string
+          user_id: string
+        }
+        Insert: {
+          approved_amount: number
+          approved_currency: string
+          authentication_strength: string
+          booking_order_id: string
+          created_at?: string
+          decision: string
+          evidence?: Json
+          id?: string
+          user_id: string
+        }
+        Update: {
+          approved_amount?: number
+          approved_currency?: string
+          authentication_strength?: string
+          booking_order_id?: string
+          created_at?: string
+          decision?: string
+          evidence?: Json
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_approval_events_booking_order_id_fkey"
+            columns: ["booking_order_id"]
+            isOneToOne: false
+            referencedRelation: "travel_booking_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_mandates: {
+        Row: {
+          allowed_booking_types: string[]
+          allowed_currencies: string[]
+          allowed_destination_codes: string[]
+          allowed_payment_rails: string[]
+          allowed_suppliers: string[]
+          created_at: string
+          id: string
+          max_daily: number
+          max_per_booking: number
+          max_weekly: number
+          require_fresh_approval_on_price_change: boolean
+          require_user_present: boolean
+          revoked_at: string | null
+          status: string
+          traveller_id: string
+          updated_at: string
+          user_id: string
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          allowed_booking_types?: string[]
+          allowed_currencies?: string[]
+          allowed_destination_codes?: string[]
+          allowed_payment_rails?: string[]
+          allowed_suppliers?: string[]
+          created_at?: string
+          id?: string
+          max_daily: number
+          max_per_booking: number
+          max_weekly: number
+          require_fresh_approval_on_price_change?: boolean
+          require_user_present?: boolean
+          revoked_at?: string | null
+          status?: string
+          traveller_id: string
+          updated_at?: string
+          user_id: string
+          valid_from?: string
+          valid_until: string
+        }
+        Update: {
+          allowed_booking_types?: string[]
+          allowed_currencies?: string[]
+          allowed_destination_codes?: string[]
+          allowed_payment_rails?: string[]
+          allowed_suppliers?: string[]
+          created_at?: string
+          id?: string
+          max_daily?: number
+          max_per_booking?: number
+          max_weekly?: number
+          require_fresh_approval_on_price_change?: boolean
+          require_user_present?: boolean
+          revoked_at?: string | null
+          status?: string
+          traveller_id?: string
+          updated_at?: string
+          user_id?: string
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_mandates_traveller_id_fkey"
+            columns: ["traveller_id"]
+            isOneToOne: false
+            referencedRelation: "booking_travellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_payment_references: {
+        Row: {
+          authorization_status: string
+          booking_order_id: string
+          created_at: string
+          id: string
+          masked_reference: string
+          metadata: Json
+          provider: string
+          provider_token_ref: string
+          provider_transaction_ref: string | null
+          rail: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          authorization_status?: string
+          booking_order_id: string
+          created_at?: string
+          id?: string
+          masked_reference: string
+          metadata?: Json
+          provider: string
+          provider_token_ref: string
+          provider_transaction_ref?: string | null
+          rail: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          authorization_status?: string
+          booking_order_id?: string
+          created_at?: string
+          id?: string
+          masked_reference?: string
+          metadata?: Json
+          provider?: string
+          provider_token_ref?: string
+          provider_transaction_ref?: string | null
+          rail?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_payment_references_booking_order_id_fkey"
+            columns: ["booking_order_id"]
+            isOneToOne: false
+            referencedRelation: "travel_booking_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_travellers: {
+        Row: {
+          citizenship_code: string
+          contact_summary: Json
+          created_at: string
+          display_name: string
+          document_status: string
+          encrypted_vault_ref: string | null
+          id: string
+          is_demo: boolean
+          passport_last4: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          citizenship_code: string
+          contact_summary?: Json
+          created_at?: string
+          display_name: string
+          document_status?: string
+          encrypted_vault_ref?: string | null
+          id?: string
+          is_demo?: boolean
+          passport_last4?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          citizenship_code?: string
+          contact_summary?: Json
+          created_at?: string
+          display_name?: string
+          document_status?: string
+          encrypted_vault_ref?: string | null
+          id?: string
+          is_demo?: boolean
+          passport_last4?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_trip_expenses: {
         Row: {
           amount: number
@@ -4918,6 +5131,105 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      travel_booking_orders: {
+        Row: {
+          amount: number
+          approval_status: string
+          booking_type: string
+          cancellation_terms: string
+          created_at: string
+          currency: string
+          failure_code: string | null
+          id: string
+          idempotency_key: string
+          itinerary_summary: Json
+          mandate_id: string | null
+          mode: string
+          offer_expires_at: string
+          payment_status: string
+          public_order_id: string
+          reconciliation_status: string
+          source_url: string | null
+          status: string
+          supplier: string
+          supplier_offer_id: string
+          supplier_order_id: string | null
+          traveller_id: string
+          updated_at: string
+          user_id: string
+          verified_at: string
+        }
+        Insert: {
+          amount: number
+          approval_status?: string
+          booking_type: string
+          cancellation_terms: string
+          created_at?: string
+          currency: string
+          failure_code?: string | null
+          id?: string
+          idempotency_key: string
+          itinerary_summary: Json
+          mandate_id?: string | null
+          mode: string
+          offer_expires_at: string
+          payment_status?: string
+          public_order_id: string
+          reconciliation_status?: string
+          source_url?: string | null
+          status?: string
+          supplier: string
+          supplier_offer_id: string
+          supplier_order_id?: string | null
+          traveller_id: string
+          updated_at?: string
+          user_id: string
+          verified_at?: string
+        }
+        Update: {
+          amount?: number
+          approval_status?: string
+          booking_type?: string
+          cancellation_terms?: string
+          created_at?: string
+          currency?: string
+          failure_code?: string | null
+          id?: string
+          idempotency_key?: string
+          itinerary_summary?: Json
+          mandate_id?: string | null
+          mode?: string
+          offer_expires_at?: string
+          payment_status?: string
+          public_order_id?: string
+          reconciliation_status?: string
+          source_url?: string | null
+          status?: string
+          supplier?: string
+          supplier_offer_id?: string
+          supplier_order_id?: string | null
+          traveller_id?: string
+          updated_at?: string
+          user_id?: string
+          verified_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travel_booking_orders_mandate_id_fkey"
+            columns: ["mandate_id"]
+            isOneToOne: false
+            referencedRelation: "booking_mandates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "travel_booking_orders_traveller_id_fkey"
+            columns: ["traveller_id"]
+            isOneToOne: false
+            referencedRelation: "booking_travellers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       travel_history: {
         Row: {
