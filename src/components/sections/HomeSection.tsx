@@ -39,7 +39,7 @@ const HomeSection: React.FC<HomeSectionProps> = ({ countries, subscription, onNa
   const { isActive: tripActive } = useActiveTrip(countries);
   const [showMore, setShowMore] = useState(false);
 
-  const { user } = useAuth() as any;
+  const { user } = useAuth();
   const userName: string | undefined =
     user?.user_metadata?.first_name ||
     user?.user_metadata?.name ||

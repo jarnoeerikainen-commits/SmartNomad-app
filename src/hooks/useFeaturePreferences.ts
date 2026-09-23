@@ -41,7 +41,9 @@ function loadPrefs(): FeaturePrefsMap {
       }
       return saved;
     }
-  } catch {}
+  } catch {
+    return buildDefaults();
+  }
   return buildDefaults();
 }
 
