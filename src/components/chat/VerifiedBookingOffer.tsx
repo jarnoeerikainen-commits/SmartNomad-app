@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, Clock3, CreditCard, ExternalLink, Hotel, Loader2, MapPin, Plane, RefreshCcw, ShieldCheck, WalletCards } from 'lucide-react';
 import { TravelCommerceService, type CommerceOffer, type DemoBookingResult, type PaymentRail } from '@/services/TravelCommerceService';
+import { DemoBookingStore } from '@/services/DemoBookingStore';
 import RideBookingCard from '@/components/chat/RideBookingCard';
 import { useToast } from '@/hooks/use-toast';
 
@@ -72,6 +73,7 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
       await TravelCommerceService.prepare(selected);
       await TravelCommerceService.approve(selected);
       const response = await TravelCommerceService.executeDemo(selected, rail, selectedServiceIds);
+      DemoBookingStore.save(selected.bookingType, response);
       setResult(response); setDialogOpen(false);
       setOutboundTransfer('unanswered'); setArrivalTransfer('unanswered');
       toast({ title: 'Demo record complete', description: response.message });
