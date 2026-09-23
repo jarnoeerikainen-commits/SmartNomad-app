@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SuperNomad SN">
+  <defs>
+    <linearGradient id="gold" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF1AE"/>
+      <stop offset="0.48" stop-color="#E9B949"/>
+      <stop offset="1" stop-color="#A96F12"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="13" fill="#111318"/>
+  <rect x="2" y="2" width="60" height="60" rx="11" fill="none" stroke="url(#gold)" stroke-width="2"/>
+  <text x="32" y="40" text-anchor="middle" fill="url(#gold)" font-family="Georgia, 'Times New Roman', serif" font-size="27" font-weight="700" letter-spacing="0">SN</text>
+</svg>
