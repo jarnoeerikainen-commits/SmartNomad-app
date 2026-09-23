@@ -44,3 +44,10 @@
 - [x] Remove named demo selectors from the header and morning view; ignore legacy named demo URLs.
 - [x] Keep John only as the masked Finnish demo traveller in You and simulated booking records.
 - [x] Complete automated and browser verification.
+
+## Clean Home and approved demo bookings
+
+- [ ] Reduce Home to Next Trip, Tax Days, and Threats Near You only.
+- [ ] Remove seeded upcoming trips and show only user-approved demo flight or hotel records.
+- [ ] Persist completed demo booking details safely and open the full record from Next Trip.
+- [ ] Verify flight and hotel completion, reload persistence, empty state, mobile layout, tests, lint, and build.
