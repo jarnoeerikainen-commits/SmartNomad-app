@@ -117,8 +117,16 @@ const TripCard: React.FC<{ trip: UpcomingTrip; onOpen: () => void; onJump: (s: s
       : `${trip.startInDays}d`;
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
       className={`group snap-start shrink-0 w-[280px] md:w-[300px] text-left rounded-2xl border ${meta.ring} ${meta.bg} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-primary/40`}
     >
       <div className="flex items-start justify-between gap-2 mb-3">
@@ -163,7 +171,7 @@ const TripCard: React.FC<{ trip: UpcomingTrip; onOpen: () => void; onJump: (s: s
         <span>Tap for full trip dossier</span>
         <ArrowRight className="h-3 w-3" />
       </div>
-    </button>
+    </div>
   );
 };
 
