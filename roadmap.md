@@ -1,5 +1,13 @@
 # Booking readiness roadmap
 
+## Home screen customization
+
+- [x] Preserve visible, hidden, and pinned choices automatically between app openings.
+- [x] Keep Home pins independent from sidebar visibility and restore them on reload.
+- [x] Set the clean default to 20 visible, 66 hidden, and six Home pins.
+- [x] Remove Business, Nomad, Family, Sport, and Sabbatical modes and demo-mode synchronization.
+- [x] Verify focused tests, lint, build health, desktop flow, reload persistence, and mobile Home layout.
+
 ## Global social introduction pause
 
 - [x] Pause new-friend and SportBuddy introductions for every user.

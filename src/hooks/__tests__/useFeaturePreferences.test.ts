@@ -20,9 +20,10 @@ describe('useFeaturePreferences', () => {
   it('keeps a Home pin when its navigation item is hidden', () => {
     const { result } = renderHook(() => useFeaturePreferences());
 
+    act(() => result.current.setVisibility('expenses', true));
     act(() => result.current.toggleVisible('expenses'));
 
-    expect(result.current.isVisible('expenses')).toBe(true);
+    expect(result.current.isVisible('expenses')).toBe(false);
     expect(result.current.isPinned('expenses')).toBe(true);
   });
 
