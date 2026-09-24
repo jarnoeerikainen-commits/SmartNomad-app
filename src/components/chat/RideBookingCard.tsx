@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Car, Clock, MapPin, Users, Briefcase, Star, Leaf, ExternalLink, CheckCircle2, Loader2, Calendar as CalIcon, Phone } from 'lucide-react';
 import { RideHailingService, type RideQuote, type RideBooking } from '@/services/RideHailingService';
 import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 interface RideBookingCardProps {
   pickup: { address: string; city?: string };
@@ -30,6 +31,7 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
   const [scheduledTime, setScheduledTime] = useState<string>(whenISO || '');
   const [booking, setBooking] = useState<RideBooking | null>(null);
   const [bookingInProgress, setBookingInProgress] = useState(false);
+  const [approvalOpen, setApprovalOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,8 +60,8 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
       });
       setBooking(result);
       toast({
-        title: scheduledTime ? '🚖 Ride scheduled' : '🚖 Driver on the way',
-        description: `${result.driverName} • ${result.vehiclePlate} • ETA ${result.etaMinutes} min`,
+         title: result.simulated ? 'Ride simulation complete' : scheduledTime ? 'Ride scheduled' : 'Driver on the way',
+         description: result.simulated ? 'No driver, reservation, charge, or funds movement occurred.' : `${result.driverName} • ${result.vehiclePlate} • ETA ${result.etaMinutes} min`,
       });
     } catch (e) {
       toast({ title: 'Booking failed', description: 'Please try again.', variant: 'destructive' });
@@ -204,14 +206,14 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
         <Button
           className="flex-1 h-9 text-xs"
           disabled={!selectedQuote || bookingInProgress}
-          onClick={handleBook}
+           onClick={() => setApprovalOpen(true)}
         >
           {bookingInProgress ? (
             <><Loader2 className="h-3 w-3 mr-1 animate-spin" /> Booking…</>
           ) : scheduledTime ? (
-            <>📅 Schedule with {selectedQuote?.supplier || '…'}</>
+             <>Review scheduled simulation</>
           ) : (
-            <>🚖 Book {selectedQuote?.supplier || '…'} now</>
+             <>Review ride simulation</>
           )}
         </Button>
         {selectedQuote && (selectedQuote.deepLink || selectedQuote.webLink) && (
@@ -227,8 +229,18 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
       </div>
 
       <p className="text-[9px] text-muted-foreground mt-2 text-center">
-        Demo mode • Connect Karhoo to enable live bookings
+         SIMULATED · USD sample prices · no real ride or payment
       </p>
+      <AlertDialog open={approvalOpen} onOpenChange={setApprovalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Approve ride simulation</AlertDialogTitle>
+            <AlertDialogDescription>This records a demo-only ride flow. No driver is contacted, no reservation is created, and no funds move.</AlertDialogDescription>
+          </AlertDialogHeader>
+          {selectedQuote && <div className="rounded-md border p-3 text-sm"><p className="font-semibold">{selectedQuote.supplier} · {selectedQuote.vehicleName}</p><p>{pickup.address} → {dropoff.address}</p><p className="mt-1 font-bold">USD {selectedQuote.priceLow.toFixed(2)}–{selectedQuote.priceHigh.toFixed(2)}</p></div>}
+          <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => { setApprovalOpen(false); void handleBook(); }}>Approve simulation</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };

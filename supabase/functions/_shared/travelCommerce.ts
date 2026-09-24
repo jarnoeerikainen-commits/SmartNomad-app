@@ -56,8 +56,8 @@ export interface CommerceOffer {
     fareOrRate: string;
     checkIn?: string;
     checkOut?: string;
-    tripType: 'one_way' | 'return' | 'stay';
-    legs: TravelLeg[];
+    tripType?: 'one_way' | 'return' | 'stay';
+    legs?: TravelLeg[];
   };
   included: string[];
   optionalServices: OptionalService[];

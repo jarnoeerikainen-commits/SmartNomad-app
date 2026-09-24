@@ -34,8 +34,8 @@ export interface CommerceOffer {
     originLabel: string; destinationLabel: string; departureLocal: string; arrivalLocal: string;
     returnDepartureLocal?: string; returnArrivalLocal?: string; duration: string;
     carrierOrProperty: string; serviceOrRoom: string; fareOrRate: string; checkIn?: string; checkOut?: string;
-    tripType: 'one_way' | 'return' | 'stay';
-    legs: Array<{ direction: 'outbound' | 'return'; originLabel: string; destinationLabel: string; departureLocal: string; arrivalLocal: string; duration: string; service: string }>;
+    tripType?: 'one_way' | 'return' | 'stay';
+    legs?: Array<{ direction: 'outbound' | 'return'; originLabel: string; destinationLabel: string; departureLocal: string; arrivalLocal: string; duration: string; service: string }>;
   };
   included: string[];
   optionalServices: Array<{ id: string; category: 'seat' | 'baggage' | 'hotel-extra'; label: string; description: string; amount: number; currency: string }>;
@@ -58,7 +58,7 @@ export interface DemoBookingResult {
     traveller: { displayName: string; citizenship: string; city: string; passport: string; documentStatus: string };
   };
   payment: { rail: PaymentRail; status: 'simulated'; providerTransactionReference: null; fundingLabel: string };
-  auditTimeline: Array<{ step: 'quote_verified' | 'user_approved' | 'payment_simulated' | 'supplier_simulated' | 'reconciled'; status: 'completed'; at: string }>;
+  auditTimeline?: Array<{ step: 'quote_verified' | 'user_approved' | 'payment_simulated' | 'supplier_simulated' | 'reconciled'; status: 'completed'; at: string }>;
 }
 
 async function invoke(body: Record<string, unknown>) {
