@@ -122,10 +122,11 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
     ? stableNumber(`${route}:${search.startDate}:${search.cabin}`, 420, 780)
     : stableNumber(`${route}:${search.adults}`, 180, 360);
   return [0, 1].map((index) => {
-    const fareOrRate = base + index * (search.bookingType === 'flight' ? 145 : 70);
-    const taxesAndMandatoryFees = search.bookingType === 'flight'
+    const tripMultiplier = search.bookingType === 'flight' && search.endDate ? 2 : 1;
+    const fareOrRate = (base + index * (search.bookingType === 'flight' ? 145 : 70)) * tripMultiplier;
+    const taxesAndMandatoryFees = (search.bookingType === 'flight'
       ? stableNumber(`${route}:tax:${index}`, 78, 86)
-      : stableNumber(`${route}:fees:${index}`, 24, 42);
+      : stableNumber(`${route}:fees:${index}`, 24, 42)) * tripMultiplier;
     const total = fareOrRate + taxesAndMandatoryFees;
     const startHour = 8 + index * 3;
     const endHour = startHour + (search.bookingType === 'flight' ? 6 : 1);

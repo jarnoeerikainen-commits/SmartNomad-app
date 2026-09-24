@@ -19,6 +19,7 @@ interface Props {
 type TransferState = 'unanswered' | 'arranged' | 'not-needed' | 'find';
 const money = (amount: number, currency: string) => `${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
 const localDate = (value: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+const tripLegs = (itinerary: CommerceOffer['itinerary']) => itinerary.legs?.length ? itinerary.legs : [{ direction: 'outbound' as const, originLabel: itinerary.originLabel, destinationLabel: itinerary.destinationLabel, departureLocal: itinerary.departureLocal, arrivalLocal: itinerary.arrivalLocal, duration: itinerary.duration, service: itinerary.serviceOrRoom }];
 
 const TransferChoice = ({ label, value, onChange }: { label: string; value: TransferState; onChange: (value: TransferState) => void }) => (
   <div className="space-y-1.5">
@@ -65,6 +66,12 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
     : 0, [selected, selectedServiceIds]);
 
   const toggleService = (id: string) => setSelectedServiceIds((current) => current.includes(id) ? current.filter((value) => value !== id) : [...current, id]);
+  const updateTransfer = (direction: 'departure' | 'arrival', value: TransferState) => {
+    if (!result) return;
+    const next = { departure: direction === 'departure' ? value : outboundTransfer, arrival: direction === 'arrival' ? value : arrivalTransfer };
+    if (direction === 'departure') setOutboundTransfer(value); else setArrivalTransfer(value);
+    DemoBookingStore.updateTransfers(result.order.publicOrderId, next);
+  };
 
   const approve = async () => {
     if (!selected) return;
@@ -110,15 +117,15 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
       <div className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" /><div><div className="flex flex-wrap items-center gap-2"><p className="text-sm font-bold">Simulation record complete</p><Badge variant="outline">NO REAL BOOKING</Badge></div><p className="text-xs text-muted-foreground">{result.order.publicOrderId} · {result.order.supplier} · reconciled demo reference {result.order.supplierOrderId}</p></div></div>
       <div className="grid gap-3 sm:grid-cols-2 text-xs">
         <div className="space-y-1"><p className="font-semibold">Traveller readiness</p><p>{result.order.traveller.displayName} · Finnish citizen · {result.order.traveller.city}</p><p className="text-muted-foreground">Passport {result.order.traveller.passport} · masked demo status only</p></div>
-        <div className="space-y-1"><p className="font-semibold">{result.order.itinerary.carrierOrProperty}</p><p>{result.order.itinerary.fareOrRate} · {result.order.itinerary.serviceOrRoom}</p><p className="text-muted-foreground">{localDate(result.order.itinerary.departureLocal)} → {localDate(result.order.itinerary.arrivalLocal)} · {result.order.itinerary.duration}</p></div>
+        <div className="space-y-1"><p className="font-semibold">{result.order.itinerary.carrierOrProperty}</p><p>{result.order.itinerary.fareOrRate}</p>{tripLegs(result.order.itinerary).map((leg) => <p key={`${leg.direction}-${leg.departureLocal}`} className="text-muted-foreground"><span className="capitalize">{leg.direction}</span>: {leg.originLabel} → {leg.destinationLabel} · {localDate(leg.departureLocal)} · {leg.service}</p>)}</div>
       </div>
       <div className="border-y py-3 space-y-1.5">{result.order.lineItems.map((item) => <div key={item.id} className="flex justify-between gap-3 text-xs"><span>{item.label}{!item.mandatory && <span className="text-muted-foreground"> · optional</span>}</span><span className="font-medium">{money(item.amount, item.currency)}</span></div>)}<div className="flex justify-between gap-3 pt-2 border-t text-sm font-bold"><span>Simulated total</span><span>{money(result.order.amount, result.order.currency)}</span></div><p className="text-[10px] text-muted-foreground">{result.payment.fundingLabel}. No card was charged and no stablecoins moved.</p></div>
       <div className="text-xs"><p className="font-semibold">Rules and status</p><p className="text-muted-foreground">{result.order.cancellationTerms}</p><p className="mt-1">Approval recorded · payment simulated · reconciliation matched · no ticket or room issued</p></div>
       <div className="space-y-3 rounded-md border border-primary/20 bg-background/70 p-3">
         <div><p className="text-sm font-semibold">Are both airport transfers arranged?</p><p className="text-xs text-muted-foreground">Check each direction. A ride quote remains a separate review and approval.</p></div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <TransferChoice label="Home / hotel → departure airport" value={outboundTransfer} onChange={setOutboundTransfer} />
-          <TransferChoice label="Arrival airport → hotel / home" value={arrivalTransfer} onChange={setArrivalTransfer} />
+          <TransferChoice label="Home / hotel → departure airport" value={outboundTransfer} onChange={(value) => updateTransfer('departure', value)} />
+          <TransferChoice label="Arrival airport → hotel / home" value={arrivalTransfer} onChange={(value) => updateTransfer('arrival', value)} />
         </div>
         <div className="flex flex-wrap gap-2 text-[11px]"><Badge variant="secondary">Arrange outbound</Badge><Badge variant="secondary">Arrange arrival</Badge><Badge variant="secondary">Both arranged</Badge></div>
       </div>
@@ -131,7 +138,7 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
         <AlertDialogHeader><AlertDialogTitle>Review the complete simulated booking</AlertDialogTitle><AlertDialogDescription>Optional services are off by default. No inventory, ticket, room, ride, card charge, or token transfer will be created.</AlertDialogDescription></AlertDialogHeader>
         {selected && <div className="space-y-4 text-sm">
           <div className="grid gap-3 rounded-md border p-3 sm:grid-cols-2">
-            <div><p className="text-xs text-muted-foreground">Itinerary / stay</p><p className="font-semibold">{selected.itinerary.originLabel} <ArrowRight className="inline h-3 w-3" /> {selected.itinerary.destinationLabel}</p><p className="text-xs">{localDate(selected.itinerary.departureLocal)} → {localDate(selected.itinerary.arrivalLocal)}</p></div>
+            <div><p className="text-xs text-muted-foreground">Itinerary / stay</p>{tripLegs(selected.itinerary).map((leg) => <div key={`${leg.direction}-${leg.departureLocal}`} className="mb-2"><p className="font-semibold capitalize">{leg.direction}: {leg.originLabel} <ArrowRight className="inline h-3 w-3" /> {leg.destinationLabel}</p><p className="text-xs">{localDate(leg.departureLocal)} → {localDate(leg.arrivalLocal)} · {leg.service}</p></div>)}</div>
             <div><p className="text-xs text-muted-foreground">Service</p><p className="font-semibold">{selected.itinerary.carrierOrProperty}</p><p className="text-xs">{selected.itinerary.serviceOrRoom} · {selected.itinerary.fareOrRate}</p></div>
           </div>
           <div><p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Included</p><div className="grid gap-1 sm:grid-cols-2">{selected.included.map((item) => <p key={item} className="text-xs">✓ {item}</p>)}</div></div>
