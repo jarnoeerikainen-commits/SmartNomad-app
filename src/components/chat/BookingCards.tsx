@@ -16,6 +16,46 @@ export interface BookingItem {
   dates?: string;
   city?: string;
   price?: string;
+  endDate?: string;
+  cabin?: 'economy' | 'premium_economy' | 'business' | 'first';
+}
+
+const FLIGHT_HOSTS = new Set(['www.kayak.com', 'www.skyscanner.net', 'www.google.com']);
+const HOTEL_HOSTS = new Set(['www.booking.com', 'www.hotels.com', 'www.trivago.com']);
+const CAR_HOSTS = new Set(['www.rentalcars.com', 'www.kayak.com', 'www.discovercars.com']);
+const CABINS = new Set(['economy', 'premium_economy', 'business', 'first']);
+
+export function isTrustedBookingUrl(item: BookingItem): boolean {
+  try {
+    const url = new URL(item.url);
+    if (url.protocol !== 'https:') return false;
+    const hosts = item.type === 'flight' ? FLIGHT_HOSTS : item.type === 'hotel' ? HOTEL_HOSTS : CAR_HOSTS;
+    return hosts.has(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+const isoToCompact = (date: string) => date.replace(/-/g, '').slice(2);
+
+export function buildTrustedBookingUrl(item: BookingItem): string | null {
+  const route = item.route?.match(/\b([A-Z]{3})\s*(?:→|-|–|to)\s*([A-Z]{3})\b/i);
+  const startDate = item.date?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const endDate = item.endDate?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const cabin = item.cabin && CABINS.has(item.cabin) ? item.cabin : 'business';
+  if (item.type === 'flight' && route && startDate) {
+    const origin = route[1].toUpperCase();
+    const destination = route[2].toUpperCase();
+    if (item.provider === 'Skyscanner') return `https://www.skyscanner.net/transport/flights/${origin.toLowerCase()}/${destination.toLowerCase()}/${isoToCompact(startDate)}${endDate ? `/${isoToCompact(endDate)}` : ''}/?adults=1&cabinclass=${cabin}`;
+    if (item.provider === 'Kayak') return `https://www.kayak.com/flights/${origin}-${destination}/${startDate}${endDate ? `/${endDate}` : ''}/${cabin}?sort=bestflight_a`;
+    if (item.provider === 'Google Flights') return `https://www.google.com/travel/flights?q=${encodeURIComponent(`${cabin.replace('_', ' ')} flights from ${origin} to ${destination} on ${startDate}${endDate ? ` returning ${endDate}` : ' one way'}`)}`;
+  }
+  if (item.type === 'hotel' && item.city && item.date && item.endDate) {
+    if (item.provider === 'Booking.com') return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(item.city)}&checkin=${item.date}&checkout=${item.endDate}&group_adults=1&nflt=class%3D4%3Bclass%3D5`;
+    if (item.provider === 'Hotels.com') return `https://www.hotels.com/Hotel-Search?destination=${encodeURIComponent(item.city)}&startDate=${item.date}&endDate=${item.endDate}&adults=1&sort=RECOMMENDED&star=4,5`;
+    if (item.provider === 'Trivago') return `https://www.trivago.com/en-US/srl?query=${encodeURIComponent(item.city)}`;
+  }
+  return isTrustedBookingUrl(item) ? item.url : null;
 }
 
 interface BookingCardsProps {
@@ -110,16 +150,20 @@ const BookingCards: React.FC<BookingCardsProps> = ({ items }) => {
 };
 
 export function parseVerifiedSearch(item?: BookingItem) {
-  if (!item?.url || item.url === '#') return null;
+  if (!item?.url || item.url === '#' || !isTrustedBookingUrl(item)) return null;
   try {
     const url = new URL(item.url);
     if (item.type === 'flight') {
-      const pathMatch = url.pathname.match(/\/flights\/([A-Z]{3})-([A-Z]{3})\/(\d{4}-\d{2}-\d{2})/i)
-        || url.pathname.match(/\/transport\/flights\/([a-z]{3})\/([a-z]{3})\/(\d{6})/i);
+      const pathMatch = url.pathname.match(/\/flights\/([A-Z]{3})-([A-Z]{3})\/(\d{4}-\d{2}-\d{2})(?:\/(\d{4}-\d{2}-\d{2}))?/i)
+        || url.pathname.match(/\/transport\/flights\/([a-z]{3})\/([a-z]{3})\/(\d{6})(?:\/(\d{6}))?/i);
       if (!pathMatch) return null;
       const compact = pathMatch[3];
       const startDate = compact.length === 6 ? `20${compact.slice(0, 2)}-${compact.slice(2, 4)}-${compact.slice(4, 6)}` : compact;
-      return { bookingType: 'flight' as const, origin: pathMatch[1].toUpperCase(), destination: pathMatch[2].toUpperCase(), startDate, adults: 1, cabin: 'business' as const };
+      const compactEnd = pathMatch[4] || url.searchParams.get('returnDate') || item.endDate;
+      const endDate = compactEnd ? (compactEnd.length === 6 ? `20${compactEnd.slice(0, 2)}-${compactEnd.slice(2, 4)}-${compactEnd.slice(4, 6)}` : compactEnd) : undefined;
+      const requestedCabin = (url.searchParams.get('cabinclass') || url.searchParams.get('cabin') || item.cabin || 'business').toLowerCase().replace('-', '_');
+      const cabin = CABINS.has(requestedCabin) ? requestedCabin as 'economy' | 'premium_economy' | 'business' | 'first' : 'business';
+      return { bookingType: 'flight' as const, origin: pathMatch[1].toUpperCase(), destination: pathMatch[2].toUpperCase(), startDate, endDate, adults: 1, cabin };
     }
     if (item.type === 'hotel') {
       const destination = url.searchParams.get('ss') || url.searchParams.get('destination') || item.city;
@@ -153,13 +197,13 @@ export function parseBookingBlocks(content: string): { text: string; bookings: B
       // Normalise: AI may return {search_engine, url} instead of BookingItem shape
       const items: BookingItem[] = parsed.map((entry: any) => {
         const provider = entry.provider || entry.search_engine || entry.name || '';
-        const url = entry.url || entry.link || '#';
+        const suppliedUrl = entry.url || entry.link || '#';
         const label = entry.label || '';
 
         // Determine type: prefer explicit, then guess from provider/url
         let type: BookingItem['type'] = entry.type as BookingItem['type'];
         if (!type || !['flight', 'hotel', 'car'].includes(type)) {
-          const lower = (url + ' ' + provider + ' ' + label).toLowerCase();
+          const lower = (suppliedUrl + ' ' + provider + ' ' + label).toLowerCase();
           if (lower.includes('hotel') || lower.includes('booking.com') || lower.includes('trivago') || lower.includes('hostel') || lower.includes('hotels.com')) {
             type = 'hotel';
           } else if (lower.includes('car') || lower.includes('rental') || lower.includes('discover')) {
@@ -172,18 +216,21 @@ export function parseBookingBlocks(content: string): { text: string; bookings: B
         // Build a meaningful label if missing
         const displayLabel = label || entry.route || entry.city || `Search on ${provider}`;
 
-        return {
+        const candidate = {
           type,
           provider: provider || 'Search',
-          url,
+          url: suppliedUrl,
           label: displayLabel,
           route: entry.route,
           date: entry.date,
           dates: entry.dates,
           city: entry.city,
-          price: entry.price
+          price: entry.price,
+          endDate: entry.endDate,
+          cabin: entry.cabin,
         } as BookingItem;
-      }).filter((item: BookingItem) => item.provider && item.provider !== 'Search' && item.url !== '#');
+        return { ...candidate, url: buildTrustedBookingUrl(candidate) || '#' };
+      }).filter((item: BookingItem) => item.provider && item.provider !== 'Search' && isTrustedBookingUrl(item));
 
       if (items.length > 0) {
         bookings.push(items);

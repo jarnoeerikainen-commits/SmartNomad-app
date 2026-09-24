@@ -76,22 +76,22 @@ export interface RideBooking {
 }
 
 // ─── Demo data: realistic city-aware mock quotes ──────────────────
-const CITY_PRICE_INDEX: Record<string, { mult: number; cur: string; localTaxi: string }> = {
-  'London': { mult: 1.4, cur: 'GBP', localTaxi: 'Black Cab' },
-  'Paris': { mult: 1.2, cur: 'EUR', localTaxi: 'G7 Taxi' },
-  'Berlin': { mult: 1.0, cur: 'EUR', localTaxi: 'FREE NOW Taxi' },
-  'Madrid': { mult: 0.85, cur: 'EUR', localTaxi: 'Cabify' },
-  'Lisbon': { mult: 0.75, cur: 'EUR', localTaxi: 'Bolt' },
-  'Helsinki': { mult: 1.3, cur: 'EUR', localTaxi: 'Taksi Helsinki' },
-  'Tallinn': { mult: 0.6, cur: 'EUR', localTaxi: 'Bolt' },
-  'New York': { mult: 1.5, cur: 'USD', localTaxi: 'Yellow Cab (Curb)' },
-  'San Francisco': { mult: 1.6, cur: 'USD', localTaxi: 'Flywheel Taxi' },
-  'Dubai': { mult: 1.1, cur: 'AED', localTaxi: 'Dubai Taxi (Careem)' },
-  'Singapore': { mult: 1.0, cur: 'SGD', localTaxi: 'ComfortDelGro' },
-  'Bangkok': { mult: 0.4, cur: 'THB', localTaxi: 'Grab Taxi' },
-  'Tokyo': { mult: 1.4, cur: 'JPY', localTaxi: 'GO / Nihon Kotsu' },
-  'Mexico City': { mult: 0.5, cur: 'MXN', localTaxi: 'Didi Taxi' },
-  'São Paulo': { mult: 0.5, cur: 'BRL', localTaxi: '99 Taxi' },
+const CITY_PRICE_INDEX: Record<string, { mult: number; localTaxi: string }> = {
+  'London': { mult: 1.65, localTaxi: 'Black Cab' },
+  'Paris': { mult: 1.35, localTaxi: 'G7 Taxi' },
+  'Berlin': { mult: 1.2, localTaxi: 'FREE NOW Taxi' },
+  'Madrid': { mult: 1.0, localTaxi: 'Cabify' },
+  'Lisbon': { mult: 0.9, localTaxi: 'Bolt' },
+  'Helsinki': { mult: 1.45, localTaxi: 'Taksi Helsinki' },
+  'Tallinn': { mult: 0.75, localTaxi: 'Bolt' },
+  'New York': { mult: 1.5, localTaxi: 'Yellow Cab (Curb)' },
+  'San Francisco': { mult: 1.6, localTaxi: 'Flywheel Taxi' },
+  'Dubai': { mult: 0.95, localTaxi: 'Dubai Taxi (Careem)' },
+  'Singapore': { mult: 0.9, localTaxi: 'ComfortDelGro' },
+  'Bangkok': { mult: 0.55, localTaxi: 'Grab Taxi' },
+  'Tokyo': { mult: 1.55, localTaxi: 'GO / Nihon Kotsu' },
+  'Mexico City': { mult: 0.65, localTaxi: 'Didi Taxi' },
+  'São Paulo': { mult: 0.65, localTaxi: '99 Taxi' },
 };
 
 const DEEP_LINKS = {
@@ -104,7 +104,7 @@ const DEEP_LINKS = {
 
 function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
   const city = req.pickup.city || 'Paris';
-  const cfg = CITY_PRICE_INDEX[city] || { mult: 1.0, cur: 'EUR', localTaxi: 'Local Taxi' };
+  const cfg = CITY_PRICE_INDEX[city] || { mult: 1.0, localTaxi: 'Local Taxi' };
   const base = 12 * cfg.mult; // base ride
   const pickup = req.pickup.address;
   const dropoff = req.dropoff.address;
@@ -122,7 +122,7 @@ function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
       durationMinutes: 18,
       priceLow: round(base * 0.9),
       priceHigh: round(base * 1.2),
-      currency: cfg.cur,
+      currency: 'USD',
       capacityPax: 4, capacityBags: 2,
       cancellationFreeMinutes: 5,
       fixedPrice: false, ecoFriendly: false,
@@ -139,7 +139,7 @@ function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
       durationMinutes: 19,
       priceLow: round(base * 0.75),
       priceHigh: round(base * 1.0),
-      currency: cfg.cur,
+      currency: 'USD',
       capacityPax: 4, capacityBags: 2,
       cancellationFreeMinutes: 3,
       fixedPrice: false, ecoFriendly: false,
@@ -156,7 +156,7 @@ function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
       durationMinutes: 20,
       priceLow: round(base * 1.0),
       priceHigh: round(base * 1.3),
-      currency: cfg.cur,
+      currency: 'USD',
       capacityPax: 4, capacityBags: 3,
       cancellationFreeMinutes: 10,
       fixedPrice: true, ecoFriendly: false,
@@ -171,7 +171,7 @@ function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
       durationMinutes: 18,
       priceLow: round(base * 1.0),
       priceHigh: round(base * 1.3),
-      currency: cfg.cur,
+      currency: 'USD',
       capacityPax: 4, capacityBags: 2,
       cancellationFreeMinutes: 5,
       fixedPrice: false, ecoFriendly: true,
@@ -187,7 +187,7 @@ function generateDemoQuotes(req: RideQuoteRequest): RideQuote[] {
       durationMinutes: 18,
       priceLow: round(base * 3.0),
       priceHigh: round(base * 3.8),
-      currency: cfg.cur,
+      currency: 'USD',
       capacityPax: 3, capacityBags: 3,
       cancellationFreeMinutes: 60,
       fixedPrice: true, ecoFriendly: false,
@@ -211,7 +211,7 @@ export class RideHailingService {
         return generateDemoQuotes(req);
       }
       if (data?.quotes && Array.isArray(data.quotes) && data.quotes.length) {
-        return data.quotes as RideQuote[];
+        return (data.quotes as RideQuote[]).filter((quote) => quote.currency === 'USD');
       }
     } catch (e) {
       console.warn('[RideHailing] Edge function unavailable, using local demo:', e);
@@ -242,13 +242,12 @@ export class RideHailingService {
       supplier: 'Demo Supplier',
       vehicleName: 'Demo Vehicle',
       driverName: driverNames[Math.floor(Math.random() * driverNames.length)],
-      driverPhone: '+33 6 12 34 56 78',
       driverRating: 4.8,
       vehiclePlate: 'AB-' + Math.floor(100 + Math.random() * 900) + '-CD',
       vehicleColor: colors[Math.floor(Math.random() * colors.length)],
       etaMinutes: 4,
       trackingUrl: undefined,
-      currency: 'EUR',
+      currency: 'USD',
       simulated: true,
     };
   }

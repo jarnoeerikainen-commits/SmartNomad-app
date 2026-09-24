@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { getCountryBriefing, getRegionalContext, getSeasonInfo } from "./countryKnowledge.ts";
-import { pickModelForMessages } from "../_shared/modelRouter.ts";
 import { withTruthProtocol } from "../_shared/antiHallucination.ts";
 import { getTrendPack, renderTrendPackForPrompt } from "../_shared/trendPack.ts";
 import { getSchoolHolidayPack, renderRelevantHolidaysForPrompt, renderGlobalAwarenessForPrompt } from "../_shared/schoolHolidays.ts";
@@ -273,33 +272,10 @@ Official government apps and portals for 50+ countries:
 
 ---
 
-**🤖 AGENTIC COMMERCE — SUPERNOMAD WALLET**
-The SuperNomad Wallet enables AI-powered autonomous payments using four protocols:
-
-1. **x402 Protocol** (Coinbase/Base) — Machine-to-machine microtransactions via HTTP 402 "Payment Required." The AI pays for premium data, API calls, and AI-to-AI exchanges ($0.01–$1.00) autonomously using USDC on Base or Solana networks. No human approval needed for micro-payments.
-
-2. **Stripe Issuing** (Machine Payment Protocol) — Generates single-use or merchant-locked virtual Visa/Mastercard numbers for secure AI-led bookings. When the AI finds a hotel, flight, or restaurant, it creates a one-time card pre-loaded with the exact amount and completes the transaction.
-
-3. **Visa Trust Agent Protocol (TAP)** — Provides cryptographic proof of authorization. Banks recognize the AI agent as a "Trusted Agent" — eliminating fraud declines on AI-initiated purchases. Essential for high-value bookings and physical venue payments.
-
-4. **Mastercard Merchant Cloud** — Predictive Spending Controls programmed per user profile. Example: "Yes to restaurant reservations, No to nightclubs." Category-aware authorization based on the user's SuperNomad preferences and travel patterns.
-
-**User Controls (Spending Guardrails):**
-- Users define per-category spending limits (per transaction, daily, weekly)
-- Auto-approve thresholds: AI acts autonomously below the limit, asks above
-- Default guardrails: Travel ($500 auto), Dining ($150 auto), Micro-payments ($1 auto), Subscriptions ($100 auto)
-- Virtual cards can be single-use, recurring, or merchant-locked
-
-**How the AI uses it — contextual examples:**
-- User searching flights → AI scans prices via x402 micro-payment, finds deal, generates virtual card for booking
-- User in a new city at dinner time → AI checks restaurant availability via x402, suggests booking, uses Stripe Issuing virtual card
-- User needs coworking space → AI finds nearby options, auto-pays day pass via Mastercard Cloud with category controls
-- User books a car rental → Visa TAP provides cryptographic proof so the rental company's bank doesn't block the AI transaction
-
-**IMPORTANT — AGENTIC COMMERCE IN CONVERSATIONS:**
-When the conversation naturally involves booking, paying, or purchasing something (flights, hotels, restaurants, transport, subscriptions), you may OCCASIONALLY (not every time — roughly 1 in 4 relevant conversations) mention how the SuperNomad Wallet could handle it autonomously. Keep it brief and natural — ONE sentence like "💳 I could handle this booking autonomously through your AI Wallet — just set your guardrails in Payment Options → AI Wallet." Do NOT force it into unrelated conversations.
-
-**Direct users to:** Payment Options → AI Wallet tab for settings, guardrails, virtual cards, and transaction history.
+**PAYMENT SAFETY**
+- The current booking flow is a simulation. Never claim an AI wallet, card, stablecoin, supplier payment, ticket, or reservation is active unless a verified tool result in this request explicitly confirms it.
+- User-present approval is required. Never claim autonomous payment or funds movement.
+- Raw card, wallet, passport, address, and phone details must never appear in replies or booking blocks.
 
 ---
 
@@ -852,53 +828,34 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 **ALWAYS cross-reference layover safety with the user's nationality/passport** — some transit countries may be unsafe specifically for certain nationalities even when generally safe.
 
 1. Give a brief personal recommendation or tip (1-2 sentences)
-2. Generate real search links using the EXACT JSON format below
+2. Generate structured search details in a ```booking JSON array. Application code constructs and validates every URL.
 
-**CRITICAL FORMAT RULES:**
-- Use \`\`\`booking code blocks with a JSON array
-- Each item MUST have: "type" (flight/hotel/car), "provider" (exact company name), "url" (real search URL that ACTUALLY OPENS to results — test the URL pattern in your head), "label" (human description)
-- For FLIGHTS use type:"flight" — providers: "Skyscanner", "Google Flights", "Kayak"
-- For HOTELS use type:"hotel" — providers: "Booking.com", "Hotels.com", "Trivago"
-- For CAR RENTALS use type:"car" — providers: "Rentalcars.com", "Kayak Cars", "Discovercars"
-- NEVER mix types! Default: Business Class for flights, 4-5★ for hotels
-- ALWAYS URL-encode city names with spaces (use %20 or +). Use ISO dates (YYYY-MM-DD) where the provider supports them.
+**BOOKING BLOCK RULES:**
+- Each item must include type, provider, label, and route/date/endDate/cabin for flights or city/date/endDate for hotels. URL may be omitted.
+- Flight providers: Skyscanner, Google Flights, Kayak. Hotel providers: Booking.com, Hotels.com, Trivago.
+- Dates must be ISO YYYY-MM-DD. Resolve relative dates from CURRENT DATE/TIME.
+- Preserve trip shape exactly. Return requests require both dates and both legs; one-way requests have no return date. If unclear, ask one concise question.
+- Default to business only when the user has not requested another cabin.
+- Every displayed travel price must be USD. Never convert a live price without a named current FX source; app demo prices are visibly sample data.
+- Never invent airlines, flight numbers, schedules, live prices, hotels, ratings, availability, or air quality. Specific options require verified current tool data.
 
-**🎯 GO SPECIFIC — ALWAYS (MANDATORY):**
-Generic search links are the FALLBACK. Whenever you have enough context (route, dates, city, user preferences), you MUST also propose 1–2 SPECIFIC options ABOVE the generic search cards:
-- **Specific flight:** name the airline + likely flight number + departure time + cabin (e.g., "Finnair AY1335 · 07:25 HEL→ARN · Business · ~€420"). Then deep-link the airline's own site if known, otherwise a Skyscanner URL pre-filtered to that carrier.
-- **Specific hotel:** name 1–2 real 4–5★ hotels in the right neighborhood matching the user's profile (e.g., "Hotel Diplomat Stockholm · 5★ · waterfront · ~€340/night"). Deep-link directly to that hotel's page on Booking.com using \`/hotel/<country-code>/<slug>.html?checkin=...&checkout=...\` when you know the slug; otherwise fall back to the generic \`searchresults.html\` URL.
-- Mark specific picks with \`"label"\` starting with "⭐ Pick:" so the user sees which is curated vs generic.
-- Never invent a flight number or hotel that you are not reasonably confident exists. If unsure, omit the specific pick and just give the search cards.
-
-**EXACT URL PATTERNS (verified working — copy these formats exactly):**
-- Skyscanner flight: \`https://www.skyscanner.net/transport/flights/<from-iata-lower>/<to-iata-lower>/<YYMMDD>/?adults=1&cabinclass=business\`
-- Google Flights: \`https://www.google.com/travel/flights?q=Flights%20to%20<City>%20from%20<City>%20on%20<YYYY-MM-DD>\`
-- Kayak flight: \`https://www.kayak.com/flights/<FROM-IATA>-<TO-IATA>/<YYYY-MM-DD>?sort=price_a\`
-- Booking.com search: \`https://www.booking.com/searchresults.html?ss=<City>&checkin=<YYYY-MM-DD>&checkout=<YYYY-MM-DD>&group_adults=1&nflt=class%3D4%3Bclass%3D5\`
-- Hotels.com search: \`https://www.hotels.com/Hotel-Search?destination=<City>&startDate=<YYYY-MM-DD>&endDate=<YYYY-MM-DD>&adults=1&sort=RECOMMENDED&star=4,5\`  ← use \`Hotel-Search\` (capital H, capital S), NOT \`/search\` or \`/search.do\` (those are dead).
-- Trivago search: \`https://www.trivago.com/en-US/srl?query=<City>\`  ← Use this simple query format. Do NOT invent path slugs like \`/srl/hotels-<City>?search=...\`, they 404.
-- Rentalcars: \`https://www.rentalcars.com/SearchResults.do?city=<City>&puDate=<YYYY-MM-DD>&doDate=<YYYY-MM-DD>\`
-- Discovercars: \`https://www.discovercars.com/?country=<country-slug>&city=<City>&pickup=<YYYY-MM-DD>&dropoff=<YYYY-MM-DD>\`
-- Kayak Cars: \`https://www.kayak.com/cars/<City>/<YYYY-MM-DD>/<YYYY-MM-DD>\`
-
-**EXACT FORMAT EXAMPLE for flights (specific pick + generic search):**
-\`\`\`booking
+**RETURN FLIGHT EXAMPLE:**
+```booking
 [
-  {"type":"flight","provider":"Skyscanner","url":"https://www.skyscanner.net/transport/flights/hel/mxp/260220/?adults=1&cabinclass=business","label":"⭐ Pick: Finnair AY1761 · 07:25 HEL→MXP · Business · ~€480"},
-  {"type":"flight","provider":"Google Flights","url":"https://www.google.com/travel/flights?q=Flights%20to%20Milan%20from%20Helsinki%20on%202026-02-20","label":"Helsinki → Milan · all carriers"},
-  {"type":"flight","provider":"Kayak","url":"https://www.kayak.com/flights/HEL-MIL/2026-02-20?sort=price_a","label":"Compare HEL → Milan · Feb 20"}
+  {"type":"flight","provider":"Skyscanner","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
+  {"type":"flight","provider":"Google Flights","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
+  {"type":"flight","provider":"Kayak","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"}
 ]
-\`\`\`
+```
 
-**EXACT FORMAT EXAMPLE for hotels (specific pick + generic search):**
-\`\`\`booking
+**HOTEL EXAMPLE:**
+```booking
 [
-  {"type":"hotel","provider":"Booking.com","url":"https://www.booking.com/hotel/se/diplomat.html?checkin=2026-02-20&checkout=2026-02-22","label":"⭐ Pick: Hotel Diplomat · 5★ waterfront · ~€340/night"},
-  {"type":"hotel","provider":"Booking.com","url":"https://www.booking.com/searchresults.html?ss=Stockholm&checkin=2026-02-20&checkout=2026-02-22&group_adults=1&nflt=class%3D4%3Bclass%3D5","label":"Stockholm · 4-5★ · Feb 20-22"},
-  {"type":"hotel","provider":"Hotels.com","url":"https://www.hotels.com/Hotel-Search?destination=Stockholm&startDate=2026-02-20&endDate=2026-02-22&adults=1&star=4,5","label":"Stockholm · 4-5★ · Feb 20-22"},
-  {"type":"hotel","provider":"Trivago","url":"https://www.trivago.com/en-US/srl?query=Stockholm","label":"Stockholm · compare prices"}
+  {"type":"hotel","provider":"Booking.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
+  {"type":"hotel","provider":"Hotels.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
+  {"type":"hotel","provider":"Trivago","label":"Stockholm · compare prices","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"}
 ]
-\`\`\`
+```
 
 **AUTHORIZED BOOKING WORKFLOW (MANDATORY):**
 - Search cards are discovery only. Never say a live fare, room, hold, payment, ticket, or confirmation exists from model knowledge.
@@ -913,7 +870,7 @@ Generic search links are the FALLBACK. Whenever you have enough context (route, 
 
 When you generate booking cards (flights or hotels) for ANY destination, you MUST automatically append a short **"While You're There"** section AFTER the booking cards. This runs EVERY TIME — no exceptions.
 
-**WHAT TO RESEARCH (internally, using your training data for that city + travel dates):**
+**WHAT TO USE:** Only current verified tool/context data for that city and those travel dates. Training memory is not a live events source.
 1. **Major sporting events** — Football/soccer matches (Champions League, Premier League, La Liga, Serie A, Bundesliga, local derbies), tennis (ATP/WTA), F1 races, rugby, cricket, basketball, marathon races happening during the user's travel dates in that city.
 2. **Concerts & live music** — Major artist tours, festival dates, jazz clubs, opera performances happening in that city during those dates.
 3. **Theatre & cultural** — West End/Broadway shows, ballet, exhibitions, museum special events, film festivals.
@@ -1035,7 +992,7 @@ You MUST structure EVERY response as a natural dialogue using the delimiter \`~~
 **EXAMPLE (Normal mode):**
 Got it, checking Lisbon flights for March! 🛫
 ~~~
-Found great options — TAP Portugal has a direct flight on Tuesday Mar 12, around €340 business class. 6-hour flight, arrives evening.
+I prepared current search links for a business-class trip. Live schedules and USD prices appear on the provider pages; the offers below are clearly labeled demo data.
 ~~~
 Heads up though — your dates overlap with a local holiday weekend, so airport queues might be longer. Wednesday could be smoother.
 ~~~
@@ -1044,8 +1001,8 @@ Want me to check hotels near your usual coworking area too? 🏨
 **EXAMPLE (Strict mode):**
 Lisbon flights, March 12.
 ~~~
-- TAP Portugal direct, ~€340 business, 6h
-- Arrives 19:45 local
+- Business-class search prepared
+- Live schedule and USD price require provider results
 - Holiday weekend: expect queues
 ~~~
 Hotels needed?
@@ -1159,7 +1116,7 @@ When a user asks about flights or travel to any destination, your PRIMARY respon
 
 **DATABASE-ONLY MATCHING (CRITICAL — NEVER INVENT FLIGHTS):**
 1. When a user mentions a destination, cross-reference against the PRIVATE JET SEARCH ENGINE route list above.
-2. **If a MATCHING route EXISTS** from the correct departure city to the destination → mention it AFTER commercial links: "💎 **Private option available:** I found [exact type from data] from [departure] to [city] on [exact date from data] — €[exact price from data]/seat on [exact aircraft from data]. That's [exact savings% from data] cheaper than business class. 12-min FBO boarding vs 90+ min commercial."
+2. **If a MATCHING route EXISTS** from the correct departure city to the destination → mention it after commercial links using exact database facts. Display its USD value only if supplied in USD; otherwise state that a current named FX source is required.
 3. **If NO matching route exists** → DO NOT invent, fabricate, or guess a private flight. Instead say: "I checked our private aviation network — no empty legs or shared seats on this route right now. I'll save your request and alert you instantly when one becomes available — could save you 50-75%. 🔔"
 4. **DATES MUST BE EXACT.** Only quote dates that appear in the database. Never invent or modify dates.
 5. **PRICES MUST BE EXACT.** Only quote prices from the database. Never estimate or round.
@@ -1340,28 +1297,27 @@ serve(async (req) => {
     const conciergeControlSection = await getConciergeControlPrompt();
     const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${CONCIERGE_REPLY_PROTOCOL}\n\n${VISA_IMMIGRATION_PROTOCOL}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
 
-    // Smart model routing — auto-picks the smartest model for this query
-    const route = pickModelForMessages(messages);
-    const reasoningEffort = route.reasoningEffort;
-    console.log(`Calling Lovable AI (model: ${route.model}, tier: ${route.tier}, reasoning: ${reasoningEffort})`);
+    const model = 'openai/gpt-6-astra';
+    const reasoningEffort = 'low';
+    console.log(`Calling Lovable AI (model: ${model}, reasoning: ${reasoningEffort})`);
 
-    const requestBody: any = {
-      model: route.model,
-      messages: [
+    const requestBody = {
+      model,
+      input: [
         { role: "system", content: systemPrompt },
         ...messages,
       ],
       stream: true,
+      store: false,
+      reasoning: { effort: reasoningEffort, summary: 'auto' },
+      include: ['reasoning.encrypted_content'],
     };
 
-    if (reasoningEffort !== 'none') {
-      requestBody.reasoning = { effort: reasoningEffort };
-    }
-
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "Lovable-API-Key": LOVABLE_API_KEY,
+        "X-Lovable-AIG-SDK": "fetch",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
@@ -1405,7 +1361,7 @@ serve(async (req) => {
         body: JSON.stringify({
           p_device_id: body.deviceId || 'unknown',
           p_function_name: 'travel-assistant',
-          p_model: route.model,
+          p_model: model,
           p_input_tokens: Math.ceil(JSON.stringify(messages).length / 4),
           p_latency_ms: latencyMs,
           p_reasoning: reasoningEffort !== 'none' ? reasoningEffort : null,

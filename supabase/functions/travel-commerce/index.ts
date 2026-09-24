@@ -59,6 +59,13 @@ serve(async (req) => {
         roomReserved: false,
         order,
         payment: { rail, status: 'simulated', providerTransactionReference: null, fundingLabel: 'Demo credits · no monetary value' },
+        auditTimeline: [
+          { step: 'quote_verified', status: 'completed', at: new Date().toISOString() },
+          { step: 'user_approved', status: 'completed', at: new Date().toISOString() },
+          { step: 'payment_simulated', status: 'completed', at: new Date().toISOString() },
+          { step: 'supplier_simulated', status: 'completed', at: new Date().toISOString() },
+          { step: 'reconciled', status: 'completed', at: new Date().toISOString() },
+        ],
         message: 'Simulation complete. No ticket, room, ride or payment was created.',
         reconciled: hasReconciledSupplierOrder({ supplierOrderId: order.supplierOrderId, reconciliationStatus: order.reconciliationStatus }),
       });

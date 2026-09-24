@@ -83,7 +83,7 @@ const BookingDossier = ({ booking, open, onOpenChange }: { booking: StoredDemoBo
               <Badge variant="secondary" className="capitalize">{bookingType}</Badge>
             </div>
             <SheetTitle className="flex items-center gap-2 font-display text-2xl"><Icon className="h-5 w-5 text-primary" />{order.itinerary.destinationLabel}</SheetTitle>
-            <SheetDescription>{order.itinerary.originLabel} → {order.itinerary.destinationLabel} · {dateLabel(order.itinerary.departureLocal)} – {dateLabel(order.itinerary.arrivalLocal)}</SheetDescription>
+             <SheetDescription>{order.itinerary.originLabel} → {order.itinerary.destinationLabel} · {order.itinerary.tripType === 'return' ? 'Return trip' : order.itinerary.tripType === 'stay' ? 'Stay' : 'One way'} · {dateLabel(order.itinerary.departureLocal)}</SheetDescription>
           </SheetHeader>
         </div>
         <div className="space-y-5 p-5 text-sm">
@@ -93,7 +93,7 @@ const BookingDossier = ({ booking, open, onOpenChange }: { booking: StoredDemoBo
           </section>
           <section>
             <h3 className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Complete itinerary</h3>
-            <div className="rounded-lg border p-3 text-xs"><p>{dateLabel(order.itinerary.departureLocal)} · {order.itinerary.originLabel}</p><p className="my-1 text-muted-foreground">{order.itinerary.duration}</p><p>{dateLabel(order.itinerary.arrivalLocal)} · {order.itinerary.destinationLabel}</p>{order.itinerary.checkIn && <p className="mt-2 text-muted-foreground">Check-in: {order.itinerary.checkIn}</p>}{order.itinerary.checkOut && <p className="text-muted-foreground">Check-out: {order.itinerary.checkOut}</p>}</div>
+             <div className="space-y-2 rounded-lg border p-3 text-xs">{(order.itinerary.legs?.length ? order.itinerary.legs : [{ direction: 'outbound', originLabel: order.itinerary.originLabel, destinationLabel: order.itinerary.destinationLabel, departureLocal: order.itinerary.departureLocal, arrivalLocal: order.itinerary.arrivalLocal, duration: order.itinerary.duration, service: order.itinerary.serviceOrRoom }]).map((leg) => <div key={`${leg.direction}-${leg.departureLocal}`} className="border-b pb-2 last:border-0 last:pb-0"><p className="font-semibold capitalize">{leg.direction} · {leg.service}</p><p>{dateLabel(leg.departureLocal)} · {leg.originLabel}</p><p className="my-1 text-muted-foreground">{leg.duration}</p><p>{dateLabel(leg.arrivalLocal)} · {leg.destinationLabel}</p></div>)}{order.itinerary.checkIn && <p className="mt-2 text-muted-foreground">Check-in: {order.itinerary.checkIn}</p>}{order.itinerary.checkOut && <p className="text-muted-foreground">Check-out: {order.itinerary.checkOut}</p>}</div>
           </section>
           <section>
             <h3 className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Included</h3>
@@ -108,6 +108,7 @@ const BookingDossier = ({ booking, open, onOpenChange }: { booking: StoredDemoBo
             <div className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">Approval and payment</p><p className="mt-1 font-semibold">Approval recorded</p><p className="text-xs">{payment.fundingLabel} · {payment.rail}</p><p className="mt-1 text-[10px] text-muted-foreground">No card charged and no funds moved</p></div>
           </section>
           <section className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs"><p className="font-semibold">Status</p><p className="mt-1">Reconciliation {order.reconciliationStatus} · payment simulated · no ticket or room issued</p><p className="mt-2 text-muted-foreground">{order.cancellationTerms}</p></section>
+          <section className="rounded-lg border p-3 text-xs"><p className="font-semibold">Airport transfers</p><p className="mt-1">Departure: {booking.transfers?.departure || 'not reviewed'} · Arrival: {booking.transfers?.arrival || 'not reviewed'}</p><p className="mt-1 text-muted-foreground">Transfer selections are separate from the flight or hotel simulation.</p></section>
         </div>
       </SheetContent>
     </Sheet>

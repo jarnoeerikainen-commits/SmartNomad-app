@@ -12,6 +12,8 @@ Deno.test('validates flight search and builds transparent demo offers', () => {
   const offers = buildDemoOffers(search, new Date('2026-09-23T11:00:00Z'));
   assertEquals(offers.length, 2);
   assertEquals(offers[0].mode, 'demo');
+  assertEquals(offers[0].currency, 'USD');
+  assertEquals(offers[0].optionalServices.every((service) => service.currency === 'USD'), true);
   assertEquals(offers[0].supplier, 'Duffel');
   assert(offers[0].expiresAt > offers[0].verifiedAt);
   assertEquals(offers[0].pricing.total, offers[0].amount);
@@ -19,6 +21,17 @@ Deno.test('validates flight search and builds transparent demo offers', () => {
   assertEquals(offers[0].optionalServices.length, 3);
   assertEquals(offers[0].optionalServices[0].category, 'seat');
   assertEquals(offers[0].optionalServices[1].category, 'baggage');
+});
+
+Deno.test('return searches preserve both legs and price both directions', () => {
+  const oneWay = buildDemoOffers(validateSearch({ bookingType: 'flight', origin: 'BOM', destination: 'DXB', startDate: '2026-09-25' }), new Date('2026-09-24T09:00:00Z'))[0];
+  const roundTrip = buildDemoOffers(validateSearch({ bookingType: 'flight', origin: 'BOM', destination: 'DXB', startDate: '2026-09-25', endDate: '2026-09-27' }), new Date('2026-09-24T09:00:00Z'))[0];
+  assertEquals(oneWay.itinerary.tripType, 'one_way');
+  assertEquals(oneWay.itinerary.legs?.length, 1);
+  assertEquals(roundTrip.itinerary.tripType, 'return');
+  assertEquals(roundTrip.itinerary.legs?.map((leg) => leg.direction), ['outbound', 'return']);
+  assertEquals(roundTrip.amount, oneWay.amount * 2);
+  assertEquals(roundTrip.currency, 'USD');
 });
 
 Deno.test('optional ancillaries are opt-in and update the all-in total deterministically', () => {
@@ -53,7 +66,7 @@ Deno.test('redacts passport, phone and card-like values', () => {
 });
 
 Deno.test('mandates fail closed for danger level 4 and changed price', () => {
-  const base = { status: 'active', validFrom: '2026-01-01T00:00:00Z', validUntil: '2027-01-01T00:00:00Z', amount: 500, maxPerBooking: 1000, bookingType: 'flight' as const, allowedBookingTypes: ['flight'], supplier: 'Duffel', allowedSuppliers: ['Duffel'], paymentRail: 'tokenized-card' as const, allowedPaymentRails: ['tokenized-card'], currency: 'EUR', allowedCurrencies: ['EUR'] };
+  const base = { status: 'active', validFrom: '2026-01-01T00:00:00Z', validUntil: '2027-01-01T00:00:00Z', amount: 500, maxPerBooking: 1000, bookingType: 'flight' as const, allowedBookingTypes: ['flight'], supplier: 'Duffel', allowedSuppliers: ['Duffel'], paymentRail: 'tokenized-card' as const, allowedPaymentRails: ['tokenized-card'], currency: 'USD', allowedCurrencies: ['USD'] };
   assertEquals(canUseMandate({ ...base, riskLevel: 4 }, new Date('2026-09-23T11:00:00Z')).reason, 'danger_gate_level_4');
   assertEquals(canUseMandate({ ...base, priceChanged: true }, new Date('2026-09-23T11:00:00Z')).reason, 'fresh_approval_required_after_price_change');
 });

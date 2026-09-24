@@ -12,6 +12,16 @@ export interface SearchRequest {
   cabin?: 'economy' | 'premium_economy' | 'business' | 'first';
 }
 
+export interface TravelLeg {
+  direction: 'outbound' | 'return';
+  originLabel: string;
+  destinationLabel: string;
+  departureLocal: string;
+  arrivalLocal: string;
+  duration: string;
+  service: string;
+}
+
 export interface CommerceOffer {
   offerId: string;
   bookingType: BookingType;
@@ -46,6 +56,8 @@ export interface CommerceOffer {
     fareOrRate: string;
     checkIn?: string;
     checkOut?: string;
+    tripType?: 'one_way' | 'return' | 'stay';
+    legs?: TravelLeg[];
   };
   included: string[];
   optionalServices: OptionalService[];
@@ -110,21 +122,31 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
     ? stableNumber(`${route}:${search.startDate}:${search.cabin}`, 420, 780)
     : stableNumber(`${route}:${search.adults}`, 180, 360);
   return [0, 1].map((index) => {
-    const fareOrRate = base + index * (search.bookingType === 'flight' ? 145 : 70);
-    const taxesAndMandatoryFees = search.bookingType === 'flight'
+    const tripMultiplier = search.bookingType === 'flight' && search.endDate ? 2 : 1;
+    const fareOrRate = (base + index * (search.bookingType === 'flight' ? 145 : 70)) * tripMultiplier;
+    const taxesAndMandatoryFees = (search.bookingType === 'flight'
       ? stableNumber(`${route}:tax:${index}`, 78, 86)
-      : stableNumber(`${route}:fees:${index}`, 24, 42);
+      : stableNumber(`${route}:fees:${index}`, 24, 42)) * tripMultiplier;
     const total = fareOrRate + taxesAndMandatoryFees;
     const startHour = 8 + index * 3;
     const endHour = startHour + (search.bookingType === 'flight' ? 6 : 1);
     const optionalServices: OptionalService[] = search.bookingType === 'flight' ? [
-      { id: `seat-window-${index}`, category: 'seat', label: index === 0 ? 'Window seat 7A' : 'Aisle seat 6C', description: 'Supplier-shaped demo seat position; live availability must be rechecked.', amount: index === 0 ? 42 : 58, currency: 'EUR' },
-      { id: `bag-extra-${index}`, category: 'baggage', label: 'Additional checked bag · 23 kg', description: 'In addition to the included checked bag.', amount: 65, currency: 'EUR' },
-      { id: `bag-heavy-${index}`, category: 'baggage', label: 'Heavy-bag allowance · up to 32 kg', description: 'Applies to one checked bag; carrier limits govern live travel.', amount: 48, currency: 'EUR' },
+      { id: `seat-window-${index}`, category: 'seat', label: index === 0 ? 'Window seat 7A' : 'Aisle seat 6C', description: 'Supplier-shaped demo seat position; live availability must be rechecked.', amount: index === 0 ? 45 : 60, currency: 'USD' },
+      { id: `bag-extra-${index}`, category: 'baggage', label: 'Additional checked bag · 23 kg', description: 'In addition to the included checked bag.', amount: 70, currency: 'USD' },
+      { id: `bag-heavy-${index}`, category: 'baggage', label: 'Heavy-bag allowance · up to 32 kg', description: 'Applies to one checked bag; carrier limits govern live travel.', amount: 52, currency: 'USD' },
     ] : [
-      { id: `breakfast-${index}`, category: 'hotel-extra', label: 'Breakfast', description: `${search.adults || 1} guest${(search.adults || 1) > 1 ? 's' : ''}, per stay in this demo.`, amount: 54, currency: 'EUR' },
-      { id: `transfer-${index}`, category: 'hotel-extra', label: 'Flexible late checkout', description: 'Until 16:00, subject to live property confirmation.', amount: 45, currency: 'EUR' },
+      { id: `breakfast-${index}`, category: 'hotel-extra', label: 'Breakfast', description: `${search.adults || 1} guest${(search.adults || 1) > 1 ? 's' : ''}, per stay in this demo.`, amount: 59, currency: 'USD' },
+      { id: `transfer-${index}`, category: 'hotel-extra', label: 'Flexible late checkout', description: 'Until 16:00, subject to live property confirmation.', amount: 49, currency: 'USD' },
     ];
+    const outboundService = `SN${stableNumber(`${route}:flight:${index}`, 100, 800)} · Demo aircraft`;
+    const outboundDeparture = `${search.startDate}T${String(startHour).padStart(2, '0')}:20`;
+    const outboundArrival = `${search.startDate}T${String(endHour).padStart(2, '0')}:35`;
+    const returnDeparture = search.endDate ? `${search.endDate}T${String(17 + index).padStart(2, '0')}:15` : undefined;
+    const returnArrival = search.endDate ? `${search.endDate}T${String(23 + index).padStart(2, '0')}:30` : undefined;
+    const flightLegs: TravelLeg[] = search.bookingType === 'flight' ? [
+      { direction: 'outbound', originLabel: `${search.origin} airport`, destinationLabel: `${search.destination} airport`, departureLocal: outboundDeparture, arrivalLocal: outboundArrival, duration: '6h 15m', service: outboundService },
+      ...(returnDeparture && returnArrival ? [{ direction: 'return' as const, originLabel: `${search.destination} airport`, destinationLabel: `${search.origin} airport`, departureLocal: returnDeparture, arrivalLocal: returnArrival, duration: '6h 15m', service: `SN${stableNumber(`${route}:return:${index}`, 100, 800)} · Demo aircraft` }] : []),
+    ] : [];
     return {
     offerId: `demo_${search.bookingType}_${stableNumber(`${route}:${index}`, 100000, 899999)}`,
     bookingType: search.bookingType,
@@ -135,7 +157,7 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
       : `${index === 0 ? 'Premium room' : 'Flexible room'} in ${search.destination}`,
     summary: `${route} · ${search.adults || 1} traveller${(search.adults || 1) > 1 ? 's' : ''}`,
     amount: total,
-    currency: 'EUR',
+    currency: 'USD',
     verifiedAt,
     expiresAt,
     cancellationTerms: index === 0 ? 'Changes may carry a supplier fee; refundability must be rechecked before approval.' : 'Flexible demo rate; live terms come from the supplier at repricing.',
@@ -146,17 +168,23 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
     pricing: { base: fareOrRate, taxesAndMandatoryFees, total },
     itinerary: search.bookingType === 'flight' ? {
       originLabel: `${search.origin} airport`, destinationLabel: `${search.destination} airport`,
-      departureLocal: `${search.startDate}T${String(startHour).padStart(2, '0')}:20`,
-      arrivalLocal: `${search.startDate}T${String(endHour).padStart(2, '0')}:35`,
+       departureLocal: outboundDeparture,
+       arrivalLocal: outboundArrival,
+       returnDepartureLocal: returnDeparture,
+       returnArrivalLocal: returnArrival,
       duration: '6h 15m', carrierOrProperty: 'Demo operating carrier',
-      serviceOrRoom: `SN${stableNumber(`${route}:flight:${index}`, 100, 800)} · Demo aircraft`,
+       serviceOrRoom: outboundService,
       fareOrRate: index === 0 ? 'Business Standard' : 'Business Flex',
+       tripType: search.endDate ? 'return' : 'one_way',
+       legs: flightLegs,
     } : {
       originLabel: `${search.destination} airport`, destinationLabel: `${search.destination} hotel district`,
       departureLocal: `${search.startDate}T15:00`, arrivalLocal: `${search.endDate || search.startDate}T12:00`,
       duration: `${Math.max(1, Math.round(((Date.parse(`${search.endDate || search.startDate}T00:00:00Z`) - Date.parse(`${search.startDate}T00:00:00Z`)) / 86_400_000)))} night(s)`,
       carrierOrProperty: `Demo ${index === 0 ? 'Grand' : 'Central'} Hotel`, serviceOrRoom: index === 0 ? 'King room · high floor' : 'King suite · city view',
       fareOrRate: index === 0 ? 'Advance purchase' : 'Flexible rate', checkIn: '15:00', checkOut: '12:00',
+       tripType: 'stay',
+       legs: [],
     },
     included: search.bookingType === 'flight'
       ? ['1 cabin bag · 8 kg', '1 checked bag · 23 kg', 'Business cabin meal', 'Standard seat assignment at check-in']

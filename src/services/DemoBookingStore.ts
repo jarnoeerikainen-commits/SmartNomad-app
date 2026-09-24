@@ -8,6 +8,7 @@ export interface StoredDemoBooking {
   bookingType: BookingType;
   completedAt: string;
   result: DemoBookingResult;
+  transfers?: { departure: 'unanswered' | 'arranged' | 'not-needed' | 'find'; arrival: 'unanswered' | 'arranged' | 'not-needed' | 'find' };
 }
 
 const isStoredDemoBooking = (value: unknown): value is StoredDemoBooking => {
@@ -50,6 +51,13 @@ export const DemoBookingStore = {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...records, record]));
     window.dispatchEvent(new CustomEvent(DEMO_BOOKINGS_CHANGED_EVENT));
     return record;
+  },
+
+  updateTransfers(id: string, transfers: NonNullable<StoredDemoBooking['transfers']>): void {
+    if (typeof window === 'undefined') return;
+    const records = this.read().map((booking) => booking.id === id ? { ...booking, transfers } : booking);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    window.dispatchEvent(new CustomEvent(DEMO_BOOKINGS_CHANGED_EVENT));
   },
 
   clear(): void {
