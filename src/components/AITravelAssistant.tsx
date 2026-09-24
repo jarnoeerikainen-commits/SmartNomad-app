@@ -60,6 +60,32 @@ interface AITravelAssistantProps {
   embedded?: boolean;
 }
 
+type StreamEvent = {
+  type?: string;
+  delta?: unknown;
+  choices?: Array<{ delta?: { content?: unknown } }>;
+  response?: { error?: { message?: unknown } | null };
+  error?: { message?: unknown } | string;
+};
+
+export function extractConciergeStreamDelta(value: unknown): string | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+  const event = value as StreamEvent;
+  const legacyContent = event.choices?.[0]?.delta?.content;
+  if (typeof legacyContent === 'string') return legacyContent;
+  if (event.type === 'response.output_text.delta' && typeof event.delta === 'string') return event.delta;
+  return undefined;
+}
+
+function getConciergeStreamError(value: unknown): string | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+  const event = value as StreamEvent;
+  if (event.type !== 'error' && event.type !== 'response.failed' && event.type !== 'response.incomplete') return undefined;
+  if (typeof event.error === 'string') return event.error;
+  const message = event.error?.message ?? event.response?.error?.message;
+  return typeof message === 'string' && message.trim() ? message : 'Concierge could not complete this answer.';
+}
+
 const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   currentLocation,
   citizenship,
@@ -343,7 +369,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = (parsed.choices?.[0]?.delta?.content || (parsed.type === 'response.output_text.delta' ? parsed.delta : undefined)) as string | undefined;
+            const streamError = getConciergeStreamError(parsed);
+            if (streamError) throw new Error(streamError);
+            const content = extractConciergeStreamDelta(parsed);
             if (content) {
               followUpContent += content;
               setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
@@ -599,7 +627,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            const streamError = getConciergeStreamError(parsed);
+            if (streamError) throw new Error(streamError);
+            const content = extractConciergeStreamDelta(parsed);
             if (content) {
               assistantContent += content;
 
@@ -640,6 +670,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
 
       // Complete thinking log
       clearThinking();
+
+      if (!assistantContent.trim()) {
+        setMessages(prev => prev.filter(message => message.id !== assistantId));
+        throw new Error('Concierge returned an empty answer. Please try again.');
+      }
 
       // Clean [STEP: ...] markers from final content
       const { cleanContent: cleanedFinal } = parseThinkingSteps(assistantContent);
