@@ -68,7 +68,7 @@ type StreamEvent = {
   error?: { message?: unknown } | string;
 };
 
-export function extractConciergeStreamDelta(value: unknown): string | undefined {
+function extractConciergeStreamDelta(value: unknown): string | undefined {
   if (!value || typeof value !== 'object') return undefined;
   const event = value as StreamEvent;
   const legacyContent = event.choices?.[0]?.delta?.content;
@@ -367,18 +367,19 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             streamDone = true;
             break;
           }
+          let parsed: unknown;
           try {
-            const parsed = JSON.parse(jsonStr);
-            const streamError = getConciergeStreamError(parsed);
-            if (streamError) throw new Error(streamError);
-            const content = extractConciergeStreamDelta(parsed);
-            if (content) {
-              followUpContent += content;
-              setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
-            }
+            parsed = JSON.parse(jsonStr);
           } catch {
             textBuffer = line + '\n' + textBuffer;
             break;
+          }
+          const streamError = getConciergeStreamError(parsed);
+          if (streamError) throw new Error(streamError);
+          const content = extractConciergeStreamDelta(parsed);
+          if (content) {
+            followUpContent += content;
+            setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
           }
         }
       }
@@ -625,45 +626,46 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
             break;
           }
 
+          let parsed: unknown;
           try {
-            const parsed = JSON.parse(jsonStr);
-            const streamError = getConciergeStreamError(parsed);
-            if (streamError) throw new Error(streamError);
-            const content = extractConciergeStreamDelta(parsed);
-            if (content) {
-              assistantContent += content;
-
-              // Parse out [STEP: ...] markers for the thinking log
-              const { cleanContent, steps } = parseThinkingSteps(assistantContent);
-              for (const step of steps) {
-                if (!seenSteps.has(step)) {
-                  seenSteps.add(step);
-                  completeThinkingStep(thinkId);
-                  addThinkingStep(step);
-                }
-              }
-
-              // Show streamed content in the first message bubble (before chunking)
-              const displayContent = cleanContent.split('~~~')[0].trim();
-              setMessages(prev => prev.map(m =>
-                m.id === assistantId
-                  ? { ...m, content: displayContent }
-                  : m
-              ));
-
-              // Early TTS: speak first sentence as soon as it's complete
-              if (voiceEnabled && !firstSentenceSpoken) {
-                const sentenceEnd = displayContent.search(/[.!?]\s/);
-                if (sentenceEnd > 20) {
-                  firstSentenceSpoken = true;
-                  const firstSentence = displayContent.slice(0, sentenceEnd + 1);
-                  speak(firstSentence);
-                }
-              }
-            }
+            parsed = JSON.parse(jsonStr);
           } catch {
             textBuffer = line + '\n' + textBuffer;
             break;
+          }
+          const streamError = getConciergeStreamError(parsed);
+          if (streamError) throw new Error(streamError);
+          const content = extractConciergeStreamDelta(parsed);
+          if (content) {
+            assistantContent += content;
+
+            // Parse out [STEP: ...] markers for the thinking log
+            const { cleanContent, steps } = parseThinkingSteps(assistantContent);
+            for (const step of steps) {
+              if (!seenSteps.has(step)) {
+                seenSteps.add(step);
+                completeThinkingStep(thinkId);
+                addThinkingStep(step);
+              }
+            }
+
+            // Show streamed content in the first message bubble (before chunking)
+            const displayContent = cleanContent.split('~~~')[0].trim();
+            setMessages(prev => prev.map(m =>
+              m.id === assistantId
+                ? { ...m, content: displayContent }
+                : m
+            ));
+
+            // Early TTS: speak first sentence as soon as it's complete
+            if (voiceEnabled && !firstSentenceSpoken) {
+              const sentenceEnd = displayContent.search(/[.!?]\s/);
+              if (sentenceEnd > 20) {
+                firstSentenceSpoken = true;
+                const firstSentence = displayContent.slice(0, sentenceEnd + 1);
+                speak(firstSentence);
+              }
+            }
           }
         }
       }
