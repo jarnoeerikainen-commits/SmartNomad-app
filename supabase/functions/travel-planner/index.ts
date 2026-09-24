@@ -8,6 +8,7 @@ import { buildVerifiedSourcesBlock } from "../_shared/verifiedSources.ts";
 import { auditedAIGatewayStream } from "../_shared/aiAudit.ts";
 import { VISA_IMMIGRATION_PROTOCOL } from "../_shared/visaImmigrationProtocol.ts";
 import { CONCIERGE_REPLY_PROTOCOL } from "../_shared/conciergeReplyProtocol.ts";
+import type { CulturalContext } from "../_shared/respectProtocol.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,14 +35,18 @@ serve(async (req) => {
     const interests = Array.isArray(body.interests) ? body.interests.slice(0, 20).map((interest: unknown) => sanitize(interest, 100)) : [];
     const month = sanitize(body.month, 50);
     const region = sanitize(body.region, 100);
-    const userProfile = body.userProfile || null;
+    const userProfile = body.userProfile && typeof body.userProfile === 'object' ? body.userProfile as Record<string, unknown> : null;
     const language = sanitize(body.language, 50);
     console.log("Travel planner full-plan request:", destination?.name || "general");
 
     const now = new Date();
     const currentDateTime = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short', timeZone: 'UTC' });
 
-    const respectBlock = buildRespectProtocol(userProfile?.cultural, destination ? { country: destination?.country, city: destination?.name } : undefined, userProfile?.lifestyle);
+    const respectBlock = buildRespectProtocol(
+      userProfile?.cultural && typeof userProfile.cultural === 'object' ? userProfile.cultural as CulturalContext : undefined,
+      destination ? { country: sanitize(destination.country), city: sanitize(destination.name) } : undefined,
+      sanitize(userProfile?.lifestyle),
+    );
 
     const systemPrompt = `Current date and time: ${currentDateTime} (UTC).
 
@@ -201,14 +206,19 @@ When suggesting flights with layovers/connections, you MUST apply the FULL safet
 - Common high-risk transit hubs to watch: Istanbul (Turkey-Syria), Doha/Dubai (Iran-Gulf), Addis Ababa (Ethiopian conflicts), Cairo (Sinai/Libya), Moscow (sanctions/war), Beirut (Israel-Hezbollah)
 ${language && language !== 'en' ? `\n**🌍 LANGUAGE: Write the ENTIRE travel plan in the user's language (code: "${language}"). All descriptions, tips, recommendations — everything in this language. Only proper nouns (hotel names, airline names, place names) can stay in their original form.**` : ''}`;
 
+    const destinationHighlights = Array.isArray(destination?.highlights) ? destination.highlights.map((item) => sanitize(item, 100)).join(', ') : '';
+    const destinationActivities = Array.isArray(destination?.activities) ? destination.activities.map((item) => sanitize(item, 100)).join(', ') : '';
+    const destinationPriceLevel = typeof destination?.priceLevel === 'number' && Number.isFinite(destination.priceLevel)
+      ? Math.max(1, Math.min(5, Math.round(destination.priceLevel)))
+      : 2;
     const destInfo = destination
-      ? `Destination: ${destination.name}, ${destination.country} (${destination.region})
-Description: ${destination.description}
-Highlights: ${destination.highlights?.join(', ') || 'N/A'}
-Activities: ${destination.activities?.join(', ') || 'N/A'}
-Weather: ${destination.weatherPattern || 'N/A'}
-Price Level: ${'💰'.repeat(destination.priceLevel || 2)}
-Ideal Duration: ${destination.idealDuration || duration || '1 week'}`
+      ? `Destination: ${sanitize(destination.name)}, ${sanitize(destination.country)} (${sanitize(destination.region)})
+Description: ${sanitize(destination.description, 1000)}
+Highlights: ${destinationHighlights || 'N/A'}
+Activities: ${destinationActivities || 'N/A'}
+Weather: ${sanitize(destination.weatherPattern) || 'N/A'}
+Price Level: ${'💰'.repeat(destinationPriceLevel)}
+Ideal Duration: ${sanitize(destination.idealDuration) || duration || '1 week'}`
       : '';
 
     const userMessage = `Create a COMPLETE travel plan with the following details:

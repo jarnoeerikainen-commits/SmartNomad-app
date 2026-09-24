@@ -300,14 +300,14 @@ Official government apps and portals for 50+ countries:
 // SYSTEM PROMPT
 // ═══════════════════════════════════════════════════════════
 
-import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
+import { buildRespectProtocol, type CulturalContext } from "../_shared/respectProtocol.ts";
 
 type ConciergeContext = Record<string, unknown> & {
   currentCity?: string;
   currentCountry?: string;
   conciergePreferences?: Record<string, string>;
-  cultural?: unknown;
-  lifestyle?: unknown;
+  cultural?: CulturalContext;
+  lifestyle?: string;
 };
 
 type ConciergeRule = { category?: string; title?: string; rule_text?: string };
@@ -1213,7 +1213,8 @@ function sanitizeContext(ctx: unknown): ConciergeContext | undefined {
     subscriptionTier: sanitizeString(c.subscriptionTier, 20),
     expenseSummary: typeof c.expenseSummary === 'string' ? c.expenseSummary.slice(0, 1000) : '',
     conciergePreferences,
-    cultural: (c.cultural && typeof c.cultural === 'object') ? c.cultural : undefined,
+    cultural: (c.cultural && typeof c.cultural === 'object') ? c.cultural as CulturalContext : undefined,
+    lifestyle: sanitizeString(c.lifestyle, 100),
   };
 }
 
