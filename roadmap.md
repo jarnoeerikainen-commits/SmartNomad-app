@@ -2,13 +2,13 @@
 
 ## Concierge travel-commerce intelligence
 
-- [ ] Enforce supernomad.app-only brand references and evidence-based travel claims.
-- [ ] Normalize all travel-commerce prices to USD.
-- [ ] Preserve return versus one-way intent and default unspecified cabins to business.
-- [ ] Generate only validated, query-filled flight and hotel search links.
-- [ ] Make simulated checkout operationally complete without implying real funds or fulfilment.
-- [ ] Store and display complete flights, hotels, extras, payments, and transfers in Next Trip.
-- [ ] Add regression tests and verify desktop/mobile Concierge and Home flows.
+- [x] Enforce supernomad.app-only brand references and evidence-based travel claims.
+- [x] Normalize all travel-commerce prices to USD.
+- [x] Preserve return versus one-way intent and default unspecified cabins to business.
+- [x] Generate only validated, query-filled flight and hotel search links.
+- [x] Make simulated checkout operationally complete without implying real funds or fulfilment.
+- [x] Store and display complete flights, hotels, extras, payments, and transfers in Next Trip.
+- [x] Add regression tests and verify desktop/mobile Concierge and Home flows.
 
 ## Home screen customization
 
