@@ -343,7 +343,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           }
           try {
             const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            const content = (parsed.choices?.[0]?.delta?.content || (parsed.type === 'response.output_text.delta' ? parsed.delta : undefined)) as string | undefined;
             if (content) {
               followUpContent += content;
               setMessages(prev => prev.map(m => m.id === followUpId ? { ...m, content: followUpContent } : m));
