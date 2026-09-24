@@ -4,9 +4,16 @@
 
 - [x] Preserve visible, hidden, and pinned choices automatically between app openings.
 - [x] Keep Home pins independent from sidebar visibility and restore them on reload.
-- [x] Set the clean default to 20 visible, 66 hidden, and six Home pins.
+- [x] Set a focused default navigation while retaining six independent Home pins.
 - [x] Remove Business, Nomad, Family, Sport, and Sabbatical modes and demo-mode synchronization.
 - [x] Verify focused tests, lint, build health, desktop flow, reload persistence, and mobile Home layout.
+
+## Sidebar visibility cleanup
+
+- [x] Make every non-system sidebar item obey Customize My App visibility.
+- [x] Add Snomad ID and Corporate Travel to the customization registry and voice catalog.
+- [x] Hide Finance & Payments and Travel Essentials completely when all their items are hidden.
+- [ ] Verify default-hidden state, manual re-enable persistence, desktop/mobile sidebar, tests, lint, and build.
 
 ## Global social introduction pause
 
