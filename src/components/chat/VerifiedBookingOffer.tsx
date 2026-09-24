@@ -129,8 +129,8 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
         </div>
         <div className="flex flex-wrap gap-2 text-[11px]"><Badge variant="secondary">Arrange outbound</Badge><Badge variant="secondary">Arrange arrival</Badge><Badge variant="secondary">Both arranged</Badge></div>
       </div>
-      {outboundTransfer === 'find' && <RideBookingCard pickup={{ address: 'Saved home or hotel (masked)' }} dropoff={{ address: result.order.itinerary.originLabel }} whenISO={result.order.itinerary.departureLocal} passengerName="John" />}
-      {arrivalTransfer === 'find' && <RideBookingCard pickup={{ address: result.order.itinerary.destinationLabel, city: destination }} dropoff={{ address: 'Saved hotel or home (masked)' }} whenISO={result.order.itinerary.arrivalLocal} passengerName="John" />}
+      {outboundTransfer === 'find' && <RideBookingCard pickup={{ address: 'Saved home or hotel (masked)' }} dropoff={{ address: result.order.itinerary.originLabel }} whenISO={result.order.itinerary.departureLocal} passengerName="John" tripBookingId={result.order.publicOrderId} />}
+      {arrivalTransfer === 'find' && <RideBookingCard pickup={{ address: result.order.itinerary.destinationLabel, city: destination }} dropoff={{ address: 'Saved hotel or home (masked)' }} whenISO={result.order.itinerary.arrivalLocal} passengerName="John" tripBookingId={result.order.publicOrderId} />}
     </Card>}
 
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
