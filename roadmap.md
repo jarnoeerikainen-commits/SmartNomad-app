@@ -13,7 +13,7 @@
 - [x] Make every non-system sidebar item obey Customize My App visibility.
 - [x] Add Snomad ID and Corporate Travel to the customization registry and voice catalog.
 - [x] Hide Finance & Payments and Travel Essentials completely when all their items are hidden.
-- [ ] Verify default-hidden state, manual re-enable persistence, desktop/mobile sidebar, tests, lint, and build.
+- [x] Verify default-hidden state, manual re-enable persistence, desktop/mobile sidebar, tests, lint, and build.
 
 ## Global social introduction pause
 
