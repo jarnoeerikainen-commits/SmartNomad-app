@@ -17,7 +17,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Subscription } from '@/types/subscription';
 import { useFeaturePreferences } from '@/hooks/useFeaturePreferences';
-import { SYSTEM_FEATURES } from '@/data/featureRegistry';
 import { filterSidebarGroups } from '@/utils/sidebarVisibility';
 
 interface SidebarItem {
