@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { buildTrustedBookingUrl, isTrustedBookingUrl, parseBookingBlocks, parseVerifiedSearch } from '../BookingCards';
+import { buildTrustedBookingUrl, isTrustedBookingUrl, isValidIsoDate, parseBookingBlocks, parseVerifiedSearch } from '../BookingCards';
+import { localDate } from '../VerifiedBookingOffer';
 
 describe('parseVerifiedSearch', () => {
   it('extracts a flight route and date from a supported search URL', () => {
@@ -23,5 +24,17 @@ describe('parseVerifiedSearch', () => {
   });
   it('refuses incomplete searches', () => {
     expect(parseVerifiedSearch({ type: 'flight', provider: 'Search', url: '#', label: 'unknown' })).toBeNull();
+  });
+  it('rejects impossible dates before opening the offer workflow', () => {
+    expect(isValidIsoDate('2026-02-30')).toBe(false);
+    expect(parseVerifiedSearch({ type: 'flight', provider: 'Kayak', url: 'https://www.kayak.com/flights/HEL-DXB/2026-02-30/business', label: 'Invalid date' })).toBeNull();
+    expect(parseVerifiedSearch({ type: 'hotel', provider: 'Booking.com', url: 'https://www.booking.com/searchresults.html?ss=Dubai&checkin=invalid', label: 'Invalid date' })).toBeNull();
+  });
+  it('never throws while displaying malformed supplier dates', () => {
+    expect(localDate('invalid')).toBe('Date unavailable');
+  });
+  it('removes Google flight-search cards even from older chat content', () => {
+    const parsed = parseBookingBlocks('```booking\n[{"type":"flight","provider":"Google Flights","url":"https://www.google.com/travel/flights","label":"Compare","route":"HEL → DXB","date":"2026-09-25"}]\n```');
+    expect(parsed.bookings).toHaveLength(0);
   });
 });

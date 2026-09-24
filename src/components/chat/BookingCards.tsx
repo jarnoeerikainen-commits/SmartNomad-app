@@ -20,10 +20,19 @@ export interface BookingItem {
   cabin?: 'economy' | 'premium_economy' | 'business' | 'first';
 }
 
-const FLIGHT_HOSTS = new Set(['www.kayak.com', 'www.skyscanner.net', 'www.google.com']);
+const FLIGHT_HOSTS = new Set(['www.kayak.com', 'www.skyscanner.net']);
 const HOTEL_HOSTS = new Set(['www.booking.com', 'www.hotels.com', 'www.trivago.com']);
 const CAR_HOSTS = new Set(['www.rentalcars.com', 'www.kayak.com', 'www.discovercars.com']);
 const CABINS = new Set(['economy', 'premium_economy', 'business', 'first']);
+
+export function isValidIsoDate(value?: string): value is string {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
 
 export function isTrustedBookingUrl(item: BookingItem): boolean {
   try {
@@ -40,15 +49,16 @@ const isoToCompact = (date: string) => date.replace(/-/g, '').slice(2);
 
 export function buildTrustedBookingUrl(item: BookingItem): string | null {
   const route = item.route?.match(/\b([A-Z]{3})\s*(?:→|-|–|to)\s*([A-Z]{3})\b/i);
-  const startDate = item.date?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
-  const endDate = item.endDate?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const extractedStart = item.date?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const extractedEnd = item.endDate?.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+  const startDate = isValidIsoDate(extractedStart) ? extractedStart : undefined;
+  const endDate = isValidIsoDate(extractedEnd) ? extractedEnd : undefined;
   const cabin = item.cabin && CABINS.has(item.cabin) ? item.cabin : 'business';
   if (item.type === 'flight' && route && startDate) {
     const origin = route[1].toUpperCase();
     const destination = route[2].toUpperCase();
     if (item.provider === 'Skyscanner') return `https://www.skyscanner.net/transport/flights/${origin.toLowerCase()}/${destination.toLowerCase()}/${isoToCompact(startDate)}${endDate ? `/${isoToCompact(endDate)}` : ''}/?adults=1&cabinclass=${cabin}`;
     if (item.provider === 'Kayak') return `https://www.kayak.com/flights/${origin}-${destination}/${startDate}${endDate ? `/${endDate}` : ''}/${cabin}?sort=bestflight_a`;
-    if (item.provider === 'Google Flights') return `https://www.google.com/travel/flights?q=${encodeURIComponent(`${cabin.replace('_', ' ')} flights from ${origin} to ${destination} on ${startDate}${endDate ? ` returning ${endDate}` : ' one way'}`)}`;
   }
   if (item.type === 'hotel' && item.city && item.date && item.endDate) {
     if (item.provider === 'Booking.com') return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(item.city)}&checkin=${item.date}&checkout=${item.endDate}&group_adults=1&nflt=class%3D4%3Bclass%3D5`;
@@ -64,7 +74,6 @@ interface BookingCardsProps {
 
 const PROVIDER_COLORS: Record<string, string> = {
   'Skyscanner': 'bg-[#0770e3]/10 text-[#0770e3] border-[#0770e3]/20',
-  'Google Flights': 'bg-[#4285f4]/10 text-[#4285f4] border-[#4285f4]/20',
   'Kayak': 'bg-[#ff690f]/10 text-[#ff690f] border-[#ff690f]/20',
   'Booking.com': 'bg-[#003580]/10 text-[#003580] border-[#003580]/20',
   'Hotels.com': 'bg-[#d32f2f]/10 text-[#d32f2f] border-[#d32f2f]/20',
@@ -161,6 +170,7 @@ export function parseVerifiedSearch(item?: BookingItem) {
       const startDate = compact.length === 6 ? `20${compact.slice(0, 2)}-${compact.slice(2, 4)}-${compact.slice(4, 6)}` : compact;
       const compactEnd = pathMatch[4] || url.searchParams.get('returnDate') || item.endDate;
       const endDate = compactEnd ? (compactEnd.length === 6 ? `20${compactEnd.slice(0, 2)}-${compactEnd.slice(2, 4)}-${compactEnd.slice(4, 6)}` : compactEnd) : undefined;
+      if (!isValidIsoDate(startDate) || (endDate && (!isValidIsoDate(endDate) || endDate <= startDate))) return null;
       const requestedCabin = (url.searchParams.get('cabinclass') || url.searchParams.get('cabin') || item.cabin || 'business').toLowerCase().replace('-', '_');
       const cabin = CABINS.has(requestedCabin) ? requestedCabin as 'economy' | 'premium_economy' | 'business' | 'first' : 'business';
       return { bookingType: 'flight' as const, origin: pathMatch[1].toUpperCase(), destination: pathMatch[2].toUpperCase(), startDate, endDate, adults: 1, cabin };
@@ -169,7 +179,7 @@ export function parseVerifiedSearch(item?: BookingItem) {
       const destination = url.searchParams.get('ss') || url.searchParams.get('destination') || item.city;
       const startDate = url.searchParams.get('checkin') || url.searchParams.get('startDate');
       const endDate = url.searchParams.get('checkout') || url.searchParams.get('endDate');
-      if (!destination || !startDate) return null;
+      if (!destination || !isValidIsoDate(startDate) || (endDate && (!isValidIsoDate(endDate) || endDate <= startDate))) return null;
       return { bookingType: 'hotel' as const, destination, startDate, endDate: endDate || undefined, adults: 1 };
     }
   } catch {

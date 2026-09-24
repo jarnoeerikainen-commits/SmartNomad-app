@@ -39,7 +39,6 @@ const QuickActions: React.FC<QuickActionsProps> = React.memo(({ onAddCountry, on
   
   const flightSearchEngines = [
     { name: 'Skyscanner', url: 'https://www.skyscanner.com' },
-    { name: 'Google Flights', url: 'https://www.google.com/travel/flights' },
     { name: 'Kayak', url: 'https://www.kayak.com' }
   ];
 

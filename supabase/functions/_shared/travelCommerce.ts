@@ -83,6 +83,13 @@ export interface BookingLineItem {
 const IATA_PATTERN = /^[A-Z]{3}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
+function isValidIsoDate(value: string): boolean {
+  if (!DATE_PATTERN.test(value)) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year && parsed.getUTCMonth() === month - 1 && parsed.getUTCDate() === day;
+}
+
 export function validateSearch(input: unknown): SearchRequest {
   if (!input || typeof input !== 'object') throw new Error('search input required');
   const value = input as Record<string, unknown>;
@@ -90,14 +97,14 @@ export function validateSearch(input: unknown): SearchRequest {
   const destination = String(value.destination || '').trim();
   const startDate = String(value.startDate || '').trim();
   if (!destination || destination.length > 120) throw new Error('valid destination required');
-  if (!DATE_PATTERN.test(startDate) || Number.isNaN(Date.parse(`${startDate}T00:00:00Z`))) throw new Error('valid startDate required');
+  if (!isValidIsoDate(startDate)) throw new Error('valid startDate required');
   if (value.bookingType === 'flight') {
     const origin = String(value.origin || '').toUpperCase();
     const arrival = destination.toUpperCase();
     if (!IATA_PATTERN.test(origin) || !IATA_PATTERN.test(arrival)) throw new Error('flight origin and destination must be 3-letter airport codes');
   }
   const endDate = value.endDate ? String(value.endDate) : undefined;
-  if (endDate && (!DATE_PATTERN.test(endDate) || Number.isNaN(Date.parse(`${endDate}T00:00:00Z`)))) throw new Error('valid endDate required');
+  if (endDate && !isValidIsoDate(endDate)) throw new Error('valid endDate required');
   if (endDate && endDate <= startDate) throw new Error('endDate must be after startDate');
   const adults = Number(value.adults || 1);
   if (!Number.isInteger(adults) || adults < 1 || adults > 9) throw new Error('adults must be between 1 and 9');
@@ -142,7 +149,7 @@ export function buildDemoOffers(search: SearchRequest, now = new Date()): Commer
     const outboundDeparture = `${search.startDate}T${String(startHour).padStart(2, '0')}:20`;
     const outboundArrival = `${search.startDate}T${String(endHour).padStart(2, '0')}:35`;
     const returnDeparture = search.endDate ? `${search.endDate}T${String(17 + index).padStart(2, '0')}:15` : undefined;
-    const returnArrival = search.endDate ? `${search.endDate}T${String(23 + index).padStart(2, '0')}:30` : undefined;
+    const returnArrival = search.endDate ? `${search.endDate}T${String(22 + index).padStart(2, '0')}:30` : undefined;
     const flightLegs: TravelLeg[] = search.bookingType === 'flight' ? [
       { direction: 'outbound', originLabel: `${search.origin} airport`, destinationLabel: `${search.destination} airport`, departureLocal: outboundDeparture, arrivalLocal: outboundArrival, duration: '6h 15m', service: outboundService },
       ...(returnDeparture && returnArrival ? [{ direction: 'return' as const, originLabel: `${search.destination} airport`, destinationLabel: `${search.origin} airport`, departureLocal: returnDeparture, arrivalLocal: returnArrival, duration: '6h 15m', service: `SN${stableNumber(`${route}:return:${index}`, 100, 800)} · Demo aircraft` }] : []),
