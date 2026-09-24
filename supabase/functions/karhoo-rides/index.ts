@@ -22,7 +22,7 @@
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+    "authorization, x-client-info, apikey, content-type, x-device-id, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface QuoteRequest {
@@ -66,7 +66,7 @@ async function karhooFetch(path: string, init: RequestInit) {
 // (Real Karhoo returns { quote_items: [...] }; we normalise here)
 function normalizeQuotes(karhooResp: any): unknown[] {
   const items = karhooResp?.quote_items || karhooResp?.quotes || [];
-  return items.map((it: any) => ({
+  return items.filter((it: any) => it.price?.currency === "USD").map((it: any) => ({
     quoteId: it.quote_id || it.id,
     supplier: it.fleet_name || it.supplier?.name || "Karhoo",
     vehicleClass: (it.vehicle_class || it.category || "standard").toLowerCase(),
@@ -75,7 +75,7 @@ function normalizeQuotes(karhooResp: any): unknown[] {
     durationMinutes: Math.round((it.duration_seconds || 1080) / 60),
     priceLow: it.price?.low ?? it.price?.value ?? 0,
     priceHigh: it.price?.high ?? it.price?.value ?? 0,
-    currency: it.price?.currency || "EUR",
+    currency: "USD",
     capacityPax: it.vehicle?.passenger_capacity || 4,
     capacityBags: it.vehicle?.luggage_capacity || 2,
     cancellationFreeMinutes: it.cancellation?.free_until_minutes || 5,
@@ -86,6 +86,7 @@ function normalizeQuotes(karhooResp: any): unknown[] {
 }
 
 function normalizeBooking(karhooResp: any): unknown {
+  if (karhooResp.quote?.currency !== "USD") throw new Error("Karhoo booking currency is not USD");
   return {
     bookingId: karhooResp.id || karhooResp.booking_id,
     status: (karhooResp.status || "confirmed").toLowerCase(),
@@ -101,7 +102,7 @@ function normalizeBooking(karhooResp: any): unknown {
     etaMinutes: Math.round((karhooResp.eta_seconds || 300) / 60),
     trackingUrl: karhooResp.tracking_url,
     pricePaid: karhooResp.quote?.total,
-    currency: karhooResp.quote?.currency || "EUR",
+    currency: "USD",
   };
 }
 
