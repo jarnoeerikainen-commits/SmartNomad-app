@@ -1,5 +1,15 @@
 # Booking readiness roadmap
 
+## Concierge travel-commerce intelligence
+
+- [ ] Enforce supernomad.app-only brand references and evidence-based travel claims.
+- [ ] Normalize all travel-commerce prices to USD.
+- [ ] Preserve return versus one-way intent and default unspecified cabins to business.
+- [ ] Generate only validated, query-filled flight and hotel search links.
+- [ ] Make simulated checkout operationally complete without implying real funds or fulfilment.
+- [ ] Store and display complete flights, hotels, extras, payments, and transfers in Next Trip.
+- [ ] Add regression tests and verify desktop/mobile Concierge and Home flows.
+
 ## Home screen customization
 
 - [x] Preserve visible, hidden, and pinned choices automatically between app openings.
