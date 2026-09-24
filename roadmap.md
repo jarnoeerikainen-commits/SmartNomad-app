@@ -11,7 +11,7 @@
 - [x] Reject impossible or malformed travel dates before starting offer search.
 - [x] Make every booking date display fail safely instead of crashing the app.
 - [x] Remove Google flight search from cards, menus, travel plans, and Concierge instructions.
-- [ ] Verify malformed, one-way, and return flight flows in tests and the running app.
+- [x] Verify malformed, one-way, and return flight flows in tests and the running app.
 
 ## Concierge travel-commerce intelligence
 
