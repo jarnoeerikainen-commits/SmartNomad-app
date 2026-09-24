@@ -799,7 +799,7 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 
 **BOOKING BLOCK RULES:**
 - Each item must include type, provider, label, and route/date/endDate/cabin for flights or city/date/endDate for hotels. URL may be omitted.
-- Flight providers: Skyscanner, Google Flights, Kayak. Hotel providers: Booking.com, Hotels.com, Trivago.
+- Flight providers: Skyscanner and Kayak only. Never output Google Flights or a google.com flight-search link. Hotel providers: Booking.com, Hotels.com, Trivago.
 - Dates must be ISO YYYY-MM-DD. Resolve relative dates from CURRENT DATE/TIME.
 - Preserve trip shape exactly. Return requests require both dates and both legs; one-way requests have no return date. If unclear, ask one concise question.
 - Default to business only when the user has not requested another cabin.
@@ -810,7 +810,6 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 \`\`\`booking
 [
   {"type":"flight","provider":"Skyscanner","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
-  {"type":"flight","provider":"Google Flights","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
   {"type":"flight","provider":"Kayak","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"}
 ]
 \`\`\`
@@ -1072,7 +1071,7 @@ ${userContext?.jetSearchContext ? `${userContext.jetSearchContext}` : ''}
 **✈️ PRIVATE AVIATION PROTOCOL (DATABASE-ONLY — NEVER FABRICATE):**
 
 **CORE RULE: COMMERCIAL FLIGHTS FIRST, ALWAYS.**
-When a user asks about flights or travel to any destination, your PRIMARY response must be commercial flight search links (Skyscanner, Google Flights, Kayak). Private jet options are a SECONDARY bonus — ONLY if a matching route exists in the private jet database above.
+When a user asks about flights or travel to any destination, your PRIMARY response must be commercial flight search links (Skyscanner and Kayak only). Private jet options are a SECONDARY bonus — ONLY if a matching route exists in the private jet database above.
 
 **DEPARTURE LOCATION LOGIC (CRITICAL — NEVER VIOLATE):**
 - The private jet data above is generated from the user's HOME/CURRENT airport.

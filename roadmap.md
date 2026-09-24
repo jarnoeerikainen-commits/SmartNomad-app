@@ -2,9 +2,16 @@
 
 ## Concierge response reliability
 
-- [ ] Accept and display the current Responses API stream without empty assistant messages.
-- [ ] Preserve compatibility with legacy stream events and reject terminal or empty streams visibly.
+- [x] Accept and display the current Responses API stream without empty assistant messages.
+- [x] Preserve compatibility with legacy stream events and reject terminal or empty streams visibly.
 - [ ] Verify normal questions and travel searches through automated, deployed-function, desktop, and mobile tests.
+
+## Booking-card crash and provider cleanup
+
+- [x] Reject impossible or malformed travel dates before starting offer search.
+- [x] Make every booking date display fail safely instead of crashing the app.
+- [x] Remove Google flight search from cards, menus, travel plans, and Concierge instructions.
+- [ ] Verify malformed, one-way, and return flight flows in tests and the running app.
 
 ## Concierge travel-commerce intelligence
 

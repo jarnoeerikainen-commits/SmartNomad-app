@@ -18,7 +18,11 @@ interface Props {
 
 type TransferState = 'unanswered' | 'arranged' | 'not-needed' | 'find';
 const money = (amount: number, currency: string) => `${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
-const localDate = (value: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+export const localDate = (value: string) => {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return 'Date unavailable';
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(parsed);
+};
 const tripLegs = (itinerary: CommerceOffer['itinerary']) => itinerary.legs?.length ? itinerary.legs : [{ direction: 'outbound' as const, originLabel: itinerary.originLabel, destinationLabel: itinerary.destinationLabel, departureLocal: itinerary.departureLocal, arrivalLocal: itinerary.arrivalLocal, duration: itinerary.duration, service: itinerary.serviceOrRoom }];
 
 const TransferChoice = ({ label, value, onChange }: { label: string; value: TransferState; onChange: (value: TransferState) => void }) => (
