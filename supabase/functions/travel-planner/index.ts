@@ -20,18 +20,18 @@ serve(async (req) => {
   }
 
   try {
-    let body: any;
-    try { body = await req.json(); } catch {
+    let body: Record<string, unknown>;
+    try { body = await req.json() as Record<string, unknown>; } catch {
       return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const sanitize = (v: unknown, max = 200): string => typeof v === 'string' ? v.replace(/<[^>]*>/g, '').slice(0, max) : '';
-    const destination = body.destination && typeof body.destination === 'object' ? body.destination : null;
+    const destination = body.destination && typeof body.destination === 'object' ? body.destination as Record<string, unknown> : null;
     const tripType = sanitize(body.tripType, 100);
     const budget = sanitize(body.budget, 50);
     const pace = sanitize(body.pace, 50);
     const duration = sanitize(body.duration, 50);
     const groupSize = sanitize(body.groupSize, 50);
-    const interests = Array.isArray(body.interests) ? body.interests.slice(0, 20).map((i: any) => sanitize(i, 100)) : [];
+    const interests = Array.isArray(body.interests) ? body.interests.slice(0, 20).map((interest: unknown) => sanitize(interest, 100)) : [];
     const month = sanitize(body.month, 50);
     const region = sanitize(body.region, 100);
     const userProfile = body.userProfile || null;
@@ -237,7 +237,7 @@ Generate the full plan now.`;
           const yr = new Date().getUTCFullYear();
           const start = new Date(Date.UTC(yr, monthIdx, 1)).toISOString().slice(0, 10);
           const end = new Date(Date.UTC(yr, monthIdx + 1, 0)).toISOString().slice(0, 10);
-          const cc = (destination as any)?.countryCode || (destination as any)?.country_code;
+          const cc = destination.countryCode || destination.country_code;
           const holidayPack = await getSchoolHolidayPack();
           holidaySection = renderRelevantHolidaysForPrompt(holidayPack, {
             destinationCountryCode: typeof cc === 'string' ? cc : undefined,

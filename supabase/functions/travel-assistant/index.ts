@@ -302,7 +302,26 @@ Official government apps and portals for 50+ countries:
 
 import { buildRespectProtocol } from "../_shared/respectProtocol.ts";
 
-function buildSystemPrompt(currentDateTime: string, userContext: any): string {
+type ConciergeContext = Record<string, unknown> & {
+  currentCity?: string;
+  currentCountry?: string;
+  conciergePreferences?: Record<string, string>;
+  cultural?: unknown;
+  lifestyle?: unknown;
+};
+
+type ConciergeRule = { category?: string; title?: string; rule_text?: string };
+type ConciergeControl = {
+  agent_key?: string;
+  status?: string;
+  automation_level?: string;
+  model_tier?: string;
+  daily_token_budget?: number;
+  requires_approval?: boolean;
+  can_write_to_user_surfaces?: boolean;
+};
+
+function buildSystemPrompt(currentDateTime: string, userContext?: ConciergeContext): string {
   const now = new Date();
   const month = now.getUTCMonth() + 1;
   const hour = now.getUTCHours();
@@ -1117,14 +1136,14 @@ async function getConciergeControlPrompt(): Promise<string> {
       admin.from("admin_ai_agent_controls").select("agent_key,display_name,status,automation_level,model_tier,daily_token_budget,requires_approval,can_write_to_user_surfaces,metadata").like("agent_key", "concierge.%").order("agent_key"),
     ]);
 
-    const rules = rulesRes.data ?? [];
-    const controls = controlsRes.data ?? [];
+    const rules = (rulesRes.data ?? []) as ConciergeRule[];
+    const controls = (controlsRes.data ?? []) as ConciergeControl[];
     if (!rules.length && !controls.length) return "";
 
-    const activeAgents = controls.filter((c: any) => c.status === "active");
-    const budget = controls.reduce((sum: number, c: any) => sum + Number(c.daily_token_budget || 0), 0);
-    const ruleText = rules.map((r: any) => `- [${r.category}] ${r.title}: ${String(r.rule_text).slice(0, 420)}`).join("\n");
-    const controlText = controls.map((c: any) => `- ${c.agent_key}: ${c.status}, ${c.automation_level}, model=${c.model_tier}, approval=${c.requires_approval ? "yes" : "no"}, live_write=${c.can_write_to_user_surfaces ? "yes" : "no"}`).join("\n");
+    const activeAgents = controls.filter((c) => c.status === "active");
+    const budget = controls.reduce((sum, c) => sum + Number(c.daily_token_budget || 0), 0);
+    const ruleText = rules.map((r) => `- [${r.category}] ${r.title}: ${String(r.rule_text).slice(0, 420)}`).join("\n");
+    const controlText = controls.map((c) => `- ${c.agent_key}: ${c.status}, ${c.automation_level}, model=${c.model_tier}, approval=${c.requires_approval ? "yes" : "no"}, live_write=${c.can_write_to_user_surfaces ? "yes" : "no"}`).join("\n");
 
     return `\n\n**BACK-OFFICE CONCIERGE CONTROL PLANE (authoritative):**\n${controls.length} Concierge agents configured, ${activeAgents.length} active, daily token cap ${budget}. Agents are behavior controls, not a reason to call extra models. Be token-friendly: route mentally first, answer directly when simple, use compact context, avoid unnecessary long output.\n\nActive rules:\n${ruleText}\n\nAgent states:\n${controlText}\n\nIf a rule conflicts with personality mode, the rule wins. If can_write_to_user_surfaces is false, never imply an automated real-world action already happened.`;
   } catch (e) {
@@ -1145,10 +1164,12 @@ const MAX_STRING = 200;
 function validateMessages(messages: unknown): { role: string; content: string }[] {
   if (!Array.isArray(messages)) throw new Error('messages must be an array');
   if (messages.length > MAX_MESSAGES) throw new Error(`Maximum ${MAX_MESSAGES} messages allowed`);
-  return messages.map((m: any, i: number) => {
-    if (!m || typeof m.content !== 'string') throw new Error(`Invalid message at index ${i}`);
+  return messages.map((message: unknown, i: number) => {
+    if (!message || typeof message !== 'object') throw new Error(`Invalid message at index ${i}`);
+    const m = message as Record<string, unknown>;
+    if (typeof m.content !== 'string') throw new Error(`Invalid message at index ${i}`);
     if (m.content.length > MAX_MESSAGE_LENGTH) throw new Error(`Message ${i} exceeds ${MAX_MESSAGE_LENGTH} chars`);
-    const role = ['user', 'assistant', 'system'].includes(m.role) ? m.role : 'user';
+    const role = typeof m.role === 'string' && ['user', 'assistant', 'system'].includes(m.role) ? m.role : 'user';
     return { role, content: m.content.slice(0, MAX_MESSAGE_LENGTH) };
   });
 }
@@ -1158,7 +1179,7 @@ function sanitizeString(val: unknown, maxLen = MAX_STRING): string {
   return val.replace(/<[^>]*>/g, '').slice(0, maxLen);
 }
 
-function sanitizeContext(ctx: unknown): Record<string, any> | undefined {
+function sanitizeContext(ctx: unknown): ConciergeContext | undefined {
   if (!ctx || typeof ctx !== 'object') return undefined;
   const c = ctx as Record<string, unknown>;
   
@@ -1223,8 +1244,8 @@ serve(async (req) => {
   }
 
   try {
-    let body: any;
-    try { body = await req.json(); } catch { 
+    let body: Record<string, unknown>;
+    try { body = await req.json() as Record<string, unknown>; } catch { 
       return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     const messages = validateMessages(body.messages);
@@ -1246,7 +1267,7 @@ serve(async (req) => {
 
     // School holiday awareness — silent unless user's plan is affected.
     const holidayPack = await getSchoolHolidayPack();
-    const ctx: any = userContext || {};
+    const ctx: ConciergeContext = userContext || {};
     const tripStart = typeof ctx.travelStart === 'string' ? ctx.travelStart : (typeof ctx.tripStart === 'string' ? ctx.tripStart : undefined);
     const tripEnd = typeof ctx.travelEnd === 'string' ? ctx.travelEnd : (typeof ctx.tripEnd === 'string' ? ctx.tripEnd : undefined);
     const destCC = typeof ctx.destinationCountryCode === 'string' ? ctx.destinationCountryCode : (typeof ctx.countryCode === 'string' ? ctx.countryCode : undefined);
