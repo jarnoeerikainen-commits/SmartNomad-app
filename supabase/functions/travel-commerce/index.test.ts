@@ -58,6 +58,18 @@ Deno.test('rejects invalid airport codes', () => {
   assert(failed);
 });
 
+Deno.test('rejects impossible and reversed travel dates before rendering', () => {
+  for (const search of [
+    { bookingType: 'flight', origin: 'HEL', destination: 'DXB', startDate: '2026-02-30' },
+    { bookingType: 'flight', origin: 'HEL', destination: 'DXB', startDate: '2026-12-20', endDate: '2026-12-19' },
+    { bookingType: 'hotel', destination: 'Dubai', startDate: 'not-a-date', endDate: '2026-12-24' },
+  ]) {
+    let failed = false;
+    try { validateSearch(search); } catch { failed = true; }
+    assert(failed);
+  }
+});
+
 Deno.test('redacts passport, phone and card-like values', () => {
   const redacted = maskSensitiveText('passport ZZ 123456 phone +000 000 0000 card 4111 1111 1111 1111');
   assert(!redacted.includes('123456'));
