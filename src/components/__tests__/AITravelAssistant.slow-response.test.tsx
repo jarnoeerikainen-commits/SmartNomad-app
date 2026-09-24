@@ -126,10 +126,11 @@ vi.mock('@/integrations/supabase/client', () => ({
 function slowStreamResponse() {
   const encoder = new TextEncoder();
   const chunks = [
-    'data: {"choices":[{"delta":{"content":"Verified answer pending source checks. "}}]}\n\n',
-    'data: {"choices":[{"delta":{"content":"Use verified websites only: https://example.com. "}}]}\n\n',
-    'data: {"choices":[{"delta":{"content":"If unknown, I will say I do not know and search more."}}]}\n\n',
-    'data: [DONE]\n\n',
+    'event: response.created\ndata: {"type":"response.created"}\n\n',
+    'event: response.output_text.delta\ndata: {"type":"response.output_text.delta","delta":"Verified answer pending source checks. "}\n\n',
+    'event: response.output_text.delta\ndata: {"type":"response.output_text.delta","delta":"Use verified websites only: https://example.com. "}\n\n',
+    'event: response.output_text.delta\ndata: {"type":"response.output_text.delta","delta":"If unknown, I will say I do not know and search more."}\n\n',
+    'event: response.completed\ndata: {"type":"response.completed","response":{"status":"completed"}}\n\n',
   ];
   let index = 0;
   return new ReadableStream({

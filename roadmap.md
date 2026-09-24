@@ -1,5 +1,11 @@
 # Booking readiness roadmap
 
+## Concierge response reliability
+
+- [ ] Accept and display the current Responses API stream without empty assistant messages.
+- [ ] Preserve compatibility with legacy stream events and reject terminal or empty streams visibly.
+- [ ] Verify normal questions and travel searches through automated, deployed-function, desktop, and mobile tests.
+
 ## Concierge travel-commerce intelligence
 
 - [x] Enforce supernomad.app-only brand references and evidence-based travel claims.
