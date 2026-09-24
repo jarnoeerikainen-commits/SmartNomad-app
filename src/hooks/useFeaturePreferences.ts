@@ -11,6 +11,22 @@ export interface FeaturePref {
 export type FeaturePrefsMap = Record<string, FeaturePref>;
 
 const STORAGE_KEY = 'supernomad_feature_prefs';
+const STORAGE_VERSION_KEY = 'supernomad_feature_prefs_version';
+const CURRENT_STORAGE_VERSION = '2';
+const PREFERENCES_CHANGED_EVENT = 'supernomad:feature-preferences-changed';
+
+// These were part of the former broad default navigation. Version 2 moves
+// them behind Customize My App so the sidebar starts focused and uncluttered.
+const VERSION_2_DEFAULT_HIDDEN_IDS = new Set([
+  'payment-options',
+  'award-cards',
+  'digital-banks',
+  'money-transfers',
+  'crypto-cash',
+  'currency-converter',
+  'emergency-cards',
+  'travel-insurance',
+]);
 
 // Deliberately small default navigation set. Home pins are independent: a
 // feature may stay out of the sidebar while remaining one tap away on Home.
@@ -27,14 +43,6 @@ const DEFAULT_VISIBLE_FEATURE_IDS = new Set([
   'visa-matcher',
   'vaccination-hub',
   'vault',
-  'payment-options',
-  'award-cards',
-  'digital-banks',
-  'money-transfers',
-  'crypto-cash',
-  'currency-converter',
-  'emergency-cards',
-  'travel-insurance',
 ]);
 
 function buildDefaults(): FeaturePrefsMap {
@@ -50,6 +58,7 @@ function loadPrefs(): FeaturePrefsMap {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const saved = JSON.parse(raw) as FeaturePrefsMap;
+      const savedVersion = localStorage.getItem(STORAGE_VERSION_KEY);
       // Merge with defaults so new features appear without resetting choices.
       const defaults = buildDefaults();
       for (const key of Object.keys(defaults)) {
@@ -60,6 +69,12 @@ function loadPrefs(): FeaturePrefsMap {
             ...defaults[key],
             ...saved[key],
           };
+        }
+      }
+      if (savedVersion !== CURRENT_STORAGE_VERSION) {
+        for (const id of VERSION_2_DEFAULT_HIDDEN_IDS) {
+          const preference = saved[id];
+          if (preference) saved[id] = { ...preference, visible: false };
         }
       }
       return saved;
@@ -75,7 +90,19 @@ export function useFeaturePreferences() {
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    localStorage.setItem(STORAGE_VERSION_KEY, CURRENT_STORAGE_VERSION);
+    window.dispatchEvent(new CustomEvent(PREFERENCES_CHANGED_EVENT, { detail: prefs }));
   }, [prefs]);
+
+  useEffect(() => {
+    const syncPreferences = (event: Event) => {
+      const next = (event as CustomEvent<FeaturePrefsMap>).detail;
+      if (!next) return;
+      setPrefs(current => JSON.stringify(current) === JSON.stringify(next) ? current : next);
+    };
+    window.addEventListener(PREFERENCES_CHANGED_EVENT, syncPreferences);
+    return () => window.removeEventListener(PREFERENCES_CHANGED_EVENT, syncPreferences);
+  }, []);
 
   const isVisible = useCallback((id: string): boolean => {
     if (isPausedSocialIntroductionFeature(id)) return false;

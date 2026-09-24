@@ -5,15 +5,16 @@ import {
   MessageSquare, ShieldCheck, Siren, ShieldAlert, Stethoscope, Scale,
   Crown, Flag, Globe2, Building, Sparkles, BarChart3, Home, Car,
   Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
-  Locate, Tag, Phone, Moon, TrendingUp, Receipt, ChefHat
+  Locate, Tag, Phone, Moon, TrendingUp, Receipt, ChefHat, Fingerprint, Briefcase
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
 
 export interface FeatureItem {
   id: string;
   label: string;
-  icon: any;
+  icon: LucideIcon;
   category: 'tax' | 'travel' | 'local' | 'premium' | 'safety' | 'finance' | 'dashboard';
   badge?: string;
   badgeVariant?: 'default' | 'destructive' | 'outline' | 'secondary';
@@ -131,8 +132,10 @@ export const FEATURE_REGISTRY: FeatureItem[] = [
   { id: 'tax-law-verifier', label: 'Tax Law Verifier', icon: Shield, category: 'tax', badge: 'AUTO', badgeVariant: 'default', description: 'Daily automated verification of tax residency laws from government sources', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
   { id: 'document-auto-fill', label: 'Document Auto-Fill', icon: FileText, category: 'tax', badge: 'AI', badgeVariant: 'secondary', description: 'Auto-fill visa, tax, and travel forms from your profile', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
   { id: 'trust-pass', label: 'Trust Pass', icon: ShieldCheck, category: 'premium', badge: 'NEW', badgeVariant: 'default', description: 'Verifiable credentials for elite chats, Vibe-Match & Sovereign Marketplace (powered by walt.id)', defaultVisible: true, defaultPinned: true, trustLevel: 'high_stakes' },
+  { id: 'snomad-id', label: 'Snomad ID', icon: Fingerprint, category: 'premium', badge: 'VAULT', badgeVariant: 'secondary', description: 'Open your private SuperNomad identity vault', defaultVisible: false, defaultPinned: false, trustLevel: 'high_stakes', aliases: ['identity vault', 'my snomad id'] },
   { id: 'sovereign-access', label: 'Sovereign Access', icon: ShieldCheck, category: 'premium', badge: 'NEW', badgeVariant: 'secondary', description: 'Granular control of every device permission & data source — granted just-in-time, revocable forever', defaultVisible: true, defaultPinned: false, trustLevel: 'high_stakes' },
   { id: 'travel-inbox', label: 'Travel Inbox', icon: Mail, category: 'travel', badge: 'NEW', badgeVariant: 'secondary', description: 'Import flight & hotel confirmations from Gmail, Outlook, or a private forward-to address', defaultVisible: true, defaultPinned: false, trustLevel: 'actionable' },
+  { id: 'corporate', label: 'Corporate Travel', icon: Briefcase, category: 'premium', badge: 'B2B', badgeVariant: 'default', description: 'Company travel approvals, duty of care, billing, and reporting', defaultVisible: false, defaultPinned: false, trustLevel: 'actionable' },
   { id: 'supernomad-call', label: 'SuperNomad Call', icon: Phone, category: 'premium', badge: 'NEW', badgeVariant: 'default', description: 'Unified calling: AI Concierge, trusted contacts, or any phone in the world — end-to-end private', defaultVisible: true, defaultPinned: true, trustLevel: 'actionable', aliases: ['call', 'phone', 'dial', 'concierge call', 'voice call', 'ring'] },
 ];
 

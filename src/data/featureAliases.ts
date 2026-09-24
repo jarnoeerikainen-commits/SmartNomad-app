@@ -102,5 +102,7 @@ export const FEATURE_ALIASES: Record<string, string[]> = {
   'lifestyle-hub': ['lifestyle', 'spotify', 'oura', 'garmin', 'strava', 'whoop', 'fitness data'],
   'venture-invest': ['venture', 'investing', 'investments', 'real estate', 'startups'],
   'trust-pass': ['trust pass', 'verified credentials', 'walt id', 'verifiable credential'],
+  'snomad-id': ['snomad id', 'identity vault', 'my identity'],
   'sovereign-access': ['sovereign access', 'permissions', 'data permissions', 'access control'],
+  corporate: ['corporate travel', 'business travel', 'company travel'],
 };
