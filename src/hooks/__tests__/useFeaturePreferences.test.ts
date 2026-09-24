@@ -80,6 +80,15 @@ describe('useFeaturePreferences', () => {
     expect(reopened.result.current.isVisible('snomad-id')).toBe(true);
   });
 
+  it('synchronizes visibility across mounted app sections immediately', () => {
+    const sidebar = renderHook(() => useFeaturePreferences());
+    const customizer = renderHook(() => useFeaturePreferences());
+
+    act(() => customizer.result.current.setVisibility('snomad-id', true));
+
+    expect(sidebar.result.current.isVisible('snomad-id')).toBe(true);
+  });
+
   it('migrates the former finance and travel defaults to hidden once', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       'payment-options': { visible: true, pinned: false, order: 1 },
