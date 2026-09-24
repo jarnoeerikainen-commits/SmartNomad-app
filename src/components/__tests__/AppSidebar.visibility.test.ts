@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Home, Wallet } from 'lucide-react';
-import { filterSidebarGroups } from '@/components/AppSidebar';
+import { filterSidebarGroups } from '@/utils/sidebarVisibility';
 
 describe('AppSidebar visibility filtering', () => {
   const groups = [
