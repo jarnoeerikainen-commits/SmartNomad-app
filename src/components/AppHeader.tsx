@@ -65,7 +65,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       <div className="container mx-auto flex h-16 items-center justify-between gap-2 px-3 sm:px-4 max-w-full">
         {/* Left side - Menu and Logo */}
         <div className="flex items-center gap-4">
-          {showMenuButton && <Button variant="ghost" size="sm" onClick={onMenuClick} className="md:hidden">
+          {showMenuButton && <Button variant="ghost" size="sm" onClick={onMenuClick} className="md:hidden" aria-label="Open navigation menu">
               <Menu className="h-5 w-5" />
             </Button>}
           
