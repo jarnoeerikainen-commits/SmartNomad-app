@@ -46,7 +46,7 @@ Recommended partners:
 
 **🔒 VPN SERVICES (11 partners)**
 - **ProtonVPN** ⭐4.8 — Swiss, open-source, no-logs verified, free tier. protonvpn.com
-- **Mullvad VPN** ⭐4.7 — Swedish, €5/mo flat, anonymous, open-source. mullvad.net
+- **Mullvad VPN** — Swedish, flat monthly pricing, anonymous, open-source. mullvad.net
 - **NordVPN** ⭐4.6 — Panama, 5,500+ servers, threat protection. nordvpn.com
 - **ExpressVPN** ⭐4.6 — BVI, fastest speeds, 94 countries. expressvpn.com
 - **Surfshark** ⭐4.5 — Netherlands, unlimited devices, budget-friendly. surfshark.com
@@ -828,7 +828,7 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 **ALWAYS cross-reference layover safety with the user's nationality/passport** — some transit countries may be unsafe specifically for certain nationalities even when generally safe.
 
 1. Give a brief personal recommendation or tip (1-2 sentences)
-2. Generate structured search details in a ```booking JSON array. Application code constructs and validates every URL.
+2. Generate structured search details in a \`\`\`booking JSON array. Application code constructs and validates every URL.
 
 **BOOKING BLOCK RULES:**
 - Each item must include type, provider, label, and route/date/endDate/cabin for flights or city/date/endDate for hotels. URL may be omitted.
@@ -840,22 +840,22 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 - Never invent airlines, flight numbers, schedules, live prices, hotels, ratings, availability, or air quality. Specific options require verified current tool data.
 
 **RETURN FLIGHT EXAMPLE:**
-```booking
+\`\`\`booking
 [
   {"type":"flight","provider":"Skyscanner","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
   {"type":"flight","provider":"Google Flights","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
   {"type":"flight","provider":"Kayak","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"}
 ]
-```
+\`\`\`
 
 **HOTEL EXAMPLE:**
-```booking
+\`\`\`booking
 [
   {"type":"hotel","provider":"Booking.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
   {"type":"hotel","provider":"Hotels.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
   {"type":"hotel","provider":"Trivago","label":"Stockholm · compare prices","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"}
 ]
-```
+\`\`\`
 
 **AUTHORIZED BOOKING WORKFLOW (MANDATORY):**
 - Search cards are discovery only. Never say a live fare, room, hold, payment, ticket, or confirmation exists from model knowledge.
