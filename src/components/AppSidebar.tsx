@@ -27,6 +27,29 @@ interface SidebarItem {
   variant?: 'default' | 'destructive' | 'outline' | 'secondary';
 }
 
+interface SidebarGroup {
+  id: string;
+  label: string;
+  items: SidebarItem[];
+}
+
+export function filterSidebarGroups(
+  groups: SidebarGroup[],
+  isVisible: (id: string) => boolean,
+  isTeenRestricted: boolean,
+): SidebarGroup[] {
+  const teenHiddenGroups = ['finance'];
+  const teenHiddenItems = ['social-chat', 'nomad-chat', 'marketplace'];
+
+  return groups.map(group => {
+    if (group.id === 'main') return group;
+    if (isTeenRestricted && teenHiddenGroups.includes(group.id)) return { ...group, items: [] };
+    let items = group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id));
+    if (isTeenRestricted) items = items.filter(item => !teenHiddenItems.includes(item.id));
+    return { ...group, items };
+  }).filter(group => group.id === 'main' || group.items.length > 0);
+}
+
 interface AppSidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
@@ -203,17 +226,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
     },
   ];
 
-  // Hide finance & social groups for teens (16-17)
-  const teenHiddenGroups = ['finance'];
-  const teenHiddenItems = ['social-chat', 'nomad-chat', 'marketplace'];
-
-  const menuGroups = menuGroupsRaw.map(group => {
-    if (group.id === 'main') return group;
-    if (isTeenRestricted && teenHiddenGroups.includes(group.id)) return { ...group, items: [] };
-    let items = group.items.filter(item => SYSTEM_FEATURES.includes(item.id) || isVisible(item.id));
-    if (isTeenRestricted) items = items.filter(item => !teenHiddenItems.includes(item.id));
-    return { ...group, items };
-  }).filter(group => group.id === 'main' || group.items.length > 0);
+  const menuGroups = filterSidebarGroups(menuGroupsRaw, isVisible, isTeenRestricted);
   
   return (
     <>

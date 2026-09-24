@@ -7,13 +7,14 @@ import {
   Gift, GraduationCap, DollarSign, Coins, Globe, Mail, Wrench,
   Locate, Tag, Phone, Moon, TrendingUp, Receipt, ChefHat, Fingerprint, Briefcase
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 export type TrustLevel = 'info' | 'advisory' | 'actionable' | 'high_stakes';
 
 export interface FeatureItem {
   id: string;
   label: string;
-  icon: any;
+  icon: LucideIcon;
   category: 'tax' | 'travel' | 'local' | 'premium' | 'safety' | 'finance' | 'dashboard';
   badge?: string;
   badgeVariant?: 'default' | 'destructive' | 'outline' | 'secondary';
