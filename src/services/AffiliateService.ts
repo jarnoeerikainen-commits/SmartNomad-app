@@ -199,7 +199,7 @@ export const AffiliateService = {
   },
 
   shareLink(code: string): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://supernomad1.lovable.app';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://supernomad.app';
     return `${origin}/r/${code}`;
   },
 

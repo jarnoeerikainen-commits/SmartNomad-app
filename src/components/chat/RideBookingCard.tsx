@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Car, Clock, MapPin, Users, Briefcase, Star, Leaf, ExternalLink, CheckCircle2, Loader2, Calendar as CalIcon, Phone } from 'lucide-react';
 import { RideHailingService, type RideQuote, type RideBooking } from '@/services/RideHailingService';
+import { DemoRideStore } from '@/services/DemoRideStore';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
@@ -13,6 +14,7 @@ interface RideBookingCardProps {
   dropoff: { address: string };
   whenISO?: string;
   passengerName?: string;
+  tripBookingId?: string;
 }
 
 const SUPPLIER_COLORS: Record<string, string> = {
@@ -22,7 +24,7 @@ const SUPPLIER_COLORS: Record<string, string> = {
 };
 
 const RideBookingCard: React.FC<RideBookingCardProps> = ({
-  pickup, dropoff, whenISO, passengerName,
+  pickup, dropoff, whenISO, passengerName, tripBookingId,
 }) => {
   const { toast } = useToast();
   const [quotes, setQuotes] = useState<RideQuote[] | null>(null);
@@ -59,6 +61,16 @@ const RideBookingCard: React.FC<RideBookingCardProps> = ({
         passenger: { name: passengerName || 'SuperNomad Member' },
       });
       setBooking(result);
+      if (result.simulated) {
+        DemoRideStore.save({
+          tripBookingId,
+          pickup: pickup.address,
+          dropoff: dropoff.address,
+          whenISO: scheduledTime || undefined,
+          quote: selectedQuote,
+          booking: result,
+        });
+      }
       toast({
          title: result.simulated ? 'Ride simulation complete' : scheduledTime ? 'Ride scheduled' : 'Driver on the way',
          description: result.simulated ? 'No driver, reservation, charge, or funds movement occurred.' : `${result.driverName} • ${result.vehiclePlate} • ETA ${result.etaMinutes} min`,

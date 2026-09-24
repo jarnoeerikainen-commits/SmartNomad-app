@@ -187,14 +187,17 @@ export function parseBookingBlocks(content: string): { text: string; bookings: B
   const text = content.replace(blockRegex, (_, raw) => {
     try {
       // Clean common LLM artifacts
-      let cleaned = raw.trim()
+      const cleaned = raw.trim()
         .replace(/,\s*([}\]])/g, '$1')       // trailing commas
+        // eslint-disable-next-line no-control-regex
         .replace(/[\x00-\x1F\x7F]/g, '');    // control chars
 
       const parsed = JSON.parse(cleaned);
       if (!Array.isArray(parsed)) return '';
 
       // Normalise: AI may return {search_engine, url} instead of BookingItem shape
+      // LLM JSON is validated and normalized field-by-field below.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const items: BookingItem[] = parsed.map((entry: any) => {
         const provider = entry.provider || entry.search_engine || entry.name || '';
         const suppliedUrl = entry.url || entry.link || '#';

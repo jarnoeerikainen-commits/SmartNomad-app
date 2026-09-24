@@ -25,9 +25,9 @@ describe('DemoBookingStore', () => {
   });
 
   it('persists transfer review against the completed trip', () => {
-    const result = makeResult('SN-DEMO-TRANSFER');
-    DemoBookingStore.save('flight', result);
-    DemoBookingStore.updateTransfers(result.order.publicOrderId, { departure: 'arranged', arrival: 'find' });
+    const transferResult = result('SN-DEMO-TRANSFER', '2027-01-10T08:00:00Z');
+    DemoBookingStore.save('flight', transferResult);
+    DemoBookingStore.updateTransfers(transferResult.order.publicOrderId, { departure: 'arranged', arrival: 'find' });
     expect(DemoBookingStore.read()[0].transfers).toEqual({ departure: 'arranged', arrival: 'find' });
   });
 

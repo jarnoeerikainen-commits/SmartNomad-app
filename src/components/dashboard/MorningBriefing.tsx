@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Hotel, Plane, Scale, ShieldAlert, ShieldCheck
 import { Country } from '@/types/country';
 import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 import { DEMO_BOOKINGS_CHANGED_EVENT, DemoBookingStore, type StoredDemoBooking } from '@/services/DemoBookingStore';
+import { DEMO_RIDES_CHANGED_EVENT, DemoRideStore, type StoredDemoRide } from '@/services/DemoRideStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -67,7 +68,7 @@ const BriefingCard: React.FC<BriefingCardProps> = ({ icon: Icon, title, headline
 const money = (amount: number, currency: string) => `${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
 const dateLabel = (value: string) => format(new Date(value), 'd MMM yyyy');
 
-const BookingDossier = ({ booking, open, onOpenChange }: { booking: StoredDemoBooking | null; open: boolean; onOpenChange: (open: boolean) => void }) => {
+const BookingDossier = ({ booking, relatedBookings, rides, open, onOpenChange }: { booking: StoredDemoBooking | null; relatedBookings: StoredDemoBooking[]; rides: StoredDemoRide[]; open: boolean; onOpenChange: (open: boolean) => void }) => {
   if (!booking) return null;
   const { result, bookingType } = booking;
   const { order, payment } = result;
@@ -109,6 +110,8 @@ const BookingDossier = ({ booking, open, onOpenChange }: { booking: StoredDemoBo
           </section>
           <section className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs"><p className="font-semibold">Status</p><p className="mt-1">Reconciliation {order.reconciliationStatus} · payment simulated · no ticket or room issued</p><p className="mt-2 text-muted-foreground">{order.cancellationTerms}</p></section>
           <section className="rounded-lg border p-3 text-xs"><p className="font-semibold">Airport transfers</p><p className="mt-1">Departure: {booking.transfers?.departure || 'not reviewed'} · Arrival: {booking.transfers?.arrival || 'not reviewed'}</p><p className="mt-1 text-muted-foreground">Transfer selections are separate from the flight or hotel simulation.</p></section>
+          {relatedBookings.length > 0 && <section><h3 className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Hotels and related bookings</h3><div className="space-y-2">{relatedBookings.map((related) => <div key={related.id} className="rounded-lg border p-3 text-xs"><div className="flex items-center justify-between gap-3"><p className="font-semibold">{related.result.order.itinerary.carrierOrProperty}</p><Badge variant="outline">SIMULATED</Badge></div><p>{related.result.order.itinerary.serviceOrRoom} · {dateLabel(related.result.order.itinerary.departureLocal)}–{dateLabel(related.result.order.itinerary.arrivalLocal)}</p><p className="mt-1 text-muted-foreground">{money(related.result.order.amount, related.result.order.currency)} · no room reserved</p></div>)}</div></section>}
+          {rides.length > 0 && <section><h3 className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Taxi and airport rides</h3><div className="space-y-2">{rides.map((ride) => <div key={ride.id} className="rounded-lg border p-3 text-xs"><div className="flex items-center justify-between gap-3"><p className="font-semibold">{ride.quote.supplier} · {ride.quote.vehicleName}</p><Badge variant="outline">DEMO · NOT BOOKED</Badge></div><p>{ride.pickup} → {ride.dropoff}</p><p className="mt-1 text-muted-foreground">{money(ride.booking.pricePaid || ride.quote.priceHigh, 'USD')} · no driver, charge, or reservation</p></div>)}</div></section>}
         </div>
       </SheetContent>
     </Sheet>
@@ -119,6 +122,7 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
   const [stats, setStats] = useState(() => ThreatIntelligenceService.getStatistics());
   const [inDanger, setInDanger] = useState(() => ThreatIntelligenceService.isUserInDangerZone());
   const [bookings, setBookings] = useState<StoredDemoBooking[]>(() => DemoBookingStore.read());
+  const [rides, setRides] = useState<StoredDemoRide[]>(() => DemoRideStore.read());
   const [dossierOpen, setDossierOpen] = useState(false);
 
   useEffect(() => {
@@ -127,12 +131,15 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
       setInDanger(ThreatIntelligenceService.isUserInDangerZone());
     };
     const refreshBookings = () => setBookings(DemoBookingStore.read());
+    const refreshRides = () => setRides(DemoRideStore.read());
     const id = window.setInterval(refreshThreats, 60_000);
     window.addEventListener(DEMO_BOOKINGS_CHANGED_EVENT, refreshBookings);
+    window.addEventListener(DEMO_RIDES_CHANGED_EVENT, refreshRides);
     window.addEventListener('storage', refreshBookings);
     return () => {
       window.clearInterval(id);
       window.removeEventListener(DEMO_BOOKINGS_CHANGED_EVENT, refreshBookings);
+      window.removeEventListener(DEMO_RIDES_CHANGED_EVENT, refreshRides);
       window.removeEventListener('storage', refreshBookings);
     };
   }, []);
@@ -141,6 +148,12 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
     const now = Date.now();
     return bookings.find((booking) => new Date(booking.result.order.itinerary.arrivalLocal).getTime() >= now) || null;
   }, [bookings]);
+  const relatedBookings = useMemo(() => {
+    if (!nextBooking) return [];
+    const destination = nextBooking.result.order.itinerary.destinationLabel.toLowerCase();
+    return bookings.filter((item) => item.id !== nextBooking.id && item.result.order.itinerary.destinationLabel.toLowerCase() === destination);
+  }, [bookings, nextBooking]);
+  const relatedRides = useMemo(() => nextBooking ? rides.filter((ride) => !ride.tripBookingId || ride.tripBookingId === nextBooking.id) : [], [nextBooking, rides]);
   const tripHeadline = nextBooking ? `${nextBooking.bookingType === 'flight' ? '✈' : '▣'} ${nextBooking.result.order.itinerary.destinationLabel}` : 'No approved demo booking';
   const tripDetail = nextBooking
     ? `${dateLabel(nextBooking.result.order.itinerary.departureLocal)} · ${nextBooking.result.order.itinerary.carrierOrProperty} · ${money(nextBooking.result.order.amount, nextBooking.result.order.currency)}`
@@ -163,7 +176,7 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
       <BriefingCard icon={nextBooking?.bookingType === 'hotel' ? Hotel : Plane} title="Next Trip" headline={tripHeadline} detail={tripDetail} tone="ok" cta={nextBooking ? 'Open full details' : 'Plan with Concierge'} onClick={() => nextBooking ? setDossierOpen(true) : onNavigate('ai-planner')} />
       <BriefingCard icon={Scale} title="Tax Days" headline={`${daysThisYear} / 183`} detail={taxDetail} tone={taxTone} cta="Open Tax Hub" onClick={() => onNavigate('tax-residency')} />
       <BriefingCard icon={threatTone === 'ok' ? ShieldCheck : ShieldAlert} title="Threats Near You" headline={threatHeadline} detail={threatDetail} tone={threatTone} cta="Open Threat Intelligence" onClick={() => onNavigate('threats')} />
-      <BookingDossier booking={nextBooking} open={dossierOpen} onOpenChange={setDossierOpen} />
+      <BookingDossier booking={nextBooking} relatedBookings={relatedBookings} rides={relatedRides} open={dossierOpen} onOpenChange={setDossierOpen} />
     </section>
   );
 };

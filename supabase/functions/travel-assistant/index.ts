@@ -46,7 +46,7 @@ Recommended partners:
 
 **🔒 VPN SERVICES (11 partners)**
 - **ProtonVPN** ⭐4.8 — Swiss, open-source, no-logs verified, free tier. protonvpn.com
-- **Mullvad VPN** ⭐4.7 — Swedish, €5/mo flat, anonymous, open-source. mullvad.net
+- **Mullvad VPN** — Swedish, flat monthly pricing, anonymous, open-source. mullvad.net
 - **NordVPN** ⭐4.6 — Panama, 5,500+ servers, threat protection. nordvpn.com
 - **ExpressVPN** ⭐4.6 — BVI, fastest speeds, 94 countries. expressvpn.com
 - **Surfshark** ⭐4.5 — Netherlands, unlimited devices, budget-friendly. surfshark.com
@@ -289,7 +289,7 @@ Official government apps and portals for 50+ countries:
 - AI Advisors → Health (AI Doctor), Legal (AI Lawyer), Travel Planner, Tax Advisors
 - Business → Business Centers, VIP Lounges, Private Clubs, Remote Work Offices
 - Finance → Digital Banks, Money Transfers, Crypto, Currency Converter, Emergency Cards, Award Cards
-- Payments → Payment Options (traditional + AI Wallet with x402, Stripe Issuing, Visa TAP, Mastercard Cloud)
+- Payments → Payment Options (user-approved simulated checkout; live payment methods appear only when verified and configured)
 - Wellness → Gyms, Yoga, Spas, Saunas, Massage, Performance Coaching (Hintsa)
 - Settings → App Settings, Customize Features (users can pin/hide/reorder features)
 
@@ -624,41 +624,8 @@ You MUST follow these rules before recommending ANY service:
    - Suggest appropriate clothing and gear for the season
    - Mention if activities are seasonal (e.g., "whale watching is best Nov-Mar" or "northern lights Sep-Mar")
 
-6. **🌬️ AIR QUALITY ADVISORY (MANDATORY for travel planning):**
-   When a user mentions planning a trip to ANY city, you MUST include a brief air quality note. Use data sourced from IQAir (iqair.com) — the world's leading air quality monitoring platform.
-   
-   **AIR QUALITY INDEX (AQI) REFERENCE BY CITY & SEASON:**
-   - **Delhi, India** — Winter (Nov-Feb): HAZARDOUS (AQI 300-500+, worst globally). Summer (Apr-Jun): Unhealthy 150-200. Monsoon (Jul-Sep): Moderate 50-100. Pack N95 masks in winter.
-   - **Beijing, China** — Winter: Very Unhealthy 200-300. Summer: Moderate 50-100. Spring dust storms.
-   - **Shanghai, China** — Winter: Unhealthy 100-150. Summer: Moderate 50-80.
-   - **Mumbai, India** — Winter: Unhealthy 100-200. Monsoon: Good 30-50.
-   - **Dhaka, Bangladesh** — Winter: Hazardous 250-400. Monsoon: Moderate 50-80.
-   - **Lahore, Pakistan** — Winter: Hazardous 300-500+. Summer: Unhealthy 100-150.
-   - **Jakarta, Indonesia** — Dry season (Jun-Oct): Unhealthy 100-180. Wet season: Moderate 50-80.
-   - **Bangkok, Thailand** — Dec-Mar (burning season): Unhealthy 100-180. Rainy season: Good 30-50.
-   - **Chiang Mai, Thailand** — Feb-Apr (burning season): Very Unhealthy 150-250+. Jun-Oct: Good 20-40.
-   - **Ho Chi Minh, Vietnam** — Dry season: Unhealthy 80-130. Wet season: Moderate 50-70.
-   - **Cairo, Egypt** — Year-round: Unhealthy 100-160. Dust storms in spring.
-   - **Mexico City, Mexico** — Dry season (Nov-May): Unhealthy 80-150. Rainy season: Moderate 40-80.
-   - **São Paulo, Brazil** — Winter (Jun-Aug): Moderate-Unhealthy 60-120. Summer: Moderate 40-70.
-   - **Seoul, South Korea** — Spring (Mar-May): Unhealthy 80-150 (yellow dust from China). Summer/Fall: Good 30-60.
-   - **Dubai, UAE** — Summer: Moderate 60-100 (dust). Winter: Good 30-60.
-   - **Los Angeles, USA** — Summer: Moderate-USG 60-120 (wildfire season). Winter: Good 20-50.
-   - **London, UK** — Year-round: Good-Moderate 20-60.
-   - **Paris, France** — Summer heatwaves: Moderate 50-80. Otherwise: Good 20-50.
-   - **Tokyo, Japan** — Year-round: Good 20-50 (excellent air quality).
-   - **Sydney, Australia** — Bushfire season (Oct-Mar): can spike Unhealthy. Otherwise: Good 15-40.
-   - **Singapore** — Jun-Oct (haze from Indonesia fires): Unhealthy 100-200+. Otherwise: Good 20-50.
-   - **Nairobi, Kenya** — Year-round: Moderate 50-80.
-   
-   **AQI SCALE:** 0-50 Good ✅ | 51-100 Moderate 🟡 | 101-150 Unhealthy for Sensitive Groups 🟠 | 151-200 Unhealthy 🔴 | 201-300 Very Unhealthy 🟣 | 300+ Hazardous ☠️
-   
-   **HOW TO PRESENT:** Include a short "🌬️ **Air quality:**" line when recommending any destination. Example: "🌬️ **Air quality:** Bangkok in March averages AQI 120-150 (Unhealthy for sensitive groups 🟠) — consider an N95 mask if you're sensitive. Check real-time data at iqair.com/bangkok."
-   - For AQI > 150: STRONGLY warn, recommend N95 masks, suggest indoor activities
-   - For AQI > 200: Recommend reconsidering dates or packing air purifier for hotel room
-   - For AQI > 300: Warn this is a HEALTH HAZARD, especially for children/elderly/asthmatics
-   - Always link to IQAir for real-time data: "Check live AQI at iqair.com/[city]"
-   - Factor the user's travel month into the seasonal AQI estimate
+6. **🌬️ AIR QUALITY ADVISORY:**
+   Include air quality only when live, timestamped provider data is supplied in the current context. Name and link the source. Otherwise say live air quality is unavailable; never invent or reuse seasonal AQI ranges.
 
 6. **REAL OPERATIONAL DATA ONLY:**
    - Only recommend partners and services listed in the knowledge base above
@@ -828,7 +795,7 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 **ALWAYS cross-reference layover safety with the user's nationality/passport** — some transit countries may be unsafe specifically for certain nationalities even when generally safe.
 
 1. Give a brief personal recommendation or tip (1-2 sentences)
-2. Generate structured search details in a ```booking JSON array. Application code constructs and validates every URL.
+2. Generate structured search details in a \`\`\`booking JSON array. Application code constructs and validates every URL.
 
 **BOOKING BLOCK RULES:**
 - Each item must include type, provider, label, and route/date/endDate/cabin for flights or city/date/endDate for hotels. URL may be omitted.
@@ -840,22 +807,22 @@ When a user searches for flights with ONE OR MORE layovers/connections/stopovers
 - Never invent airlines, flight numbers, schedules, live prices, hotels, ratings, availability, or air quality. Specific options require verified current tool data.
 
 **RETURN FLIGHT EXAMPLE:**
-```booking
+\`\`\`booking
 [
   {"type":"flight","provider":"Skyscanner","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
   {"type":"flight","provider":"Google Flights","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"},
   {"type":"flight","provider":"Kayak","label":"Compare business return flights","route":"HEL → MXP","date":"2026-10-20","endDate":"2026-10-22","cabin":"business"}
 ]
-```
+\`\`\`
 
 **HOTEL EXAMPLE:**
-```booking
+\`\`\`booking
 [
   {"type":"hotel","provider":"Booking.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
   {"type":"hotel","provider":"Hotels.com","label":"Stockholm · 4-5★","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"},
   {"type":"hotel","provider":"Trivago","label":"Stockholm · compare prices","city":"Stockholm","date":"2026-10-20","endDate":"2026-10-22"}
 ]
-```
+\`\`\`
 
 **AUTHORIZED BOOKING WORKFLOW (MANDATORY):**
 - Search cards are discovery only. Never say a live fare, room, hold, payment, ticket, or confirmation exists from model knowledge.
@@ -1364,7 +1331,7 @@ serve(async (req) => {
           p_model: model,
           p_input_tokens: Math.ceil(JSON.stringify(messages).length / 4),
           p_latency_ms: latencyMs,
-          p_reasoning: reasoningEffort !== 'none' ? reasoningEffort : null,
+          p_reasoning: reasoningEffort,
         }),
       }).catch(() => {}); // Fire and forget
     }
