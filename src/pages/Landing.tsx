@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Shield, Sparkles, Globe2, Lock, Plane, Calculator, FileCheck,
-  Users, Bell, MessageCircle, Brain, MapPin, Award, Wallet,
-  ArrowRight, Check, Rocket, Star, Mic, Eye, Zap, AlertTriangle,
+  Users, MessageCircle, Brain, Award,
+  ArrowRight, Check, Rocket, Mic, Eye, Zap, AlertTriangle,
   Apple, Smartphone, Hotel, UtensilsCrossed, Music2, Trophy,
-  Radar, Siren, ShieldAlert, Activity, Headphones, Heart,
-  PlayCircle, X, Clock, Route, Building2, Film
+  Headphones, Heart,
+  PlayCircle, X, Clock, Route, Film
 } from 'lucide-react';
 import logo from '@/assets/supernomad-logo.jpg';
 import heroImg from '@/assets/landing-hero.jpg';
@@ -17,7 +17,7 @@ import communityImg from '@/assets/landing-community.jpg';
 import securityImg from '@/assets/landing-security.jpg';
 import travelImg from '@/assets/landing-travel.jpg';
 import lifestyleImg from '@/assets/landing-lifestyle.jpg';
-import { LiveTicker, Typewriter, Magnetic, ScrollCounter, ConciergeOrb, HairlineFrame } from '@/components/landing/SovereignWow';
+import { Typewriter, Magnetic, ScrollCounter, ConciergeOrb } from '@/components/landing/SovereignWow';
 
 const Landing: React.FC = () => {
   const [filmMode, setFilmMode] = useState<'closed' | 'teaser'>('closed');
@@ -37,13 +37,6 @@ const Landing: React.FC = () => {
     });
   }, []);
 
-  const stats = [
-    { value: '300M+', label: 'Global Citizens', sub: 'Who call the world home' },
-    { value: '$12K', label: 'Avg Tax Penalty', sub: 'Lost yearly to residency confusion' },
-    { value: '200+', label: 'Hours Wasted', sub: 'On bureaucracy every year' },
-    { value: '67%', label: 'Security Issues', sub: 'Of nomads report data breaches' },
-  ];
-
   const pains = [
     { icon: Calculator, title: 'Tax Confusion', fix: 'Tax Intelligence Hub', desc: 'Overlapping jurisdictions, the 184-day trap, double taxation. We track every day, every threshold, and every rule — silently.' },
     { icon: FileCheck, title: 'Visa Stress', fix: 'Visa Auto-Matcher', desc: 'Expirations, renewal windows, entry rules. SuperNomad alerts you weeks before any deadline slips.' },
@@ -52,22 +45,20 @@ const Landing: React.FC = () => {
   ];
 
   const features = [
-    { icon: Brain, title: 'AI Concierge', desc: 'Sofia & Marcus — voice-first assistants that book, plan, and protect 24/7.' },
-    { icon: Calculator, title: 'Tax Tracker', desc: '195+ countries, real-time residency thresholds, Schengen 90/180.' },
-    { icon: FileCheck, title: 'Visa & ETIAS', desc: 'Auto-match programs, EU 2026 ETIAS portal, official links.' },
+    { icon: Brain, title: 'AI Concierge', desc: 'Voice-first assistance for research, planning, and user-approved travel demos.' },
+    { icon: Calculator, title: 'Tax Tracker', desc: 'Day counting, residency thresholds, and Schengen 90/180 tools.' },
+    { icon: FileCheck, title: 'Visa & ETIAS', desc: 'Travel-authorisation information with official source links.' },
     { icon: Shield, title: 'Trust Pass', desc: 'W3C verifiable credentials with selective disclosure.' },
-    { icon: Eye, title: 'Black Box Guardian', desc: 'WORM evidence recorder for personal safety incidents.' },
-    { icon: Wallet, title: 'Agentic Wallet', desc: 'x402 protocol — AI books and pays autonomously, with your rules.' },
-    { icon: AlertTriangle, title: 'Threat Intelligence', desc: '500+ live incidents across 200+ cities, with safety scores.' },
-    { icon: Globe2, title: 'Local Living', desc: '700+ business centers, weather, and community across 100+ cities.' },
+    { icon: AlertTriangle, title: 'Travel Advisories', desc: 'Location-aware safety information with named sources where available.' },
+    { icon: Globe2, title: 'Local Living', desc: 'Workspace, weather, community, and local-service discovery.' },
     { icon: MessageCircle, title: 'Community', desc: 'User-initiated Pulse and Vibe conversations.' },
-    { icon: Award, title: 'Award Cards', desc: '100+ loyalty programs with AI-optimized point redemption.' },
+    { icon: Award, title: 'Award Cards', desc: 'Loyalty-program organization and redemption guidance.' },
   ];
 
   const steps = [
-    { n: '01', title: 'Onboard Securely', desc: 'Verify in under 2 minutes with biometric AI. End-to-end encrypted, GDPR and CCPA compliant from day one.', bullets: ['Biometric verification', 'GDPR & CCPA compliant', 'End-to-end encryption', 'Instant — no paperwork'] },
+    { n: '01', title: 'Onboard Securely', desc: 'Set up your profile and privacy preferences before adding personal travel context.', bullets: ['Consent-first setup', 'Privacy controls', 'Encrypted local vault', 'Clear data choices'] },
     { n: '02', title: 'Connect & Configure', desc: 'Tell the AI your goals. SuperNomad configures compliance tracking and curates the marketplace.', bullets: ['Custom compliance rules', 'Travel preferences', 'Marketplace curation', 'Automated alerts'] },
-    { n: '03', title: 'Live & Explore', desc: 'SuperNomad runs invisibly. It only interrupts when action is required — otherwise, you focus entirely on your life.', bullets: ['Invisible monitoring', 'Proactive tax alerts', 'Event discovery', '24/7 multilingual support'] },
+    { n: '03', title: 'Live & Explore', desc: 'Use the app to review travel, compliance, and local-life information when you need it.', bullets: ['Trip organization', 'Tax-day reminders', 'Event discovery', 'Multilingual assistance'] },
   ];
 
   const sports = [
@@ -86,7 +77,7 @@ const Landing: React.FC = () => {
   const cinematicMoments = [
     { img: heroImg, label: 'Executive arrival', detail: 'Airport, hotel, route and safety handled before landing.' },
     { img: travelImg, label: 'Borderless operations', detail: 'Trips, loyalty, receipts, tax days and visas in one timeline.' },
-    { img: communityImg, label: 'Local life instantly', detail: 'Padel, dinners, clubs, families and verified city services.' },
+    { img: communityImg, label: 'Local life organized', detail: 'Padel, dining, clubs, family needs, and city services.' },
     { img: securityImg, label: 'Sovereign protection', detail: 'Threat intelligence, identity vault and consent-first AI.' },
   ];
 
@@ -134,7 +125,6 @@ const Landing: React.FC = () => {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold">Launch App</Button></Link>
-                  <Link to="/admin"><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Back Office</Button></Link>
                 </div>
               </div>
             </div>
@@ -155,18 +145,11 @@ const Landing: React.FC = () => {
               <button type="button" onClick={() => setFilmMode('teaser')} className="hover:text-[hsl(var(--gold))] transition-colors">Teaser</button>
             <a href="#problem" className="hover:text-[hsl(var(--gold))] transition-colors">Problem</a>
             <a href="#concierge" className="hover:text-[hsl(var(--gold))] transition-colors">Concierge AI</a>
-            <a href="#guardian" className="hover:text-[hsl(var(--gold))] transition-colors">Guardian</a>
             <a href="#ecosystem" className="hover:text-[hsl(var(--gold))] transition-colors">Ecosystem</a>
             <a href="#pricing" className="hover:text-[hsl(var(--gold))] transition-colors">Pricing</a>
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/admin" className="inline-flex">
-              <Button size="sm" variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white px-2 sm:px-3" title="Investor Back Office preview">
-                <Shield className="h-3.5 w-3.5 text-[hsl(var(--gold))] sm:mr-1.5" />
-                <span className="hidden sm:inline">Back Office</span>
-              </Button>
-            </Link>
             <Link to="/app">
               <Button size="sm" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-90 shadow-[var(--shadow-glow-gold)]">
                 Launch App <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -175,11 +158,6 @@ const Landing: React.FC = () => {
           </div>
         </div>
       </header>
-
-      {/* Live ticker — sits flush under the nav, breathes the brand */}
-      <div className="fixed left-0 right-0 top-[60px] z-40">
-        <LiveTicker />
-      </div>
 
       {/* ============= HERO ============= */}
       <section id="top" className="relative flex min-h-[100svh] items-center pt-28 pb-8 sm:pt-32 sm:pb-12 lg:min-h-[min(900px,100svh)]">
@@ -241,7 +219,6 @@ const Landing: React.FC = () => {
               {trustBadges.map(({ icon: Icon, label }) => (
                 <span key={label} className="flex items-center gap-1.5"><Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> {label}</span>
               ))}
-              <span className="flex items-center gap-1.5"><Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[hsl(var(--gold))]" /> 6.2M+ nomads online</span>
             </div>
           </div>
         </div>
@@ -265,17 +242,8 @@ const Landing: React.FC = () => {
                 "The 184<sup className="text-[0.6em] text-[hsl(var(--gold))]">th</sup> day might be the most expensive day of your life."
               </h2>
               <p className="text-lg text-[hsl(30_12%_80%)] leading-relaxed">
-                One miscounted day can trigger tax residency in a country you never intended to live in: audits, double taxation, frozen bank accounts. SuperNomad counts every day silently — across <strong className="text-white">195+ jurisdictions</strong> — and warns you long before the line is crossed.
+                A miscounted day can affect tax residency and reporting obligations. SuperNomad helps organize travel-day records and presents relevant rules with source links so you can review them with a qualified advisor.
               </p>
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                {stats.map((s) => (
-                  <div key={s.label} className="rounded-xl border border-[hsl(43_96%_56%/0.2)] bg-[hsl(220_22%_12%/0.6)] backdrop-blur-sm p-5">
-                    <div className="font-display text-3xl md:text-4xl font-bold text-[hsl(var(--gold))]">{s.value}</div>
-                    <div className="text-sm font-semibold text-white mt-1">{s.label}</div>
-                    <div className="text-xs text-[hsl(30_12%_70%)] mt-1 leading-snug">{s.sub}</div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -290,7 +258,7 @@ const Landing: React.FC = () => {
             <div className="space-y-6">
               <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)]"><PlayCircle className="mr-1.5 h-3 w-3" /> Cinematic website layer</Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">Less SaaS page. More private-bank travel command room.</h2>
-              <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">The new landing experience shows SuperNomad through real-world moments: arrival, protection, community, identity and company intelligence — while keeping instant access to the app and Back Office.</p>
+              <p className="text-lg leading-relaxed text-[hsl(30_12%_80%)]">Explore SuperNomad through practical moments: arrival, travel planning, community, identity, and cross-border organization — with direct access to the app.</p>
                <div className="flex flex-wrap gap-3">
                  <Button onClick={() => setFilmMode('teaser')} className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><PlayCircle className="mr-2 h-4 w-4" /> Play teaser</Button>
                </div>
@@ -318,7 +286,7 @@ const Landing: React.FC = () => {
           <div className="text-center mb-14 max-w-3xl mx-auto">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] mb-4">The Fix</Badge>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">Every nomad's pain — solved by one platform.</h2>
-            <p className="text-lg text-[hsl(30_12%_80%)]">Stop juggling spreadsheets, government portals, and a dozen insecure apps. SuperNomad replaces all of them.</p>
+            <p className="text-lg text-[hsl(30_12%_80%)]">Bring travel records, official portals, and everyday cross-border tools into one organized workspace.</p>
           </div>
           <div className="grid sm:grid-cols-2 gap-5">
             {pains.map(({ icon: Icon, title, fix, desc }) => (
@@ -358,9 +326,9 @@ const Landing: React.FC = () => {
               <ul className="space-y-3 text-[hsl(30_12%_88%)]">
                 {[
                   'Books flights, hotels, and car rentals — with your loyalty cards already attached.',
-                  'Reserves restaurant tables in 100+ cities, matched to your cuisine and budget.',
+                  'Finds restaurant options matched to your cuisine and budget.',
                   'Surfaces concerts, padel matches, golf tee times, and local events worth your time.',
-                  'Optimizes airport lounges, points redemption, and upgrade timing automatically.',
+                  'Compares airport lounges, points redemption, and upgrade options.',
                   'Remembers every preference across cities — no re-explaining who you are.',
                 ].map((b) => (
                   <li key={b} className="flex items-start gap-2.5">
@@ -389,7 +357,7 @@ const Landing: React.FC = () => {
                   { icon: Music2, title: 'Concerts & Events', desc: 'Curated to your taste, not algorithms' },
                   { icon: Award, title: 'Loyalty Optimizer', desc: 'Auto-applies the right card every time' },
                   { icon: Headphones, title: 'Airport Lounges', desc: 'Best lounge per terminal, on the fly' },
-                  { icon: Wallet, title: 'Agentic Wallet', desc: 'Autonomous booking with your rules' },
+                  { icon: Check, title: 'Approval Controls', desc: 'Every demo purchase requires your confirmation' },
                   { icon: Heart, title: 'Personal Memory', desc: 'Knows your style across every city' },
                 ].map(({ icon: Icon, title, desc }) => (
                   <div
@@ -409,106 +377,15 @@ const Landing: React.FC = () => {
               <div className="mt-5 rounded-2xl border border-[hsl(43_96%_56%/0.2)] bg-[hsl(220_22%_10%/0.85)] p-5 shadow-[0_20px_60px_-20px_hsl(0_0%_0%/0.6)]">
                 <div className="flex items-center gap-2 mb-3 text-xs text-[hsl(var(--gold))]">
                   <span className="inline-flex h-2 w-2 rounded-full bg-[hsl(var(--gold))]" />
-                  Live · Sofia is online
+                  Concierge demo
                 </div>
                 <div className="space-y-2.5 text-sm">
                   <div className="text-[hsl(30_12%_70%)]"><span className="text-white">You:</span> "Book me Lisbon → Madrid Friday morning."</div>
                   <div className="text-[hsl(30_12%_88%)]">
-                    <span className="text-[hsl(var(--gold))]">Sofia:</span> TAP 8:05 → window seat, vegetarian meal, points on your Star Alliance Gold. Suite at Rosewood with late check-in. Padel court booked Saturday 10 am with Carlos. Confirm?
+                    <span className="text-[hsl(var(--gold))]">Sofia:</span> I can search a Friday-morning Lisbon–Madrid itinerary and prepare user-approved demo options. Shall I include a hotel and local activities?
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============= THREAT INTELLIGENCE / GUARDIAN SPOTLIGHT ============= */}
-      <section id="guardian" className="relative py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={securityImg} alt="" className="w-full h-full object-cover opacity-25" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220_22%_8%)] via-[hsl(220_22%_8%/0.92)] to-[hsl(220_22%_8%)]" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* LEFT — Live threat panel */}
-            <div className="lg:col-span-7 order-2 lg:order-1">
-              <div className="rounded-2xl border border-[hsl(0_80%_58%/0.25)] bg-[hsl(220_22%_10%/0.9)] backdrop-blur-sm p-6 shadow-[0_30px_80px_-20px_hsl(0_0%_0%/0.7)]">
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-2">
-                    <Radar className="h-5 w-5 text-[hsl(0_80%_68%)]" />
-                    <span className="font-display font-bold text-white">Threat Intelligence · Live</span>
-                  </div>
-                  <Badge className="bg-[hsl(0_80%_58%/0.18)] text-[hsl(0_80%_72%)] border-[hsl(0_80%_58%/0.35)] text-[10px]">
-                    500+ incidents · 200+ cities
-                  </Badge>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    { city: 'Paris', lvl: 'Caution', color: 'hsl(43_96%_56%)', msg: 'Transport strike — metro line 1 disrupted until 18:00' },
-                    { city: 'Bangkok', lvl: 'Advisory', color: 'hsl(43_96%_56%)', msg: 'Air quality unhealthy (AQI 168) — limit outdoor activity' },
-                    { city: 'Mexico City', lvl: 'Alert', color: 'hsl(0_80%_62%)', msg: 'Civil demonstration near Reforma 14:00 — avoid corridor' },
-                    { city: 'Dubai', lvl: 'Safe', color: 'hsl(160_60%_50%)', msg: 'No active incidents · Guardian standing by' },
-                  ].map((t) => (
-                    <div key={t.city} className="flex items-start gap-3 rounded-lg border border-[hsl(43_96%_56%/0.12)] bg-[hsl(220_22%_12%)] p-3">
-                      <span
-                        className="mt-1.5 inline-flex h-2.5 w-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: t.color, boxShadow: `0 0 12px ${t.color}` }}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-white text-sm">{t.city}</span>
-                          <span className="text-[10px] uppercase tracking-wider" style={{ color: t.color }}>{t.lvl}</span>
-                        </div>
-                        <div className="text-xs text-[hsl(30_12%_78%)] leading-snug">{t.msg}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-5 pt-4 border-t border-[hsl(43_96%_56%/0.12)] grid grid-cols-3 gap-3 text-center">
-                  <div>
-                    <div className="font-display text-2xl font-bold text-white">24/7</div>
-                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Monitoring</div>
-                  </div>
-                  <div>
-                    <div className="font-display text-2xl font-bold text-[hsl(var(--gold))]">&lt; 60s</div>
-                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Alert latency</div>
-                  </div>
-                  <div>
-                    <div className="font-display text-2xl font-bold text-white">8</div>
-                    <div className="text-[10px] uppercase tracking-wider text-[hsl(30_12%_70%)]">Threat types</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT — Pitch */}
-            <div className="lg:col-span-5 space-y-6 order-1 lg:order-2">
-              <Badge className="bg-[hsl(0_80%_58%/0.15)] text-[hsl(0_80%_70%)] border-[hsl(0_80%_58%/0.3)]">
-                <ShieldAlert className="mr-1.5 h-3 w-3" /> Threat Intelligence + Guardian
-              </Badge>
-              <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-                Because peace of mind is <span className="text-[hsl(0_80%_70%)]">non-negotiable.</span>
-              </h2>
-              <p className="text-lg text-[hsl(30_12%_82%)] leading-relaxed">
-                SuperNomad continuously fuses 500+ live incidents across 200+ cities — terrorism, civil unrest, severe weather, cyber, transport, and health — and warns you before you walk into trouble. The Concierge re-routes flights, cancels bookings, and notifies your family automatically.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { icon: Radar, t: 'Real-time fusion', d: 'Government feeds, news wires, and crowd-sourced reports.' },
-                  { icon: Activity, t: 'Personal safety score', d: 'Per neighborhood, per hour, for your itinerary.' },
-                  { icon: Eye, t: 'Black Box Guardian', d: 'WORM evidence recorder — un-erasable and encrypted.' },
-                  { icon: Siren, t: 'SOS + Cyber Helpline', d: '24/7 human + AI response, embassy hotline.' },
-                ].map(({ icon: Icon, t, d }) => (
-                  <li key={t} className="flex items-start gap-3 rounded-lg border border-[hsl(0_80%_58%/0.18)] bg-[hsl(220_22%_12%/0.6)] p-3">
-                    <Icon className="h-5 w-5 text-[hsl(0_80%_70%)] mt-0.5 shrink-0" />
-                    <div>
-                      <div className="font-semibold text-white text-sm">{t}</div>
-                      <div className="text-xs text-[hsl(30_12%_78%)] leading-snug">{d}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
@@ -520,7 +397,7 @@ const Landing: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
           <div className="text-center mb-14 max-w-3xl mx-auto">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] mb-4">The Ecosystem</Badge>
-            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">65+ tools. One sovereign hub.</h2>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">Your cross-border tools. One sovereign hub.</h2>
             <p className="text-lg text-[hsl(30_12%_80%)]">From booking a flight, to optimizing your tax position, to surviving a border crisis — it all lives here.</p>
           </div>
 
@@ -539,7 +416,7 @@ const Landing: React.FC = () => {
             {[
               { img: travelImg, title: 'Travel', tag: 'Air charter · Loyalty · Concierge' },
               { img: securityImg, title: 'Identity Vault', tag: 'AES-256 · Zero-knowledge' },
-              { img: communityImg, title: 'Local Living', tag: '100+ cities · Live community' },
+              { img: communityImg, title: 'Local Living', tag: 'City services · User-led community' },
             ].map(({ img, title, tag }) => (
               <div key={title} className="relative rounded-2xl overflow-hidden ring-1 ring-[hsl(43_96%_56%/0.2)] aspect-[4/3] group">
                 <img src={img} alt={title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" width={1024} height={768} />
@@ -588,7 +465,7 @@ const Landing: React.FC = () => {
           <div className="text-center mb-14 max-w-3xl mx-auto">
             <Badge className="bg-[hsl(43_96%_56%/0.15)] text-[hsl(var(--gold))] border-[hsl(43_96%_56%/0.3)] mb-4"><Route className="mr-1.5 h-3 w-3" /> AI command map</Badge>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">One user request. A full operating system behind it.</h2>
-            <p className="text-lg text-[hsl(30_12%_80%)]">The public website now makes the intelligence layer visible: CEO strategy, directors, concierge routing and specialist agents working together without wasting tokens.</p>
+            <p className="text-lg text-[hsl(30_12%_80%)]">Specialized assistants coordinate travel research, compliance context, identity controls, and user-approved actions.</p>
           </div>
           <div className="grid md:grid-cols-4 gap-4">
             {aiMap.map(({ icon: Icon, title, desc }, index) => (
@@ -611,10 +488,10 @@ const Landing: React.FC = () => {
               <img src={lifestyleImg} alt="Friends playing padel at sunset" loading="lazy" className="w-full h-auto" width={1024} height={1024} />
             </div>
             <div className="space-y-6 order-1 md:order-2">
-              <Badge className="bg-[hsl(12_88%_59%/0.15)] text-[hsl(12_88%_70%)] border-[hsl(12_88%_59%/0.3)]">Live · Connect · Thrive</Badge>
+              <Badge className="bg-[hsl(12_88%_59%/0.15)] text-[hsl(12_88%_70%)] border-[hsl(12_88%_59%/0.3)]">Discover · Connect · Thrive</Badge>
               <h2 className="font-display text-3xl md:text-5xl font-bold">Move cities. Never restart your life.</h2>
               <p className="text-lg text-[hsl(30_12%_80%)] leading-relaxed">
-                Padel partners in Madrid. Cycling crews in Mallorca. Golf in Phuket. Dinner in Lisbon. SuperNomad turns every new city into a community — instantly.
+                Discover padel, cycling, golf, dining, and user-led communities while settling into a new city.
               </p>
               <div className="grid sm:grid-cols-3 gap-3">
                 {sports.map((s) => (
@@ -640,9 +517,9 @@ const Landing: React.FC = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               { icon: Zap, title: 'Proactive, not reactive', desc: 'AI anticipates tax thresholds, visa deadlines, and compliance shifts before they hit.' },
-              { icon: Mic, title: 'Fully voice-controlled', desc: 'Natural commands across 13 languages. Hands-free, anywhere on Earth.' },
-              { icon: Lock, title: 'Sovereign by design', desc: 'AES-256-GCM, zero-knowledge vaults, and GDPR Art. 17 right to erasure.' },
-              { icon: Globe2, title: 'Truly global', desc: '195+ countries, 100+ cities, embassies, weather, threats, and community.' },
+              { icon: Mic, title: 'Voice-enabled', desc: 'Use supported voice commands for hands-free navigation and Concierge conversations.' },
+              { icon: Lock, title: 'Sovereign by design', desc: 'AES-256-GCM local vault encryption, consent controls, and account data-deletion tools.' },
+              { icon: Globe2, title: 'Cross-border by design', desc: 'Bring travel records, official links, weather, embassies, and local discovery together.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="text-center p-6">
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-[hsl(var(--gold-dark))] to-[hsl(var(--gold-light))] flex items-center justify-center text-[hsl(220_22%_10%)] mb-4 shadow-[var(--shadow-glow-gold)]">
@@ -671,13 +548,12 @@ const Landing: React.FC = () => {
               <div className="font-display text-5xl font-bold mb-6">$0<span className="text-base font-normal text-[hsl(30_12%_70%)]">/month</span></div>
               <ul className="space-y-3 text-sm mb-7">
                 {[
-                  '1,000,000 AI requests / month',
                   'AI Concierge — chat mode',
-                  'All 195+ countries · Visa & ETIAS hub',
+                  'Visa and travel-authorisation hub',
                   'Snomad ID encrypted vault',
-                  'Black Box Guardian + Trust Pass',
-                  'Agentic Wallet (autonomous booking)',
-                  'Community, weather, and threat intel',
+                  'Trust Pass identity controls',
+                  'User-approved travel booking demo',
+                  'Community, weather, and travel advisories',
                 ].map(b => (
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
@@ -694,11 +570,10 @@ const Landing: React.FC = () => {
               <ul className="space-y-3 text-sm mb-7">
                 {[
                   'Everything in Free',
-                  '10,000,000 AI requests / month',
                   'AI Concierge — voice + chat with memory',
                   'Tax Day Calculator (183-day, SPT, residency)',
                   'Travel Reports (PDF + Excel exports)',
-                  'Priority 24/7 support',
+                  'Priority support',
                 ].map(b => (
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
@@ -723,10 +598,10 @@ const Landing: React.FC = () => {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             {[
-              { icon: Lock, title: 'AES-256-GCM', desc: 'Military-grade encryption for vault, identity, and payment data.' },
-              { icon: Shield, title: 'GDPR Art. 17', desc: 'Right to erasure — wipe your data with one click, anytime.' },
-              { icon: Eye, title: 'Zero-Knowledge', desc: 'We cannot read your vault. Only you hold the keys.' },
-              { icon: Check, title: 'CCPA Ready', desc: 'California Consumer Privacy Act compliant from day one.' },
+              { icon: Lock, title: 'AES-256-GCM', desc: 'Client-side encryption for locally stored vault data.' },
+              { icon: Shield, title: 'Deletion Controls', desc: 'Tools for requesting account-data deletion.' },
+              { icon: Eye, title: 'Local Vault', desc: 'Sensitive vault fields are encrypted before local storage.' },
+              { icon: Check, title: 'Consent Controls', desc: 'Permission choices are presented before connected actions.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="rounded-xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_10%)] p-5">
                 <Icon className="h-6 w-6 text-[hsl(var(--gold))] mb-3" />
@@ -779,11 +654,10 @@ const Landing: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_11%/0.72)] p-5 sm:p-6">
             <div className="text-center sm:text-left">
               <div className="font-display text-2xl font-bold text-white">Go straight to the product.</div>
-              <div className="text-sm text-[hsl(30_12%_76%)]">The cinematic layer never blocks app access or investor/staff Back Office access.</div>
+              <div className="text-sm text-[hsl(30_12%_76%)]">Explore the product directly in guided demo mode.</div>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
               <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><Rocket className="mr-2 h-4 w-4" /> Launch App</Button></Link>
-              <Link to="/admin"><Button variant="outline" className="border-[hsl(43_96%_56%/0.4)] bg-transparent text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white"><Building2 className="mr-2 h-4 w-4 text-[hsl(var(--gold))]" /> Back Office</Button></Link>
             </div>
           </div>
         </div>
@@ -801,7 +675,7 @@ const Landing: React.FC = () => {
             Your sovereign life,{' '}
             <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] bg-clip-text text-transparent">starts now.</span>
           </h2>
-          <p className="text-lg text-[hsl(30_12%_80%)] mb-8">Open the app. Try it as a demo. Live borderless in 60 seconds.</p>
+          <p className="text-lg text-[hsl(30_12%_80%)] mb-8">Open the app and explore the guided demo.</p>
           <Link to="/app">
             <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-lg px-10 py-7 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
               <Rocket className="mr-2 h-5 w-5" /> Launch SuperNomad
@@ -847,7 +721,7 @@ const Landing: React.FC = () => {
             <div>© 2026 SuperNomad. Built for the borderless generation.</div>
             <div className="flex flex-wrap gap-x-5 gap-y-1 items-center">
               <span className="flex items-center gap-1.5"><Lock className="h-3 w-3 text-[hsl(var(--gold))]" /> AES-256-GCM</span>
-              <span className="flex items-center gap-1.5"><Shield className="h-3 w-3 text-[hsl(var(--gold))]" /> GDPR · CCPA</span>
+              <span className="flex items-center gap-1.5"><Shield className="h-3 w-3 text-[hsl(var(--gold))]" /> Privacy controls</span>
               <span>SuperNomad is not a tax, legal, or financial advisor.</span>
             </div>
           </div>

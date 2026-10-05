@@ -2,44 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, MessageCircle, X, ArrowRight } from 'lucide-react';
 
-/* ---------------- Live ticker ---------------- */
-export const LiveTicker: React.FC = () => {
-  const [time, setTime] = useState(() => new Date());
-  useEffect(() => {
-    const t = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  const hh = time.toUTCString().slice(17, 22);
-  const items = [
-    `${hh} UTC · live`,
-    '6,258,490 nomads online',
-    'Lisbon 22°C · clear',
-    'Dubai 31°C · haze',
-    'Singapore 29°C · rain',
-    'EUR/USD 1.08',
-    'GBP/USD 1.27',
-    'BTC $104,210',
-    '195+ jurisdictions tracked',
-    'ETIAS · live',
-    'Schengen 90/180 · monitored',
-    '500+ safety incidents · last 24h',
-    'AES-256-GCM · zero-knowledge',
-  ];
-  const loop = [...items, ...items];
-  return (
-    <div className="sn-ticker-mask w-full overflow-hidden border-y border-[hsl(43_96%_56%/0.18)] bg-[hsl(220_22%_5%/0.7)] backdrop-blur-sm">
-      <div className="sn-ticker-track py-2 text-[11px] uppercase tracking-[0.18em] text-[hsl(30_12%_82%)] sm:text-xs">
-        {loop.map((it, i) => (
-          <span key={i} className="mx-6 flex items-center gap-2 whitespace-nowrap">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--gold))] shadow-[0_0_8px_hsl(43_96%_56%/0.8)]" />
-            {it}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 /* ---------------- Typewriter headline ---------------- */
 export const Typewriter: React.FC<{ text: string; speed?: number; className?: string }> = ({ text, speed = 55, className }) => {
   const [n, setN] = useState(0);

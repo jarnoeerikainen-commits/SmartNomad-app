@@ -80,8 +80,7 @@ const TermsAndConditions: React.FC = () => {
               <li>AI-powered travel assistance (AI Doctor, AI Lawyer, AI Planner, Concierge)</li>
               <li>Identity Vault (Snomad ID) with AES-256-GCM encrypted document storage</li>
               <li>Currency conversion, digital banking, payment management, and financial tools</li>
-              <li>Emergency services, SOS, embassy directory, and safety information</li>
-              <li>Black Box Guardian personal safety system (DEMO MODE)</li>
+              <li>Embassy directory and sourced travel-safety information</li>
               <li>Cyber Helpline & Threat Intelligence monitoring</li>
               <li>Community features: Social Vibe, Nomad Pulse, Marketplace</li>
               <li>Local services discovery, weather, wellness, and recommendations</li>
@@ -196,7 +195,7 @@ const TermsAndConditions: React.FC = () => {
               7.5. <strong>AI Memory & Personalisation:</strong> SuperNomad may store distilled facts and semantic embeddings from your AI conversations to improve future interactions. You may delete this data at any time through the Data Management settings. AI memories are isolated by device and cannot be accessed by other users.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              7.6. <strong>Safety Features — DEMO MODE:</strong> The Black Box Guardian, SOS Services, and emergency AI features operate exclusively in DEMO MODE in the current version. NO real emergency calls, police alerts, GPS tracking signals, or distress notifications are transmitted to any emergency service, law enforcement agency, or third party. SuperNomad is not a licensed security service, emergency response provider, or law enforcement agency. In any genuine emergency, you must contact local emergency services directly (112 EU, 911 US, 999 UK, 000 AU).
+              7.6. <strong>Emergency Services:</strong> SuperNomad is not an emergency response provider. It does not place emergency calls, alert police, or transmit distress notifications to emergency services. In a genuine emergency, contact the relevant local emergency service directly.
             </p>
           </section>
 
@@ -231,7 +230,7 @@ const TermsAndConditions: React.FC = () => {
               <li>Unauthorised access, use, or alteration of your transmissions or content</li>
               <li>Tax, visa, immigration, or financial decisions made based on Service information</li>
               <li>Inaccuracies in travel day calculations, tax residency tracking, visa monitoring, or Schengen calculations</li>
-              <li>Actions taken or not taken based on Black Box Guardian, SOS Services, or Cyber Helpline outputs</li>
+              <li>Actions taken or not taken based on travel-safety or Cyber Helpline information</li>
               <li>Medical, legal, or security decisions influenced by AI-generated responses</li>
               <li>Data loss from the Identity Vault, browser localStorage clearing, or device changes</li>
               <li>Disruptions to third-party services (AI providers, payment processors, mapping services)</li>
