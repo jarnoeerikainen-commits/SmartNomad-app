@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
-import { ArrowRight, CheckCircle2, Hotel, Plane, Scale, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Hotel, Plane, Scale, ShieldAlert } from 'lucide-react';
 import { Country } from '@/types/country';
-import { ThreatIntelligenceService } from '@/services/ThreatIntelligenceService';
 import { DEMO_BOOKINGS_CHANGED_EVENT, DemoBookingStore, type StoredDemoBooking } from '@/services/DemoBookingStore';
 import { DEMO_RIDES_CHANGED_EVENT, DemoRideStore, type StoredDemoRide } from '@/services/DemoRideStore';
 import { Badge } from '@/components/ui/badge';
@@ -119,25 +118,17 @@ const BookingDossier = ({ booking, relatedBookings, rides, open, onOpenChange }:
 };
 
 const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate }) => {
-  const [stats, setStats] = useState(() => ThreatIntelligenceService.getStatistics());
-  const [inDanger, setInDanger] = useState(() => ThreatIntelligenceService.isUserInDangerZone());
   const [bookings, setBookings] = useState<StoredDemoBooking[]>(() => DemoBookingStore.read());
   const [rides, setRides] = useState<StoredDemoRide[]>(() => DemoRideStore.read());
   const [dossierOpen, setDossierOpen] = useState(false);
 
   useEffect(() => {
-    const refreshThreats = () => {
-      setStats(ThreatIntelligenceService.getStatistics());
-      setInDanger(ThreatIntelligenceService.isUserInDangerZone());
-    };
     const refreshBookings = () => setBookings(DemoBookingStore.read());
     const refreshRides = () => setRides(DemoRideStore.read());
-    const id = window.setInterval(refreshThreats, 60_000);
     window.addEventListener(DEMO_BOOKINGS_CHANGED_EVENT, refreshBookings);
     window.addEventListener(DEMO_RIDES_CHANGED_EVENT, refreshRides);
     window.addEventListener('storage', refreshBookings);
     return () => {
-      window.clearInterval(id);
       window.removeEventListener(DEMO_BOOKINGS_CHANGED_EVENT, refreshBookings);
       window.removeEventListener(DEMO_RIDES_CHANGED_EVENT, refreshRides);
       window.removeEventListener('storage', refreshBookings);
@@ -165,17 +156,11 @@ const MorningBriefing: React.FC<MorningBriefingProps> = ({ countries, onNavigate
   const taxTone: Tone = daysThisYear >= 183 ? 'alert' : daysThisYear >= 146 ? 'warn' : 'ok';
   const taxDetail = taxTone === 'alert' ? `Tax residency threshold reached in ${currentYear}.` : `${remainingTax} days of headroom this year.`;
 
-  const nearby = stats.activeNearby || 0;
-  const critical = stats.critical || 0;
-  const threatTone: Tone = inDanger || critical > 0 ? 'alert' : nearby > 0 ? 'warn' : 'ok';
-  const threatHeadline = threatTone === 'alert' ? `${critical} critical · ${nearby} nearby` : nearby > 0 ? `${nearby} alert${nearby > 1 ? 's' : ''} nearby` : 'No threats nearby';
-  const threatDetail = threatTone === 'alert' ? 'Critical incidents detected. Tap to view actions.' : nearby > 0 ? 'Non-critical incidents within 100 km of your location.' : 'All monitored sources clear within 100 km.';
-
   return (
     <section aria-label="Home status" className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <BriefingCard icon={nextBooking?.bookingType === 'hotel' ? Hotel : Plane} title="Next Trip" headline={tripHeadline} detail={tripDetail} tone="ok" cta={nextBooking ? 'Open full details' : 'Plan with Concierge'} onClick={() => nextBooking ? setDossierOpen(true) : onNavigate('ai-planner')} />
       <BriefingCard icon={Scale} title="Tax Days" headline={`${daysThisYear} / 183`} detail={taxDetail} tone={taxTone} cta="Open Tax Hub" onClick={() => onNavigate('tax-residency')} />
-      <BriefingCard icon={threatTone === 'ok' ? ShieldCheck : ShieldAlert} title="Threats Near You" headline={threatHeadline} detail={threatDetail} tone={threatTone} cta="Open Threat Intelligence" onClick={() => onNavigate('threats')} />
+      <BriefingCard icon={ShieldAlert} title="Travel Advisories" headline="Review sourced updates" detail="Open official advisories and named-source travel information for your location." tone="warn" cta="Open Travel Advisories" onClick={() => onNavigate('threats')} />
       <BookingDossier booking={nextBooking} relatedBookings={relatedBookings} rides={relatedRides} open={dossierOpen} onOpenChange={setDossierOpen} />
     </section>
   );

@@ -26,9 +26,12 @@ describe('public surface governance', () => {
 
   it('keeps ordinary app navigation free of staff shortcuts', () => {
     const sidebar = read('../../components/AppSidebar.tsx');
+    const home = read('../../components/dashboard/MorningBriefing.tsx');
     const shortcuts = read('../../components/BackToWebsiteButton.tsx');
 
     expect(sidebar).not.toMatch(/id:\s*['"]admin['"]/);
+    expect(sidebar).not.toMatch(/setIsInDangerZone\(true\)/);
+    expect(home).not.toMatch(/critical\s*·|incidents detected|sources clear/i);
     expect(shortcuts).not.toContain('/admin');
     expect(shortcuts).not.toMatch(/Back Office/i);
   });

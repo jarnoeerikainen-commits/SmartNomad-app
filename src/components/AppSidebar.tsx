@@ -51,21 +51,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   const ageGroup = typeof window !== 'undefined' ? localStorage.getItem('ageGroup') || 'adult' : 'adult';
   const isTeenRestricted = ageGroup === 'teen';
   
-  // Check for danger zone (imported from ThreatIntelligenceService)
-  const [isInDangerZone, setIsInDangerZone] = React.useState(false);
-  
-  React.useEffect(() => {
-    // Simulate threat checking - in real app this would call the service
-    const checkThreats = () => {
-      // Mock: Set to true to show blinking red badge
-      setIsInDangerZone(true);
-    };
-    
-    checkThreats();
-    const interval = setInterval(checkThreats, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => 
       prev.includes(groupId) 
@@ -87,7 +72,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'safety',
       label: 'Safety & Emergency',
       items: [
-        { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: isInDangerZone ? 'ALERT' : 'SAFE', variant: isInDangerZone ? 'destructive' as const : 'secondary' as const },
+        { id: 'threats', label: t('sidebar.threats'), icon: Shield, badge: 'SOURCES', variant: 'secondary' as const },
         { id: 'guardian', label: t('sidebar.guardian'), icon: ShieldCheck, badge: 'NEW', variant: 'secondary' as const },
         { id: 'emergency', label: t('sidebar.emergency'), icon: AlertTriangle, badge: 'SOS', variant: 'destructive' as const },
         { id: 'embassy', label: t('sidebar.embassy'), icon: Flag, badge: 'OFFICIAL', variant: 'secondary' as const },

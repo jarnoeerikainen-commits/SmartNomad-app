@@ -5,7 +5,7 @@
 - [x] Remove static live indicators, unsourced figures, incident statistics, and unsupported absolute claims from the public website.
 - [x] Remove Guardian/SOS, autonomous booking, and Agentic Wallet from current public capability and pricing copy.
 - [x] Remove visible Back Office links and require an authenticated staff role for `/admin`.
-- [ ] Add regression tests and verify website, app, Concierge, and staff access on desktop and mobile.
+- [x] Add regression tests and verify website, app, Concierge, and staff access on desktop and mobile.
 
 ## Concierge response reliability
 
