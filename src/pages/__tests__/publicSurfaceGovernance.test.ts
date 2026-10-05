@@ -15,6 +15,8 @@ describe('public surface governance', () => {
       /autonomous booking/i,
       /Black Box Guardian/i,
       /SOS\s*\+/i,
+      /Sofia is online/i,
+      /100\+ cities/i,
       /to="\/admin"/i,
       />Back Office</i,
     ];
