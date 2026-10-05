@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Home, MapPin, FileText, CreditCard, Shield, Settings, HelpCircle,
   Newspaper, Calculator, Plane, Heart, AlertTriangle, Car,
@@ -47,7 +46,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
   onUpgradeClick
 }) => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
   const { isVisible } = useFeaturePreferences();
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['safety', 'tax', 'premium', 'travel', 'local']);
   const ageGroup = typeof window !== 'undefined' ? localStorage.getItem('ageGroup') || 'adult' : 'adult';
@@ -81,7 +79,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       id: 'main',
       label: t('sidebar.quick_actions'),
       items: [
-        { id: 'admin', label: 'Back Office', icon: Briefcase, badge: 'STAFF', variant: 'default' as const },
         { id: 'dashboard', label: t('nav.dashboard'), icon: Home },
         { id: 'customize', label: 'Customize App', icon: BarChart3 },
       ]
@@ -246,30 +243,6 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
                             <span className="flex-1 text-left">{item.label}</span>
                             {item.badge && (
                               <Badge variant={item.variant || 'secondary'} className="ml-auto text-xs">
-                                {item.badge}
-                              </Badge>
-                            )}
-                          </Button>
-                        );
-                      }
-
-                      // Handle Back Office (route navigation)
-                      if (item.id === 'admin') {
-                        return (
-                          <Button
-                            key={item.id}
-                            variant="default"
-                            className="w-full justify-start gap-3 border-0 text-[hsl(220_22%_10%)] font-semibold shadow-medium hover:shadow-lg hover:scale-[1.02] transition-all"
-                            style={{ background: 'var(--gradient-gold)', boxShadow: 'var(--shadow-glow-gold)' }}
-                            onClick={() => {
-                              navigate('/admin');
-                              onClose?.();
-                            }}
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span className="flex-1 text-left">{item.label}</span>
-                            {item.badge && (
-                              <Badge variant="secondary" className="ml-auto text-xs bg-[hsl(220_22%_10%)] text-[hsl(var(--gold))]">
                                 {item.badge}
                               </Badge>
                             )}

@@ -170,9 +170,9 @@ const Auth: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <FeatureHighlight icon={<Globe className="h-5 w-5 text-primary" />} title="195+ Countries" desc="Tax tracking, visa management, and residency intelligence" />
-            <FeatureHighlight icon={<Shield className="h-5 w-5 text-primary" />} title="Black Box Guardian" desc="Military-grade personal safety with encrypted evidence chain" />
-            <FeatureHighlight icon={<Zap className="h-5 w-5 text-primary" />} title="8 AI Specialists" desc="Legal, medical, travel, financial — your concierge team" />
+            <FeatureHighlight icon={<Globe className="h-5 w-5 text-primary" />} title="Cross-Border Tools" desc="Tax tracking, visa management, and residency information" />
+            <FeatureHighlight icon={<Shield className="h-5 w-5 text-primary" />} title="Private by Design" desc="Encrypted local storage and consent-led access controls" />
+            <FeatureHighlight icon={<Zap className="h-5 w-5 text-primary" />} title="AI Specialists" desc="Travel, compliance, and local-life assistance" />
           </div>
         </div>
       </div>

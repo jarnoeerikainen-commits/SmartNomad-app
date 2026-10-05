@@ -18,7 +18,7 @@ const STAFF_RANK = ['admin', 'support', 'affiliate_manager', 'affiliate_partner'
 
 /**
  * Resolves the highest staff role for the current user.
- * In demo mode (no auth), returns synthetic 'admin' role so investors can browse the back office read-only.
+ * Anonymous users never receive a synthetic staff role.
  */
 export function useStaffRole(): StaffState {
   const { user, isLoading: authLoading } = useAuth();
@@ -38,17 +38,16 @@ export function useStaffRole(): StaffState {
     async function resolve() {
       if (authLoading) return;
 
-      // Demo / unauthenticated → grant synthetic admin (read-only investor preview)
       if (!user) {
         if (!cancelled) {
           setState({
-            role: 'admin',
-            isStaff: true,
-            isAdmin: true,
-            isSupport: true,
-            isAffiliateManager: true,
+            role: null,
+            isStaff: false,
+            isAdmin: false,
+            isSupport: false,
+            isAffiliateManager: false,
             isLoading: false,
-            isDemoMode: true,
+            isDemoMode: false,
           });
         }
         return;
