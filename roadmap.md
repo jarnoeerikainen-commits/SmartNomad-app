@@ -1,5 +1,12 @@
 # Booking readiness roadmap
 
+## Public claims and staff-access cleanup
+
+- [ ] Remove static live indicators, unsourced figures, incident statistics, and unsupported absolute claims from the public website.
+- [ ] Remove Guardian/SOS, autonomous booking, and Agentic Wallet from current public capability and pricing copy.
+- [ ] Remove visible Back Office links and require an authenticated staff role for `/admin`.
+- [ ] Add regression tests and verify website, app, Concierge, and staff access on desktop and mobile.
+
 ## Concierge response reliability
 
 - [x] Accept and display the current Responses API stream without empty assistant messages.
