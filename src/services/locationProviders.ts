@@ -245,7 +245,16 @@ export async function reverseGeocode(lat: number, lon: number): Promise<Location
 
 // ---------- GPS (always fresh — no stale browser cache) ----------
 
-export function getGPSPosition(opts?: { freshOnly?: boolean }): Promise<GeolocationPosition | null> {
+export async function hasGrantedGPSPermission(): Promise<boolean> {
+  try {
+    return (await navigator.permissions?.query({ name: 'geolocation' }))?.state === 'granted';
+  } catch {
+    return false;
+  }
+}
+
+export async function getGPSPosition(opts?: { freshOnly?: boolean; requestPermission?: boolean }): Promise<GeolocationPosition | null> {
+  if (!opts?.requestPermission && !await hasGrantedGPSPermission()) return null;
   return new Promise((resolve) => {
     if (!('geolocation' in navigator)) return resolve(null);
     navigator.geolocation.getCurrentPosition(
@@ -260,7 +269,7 @@ export function getGPSPosition(opts?: { freshOnly?: boolean }): Promise<Geolocat
   });
 }
 
-export async function getGPSLocation(opts?: { freshOnly?: boolean }): Promise<LocationData | null> {
+export async function getGPSLocation(opts?: { freshOnly?: boolean; requestPermission?: boolean }): Promise<LocationData | null> {
   const pos = await getGPSPosition(opts);
   if (!pos) return null;
   return reverseGeocode(pos.coords.latitude, pos.coords.longitude);

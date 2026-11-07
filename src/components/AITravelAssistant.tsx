@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
+import { Menu, MessageCircle, Send, X, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX, ChevronUp } from 'lucide-react';
 import ConciergeSettings, { getConciergePrefs, ConciergePreferences } from './ConciergeSettings';
 import ConciergeAvatar from './ConciergeAvatar';
 import { ConciergeQuickLinks } from './BackToWebsiteButton';
@@ -1040,7 +1040,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
             <div className="flex gap-0.5 items-center">
-              <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" aria-label="Open navigation menu" onClick={() => window.dispatchEvent(new CustomEvent('supernomad:open-navigation'))}><MessageCircle className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" aria-label="Open navigation menu" onClick={() => window.dispatchEvent(new CustomEvent('supernomad:open-navigation'))}><Menu className="h-4 w-4" /></Button>
               <ConciergeQuickLinks />
               <ConciergeSettings onPrefsChange={setConciergePrefs} />
               {ttsSupported && (
