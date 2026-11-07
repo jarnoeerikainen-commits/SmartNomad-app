@@ -4,7 +4,7 @@
 
 - [x] Show the public homepage on first and repeat phone website visits.
 - [x] Make Demo APP open Concierge directly without changing AI or booking behavior.
-- [ ] Verify entry regressions, full app tests, and phone/desktop button flows.
+- [x] Verify entry regressions, 155 app tests, and fresh/repeat button flows at six phone/desktop sizes.
 
 ## Active Concierge choices and voice parity
 
