@@ -45,6 +45,7 @@ import DeferredAgeAccess from './auth/DeferredAgeAccess';
 import { useLocation } from '@/contexts/LocationContext';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 import { getHermesAssist } from '@/lib/conciergeHermes';
+import { getLifestyleContextForAI } from '@/services/LifestyleConnectorsService';
 
 
 interface Message {
@@ -59,7 +60,7 @@ interface Message {
 interface AITravelAssistantProps {
   currentLocation?: { country: string; city: string };
   citizenship?: string;
-  userProfile?: any;
+  userProfile?: unknown;
   embedded?: boolean;
 }
 
@@ -148,7 +149,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     try {
       const tm = JSON.parse(localStorage.getItem('travelMode') || '{}');
       if (tm?.mode === 'business') travelMode = 'business';
-    } catch {}
+    } catch { /* Invalid stored travel mode is ignored. */ }
 
     if (isDemoPersona && activePersona) {
       const p = activePersona;
@@ -244,7 +245,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           setInputMessage(prev => (prev ? prev : raw));
           localStorage.removeItem(PREFILL);
         }
-      } catch {}
+      } catch { /* Storage may be unavailable. */ }
     };
     consume();
     const handler = (e: Event) => {
@@ -407,7 +408,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       const smartCtx = await aiMemoryService.buildSmartContext(userMessage);
       persistentMemories = smartCtx.persistentMemories;
       conversationSummary = smartCtx.conversationSummary;
-    } catch {}
+    } catch { /* Continue without optional memories. */ }
 
     const activeThreats = dummyThreats
       .filter(t => t.isActive && (t.severity === 'critical' || t.severity === 'high' || t.severity === 'medium'))
@@ -433,19 +434,17 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
           const data = parsed.data;
           if (data?.categories) {
             cityServicesContext = `Verified providers in ${data.city}, ${data.country} (researched ${data.lastResearched}):\n` +
-              data.categories.map((cat: any) =>
-                `${cat.name}: ${cat.providers.map((p: any) => `${p.name} (★${p.rating}, ${p.website}, ${p.phone})`).join('; ')}`
+              data.categories.map((cat: { name: string; providers: Array<{ name: string; rating?: number; website?: string; phone?: string }> }) =>
+                `${cat.name}: ${cat.providers.map(p => `${p.name} (${p.website || ''}, ${p.phone || ''})`).join('; ')}`
               ).join('\n');
           }
         }
-      } catch {}
+      } catch { /* Ignore malformed optional city cache. */ }
     }
 
     // Build verified "everything I know" bundle
     const lifestyleString = (() => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { getLifestyleContextForAI } = require('@/services/LifestyleConnectorsService');
         return getLifestyleContextForAI() || undefined;
       } catch { return undefined; }
     })();
@@ -775,7 +774,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         if (msg.includes('allergic') || msg.includes('allergy') || msg.includes('medication')) {
           addMemory({ fact: `Health: ${userMessage.slice(0, 100)}`, category: 'health', durability: 'durable', source: 'conversation' });
         }
-      } catch {}
+      } catch { /* Optional local preference learning must not block replies. */ }
 
       // Trigger AI memory distillation every 4 exchanges (debounced)
       exchangeCountRef.current += 1;
@@ -937,7 +936,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     setInputMessage('');
 
     // ─── Ride-hailing intent: inject a RideBookingCard before the model replies
-    const rideIntent = RideHailingService.detectRideIntent(sentText);
+    const rideIntent = RideHailingService.detectRideIntent(text);
     if (rideIntent.isRide) {
       const city = conciergeLocation?.city || currentLocation?.city || 'your city';
       const dropoff = rideIntent.dropoffHint || (sentText.match(/airport/i) ? `${city} airport` : 'destination');
@@ -978,7 +977,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   };
 
   const submitUserInput = (text: string) => {
-    const lastUserIndex = messages.findLastIndex(message => message.isUser);
+    let lastUserIndex = -1;
+    messages.forEach((message, index) => { if (message.isUser) lastUserIndex = index; });
     const latestReply = messages.slice(lastUserIndex + 1).filter(message => !message.isUser).map(message => message.content).join('\n');
     const { chips } = parseActionChips(latestReply);
     const selected = matchConciergeChoice(text, chips.slice(0, 3));
@@ -1506,6 +1506,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                 {sttSupported && (
                   <Button
                     onClick={handleMicClick}
+                    aria-label={isListening ? 'Stop listening' : 'Speak to Concierge'}
                     variant={isListening ? 'default' : 'outline'}
                     size="sm"
                     className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}

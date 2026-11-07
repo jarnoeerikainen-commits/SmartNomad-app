@@ -3,7 +3,7 @@ import type { ActionChip } from './ActionChips';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, PhoneCall, FileText, CheckCircle2, Clock, MapPin, Calendar, CreditCard, Loader2, Shield, ExternalLink } from 'lucide-react';
+import { PhoneCall, FileText, CheckCircle2, Clock, MapPin, Calendar, CreditCard, Loader2, Shield, ExternalLink } from 'lucide-react';
 
 // ─── Action Types ──────────────────────────────────────────
 export type ActionType = 'phone-call' | 'document-fill' | 'reservation' | 'payment' | 'form-submit' | 'appointment';
@@ -119,7 +119,7 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items, onAction, disabled }) 
                 Waiting for your explicit review. Concierge actions involving money, reservations, or submitted data never run automatically.
               </div>
             )}
-            {action.details && action.status === 'completed' && (
+            {action.details && (
               <div className="grid grid-cols-2 gap-1 text-[11px] bg-background/60 rounded p-2">
                 {Object.entries(action.details).map(([key, value]) => (
                   <div key={key}>
@@ -128,13 +128,6 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items, onAction, disabled }) 
                   </div>
                 ))}
               </div>
-            )}
-
-            {/* Result message */}
-            {action.result && action.status === 'completed' && (
-              <p className="text-xs text-green-700 dark:text-green-400 font-medium">
-                ✅ {action.result}
-              </p>
             )}
 
             {/* Action URL */}
@@ -164,12 +157,13 @@ export function parseActionBlocks(content: string): { text: string; actions: Act
   const actions: ActionItem[][] = [];
   const text = content.replace(blockRegex, (_, raw) => {
     try {
-      let cleaned = raw.trim()
+      const cleaned = raw.trim()
         .replace(/,\s*([}\]])/g, '$1')
+        // eslint-disable-next-line no-control-regex
         .replace(/[\x00-\x1F\x7F]/g, '');
       const parsed = JSON.parse(cleaned);
       if (!Array.isArray(parsed)) return '';
-      const items: ActionItem[] = parsed.map((entry: any) => ({
+      const items: ActionItem[] = parsed.filter((entry: unknown) => entry && typeof entry === 'object').map((entry: Partial<ActionItem>) => ({
         type: entry.type || 'reservation',
         status: entry.status || 'pending',
         title: entry.title || 'Action',

@@ -16,7 +16,7 @@ export const sanitizeSpeechText = (text: string) => text
   .replace(/[*_~`#]/g, '')
   .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
   .replace(/^.*(?:Search on|Open in|Book (?:on|via|at)).*$/gm, '')
-  .replace(/[🔗🌐💻📱]/g, '')
+  .replace(/[🔗🌐💻📱]/gu, '')
   .replace(/\n{2,}/g, '. ')
   .replace(/\n/g, ' ')
   .replace(/\s{2,}/g, ' ')

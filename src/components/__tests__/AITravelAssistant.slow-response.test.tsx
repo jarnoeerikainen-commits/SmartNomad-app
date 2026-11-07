@@ -231,7 +231,7 @@ describe('AITravelAssistant slow-response resilience', () => {
     expect(tapRequest).toContain('Original reply:');
     await waitFor(() => expect(screen.getAllByRole('button', { name: 'Compare hotels' }).at(-1)).toBeEnabled());
     voiceInput.transcript = 'Compare hotels';
-    const mic = screen.getByRole('button', { name: /Start microphone|Start voice|microphone|voice input/i });
+    const mic = screen.getByRole('button', { name: 'Speak to Concierge' });
     fireEvent.click(mic);
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
     const spokenRequest = JSON.parse(String(vi.mocked(fetch).mock.calls[2][1]?.body)).messages.at(-1).content;
