@@ -2,10 +2,10 @@
 
 ## Active Concierge choices and voice parity
 
-- [ ] Replace unhandled option events with contextual Concierge actions and safe link handling.
-- [ ] Use the same action route for tap, typed selection, and spoken selection; preserve explicit booking/payment approval.
-- [ ] Make mixed booking/action/calendar/ride replies render correctly on phones and desktop.
-- [ ] Run action regressions, the full automated suite, and desktop/mobile browser flows.
+- [x] Replace unhandled option events with contextual Concierge actions and safe link handling.
+- [x] Use the same action route for tap, typed selection, and spoken selection; preserve explicit booking/payment approval.
+- [x] Correct typed-marker routing for mixed replies and add calendar proposal rendering on phones.
+- [x] Run action regressions (all 17 option kinds), 154 app tests, and real desktop/mobile reply-and-tap flows with controlled speech-recognition checks.
 
 ## Easier mobile entry and Concierge
 
