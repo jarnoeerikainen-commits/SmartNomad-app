@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { LocationData } from '@/types/country';
 import { useToast } from '@/hooks/use-toast';
-import { fetchIPLocation, getGPSLocation } from '@/services/locationProviders';
+import { fetchIPLocation, getGPSLocation, hasGrantedGPSPermission } from '@/services/locationProviders';
 
 interface VPNStatus {
   detected: boolean;
@@ -53,7 +53,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const requestSeqRef = useRef(0);
   const { toast } = useToast();
 
-  const resolveLocation = useCallback(async (opts?: { freshOnly?: boolean; silent?: boolean }) => {
+  const resolveLocation = useCallback(async (opts?: { freshOnly?: boolean; silent?: boolean; requestPermission?: boolean }) => {
     const requestSeq = ++requestSeqRef.current;
     if (!opts?.silent) setIsLoading(true);
     setError(null);
@@ -61,7 +61,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Always run BOTH lookups in parallel.
     // freshOnly forces GPS to bypass browser position cache — critical after VPN toggle.
     const [gps, ip] = await Promise.all([
-      getGPSLocation({ freshOnly: opts?.freshOnly ?? true }),
+      getGPSLocation({ freshOnly: opts?.freshOnly ?? true, requestPermission: opts?.requestPermission }),
       fetchIPLocation(),
     ]);
 
@@ -93,8 +93,8 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (countriesMismatch(gps, ip)) {
       setVpnStatus((prev) => ({
         detected: true,
-        gpsLocation: gps!,
-        ipLocation: ip!,
+        gpsLocation: gps || undefined,
+        ipLocation: ip || undefined,
         dismissed: prev.dismissed,
       }));
     } else {
@@ -112,7 +112,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const refreshLocation = useCallback(
-    () => resolveLocation({ freshOnly: true }),
+    () => resolveLocation({ freshOnly: true, requestPermission: true }),
     [resolveLocation]
   );
 
@@ -136,6 +136,10 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     if (!('geolocation' in navigator)) return;
 
+    let disposed = false;
+    let permissionStatus: PermissionStatus | undefined;
+    const startWatch = async () => {
+    if (!await hasGrantedGPSPermission() || disposed || watchIdRef.current !== null) return;
     watchIdRef.current = navigator.geolocation.watchPosition(
       () => {
         resolveLocation({ freshOnly: true, silent: true });
@@ -150,7 +154,16 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
     );
 
+    };
+    void startWatch();
+    const permissionChanged = () => { void startWatch(); };
+    navigator.permissions?.query({ name: 'geolocation' }).then((status) => {
+      if (!disposed) status.addEventListener('change', permissionChanged);
+      permissionStatus = status;
+    }).catch(() => {});
     return () => {
+      disposed = true;
+      permissionStatus?.removeEventListener('change', permissionChanged);
       if (watchIdRef.current !== null) {
         navigator.geolocation.clearWatch(watchIdRef.current);
         watchIdRef.current = null;

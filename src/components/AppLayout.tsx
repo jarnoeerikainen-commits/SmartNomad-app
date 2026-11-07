@@ -16,6 +16,9 @@ import { VoiceControlProvider } from '@/contexts/VoiceControlContext';
 import MFAGate from '@/components/auth/MFAGate';
 import CalendarReminderBoot from '@/components/calendar/CalendarReminderBoot';
 import { safeSectionDuringSocialPause } from '@/config/socialIntroductionPolicy';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { needsAdultAccess } from '@/utils/mobileEntry';
+import DeferredAgeAccess from './auth/DeferredAgeAccess';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
 const TrackingSection = lazy(() => import('./sections/TrackingSection'));
@@ -162,12 +165,25 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   onProfileComplete
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
-  const [bottomNavTab, setBottomNavTab] = useState('home');
+  const isMobile = useIsMobile();
+  const [bottomNavTab, setBottomNavTab] = useState(() => isMobile ? 'concierge' : 'home');
+  const [, refreshAgeAccess] = useState(0);
   const [requestedAssistant, setRequestedAssistant] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showProfileForm, setShowProfileForm] = useState(false);
   const mainScrollRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    window.dispatchEvent(new CustomEvent(bottomNavTab === 'concierge' ? 'supernomad:open-concierge' : 'supernomad:hide-concierge'));
+  }, [isMobile, bottomNavTab, activeSection]);
+
+  useEffect(() => {
+    const openMenu = () => setSidebarOpen(true);
+    window.addEventListener('supernomad:open-navigation', openMenu);
+    return () => window.removeEventListener('supernomad:open-navigation', openMenu);
+  }, []);
 
   useEffect(() => {
     const scrollMainToTop = () => {
@@ -192,11 +208,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   }, []);
 
   const handleVoiceTabChange = useCallback((tab: string) => {
-    setBottomNavTab(tab);
+    setBottomNavTab(tab === 'ai' && isMobile ? 'concierge' : tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
-  }, []);
+  }, [isMobile]);
 
   // Return to dashboard when home event is triggered
   useEffect(() => {
@@ -254,15 +270,17 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   }, []);
 
   const handleBottomNavChange = useCallback((tab: string) => {
-    setBottomNavTab(tab);
+    setBottomNavTab(tab === 'ai' && isMobile ? 'concierge' : tab);
     setActiveSection('dashboard');
     setRequestedAssistant(null);
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
-  }, []);
+  }, [isMobile]);
 
   const renderBottomNavContent = () => {
     switch (bottomNavTab) {
+      case 'concierge':
+        return null;
       case 'home':
         return (
           <div className="space-y-6">
@@ -343,6 +361,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   };
 
   const renderSidebarSection = () => {
+    const ageGroup = localStorage.getItem('ageGroup');
+    if (ageGroup === 'child' || (needsAdultAccess(activeSection) && ageGroup !== 'adult')) {
+      return <DeferredAgeAccess onVerified={() => refreshAgeAccess((value) => value + 1)} />;
+    }
     switch (activeSection) {
       case 'guardian': return <SuperNomadGuardian />;
       case 'threats': return <ThreatDashboard />;
@@ -507,7 +529,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   return (
     <VoiceControlProvider onNavigate={handleVoiceNavigate} onTabChange={handleVoiceTabChange}>
-    <div className="min-h-dvh bg-background pt-[env(safe-area-inset-top,0px)]">
+    <div className={`min-h-dvh bg-background pt-[env(safe-area-inset-top,0px)] ${isMobile && bottomNavTab === 'concierge' ? '[&>header]:hidden' : '[&>header]:z-40 md:[&>header]:z-[70]'}`}>
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
@@ -560,7 +582,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       
       {/* Bottom Navigation - Mobile Only */}
       <BottomNavigation 
-        activeTab={bottomNavTab}
+        activeTab={bottomNavTab === 'concierge' ? 'ai' : bottomNavTab}
         onTabChange={handleBottomNavChange}
       />
       

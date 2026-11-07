@@ -53,19 +53,11 @@ export const CookieConsent: React.FC = () => {
     setPreferences(allAccepted);
     localStorage.setItem('cookieConsent', JSON.stringify(allAccepted));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "All cookies have been accepted.",
-    });
   };
 
   const acceptSelected = () => {
     localStorage.setItem('cookieConsent', JSON.stringify(preferences));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "Your cookie preferences have been saved.",
-    });
   };
 
   const rejectAll = () => {
@@ -78,27 +70,9 @@ export const CookieConsent: React.FC = () => {
     setPreferences(minimal);
     localStorage.setItem('cookieConsent', JSON.stringify(minimal));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "Only necessary cookies will be used.",
-    });
   };
 
-  // Defer the cookie banner until first-time onboarding has completed so it
-  // doesn't sit on top of the welcome modal on small phones.
-  const [onboardingDone, setOnboardingDone] = useState(
-    () => typeof window !== 'undefined' && !!localStorage.getItem('hasSeenOnboarding')
-  );
-  useEffect(() => {
-    if (onboardingDone) return;
-    const check = () => {
-      if (localStorage.getItem('hasSeenOnboarding')) setOnboardingDone(true);
-    };
-    const id = window.setInterval(check, 600);
-    return () => window.clearInterval(id);
-  }, [onboardingDone]);
-
-  if (!isVisible || !onboardingDone) return null;
+  if (!isVisible) return null;
 
   return (
     <div
