@@ -40,6 +40,7 @@ import { buildConciergeContextBundle, renderContextNarrative } from '@/utils/con
 import { evaluateAnswer } from '@/utils/conciergeQuality';
 import { recordOutcome } from '@/utils/conciergeFeedback';
 import { buildGreetingParts, type GreetingPart } from '@/utils/conciergeGreetings';
+import DeferredAgeAccess from './auth/DeferredAgeAccess';
 import { useLocation } from '@/contexts/LocationContext';
 import { AdminAgentActivityService } from '@/services/AdminAgentActivityService';
 import { getHermesAssist } from '@/lib/conciergeHermes';
@@ -1126,6 +1127,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   </div>
                 </div>
               )}
+              {localStorage.getItem('ageGroup') === 'child' ? <DeferredAgeAccess onVerified={() => {}} /> : null}
               <ScrollArea ref={scrollAreaRef} className="flex-1 min-h-0 px-3 mobile-native-scroll">
                 <div className="space-y-4 pb-4 pt-2">
                 {messages.map((message) => {
@@ -1247,9 +1249,9 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
                     className="flex-1 min-w-0 text-base"
                     aria-label="Message Concierge"
-                    disabled={isTyping}
+                    disabled={isTyping || localStorage.getItem('ageGroup') === 'child'}
                   />
-                  <Button aria-label="Send message" onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="h-11 w-11 shrink-0 p-0">
+                  <Button aria-label="Send message" onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping || localStorage.getItem('ageGroup') === 'child'} size="sm" className="h-11 w-11 shrink-0 p-0">
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>

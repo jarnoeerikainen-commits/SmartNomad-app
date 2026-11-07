@@ -137,8 +137,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!('geolocation' in navigator)) return;
 
     let disposed = false;
+    let permissionStatus: PermissionStatus | undefined;
     const startWatch = async () => {
-    if (!await hasGrantedGPSPermission() || disposed) return;
+    if (!await hasGrantedGPSPermission() || disposed || watchIdRef.current !== null) return;
     watchIdRef.current = navigator.geolocation.watchPosition(
       () => {
         resolveLocation({ freshOnly: true, silent: true });
@@ -160,7 +161,6 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (!disposed) status.addEventListener('change', permissionChanged);
       permissionStatus = status;
     }).catch(() => {});
-    let permissionStatus: PermissionStatus | undefined;
     return () => {
       disposed = true;
       permissionStatus?.removeEventListener('change', permissionChanged);

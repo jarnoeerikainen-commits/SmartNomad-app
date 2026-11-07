@@ -529,7 +529,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   return (
     <VoiceControlProvider onNavigate={handleVoiceNavigate} onTabChange={handleVoiceTabChange}>
-    <div className="min-h-dvh bg-background pt-[env(safe-area-inset-top,0px)]">
+    <div className="min-h-dvh bg-background pt-[env(safe-area-inset-top,0px)] [&>header]:z-40 md:[&>header]:z-[70]">
       <AppHeader 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         showMenuButton={true}
