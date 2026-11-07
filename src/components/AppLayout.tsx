@@ -282,7 +282,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const renderBottomNavContent = () => {
     switch (bottomNavTab) {
       case 'concierge':
-        return null;
+        if (isMobile) return null;
+        return <HomeSection countries={countries} onNavigate={(section) => setActiveSection(safeSectionDuringSocialPause(section))} />;
       case 'home':
         return (
           <div className="space-y-6">
