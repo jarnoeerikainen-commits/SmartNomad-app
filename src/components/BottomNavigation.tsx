@@ -3,6 +3,7 @@ import { Home, BarChart3, AlertCircle, Bot, User } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BottomNavigationProps {
   activeTab: string;
@@ -11,6 +12,7 @@ interface BottomNavigationProps {
 
 const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTab, onTabChange }) => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   
   const tabs = [
     { id: 'home', labelKey: 'bottomnav.home', icon: Home },
@@ -21,7 +23,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = React.memo(({ activeTa
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-border md:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <nav aria-label="Main navigation" className={cn("fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-border", !isMobile && 'hidden')} style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;

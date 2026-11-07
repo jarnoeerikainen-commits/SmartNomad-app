@@ -125,7 +125,12 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       setAvatarHidden(false);
     };
     window.addEventListener('supernomad:open-concierge', openConcierge as EventListener);
-    return () => window.removeEventListener('supernomad:open-concierge', openConcierge as EventListener);
+    const hideConcierge = () => { setIsOpen(false); };
+    window.addEventListener('supernomad:hide-concierge', hideConcierge);
+    return () => {
+      window.removeEventListener('supernomad:open-concierge', openConcierge as EventListener);
+      window.removeEventListener('supernomad:hide-concierge', hideConcierge);
+    };
   }, []);
   
   const conversationIdRef = useRef<string | null>(null);
@@ -1015,7 +1020,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   if (isMobile) {
     return (
       <div
-        className={embedded ? 'relative z-0 flex min-h-[70dvh] flex-col md:hidden' : 'pointer-events-none fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden'}
+        className={embedded ? 'relative z-0 flex min-h-[70dvh] flex-col' : 'pointer-events-none fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col'}
         role="region"
         aria-label="SuperNomad Concierge"
         style={{
@@ -1028,8 +1033,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
         <Card className={`pointer-events-auto flex flex-col flex-1 min-h-0 glass-morphism shadow-large overflow-hidden ${embedded ? 'rounded-lg border' : 'rounded-none'} ${
           isMinimized ? 'flex-initial' : ''
         }`}>
-          <CardHeader className="flex flex-row items-center justify-between p-3 pb-2 gradient-mesh flex-shrink-0">
-            <div className="flex items-center gap-1.5 min-w-0">
+          <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-1 p-3 pb-2 gradient-mesh flex-shrink-0">
+            <div className="flex basis-full items-center gap-1.5 min-w-0">
               {conciergePrefs.avatarVisible ? (
                 <ConciergeAvatar face={conciergePrefs.avatarFace} isSpeaking={isSpeaking} isTyping={isTyping} mouthOpenness={mouthOpenness} currentWord={currentWord} size="sm" />
               ) : (
@@ -1040,7 +1045,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <CardTitle className="text-xs font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
-            <div className="flex gap-0.5 items-center">
+            <div className="ml-auto flex gap-0.5 items-center">
               <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" aria-label="Open navigation menu" onClick={() => window.dispatchEvent(new CustomEvent('supernomad:open-navigation'))}><Menu className="h-4 w-4" /></Button>
               <ConciergeQuickLinks />
               <ConciergeSettings onPrefsChange={setConciergePrefs} />

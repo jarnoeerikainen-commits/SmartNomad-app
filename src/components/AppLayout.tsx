@@ -166,7 +166,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const isMobile = useIsMobile();
-  const [bottomNavTab, setBottomNavTab] = useState(() => window.matchMedia('(max-width: 767px)').matches ? 'concierge' : 'home');
+  const [bottomNavTab, setBottomNavTab] = useState(() => isMobile ? 'concierge' : 'home');
   const [, refreshAgeAccess] = useState(0);
   const [requestedAssistant, setRequestedAssistant] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -176,7 +176,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 
   useEffect(() => {
     if (!isMobile) return;
-    window.dispatchEvent(new CustomEvent('supernomad:open-concierge', { detail: { minimized: bottomNavTab !== 'concierge' } }));
+    window.dispatchEvent(new CustomEvent(bottomNavTab === 'concierge' ? 'supernomad:open-concierge' : 'supernomad:hide-concierge'));
   }, [isMobile, bottomNavTab, activeSection]);
 
   useEffect(() => {
@@ -208,11 +208,11 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   }, []);
 
   const handleVoiceTabChange = useCallback((tab: string) => {
-    setBottomNavTab(tab === 'ai' && window.matchMedia('(max-width: 767px)').matches ? 'concierge' : tab);
+    setBottomNavTab(tab === 'ai' && isMobile ? 'concierge' : tab);
     setActiveSection('dashboard');
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
-  }, []);
+  }, [isMobile]);
 
   // Return to dashboard when home event is triggered
   useEffect(() => {
@@ -270,7 +270,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   }, []);
 
   const handleBottomNavChange = useCallback((tab: string) => {
-    setBottomNavTab(tab === 'ai' && window.matchMedia('(max-width: 767px)').matches ? 'concierge' : tab);
+    setBottomNavTab(tab === 'ai' && isMobile ? 'concierge' : tab);
     setActiveSection('dashboard');
     setRequestedAssistant(null);
     setSidebarOpen(false);
