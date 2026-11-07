@@ -53,19 +53,11 @@ export const CookieConsent: React.FC = () => {
     setPreferences(allAccepted);
     localStorage.setItem('cookieConsent', JSON.stringify(allAccepted));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "All cookies have been accepted.",
-    });
   };
 
   const acceptSelected = () => {
     localStorage.setItem('cookieConsent', JSON.stringify(preferences));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "Your cookie preferences have been saved.",
-    });
   };
 
   const rejectAll = () => {
@@ -78,10 +70,6 @@ export const CookieConsent: React.FC = () => {
     setPreferences(minimal);
     localStorage.setItem('cookieConsent', JSON.stringify(minimal));
     setIsVisible(false);
-    toast({
-      title: "Cookie preferences saved",
-      description: "Only necessary cookies will be used.",
-    });
   };
 
   if (!isVisible) return null;

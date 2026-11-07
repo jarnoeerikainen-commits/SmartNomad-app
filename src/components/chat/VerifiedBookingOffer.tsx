@@ -96,14 +96,14 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
   if (loading) return <div className="my-2 flex items-center gap-2 text-xs text-muted-foreground"><Loader2 className="h-3.5 w-3.5 animate-spin" />Checking authorized supplier-shaped demo offers…</div>;
 
   return <div className="my-3 space-y-3">
-    <div className="flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2 text-xs font-semibold"><ShieldCheck className="h-4 w-4 text-primary" />Verified offer workflow <Badge variant="outline">SIMULATED</Badge></div>
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center gap-2 text-xs font-semibold"><ShieldCheck className="h-4 w-4 text-primary" />Verified offer workflow <Badge variant="outline">SIMULATED</Badge></div>
       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => void load()} aria-label="Refresh offers"><RefreshCcw className="h-3.5 w-3.5" /></Button>
     </div>
     {offers.map((offer) => {
       const Icon = offer.bookingType === 'flight' ? Plane : Hotel;
       return <Card key={offer.offerId} className="border-primary/20 p-3">
-        <div className="flex items-start gap-3">
+        <div className="flex flex-wrap items-start gap-3">
           <div className="rounded-md bg-primary/10 p-2"><Icon className="h-4 w-4 text-primary" /></div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-1.5"><p className="text-sm font-semibold">{offer.title}</p><Badge variant="outline" className="text-[9px] uppercase">Demo data</Badge></div>
@@ -112,7 +112,7 @@ export const VerifiedBookingOffer: React.FC<Props> = ({ search }) => {
             <p className="mt-1 text-[11px] text-muted-foreground">Includes {offer.included.join(' · ')}</p>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground"><span>{offer.supplier}</span><span>·</span><span className="flex items-center gap-1"><Clock3 className="h-3 w-3" />15-minute demo quote</span><a className="inline-flex items-center gap-1 text-primary" href={offer.sourceUrl} target="_blank" rel="noreferrer">Source <ExternalLink className="h-3 w-3" /></a></div>
           </div>
-          <div className="shrink-0 text-right"><p className="text-base font-bold">{money(offer.amount, offer.currency)}</p><p className="text-[9px] text-muted-foreground">all mandatory fees</p><Button size="sm" className="mt-2 h-8 text-xs" onClick={() => { setSelected(offer); setSelectedServiceIds([]); setDialogOpen(true); }}>Review</Button></div>
+          <div className="w-full text-right sm:w-auto sm:shrink-0"><p className="text-base font-bold">{money(offer.amount, offer.currency)}</p><p className="text-[9px] text-muted-foreground">all mandatory fees</p><Button size="sm" className="mt-2 h-8 text-xs" onClick={() => { setSelected(offer); setSelectedServiceIds([]); setDialogOpen(true); }}>Review</Button></div>
         </div>
       </Card>;
     })}

@@ -24,15 +24,7 @@ export const VoiceControlButton: React.FC = () => {
 
   const [showOnboardBubble, setShowOnboardBubble] = useState(false);
 
-  // Show onboarding bubble once for new users
-  useEffect(() => {
-    if (!sttSupported && !ttsSupported) return;
-    const seen = localStorage.getItem(VOICE_TIPS_KEY);
-    if (!seen) {
-      const timer = setTimeout(() => setShowOnboardBubble(true), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [sttSupported, ttsSupported]);
+  // Voice help never interrupts app entry; controls remain available on demand.
 
   const dismissOnboardBubble = () => {
     setShowOnboardBubble(false);
