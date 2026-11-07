@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Globe } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /**
  * Floating website shortcut shown inside the app.
@@ -10,6 +11,8 @@ import { Globe } from 'lucide-react';
  * the chat input area.
  */
 const BackToWebsiteButton: React.FC = () => {
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
   return (
     <div className="hidden md:flex fixed md:bottom-4 md:left-4 z-[60] flex-col gap-2">
       <Link
