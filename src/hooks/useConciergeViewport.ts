@@ -7,7 +7,7 @@ export function useConciergeViewport(enabled: boolean) {
     if (!enabled) return;
     const visual = window.visualViewport;
     const update = () => setViewport(getMobileConciergeViewport(
-      visual?.height ?? window.innerHeight, visual?.offsetTop ?? 0, window.innerHeight,
+      window.visualViewport?.height ?? window.innerHeight, window.visualViewport?.offsetTop ?? 0, window.innerHeight,
     ));
     update();
     visual?.addEventListener('resize', update);
