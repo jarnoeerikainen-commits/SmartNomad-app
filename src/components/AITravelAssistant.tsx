@@ -918,7 +918,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   };
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || localStorage.getItem('ageGroup') === 'child') return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -959,6 +959,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   };
 
   const handleMicClick = async () => {
+    if (localStorage.getItem('ageGroup') === 'child') return;
     if (isListening) {
       stopListening();
       return;
@@ -1042,7 +1043,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                   <Bot className="h-4 w-4 text-white" />
                 </div>
               )}
-              <CardTitle className="text-xs font-semibold truncate">{conciergePrefs.aiName || 'Concierge'}</CardTitle>
+              <CardTitle className="text-sm font-semibold truncate">SuperNomad Concierge</CardTitle>
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
             <div className="ml-auto flex gap-0.5 items-center">
@@ -1235,7 +1236,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                             variant={isListening ? 'default' : 'outline'}
                             size="sm"
                             className={`h-11 w-11 shrink-0 p-0 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
-                            disabled={isTyping}
+                            disabled={isTyping || localStorage.getItem('ageGroup') === 'child'}
                           >
                             {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                           </Button>

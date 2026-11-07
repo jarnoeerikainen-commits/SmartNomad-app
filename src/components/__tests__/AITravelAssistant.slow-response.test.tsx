@@ -29,7 +29,8 @@ vi.mock('@/contexts/TrustContext', () => ({
   useTrust: () => ({ addThinkingStep: vi.fn(() => 'think-1'), completeThinkingStep: vi.fn(), clearThinking: vi.fn() }),
 }));
 
-vi.mock('@/hooks/use-mobile', () => ({ useIsMobile: () => false }));
+const mobile = vi.hoisted(() => ({ enabled: false }));
+vi.mock('@/hooks/use-mobile', () => ({ useIsMobile: () => mobile.enabled }));
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 vi.mock('@/hooks/useVoiceConversation', () => ({
   useVoiceConversation: () => ({
@@ -147,6 +148,7 @@ function slowStreamResponse() {
 
 describe('AITravelAssistant slow-response resilience', () => {
   beforeEach(() => {
+    mobile.enabled = false;
     localStorage.clear();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(slowStreamResponse(), { status: 200, headers: { 'Content-Type': 'text/event-stream' } })));
   });
@@ -190,5 +192,20 @@ describe('AITravelAssistant slow-response resilience', () => {
     expect(errors).toHaveLength(0);
 
     errorSpy.mockRestore();
+  });
+
+  it('starts ready on mobile, sends a real-format stream, and respects explicit dismissal', async () => {
+    mobile.enabled = true;
+    render(<AITravelAssistant />);
+    const input = screen.getByRole('textbox', { name: 'Message Concierge' });
+    expect(input).toBeEnabled();
+    expect(screen.queryByText('Hello John. How can I help?')).toBeNull();
+    fireEvent.change(input, { target: { value: 'Find a return flight' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+    await screen.findByText(/Verified answer pending source checks/);
+    fireEvent.click(screen.getByRole('button', { name: 'Close Concierge' }));
+    expect(screen.queryByRole('textbox', { name: 'Message Concierge' })).toBeNull();
+    act(() => window.dispatchEvent(new CustomEvent('supernomad:open-concierge')));
+    expect(screen.getByRole('textbox', { name: 'Message Concierge' })).toBeVisible();
   });
 });

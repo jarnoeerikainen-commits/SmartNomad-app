@@ -275,7 +275,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
     setRequestedAssistant(null);
     setSidebarOpen(false);
     window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
-  }, []);
+  }, [isMobile]);
 
   const renderBottomNavContent = () => {
     switch (bottomNavTab) {
