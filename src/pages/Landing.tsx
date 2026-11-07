@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { DEMO_APP_ENTRY } from '@/utils/mobileEntry';
 import {
   Shield, Sparkles, Globe2, Lock, Plane, Calculator, FileCheck,
   Users, MessageCircle, Brain, Award,
@@ -124,7 +125,7 @@ const Landing: React.FC = () => {
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold">Launch App</Button></Link>
+                  <Link to={DEMO_APP_ENTRY}><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold">Demo APP</Button></Link>
                 </div>
               </div>
             </div>
@@ -150,9 +151,9 @@ const Landing: React.FC = () => {
             <a href="#trust" className="hover:text-[hsl(var(--gold))] transition-colors">Trust</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/app">
+            <Link to={DEMO_APP_ENTRY}>
               <Button size="sm" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-90 shadow-[var(--shadow-glow-gold)]">
-                Launch App <ArrowRight className="ml-1.5 h-4 w-4" />
+                Demo APP <ArrowRight className="ml-1.5 h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -202,9 +203,9 @@ const Landing: React.FC = () => {
                 </Button>
               </button>
               <Magnetic>
-                <Link to="/app">
+                <Link to={DEMO_APP_ENTRY}>
                   <Button size="lg" className="sn-gold-ring w-full rounded-md bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] px-5 py-4 text-sm font-semibold text-[hsl(220_22%_10%)] shadow-[var(--shadow-glow-gold)] transition-transform hover:scale-[1.03] hover:opacity-95 sm:w-auto sm:px-7 sm:py-5 sm:text-base">
-                    <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Launch SuperNomad
+                    <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Demo APP
                     <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Button>
                 </Link>
@@ -558,8 +559,8 @@ const Landing: React.FC = () => {
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
               </ul>
-              <Link to="/app" className="block">
-                <Button variant="outline" className="w-full border-[hsl(43_96%_56%/0.4)] text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Try the demo</Button>
+              <Link to={DEMO_APP_ENTRY} className="block">
+                <Button variant="outline" className="w-full border-[hsl(43_96%_56%/0.4)] text-white hover:bg-[hsl(43_96%_56%/0.1)] hover:text-white">Demo APP</Button>
               </Link>
             </div>
             <div className="rounded-2xl border-2 border-[hsl(var(--gold))] bg-gradient-to-br from-[hsl(220_22%_14%)] to-[hsl(220_22%_10%)] p-8 relative shadow-[var(--shadow-glow-gold)]">
@@ -578,9 +579,9 @@ const Landing: React.FC = () => {
                   <li key={b} className="flex items-start gap-2"><Check className="h-4 w-4 text-[hsl(var(--gold))] mt-0.5 shrink-0" /> {b}</li>
                 ))}
               </ul>
-              <Link to="/app" className="block">
+              <Link to={DEMO_APP_ENTRY} className="block">
                 <Button className="w-full bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold hover:opacity-95">
-                  Launch SuperNomad
+                  Demo APP
                 </Button>
               </Link>
             </div>
@@ -657,7 +658,7 @@ const Landing: React.FC = () => {
               <div className="text-sm text-[hsl(30_12%_76%)]">Explore the product directly in guided demo mode.</div>
             </div>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link to="/app"><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><Rocket className="mr-2 h-4 w-4" /> Launch App</Button></Link>
+              <Link to={DEMO_APP_ENTRY}><Button className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold"><Rocket className="mr-2 h-4 w-4" /> Demo APP</Button></Link>
             </div>
           </div>
         </div>
@@ -676,9 +677,9 @@ const Landing: React.FC = () => {
             <span className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] bg-clip-text text-transparent">starts now.</span>
           </h2>
           <p className="text-lg text-[hsl(30_12%_80%)] mb-8">Open the app and explore the guided demo.</p>
-          <Link to="/app">
+          <Link to={DEMO_APP_ENTRY}>
             <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--gold-dark))] via-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(220_22%_10%)] font-semibold text-lg px-10 py-7 hover:opacity-95 shadow-[var(--shadow-glow-gold)] hover:scale-[1.02] transition-transform">
-              <Rocket className="mr-2 h-5 w-5" /> Launch SuperNomad
+              <Rocket className="mr-2 h-5 w-5" /> Demo APP
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
@@ -702,7 +703,7 @@ const Landing: React.FC = () => {
             <div>
               <div className="font-semibold text-white mb-3 text-sm">Product</div>
               <ul className="space-y-2 text-sm text-[hsl(30_12%_75%)]">
-                <li><Link to="/app" className="hover:text-[hsl(var(--gold))]">Launch App</Link></li>
+                <li><Link to={DEMO_APP_ENTRY} className="hover:text-[hsl(var(--gold))]">Demo APP</Link></li>
                 <li><a href="#ecosystem" className="hover:text-[hsl(var(--gold))]">Features</a></li>
                 <li><a href="#pricing" className="hover:text-[hsl(var(--gold))]">Pricing</a></li>
                 <li><a href="#how" className="hover:text-[hsl(var(--gold))]">How it works</a></li>

@@ -168,7 +168,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const [activeSection, setActiveSection] = useState('dashboard');
   const isMobile = useIsMobile();
   const location = useLocation();
-  const [bottomNavTab, setBottomNavTab] = useState(() => getInitialAppTab(isMobile, location.search));
+  const [bottomNavTab, setBottomNavTab] = useState<string>(() => getInitialAppTab(isMobile, location.search));
   const [, refreshAgeAccess] = useState(0);
   const [requestedAssistant, setRequestedAssistant] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
