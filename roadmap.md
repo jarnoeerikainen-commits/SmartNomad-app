@@ -1,5 +1,12 @@
 # Booking readiness roadmap
 
+## Active Concierge choices and voice parity
+
+- [ ] Replace unhandled option events with contextual Concierge actions and safe link handling.
+- [ ] Use the same action route for tap, typed selection, and spoken selection; preserve explicit booking/payment approval.
+- [ ] Make mixed booking/action/calendar/ride replies render correctly on phones and desktop.
+- [ ] Run action regressions, the full automated suite, and desktop/mobile browser flows.
+
 ## Easier mobile entry and Concierge
 
 - [x] Open Concierge first on phones, preserve desktop/website access and explicit navigation.
