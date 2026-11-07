@@ -1,5 +1,12 @@
 # Booking readiness roadmap
 
+## Active Concierge choices and voice parity
+
+- [x] Replace unhandled option events with contextual Concierge actions and safe link handling.
+- [x] Use the same action route for tap, typed selection, and spoken selection; preserve explicit booking/payment approval.
+- [x] Correct typed-marker routing for mixed replies and add calendar proposal rendering on phones.
+- [x] Run action regressions (all 17 option kinds), 154 app tests, and real desktop/mobile reply-and-tap flows with controlled speech-recognition checks.
+
 ## Easier mobile entry and Concierge
 
 - [x] Open Concierge first on phones, preserve desktop/website access and explicit navigation.

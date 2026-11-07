@@ -33,9 +33,9 @@ describe('parseActionChips', () => {
     expect(r.text.trim()).toBe('OK.');
   });
 
-  it('falls back to "open" for unknown kinds', () => {
+  it('routes unknown kinds to a conversational reply', () => {
     const r = parseActionChips('[[CHIPS: Do thing|invented_kind|x]]');
-    expect(r.chips[0].kind).toBe('open');
+    expect(r.chips[0].kind).toBe('reply');
   });
 
   it('ignores malformed bullet lines', () => {

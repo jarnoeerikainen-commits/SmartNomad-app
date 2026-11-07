@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
-  Calendar, Phone, Mail, ExternalLink, Bookmark, Clock, FileCheck,
+  Calendar, Phone, ExternalLink, Bookmark, Clock, FileCheck,
   CreditCard, Plane, Hotel, Car, ShieldCheck, MapPin, Forward, Share2,
   Download, MessageSquare, type LucideIcon,
 } from 'lucide-react';
@@ -57,11 +57,12 @@ const KIND_ICON: Record<ActionChipKind, LucideIcon> = {
 
 interface ActionChipsProps {
   chips: ActionChip[];
-  onAction?: (chip: ActionChip) => void;
+  onAction: (chip: ActionChip) => void;
+  disabled?: boolean;
 }
 
 /** Render action chips below an assistant message. Max 3 — enforced. */
-export const ActionChips: React.FC<ActionChipsProps> = ({ chips, onAction }) => {
+export const ActionChips: React.FC<ActionChipsProps> = ({ chips, onAction, disabled = false }) => {
   if (!chips || chips.length === 0) return null;
   const limited = chips.slice(0, 3);
 
@@ -75,8 +76,9 @@ export const ActionChips: React.FC<ActionChipsProps> = ({ chips, onAction }) => 
             key={`${c.label}-${i}`}
             size="sm"
             variant={isPrimary ? 'default' : 'outline'}
-            className="h-7 text-[11px] gap-1.5 rounded-full px-3"
-            onClick={() => handleChip(c, onAction)}
+            className="min-h-11 h-auto whitespace-normal text-xs gap-1.5 rounded-full px-3 py-2"
+            disabled={disabled}
+            onClick={() => onAction(c)}
           >
             <Icon className="h-3 w-3" />
             {c.label}
@@ -86,38 +88,6 @@ export const ActionChips: React.FC<ActionChipsProps> = ({ chips, onAction }) => 
     </div>
   );
 };
-
-// ─── Default handler (when host doesn't override) ─────────
-function handleChip(chip: ActionChip, onAction?: (c: ActionChip) => void) {
-  if (onAction) {
-    onAction(chip);
-    return;
-  }
-  // Sensible defaults so chips always do *something*.
-  switch (chip.kind) {
-    case 'open':
-    case 'verify':
-      if (chip.payload?.startsWith('http')) {
-        window.open(chip.payload, '_blank', 'noopener,noreferrer');
-      }
-      break;
-    case 'calendar':
-      window.dispatchEvent(new CustomEvent('concierge:add-to-calendar', { detail: chip }));
-      break;
-    case 'hold':
-      window.dispatchEvent(new CustomEvent('concierge:hold-24h', { detail: chip }));
-      break;
-    case 'forward':
-      window.dispatchEvent(new CustomEvent('concierge:forward-accountant', { detail: chip }));
-      break;
-    case 'book':
-    case 'pay':
-      window.dispatchEvent(new CustomEvent('concierge:book', { detail: chip }));
-      break;
-    default:
-      window.dispatchEvent(new CustomEvent('concierge:action', { detail: chip }));
-  }
-}
 
 // ─── Parser ───────────────────────────────────────────────
 /**
@@ -151,12 +121,12 @@ export function parseActionChips(content: string): { text: string; chips: Action
 }
 
 function pushChip(out: ActionChip[], raw: string) {
-  const parts = raw.split('|').map(s => s.trim()).filter(Boolean);
+  const parts = raw.split('|').map(s => s.trim());
   if (parts.length === 0) return;
-  const [label, kindRaw = 'open', payload] = parts;
+  const [label, kindRaw = 'reply', ...payloadParts] = parts;
   if (!label) return;
-  const kind = (KIND_ICON as any)[kindRaw] ? (kindRaw as ActionChipKind) : 'open';
-  out.push({ label, kind, payload });
+  const kind = Object.prototype.hasOwnProperty.call(KIND_ICON, kindRaw) ? (kindRaw as ActionChipKind) : 'reply';
+  out.push({ label, kind, payload: payloadParts.join('|') || undefined });
 }
 
 export default ActionChips;

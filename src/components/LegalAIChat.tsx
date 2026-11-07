@@ -11,6 +11,7 @@ import SourceOfTruthChip from '@/components/SourceOfTruthChip';
 import ActionChips, { parseActionChips } from '@/components/chat/ActionChips';
 import { useVoiceConversation } from '@/hooks/useVoiceConversation';
 import { learnFromExchange } from '@/utils/conciergeLearning';
+import { buildConciergeActionRequest, safeActionUrl } from '@/utils/conciergeActions';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -204,7 +205,14 @@ export const LegalAIChat: React.FC<LegalAIChatProps> = ({
                   <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-[80%] rounded-lg px-4 py-2 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                       <p className="text-sm whitespace-pre-wrap">{text}</p>
-                      {chips.length > 0 && <ActionChips chips={chips} />}
+                      {chips.length > 0 && <ActionChips chips={chips} disabled={isLoading} onAction={chip => {
+                        const url = safeActionUrl(chip.payload);
+                        if (url && ['open', 'verify', 'directions', 'download'].includes(chip.kind)) {
+                          window.open(url, '_blank', 'noopener,noreferrer');
+                        } else {
+                          void handleSend(buildConciergeActionRequest(chip, msg.content));
+                        }
+                      }} />}
                     </div>
                   </div>
                 );

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import type { ActionChip } from './ActionChips';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, PhoneCall, FileText, CheckCircle2, Clock, MapPin, Calendar, CreditCard, Loader2, Shield, ExternalLink } from 'lucide-react';
+import { PhoneCall, FileText, CheckCircle2, Clock, MapPin, Calendar, CreditCard, Loader2, Shield, ExternalLink } from 'lucide-react';
 
 // ─── Action Types ──────────────────────────────────────────
 export type ActionType = 'phone-call' | 'document-fill' | 'reservation' | 'payment' | 'form-submit' | 'appointment';
@@ -22,6 +23,8 @@ export interface ActionItem {
 
 interface ActionCardsProps {
   items: ActionItem[];
+  onAction: (chip: ActionChip) => void;
+  disabled?: boolean;
 }
 
 // ─── Status Animations ────────────────────────────────────
@@ -65,87 +68,13 @@ const STATUS_COLORS: Record<ActionStatus, string> = {
 
 // ─── Phone Call Animation ─────────────────────────────────
 const PhoneCallVisualizer: React.FC<{ status: ActionStatus; provider?: string }> = ({ status, provider }) => {
-  const [dots, setDots] = useState(0);
-  const [waveform, setWaveform] = useState<number[]>([3, 5, 2, 7, 4, 6, 3, 5, 8, 4]);
-
-  useEffect(() => {
-    if (status !== 'in-progress') return;
-    const dotInterval = setInterval(() => setDots(d => (d + 1) % 4), 500);
-    const waveInterval = setInterval(() => {
-      setWaveform(prev => prev.map(() => Math.floor(Math.random() * 10) + 1));
-    }, 200);
-    return () => { clearInterval(dotInterval); clearInterval(waveInterval); };
-  }, [status]);
-
-  if (status === 'pending') {
-    return (
-      <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
-        <Phone className="h-3 w-3" />
-        <span>Dialing {provider}{'.'.repeat(dots)}</span>
-      </div>
-    );
-  }
-
-  if (status === 'in-progress') {
-    return (
-      <div className="space-y-2 py-1">
-        <div className="flex items-center gap-2 text-xs text-primary font-medium">
-          <PhoneCall className="h-3 w-3 animate-pulse" />
-          <span>Connected — speaking with {provider}</span>
-        </div>
-        <div className="flex items-center gap-[2px] h-4">
-          {waveform.map((h, i) => (
-            <div
-              key={i}
-              className="w-1 bg-primary/60 rounded-full transition-all duration-150"
-              style={{ height: `${h * 2}px` }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+  return status === 'pending' ? <p className="text-xs text-muted-foreground">Call request{provider ? ` — ${provider}` : ''}. Not connected.</p> : null;
 };
 
 // ─── Main Action Card ─────────────────────────────────────
-const ActionCards: React.FC<ActionCardsProps> = ({ items }) => {
-  const [actionStates, setActionStates] = useState<ActionItem[]>(items);
-
-  // Simulate action progression for demo
-  useEffect(() => {
-    const initialItems = items.map(item => ({ ...item }));
-    setActionStates(initialItems);
-
-    const timers: ReturnType<typeof setTimeout>[] = [];
-
-    initialItems.forEach((item, idx) => {
-      const requiresExplicitAction = item.type === 'payment' || item.type === 'reservation' || item.type === 'form-submit';
-      if (item.status === 'pending' && !requiresExplicitAction) {
-        // Move to in-progress after a short delay
-        timers.push(setTimeout(() => {
-          setActionStates(prev => {
-            const next = [...prev];
-            next[idx] = { ...next[idx], status: 'in-progress' };
-            return next;
-          });
-        }, 800 + idx * 400));
-
-        // Move to completed after the simulated duration
-        const duration = item.duration || 3000;
-        timers.push(setTimeout(() => {
-          setActionStates(prev => {
-            const next = [...prev];
-            next[idx] = { ...next[idx], status: 'completed' };
-            return next;
-          });
-        }, 800 + idx * 400 + duration));
-      }
-    });
-
-    return () => timers.forEach(clearTimeout);
-  }, [items]);
+const ActionCards: React.FC<ActionCardsProps> = ({ items, onAction, disabled }) => {
+  // Model output is a proposal, not evidence of execution.
+  const actionStates = items.map(item => ({ ...item, status: 'pending' as const }));
 
   return (
     <div className="space-y-2 my-2">
@@ -190,7 +119,7 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items }) => {
                 Waiting for your explicit review. Concierge actions involving money, reservations, or submitted data never run automatically.
               </div>
             )}
-            {action.details && action.status === 'completed' && (
+            {action.details && (
               <div className="grid grid-cols-2 gap-1 text-[11px] bg-background/60 rounded p-2">
                 {Object.entries(action.details).map(([key, value]) => (
                   <div key={key}>
@@ -201,22 +130,16 @@ const ActionCards: React.FC<ActionCardsProps> = ({ items }) => {
               </div>
             )}
 
-            {/* Result message */}
-            {action.result && action.status === 'completed' && (
-              <p className="text-xs text-green-700 dark:text-green-400 font-medium">
-                ✅ {action.result}
-              </p>
-            )}
-
             {/* Action URL */}
-            {action.url && action.status === 'completed' && (
+            {(
               <Button
                 variant="outline"
                 size="sm"
                 className="h-7 text-xs gap-1"
-                onClick={() => window.open(action.url, '_blank', 'noopener,noreferrer')}
+                disabled={disabled}
+                onClick={() => onAction({ label: action.title, kind: action.type === 'payment' ? 'pay' : action.type === 'phone-call' ? 'call' : action.type === 'reservation' ? 'book' : 'reply', payload: action.url || JSON.stringify(action.details || {}) })}
               >
-                View Details <ExternalLink className="h-3 w-3" />
+                Review request <ExternalLink className="h-3 w-3" />
               </Button>
             )}
           </div>
@@ -234,12 +157,13 @@ export function parseActionBlocks(content: string): { text: string; actions: Act
   const actions: ActionItem[][] = [];
   const text = content.replace(blockRegex, (_, raw) => {
     try {
-      let cleaned = raw.trim()
+      const cleaned = raw.trim()
         .replace(/,\s*([}\]])/g, '$1')
+        // eslint-disable-next-line no-control-regex
         .replace(/[\x00-\x1F\x7F]/g, '');
       const parsed = JSON.parse(cleaned);
       if (!Array.isArray(parsed)) return '';
-      const items: ActionItem[] = parsed.map((entry: any) => ({
+      const items: ActionItem[] = parsed.filter((entry: unknown) => entry && typeof entry === 'object').map((entry: Partial<ActionItem>) => ({
         type: entry.type || 'reservation',
         status: entry.status || 'pending',
         title: entry.title || 'Action',
