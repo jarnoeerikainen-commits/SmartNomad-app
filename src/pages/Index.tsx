@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import AppLayout from '@/components/AppLayout';
-import OnboardingFlow from '@/components/OnboardingFlow';
-import SovereignAccessTour from '@/components/permissions/SovereignAccessTour';
 import GuidedTour from '@/components/tour/GuidedTour';
-import AuroraIntro from '@/components/avatar/AuroraIntro';
 import { Country } from '@/types/country';
 import { Subscription } from '@/types/subscription';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -15,9 +12,6 @@ const Index = () => {
   const { t } = useLanguage();
   const [countries, setCountries] = useState<Country[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showAuroraIntro, setShowAuroraIntro] = useState(false);
-  const [showSovereignTour, setShowSovereignTour] = useState(false);
   const [showGuidedTour, setShowGuidedTour] = useState(() => {
     if (typeof window === 'undefined') return false;
     return new URLSearchParams(window.location.search).get('tour') === '1';
@@ -36,7 +30,6 @@ const Index = () => {
   // Ensure home click closes overlays, scrolls to top
   useEffect(() => {
     const handler = () => {
-      setShowOnboarding(false);
       window.dispatchEvent(new CustomEvent('supernomad:scroll-main-top'));
     };
     window.addEventListener('supernomad:home', handler);
@@ -47,9 +40,7 @@ const Index = () => {
   useEffect(() => {
     const savedCountries = localStorage.getItem('trackedCountries');
     const savedProfile = localStorage.getItem('userProfile');
-    const enhancedProfile = localStorage.getItem('enhancedProfile');
     const savedSubscription = localStorage.getItem('subscription');
-    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
     
     if (savedCountries) {
       setCountries(JSON.parse(savedCountries));
@@ -63,29 +54,8 @@ const Index = () => {
       setSubscription(JSON.parse(savedSubscription));
     }
 
-    // Demo fast-path skips every onboarding. Named persona parameters are ignored.
-    // overlay so investors and first-time demo users land straight on the app.
-    const params = new URLSearchParams(window.location.search);
-    const demoParam = params.get('demo');
-    if (demoParam && demoParam !== '0') {
-      localStorage.removeItem('supernomad_active_demo_persona');
-      localStorage.removeItem('demoPersona');
-      localStorage.setItem('hasSeenOnboarding', '1');
-      localStorage.setItem('supernomad_avatar_intro_seen', '1');
-      localStorage.setItem('supernomad_sovereign_tour_seen', '1');
-      return;
-    }
+    // Basic app entry has no mandatory welcome, avatar, or permission tour.
 
-    // Guided tour from landing takes precedence over onboarding overlays
-    if (showGuidedTour) {
-      // suppress others
-    } else if (!hasSeenOnboarding) {
-      setShowOnboarding(true);
-    } else if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
-      setShowAuroraIntro(true);
-    } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-      setShowSovereignTour(true);
-    }
   }, []);
 
   // React to demo persona switching: reload countries + subscription from localStorage
@@ -105,24 +75,6 @@ const Index = () => {
       window.removeEventListener('supernomad:demo-persona-cleared', reload);
     };
   }, []);
-
-  const handleCloseAuroraIntro = () => {
-    localStorage.setItem('supernomad_avatar_intro_seen', '1');
-    setShowAuroraIntro(false);
-    if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-      setShowSovereignTour(true);
-    }
-  };
-
-  const handleCloseSovereignTour = () => {
-    localStorage.setItem('supernomad_sovereign_tour_seen', '1');
-    setShowSovereignTour(false);
-  };
-
-  const handleOpenAccessCenter = () => {
-    handleCloseSovereignTour();
-    window.dispatchEvent(new CustomEvent('supernomad:navigate', { detail: { section: 'sovereign-access' } }));
-  };
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
@@ -272,30 +224,6 @@ const Index = () => {
           }}
         />
       )}
-
-      {!showGuidedTour && showOnboarding && (
-        <OnboardingFlow onComplete={() => {
-          setShowOnboarding(false);
-          if (!localStorage.getItem('supernomad_avatar_intro_seen')) {
-            setShowAuroraIntro(true);
-          } else if (!localStorage.getItem('supernomad_sovereign_tour_seen')) {
-            setShowSovereignTour(true);
-          }
-        }} />
-      )}
-
-      {showAuroraIntro && (
-        <AuroraIntro
-          userName={userProfile?.firstName || userProfile?.name || 'Nomad'}
-          onComplete={handleCloseAuroraIntro}
-        />
-      )}
-
-      <SovereignAccessTour
-        open={showSovereignTour}
-        onClose={handleCloseSovereignTour}
-        onOpenAccessCenter={handleOpenAccessCenter}
-      />
 
       <AppLayout
         countries={countries}

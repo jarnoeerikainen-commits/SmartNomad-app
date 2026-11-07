@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useConciergeViewport } from '@/hooks/useConciergeViewport';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -112,16 +113,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [mobileInitDone, setMobileInitDone] = useState(false);
+  const mobileViewport = useConciergeViewport(isMobile && !embedded);
   const [avatarHidden, setAvatarHidden] = useState(false);
-
-  // On mobile, the global concierge starts minimized; embedded assistant panels stay fully usable inline.
-  useEffect(() => {
-    if (isMobile && !embedded && !mobileInitDone) {
-      setIsMinimized(true);
-      setMobileInitDone(true);
-    }
-  }, [isMobile, embedded, mobileInitDone]);
 
   useEffect(() => {
     const openConcierge = (event: Event) => {
@@ -200,6 +193,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   };
 
   const [messages, setMessages] = useState<Message[]>(() => {
+    if (isMobile) return [];
     const parts = buildGreeting();
     return [{
       id: 'greet-init-0',
@@ -231,15 +225,6 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
       setAvatarHidden(false);
     }
   }, [isSpeaking]);
-
-  // Show mic speech bubble once for new users
-  useEffect(() => {
-    const seen = localStorage.getItem('supernomad_concierge_mic_tip');
-    if (!seen && sttSupported) {
-      const timer = setTimeout(() => setShowMicBubble(true), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [sttSupported]);
 
   // Listen for Home command-bar prefill events / localStorage handoff.
   useEffect(() => {
@@ -273,6 +258,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
   // Re-greet when persona / language / name / personality / live location changes
   // (only if user hasn't started chatting yet — we don't want to wipe an active conversation)
   useEffect(() => {
+    if (isMobile) return;
     if (!isDemoPersona && isLocationLoading) return;
     if (hasUserMessagesRef.current) return;
 
@@ -1029,7 +1015,14 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
     return (
       <div
         className={embedded ? 'relative z-0 flex min-h-[70dvh] flex-col md:hidden' : 'pointer-events-none fixed inset-x-0 top-0 bottom-16 z-50 flex flex-col md:hidden'}
-        style={{ paddingTop: embedded ? undefined : 'env(safe-area-inset-top, 0px)' }}
+        role="region"
+        aria-label="SuperNomad Concierge"
+        style={{
+          paddingTop: embedded ? undefined : 'env(safe-area-inset-top, 0px)',
+          top: !embedded && mobileViewport ? mobileViewport.top : undefined,
+          bottom: !embedded && mobileViewport ? 'auto' : undefined,
+          height: !embedded && mobileViewport ? `calc(${mobileViewport.height}px - ${mobileViewport.keyboardOpen ? '0px' : '4rem + env(safe-area-inset-bottom, 0px)'})` : undefined,
+        }}
       >
         <Card className={`pointer-events-auto flex flex-col flex-1 min-h-0 glass-morphism shadow-large overflow-hidden ${embedded ? 'rounded-lg border' : 'rounded-none'} ${
           isMinimized ? 'flex-initial' : ''
@@ -1047,6 +1040,7 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
               <div className="h-2 w-2 bg-success rounded-full animate-pulse shadow-glow flex-shrink-0" />
             </div>
             <div className="flex gap-0.5 items-center">
+              <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" aria-label="Open navigation menu" onClick={() => window.dispatchEvent(new CustomEvent('supernomad:open-navigation'))}><MessageCircle className="h-4 w-4" /></Button>
               <ConciergeQuickLinks />
               <ConciergeSettings onPrefsChange={setConciergePrefs} />
               {ttsSupported && (
@@ -1060,7 +1054,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                           if (voiceEnabled && isSpeaking) stopSpeaking();
                           toggleVoice();
                         }}
-                        className={`h-8 w-8 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
+                        aria-label={voiceEnabled ? "Mute Concierge voice" : "Enable Concierge voice"}
+                        className={`h-9 w-9 p-0 ${voiceEnabled ? 'text-primary' : ''}`}
                       >
                         {voiceEnabled ? <Volume2 className={`h-4 w-4 ${isSpeaking ? 'animate-pulse' : ''}`} /> : <VolumeX className="h-4 w-4" />}
                       </Button>
@@ -1077,7 +1072,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsMinimized(!isMinimized)}
-                    className="h-8 w-8 p-0"
+                    aria-label={isMinimized ? "Expand Concierge" : "Minimize Concierge"}
+                    className="h-9 w-9 p-0"
                   >
                     {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
                   </Button>
@@ -1085,7 +1081,8 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsOpen(false)}
-                    className="h-8 w-8 p-0"
+                    aria-label="Close Concierge"
+                    className="h-9 w-9 p-0"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -1227,9 +1224,10 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                         <TooltipTrigger asChild>
                           <Button
                             onClick={() => { handleMicClick(); if (showMicBubble) { setShowMicBubble(false); localStorage.setItem('supernomad_concierge_mic_tip', 'true'); } }}
+                            aria-label={isListening ? 'Stop listening' : 'Speak to Concierge'}
                             variant={isListening ? 'default' : 'outline'}
                             size="sm"
-                            className={`px-3 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
+                            className={`h-11 w-11 shrink-0 p-0 ${isListening ? 'animate-pulse bg-destructive hover:bg-destructive/90' : ''} ${micPermission === 'denied' ? 'opacity-50' : ''}`}
                             disabled={isTyping}
                           >
                             {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -1247,10 +1245,11 @@ const AITravelAssistant: React.FC<AITravelAssistantProps> = ({
                     onKeyDown={handleKeyPress}
                     onFocus={keepMobileComposerVisible}
                     placeholder={isListening ? t('ai.listening') || 'Listening...' : t('ai.placeholder')}
-                    className="flex-1 min-w-0"
+                    className="flex-1 min-w-0 text-base"
+                    aria-label="Message Concierge"
                     disabled={isTyping}
                   />
-                  <Button onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="px-3">
+                  <Button aria-label="Send message" onClick={handleSendMessage} disabled={!inputMessage.trim() || isTyping} size="sm" className="h-11 w-11 shrink-0 p-0">
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
