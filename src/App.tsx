@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
@@ -19,16 +19,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import { GlobalKeyboardScroll } from "./components/GlobalKeyboardScroll";
 import GlobalCommandPalette from "./components/GlobalCommandPalette";
 import HermesWake from "./components/HermesWake";
-import { useIsMobile } from './hooks/use-mobile';
-import { shouldEnterMobileApp } from './utils/mobileEntry';
-
-const EntryScreen = () => {
-  const isMobile = useIsMobile();
-  const location = useLocation();
-  return shouldEnterMobileApp(isMobile, location.search)
-    ? <Navigate to={`/app${location.search}`} replace />
-    : <Landing />;
-};
 
 // Lazy load pages
 const WiFiFinder = lazy(() => import("./pages/WiFiFinder"));
@@ -98,7 +88,7 @@ const App = () => {
             <HermesWake />
               <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
                 <Routes>
-                  <Route path="/" element={<EntryScreen />} />
+                  <Route path="/" element={<Landing />} />
                   <Route path="/app" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />

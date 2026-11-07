@@ -1,5 +1,11 @@
 # Booking readiness roadmap
 
+## Homepage-first mobile demo entry
+
+- [x] Show the public homepage on first and repeat phone website visits.
+- [x] Make Demo APP open Concierge directly without changing AI or booking behavior.
+- [x] Verify entry regressions, 155 app tests, and fresh/repeat button flows at six phone/desktop sizes.
+
 ## Active Concierge choices and voice parity
 
 - [x] Replace unhandled option events with contextual Concierge actions and safe link handling.

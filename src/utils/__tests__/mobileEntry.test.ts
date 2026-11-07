@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { classifyBirthYear, getMobileConciergeViewport, needsAdultAccess, shouldEnterMobileApp } from '../mobileEntry';
+import { classifyBirthYear, DEMO_APP_ENTRY, getInitialAppTab, getMobileConciergeViewport, needsAdultAccess } from '../mobileEntry';
 
 describe('mobile entry safeguards', () => {
-  it('opens the app on phones but preserves explicit website access and desktop entry', () => {
-    expect(shouldEnterMobileApp(true, '')).toBe(true);
-    expect(shouldEnterMobileApp(true, '?view=website')).toBe(false);
-    expect(shouldEnterMobileApp(false, '')).toBe(false);
+  it('routes Demo APP directly to Concierge on phones and desktop', () => {
+    const entry = new URL(DEMO_APP_ENTRY, 'https://supernomad.app');
+    expect(entry.pathname).toBe('/app');
+    expect(entry.searchParams.get('demo')).toBe('1');
+    expect(getInitialAppTab(true, entry.search)).toBe('concierge');
+    expect(getInitialAppTab(false, entry.search)).toBe('concierge');
+  });
+  it('preserves direct app entry defaults without an explicit Concierge request', () => {
+    expect(getInitialAppTab(true, '')).toBe('concierge');
+    expect(getInitialAppTab(false, '')).toBe('home');
+    expect(getInitialAppTab(false, '?entry=unknown')).toBe('home');
   });
   it('detects a keyboard viewport without subtracting navigation space twice', () => {
     expect(getMobileConciergeViewport(430, 10, 844)).toEqual({ height: 430, top: 10, keyboardOpen: true });

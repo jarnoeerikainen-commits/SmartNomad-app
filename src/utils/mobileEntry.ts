@@ -1,5 +1,7 @@
-export function shouldEnterMobileApp(isMobile: boolean, search: string): boolean {
-  return isMobile && new URLSearchParams(search).get('view') !== 'website';
+export const DEMO_APP_ENTRY = '/app?demo=1&entry=concierge';
+
+export function getInitialAppTab(isMobile: boolean, search: string): 'concierge' | 'home' {
+  return isMobile || new URLSearchParams(search).get('entry') === 'concierge' ? 'concierge' : 'home';
 }
 
 export function getMobileConciergeViewport(height: number, offsetTop: number, layoutHeight: number) {
