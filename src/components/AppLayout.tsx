@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
+import { useLocation } from 'react-router-dom';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import BottomNavigation from './BottomNavigation';
@@ -17,7 +18,7 @@ import MFAGate from '@/components/auth/MFAGate';
 import CalendarReminderBoot from '@/components/calendar/CalendarReminderBoot';
 import { safeSectionDuringSocialPause } from '@/config/socialIntroductionPolicy';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { needsAdultAccess } from '@/utils/mobileEntry';
+import { getInitialAppTab, needsAdultAccess } from '@/utils/mobileEntry';
 import DeferredAgeAccess from './auth/DeferredAgeAccess';
 
 // Lazy-loaded section components — only downloaded when the user navigates to them
@@ -166,7 +167,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
 }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const isMobile = useIsMobile();
-  const [bottomNavTab, setBottomNavTab] = useState(() => isMobile ? 'concierge' : 'home');
+  const location = useLocation();
+  const [bottomNavTab, setBottomNavTab] = useState(() => getInitialAppTab(isMobile, location.search));
   const [, refreshAgeAccess] = useState(0);
   const [requestedAssistant, setRequestedAssistant] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -175,7 +177,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   const mainScrollRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile && bottomNavTab !== 'concierge') return;
     window.dispatchEvent(new CustomEvent(bottomNavTab === 'concierge' ? 'supernomad:open-concierge' : 'supernomad:hide-concierge'));
   }, [isMobile, bottomNavTab, activeSection]);
 
