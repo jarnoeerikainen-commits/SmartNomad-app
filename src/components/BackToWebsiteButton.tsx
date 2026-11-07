@@ -13,7 +13,7 @@ const BackToWebsiteButton: React.FC = () => {
   return (
     <div className="hidden md:flex fixed md:bottom-4 md:left-4 z-[60] flex-col gap-2">
       <Link
-        to="/"
+        to="/?view=website"
         aria-label="Back to SuperNomad website"
         className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(43_96%_56%/0.4)] bg-[hsl(220_22%_10%/0.85)] backdrop-blur-md px-3 py-1.5 text-xs font-medium text-white hover:bg-[hsl(220_22%_14%)] hover:border-[hsl(var(--gold))] transition-all shadow-lg"
       >
@@ -33,7 +33,7 @@ export const ConciergeQuickLinks: React.FC = () => {
   return (
     <>
       <Link
-        to="/"
+        to="/?view=website"
         aria-label="Back to SuperNomad website"
         title="Website"
         className="inline-flex h-8 w-8 items-center justify-center rounded-md text-foreground/80 hover:text-foreground hover:bg-accent transition-colors"

@@ -84,21 +84,7 @@ export const CookieConsent: React.FC = () => {
     });
   };
 
-  // Defer the cookie banner until first-time onboarding has completed so it
-  // doesn't sit on top of the welcome modal on small phones.
-  const [onboardingDone, setOnboardingDone] = useState(
-    () => typeof window !== 'undefined' && !!localStorage.getItem('hasSeenOnboarding')
-  );
-  useEffect(() => {
-    if (onboardingDone) return;
-    const check = () => {
-      if (localStorage.getItem('hasSeenOnboarding')) setOnboardingDone(true);
-    };
-    const id = window.setInterval(check, 600);
-    return () => window.clearInterval(id);
-  }, [onboardingDone]);
-
-  if (!isVisible || !onboardingDone) return null;
+  if (!isVisible) return null;
 
   return (
     <div

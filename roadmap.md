@@ -1,5 +1,12 @@
 # Booking readiness roadmap
 
+## Easier mobile entry and Concierge
+
+- [ ] Open Concierge first on phones, preserve desktop/website access and explicit navigation.
+- [ ] Make cookie choice the only startup interaction; remove automatic introductions and permission prompts.
+- [ ] Preserve age restrictions and all travel/payment logic.
+- [ ] Verify phone sizes, keyboard-aware layout, first/repeat entry, real chat/search, voice controls, and automated tests.
+
 ## Public claims and staff-access cleanup
 
 - [x] Remove static live indicators, unsourced figures, incident statistics, and unsupported absolute claims from the public website.
