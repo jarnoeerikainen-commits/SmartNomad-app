@@ -30,6 +30,7 @@ vi.mock('@/contexts/TrustContext', () => ({
 }));
 
 const mobile = vi.hoisted(() => ({ enabled: false }));
+const voiceInput = vi.hoisted(() => ({ transcript: '', enabled: false }));
 vi.mock('@/hooks/use-mobile', () => ({ useIsMobile: () => mobile.enabled }));
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 vi.mock('@/hooks/useVoiceConversation', () => ({
@@ -40,12 +41,12 @@ vi.mock('@/hooks/useVoiceConversation', () => ({
     currentWord: '',
     mouthOpenness: 0,
     micPermission: 'prompt',
-    startListening: vi.fn(),
+    startListening: vi.fn(async (onResult: (text: string) => void) => onResult(voiceInput.transcript)),
     stopListening: vi.fn(),
     speak: vi.fn(),
     stopSpeaking: vi.fn(),
     toggleVoice: vi.fn(),
-    sttSupported: false,
+    sttSupported: voiceInput.enabled,
     ttsSupported: false,
     setVoiceGender: vi.fn(),
     setLanguage: vi.fn(),
@@ -149,6 +150,8 @@ function slowStreamResponse() {
 describe('AITravelAssistant slow-response resilience', () => {
   beforeEach(() => {
     mobile.enabled = false;
+    voiceInput.enabled = false;
+    voiceInput.transcript = '';
     localStorage.clear();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(slowStreamResponse(), { status: 200, headers: { 'Content-Type': 'text/event-stream' } })));
   });
@@ -207,5 +210,31 @@ describe('AITravelAssistant slow-response resilience', () => {
     expect(screen.queryByRole('textbox', { name: 'Message Concierge' })).toBeNull();
     act(() => window.dispatchEvent(new CustomEvent('supernomad:open-concierge')));
     expect(screen.getByRole('textbox', { name: 'Message Concierge' })).toBeVisible();
+  });
+
+  it.each([false, true])('routes tapped and spoken options identically on mobile=%s', async isMobile => {
+    mobile.enabled = isMobile;
+    voiceInput.enabled = true;
+    const content = 'Choose your next step. [[CHIPS: Compare hotels|hotel|Dubai;; Review payment|pay|offer-123]]';
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(`data: ${JSON.stringify({ type: 'response.output_text.delta', delta: content })}\n\ndata: [DONE]\n\n`, { status: 200 })));
+    render(<AITravelAssistant />);
+    const input = screen.getByPlaceholderText('Ask concierge...');
+    fireEvent.change(input, { target: { value: 'Plan Dubai' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    const compare = await screen.findByRole('button', { name: 'Compare hotels' });
+    await waitFor(() => expect(compare).toBeEnabled());
+    fireEvent.click(compare);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    const requests = vi.mocked(fetch).mock.calls;
+    const tapRequest = JSON.parse(String(requests[1][1]?.body)).messages.at(-1).content;
+    expect(tapRequest).toContain('I selected "Compare hotels"');
+    expect(tapRequest).toContain('Original reply:');
+    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Compare hotels' }).at(-1)).toBeEnabled());
+    voiceInput.transcript = 'Compare hotels';
+    const mic = screen.getByRole('button', { name: /Start microphone|Start voice|microphone|voice input/i });
+    fireEvent.click(mic);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+    const spokenRequest = JSON.parse(String(vi.mocked(fetch).mock.calls[2][1]?.body)).messages.at(-1).content;
+    expect(spokenRequest).toBe(tapRequest);
   });
 });
