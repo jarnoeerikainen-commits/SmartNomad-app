@@ -1,6 +1,12 @@
 const WORD_MATCHER = /\S+/g;
 
 export const sanitizeSpeechText = (text: string) => text
+  .replace(/\[\[CHIPS\]\]([\s\S]*?)\[\[\/CHIPS\]\]/gi, (_, body: string) => {
+    const labels = body.split(/\r?\n/).map(line => line.match(/^[-*]\s*([^|]+)/)?.[1]?.trim()).filter(Boolean).slice(0, 3);
+    return labels.length ? ` Options: ${labels.join('; ')}.` : '';
+  })
+  .replace(/\[\[CHIPS:\s*([^\]]+)\]\]/gi, (_, body: string) => ` Options: ${body.split(';;').slice(0, 3).map(part => part.split('|')[0].trim()).join('; ')}.`)
+  .replace(/\[\[CHIPS[\s\S]*$/gi, '')
   .replace(/```(?:json|booking)[\s\S]*?```/g, '')
   .replace(/\[?\{[^{}]*"url"[^{}]*\}[\s,\]]*/g, '')
   .replace(/https?:\/\/[^\s)]+/g, '')
