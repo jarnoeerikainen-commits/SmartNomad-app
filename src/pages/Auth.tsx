@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Globe, Shield, Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PasswordStrengthMeter, { evaluatePassword } from '@/components/auth/PasswordStrengthMeter';
+import { validateDeliverableEmail } from '@/utils/emailValidation';
 
 const Auth: React.FC = () => {
   const { isAuthenticated, isLoading, signIn, signUp, resetPassword } = useAuth();
@@ -68,6 +69,11 @@ const Auth: React.FC = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    const emailCheck = validateDeliverableEmail(signupEmail);
+    if (!emailCheck.valid) {
+      toast({ title: 'Check your email address', description: emailCheck.error, variant: 'destructive' });
+      return;
+    }
     if (signupPassword.length < 8) {
       toast({ title: 'Password too short', description: 'Minimum 8 characters required.', variant: 'destructive' });
       return;
@@ -82,7 +88,7 @@ const Auth: React.FC = () => {
       return;
     }
     setLoading(true);
-    const { error } = await signUp(signupEmail, signupPassword, signupFirstName, signupLastName);
+    const { error } = await signUp(emailCheck.normalized, signupPassword, signupFirstName, signupLastName);
     setLoading(false);
     if (error) {
       toast({ title: 'Sign up failed', description: error.message, variant: 'destructive' });
@@ -97,8 +103,13 @@ const Auth: React.FC = () => {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    const emailCheck = validateDeliverableEmail(forgotEmail);
+    if (!emailCheck.valid) {
+      toast({ title: 'Check your email address', description: emailCheck.error, variant: 'destructive' });
+      return;
+    }
     setLoading(true);
-    const { error } = await resetPassword(forgotEmail);
+    const { error } = await resetPassword(emailCheck.normalized);
     setLoading(false);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });

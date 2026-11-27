@@ -5,6 +5,22 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const BLOCKED_EMAIL_DOMAINS = new Set([
+  'example.com', 'example.org', 'example.net', 'test.com', 'test.org', 'test.net',
+  'invalid', 'localhost', 'localdomain', 'mailinator.com', 'guerrillamail.com',
+  'tempmail.com', 'throwaway.email', 'yopmail.com', '10minutemail.com',
+]);
+const BLOCKED_TLDS = new Set(['test', 'example', 'invalid', 'localhost', 'local']);
+const EMAIL_REGEX = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/i;
+
+function isDeliverableEmail(raw: string): boolean {
+  const normalized = raw.trim().toLowerCase();
+  if (!normalized || normalized.length > 254 || !EMAIL_REGEX.test(normalized)) return false;
+  const domain = normalized.split('@')[1] ?? '';
+  const tld = domain.split('.').pop() ?? '';
+  return tld.length >= 2 && !BLOCKED_TLDS.has(tld) && !BLOCKED_EMAIL_DOMAINS.has(domain);
+}
+
 // ═══════════════════════════════════════════════════════════
 // send-calendar-reminder — emails reminders for upcoming
 // SuperNomad calendar events via the Resend connector.
@@ -45,6 +61,13 @@ serve(async (req) => {
     if (!to || !eventTitle || !startIso) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!isDeliverableEmail(to)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or non-deliverable recipient email address' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

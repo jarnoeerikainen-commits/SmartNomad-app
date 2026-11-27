@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getDeviceId } from '@/utils/deviceId';
+import { validateDeliverableEmail } from '@/utils/emailValidation';
 
 interface AuthContextType {
   user: User | null;
@@ -82,8 +83,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
+    const check = validateDeliverableEmail(email);
+    if (!check.valid) {
+      return { error: new Error(check.error) };
+    }
     const { error } = await supabase.auth.signUp({
-      email,
+      email: check.normalized,
       password,
       options: {
         emailRedirectTo: window.location.origin,
@@ -97,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
     return { error };
   };
 
@@ -108,7 +113,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const check = validateDeliverableEmail(email);
+    if (!check.valid) {
+      return { error: new Error(check.error) };
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(check.normalized, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     return { error };
