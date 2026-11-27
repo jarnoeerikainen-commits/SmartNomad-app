@@ -1285,27 +1285,22 @@ serve(async (req) => {
     const conciergeControlSection = await getConciergeControlPrompt();
     const systemPrompt = withTruthProtocol(`${baseSystemPrompt}\n\n${CONCIERGE_REPLY_PROTOCOL}\n\n${VISA_IMMIGRATION_PROTOCOL}\n\n${trendSection}${holidaySection ? `\n\n${holidaySection}` : ''}${venueSection ? `\n\n${venueSection}` : ''}${conciergeControlSection}`);
 
-    const model = 'openai/gpt-6-astra';
-    const reasoningEffort = 'low';
-    console.log(`Calling Lovable AI (model: ${model}, reasoning: ${reasoningEffort})`);
+    const model = 'google/gemini-3-flash-preview';
+    console.log(`Calling Lovable AI (model: ${model})`);
 
     const requestBody = {
       model,
-      input: [
+      messages: [
         { role: "system", content: systemPrompt },
         ...messages,
       ],
       stream: true,
-      store: false,
-      reasoning: { effort: reasoningEffort, summary: 'auto' },
-      include: ['reasoning.encrypted_content'],
     };
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Lovable-API-Key": LOVABLE_API_KEY,
-        "X-Lovable-AIG-SDK": "fetch",
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestBody),
@@ -1333,7 +1328,7 @@ serve(async (req) => {
     }
 
     const latencyMs = Date.now() - startTime;
-    console.log(`Travel assistant responded (${latencyMs}ms, reasoning: ${reasoningEffort})`);
+    console.log(`Travel assistant responded (${latencyMs}ms, model: ${model})`);
 
     // Log usage asynchronously (non-blocking)
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");

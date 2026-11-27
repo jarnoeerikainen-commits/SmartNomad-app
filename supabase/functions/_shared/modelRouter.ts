@@ -22,8 +22,8 @@ export type ModelTier = 'intelligence' | 'balanced' | 'speed' | 'vision';
  * Last reviewed: 2026-04-20
  */
 export const MODEL_REGISTRY: Record<ModelTier, string> = {
-  // Hardest reasoning: tax/legal/medical, multi-step planning, citations
-  intelligence: 'google/gemini-3.1-pro-preview',
+  // Cost-optimized reasoning: tax/legal/medical, multi-step planning, citations
+  intelligence: 'google/gemini-3-flash-preview',
   // Daily concierge default: smart, fast, low-cost
   balanced: 'google/gemini-3-flash-preview',
   // Pure speed: tag extraction, classifiers, short transforms
